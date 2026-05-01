@@ -16,9 +16,9 @@ main() {
     conf_args=("--prefix=${dict['prefix']}")
     dict['url']="https://github.com/scop/bash-completion/releases/download/\
 ${dict['version']}/bash-completion-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -34,10 +34,10 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only 'make'
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['man1dir']="${dict['prefix']}/share/man/man1"
@@ -61,16 +61,16 @@ main() {
         '-Duseshrplib'
         '-Dusethreads'
     )
-    koopa_is_linux && dict['jobs']=1
+    _koopa_is_linux && dict['jobs']=1
     # All Perl 5 releases are currently organized under '5.0'.
-    dict['src_maj_min_ver']="$(koopa_major_version "${dict['version']}").0"
+    dict['src_maj_min_ver']="$(_koopa_major_version "${dict['version']}").0"
     dict['url']="https://www.cpan.org/src/${dict['src_maj_min_ver']}/\
 perl-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
-    koopa_mkdir \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
+    _koopa_mkdir \
         "${dict['man1dir']}" \
         "${dict['man3dir']}" \
         "${dict['sysman']}"

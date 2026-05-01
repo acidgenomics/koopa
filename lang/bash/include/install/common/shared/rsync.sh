@@ -22,7 +22,7 @@ main() {
         'openssl'
         'xxhash'
     )
-    koopa_activate_app  "${deps[@]}"
+    _koopa_activate_app  "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -35,7 +35,7 @@ main() {
         '--with-included-popt=no'
         '--with-included-zlib=no'
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         conf_args+=('--disable-zstd')
     else
@@ -45,9 +45,9 @@ main() {
 # > rsync-${dict['version']}.tar.gz"
     dict['url']="https://www.mirrorservice.org/sites/rsync.samba.org/\
 rsync-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

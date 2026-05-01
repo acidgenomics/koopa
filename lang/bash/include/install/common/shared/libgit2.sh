@@ -15,15 +15,15 @@ main() {
     local -a build_deps cmake_args deps
     build_deps=('cmake' 'pkg-config')
     deps=('zlib' 'pcre' 'openssl' 'libssh2')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    dict['libssh2']="$(koopa_app_prefix 'libssh2')"
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
-    dict['pcre']="$(koopa_app_prefix 'pcre')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    dict['libssh2']="$(_koopa_app_prefix 'libssh2')"
+    dict['openssl']="$(_koopa_app_prefix 'openssl')"
+    dict['pcre']="$(_koopa_app_prefix 'pcre')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     cmake['libssh2_include_dir']="${dict['libssh2']}/include"
     cmake['libssh2_library']="${dict['libssh2']}/lib/\
 libssh2.${dict['shared_ext']}"
@@ -36,12 +36,12 @@ libssl.${dict['shared_ext']}"
     cmake['pcre_library']="${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${cmake['libssh2_include_dir']}" \
         "${cmake['openssl_include_dir']}" \
         "${cmake['pcre_include_dir']}" \
         "${cmake['zlib_include_dir']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${cmake['libssh2_library']}" \
         "${cmake['openssl_crypto_library']}" \
         "${cmake['openssl_ssl_library']}" \
@@ -65,9 +65,9 @@ libssl.${dict['shared_ext']}"
     )
     dict['url']="https://github.com/libgit2/libgit2/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

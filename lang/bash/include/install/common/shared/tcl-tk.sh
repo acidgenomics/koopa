@@ -15,7 +15,7 @@ main() {
     local -A dict
     local -a conf_args deps
     deps=('zlib')
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         deps+=(
             'xorg-xorgproto'
@@ -27,11 +27,11 @@ main() {
             'xorg-libx11'
         )
     fi
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     conf_args=(
         '--enable-shared'
         "--prefix=${dict['prefix']}"
@@ -40,18 +40,18 @@ main() {
 ${dict['version']}.tar.gz"
     dict['tk_url']="https://koopa.acidgenomics.com/src/tk/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['tcl_url']}" 'tcl.tar.gz'
-    koopa_download "${dict['tk_url']}" 'tk.tar.gz'
-    koopa_extract 'tcl.tar.gz' 'tcl-src'
-    koopa_extract 'tk.tar.gz' 'tk-src'
+    _koopa_download "${dict['tcl_url']}" 'tcl.tar.gz'
+    _koopa_download "${dict['tk_url']}" 'tk.tar.gz'
+    _koopa_extract 'tcl.tar.gz' 'tcl-src'
+    _koopa_extract 'tk.tar.gz' 'tk-src'
     (
-        koopa_cd 'tcl-src/unix'
+        _koopa_cd 'tcl-src/unix'
         local -a tcl_conf_args
         tcl_conf_args+=(
             "${conf_args[@]}"
             '--enable-threads'
         )
-        koopa_make_build \
+        _koopa_make_build \
             --target='install' \
             --target='install-private-headers' \
             "${tcl_conf_args[@]}"
@@ -62,21 +62,21 @@ ${dict['version']}.tar.gz"
             "${conf_args[@]}"
             "--with-tcl=${dict['prefix']}/lib"
         )
-        if koopa_is_macos
+        if _koopa_is_macos
         then
             tk_conf_args+=('--enable-aqua=yes')
         fi
-        koopa_cd 'tk-src/unix'
-        koopa_make_build \
+        _koopa_cd 'tk-src/unix'
+        _koopa_make_build \
             --target='install' \
             --target='install-private-headers' \
             "${tk_conf_args[@]}"
     )
     (
         # This is necessary for Lmod.
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln "tclsh${dict['maj_min_ver']}" 'tclsh'
-        koopa_ln "wish${dict['maj_min_ver']}" 'wish'
+        _koopa_cd "${dict['prefix']}/bin"
+        _koopa_ln "tclsh${dict['maj_min_ver']}" 'tclsh'
+        _koopa_ln "wish${dict['maj_min_ver']}" 'wish'
     )
     return 0
 }

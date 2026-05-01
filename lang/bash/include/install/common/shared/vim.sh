@@ -12,18 +12,18 @@ main() {
     # - https://github.com/vim/vim/issues/1081
     # """
     local -A app dict
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'ncurses' 'python'
-    app['python']="$(koopa_locate_python --realpath)"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'ncurses' 'python'
+    app['python']="$(_koopa_locate_python --realpath)"
     app['python_config']="${app['python']}-config"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['python']="$(koopa_app_prefix 'python')"
+    dict['python']="$(_koopa_app_prefix 'python')"
     dict['python_config_dir']="$("${app['python_config']}" --configdir)"
     dict['python_rpath']="${dict['python']}/lib"
     dict['vim_rpath']="${dict['prefix']}/lib"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${dict['python_config_dir']}" \
         "${dict['python_rpath']}"
     conf_args=(
@@ -40,20 +40,20 @@ main() {
         "--with-python3-config-dir=${dict['python_config_dir']}"
         '--with-tlib=ncurses'
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         conf_args+=(
             '--enable-gui=no'
             '--without-x'
         )
     fi
-    koopa_add_rpath_to_ldflags \
+    _koopa_add_rpath_to_ldflags \
         "${dict['python_rpath']}" \
         "${dict['vim_rpath']}"
     dict['url']="https://github.com/vim/vim/archive/v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

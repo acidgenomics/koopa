@@ -14,7 +14,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/jfrog/jfrog-cli/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_build_go_package \
+    _koopa_build_go_package \
         --bin-name="${dict['bin_name']}" \
         --ldflags="${dict['ldflags']}" \
         --url="${dict['url']}"

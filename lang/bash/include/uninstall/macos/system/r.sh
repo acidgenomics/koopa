@@ -14,8 +14,8 @@ main() {
         '/usr/local/bin/R'
         '/usr/local/bin/Rscript'
     )
-    koopa_rm --sudo "${rm_files[@]}"
-    koopa_macos_uninstall_system_r_gfortran
-    koopa_macos_uninstall_system_r_xcode_openmp
+    _koopa_rm --sudo "${rm_files[@]}"
+    _koopa_macos_uninstall_system_r_gfortran
+    _koopa_macos_uninstall_system_r_xcode_openmp
     return 0
 }

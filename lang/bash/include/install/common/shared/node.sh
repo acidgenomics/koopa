@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package --name='nodejs'
+    _koopa_install_conda_package --name='nodejs'
     return 0
 }
 
@@ -36,13 +36,13 @@ install_from_source() {
     local -A app dict
     local -a build_deps conf_args
     build_deps=('make' 'ninja' 'pkg-config' 'python3.13')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    app['python']="$(koopa_locate_python313 --realpath)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    app['make']="$(_koopa_locate_make)"
+    app['python']="$(_koopa_locate_python313 --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--ninja'
@@ -52,34 +52,34 @@ install_from_source() {
     # Ensure that subprocesses spawned by make are using our Python.
     export PYTHON="${app['python']}"
     # This is needed to put sysctl into PATH.
-    if koopa_is_macos
+    if _koopa_is_macos
     then
-        koopa_add_to_path_end '/usr/sbin'
+        _koopa_add_to_path_end '/usr/sbin'
     fi
     dict['url']="https://nodejs.org/dist/v${dict['version']}/\
 node-v${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     # Create 'yarn' symlink in 'bin'.
     (
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln \
+        _koopa_cd "${dict['prefix']}/bin"
+        _koopa_ln \
             '../lib/node_modules/corepack/dist/yarn.js' \
             'yarn'
     )
     # Create 'npm.1' and 'npx.1' symlinks in 'man1'.
     (
-        koopa_cd "${dict['prefix']}/share/man/man1"
-        koopa_ln \
+        _koopa_cd "${dict['prefix']}/share/man/man1"
+        _koopa_ln \
             '../../../lib/node_modules/npm/man/man1/npm.1' \
             'npm.1'
-        koopa_ln \
+        _koopa_ln \
             '../../../lib/node_modules/npm/man/man1/npx.1' \
             'npx.1'
     )

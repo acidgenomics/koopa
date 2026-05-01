@@ -12,9 +12,9 @@ main() {
     # """
     local -A app dict
     local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    app['gfortran']="$(koopa_locate_gfortran --only-system)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'pkg-config'
+    app['gfortran']="$(_koopa_locate_gfortran --only-system)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # Temporary fix for 3.11.0 download link.
@@ -30,9 +30,9 @@ v${dict['version']}.tar.gz"
         "-DCMAKE_Fortran_COMPILER=${app['gfortran']}"
         '-DLAPACKE=ON'
     )
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

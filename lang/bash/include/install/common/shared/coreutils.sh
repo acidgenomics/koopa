@@ -7,16 +7,16 @@ main() {
     # """
     local -a conf_args deps install_args
     local conf_arg
-    koopa_activate_app --build-only 'gperf'
+    _koopa_activate_app --build-only 'gperf'
     deps=()
-    koopa_is_linux && deps+=('attr')
+    _koopa_is_linux && deps+=('attr')
     deps+=('gmp')
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     conf_args+=('--program-prefix=g')
     for conf_arg in "${conf_args[@]}"
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

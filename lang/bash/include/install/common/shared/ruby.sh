@@ -19,16 +19,16 @@ main() {
         'libyaml'
         'libffi'
     )
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app "${deps[@]}"
-    dict['libffi']="$(koopa_app_prefix 'libffi')"
-    dict['libyaml']="$(koopa_app_prefix 'libyaml')"
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app "${deps[@]}"
+    dict['libffi']="$(_koopa_app_prefix 'libffi')"
+    dict['libyaml']="$(_koopa_app_prefix 'libyaml')"
+    dict['openssl']="$(_koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['readline']="$(koopa_app_prefix 'readline')"
+    dict['readline']="$(_koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     conf_args=(
         '--disable-install-doc'
         '--disable-silent-rules'
@@ -42,12 +42,12 @@ main() {
         "--with-zlib-dir=${dict['zlib']}"
         '--without-gmp'
     )
-    koopa_is_macos && conf_args+=('--enable-dtrace')
+    _koopa_is_macos && conf_args+=('--enable-dtrace')
     dict['url']="https://cache.ruby-lang.org/pub/ruby/${dict['maj_min_ver']}/\
 ruby-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

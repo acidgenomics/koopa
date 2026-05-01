@@ -12,11 +12,11 @@ main() {
     local -A app dict
     local -a conf_args install_args
     local conf_arg
-    koopa_activate_app 'gettext' 'libiconv' 'ncurses' 'perl'
-    app['perl']="$(koopa_locate_perl --realpath)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['gettext']="$(koopa_app_prefix 'gettext')"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    _koopa_activate_app 'gettext' 'libiconv' 'ncurses' 'perl'
+    app['perl']="$(_koopa_locate_perl --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['gettext']="$(_koopa_app_prefix 'gettext')"
+    dict['libiconv']="$(_koopa_app_prefix 'libiconv')"
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-install-warnings'
@@ -30,6 +30,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

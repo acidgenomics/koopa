@@ -5,7 +5,7 @@ main() {
     # Uninstall Docker.
     # @note Updated 2022-10-07.
     # """
-    koopa_rm \
+    _koopa_rm \
         "${HOME}/Library/Application Scripts/com.docker.helper" \
         "${HOME}/Library/Application Scripts/group.com.docker" \
         "${HOME}/Library/Application Support/Docker Desktop" \

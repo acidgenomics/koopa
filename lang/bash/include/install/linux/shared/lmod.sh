@@ -11,28 +11,28 @@ main() {
     local -A app dict
     local -a rocks
     local rock
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app \
+    _koopa_activate_app --build-only 'make' 'pkg-config'
+    _koopa_activate_app \
         'zlib' \
         'lua' \
         'luarocks' \
         'tcl-tk'
-    app['lua']="$(koopa_locate_lua --realpath)"
-    app['luac']="$(koopa_locate_luac --realpath)"
-    app['luarocks']="$(koopa_locate_luarocks --realpath)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['lua']="$(koopa_app_prefix 'lua')"
+    app['lua']="$(_koopa_locate_lua --realpath)"
+    app['luac']="$(_koopa_locate_luac --realpath)"
+    app['luarocks']="$(_koopa_locate_luarocks --realpath)"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
+    dict['lua']="$(_koopa_app_prefix 'lua')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['libexec']="$(_koopa_init_dir "${dict['prefix']}/libexec")"
     dict['apps_dir']="${dict['prefix']}/apps"
     dict['data_dir']="${dict['libexec']}/moduleData"
     dict['url']="https://github.com/TACC/Lmod/archive/${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     rocks=('luaposix' 'luafilesystem')
     for rock in "${rocks[@]}"
     do
@@ -42,8 +42,8 @@ main() {
                 --tree "${dict['libexec']}" \
                 "$rock"
     done
-    dict['lua_ver']="$(koopa_get_version "${app['lua']}")"
-    dict['lua_compat_ver']="$(koopa_major_minor_version "${dict['lua_ver']}")"
+    dict['lua_ver']="$(_koopa_get_version "${app['lua']}")"
+    dict['lua_compat_ver']="$(_koopa_major_minor_version "${dict['lua_ver']}")"
     lua_path_arr=(
         # > './?.lua'
         "${dict['libexec']}/share/lua/${dict['lua_compat_ver']}/?.lua"
@@ -70,8 +70,8 @@ main() {
         "--with-spiderCacheDir=${dict['data_dir']}/cacheDir"
         "--with-updateSystemFn=${dict['data_dir']}/system.txt"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
+    _koopa_print_env
+    _koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"

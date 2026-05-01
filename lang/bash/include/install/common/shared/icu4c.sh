@@ -20,11 +20,11 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['kebab_version']="$(koopa_kebab_case "${dict['version']}")"
-    dict['snake_version']="$(koopa_snake_case "${dict['version']}")"
+    dict['kebab_version']="$(_koopa_kebab_case "${dict['version']}")"
+    dict['snake_version']="$(_koopa_snake_case "${dict['version']}")"
     conf_args+=(
         '--disable-samples'
         '--disable-static'
@@ -36,17 +36,17 @@ main() {
     )
     dict['url']="https://github.com/unicode-org/icu/releases/download/\
 release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
-    koopa_download "${dict['url']}"
+    _koopa_download "${dict['url']}"
     # This step can error due to broken 'LICENSE' symlink in 74.2.
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'icu'
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'icu'
     # Broken LICENSE symlink causes make to fail.
     if [[ ! -e 'icu/LICENSE' ]]
     then
-        koopa_rm 'icu/LICENSE'
-        koopa_touch 'icu/LICENSE'
+        _koopa_rm 'icu/LICENSE'
+        _koopa_touch 'icu/LICENSE'
     fi
-    koopa_cd 'icu/source'
-    koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    koopa_make_build "${conf_args[@]}"
+    _koopa_cd 'icu/source'
+    _koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

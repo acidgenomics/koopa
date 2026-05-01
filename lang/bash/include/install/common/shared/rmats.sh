@@ -10,14 +10,14 @@ main() {
     # - https://github.com/Xinglab/rmats-turbo/issues/36
     # """
     local -A app dict
-    koopa_assert_is_not_arm64
+    _koopa_assert_is_not_arm64
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    koopa_install_conda_package
-    koopa_rm "${dict['prefix']}/bin"
-    koopa_mkdir "${dict['prefix']}/bin"
+    _koopa_install_conda_package
+    _koopa_rm "${dict['prefix']}/bin"
+    _koopa_mkdir "${dict['prefix']}/bin"
     app['python']="${dict['prefix']}/libexec/bin/python3"
     app['rmats_py']="${dict['prefix']}/libexec/rMATS/rmats.py"
-    koopa_assert_is_existing "${app[@]}"
+    _koopa_assert_is_existing "${app[@]}"
     app['rmats']="${dict['prefix']}/bin/rmats"
     read -r -d '' "dict[rmats_string]" << END || true
 #!/bin/sh
@@ -33,10 +33,10 @@ ${app['python']} \\
     ${app['rmats_py']} \\
     "\$@"
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${app['rmats']}" \
         --string="${dict['rmats_string']}"
-    koopa_chmod +x "${app['rmats']}"
+    _koopa_chmod +x "${app['rmats']}"
     "${app['rmats']}" --help
     return 0
 }

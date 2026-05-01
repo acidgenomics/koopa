@@ -23,26 +23,26 @@ main() {
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
     local -A app
-    koopa_assert_has_no_args "$#"
-    koopa_alert 'Configuring system defaults.'
-    koopa_add_to_path_end '/usr/sbin' '/sbin'
-    koopa_print_env
-    app['cat']="$(koopa_locate_cat --allow-system)"
+    _koopa_assert_has_no_args "$#"
+    _koopa_alert 'Configuring system defaults.'
+    _koopa_add_to_path_end '/usr/sbin' '/sbin'
+    _koopa_print_env
+    app['cat']="$(_koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
-        koopa_debian_locate_debconf_set_selections \
+        _koopa_debian_locate_debconf_set_selections \
     )"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_configure_sources
-    koopa_debian_apt_get update
-    koopa_debian_apt_get full-upgrade
-    if koopa_linux_is_init_systemd
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_debian_apt_configure_sources
+    _koopa_debian_apt_get update
+    _koopa_debian_apt_get full-upgrade
+    if _koopa_linux_is_init_systemd
     then
-        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
+        "${app['cat']}" << END | _koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
     fi
-    koopa_debian_apt_install \
+    _koopa_debian_apt_install \
         'bash' \
         'ca-certificates' \
         'coreutils' \
@@ -65,23 +65,23 @@ END
         'tzdata' \
         'unzip' \
         'zsh'
-    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
-    app['update_locale']="$(koopa_debian_locate_update_locale)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_get autoremove
-    koopa_debian_apt_get clean
-    koopa_debian_set_timezone
-    koopa_sudo_write_string \
+    app['dpkg_reconfigure']="$(_koopa_debian_locate_dpkg_reconfigure)"
+    app['locale_gen']="$(_koopa_debian_locate_locale_gen)"
+    app['update_locale']="$(_koopa_debian_locate_update_locale)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_debian_apt_get autoremove
+    _koopa_debian_apt_get clean
+    _koopa_debian_set_timezone
+    _koopa_sudo_write_string \
         --file='/etc/locale.gen' \
         --string='en_US.UTF-8 UTF-8'
-    koopa_sudo "${app['locale_gen']}" --purge
-    koopa_sudo "${app['dpkg_reconfigure']}" \
+    _koopa_sudo "${app['locale_gen']}" --purge
+    _koopa_sudo "${app['dpkg_reconfigure']}" \
         --frontend='noninteractive' locales
-    koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
-    # > koopa_debian_needrestart_noninteractive
-    # > koopa_enable_passwordless_sudo
-    koopa_linux_configure_system_sshd
-    koopa_alert_success 'Configuration of system defaults was successful.'
+    _koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
+    # > _koopa_debian_needrestart_noninteractive
+    # > _koopa_enable_passwordless_sudo
+    _koopa_linux_configure_system_sshd
+    _koopa_alert_success 'Configuration of system defaults was successful.'
     return 0
 }

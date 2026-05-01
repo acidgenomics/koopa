@@ -15,18 +15,18 @@ main() {
     # """
     local -A app dict
     local -a install_args
-    if koopa_is_macos
+    if _koopa_is_macos
     then
-        koopa_macos_assert_is_xcode_clt_installed
+        _koopa_macos_assert_is_xcode_clt_installed
     fi
-    app['brew']="$(koopa_locate_brew)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
-    dict['prefix']="$(koopa_homebrew_prefix)"
-    koopa_assert_is_dir "${dict['prefix']}"
+    app['brew']="$(_koopa_locate_brew)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['brewfile']="$(_koopa_xdg_config_home)/homebrew/brewfile"
+    dict['prefix']="$(_koopa_homebrew_prefix)"
+    _koopa_assert_is_dir "${dict['prefix']}"
     if [[ ! -f "${dict['brewfile']}" ]]
     then
-        koopa_stop "Brewfile at '${dict['brewfile']}' does not exist. \
+        _koopa_stop "Brewfile at '${dict['brewfile']}' does not exist. \
 Run 'koopa install dotfiles' and 'koopa configure user dotfiles' to resolve."
     fi
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
@@ -39,11 +39,11 @@ Run 'koopa install dotfiles' and 'koopa configure user dotfiles' to resolve."
         '--no-upgrade'
         "--file=${dict['brewfile']}"
     )
-    koopa_dl 'Brewfile' "${dict['brewfile']}"
-    koopa_add_to_path_start "${dict['prefix']}/bin"
-    koopa_brew_reset_permissions
+    _koopa_dl 'Brewfile' "${dict['brewfile']}"
+    _koopa_add_to_path_start "${dict['prefix']}/bin"
+    _koopa_brew_reset_permissions
     "${app['brew']}" analytics off
     "${app['brew']}" bundle install "${install_args[@]}"
-    koopa_brew_doctor
+    _koopa_brew_doctor
     return 0
 }

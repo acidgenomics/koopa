@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -32,25 +32,25 @@ install_from_source() {
         'libaec' # hdf5
         'hdf5'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['autoreconf']="$(koopa_locate_autoreconf)"
-    app['patch']="$(koopa_locate_patch)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['autoreconf']="$(_koopa_locate_autoreconf)"
+    app['patch']="$(_koopa_locate_patch)"
+    app['sed']="$(_koopa_locate_sed --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['bzip2']="$(_koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     cmake['bzip2_include_dir']="${dict['bzip2']}/include"
     cmake['bzip2_libraries']="${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${cmake['bzip2_include_dir']}" \
         "${cmake['zlib_include_dir']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${cmake['bzip2_libraries']}" \
         "${cmake['zlib_library']}"
     cmake_args=(
@@ -69,21 +69,21 @@ install_from_source() {
     )
     dict['url']="https://github.com/pachterlab/kallisto/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     export CMAKE_POLICY_VERSION_MINIMUM=3.5
     export KOOPA_CPU_COUNT=1
-    if koopa_is_macos
+    if _koopa_is_macos
     then
-        app['patch']="$(koopa_locate_patch)"
-        koopa_assert_is_executable "${app['patch']}"
-        dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
-        koopa_assert_is_dir "${dict['patch_prefix']}"
+        app['patch']="$(_koopa_locate_patch)"
+        _koopa_assert_is_executable "${app['patch']}"
+        dict['patch_prefix']="$(_koopa_patch_prefix)/common/kallisto"
+        _koopa_assert_is_dir "${dict['patch_prefix']}"
         dict['patch_file']="${dict['patch_prefix']}/2026-03-21-macos.patch"
         "${app['patch']}" -p1 < "${dict['patch_file']}"
     fi
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
 

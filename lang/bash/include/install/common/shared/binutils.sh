@@ -26,8 +26,8 @@ main() {
     local conf_arg
     build_deps=('bison' 'flex')
     deps=('zlib' 'texinfo')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     conf_args=(
         # > '--disable-multilib'
         # > '--disable-nls'
@@ -52,7 +52,7 @@ main() {
         '--enable-gold'
         '--without-debuginfod'
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         conf_args+=(
             # > 'LEX=flex'
@@ -63,6 +63,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app --jobs=1 "${install_args[@]}"
+    _koopa_install_gnu_app --jobs=1 "${install_args[@]}"
     return 0
 }

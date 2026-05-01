@@ -5,7 +5,7 @@ main() {
     # Uninstall Adobe Creative Cloud preferences.
     # @note Updated 2021-10-30.
     # """
-    koopa_rm --sudo \
+    _koopa_rm --sudo \
         '/Library/Application Support/Adobe'* \
         '/Library/Application Support/regid.'*'.com.adobe' \
         '/Library/Caches/com.'{a,A}'dobe'* \
@@ -13,7 +13,7 @@ main() {
         '/Library/Preferences/com.'{a,A}'dobe'* \
         '/Library/ScriptingAdditions/Adobe Unit Types.osax' \
         '/Users/Shared/Adobe'
-    koopa_rm \
+    _koopa_rm \
         "${HOME}/Documents/Adobe" \
         "${HOME}/Library/Application Support/Adobe"* \
         "${HOME}/Library/Caches/Adobe"* \

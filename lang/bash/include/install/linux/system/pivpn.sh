@@ -11,8 +11,8 @@ main() {
     local -A dict
     dict['file']='pivpn.sh'
     dict['url']='https://install.pivpn.io'
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_chmod 'u+x' "${dict['file']}"
+    _koopa_download "${dict['url']}" "${dict['file']}"
+    _koopa_chmod 'u+x' "${dict['file']}"
     "./${dict['file']}"
     return 0
 }

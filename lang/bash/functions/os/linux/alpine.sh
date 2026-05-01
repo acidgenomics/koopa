@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=all
 
-koopa_alpine_install_system_glibc() {
-    koopa_install_app \
+_koopa_alpine_install_system_glibc() {
+    _koopa_install_app \
         --name='glibc' \
         --platform='alpine' \
         --system \
@@ -10,14 +10,14 @@ koopa_alpine_install_system_glibc() {
         "$@"
 }
 
-koopa_alpine_locate_apk() {
-    koopa_locate_app \
+_koopa_alpine_locate_apk() {
+    _koopa_locate_app \
         '/sbin/apk' \
         "$@"
 }
 
-koopa_alpine_locate_localedef() {
-    koopa_locate_app \
+_koopa_alpine_locate_localedef() {
+    _koopa_locate_app \
         '/usr/glibc-compat/bin/localedef' \
         "$@"
 }

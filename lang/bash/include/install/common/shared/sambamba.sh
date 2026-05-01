@@ -13,50 +13,50 @@ main() {
     # """
     local -A app dict
     local -a build_deps deps
-    koopa_assert_is_not_arm64
+    _koopa_assert_is_not_arm64
     build_deps=('ldc' 'make' 'python')
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('lz4' 'xz' 'zlib')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['ldc']="$(koopa_app_prefix 'ldc')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['ldc']="$(_koopa_app_prefix 'ldc')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/biod/sambamba/archive/refs/tags/\
 v${dict['version']}.tar.gz"
     export CC="${app['cc']}"
     export LIBRARY_PATH="${LIBRARY_PATH:?}"
-    koopa_is_macos && unset -v LDFLAGS
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_find_and_replace_in_file \
+    _koopa_is_macos && unset -v LDFLAGS
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_find_and_replace_in_file \
         --pattern='^(CC=gcc)$' \
         --regex \
         --replacement='# \1' \
         'Makefile'
-    if koopa_is_macos
+    if _koopa_is_macos
     then
-        koopa_find_and_replace_in_file \
+        _koopa_find_and_replace_in_file \
             --pattern='^(LDFLAGS     = -L=-flto=full)$' \
             --regex \
             --replacement='# \1' \
             'Makefile'
     fi
-    koopa_print_env
+    _koopa_print_env
     "${app['make']}" \
         CC="$CC" \
         LIBRARY_PATH="$LIBRARY_PATH" \
         VERBOSE=1 \
         release
-    if ! koopa_is_arm64
+    if ! _koopa_is_arm64
     then
         "${app['make']}" check
     fi
-    koopa_cp \
+    _koopa_cp \
         "bin/sambamba-${dict['version']}" \
         "${dict['prefix']}/bin/sambamba"
     return 0

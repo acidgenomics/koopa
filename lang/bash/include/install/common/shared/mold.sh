@@ -12,16 +12,16 @@ main() {
     local -A dict
     local -a cmake_args deps
     deps+=('mimalloc' 'tbb' 'zlib' 'zstd')
-    koopa_activate_app "${deps[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app "${deps[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_is_linux && dict['jobs']=1
+    _koopa_is_linux && dict['jobs']=1
     dict['url']="https://github.com/rui314/mold/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     cmake_args=(
         '-DCMAKE_SKIP_INSTALL_RULES=OFF'
         '-DMOLD_LTO=ON'
@@ -29,7 +29,7 @@ v${dict['version']}.tar.gz"
         '-DMOLD_USE_SYSTEM_MIMALLOC=ON'
         '-DMOLD_USE_SYSTEM_TBB=ON'
     )
-    koopa_cmake_build \
+    _koopa_cmake_build \
         --jobs="${dict['jobs']}" \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"

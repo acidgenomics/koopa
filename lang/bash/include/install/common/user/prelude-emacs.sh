@@ -12,10 +12,10 @@ main() {
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/bbatsov/prelude.git'
-    koopa_git_clone \
+    _koopa_git_clone \
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
-    koopa_prelude_emacs --no-window-system
+    _koopa_prelude_emacs --no-window-system
     return 0
 }

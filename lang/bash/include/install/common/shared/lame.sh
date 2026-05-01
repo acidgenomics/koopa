@@ -21,15 +21,15 @@ main() {
     )
     dict['url']="https://koopa.acidgenomics.com/src/lame/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_find_and_replace_in_file \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_find_and_replace_in_file \
         --multiline \
         --pattern='lame_init_old\n' \
         --regex \
         --replacement='' \
         'include/libmp3lame.sym'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

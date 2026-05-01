@@ -70,8 +70,8 @@ main() {
     local -a build_deps conf_args deps
     bool['devel']=0
     build_deps=('autoconf' 'automake' 'libtool' 'make' 'pkg-config')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    ! koopa_is_macos && deps+=('bzip2')
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=(
         'xz'
         'zlib' # libpng
@@ -109,40 +109,40 @@ main() {
         'cairo'
         'tcl-tk'
     )
-    koopa_activate_app "${deps[@]}"
-    app['ar']="$(koopa_locate_ar --only-system)"
-    app['awk']="$(koopa_locate_awk)"
-    app['bash']="$(koopa_locate_bash)"
-    ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['cxx']="$(koopa_locate_cxx --only-system)"
-    app['echo']="$(koopa_locate_echo)"
-    app['gfortran']="$(koopa_locate_gfortran --only-system)"
-    app['gzip']="$(koopa_locate_gzip)"
-    app['jar']="$(koopa_locate_jar)"
-    app['java']="$(koopa_locate_java)"
-    app['javac']="$(koopa_locate_javac)"
-    app['less']="$(koopa_locate_less)"
-    app['ln']="$(koopa_locate_ln)"
-    app['make']="$(koopa_locate_make)"
-    app['perl']="$(koopa_locate_perl)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    app['sed']="$(koopa_locate_sed)"
-    app['strip']="$(koopa_locate_strip)"
-    app['tar']="$(koopa_locate_tar)"
-    app['texi2dvi']="$(koopa_locate_texi2dvi)"
-    app['unzip']="$(koopa_locate_unzip)"
-    app['vim']="$(koopa_locate_vim)"
-    app['yacc']="$(koopa_locate_yacc)"
-    app['zip']="$(koopa_locate_zip)"
-    koopa_assert_is_executable "${app[@]}"
-    app['lpr']="$(koopa_locate_lpr --allow-missing)"
-    app['open']="$(koopa_locate_open --allow-missing)"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app "${deps[@]}"
+    app['ar']="$(_koopa_locate_ar --only-system)"
+    app['awk']="$(_koopa_locate_awk)"
+    app['bash']="$(_koopa_locate_bash)"
+    ! _koopa_is_macos && app['bzip2']="$(_koopa_locate_bzip2)"
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['cxx']="$(_koopa_locate_cxx --only-system)"
+    app['echo']="$(_koopa_locate_echo)"
+    app['gfortran']="$(_koopa_locate_gfortran --only-system)"
+    app['gzip']="$(_koopa_locate_gzip)"
+    app['jar']="$(_koopa_locate_jar)"
+    app['java']="$(_koopa_locate_java)"
+    app['javac']="$(_koopa_locate_javac)"
+    app['less']="$(_koopa_locate_less)"
+    app['ln']="$(_koopa_locate_ln)"
+    app['make']="$(_koopa_locate_make)"
+    app['perl']="$(_koopa_locate_perl)"
+    app['pkg_config']="$(_koopa_locate_pkg_config)"
+    app['sed']="$(_koopa_locate_sed)"
+    app['strip']="$(_koopa_locate_strip)"
+    app['tar']="$(_koopa_locate_tar)"
+    app['texi2dvi']="$(_koopa_locate_texi2dvi)"
+    app['unzip']="$(_koopa_locate_unzip)"
+    app['vim']="$(_koopa_locate_vim)"
+    app['yacc']="$(_koopa_locate_yacc)"
+    app['zip']="$(_koopa_locate_zip)"
+    _koopa_assert_is_executable "${app[@]}"
+    app['lpr']="$(_koopa_locate_lpr --allow-missing)"
+    app['open']="$(_koopa_locate_open --allow-missing)"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
-    dict['temurin']="$(koopa_app_prefix 'temurin')"
+    dict['tcl_tk']="$(_koopa_app_prefix 'tcl-tk')"
+    dict['temurin']="$(_koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
     conf_dict['ar']="${app['ar']}"
@@ -152,7 +152,7 @@ main() {
     conf_dict['echo']="${app['echo']}"
     conf_dict['editor']="${app['vim']}"
     conf_dict['fc']="${app['gfortran']}"
-    conf_dict['flibs']="$(koopa_r_gfortran_libs)"
+    conf_dict['flibs']="$(_koopa_r_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['temurin']}"
@@ -167,7 +167,7 @@ main() {
     conf_dict['perl']="${app['perl']}"
     conf_dict['r_batchsave']='--no-save --no-restore'
     conf_dict['r_browser']="${app['open']}"
-    ! koopa_is_macos && conf_dict['r_bzipcmd']="${app['bzip2']}"
+    ! _koopa_is_macos && conf_dict['r_bzipcmd']="${app['bzip2']}"
     conf_dict['r_gzipcmd']="${app['gzip']}"
     conf_dict['r_libs_site']="\${R_HOME}/site-library"
     conf_dict['r_libs_user']="\${R_LIBS_SITE}"
@@ -236,10 +236,10 @@ main() {
     conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
-    ! koopa_is_macos && conf_args+=("R_BZIPCMD=${conf_dict['r_bzipcmd']}")
+    ! _koopa_is_macos && conf_args+=("R_BZIPCMD=${conf_dict['r_bzipcmd']}")
     conf_args+=(
         '--disable-static'
         '--enable-R-profiling'
@@ -303,12 +303,12 @@ main() {
         "TZ=${conf_dict['tz']}"
         "YACC=${conf_dict['yacc']}"
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         dict['texbin']='/Library/TeX/texbin'
         if [[ -d "${dict['texbin']}" ]]
         then
-            koopa_add_to_path_start "${dict['texbin']}"
+            _koopa_add_to_path_start "${dict['texbin']}"
         fi
         # Aqua framework is required to use R with RStudio on macOS. Currently
         # disabled due to build issues on macOS 13 with XCode CLT 14.
@@ -317,15 +317,15 @@ main() {
     if [[ "${bool['devel']}" -eq 1 ]]
     then
         conf_args+=('--program-suffix=dev')
-        app['svn']="$(koopa_locate_svn)"
-        koopa_assert_is_executable "${app['svn']}"
-        dict['rtop']="$(koopa_init_dir 'svn/r')"
+        app['svn']="$(_koopa_locate_svn)"
+        _koopa_assert_is_executable "${app['svn']}"
+        dict['rtop']="$(_koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
         # TODO Rework this as an array and then paste with ','.
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
         # Can debug subversion linkage with:
         # > "${app['svn']}" --version --verbose
-        koopa_alert "Cloning from '${dict['svn_url']}' with subversion \
+        _koopa_alert "Cloning from '${dict['svn_url']}' with subversion \
 into '${dict['rtop']}'."
         "${app['svn']}" \
             --non-interactive \
@@ -334,30 +334,30 @@ into '${dict['rtop']}'."
                 --revision="${dict['version']}" \
                 "${dict['svn_url']}" \
                 "${dict['rtop']}"
-        koopa_cd "${dict['rtop']}"
-        koopa_print "Revision: ${dict['version']}" > 'SVNINFO'
+        _koopa_cd "${dict['rtop']}"
+        _koopa_print "Revision: ${dict['version']}" > 'SVNINFO'
     else
-        dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+        dict['maj_ver']="$(_koopa_major_version "${dict['version']}")"
         dict['url']="https://cloud.r-project.org/src/base/\
 R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
-        koopa_download "${dict['url']}"
-        koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-        koopa_cd 'src'
+        _koopa_download "${dict['url']}"
+        _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+        _koopa_cd 'src'
     fi
     # 'configure' doesn't detect curl 8 correctly.
     export r_cv_have_curl728='yes'
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
+    _koopa_print_env
+    _koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     app['r']="${dict['prefix']}/bin/R"
     app['rscript']="${dict['prefix']}/bin/Rscript"
-    koopa_assert_is_executable "${app['r']}" "${app['rscript']}"
-    koopa_configure_r "${app['r']}"
+    _koopa_assert_is_executable "${app['r']}" "${app['rscript']}"
+    _koopa_configure_r "${app['r']}"
     "${app['rscript']}" -e 'capabilities()'
-    koopa_check_shared_object \
+    _koopa_check_shared_object \
         --name='libR' \
         --prefix="${dict['prefix']}/lib/R/lib"
     return 0

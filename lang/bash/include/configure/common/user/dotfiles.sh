@@ -22,21 +22,21 @@ main() {
     # - https://blog.lazkani.io/posts/dotfiles-with-chezmoi/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
-    koopa_assert_is_not_root
-    app['bash']="$(koopa_locate_bash --allow-bootstrap --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['opt_prefix']="$(koopa_opt_prefix)/dotfiles"
-    dict['df_prefix']="$(koopa_dotfiles_prefix)"
-    dict['df_work_prefix']="$(koopa_dotfiles_work_prefix)"
-    dict['df_private_prefix']="$(koopa_dotfiles_private_prefix)"
-    koopa_assert_is_dir "${dict['opt_prefix']}"
-    koopa_ln "${dict['opt_prefix']}" "${dict['df_prefix']}"
+    _koopa_assert_has_no_args "$#"
+    _koopa_assert_is_not_root
+    app['bash']="$(_koopa_locate_bash --allow-bootstrap --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['opt_prefix']="$(_koopa_opt_prefix)/dotfiles"
+    dict['df_prefix']="$(_koopa_dotfiles_prefix)"
+    dict['df_work_prefix']="$(_koopa_dotfiles_work_prefix)"
+    dict['df_private_prefix']="$(_koopa_dotfiles_private_prefix)"
+    _koopa_assert_is_dir "${dict['opt_prefix']}"
+    _koopa_ln "${dict['opt_prefix']}" "${dict['df_prefix']}"
     dict['install_script']="${dict['df_prefix']}/install"
     dict['work_install_script']="${dict['df_work_prefix']}/install"
     dict['private_install_script']="${dict['df_private_prefix']}/install"
-    koopa_assert_is_file "${dict['install_script']}"
-    koopa_add_to_path_start "$(koopa_dirname "${app['bash']}")"
+    _koopa_assert_is_file "${dict['install_script']}"
+    _koopa_add_to_path_start "$(_koopa_dirname "${app['bash']}")"
     "${app['bash']}" "${dict['install_script']}"
     if [[ -f "${dict['work_install_script']}" ]]
     then

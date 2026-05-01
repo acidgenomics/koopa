@@ -7,7 +7,7 @@ main() {
     # """
     local -a conf_args install_args
     local conf_arg
-    koopa_activate_app 'pcre2'
+    _koopa_activate_app 'pcre2'
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-nls'
@@ -17,6 +17,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

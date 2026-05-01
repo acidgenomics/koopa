@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+_koopa_install_picard() {
+    _koopa_assert_is_not_arm64
+    _koopa_install_app \
+        --name='picard' \
+        "$@"
+}

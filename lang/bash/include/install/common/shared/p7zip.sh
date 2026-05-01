@@ -11,30 +11,30 @@ main() {
     # - https://ports.macports.org/port/p7zip/
     # """
     local -A app dict
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['cxx']="$(koopa_locate_cxx --only-system)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['cxx']="$(_koopa_locate_cxx --only-system)"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/p7zip-project/p7zip/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    if koopa_is_linux
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    if _koopa_is_linux
     then
         dict['makefile']='makefile.linux_any_cpu'
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
         dict['makefile']='makefile.macosx_llvm_64bits'
     fi
-    koopa_assert_is_file "${dict['makefile']}"
-    koopa_ln "${dict['makefile']}" 'makefile.machine'
+    _koopa_assert_is_file "${dict['makefile']}"
+    _koopa_ln "${dict['makefile']}" 'makefile.machine'
     CC="${app['cc']}"
     CXX="${app['cxx']}"
     export CC CXX
-    koopa_print_env
+    _koopa_print_env
     # The 'all3' here refers to '7z', '7za', and '7zr'.
     "${app['make']}" all3 \
         ALLFLAGS_C="${CFLAGS:-}" \

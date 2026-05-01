@@ -11,17 +11,17 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only \
+    _koopa_activate_app --build-only \
         'autoconf' \
         'automake' \
         'libtool' \
         'm4' \
         'pkg-config'
-    app['autoreconf']="$(koopa_locate_autoreconf)"
-    koopa_assert_is_executable "${app[@]}"
+    app['autoreconf']="$(_koopa_locate_autoreconf)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['version2']="$(koopa_major_minor_patch_version "${dict['version']}")"
+    dict['version2']="$(_koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-static'
@@ -29,10 +29,10 @@ main() {
     )
     dict['url']="https://github.com/kkos/oniguruma/releases/download/\
 v${dict['version']}/onig-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     "${app['autoreconf']}" --force --install --verbose
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -20,8 +20,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app \
         'zlib' \
         'apr' \
         'apr-util' \
@@ -31,11 +31,11 @@ main() {
         'ruby' \
         'serf' \
         'sqlite'
-    dict['apr']="$(koopa_app_prefix 'apr')"
-    dict['apr_util']="$(koopa_app_prefix 'apr-util')"
+    dict['apr']="$(_koopa_app_prefix 'apr')"
+    dict['apr_util']="$(_koopa_app_prefix 'apr-util')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['serf']="$(koopa_app_prefix 'serf')"
-    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
+    dict['serf']="$(_koopa_app_prefix 'serf')"
+    dict['sqlite']="$(_koopa_app_prefix 'sqlite')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-debug'
@@ -58,9 +58,9 @@ main() {
     )
     dict['url']="https://archive.apache.org/dist/subversion/\
 subversion-${dict['version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

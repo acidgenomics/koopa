@@ -30,18 +30,18 @@ main() {
         'ncurses'
         'icu4c'
     )
-    if ! koopa_is_macos
+    if ! _koopa_is_macos
     then
         deps+=('libxml2')
     fi
-    koopa_activate_app "${deps[@]}"
-    dict['bison']="$(koopa_app_prefix 'bison')"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
-    dict['libunistring']="$(koopa_app_prefix 'libunistring')"
-    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
-    dict['ncurses']="$(koopa_app_prefix 'ncurses')"
+    _koopa_activate_app "${deps[@]}"
+    dict['bison']="$(_koopa_app_prefix 'bison')"
+    dict['libiconv']="$(_koopa_app_prefix 'libiconv')"
+    dict['libunistring']="$(_koopa_app_prefix 'libunistring')"
+    dict['libxml2']="$(_koopa_app_prefix 'libxml2')"
+    dict['ncurses']="$(_koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     conf_args+=(
         # > '--disable-debug'
         # > '--disable-silent-rules'
@@ -65,7 +65,7 @@ main() {
         "--with-libunistring-prefix=${dict['libunistring']}"
         '--without-emacs'
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         conf_args+=(
             '--with-included-gettext'
@@ -76,10 +76,10 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app \
+    _koopa_install_gnu_app \
         --compress-ext='xz' \
         "${install_args[@]}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${dict['prefix']}/include/libintl.h" \
         "${dict['prefix']}/lib/libintl.${dict['shared_ext']}"
     return 0

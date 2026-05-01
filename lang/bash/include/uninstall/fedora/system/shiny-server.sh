@@ -7,6 +7,6 @@ main() {
     #
     # Consider deleting 'shiny' user.
     # """
-    koopa_fedora_dnf_remove 'shiny-server'
+    _koopa_fedora_dnf_remove 'shiny-server'
     return 0
 }

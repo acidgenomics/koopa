@@ -12,22 +12,22 @@ main() {
     # """
     local -A app dict
     local -a b2_args bootstrap_args deps
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('icu4c' 'xz' 'zlib' 'zstd')
-    koopa_activate_app "${deps[@]}"
-    app['cc']="$(koopa_locate_cc --only-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app "${deps[@]}"
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['icu4c']="$(_koopa_app_prefix 'icu4c')"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['toolset']="$(koopa_basename "${app['cc']}")"
+    dict['toolset']="$(_koopa_basename "${app['cc']}")"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['snake_version']="$(koopa_snake_case "${dict['version']}")"
+    dict['snake_version']="$(_koopa_snake_case "${dict['version']}")"
     dict['url']="https://boostorg.jfrog.io/artifactory/main/release/\
 ${dict['version']}/source/boost_${dict['snake_version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     bootstrap_args=(
         "--libdir=${dict['prefix']}/lib"
         "--prefix=${dict['prefix']}"
@@ -52,7 +52,7 @@ ${dict['version']}/source/boost_${dict['snake_version']}.tar.bz2"
         'variant=release'
         'install'
     )
-    koopa_print_env
+    _koopa_print_env
     ./bootstrap.sh --help
     ./bootstrap.sh "${bootstrap_args[@]}"
     ./b2 --help

@@ -12,9 +12,9 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'bash'
-    app['bash']="$(koopa_locate_bash)"
-    koopa_assert_is_executable "${app['bash']}"
+    _koopa_activate_app --build-only 'bash'
+    app['bash']="$(_koopa_locate_bash)"
+    _koopa_assert_is_executable "${app['bash']}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -25,9 +25,9 @@ main() {
     )
     dict['url']="https://github.com/wofr06/lesspipe/archive/refs/\
 tags/v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

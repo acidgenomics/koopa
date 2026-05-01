@@ -28,8 +28,8 @@ main() {
         'texinfo'
         'gnutls'
     )
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app "${deps[@]}"
     conf_args=(
         # Used in Homebrew formula:
         # > '--with-gnutls'
@@ -43,7 +43,7 @@ main() {
         '--without-selinux'
         '--without-x'
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         conf_args+=('--without-ns')
     fi
@@ -51,6 +51,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

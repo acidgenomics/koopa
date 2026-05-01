@@ -17,8 +17,8 @@ main() {
         '/usr/local/bin/python3'
         '/usr/local/bin/python3-config'
     )
-    koopa_rm --sudo "${rm_files[@]}"
-    koopa_rm --sudo \
+    _koopa_rm --sudo "${rm_files[@]}"
+    _koopa_rm --sudo \
         '/Applications/Python'* \
         '/usr/local/bin/2to3-'* \
         '/usr/local/bin/idle3.'* \

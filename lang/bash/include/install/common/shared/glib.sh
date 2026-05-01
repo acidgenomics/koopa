@@ -18,30 +18,30 @@ main() {
     build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python')
     deps=('zlib')
     # Linking to our gettext causes build to fail for 2.76.5.
-    # > koopa_is_macos && deps+=('gettext')
+    # > _koopa_is_macos && deps+=('gettext')
     deps+=('libffi' 'pcre2')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['meson']="$(koopa_locate_meson)"
-    app['ninja']="$(koopa_locate_ninja)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['meson']="$(_koopa_locate_meson)"
+    app['ninja']="$(_koopa_locate_ninja)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     dict['url']="https://download.gnome.org/sources/glib/\
 ${dict['maj_min_ver']}/glib-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_mkdir 'build'
-    koopa_cd 'build'
-    koopa_print_env
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_mkdir 'build'
+    _koopa_cd 'build'
+    _koopa_print_env
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
         '-Dlibdir=lib'
     )
-    koopa_dl 'meson args' "${meson_args[*]}"
+    _koopa_dl 'meson args' "${meson_args[*]}"
     "${app['meson']}" "${meson_args[@]}" ..
     "${app['ninja']}" -v
     "${app['ninja']}" install -v

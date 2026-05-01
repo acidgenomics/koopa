@@ -10,23 +10,23 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
+    _koopa_activate_app --build-only 'pkg-config'
+    dict['gnu_mirror']="$(_koopa_gnu_mirror_url)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=("--prefix=${dict['prefix']}")
-    if koopa_is_alpine
+    if _koopa_is_alpine
     then
         conf_args+=('--without-bash-malloc')
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
         CFLAGS="-DSSH_SOURCE_BASHRC ${CFLAGS:-}"
         export CFLAGS
     fi
     dict['url']="${dict['gnu_mirror']}/bash/bash-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

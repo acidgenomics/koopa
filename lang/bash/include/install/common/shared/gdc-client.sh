@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -27,16 +27,16 @@ dependencies:
   - python =3.12
   - gdc-client =${dict['version']}
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${dict['conda_env_file']}" \
         --string="${dict['conda_env_string']}"
-    koopa_install_conda_package --file="${dict['conda_env_file']}"
+    _koopa_install_conda_package --file="${dict['conda_env_file']}"
     return 0
 
 }
 
 main() {
-    if koopa_has_firewall
+    if _koopa_has_firewall
     then
         install_from_conda_python312
     else

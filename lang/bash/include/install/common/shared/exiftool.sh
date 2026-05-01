@@ -8,6 +8,6 @@ main() {
     # Ensure release is tagged production before submitting.
     # https://exiftool.org/history.html
     # """
-    koopa_install_perl_package --cpan-path='EXIFTOOL/Image-ExifTool'
+    _koopa_install_perl_package --cpan-path='EXIFTOOL/Image-ExifTool'
     return 0
 }

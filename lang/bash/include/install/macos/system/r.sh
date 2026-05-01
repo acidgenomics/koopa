@@ -26,11 +26,11 @@ main() {
     # """
     local -A app bool dict
     bool['backup']=0
-    app['installer']="$(koopa_macos_locate_installer)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
+    app['installer']="$(_koopa_macos_locate_installer)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(_koopa_arch)"
     dict['framework_prefix']='/Library/Frameworks/R.framework'
-    dict['os']="$(koopa_kebab_case "$(koopa_macos_os_codename)")"
+    dict['os']="$(_koopa_kebab_case "$(_koopa_macos_os_codename)")"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['arch']}" in
         'aarch64')
@@ -45,42 +45,42 @@ main() {
     # >         dict['os']='big-sur'
     # >         ;;
     # >     *)
-    # >         koopa_stop 'Unsupported OS.'
+    # >         _koopa_stop 'Unsupported OS.'
     # >         ;;
     # > esac
     dict['os']='big-sur'
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     dict['prefix']="${dict['framework_prefix']}/Versions/\
 ${dict['maj_min_ver']}-${dict['arch']}/Resources"
     [[ -d "${dict['prefix']}/site-library" ]] && bool['backup']=1
     if [[ "${bool['backup']}" -eq 1 ]]
     then
-        koopa_alert "Backing up site library."
-        koopa_mv --sudo "${dict['prefix']}/site-library" 'site-library'
+        _koopa_alert "Backing up site library."
+        _koopa_mv --sudo "${dict['prefix']}/site-library" 'site-library'
     fi
     dict['url']="https://cran.r-project.org/bin/macosx/\
 ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
-    koopa_download "${dict['url']}"
-    koopa_sudo \
+    _koopa_download "${dict['url']}"
+    _koopa_sudo \
         "${app['installer']}" \
-            -pkg "$(koopa_basename "${dict['url']}")" \
+            -pkg "$(_koopa_basename "${dict['url']}")" \
             -target '/'
-    koopa_assert_is_dir "${dict['prefix']}"
+    _koopa_assert_is_dir "${dict['prefix']}"
     if [[ "${bool['backup']}" -eq 1 ]]
     then
-        koopa_alert "Restoring site library."
-        koopa_mv --sudo 'site-library' "${dict['prefix']}/site-library"
+        _koopa_alert "Restoring site library."
+        _koopa_mv --sudo 'site-library' "${dict['prefix']}/site-library"
     fi
     app['r']="${dict['prefix']}/bin/R"
-    koopa_assert_is_installed "${app['r']}"
+    _koopa_assert_is_installed "${app['r']}"
     if [[ ! -d '/opt/gfortran' ]]
     then
-        koopa_macos_install_system_r_gfortran
+        _koopa_macos_install_system_r_gfortran
     fi
     if [[ ! -f '/usr/local/include/omp.h' ]]
     then
-        koopa_macos_install_system_r_xcode_openmp
+        _koopa_macos_install_system_r_xcode_openmp
     fi
-    koopa_configure_r "${app['r']}"
+    _koopa_configure_r "${app['r']}"
     return 0
 }

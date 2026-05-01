@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -19,20 +19,20 @@ install_from_source() {
     #
     local -A app dict
     local -a includes libs
-    koopa_assert_is_not_arm64
-    koopa_activate_app 'zlib'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_assert_is_not_arm64
+    _koopa_activate_app 'zlib'
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/lh3/minimap2/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
     includes=(
         "-I${dict['zlib']}/include"
     )
@@ -46,7 +46,7 @@ v${dict['version']}.tar.gz"
         INCLUDES="${includes[*]}" \
         LIBS="${libs[*]}" \
         VERBOSE=1
-    koopa_cp --target-directory="${dict['prefix']}/bin" 'minimap2'
+    _koopa_cp --target-directory="${dict['prefix']}/bin" 'minimap2'
     return 0
 }
 

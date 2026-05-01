@@ -15,15 +15,15 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://nim-lang.org/download/nim-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
     ./build.sh
     bin/nim c -d:release koch
     ./koch boot -d:release -d:nimUseLinenoise
     ./koch tools
-    koopa_cp --target-directory="${dict['prefix']}" ./*
-    koopa_assert_is_installed "${dict['prefix']}/bin/nim"
+    _koopa_cp --target-directory="${dict['prefix']}" ./*
+    _koopa_assert_is_installed "${dict['prefix']}/bin/nim"
     return 0
 }

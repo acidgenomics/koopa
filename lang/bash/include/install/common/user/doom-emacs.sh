@@ -24,18 +24,18 @@ main() {
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/hlissner/doom-emacs.git'
-    koopa_git_clone \
+    _koopa_git_clone \
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"
     app['doom']="${dict['prefix']}/bin/doom"
-    koopa_assert_is_installed "${app['doom']}"
-    if koopa_is_linux
+    _koopa_assert_is_installed "${app['doom']}"
+    if _koopa_is_linux
     then
-        koopa_activate_app --build-only 'emacs'
-    elif koopa_is_macos
+        _koopa_activate_app --build-only 'emacs'
+    elif _koopa_is_macos
     then
-        koopa_add_to_path_start "$(koopa_homebrew_prefix)/bin"
+        _koopa_add_to_path_start "$(_koopa_homebrew_prefix)/bin"
     fi
     "${app['doom']}" install \
         --debug \

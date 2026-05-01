@@ -7,13 +7,13 @@ main() {
     # @seealso
     # - https://www.java.com/en/download/help/mac_uninstall_java.xml
     # """
-    koopa_rm --sudo \
+    _koopa_rm --sudo \
         '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin' \
         '/Library/LaunchAgents/com.oracle.java.Java-Updater.plist' \
         '/Library/LaunchDaemons/com.oracle.java.Helper-Tool.plist' \
         '/Library/PreferencePanes/JavaControlPanel.prefPane' \
         '/Library/Preferences/com.oracle.java.Helper-Tool.plist'
-    koopa_rm \
+    _koopa_rm \
         "${HOME}/Library/Caches/com.oracle.java.Java-Updater" \
         "${HOME}/Library/Application Support/Oracle/Java" \
         "${HOME}/Library/Preferences/com.apple.java.util.prefs.plist" \

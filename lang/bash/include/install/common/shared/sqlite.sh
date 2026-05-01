@@ -15,10 +15,10 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'zlib' 'readline'
-    app['sed']="$(koopa_locate_sed --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'zlib' 'readline'
+    app['sed']="$(_koopa_locate_sed --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -49,12 +49,12 @@ main() {
             dict['year']='2020'
             ;;
         *)
-            koopa_stop "Unsupported version: '${dict['version']}'."
+            _koopa_stop "Unsupported version: '${dict['version']}'."
             ;;
     esac
     # e.g. '3.32.3' to '3320300'.
     dict['file_version']="$( \
-        koopa_print "${dict['version']}" \
+        _koopa_print "${dict['version']}" \
         | "${app['sed']}" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
     )"
     conf_args=(
@@ -67,12 +67,12 @@ main() {
         '--enable-threadsafe'
         "--prefix=${dict['prefix']}"
     )
-    koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
+    _koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     dict['url']="https://www.sqlite.org/${dict['year']}/\
 sqlite-autoconf-${dict['file_version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

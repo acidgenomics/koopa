@@ -17,10 +17,10 @@ main() {
     # """
     local -A app dict
     local -a loc_macros make_args
-    koopa_activate_app --build-only 'make'
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'make'
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -29,19 +29,19 @@ main() {
             dict['patch_version']='28'
             ;;
         *)
-            koopa_stop 'Unsupported version.'
+            _koopa_stop 'Unsupported version.'
             ;;
     esac
     dict['url']="https://koopa.acidgenomics.com/src/unzip/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_apply_debian_patch_set \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_apply_debian_patch_set \
         --name='unzip' \
         --patch-version="${dict['patch_version']}" \
         --target='src' \
         --version="${dict['version']}"
-    koopa_cd 'src'
+    _koopa_cd 'src'
     # These macros also follow Ubuntu, and are required to:
     # - Correctly handle large archives (> 4GB).
     # - Extract & print archive contents with non-latin characters.
@@ -57,13 +57,13 @@ ${dict['version']}.tar.gz"
         "CC=${app['cc']}"
         "LOC=${loc_macros[*]}"
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         make_args+=('LFLAGS1=-liconv' 'macosx')
     else
         make_args+=('generic')
     fi
-    koopa_print_env
+    _koopa_print_env
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
     "${app['make']}" -f 'unix/Makefile' check
     "${app['make']}" -f 'unix/Makefile' \

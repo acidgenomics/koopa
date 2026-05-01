@@ -21,7 +21,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/gohugoio/hugo/archive/\
 v${dict['version']}.tar.gz"
-    koopa_build_go_package \
+    _koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --tags="${dict['tags']}" \
         --url="${dict['url']}"

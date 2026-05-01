@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+_koopa_admin_group_name() {
+    # """
+    # Return the administrator group name.
+    # @note Updated 2023-03-26.
+    #
+    # Usage of 'groups' can be terribly slow for domain users. Instead of grep
+    # matching against 'groups' return, just set the expected default per Linux
+    # distro. In the event that we're unsure, the function will intentionally
+    # error.
+    # """
+    local group
+    _koopa_assert_has_no_args "$#"
+    if _koopa_is_root
+    then
+        group='root'
+    elif _koopa_is_alpine
+    then
+        group='wheel'
+    elif _koopa_is_arch
+    then
+        group='wheel'
+    elif _koopa_is_debian_like
+    then
+        group='sudo'
+    elif _koopa_is_fedora_like
+    then
+        group='wheel'
+    elif _koopa_is_macos
+    then
+        group='admin'
+    elif _koopa_is_opensuse
+    then
+        group='wheel'
+    else
+        _koopa_stop 'Failed to determine admin group.'
+    fi
+    _koopa_print "$group"
+    return 0
+}

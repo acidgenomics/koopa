@@ -19,14 +19,14 @@ main() {
     # - https://www.sens.buffalo.edu/software/conda
     # """
     local -A app dict
-    app['bash']="$(koopa_locate_bash --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['os_type']="$(koopa_os_type)"
+    app['bash']="$(_koopa_locate_bash --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(_koopa_arch)" # e.g. 'x86_64'.
+    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['os_type']="$(_koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_version']='3.13'
-    if koopa_has_firewall
+    if _koopa_has_firewall
     then
         dict['py_version']='3.12'
     fi
@@ -45,7 +45,7 @@ main() {
             dict['os_type2']='Linux'
             ;;
         *)
-            koopa_stop "'${dict['os_type']}' is not supported."
+            _koopa_stop "'${dict['os_type']}' is not supported."
             ;;
     esac
     while (("$#"))
@@ -62,32 +62,32 @@ main() {
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa_invalid_arg "$1"
+                _koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    dict['py_version']="$(koopa_major_minor_version "${dict['py_version']}")"
-    dict['py_major_version']="$(koopa_major_version "${dict['py_version']}")"
+    dict['py_version']="$(_koopa_major_minor_version "${dict['py_version']}")"
+    dict['py_major_version']="$(_koopa_major_version "${dict['py_version']}")"
     dict['py_version2']="$( \
-        koopa_gsub \
+        _koopa_gsub \
             --fixed \
             --pattern='.' \
             --replacement='' \
-            "$(koopa_major_minor_version "${dict['py_version']}")" \
+            "$(_koopa_major_minor_version "${dict['py_version']}")" \
     )"
     dict['script']="Miniconda${dict['py_major_version']}-\
 py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
     dict['url']="https://repo.anaconda.com/miniconda/${dict['script']}"
-    koopa_download "${dict['url']}" "${dict['script']}"
-    koopa_print_env
+    _koopa_download "${dict['url']}" "${dict['script']}"
+    _koopa_print_env
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
     # Note that this step configures conda to not use Anaconda channels.
-    koopa_cp \
-        "${dict['koopa_prefix']}/etc/conda/condarc" \
+    _koopa_cp \
+        "${dict['_koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
     app['conda']="${dict['prefix']}/bin/conda"
-    koopa_assert_is_installed "${app['conda']}"
+    _koopa_assert_is_installed "${app['conda']}"
     "${app['conda']}" list
     "${app['conda']}" info --all
     "${app['conda']}" config --show

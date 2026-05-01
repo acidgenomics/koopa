@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+
+_koopa_r_configure_ldpaths() {
+    # """
+    # Configure 'ldpaths' file for system R LD linker configuration.
+    # @note Updated 2024-12-10.
+    #
+    # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
+    # correctly on macOS.
+    #
+    # Usage of ': ${KEY=VALUE}' here stores the variable internally, but does
+    # not export into R session, and is not accessible with 'Sys.getenv()'.
+    #
+    # @section R-spatial evolution:
+    #
+    # R-spatial packages are being reworked. rgdal, rgeos, and maptools will be
+    # retired in 2023 in favor of more modern packages, such as sf. When this
+    # occurs, it may be possible to remove the geospatial libraries (geos, proj,
+    # gdal) as dependencies here.
+    #
+    # https://r-spatial.org/r/2022/04/12/evolution.html
+    #
+    # @seealso
+    # - https://github.com/wch/r-source/blob/HEAD/etc/ldpaths.in
+    # """
+    local -A app bool dict ld_lib_app_arr
+    local -a keys ld_lib_arr lines
+    local key
+    _koopa_assert_has_args_eq "$#" 1
+    app['r']="${1:?}"
+    _koopa_assert_is_executable "${app[@]}"
+    bool['system']=0
+    bool['use_apps']=1
+    bool['use_local']=0
+    ! _koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    dict['arch']="$(_koopa_arch)"
+    if _koopa_is_macos
+    then
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['arch']='arm64'
+                ;;
+        esac
+    fi
+    if [[ "${bool['use_apps']}" -eq 1 ]]
+    then
+        dict['java_home']="$(_koopa_app_prefix 'temurin')"
+    else
+        if _koopa_is_linux
+        then
+            dict['java_home']='/usr/lib/jvm/default-java'
+        elif _koopa_is_macos
+        then
+            dict['java_home']="$(/usr/libexec/java_home)"
+        fi
+    fi
+    _koopa_assert_is_dir "${dict['java_home']}"
+    lines=()
+    lines+=(": \${JAVA_HOME=${dict['java_home']}}")
+    if _koopa_is_macos
+    then
+        lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
+libexec/Contents/Home/lib/server}")
+    else
+        lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
+libexec/lib/server}")
+    fi
+    if [[ "${bool['use_apps']}" -eq 1 ]]
+    then
+        ! _koopa_is_macos && keys+=('bzip2')
+        keys+=(
+            # > 'jpeg'
+            # > 'libuv'
+            'cairo'
+            'curl'
+            'fontconfig'
+            'freetype'
+            'fribidi'
+            'gdal'
+            'geos'
+            'glib'
+            # > 'graphviz'
+            'harfbuzz'
+            'hdf5'
+            'icu4c' # libxml2
+            'imagemagick'
+            'libffi'
+            'libgit2'
+            'libiconv'
+            'libjpeg-turbo'
+            'libpng'
+            'libssh2'
+            'libtiff'
+            'libxml2'
+            'openssl'
+            'pcre'
+            'pcre2'
+            'pixman'
+            'proj'
+            # > 'python'
+            'readline'
+            'sqlite'
+            'xorg-libice'
+            'xorg-libpthread-stubs'
+            'xorg-libsm'
+            'xorg-libx11'
+            'xorg-libxau'
+            'xorg-libxcb'
+            'xorg-libxdmcp'
+            'xorg-libxext'
+            'xorg-libxrandr'
+            'xorg-libxrender'
+            'xorg-libxt'
+            'xz'
+            'zlib'
+            'zstd'
+        )
+        if _koopa_is_macos || [[ "${bool['system']}" -eq 0 ]]
+        then
+            keys+=('gettext')
+        fi
+        for key in "${keys[@]}"
+        do
+            local prefix
+            prefix="$(_koopa_app_prefix "$key")"
+            _koopa_assert_is_dir "$prefix"
+            ld_lib_app_arr[$key]="$prefix"
+        done
+        for i in "${!ld_lib_app_arr[@]}"
+        do
+            ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+        done
+        _koopa_assert_is_dir "${ld_lib_app_arr[@]}"
+    fi
+    ld_lib_arr=()
+    # Alternative approach, that uses absolute path:
+    # > ld_lib_arr+=("${dict['r_prefix']}/lib")
+    ld_lib_arr+=("\${R_HOME}/lib")
+    if [[ "${bool['use_local']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
+    then
+        ld_lib_arr+=('/usr/local/lib')
+    fi
+    if [[ "${bool['use_apps']}" -eq 1 ]]
+    then
+        ld_lib_arr+=("${ld_lib_app_arr[@]}")
+    fi
+    # > if _koopa_is_macos && [[ "${bool['system']}" -eq 1 ]]
+    # > then
+    # >     dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
+    # >     _koopa_assert_is_dir "${dict['r_opt_libdir']}"
+    # >     ld_lib_arr+=("${dict['r_opt_libdir']}")
+    # > fi
+    if _koopa_is_linux
+    then
+        dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
+        _koopa_assert_is_dir "${dict['sys_libdir']}" '/usr/lib' '/lib'
+        ld_lib_arr+=("${dict['sys_libdir']}" '/usr/lib' '/lib')
+    fi
+    ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
+    dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
+    lines+=(
+        "R_LD_LIBRARY_PATH=\"${dict['library_path']}\""
+    )
+    if _koopa_is_linux
+    then
+        lines+=(
+            "LD_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
+            'export LD_LIBRARY_PATH'
+        )
+    elif _koopa_is_macos
+    then
+        lines+=(
+            "DYLD_FALLBACK_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
+            'export DYLD_FALLBACK_LIBRARY_PATH'
+        )
+    fi
+    dict['r_prefix']="$(_koopa_r_prefix "${app['r']}")"
+    _koopa_assert_is_dir "${dict['r_prefix']}"
+    dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    dict['file_bak']="${dict['file']}.bak"
+    _koopa_assert_is_file "${dict['file']}"
+    dict['string']="$(_koopa_print "${lines[@]}")"
+    _koopa_alert_info "Modifying '${dict['file']}'."
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            _koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+        fi
+        _koopa_rm --sudo "${dict['file']}"
+        _koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+        _koopa_chmod --sudo 0644 "${dict['file']}"
+    else
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            _koopa_cp "${dict['file']}" "${dict['file_bak']}"
+        fi
+        _koopa_rm "${dict['file']}"
+        _koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
+    return 0
+}

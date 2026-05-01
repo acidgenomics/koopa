@@ -18,7 +18,7 @@ main() {
     local -a build_deps conf_args deps install_args
     local conf_arg
     build_deps=('sed' 'texinfo')
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=(
         'brotli'
         'xz'
@@ -42,12 +42,12 @@ main() {
         # > 'lzlib'
         # > 'p11-kit'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    dict['gettext']="$(koopa_app_prefix 'gettext')"
-    dict['sed']="$(koopa_app_prefix 'sed')"
-    dict['ssl']="$(koopa_app_prefix 'openssl')"
-    # > dict['lzlib']="$(koopa_app_prefix 'lzlib')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    dict['gettext']="$(_koopa_app_prefix 'gettext')"
+    dict['sed']="$(_koopa_app_prefix 'sed')"
+    dict['ssl']="$(_koopa_app_prefix 'openssl')"
+    # > dict['lzlib']="$(_koopa_app_prefix 'lzlib')"
     # > export LZIP_CFLAGS="-I${dict['lzlib']}/include"
     # > export LZIP_LIBS="-L${dict['lzlib']}/lib -llz"
     conf_args=(
@@ -63,13 +63,13 @@ main() {
         install_args+=('-D' "$conf_arg")
     done
     # The pattern used in 'docs/wget2_md2man.sh.in' doesn't work with bsd sed.
-    koopa_mkdir 'bin'
+    _koopa_mkdir 'bin'
     (
-        koopa_cd 'bin'
-        koopa_ln "${dict['sed']}/bin/gsed" 'sed'
+        _koopa_cd 'bin'
+        _koopa_ln "${dict['sed']}/bin/gsed" 'sed'
     )
-    koopa_add_to_path_start "$(koopa_realpath 'bin')"
-    koopa_install_gnu_app \
+    _koopa_add_to_path_start "$(_koopa_realpath 'bin')"
+    _koopa_install_gnu_app \
         --mirror='https://mirrors.kernel.org/gnu' \
         --parent-name='wget' \
         "${install_args[@]}"

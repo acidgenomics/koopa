@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../lang/bash/include/header.sh"
 
-koopa_move_into_dated_dirs_by_timestamp "$@"
+_koopa_move_into_dated_dirs_by_timestamp "$@"

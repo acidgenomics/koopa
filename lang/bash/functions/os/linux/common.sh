@@ -1,73 +1,73 @@
 #!/usr/bin/env bash
 # shellcheck disable=all
 
-koopa_linux_add_user_to_etc_passwd() {
+_koopa_linux_add_user_to_etc_passwd() {
     local -A dict
-    koopa_assert_has_args_le "$#" 1
+    _koopa_assert_has_args_le "$#" 1
     dict['passwd_file']='/etc/passwd'
     dict['user']="${1:-}"
-    koopa_assert_is_file "${dict['passwd_file']}"
-    [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
-    if ! koopa_file_detect_fixed \
+    _koopa_assert_is_file "${dict['passwd_file']}"
+    [[ -z "${dict['user']}" ]] && dict['user']="$(_koopa_user_name)"
+    if ! _koopa_file_detect_fixed \
         --file="${dict['passwd_file']}" \
         --pattern="${dict['user']}" \
         --sudo
     then
-        koopa_alert "Updating '${dict['passwd_file']}' to \
+        _koopa_alert "Updating '${dict['passwd_file']}' to \
 include '${dict['user']}'."
         dict['user_string']="$(getent passwd "${dict['user']}")"
-        koopa_sudo_append_string \
+        _koopa_sudo_append_string \
             --file="${dict['passwd_file']}" \
             --string="${dict['user_string']}"
     else
-        koopa_alert_note "'${dict['user']}' already defined \
+        _koopa_alert_note "'${dict['user']}' already defined \
 in '${dict['passwd_file']}'."
     fi
     return 0
 }
 
-koopa_linux_add_user_to_group() {
+_koopa_linux_add_user_to_group() {
     local -A app dict
-    koopa_assert_has_args_le "$#" 2
-    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_args_le "$#" 2
+    app['gpasswd']="$(_koopa_linux_locate_gpasswd)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['group']="${1:?}"
     dict['user']="${2:-}"
-    [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
-    koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
-    koopa_sudo \
+    [[ -z "${dict['user']}" ]] && dict['user']="$(_koopa_user_name)"
+    _koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
+    _koopa_sudo \
         "${app['gpasswd']}" \
             --add "${dict['user']}" "${dict['group']}"
     return 0
 }
 
-koopa_linux_aws_ec2_instance_id() {
+_koopa_linux_aws_ec2_instance_id() {
     local -A app dict
-    koopa_assert_has_no_args "$#"
-    app['ec2_metadata']="$(koopa_linux_locate_ec2_metadata)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_no_args "$#"
+    app['ec2_metadata']="$(_koopa_linux_locate_ec2_metadata)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['string']="$("${app['ec2_metadata']}" --instance-id)"
     [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
+    _koopa_print "${dict['string']}"
     return 0
 }
 
-koopa_linux_aws_ec2_instance_type() {
+_koopa_linux_aws_ec2_instance_type() {
     local -A app dict
-    koopa_assert_has_no_args "$#"
-    app['ec2_metadata']="$(koopa_linux_locate_ec2_metadata)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_no_args "$#"
+    app['ec2_metadata']="$(_koopa_linux_locate_ec2_metadata)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['string']="$("${app['ec2_metadata']}" --instance-type)"
     [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
+    _koopa_print "${dict['string']}"
     return 0
 }
 
-koopa_linux_aws_ec2_stop() {
+_koopa_linux_aws_ec2_stop() {
     local -A app dict
-    app['aws']="$(koopa_locate_aws)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['id']="$(koopa_linux_aws_ec2_instance_id)"
+    app['aws']="$(_koopa_locate_aws)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['id']="$(_koopa_linux_aws_ec2_instance_id)"
     [[ -n "${dict['id']}" ]] || return 1
     dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
@@ -82,12 +82,12 @@ koopa_linux_aws_ec2_stop() {
                 shift 2
                 ;;
             *)
-                koopa_invalid_arg "$1"
+                _koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    koopa_alert "Stopping EC2 instance '${dict['id']}'."
+    _koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
+    _koopa_alert "Stopping EC2 instance '${dict['id']}'."
     "${app['aws']}" ec2 stop-instances \
         --instance-ids "${dict['id']}" \
         --no-cli-pager \
@@ -96,11 +96,11 @@ koopa_linux_aws_ec2_stop() {
     return 0
 }
 
-koopa_linux_aws_ec2_terminate() {
+_koopa_linux_aws_ec2_terminate() {
     local -A app dict
-    app['aws']="$(koopa_locate_aws)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['id']="$(koopa_linux_aws_ec2_instance_id)"
+    app['aws']="$(_koopa_locate_aws)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['id']="$(_koopa_linux_aws_ec2_instance_id)"
     [[ -n "${dict['id']}" ]] || return 1
     dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
@@ -115,11 +115,11 @@ koopa_linux_aws_ec2_terminate() {
                 shift 2
                 ;;
             *)
-                koopa_invalid_arg "$1"
+                _koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
+    _koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     "${app['aws']}" ec2 terminate-instances \
         --instance-ids "${dict['id']}" \
         --no-cli-pager \
@@ -128,12 +128,12 @@ koopa_linux_aws_ec2_terminate() {
     return 0
 }
 
-koopa_linux_bcl2fastq_indrops() {
+_koopa_linux_bcl2fastq_indrops() {
     local -A app dict
-    koopa_assert_has_no_args "$#"
-    app['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
-    app['tee']="$(koopa_locate_tee --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_no_args "$#"
+    app['bcl2fastq']="$(_koopa_linux_locate_bcl2fastq)"
+    app['tee']="$(_koopa_locate_tee --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['log_file']='bcl2fastq-indrops.log'
     "${app['bcl2fastq']}" \
         --use-bases-mask 'y*,y*,y*,y*' \
@@ -143,209 +143,209 @@ koopa_linux_bcl2fastq_indrops() {
     return 0
 }
 
-koopa_linux_configure_system_lmod() {
-    koopa_configure_app \
+_koopa_linux_configure_system_lmod() {
+    _koopa_configure_app \
         --name='lmod' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_configure_system_rstudio_server() {
-    koopa_configure_app \
+_koopa_linux_configure_system_rstudio_server() {
+    _koopa_configure_app \
         --name='rstudio-server' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_configure_system_sshd() {
-    koopa_configure_app \
+_koopa_linux_configure_system_sshd() {
+    _koopa_configure_app \
         --name='sshd' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_delete_cache() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_is_docker
+_koopa_linux_delete_cache() {
+    _koopa_assert_has_no_args "$#"
+    if ! _koopa_is_docker
     then
-        koopa_stop 'Cache removal only supported inside Docker images.'
+        _koopa_stop 'Cache removal only supported inside Docker images.'
     fi
-    koopa_alert 'Removing caches, logs, and temporary files.'
-    koopa_rm --sudo \
+    _koopa_alert 'Removing caches, logs, and temporary files.'
+    _koopa_rm --sudo \
         '/root/.cache' \
         '/tmp/'* \
         '/var/backups/'* \
         '/var/cache/'*
-    if koopa_is_debian_like
+    if _koopa_is_debian_like
     then
-        koopa_rm --sudo '/var/lib/apt/lists/'*
+        _koopa_rm --sudo '/var/lib/apt/lists/'*
     fi
     return 0
 }
 
-koopa_linux_disable_root_password_expiration() {
-    koopa_assert_has_no_args "$#"
-    koopa_sudo -i chage -M 99999 root
+_koopa_linux_disable_root_password_expiration() {
+    _koopa_assert_has_no_args "$#"
+    _koopa_sudo -i chage -M 99999 root
     return 0
 }
 
-koopa_linux_fix_sudo_setrlimit_error() {
+_koopa_linux_fix_sudo_setrlimit_error() {
     local -A dict
-    koopa_assert_has_no_args "$#"
+    _koopa_assert_has_no_args "$#"
     dict['file']='/etc/sudo.conf'
     dict['string']='Set disable_coredump false'
-    koopa_sudo_append_string \
+    _koopa_sudo_append_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
     return 0
 }
 
-koopa_linux_install_apptainer() {
-    koopa_install_app \
+_koopa_linux_install_apptainer() {
+    _koopa_install_app \
         --name='apptainer' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_aspera_connect() {
-    koopa_assert_is_not_arm64
-    koopa_install_app \
+_koopa_linux_install_aspera_connect() {
+    _koopa_assert_is_not_arm64
+    _koopa_install_app \
         --name='aspera-connect' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_attr() {
-    koopa_install_app \
+_koopa_linux_install_attr() {
+    _koopa_install_app \
         --name='attr' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_cloudbiolinux() {
-    koopa_install_app \
+_koopa_linux_install_cloudbiolinux() {
+    _koopa_install_app \
         --name='cloudbiolinux' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_elfutils() {
-    koopa_install_app \
+_koopa_linux_install_elfutils() {
+    _koopa_install_app \
         --name='elfutils' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_gcc() {
-    koopa_install_app \
+_koopa_linux_install_gcc() {
+    _koopa_install_app \
         --name='gcc' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_lmod() {
-    koopa_install_app \
+_koopa_linux_install_lmod() {
+    _koopa_install_app \
         --name='lmod' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_ont_bonito() {
-    koopa_install_app \
+_koopa_linux_install_ont_bonito() {
+    _koopa_install_app \
         --name='ont-bonito' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_install_private_bcl2fastq() {
-    koopa_assert_is_not_arm64
-    koopa_install_app \
+_koopa_linux_install_private_bcl2fastq() {
+    _koopa_assert_is_not_arm64
+    _koopa_install_app \
         --name='bcl2fastq' \
         --platform='linux' \
         --private \
         "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
+    _koopa_alert_note "Installation requires agreement to terms of service at: \
 'https://support.illumina.com/sequencing/sequencing_software/\
 bcl2fastq-conversion-software/downloads.html'."
     return 0
 }
 
-koopa_linux_install_private_cellranger() {
-    koopa_assert_is_not_arm64
-    koopa_install_app \
+_koopa_linux_install_private_cellranger() {
+    _koopa_assert_is_not_arm64
+    _koopa_install_app \
         --name='cellranger' \
         --platform='linux' \
         --private \
         "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
+    _koopa_alert_note "Installation requires agreement to terms of service at: \
 'https://support.10xgenomics.com/single-cell-gene-expression/\
 software/downloads/latest'."
     return 0
 }
 
-koopa_linux_install_system_pihole() {
-    koopa_install_app \
+_koopa_linux_install_system_pihole() {
+    _koopa_install_app \
         --name='pihole' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_install_system_pivpn() {
-    koopa_install_app \
+_koopa_linux_install_system_pivpn() {
+    _koopa_install_app \
         --name='pivpn' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_is_init_systemd() {
+_koopa_linux_is_init_systemd() {
     [[ -d '/run/systemd/system' ]]
 }
 
-koopa_linux_locate_bcl2fastq() {
-    koopa_locate_app \
+_koopa_linux_locate_bcl2fastq() {
+    _koopa_locate_app \
         --app-name='bcl2fastq' \
         --bin-name='bcl2fastq' \
         "$@"
 }
 
-koopa_linux_locate_ec2_metadata() {
+_koopa_linux_locate_ec2_metadata() {
     local app
-    if koopa_is_ubuntu_like
+    if _koopa_is_ubuntu_like
     then
         app='/usr/bin/ec2metadata'
     else
         app='/usr/bin/ec2-metadata'
     fi
-    koopa_locate_app "$app" "$@"
+    _koopa_locate_app "$app" "$@"
 }
 
-koopa_linux_locate_getconf() {
-    koopa_locate_app \
+_koopa_linux_locate_getconf() {
+    _koopa_locate_app \
         '/usr/bin/getconf' \
         "$@"
 }
 
-koopa_linux_locate_gpasswd() {
-    koopa_locate_app \
+_koopa_linux_locate_gpasswd() {
+    _koopa_locate_app \
         '/usr/bin/gpasswd' \
         "$@"
 }
 
-koopa_linux_locate_groupadd() {
-    koopa_locate_app \
+_koopa_linux_locate_groupadd() {
+    _koopa_locate_app \
         '/usr/sbin/groupadd' \
         "$@"
 }
 
-koopa_linux_locate_ldconfig() {
+_koopa_linux_locate_ldconfig() {
     local args
     args=()
-    case "$(koopa_os_id)" in
+    case "$(_koopa_os_id)" in
         'alpine' | \
         'debian')
             args+=('/sbin/ldconfig')
@@ -354,43 +354,43 @@ koopa_linux_locate_ldconfig() {
             args+=('/usr/sbin/ldconfig')
             ;;
     esac
-    koopa_locate_app "${args[@]}" "$@"
+    _koopa_locate_app "${args[@]}" "$@"
 }
 
-koopa_linux_locate_ldd() {
-    koopa_locate_app \
+_koopa_linux_locate_ldd() {
+    _koopa_locate_app \
         '/usr/bin/ldd' \
         "$@"
 }
 
-koopa_linux_locate_pihole() {
-    koopa_locate_app \
+_koopa_linux_locate_pihole() {
+    _koopa_locate_app \
         '/usr/local/bin/pihole' \
         "$@"
 }
 
-koopa_linux_locate_rstudio_server() {
-    koopa_locate_app \
+_koopa_linux_locate_rstudio_server() {
+    _koopa_locate_app \
         '/usr/sbin/rstudio-server' \
         "$@"
 }
 
-koopa_linux_locate_shiny_server() {
-    koopa_locate_app \
+_koopa_linux_locate_shiny_server() {
+    _koopa_locate_app \
         '/usr/bin/shiny-server' \
         "$@"
 }
 
-koopa_linux_locate_sqlplus() {
-    koopa_locate_app \
+_koopa_linux_locate_sqlplus() {
+    _koopa_locate_app \
         '/usr/bin/sqlplus' \
         "$@"
 }
 
-koopa_linux_locate_systemctl() {
+_koopa_linux_locate_systemctl() {
     local args
     args=()
-    case "$(koopa_os_id)" in
+    case "$(_koopa_os_id)" in
         'debian')
             args+=('/bin/systemctl')
             ;;
@@ -398,43 +398,43 @@ koopa_linux_locate_systemctl() {
             args+=('/usr/bin/systemctl')
             ;;
     esac
-    koopa_locate_app "${args[@]}" "$@"
+    _koopa_locate_app "${args[@]}" "$@"
 }
 
-koopa_linux_locate_useradd() {
-    koopa_locate_app \
+_koopa_linux_locate_useradd() {
+    _koopa_locate_app \
         '/usr/sbin/useradd' \
         "$@"
 }
 
-koopa_linux_locate_usermod() {
-    koopa_locate_app \
+_koopa_linux_locate_usermod() {
+    _koopa_locate_app \
         '/usr/sbin/usermod' \
         "$@"
 }
 
-koopa_linux_oracle_instantclient_version() {
+_koopa_linux_oracle_instantclient_version() {
     local -A app
     local str
-    koopa_assert_has_no_args "$#"
-    app['sqlplus']="$(koopa_linux_locate_sqlplus)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_no_args "$#"
+    app['sqlplus']="$(_koopa_linux_locate_sqlplus)"
+    _koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['sqlplus']}" -v \
-            | koopa_grep --pattern='^Version' --regex \
-            | koopa_extract_version \
+            | _koopa_grep --pattern='^Version' --regex \
+            | _koopa_extract_version \
     )"
     [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    _koopa_print "$str"
     return 0
 }
 
-koopa_linux_os_version() {
+_koopa_linux_os_version() {
     local -A app dict
-    koopa_assert_has_no_args "$#"
-    app['awk']="$(koopa_locate_awk --allow-system)"
-    app['tr']="$(koopa_locate_tr --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_no_args "$#"
+    app['awk']="$(_koopa_locate_awk --allow-system)"
+    app['tr']="$(_koopa_locate_tr --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['key']='VERSION_ID'
     dict['file']='/etc/os-release'
     dict['string']="$( \
@@ -444,169 +444,169 @@ koopa_linux_os_version() {
         | "${app['tr']}" -d '"' \
     )"
     [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
+    _koopa_print "${dict['string']}"
     return 0
 }
 
-koopa_linux_proc_cmdline() {
+_koopa_linux_proc_cmdline() {
     local -A app dict
-    koopa_assert_has_args_eq "$#" 1
-    app['cat']="$(koopa_locate_cat --allow-system)"
-    app['echo']="$(koopa_locate_echo --allow-system)"
-    app['xargs']="$(koopa_locate_xargs --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_args_eq "$#" 1
+    app['cat']="$(_koopa_locate_cat --allow-system)"
+    app['echo']="$(_koopa_locate_echo --allow-system)"
+    app['xargs']="$(_koopa_locate_xargs --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['pid']="${1:?}"
     dict['cmdline']="/proc/${dict['pid']}/cmdline"
-    koopa_assert_is_file "${dict['cmdline']}"
+    _koopa_assert_is_file "${dict['cmdline']}"
     "${app['cat']}" "${dict['cmdline']}" \
         | "${app['xargs']}" -0 "${app['echo']}"
     return 0
 }
 
-koopa_linux_profile_d_file() {
-    koopa_print '/etc/profile.d/zzz-koopa.sh'
+_koopa_linux_profile_d_file() {
+    _koopa_print '/etc/profile.d/zzz-koopa.sh'
     return 0
 }
 
-koopa_linux_remove_user_from_group() {
+_koopa_linux_remove_user_from_group() {
     local -A app dict
-    koopa_assert_has_args_le "$#" 2
-    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_has_args_le "$#" 2
+    app['gpasswd']="$(_koopa_linux_locate_gpasswd)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['group']="${1:?}"
     dict['user']="${2:-}"
-    [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
-    koopa_sudo \
+    [[ -z "${dict['user']}" ]] && dict['user']="$(_koopa_user_name)"
+    _koopa_sudo \
         "${app['gpasswd']}" \
             --delete "${dict['user']}" "${dict['group']}"
     return 0
 }
 
-koopa_linux_uninstall_apptainer() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_apptainer() {
+    _koopa_uninstall_app \
         --name='apptainer' \
         "$@"
 }
 
-koopa_linux_uninstall_aspera_connect() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_aspera_connect() {
+    _koopa_uninstall_app \
         --name='aspera-connect' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_attr() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_attr() {
+    _koopa_uninstall_app \
         --name='attr' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_bcbio_nextgen() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_bcbio_nextgen() {
+    _koopa_uninstall_app \
         --name='bcbio-nextgen' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_private_bcl2fastq() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_private_bcl2fastq() {
+    _koopa_uninstall_app \
         --name='bcl2fastq' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_cloudbiolinux() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_cloudbiolinux() {
+    _koopa_uninstall_app \
         --name='cloudbiolinux' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_elfutils() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_elfutils() {
+    _koopa_uninstall_app \
         --name='elfutils' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_gcc() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_gcc() {
+    _koopa_uninstall_app \
         --name='gcc' \
         "$@"
 }
 
-koopa_linux_uninstall_lmod() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_lmod() {
+    _koopa_uninstall_app \
         --name='lmod' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_ont_bonito() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_ont_bonito() {
+    _koopa_uninstall_app \
         --name='ont-bonito' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_private_cellranger() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_private_cellranger() {
+    _koopa_uninstall_app \
         --name='cellranger' \
         --platform='linux' \
         "$@"
 }
 
-koopa_linux_uninstall_system_pihole() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_system_pihole() {
+    _koopa_uninstall_app \
         --name='pihole' \
         --platform='linux' \
         --system \
         "$@"
 }
 
-koopa_linux_uninstall_system_pivpn() {
-    koopa_uninstall_app \
+_koopa_linux_uninstall_system_pivpn() {
+    _koopa_uninstall_app \
         --name='pivpn' \
         --system \
         "$@"
 }
 
-koopa_linux_update_ldconfig() {
+_koopa_linux_update_ldconfig() {
     local -A app
-    koopa_assert_has_no_args "$#"
-    app['ldconfig']="$(koopa_linux_locate_ldconfig)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['ldconfig']}" || true
+    _koopa_assert_has_no_args "$#"
+    app['ldconfig']="$(_koopa_linux_locate_ldconfig)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_sudo "${app['ldconfig']}" || true
     return 0
 }
 
-koopa_linux_update_profile_d() {
+_koopa_linux_update_profile_d() {
     local -A dict
-    koopa_assert_has_no_args "$#"
-    koopa_is_shared_install || return 0
-    koopa_assert_is_admin
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['file']="$(koopa_linux_profile_d_file)"
-    dict['today']="$(koopa_today)"
+    _koopa_assert_has_no_args "$#"
+    _koopa_is_shared_install || return 0
+    _koopa_assert_is_admin
+    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['file']="$(_koopa_linux_profile_d_file)"
+    dict['today']="$(_koopa_today)"
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
         return 0
     fi
-    koopa_alert "Adding koopa activation to '${dict['file']}'."
-    koopa_rm --sudo "${dict['file']}"
+    _koopa_alert "Adding koopa activation to '${dict['file']}'."
+    _koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 _koopa_activate_shared_profile() {
-    if [ -f '${dict['koopa_prefix']}/activate' ]
+    if [ -f '${dict['_koopa_prefix']}/activate' ]
     then
-        . '${dict['koopa_prefix']}/activate'
+        . '${dict['_koopa_prefix']}/activate'
     fi
     return 0
 }
 
 _koopa_activate_shared_profile
 END
-    koopa_sudo_write_string \
+    _koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
 }

@@ -13,7 +13,7 @@ main() {
     local repo
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_git_clone \
+    _koopa_git_clone \
         --branch='release-1-6-924' \
         --prefix="${dict['prefix']}/bioperl-live" \
         --url='https://github.com/bioperl/bioperl-live.git'
@@ -23,7 +23,7 @@ main() {
     )
     for repo in "${repos[@]}"
     do
-        koopa_git_clone \
+        _koopa_git_clone \
             --branch='main' \
             --prefix="${dict['prefix']}/${repo}" \
             --url="https://github.com/Ensembl/${repo}.git"
@@ -38,7 +38,7 @@ main() {
     )
     for repo in "${repos[@]}"
     do
-        koopa_git_clone \
+        _koopa_git_clone \
             --branch="release/${dict['version']}" \
             --prefix="${dict['prefix']}/${repo}" \
             --url="https://github.com/Ensembl/${repo}.git"

@@ -14,8 +14,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'libjpeg-turbo' 'zstd'
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'libjpeg-turbo' 'zstd'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -34,9 +34,9 @@ tiff-${dict['version']}.tar.xz"
 # > v${dict['version']}/libtiff-v${dict['version']}.tar.gz"
 # >     dict['url']="https://github.com/libsdl-org/libtiff/archive/refs/tags/\
 # > v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -18,14 +18,14 @@ main() {
     local -a build_deps cmake_args deps
     build_deps=('pkg-config')
     deps=('fmt')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    dict['fmt']="$(koopa_app_prefix 'fmt')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    dict['fmt']="$(_koopa_app_prefix 'fmt')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir "${dict['fmt']}"
+    _koopa_assert_is_dir "${dict['fmt']}"
     cmake['fmt_dir']="${dict['fmt']}/lib/cmake/fmt"
-    koopa_assert_is_dir "${cmake['fmt_dir']}"
+    _koopa_assert_is_dir "${cmake['fmt_dir']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DSPDLOG_BUILD_BENCH=OFF'
@@ -37,9 +37,9 @@ main() {
     )
     dict['url']="https://github.com/gabime/spdlog/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

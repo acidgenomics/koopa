@@ -11,24 +11,24 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'go' 'make' 'pkg-config'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['gocache']="$(koopa_init_dir 'gocache')"
-    dict['gopath']="$(koopa_init_dir 'go')"
+    _koopa_activate_app --build-only 'go' 'make' 'pkg-config'
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['gocache']="$(_koopa_init_dir 'gocache')"
+    dict['gopath']="$(_koopa_init_dir 'go')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['url']="https://github.com/apptainer/apptainer/archive/refs/\
 tags/v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     # This step is needed to avoid an error when not cloned from git repo.
     if [[ ! -f 'VERSION' ]]
     then
-        koopa_print "${dict['version']}" > 'VERSION'
+        _koopa_print "${dict['version']}" > 'VERSION'
     fi
     conf_args=(
         "--prefix=${dict['prefix']}"
@@ -36,10 +36,10 @@ tags/v${dict['version']}.tar.gz"
         '-P' 'release-stripped'
         '-v'
     )
-    koopa_print_env
+    _koopa_print_env
     ./mconfig "${conf_args[@]}"
     "${app['make']}" -C 'builddir'
     "${app['make']}" -C 'builddir' install
-    koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
+    _koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

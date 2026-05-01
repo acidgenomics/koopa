@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -24,7 +24,7 @@ install_from_source() {
     #   - https://github.com/jgm/pandoc/issues/8560
     #   - https://github.com/Homebrew/homebrew-core/pull/120967
     # """
-    koopa_install_haskell_package \
+    _koopa_install_haskell_package \
         --dependency='zlib' \
         --extra-package='pandoc-cli' \
         --extra-package='pandoc-lua-engine' \

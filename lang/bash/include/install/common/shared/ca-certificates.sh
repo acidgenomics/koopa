@@ -15,8 +15,8 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="cacert-${dict['version']}.pem"
     dict['url']="https://curl.se/ca/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_cp \
+    _koopa_download "${dict['url']}" "${dict['file']}"
+    _koopa_cp \
         "${dict['file']}" \
         "${dict['prefix']}/share/ca-certificates/cacert.pem"
     return 0

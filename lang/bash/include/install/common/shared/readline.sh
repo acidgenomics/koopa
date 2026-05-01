@@ -20,13 +20,13 @@ main() {
     # """
     local -A app dict
     local -a conf_args make_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app 'ncurses'
-    app['make']="$(koopa_locate_make)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only 'make' 'pkg-config'
+    _koopa_activate_app 'ncurses'
+    app['make']="$(_koopa_locate_make)"
+    app['pkg_config']="$(_koopa_locate_pkg_config)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['gnu_mirror']="$(_koopa_gnu_mirror_url)"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -41,24 +41,24 @@ main() {
     )
     dict['url']="${dict['gnu_mirror']}/readline/\
 readline-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     # There is no termcap.pc in the base system, so we have to comment out the
     # corresponding 'Requires.private' line. Otherwise, pkg-config will consider
     # the readline module unusable.
-    koopa_find_and_replace_in_file \
+    _koopa_find_and_replace_in_file \
         --regex \
         --pattern='^(Requires.private: .*)$' \
         --replacement='# \1' \
         'readline.pc.in'
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
+    _koopa_print_env
+    _koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" "${make_args[@]}" --jobs="${dict['jobs']}"
     "${app['make']}" "${make_args[@]}" install
-    koopa_check_shared_object \
+    _koopa_check_shared_object \
         --name='libreadline' \
         --prefix="${dict['prefix']}/lib"
     return 0

@@ -5,7 +5,7 @@ install_from_conda() {
     # Details on arm64 build support:
     # https://github.com/bioconda/bioconda-recipes/pull/54092
     # """
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -24,7 +24,7 @@ install_from_source() {
     local -A app cmake dict
     local -a build_deps cmake_args deps
     build_deps=('patch' 'pkg-config')
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=(
         'boost'
         'cereal'
@@ -40,21 +40,21 @@ install_from_source() {
         'tbb'
         'xz'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['patch']="$(koopa_locate_patch)"
-    app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['curl']="$(koopa_app_prefix 'curl')"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
-    dict['jemalloc']="$(koopa_app_prefix 'jemalloc')"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['patch']="$(_koopa_locate_patch)"
+    app['pkg_config']="$(_koopa_locate_pkg_config --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['curl']="$(_koopa_app_prefix 'curl')"
+    dict['icu4c']="$(_koopa_app_prefix 'icu4c')"
+    dict['jemalloc']="$(_koopa_app_prefix 'jemalloc')"
+    dict['libiconv']="$(_koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
-    dict['staden_io_lib']="$(koopa_app_prefix 'staden-io-lib')"
+    dict['shared_ext']="$(_koopa_shared_ext)"
+    dict['staden_io_lib']="$(_koopa_app_prefix 'staden-io-lib')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['xz']="$(koopa_app_prefix 'xz')"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['xz']="$(_koopa_app_prefix 'xz')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     cmake['curl_include_dir']="${dict['curl']}/include"
     cmake['curl_library']="${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
     cmake['htscodec_library']="${dict['staden_io_lib']}/lib/libhtscodecs.a"
@@ -71,7 +71,7 @@ libjemalloc.${dict['shared_ext']}"
     cmake['staden_include_dir']="${dict['staden_io_lib']}/include"
     cmake['staden_library']="${dict['staden_io_lib']}/lib/\
 libstaden-read.${dict['shared_ext']}"
-    cmake['staden_version']="$(koopa_app_version 'staden-io-lib')"
+    cmake['staden_version']="$(_koopa_app_version 'staden-io-lib')"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     cmake_args+=(
@@ -96,9 +96,9 @@ libstaden-read.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
         "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
-    if ! koopa_is_macos
+    if ! _koopa_is_macos
     then
-        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+        dict['bzip2']="$(_koopa_app_prefix 'bzip2')"
         cmake['bzip2_include_dir']="${dict['bzip2']}/include"
         cmake['bzip2_libraries']="${dict['bzip2']}/lib/\
 libbz2.${dict['shared_ext']}"
@@ -110,20 +110,20 @@ libbz2.${dict['shared_ext']}"
     fi
     dict['url']="https://github.com/COMBINE-lab/salmon/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    dict['patch_prefix']="$(koopa_patch_prefix)/common/salmon"
-    koopa_assert_is_dir "${dict['patch_prefix']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    dict['patch_prefix']="$(_koopa_patch_prefix)/common/salmon"
+    _koopa_assert_is_dir "${dict['patch_prefix']}"
     dict['patch_file']="${dict['patch_prefix']}/staden.patch"
     "${app['patch']}" \
         --unified \
         --verbose \
         'cmake/Modules/Findlibstadenio.cmake' \
         "${dict['patch_file']}"
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     app['salmon']="${dict['prefix']}/bin/salmon"
-    koopa_assert_is_executable "${app['salmon']}"
+    _koopa_assert_is_executable "${app['salmon']}"
     "${app['salmon']}" --version
     return 0
 }

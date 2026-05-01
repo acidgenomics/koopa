@@ -11,10 +11,10 @@ main() {
     local -A dict
     local -a conf_args install_args
     local conf_arg
-    koopa_activate_app --build-only \
+    _koopa_activate_app --build-only \
         'autoconf' \
         'automake'
-    koopa_activate_app \
+    _koopa_activate_app \
         'gettext' \
         'libidn' \
         'libtasn1' \
@@ -22,10 +22,10 @@ main() {
         'openssl' \
         'pcre2' \
         'gnutls'
-    dict['ssl']="$(koopa_app_prefix 'openssl')"
+    dict['ssl']="$(_koopa_app_prefix 'openssl')"
     # OpenSSL >= 4.0 removed 'SSLv3_client_method' without defining
     # 'OPENSSL_NO_SSL3_METHOD', which wget checks with '#ifndef'.
-    koopa_append_cppflags '-DOPENSSL_NO_SSL3_METHOD'
+    _koopa_append_cppflags '-DOPENSSL_NO_SSL3_METHOD'
     conf_args=(
         '--disable-debug'
         "--with-libssl-prefix=${dict['ssl']}"
@@ -37,6 +37,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

@@ -15,7 +15,7 @@ main() {
     local -a conf_args deps install_args
     local conf_arg
     deps+=('gmp' 'm4' 'openssl')
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     conf_args+=(
         '--disable-dependency-tracking'
         '--disable-static'
@@ -27,10 +27,10 @@ main() {
         install_args+=('-D' "$conf_arg")
     done
     # We need to set DWARF 4 for GCC 13 when building on CentOS 7.
-    if koopa_is_linux
+    if _koopa_is_linux
     then
-        koopa_append_cppflags '-gdwarf-4'
+        _koopa_append_cppflags '-gdwarf-4'
     fi
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

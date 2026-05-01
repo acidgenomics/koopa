@@ -15,7 +15,7 @@ main() {
 build.buildVersion=${dict['version']}"
     dict['url']="https://github.com/databricks/cli/archive/\
 v${dict['version']}.tar.gz"
-    koopa_build_go_package \
+    _koopa_build_go_package \
         --bin-name='databricks' \
         --ldflags="${dict['ldflags']}" \
         --prefix="${dict['prefix']}" \

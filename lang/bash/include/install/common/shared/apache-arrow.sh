@@ -24,9 +24,9 @@ main() {
         # > 'llvm'
         'openssl'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    # > dict['llvm_root']="$(koopa_app_prefix 'llvm')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    # > dict['llvm_root']="$(_koopa_app_prefix 'llvm')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
@@ -34,16 +34,16 @@ main() {
         '-DARROW_DEPENDENCY_SOURCE=BUNDLED'
         '-DARROW_PARQUET=ON'
     )
-    if ! koopa_is_arm64
+    if ! _koopa_is_arm64
     then
         cmake_args+=('-DARROW_MIMALLOC=ON')
     fi
     dict['url']="https://www.apache.org/dyn/closer.lua?action=download&\
 filename=arrow/arrow-${dict['version']}/apache-arrow-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src/cpp'
-    koopa_cmake_build \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src/cpp'
+    _koopa_cmake_build \
         --ninja \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"

@@ -10,8 +10,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'groff'
-    koopa_activate_app 'openssl'
+    _koopa_activate_app --build-only 'groff'
+    _koopa_activate_app 'openssl'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -41,19 +41,19 @@ main() {
     )
     dict['url']="https://www.openldap.org/software/download/OpenLDAP/\
 openldap-release/openldap-${dict['version']}.tgz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     # Fix OpenSSL 4 compatibility: ASN1_STRING is now fully opaque.
     # Use accessor functions instead of direct struct member access.
-    koopa_find_and_replace_in_file \
+    _koopa_find_and_replace_in_file \
         --pattern='cn->length' \
         --replacement='ASN1_STRING_length(cn)' \
         'libraries/libldap/tls_o.c'
-    koopa_find_and_replace_in_file \
+    _koopa_find_and_replace_in_file \
         --pattern='cn->data' \
         --replacement='ASN1_STRING_get0_data(cn)' \
         'libraries/libldap/tls_o.c'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

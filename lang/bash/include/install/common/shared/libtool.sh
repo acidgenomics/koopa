@@ -8,7 +8,7 @@ main() {
     local -A dict
     local -a conf_args install_args
     local conf_arg
-    koopa_activate_app 'm4'
+    _koopa_activate_app 'm4'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     conf_args=(
         '--disable-static'
@@ -18,11 +18,11 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     (
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln 'glibtool' 'libtool'
-        koopa_ln 'glibtoolize' 'libtoolize'
+        _koopa_cd "${dict['prefix']}/bin"
+        _koopa_ln 'glibtool' 'libtool'
+        _koopa_ln 'glibtoolize' 'libtoolize'
     )
     return 0
 }

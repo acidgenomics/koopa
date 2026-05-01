@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+_koopa_is_recent() {
+    # """
+    # If the file exists and is more recent than 2 weeks old.
+    # @note Updated 2023-04-05.
+    #
+    # Current approach uses find to filter based on modification date.
+    #
+    # Alternatively, can we use 'stat' to compare the modification time to Unix
+    # epoch in seconds or with GNU date.
+    #
+    # NB Don't attempt to use '_koopa_find' here, as this is acting directly
+    # on a file rather than directory input.
+    #
+    # @seealso
+    # - https://stackoverflow.com/a/32019461
+    # - fd using '--changed-before <DAYS>d' argument.
+    #
+    # @examples
+    # > _koopa_is_recent ~/hello-world.txt
+    # """
+    local -A app dict
+    local file
+    _koopa_assert_has_args "$#"
+    app['find']="$(_koopa_locate_find)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['days']=14
+    for file in "$@"
+    do
+        local exists
+        [[ -e "$file" ]] || return 1
+        exists="$( \
+            "${app['find']}" "$file" \
+                -mindepth 0 \
+                -maxdepth 0 \
+                -mtime "-${dict['days']}" \
+            2>/dev/null \
+        )"
+        [[ -n "$exists" ]] || return 1
+    done
+    return 0
+}

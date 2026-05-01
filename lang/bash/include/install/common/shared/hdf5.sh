@@ -17,19 +17,19 @@ main() {
     local -A cmake dict
     local -a cmake_args deps
     deps=('libaec' 'zlib')
-    koopa_activate_app "${deps[@]}"
-    dict['libaec']="$(koopa_app_prefix 'libaec')"
+    _koopa_activate_app "${deps[@]}"
+    dict['libaec']="$(_koopa_app_prefix 'libaec')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/HDFGroup/hdf5/releases/download/\
 ${dict['version']}/hdf5-${dict['version']}.tar.gz"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${cmake['zlib_include_dir']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${cmake['zlib_library']}"
     cmake_args=(
         # > '-DHDF5_BUILD_FORTRAN:BOOL=ON'
@@ -41,10 +41,10 @@ ${dict['version']}/hdf5-${dict['version']}.tar.gz"
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
         "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build \
         --include-dir='include' \
         --lib-dir='lib' \
         --prefix="${dict['prefix']}" \

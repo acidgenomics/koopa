@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+_koopa_linux_add_user_to_etc_passwd() {
+    # """
+    # Any any type of user, including domain user to passwd file.
+    # @note Updated 2023-04-06.
+    #
+    # Necessary for running 'chsh' with a Kerberos / Active Directory domain
+    # account, on AWS or Azure for example.
+    #
+    # Note that this function will enable use of RStudio for domain users.
+    #
+    # @examples
+    # > _koopa_linux_add_user_to_etc_passwd 'domain.user'
+    # """
+    local -A dict
+    _koopa_assert_has_args_le "$#" 1
+    dict['passwd_file']='/etc/passwd'
+    dict['user']="${1:-}"
+    _koopa_assert_is_file "${dict['passwd_file']}"
+    [[ -z "${dict['user']}" ]] && dict['user']="$(_koopa_user_name)"
+    if ! _koopa_file_detect_fixed \
+        --file="${dict['passwd_file']}" \
+        --pattern="${dict['user']}" \
+        --sudo
+    then
+        _koopa_alert "Updating '${dict['passwd_file']}' to \
+include '${dict['user']}'."
+        dict['user_string']="$(getent passwd "${dict['user']}")"
+        _koopa_sudo_append_string \
+            --file="${dict['passwd_file']}" \
+            --string="${dict['user_string']}"
+    else
+        _koopa_alert_note "'${dict['user']}' already defined \
+in '${dict['passwd_file']}'."
+    fi
+    return 0
+}

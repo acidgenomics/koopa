@@ -11,7 +11,7 @@ main() {
     local -A dict
     dict['git']='https://github.com/posit-dev/air'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_install_rust_package \
+    _koopa_install_rust_package \
         --git="${dict['git']}" \
         --tag="${dict['version']}"
     return 0

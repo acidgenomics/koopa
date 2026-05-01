@@ -10,21 +10,21 @@ main() {
     # - https://formulae.brew.sh/formula/pbzip2
     # """
     local -A app dict
-    koopa_activate_app --build-only 'make'
-    ! koopa_is_macos && koopa_activate_app 'bzip2'
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only 'make'
+    ! _koopa_is_macos && _koopa_activate_app 'bzip2'
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     dict['url']="https://launchpad.net/pbzip2/${dict['maj_min_ver']}/\
 ${dict['version']}/+download/pbzip2-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
         CC="${app['cc']}" \

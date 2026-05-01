@@ -10,8 +10,8 @@ main() {
     # """
     local -A dict
     dict['prefix']='/Library/Developer/CommandLineTools'
-    koopa_assert_is_dir "${dict['prefix']}"
-    koopa_dl 'CLT prefix' "${dict['prefix']}"
-    koopa_rm --sudo --verbose "${dict['prefix']}"
+    _koopa_assert_is_dir "${dict['prefix']}"
+    _koopa_dl 'CLT prefix' "${dict['prefix']}"
+    _koopa_rm --sudo --verbose "${dict['prefix']}"
     return 0
 }

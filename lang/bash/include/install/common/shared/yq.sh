@@ -13,6 +13,6 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/mikefarah/yq/archive/\
 v${dict['version']}.tar.gz"
-    koopa_build_go_package --url="${dict['url']}"
+    _koopa_build_go_package --url="${dict['url']}"
     return 0
 }

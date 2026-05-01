@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+_koopa_init_dir() {
+    # """
+    # Initialize (create) a directory and return the real path on disk.
+    # @note Updated 2023-04-05.
+    # """
+    local -A dict
+    local -a mkdir pos
+    dict['sudo']=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--sudo' | \
+            '-S')
+                dict['sudo']=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    _koopa_assert_has_args_eq "$#" 1
+    dict['dir']="${1:?}"
+    if _koopa_str_detect_regex \
+        --string="${dict['dir']}" \
+        --pattern='^~'
+    then
+        dict['dir']="$( \
+            _koopa_sub \
+                --pattern='^~' \
+                --replacement="${HOME:?}" \
+                "${dict['dir']}" \
+        )"
+    fi
+    mkdir=('_koopa_mkdir')
+    [[ "${dict['sudo']}" -eq 1 ]] && mkdir+=('--sudo')
+    if [[ ! -d "${dict['dir']}" ]]
+    then
+        "${mkdir[@]}" "${dict['dir']}"
+    fi
+    dict['realdir']="$(_koopa_realpath "${dict['dir']}")"
+    _koopa_print "${dict['realdir']}"
+    return 0
+}

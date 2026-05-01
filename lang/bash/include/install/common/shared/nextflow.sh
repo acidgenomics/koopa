@@ -4,8 +4,8 @@ install_from_conda() {
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['libexec']="${dict['prefix']}/libexec"
-    koopa_install_conda_package
-    koopa_rm "${dict['prefix']}/bin/nextflow"
+    _koopa_install_conda_package
+    _koopa_rm "${dict['prefix']}/bin/nextflow"
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
 set -o errexit
@@ -14,10 +14,10 @@ set -o nounset
 export NXF_JAVA_HOME='${dict['libexec']}'
 '${dict['libexec']}/bin/nextflow' "\$@"
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${dict['prefix']}/bin/nextflow" \
         --string="${dict['bin_string']}"
-    koopa_chmod +x "${dict['prefix']}/bin/nextflow"
+    _koopa_chmod +x "${dict['prefix']}/bin/nextflow"
     "${dict['prefix']}/bin/nextflow" -version
     return 0
 }
@@ -34,17 +34,17 @@ install_from_source() {
     # """
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['temurin']="$(koopa_app_prefix 'temurin')"
+    dict['temurin']="$(_koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir "${dict['temurin']}"
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    koopa_download 'https://get.nextflow.io' 'nextflow'
+    _koopa_assert_is_dir "${dict['temurin']}"
+    dict['libexec']="$(_koopa_init_dir "${dict['prefix']}/libexec")"
+    _koopa_download 'https://get.nextflow.io' 'nextflow'
     export NXF_HOME="${dict['libexec']}"
     export NXF_JAVA_HOME="${dict['temurin']}"
     export NXF_VER="${dict['version']}"
-    koopa_chmod +x 'nextflow'
+    _koopa_chmod +x 'nextflow'
     ./nextflow
-    koopa_cp --target-directory="${dict['libexec']}/bin" 'nextflow'
+    _koopa_cp --target-directory="${dict['libexec']}/bin" 'nextflow'
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
 set -o errexit
@@ -53,12 +53,12 @@ set -o nounset
 export NXF_JAVA_HOME='${dict['temurin']}'
 '${dict['libexec']}/bin/nextflow' "\$@"
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${dict['prefix']}/bin/nextflow" \
         --string="${dict['bin_string']}"
-    koopa_chmod +x "${dict['prefix']}/bin/nextflow"
+    _koopa_chmod +x "${dict['prefix']}/bin/nextflow"
     "${dict['prefix']}/bin/nextflow" -version
-    koopa_rm "${dict['libexec']}/tmp"
+    _koopa_rm "${dict['libexec']}/tmp"
     return 0
 }
 

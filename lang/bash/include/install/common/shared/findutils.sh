@@ -5,7 +5,7 @@ main() {
     # Install findutils.
     # @note Updated 2023-08-31.
     # """
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         # Workaround for build failures in 4.8.0.
         # See also:
@@ -19,7 +19,7 @@ main() {
         CFLAGS="-D__nonnull\(params\)= ${CFLAGS}"
         export CFLAGS
     fi
-    koopa_install_gnu_app \
+    _koopa_install_gnu_app \
         --compress-ext='xz' \
         -D '--program-prefix=g'
     return 0

@@ -13,14 +13,14 @@ main() {
     local -A dict
     local -a build_deps conf_args
     build_deps+=('perl' 'pkg-config')
-    koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app --build-only "${build_deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/besser82/libxcrypt/releases/download/\
 v${dict['version']}/libxcrypt-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-failure-tokens'
@@ -30,6 +30,6 @@ v${dict['version']}/libxcrypt-${dict['version']}.tar.xz"
         # > '--disable-valgrind'
         # > '--disable-xcrypt-compat-files'
     )
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

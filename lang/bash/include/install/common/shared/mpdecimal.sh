@@ -15,10 +15,10 @@ main() {
     )
     dict['url']="https://www.bytereef.org/software/mpdecimal/releases/\
 mpdecimal-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
+    _koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }

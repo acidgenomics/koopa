@@ -11,9 +11,9 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config' 'python'
-    app['python']="$(koopa_locate_python --realpath)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'pkg-config' 'python'
+    app['python']="$(_koopa_locate_python --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -25,9 +25,9 @@ main() {
 # > xcb-proto-${dict['version']}.tar.xz"
     dict['url']="https://xorg.freedesktop.org/archive/individual/proto/\
 xcb-proto-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

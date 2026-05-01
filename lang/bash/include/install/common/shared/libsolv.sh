@@ -10,17 +10,17 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'zlib'
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'zlib'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
-    koopa_assert_is_dir "${dict['zlib']}"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
+    _koopa_assert_is_dir "${dict['zlib']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    koopa_assert_is_dir "${cmake['zlib_include_dir']}"
-    koopa_assert_is_file "${cmake['zlib_library']}"
+    _koopa_assert_is_dir "${cmake['zlib_include_dir']}"
+    _koopa_assert_is_file "${cmake['zlib_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         # > '-DENABLE_PYTHON=yes'
@@ -32,9 +32,9 @@ main() {
     )
     dict['url']="https://github.com/openSUSE/libsolv/archive/refs/tags/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
