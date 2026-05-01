@@ -13,7 +13,7 @@ main() {
     local -A app dict
     local -a bootstrap_args cmake_args
     _koopa_activate_app --build-only 'make'
-    _koopa_activate_app 'curl' 'openssl' 'zlib'
+    _koopa_activate_app 'zlib' 'zstd' 'openssl' 'libssh2' 'curl'
     app['make']="$(_koopa_locate_make)"
     _koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(_koopa_cpu_count)"

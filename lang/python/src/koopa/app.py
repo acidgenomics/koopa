@@ -194,6 +194,34 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
+def stale_revdeps(names: list) -> list:
+    """Get installed apps whose runtime dependencies are being reinstalled.
+
+    Given a list of app names being installed, returns any currently installed
+    apps that have one or more of those names as a runtime dependency. Only
+    considers 'dependencies', not 'build_dependencies'.
+    """
+    json_data = import_app_json()
+    keys = list(json_data.keys())
+    targets = set(names)
+    installed = set(installed_apps())
+    sys_dict = {"os_id": os_id()}
+    lst = []
+    for key in keys:
+        if key not in installed:
+            continue
+        if key in targets:
+            continue
+        deps = []
+        if "dependencies" in json_data[key]:
+            deps = json_data[key]["dependencies"]
+            if isinstance(deps, dict):
+                deps = _resolve_dep_dict(deps, sys_dict)
+        if targets.intersection(deps):
+            lst.append(key)
+    return lst
+
+
 def installed_apps() -> list:
     """List installed apps."""
     app_prefix = koopa_app_prefix()
