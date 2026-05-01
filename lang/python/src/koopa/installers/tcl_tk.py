@@ -24,21 +24,23 @@ def main(
     env = activate_app("make", "pkg-config", build_only=True)
     if sys.platform != "darwin":
         env = activate_app(
-            "xorg-xorgproto", "xorg-xcb-proto", "xorg-libpthread-stubs",
-            "xorg-libxau", "xorg-libxdmcp", "xorg-libxcb",
-            "xorg-libx11", "xorg-libxext", "xorg-libxrender",
+            "xorg-xorgproto",
+            "xorg-xcb-proto",
+            "xorg-libpthread-stubs",
+            "xorg-libxau",
+            "xorg-libxdmcp",
+            "xorg-libxcb",
+            "xorg-libx11",
+            "xorg-libxext",
+            "xorg-libxrender",
             env=env,
         )
     make = locate("make")
     maj_min_ver = major_minor_version(version)
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
-    tcl_url = (
-        f"https://koopa.acidgenomics.com/src/tcl/tcl{version}-src.tar.gz"
-    )
-    tk_url = (
-        f"https://koopa.acidgenomics.com/src/tk/tk{version}-src.tar.gz"
-    )
+    tcl_url = f"https://koopa.acidgenomics.com/src/tcl/tcl{version}-src.tar.gz"
+    tk_url = f"https://koopa.acidgenomics.com/src/tk/tk{version}-src.tar.gz"
     tcl_tarball = download(tcl_url)
     tk_tarball = download(tk_url)
     extract(tcl_tarball, "tcl-src")

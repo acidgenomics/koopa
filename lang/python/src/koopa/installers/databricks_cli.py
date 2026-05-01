@@ -14,9 +14,7 @@ def main(
 ) -> None:
     """Install databricks-cli."""
     url = f"https://github.com/databricks/cli/archive/v{version}.tar.gz"
-    ldflags = (
-        f"-X github.com/databricks/cli/internal/build.buildVersion={version}"
-    )
+    ldflags = f"-X github.com/databricks/cli/internal/build.buildVersion={version}"
     build_go_package(
         url=url,
         name=name,

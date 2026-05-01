@@ -38,15 +38,29 @@ def main(
     pkg_config = locate("pkg-config")
     python_bin = locate("python3")
     swig = locate("swig")
-    py_ver = subprocess.run(
-        [python_bin, "--version"],
-        capture_output=True, text=True, check=True,
-    ).stdout.strip().split()[-1]
+    py_ver = (
+        subprocess.run(
+            [python_bin, "--version"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        .stdout.strip()
+        .split()[-1]
+    )
     py_maj_min = major_minor_version(py_ver)
-    projects = ";".join([
-        "clang", "clang-tools-extra", "flang", "lld",
-        "lldb", "mlir", "openmp", "polly",
-    ])
+    projects = ";".join(
+        [
+            "clang",
+            "clang-tools-extra",
+            "flang",
+            "lld",
+            "lldb",
+            "mlir",
+            "openmp",
+            "polly",
+        ]
+    )
     runtimes = ";".join(["libcxx", "libcxxabi", "libunwind"])
     url = (
         f"https://github.com/llvm/llvm-project/releases/download/"
@@ -79,17 +93,21 @@ def main(
         f"-DZstd_LIBRARY={zstd_prefix}/lib/libzstd.{ext}",
     ]
     if sys.platform == "darwin":
-        cmake_args.extend([
-            f"-DLLVM_ENABLE_PROJECTS={projects}",
-            f"-DLLVM_ENABLE_RUNTIMES={runtimes}",
-            "-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF",
-        ])
+        cmake_args.extend(
+            [
+                f"-DLLVM_ENABLE_PROJECTS={projects}",
+                f"-DLLVM_ENABLE_RUNTIMES={runtimes}",
+                "-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF",
+            ]
+        )
     else:
         binutils_prefix = app_prefix("binutils")
         elfutils_prefix = app_prefix("elfutils")
-        cmake_args.extend([
-            f"-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR={elfutils_prefix}/include",
-            f"-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES={elfutils_prefix}/lib/libelf.{ext}",
-            f"-DLLVM_BINUTILS_INCDIR={binutils_prefix}/include",
-        ])
+        cmake_args.extend(
+            [
+                f"-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR={elfutils_prefix}/include",
+                f"-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES={elfutils_prefix}/lib/libelf.{ext}",
+                f"-DLLVM_BINUTILS_INCDIR={binutils_prefix}/include",
+            ]
+        )
     cmake_build(prefix=prefix, args=cmake_args, env=env)

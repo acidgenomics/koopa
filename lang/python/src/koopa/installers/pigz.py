@@ -27,14 +27,8 @@ def main(
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     subprocess_env["CC"] = "gcc"
-    subprocess_env["CFLAGS"] = (
-        f"-I{zlib_prefix}/include "
-        + subprocess_env.get("CFLAGS", "")
-    )
-    subprocess_env["LDFLAGS"] = (
-        f"-L{zlib_prefix}/lib "
-        + subprocess_env.get("LDFLAGS", "")
-    )
+    subprocess_env["CFLAGS"] = f"-I{zlib_prefix}/include " + subprocess_env.get("CFLAGS", "")
+    subprocess_env["LDFLAGS"] = f"-L{zlib_prefix}/lib " + subprocess_env.get("LDFLAGS", "")
     jobs = os.cpu_count() or 1
     subprocess.run(
         [make, f"--jobs={jobs}"],

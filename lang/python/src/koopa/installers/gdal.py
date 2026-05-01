@@ -21,10 +21,26 @@ def main(
     """Install gdal."""
     env = activate_app("pkg-config", "python", build_only=True)
     env = activate_app(
-        "zlib", "zstd", "bison", "expat", "geos", "hdf5",
-        "libdeflate", "libjpeg-turbo", "libpng", "libtiff",
-        "libxml2", "lz4", "openjpeg", "openssl", "pcre2",
-        "sqlite", "xz", "libssh2", "curl", "proj",
+        "zlib",
+        "zstd",
+        "bison",
+        "expat",
+        "geos",
+        "hdf5",
+        "libdeflate",
+        "libjpeg-turbo",
+        "libpng",
+        "libtiff",
+        "libxml2",
+        "lz4",
+        "openjpeg",
+        "openssl",
+        "pcre2",
+        "sqlite",
+        "xz",
+        "libssh2",
+        "curl",
+        "proj",
         env=env,
     )
     curl_prefix = app_prefix("curl")

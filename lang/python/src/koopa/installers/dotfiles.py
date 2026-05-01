@@ -16,7 +16,8 @@ def main(
     url = "https://github.com/acidgenomics/dotfiles.git"
     subprocess.run(
         [
-            "git", "clone",
+            "git",
+            "clone",
             "--depth=1",
             f"--branch={version}",
             url,

@@ -13,10 +13,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install jfrog-cli."""
-    url = (
-        f"https://github.com/jfrog/jfrog-cli/archive/refs/tags/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/jfrog/jfrog-cli/archive/refs/tags/v{version}.tar.gz"
     build_go_package(
         url=url,
         name=name,

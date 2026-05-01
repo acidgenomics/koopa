@@ -26,16 +26,45 @@ def main(
     deps = []
     if sys.platform != "darwin":
         deps.append("bzip2")
-    deps.extend([
-        "xz", "zlib", "zstd", "gettext", "icu4c", "readline",
-        "openssl", "libssh2", "curl", "libjpeg-turbo", "libpng",
-        "libtiff", "openblas", "pcre2", "texinfo", "libffi",
-        "glib", "freetype", "libxml2", "fontconfig", "pixman",
-        "xorg-xorgproto", "xorg-xcb-proto", "xorg-libpthread-stubs",
-        "xorg-libice", "xorg-libsm", "xorg-libxau", "xorg-libxdmcp",
-        "xorg-libxcb", "xorg-libx11", "xorg-libxext",
-        "xorg-libxrender", "xorg-libxt", "cairo", "tcl-tk",
-    ])
+    deps.extend(
+        [
+            "xz",
+            "zlib",
+            "zstd",
+            "gettext",
+            "icu4c",
+            "readline",
+            "openssl",
+            "libssh2",
+            "curl",
+            "libjpeg-turbo",
+            "libpng",
+            "libtiff",
+            "openblas",
+            "pcre2",
+            "texinfo",
+            "libffi",
+            "glib",
+            "freetype",
+            "libxml2",
+            "fontconfig",
+            "pixman",
+            "xorg-xorgproto",
+            "xorg-xcb-proto",
+            "xorg-libpthread-stubs",
+            "xorg-libice",
+            "xorg-libsm",
+            "xorg-libxau",
+            "xorg-libxdmcp",
+            "xorg-libxcb",
+            "xorg-libx11",
+            "xorg-libxext",
+            "xorg-libxrender",
+            "xorg-libxt",
+            "cairo",
+            "tcl-tk",
+        ]
+    )
     env = activate_app(*deps, env=env)
     make = locate("make")
     pkg_config = locate("pkg-config")
@@ -43,51 +72,80 @@ def main(
     subprocess_env = env.to_env_dict()
     blas_libs = subprocess.run(
         [pkg_config, "--libs", "openblas"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     cairo_libs = subprocess.run(
         [
-            pkg_config, "--libs",
-            "cairo", "cairo-fc", "cairo-ft", "cairo-pdf",
-            "cairo-png", "cairo-ps", "cairo-script", "cairo-svg",
-            "cairo-xcb", "cairo-xcb-shm", "cairo-xlib",
+            pkg_config,
+            "--libs",
+            "cairo",
+            "cairo-fc",
+            "cairo-ft",
+            "cairo-pdf",
+            "cairo-png",
+            "cairo-ps",
+            "cairo-script",
+            "cairo-svg",
+            "cairo-xcb",
+            "cairo-xcb-shm",
+            "cairo-xlib",
             "cairo-xlib-xrender",
         ],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     icu_libs = subprocess.run(
         [pkg_config, "--libs", "icu-i18n", "icu-io", "icu-uc"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     jpeg_libs = subprocess.run(
         [pkg_config, "--libs", "libjpeg"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     png_libs = subprocess.run(
         [pkg_config, "--libs", "libpng"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     tiff_libs = subprocess.run(
         [pkg_config, "--libs", "libtiff-4"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     pcre2_libs = subprocess.run(
         [
-            pkg_config, "--libs",
-            "libpcre2-8", "libpcre2-16", "libpcre2-32", "libpcre2-posix",
+            pkg_config,
+            "--libs",
+            "libpcre2-8",
+            "libpcre2-16",
+            "libpcre2-32",
+            "libpcre2-posix",
         ],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     readline_libs = subprocess.run(
         [pkg_config, "--libs", "readline"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=subprocess_env,
     ).stdout.strip()
     conf_args = [
@@ -128,7 +186,8 @@ def main(
         svn_url = "https://svn.r-project.org/R/trunk"
         subprocess.run(
             [
-                svn, "--non-interactive",
+                svn,
+                "--non-interactive",
                 "--trust-server-cert-failures=unknown-ca,cn-mismatch,expired,not-yet-valid,other",
                 "checkout",
                 f"--revision={version}",
@@ -142,10 +201,7 @@ def main(
             fh.write(f"Revision: {version}\n")
     else:
         maj_ver = major_version(version)
-        url = (
-            f"https://cloud.r-project.org/src/base/R-{maj_ver}/"
-            f"R-{version}.tar.gz"
-        )
+        url = f"https://cloud.r-project.org/src/base/R-{maj_ver}/R-{version}.tar.gz"
         download_extract_cd(url)
     subprocess_env["r_cv_have_curl728"] = "yes"
     jobs = os.cpu_count() or 1

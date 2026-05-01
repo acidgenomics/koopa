@@ -23,10 +23,7 @@ def main(
         platform = "Darwin"
     else:
         platform = "Linux"
-    url = (
-        f"https://ccsb.scripps.edu/adfr/download/"
-        f"ADFRsuite_{version}_{platform}.tar.gz"
-    )
+    url = f"https://ccsb.scripps.edu/adfr/download/ADFRsuite_{version}_{platform}.tar.gz"
     tarball = download(url)
     extract(tarball, "src")
     os.chdir("src")
@@ -34,7 +31,8 @@ def main(
     os.makedirs(libexec, exist_ok=True)
     subprocess.run(
         [
-            "bash", "-c",
+            "bash",
+            "-c",
             f"yes | ./install.sh -d {libexec} -c 0",
         ],
         check=True,

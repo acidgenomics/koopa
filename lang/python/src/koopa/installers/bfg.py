@@ -24,10 +24,7 @@ def main(
     os.makedirs(libexec, exist_ok=True)
     os.makedirs(bin_dir, exist_ok=True)
     jar_name = f"bfg-{version}.jar"
-    url = (
-        f"https://repo1.maven.org/maven2/com/madgag/bfg/"
-        f"{version}/{jar_name}"
-    )
+    url = f"https://repo1.maven.org/maven2/com/madgag/bfg/{version}/{jar_name}"
     download(url, output=os.path.join(libexec, jar_name))
     wrapper = os.path.join(bin_dir, "bfg")
     with open(wrapper, "w") as fh:

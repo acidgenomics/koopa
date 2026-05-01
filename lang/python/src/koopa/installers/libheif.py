@@ -20,10 +20,7 @@ def main(
     libjpeg_prefix = app_prefix("libjpeg-turbo")
     libpng_prefix = app_prefix("libpng")
     ext = shared_ext()
-    url = (
-        f"https://github.com/nicolo-ribaudo/libheif/archive/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/nicolo-ribaudo/libheif/archive/v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,

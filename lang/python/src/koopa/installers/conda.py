@@ -39,9 +39,7 @@ def main(
             arch2 = "arm64"
     else:
         os_type2 = "Linux"
-    script = (
-        f"Miniconda{py_major}-py{py_version2}_{version}-{os_type2}-{arch2}.sh"
-    )
+    script = f"Miniconda{py_major}-py{py_version2}_{version}-{os_type2}-{arch2}.sh"
     url = f"https://repo.anaconda.com/miniconda/{script}"
     download(url, output=script)
     subprocess.run(

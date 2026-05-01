@@ -24,10 +24,7 @@ def main(
     make = locate("make")
     ext = shared_ext()
     maj_min_ver = major_minor_version(version)
-    url = (
-        f"https://github.com/LuaJIT/LuaJIT/archive/refs/tags/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/LuaJIT/LuaJIT/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     if sys.platform == "darwin":

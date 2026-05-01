@@ -30,9 +30,7 @@ def main(
         text = fh.read()
     text = text.replace(
         "LIBS=[",
-        f"CPPPATH=['{zlib_prefix}/include'],\n"
-        f"    LIBPATH=['{zlib_prefix}/lib'],\n"
-        f"    LIBS=[",
+        f"CPPPATH=['{zlib_prefix}/include'],\n    LIBPATH=['{zlib_prefix}/lib'],\n    LIBS=[",
         1,
     )
     with open("SConstruct", "w") as fh:

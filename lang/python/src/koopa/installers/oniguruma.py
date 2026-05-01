@@ -17,13 +17,14 @@ def main(
 ) -> None:
     """Install oniguruma."""
     env = activate_app(
-        "autoconf", "automake", "libtool", "m4", "pkg-config",
+        "autoconf",
+        "automake",
+        "libtool",
+        "m4",
+        "pkg-config",
         build_only=True,
     )
-    url = (
-        f"https://github.com/kkos/oniguruma/releases/download/"
-        f"v{version}/onig-{version}.tar.gz"
-    )
+    url = f"https://github.com/kkos/oniguruma/releases/download/v{version}/onig-{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     subprocess.run(

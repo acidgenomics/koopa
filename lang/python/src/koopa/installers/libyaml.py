@@ -17,7 +17,11 @@ def main(
 ) -> None:
     """Install libyaml."""
     env = activate_app(
-        "autoconf", "automake", "libtool", "m4", "pkg-config",
+        "autoconf",
+        "automake",
+        "libtool",
+        "m4",
+        "pkg-config",
         build_only=True,
     )
     libtool_prefix = app_prefix("libtool")

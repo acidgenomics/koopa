@@ -22,8 +22,15 @@ def main(
     """Install git."""
     env = activate_app("autoconf", "make", build_only=True)
     env = activate_app(
-        "expat", "zlib", "gettext", "openssl", "zstd",
-        "libssh2", "curl", "pcre2", "libiconv",
+        "expat",
+        "zlib",
+        "gettext",
+        "openssl",
+        "zstd",
+        "libssh2",
+        "curl",
+        "pcre2",
+        "libiconv",
         env=env,
     )
     make = locate("make")
@@ -82,7 +89,8 @@ def main(
     )
     subprocess.run(
         [
-            make, f"--jobs={jobs}",
+            make,
+            f"--jobs={jobs}",
             "NO_IMAP_SEND=YesPlease",
             "NO_INSTALL_HARDLINKS=YesPlease",
             "VERBOSE=1",

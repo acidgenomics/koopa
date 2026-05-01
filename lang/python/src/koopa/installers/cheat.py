@@ -13,10 +13,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install cheat."""
-    url = (
-        f"https://github.com/cheat/cheat/archive/refs/tags/"
-        f"{version}.tar.gz"
-    )
+    url = f"https://github.com/cheat/cheat/archive/refs/tags/{version}.tar.gz"
     build_go_package(
         url=url,
         name=name,
