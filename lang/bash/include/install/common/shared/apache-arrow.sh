@@ -21,18 +21,23 @@ main() {
         'python'
     )
     deps+=(
+        'boost'
         # > 'llvm'
         'openssl'
     )
     _koopa_activate_app --build-only "${build_deps[@]}"
     _koopa_activate_app "${deps[@]}"
     # > dict['llvm_root']="$(_koopa_app_prefix 'llvm')"
+    dict['boost']="$(_koopa_app_prefix 'boost')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    _koopa_assert_is_dir "${dict['boost']}"
     cmake_args=(
         '-DARROW_CSV=ON'
         '-DARROW_DEPENDENCY_SOURCE=BUNDLED'
         '-DARROW_PARQUET=ON'
+        "-DBoost_ROOT=${dict['boost']}"
+        '-DBoost_SOURCE=SYSTEM'
     )
     if ! _koopa_is_arm64
     then
