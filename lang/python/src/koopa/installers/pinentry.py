@@ -15,9 +15,7 @@ def main(
 ) -> None:
     """Install pinentry."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app(
-        "libiconv", "ncurses", "libgpg-error", "libassuan", env=env
-    )
+    env = activate_app("libiconv", "ncurses", "libgpg-error", "libassuan", env=env)
     lgpe_prefix = app_prefix("libgpg-error")
     libassuan_prefix = app_prefix("libassuan")
     libiconv_prefix = app_prefix("libiconv")

@@ -21,13 +21,18 @@ def main(
         build_deps.append("gcc")
     env = activate_app(*build_deps, build_only=True)
     env = activate_app(
-        "c-ares", "jemalloc", "libev", "icu4c", "libxml2", "openssl", "zlib",
+        "c-ares",
+        "jemalloc",
+        "libev",
+        "icu4c",
+        "libxml2",
+        "openssl",
+        "zlib",
         env=env,
     )
     python = locate("python3")
     url = (
-        f"https://github.com/nghttp2/nghttp2/releases/download/"
-        f"v{version}/nghttp2-{version}.tar.gz"
+        f"https://github.com/nghttp2/nghttp2/releases/download/v{version}/nghttp2-{version}.tar.gz"
     )
     download_extract_cd(url)
     make_build(

@@ -20,14 +20,9 @@ def main(
 ) -> None:
     """Install libxml2."""
     env = activate_app("make", "pkg-config", build_only=True)
-    env = activate_app(
-        "zlib", "icu4c", "readline", "xz", "libiconv", env=env
-    )
+    env = activate_app("zlib", "icu4c", "readline", "xz", "libiconv", env=env)
     mm = _major_minor_version(version)
-    url = (
-        f"https://download.gnome.org/sources/libxml2/"
-        f"{mm}/libxml2-{version}.tar.xz"
-    )
+    url = f"https://download.gnome.org/sources/libxml2/{mm}/libxml2-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

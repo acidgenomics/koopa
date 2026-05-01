@@ -18,9 +18,20 @@ def main(
     """Install gnupg."""
     env = activate_app("pkg-config", build_only=True)
     deps = [
-        "zlib", "readline", "nettle", "libtasn1", "gnutls", "sqlite",
-        "libgpg-error", "libgcrypt", "libassuan", "libksba", "npth",
-        "pinentry", "openldap", "libiconv",
+        "zlib",
+        "readline",
+        "nettle",
+        "libtasn1",
+        "gnutls",
+        "sqlite",
+        "libgpg-error",
+        "libgcrypt",
+        "libassuan",
+        "libksba",
+        "npth",
+        "pinentry",
+        "openldap",
+        "libiconv",
     ]
     if sys.platform != "darwin":
         deps.append("bzip2")

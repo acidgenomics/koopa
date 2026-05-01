@@ -15,10 +15,7 @@ def main(
 ) -> None:
     """Install xorg-xorgproto."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/proto/"
-        f"xorgproto-{version}.tar.gz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/proto/xorgproto-{version}.tar.gz"
     download_extract_cd(url)
     make_build(
         conf_args=[

@@ -24,10 +24,7 @@ def main(
         "xorg-libxcb",
         env=env,
     )
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"libX11-{version}.tar.xz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/libX11-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

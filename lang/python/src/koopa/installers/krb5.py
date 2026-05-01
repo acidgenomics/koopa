@@ -23,10 +23,7 @@ def main(
     """Install krb5."""
     env = activate_app("libedit", "openssl", env=None)
     mm = _major_minor_version(version)
-    url = (
-        f"https://kerberos.org/dist/krb5/"
-        f"{mm}/krb5-{version}.tar.gz"
-    )
+    url = f"https://kerberos.org/dist/krb5/{mm}/krb5-{version}.tar.gz"
     download_extract_cd(url)
     os.chdir(os.path.join("krb5", "src"))
     make_build(

@@ -20,15 +20,10 @@ def main(
 ) -> None:
     """Install libxslt."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app(
-        "icu4c", "libxml2", "libgpg-error", "libgcrypt", env=env
-    )
+    env = activate_app("icu4c", "libxml2", "libgpg-error", "libgcrypt", env=env)
     libxml2_prefix = app_prefix("libxml2")
     mm = _major_minor_version(version)
-    url = (
-        f"https://download.gnome.org/sources/libxslt/"
-        f"{mm}/libxslt-{version}.tar.xz"
-    )
+    url = f"https://download.gnome.org/sources/libxslt/{mm}/libxslt-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

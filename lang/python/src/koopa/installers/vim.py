@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 
-from koopa.build import activate_app, app_prefix, locate, make_build
+from koopa.build import activate_app, locate, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
@@ -31,8 +31,10 @@ def main(
         f"--prefix={prefix}",
     ]
     if sys.platform == "darwin":
-        conf_args.extend([
-            "--disable-gui",
-            "--without-x",
-        ])
+        conf_args.extend(
+            [
+                "--disable-gui",
+                "--without-x",
+            ]
+        )
     make_build(conf_args=conf_args, env=env)

@@ -16,10 +16,7 @@ def main(
     """Install xorg-libice."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("xorg-xorgproto", "xorg-xtrans", env=env)
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"libICE-{version}.tar.xz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/libICE-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

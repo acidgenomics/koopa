@@ -19,10 +19,7 @@ def main(
     env = activate_app("libtool", "make", "pkg-config", build_only=True)
     env = activate_app("ncurses", "unibilium", env=env)
     make = locate("make")
-    url = (
-        f"https://www.leonerd.org.uk/code/libtermkey/"
-        f"libtermkey-{version}.tar.gz"
-    )
+    url = f"https://www.leonerd.org.uk/code/libtermkey/libtermkey-{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     subprocess.run(

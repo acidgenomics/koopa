@@ -17,16 +17,11 @@ def main(
 ) -> None:
     """Install curl."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app(
-        "ca-certificates", "zlib", "zstd", "openssl", "libssh2", env=env
-    )
+    env = activate_app("ca-certificates", "zlib", "zstd", "openssl", "libssh2", env=env)
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = f"{ca_prefix}/share/ca-certificates/cacert.pem"
     version2 = version.replace(".", "_")
-    url = (
-        f"https://github.com/curl/curl/releases/download/"
-        f"curl-{version2}/curl-{version}.tar.xz"
-    )
+    url = f"https://github.com/curl/curl/releases/download/curl-{version2}/curl-{version}.tar.xz"
     download_extract_cd(url)
     conf_args = [
         "--disable-debug",
@@ -48,8 +43,10 @@ def main(
         f"--prefix={prefix}",
     ]
     if sys.platform == "darwin":
-        conf_args.extend([
-            "--with-default-ssl-backend=openssl",
-            "--with-secure-transport",
-        ])
+        conf_args.extend(
+            [
+                "--with-default-ssl-backend=openssl",
+                "--with-secure-transport",
+            ]
+        )
     make_build(conf_args=conf_args, env=env)

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import os
-
 from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
 from koopa.installers._build_helper import download_extract_cd
 
@@ -20,10 +18,7 @@ def main(
     libaec_prefix = app_prefix("libaec")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
-    url = (
-        f"https://github.com/HDFGroup/hdf5/releases/download/"
-        f"{version}/hdf5-{version}.tar.gz"
-    )
+    url = f"https://github.com/HDFGroup/hdf5/releases/download/{version}/hdf5-{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,

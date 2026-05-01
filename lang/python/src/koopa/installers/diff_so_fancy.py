@@ -18,10 +18,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install diff-so-fancy."""
-    url = (
-        f"https://github.com/so-fancy/diff-so-fancy/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v{version}.tar.gz"
     tarball = download(url)
     extract(tarball, "src")
     os.chdir("src")

@@ -15,10 +15,7 @@ def main(
 ) -> None:
     """Install xorg-libpthread-stubs."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"libpthread-stubs-{version}.tar.xz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/libpthread-stubs-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[f"--prefix={prefix}"],

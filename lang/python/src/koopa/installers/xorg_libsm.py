@@ -15,13 +15,8 @@ def main(
 ) -> None:
     """Install xorg-libsm."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app(
-        "xorg-xorgproto", "xorg-xtrans", "xorg-libice", env=env
-    )
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"libSM-{version}.tar.xz"
-    )
+    env = activate_app("xorg-xorgproto", "xorg-xtrans", "xorg-libice", env=env)
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/libSM-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

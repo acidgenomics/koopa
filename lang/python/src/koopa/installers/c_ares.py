@@ -15,9 +15,6 @@ def main(
 ) -> None:
     """Install c-ares."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/c-ares/c-ares/releases/download/"
-        f"v{version}/c-ares-{version}.tar.gz"
-    )
+    url = f"https://github.com/c-ares/c-ares/releases/download/v{version}/c-ares-{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(prefix=prefix, env=env)

@@ -26,10 +26,7 @@ def main(
         "xorg-libx11",
         env=env,
     )
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"libXt-{version}.tar.xz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/libXt-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

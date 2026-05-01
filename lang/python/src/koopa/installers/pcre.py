@@ -14,9 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install pcre."""
-    env = activate_app(
-        "autoconf", "automake", "libtool", "pkg-config", build_only=True
-    )
+    env = activate_app("autoconf", "automake", "libtool", "pkg-config", build_only=True)
     env = activate_app("zlib", "bzip2", env=env)
     url = f"https://koopa.acidgenomics.com/src/pcre/{version}.tar.bz2"
     download_extract_cd(url)

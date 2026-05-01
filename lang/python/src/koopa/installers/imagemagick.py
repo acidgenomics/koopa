@@ -18,17 +18,25 @@ def main(
     """Install imagemagick."""
     env = activate_app("pkg-config", build_only=True)
     deps = [
-        "zlib", "zstd", "xz", "freetype", "jpeg", "libde265", "libheif",
-        "libpng", "libtiff", "libtool", "icu4c", "libxml2", "libzip",
+        "zlib",
+        "zstd",
+        "xz",
+        "freetype",
+        "jpeg",
+        "libde265",
+        "libheif",
+        "libpng",
+        "libtiff",
+        "libtool",
+        "icu4c",
+        "libxml2",
+        "libzip",
         "fontconfig",
     ]
     if sys.platform != "darwin":
         deps.append("bzip2")
     env = activate_app(*deps, env=env)
-    url = (
-        f"https://imagemagick.org/archive/releases/"
-        f"ImageMagick-{version}.tar.xz"
-    )
+    url = f"https://imagemagick.org/archive/releases/ImageMagick-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

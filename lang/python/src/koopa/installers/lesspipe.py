@@ -16,10 +16,7 @@ def main(
     """Install lesspipe."""
     env = activate_app("bash", build_only=True)
     bash = locate("bash")
-    url = (
-        f"https://github.com/wofr06/lesspipe/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/wofr06/lesspipe/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     make_build(
         conf_args=[

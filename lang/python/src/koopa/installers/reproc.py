@@ -15,10 +15,7 @@ def main(
 ) -> None:
     """Install reproc."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/DaanDeMeyer/reproc/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/DaanDeMeyer/reproc/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,

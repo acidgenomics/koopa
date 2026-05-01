@@ -20,16 +20,18 @@ def main(
     """Install openssh."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app(
-        "zlib", "openssl", "ldns", "libedit", "libfido2", "libxcrypt",
+        "zlib",
+        "openssl",
+        "ldns",
+        "libedit",
+        "libfido2",
+        "libxcrypt",
         "krb5",
         env=env,
     )
     openssl_prefix = app_prefix("openssl")
     libedit_prefix = app_prefix("libedit")
-    url = (
-        f"https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
-        f"openssh-{version}.tar.gz"
-    )
+    url = f"https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz"
     download_extract_cd(url)
     conf_args = [
         f"--mandir={prefix}/share/man",
@@ -47,16 +49,20 @@ def main(
         "--without-zlib-version-check",
     ]
     if sys.platform == "darwin":
-        conf_args.extend([
-            f"--with-libedit={libedit_prefix}",
-            "--with-keychain=apple",
-            "--with-privsep-path=/var/empty",
-        ])
+        conf_args.extend(
+            [
+                f"--with-libedit={libedit_prefix}",
+                "--with-keychain=apple",
+                "--with-privsep-path=/var/empty",
+            ]
+        )
     else:
-        conf_args.extend([
-            "--with-libedit",
-            f"--with-privsep-path={prefix}/var/lib/sshd",
-        ])
+        conf_args.extend(
+            [
+                "--with-libedit",
+                f"--with-privsep-path={prefix}/var/lib/sshd",
+            ]
+        )
     make_build(
         conf_args=conf_args,
         targets=["install-nokeys"],

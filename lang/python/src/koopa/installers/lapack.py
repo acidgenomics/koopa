@@ -21,10 +21,7 @@ def main(
     if gfortran is None:
         msg = "gfortran not found."
         raise FileNotFoundError(msg)
-    url = (
-        f"https://github.com/Reference-LAPACK/lapack/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,

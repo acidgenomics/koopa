@@ -15,10 +15,7 @@ def main(
 ) -> None:
     """Install yaml-cpp."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/jbeder/yaml-cpp/archive/"
-        f"refs/tags/{version}.tar.gz"
-    )
+    url = f"https://github.com/jbeder/yaml-cpp/archive/refs/tags/{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,
