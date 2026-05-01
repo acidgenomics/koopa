@@ -32,7 +32,8 @@ def main(
     subprocess.run(
         [
             make,
-            "-f", "unix/Makefile",
+            "-f",
+            "unix/Makefile",
             "install",
             f"prefix={prefix}",
             f"MANDIR={prefix}/share/man/man1",

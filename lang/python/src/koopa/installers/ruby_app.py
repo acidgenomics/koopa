@@ -25,10 +25,7 @@ def main(
     readline_prefix = app_prefix("readline")
     zlib_prefix = app_prefix("zlib")
     maj_min_ver = major_minor_version(version)
-    url = (
-        f"https://cache.ruby-lang.org/pub/ruby/{maj_min_ver}/"
-        f"ruby-{version}.tar.gz"
-    )
+    url = f"https://cache.ruby-lang.org/pub/ruby/{maj_min_ver}/ruby-{version}.tar.gz"
     download_extract_cd(url)
     conf_args = [
         "--disable-install-doc",

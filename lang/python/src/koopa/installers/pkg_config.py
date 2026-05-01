@@ -20,22 +20,21 @@ def main(
     """Install pkg-config."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = (
-        f"https://pkgconfig.freedesktop.org/releases/"
-        f"pkg-config-{version}.tar.gz"
-    )
+    url = f"https://pkgconfig.freedesktop.org/releases/pkg-config-{version}.tar.gz"
     download_extract_cd(url)
     if sys.platform == "darwin":
         sys_inc_dir = "/usr/include"
         pc_path = "/usr/lib/pkgconfig"
     else:
         sys_inc_dir = "/usr/include"
-        pc_path = ":".join([
-            "/usr/lib/pkgconfig",
-            "/usr/lib/x86_64-linux-gnu/pkgconfig",
-            "/usr/lib/aarch64-linux-gnu/pkgconfig",
-            "/usr/share/pkgconfig",
-        ])
+        pc_path = ":".join(
+            [
+                "/usr/lib/pkgconfig",
+                "/usr/lib/x86_64-linux-gnu/pkgconfig",
+                "/usr/lib/aarch64-linux-gnu/pkgconfig",
+                "/usr/share/pkgconfig",
+            ]
+        )
     conf_args = [
         f"--prefix={prefix}",
         f"--with-system-include-path={sys_inc_dir}",

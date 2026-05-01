@@ -28,10 +28,7 @@ def main(
     luajit_maj_min = major_minor_version(luajit_ver)
     url = f"https://github.com/luvit/luv/archive/{version}.tar.gz"
     download_extract_cd(url)
-    compat_url = (
-        "https://github.com/keplerproject/lua-compat-5.3/archive/"
-        "v0.13.tar.gz"
-    )
+    compat_url = "https://github.com/keplerproject/lua-compat-5.3/archive/v0.13.tar.gz"
     compat_tarball = download(compat_url)
     extract(compat_tarball, "deps/lua-compat-5.3")
     cmake_build(

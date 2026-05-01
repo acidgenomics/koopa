@@ -31,10 +31,18 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     env = activate_app("make", "pkg-config", build_only=True)
     deps = []
     if sys.platform != "darwin":
-        deps.extend([
-            "bzip2", "libedit", "libffi", "libxcrypt",
-            "ncurses", "readline", "unzip", "zlib",
-        ])
+        deps.extend(
+            [
+                "bzip2",
+                "libedit",
+                "libffi",
+                "libxcrypt",
+                "ncurses",
+                "readline",
+                "unzip",
+                "zlib",
+            ]
+        )
     deps.extend(["expat", "mpdecimal", "openssl3", "sqlite", "xz"])
     env = activate_app(*deps, env=env)
     make = locate("make")
@@ -42,15 +50,11 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     maj_min_ver = major_minor_version(version)
     os.makedirs(os.path.join(prefix, "bin"), exist_ok=True)
     os.makedirs(os.path.join(prefix, "lib"), exist_ok=True)
-    base_url = os.environ.get(
-        "PYTHON_BUILD_MIRROR_URL", "https://www.python.org/ftp/python"
-    )
+    base_url = os.environ.get("PYTHON_BUILD_MIRROR_URL", "https://www.python.org/ftp/python")
     url = f"{base_url}/{version}/Python-{version}.tar.xz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
-    subprocess_env["PATH"] = (
-        os.path.join(prefix, "bin") + ":" + subprocess_env.get("PATH", "")
-    )
+    subprocess_env["PATH"] = os.path.join(prefix, "bin") + ":" + subprocess_env.get("PATH", "")
     ldflags = subprocess_env.get("LDFLAGS", "")
     subprocess_env["LDFLAGS"] = f"-Wl,-rpath,{prefix}/lib {ldflags}"
     conf_args = [
@@ -99,8 +103,15 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     )
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     for mod in (
-        "_bz2", "_ctypes", "_decimal", "hashlib",
-        "pyexpat", "readline", "sqlite3", "ssl", "zlib",
+        "_bz2",
+        "_ctypes",
+        "_decimal",
+        "hashlib",
+        "pyexpat",
+        "readline",
+        "sqlite3",
+        "ssl",
+        "zlib",
     ):
         subprocess.run([python, "-c", f"import {mod}"], check=True)
     _create_unversioned_symlinks(prefix)
@@ -111,8 +122,11 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
     maj_min_ver = major_minor_version(version)
     subprocess.run(
         [
-            uv, "python", "install",
-            "--install-dir", "uv",
+            uv,
+            "python",
+            "install",
+            "--install-dir",
+            "uv",
             "--no-bin",
             "--no-cache",
             "--no-config",
@@ -132,14 +146,23 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
         dst = os.path.join(prefix, item)
         if os.path.isdir(src):
             import shutil
+
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
             import shutil
+
             shutil.copy2(src, dst)
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     for mod in (
-        "_bz2", "_ctypes", "_decimal", "hashlib",
-        "pyexpat", "readline", "sqlite3", "ssl", "zlib",
+        "_bz2",
+        "_ctypes",
+        "_decimal",
+        "hashlib",
+        "pyexpat",
+        "readline",
+        "sqlite3",
+        "ssl",
+        "zlib",
     ):
         subprocess.run([python, "-c", f"import {mod}"], check=True)
     _create_unversioned_symlinks(prefix)

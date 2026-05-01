@@ -21,8 +21,14 @@ def main(
     """Install proj."""
     env = activate_app("pkg-config", "python", build_only=True)
     env = activate_app(
-        "zlib", "zstd", "openssl", "libssh2", "curl",
-        "libjpeg-turbo", "libtiff", "sqlite",
+        "zlib",
+        "zstd",
+        "openssl",
+        "libssh2",
+        "curl",
+        "libjpeg-turbo",
+        "libtiff",
+        "sqlite",
         env=env,
     )
     sqlite_prefix = app_prefix("sqlite")

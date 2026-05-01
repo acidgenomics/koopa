@@ -20,14 +20,9 @@ def main(
     env = activate_app("zlib", "zstd", "hdf5", env=env)
     zstd_prefix = app_prefix("zstd")
     ext = shared_ext()
-    url = (
-        f"https://github.com/nanoporetech/vbz_compression/archive/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/nanoporetech/vbz_compression/archive/v{version}.tar.gz"
     download_extract_cd(url)
-    svb_url = (
-        "https://github.com/lemire/streamvbyte/archive/v0.5.2.tar.gz"
-    )
+    svb_url = "https://github.com/lemire/streamvbyte/archive/v0.5.2.tar.gz"
     svb_tarball = download(svb_url)
     extract(svb_tarball, "third_party/streamvbyte")
     cmake_build(

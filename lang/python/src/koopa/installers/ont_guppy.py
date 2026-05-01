@@ -31,8 +31,12 @@ def main(
     )
     subprocess.run(
         [
-            "aws", "--profile=acidgenomics",
-            "s3", "cp", s3_url, ".",
+            "aws",
+            "--profile=acidgenomics",
+            "s3",
+            "cp",
+            s3_url,
+            ".",
         ],
         check=True,
     )

@@ -17,10 +17,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install apache-spark."""
-    url = (
-        f"https://archive.apache.org/dist/spark/spark-{version}/"
-        f"spark-{version}-bin-hadoop3.tgz"
-    )
+    url = f"https://archive.apache.org/dist/spark/spark-{version}/spark-{version}-bin-hadoop3.tgz"
     tarball = download(url)
     libexec = os.path.join(prefix, "libexec")
     extract(tarball, libexec)
