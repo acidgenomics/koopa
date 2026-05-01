@@ -20,7 +20,7 @@ def build_all_tags(local: str, remote: str) -> bool:
     tags = list_subdirs(path=local, recursive=False, sort=True, basename_only=True)
     for tag in tags:
         local2 = join(local, tag)
-        assert isdir(tag)
+        assert isdir(local2)
         remote2 = remote + ":" + tag
         build_tag(local=local2, remote=remote2)
     return True
