@@ -27,6 +27,8 @@ def main(
     subprocess_env = env.to_env_dict()
     cc = os.environ.get("CC", "gcc")
     toolset = os.path.basename(cc)
+    if sys.platform == "darwin" and toolset == "gcc":
+        toolset = "clang"
     url = (
         f"https://github.com/boostorg/boost/releases/download/"
         f"boost-{version}/boost-{version}-b2-nodocs.tar.gz"
