@@ -184,6 +184,8 @@ def _build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("header")
     subparsers.add_parser("install-all-apps")
     subparsers.add_parser("install-default-apps")
+    subparsers.add_parser("list-all-apps")
+    subparsers.add_parser("list-default-apps")
 
     return parser
 
@@ -425,6 +427,20 @@ def _handle_install_default_apps(_args: argparse.Namespace) -> None:
     install_default_apps()
 
 
+def _handle_list_all_apps(_args: argparse.Namespace) -> None:
+    """Handle ``koopa list-all-apps`` subcommand."""
+    from koopa.cli import print_shared_apps
+
+    print_shared_apps(mode="all")
+
+
+def _handle_list_default_apps(_args: argparse.Namespace) -> None:
+    """Handle ``koopa list-default-apps`` subcommand."""
+    from koopa.cli import print_shared_apps
+
+    print_shared_apps(mode="default")
+
+
 # -- Entry point --------------------------------------------------------------
 
 
@@ -455,6 +471,8 @@ def main() -> None:
         "header": _handle_header,
         "install-all-apps": _handle_install_all_apps,
         "install-default-apps": _handle_install_default_apps,
+        "list-all-apps": _handle_list_all_apps,
+        "list-default-apps": _handle_list_default_apps,
     }
     handler = handlers.get(args.command)
     if handler is None:
