@@ -1,7 +1,18 @@
-"""Syntactically valid names."""
+"""Syntactically valid names.
+
+Uses the external ``syntactic`` package when available, falling back to
+built-in implementations.
+"""
 
 from re import sub
 from unicodedata import combining, normalize
+
+try:
+    from syntactic import kebab_case as _ext_kebab_case
+    from syntactic import snake_case as _ext_snake_case
+except ImportError:
+    _ext_kebab_case = None  # type: ignore[assignment]
+    _ext_snake_case = None  # type: ignore[assignment]
 
 
 def _syntactic_engine(string: str) -> str:
@@ -40,8 +51,10 @@ def _syntactic_engine(string: str) -> str:
 
 def kebab_case(string: str) -> str:
     """Kebab case."""
-    string = _syntactic_engine(string=string)
-    return string
+    if _ext_kebab_case is not None:
+        result = _ext_kebab_case(string)
+        return result[0] if isinstance(result, list) else result
+    return _syntactic_engine(string=string)
 
 
 def remove_accents(string: str) -> str:
@@ -58,6 +71,8 @@ def remove_accents(string: str) -> str:
 
 def snake_case(string: str) -> str:
     """Snake case."""
+    if _ext_snake_case is not None:
+        result = _ext_snake_case(string)
+        return result[0] if isinstance(result, list) else result
     string = _syntactic_engine(string=string)
-    string = string.replace("-", "_")
-    return string
+    return string.replace("-", "_")

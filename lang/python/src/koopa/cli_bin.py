@@ -384,9 +384,12 @@ def _handle_download_github_latest(args: list[str]) -> None:
 # -- Rename operations ---------------------------------------------------------
 
 
-def _handle_rename_camel_case(args: list[str]) -> None:
-    from syntactic import syntactic_rename
-
+def _syntactic_rename(args: list[str], *, fun: str) -> None:
+    try:
+        from syntactic import syntactic_rename
+    except ImportError:
+        msg = "Package 'syntactic' is not installed."
+        raise SystemExit(msg) from None
     _, flags, pos = _parse_key_value_args(
         args,
         keys=set(),
@@ -395,47 +398,23 @@ def _handle_rename_camel_case(args: list[str]) -> None:
     _assert_args(pos, min_=1)
     syntactic_rename(
         pos,
-        fun="camel_case",
+        fun=fun,
         recursive=flags.get("recursive", False),
         quiet=flags.get("quiet", False),
         dry_run=flags.get("dry-run", False),
     )
+
+
+def _handle_rename_camel_case(args: list[str]) -> None:
+    _syntactic_rename(args, fun="camel_case")
 
 
 def _handle_rename_kebab_case(args: list[str]) -> None:
-    from syntactic import syntactic_rename
-
-    _, flags, pos = _parse_key_value_args(
-        args,
-        keys=set(),
-        flags={"recursive", "quiet", "dry-run"},
-    )
-    _assert_args(pos, min_=1)
-    syntactic_rename(
-        pos,
-        fun="kebab_case",
-        recursive=flags.get("recursive", False),
-        quiet=flags.get("quiet", False),
-        dry_run=flags.get("dry-run", False),
-    )
+    _syntactic_rename(args, fun="kebab_case")
 
 
 def _handle_rename_snake_case(args: list[str]) -> None:
-    from syntactic import syntactic_rename
-
-    _, flags, pos = _parse_key_value_args(
-        args,
-        keys=set(),
-        flags={"recursive", "quiet", "dry-run"},
-    )
-    _assert_args(pos, min_=1)
-    syntactic_rename(
-        pos,
-        fun="snake_case",
-        recursive=flags.get("recursive", False),
-        quiet=flags.get("quiet", False),
-        dry_run=flags.get("dry-run", False),
-    )
+    _syntactic_rename(args, fun="snake_case")
 
 
 def _handle_rename_lowercase(args: list[str]) -> None:
