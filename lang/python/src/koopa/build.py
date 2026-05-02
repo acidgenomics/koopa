@@ -8,6 +8,7 @@ Python equivalents of the Bash functions ``_koopa_activate_app``,
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -269,6 +270,9 @@ def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
 # -- cmake_build --------------------------------------------------------------
 
 
+_NINJA_PROGRESS_RE = re.compile(r"^\[(\d+)/(\d+)\]")
+
+
 def cmake_build(
     *,
     prefix: str,
@@ -292,7 +296,8 @@ def cmake_build(
     args
         Additional CMake cache variables (e.g. ``["-DFOO=ON"]``).
     generator
-        CMake generator name (default ``"Unix Makefiles"``).
+        CMake generator name (default ``"Unix Makefiles"``).  Automatically
+        switched to ``"Ninja"`` when ``ninja`` is on PATH.
     jobs
         Parallel build jobs (defaults to CPU count).
     env
@@ -304,6 +309,8 @@ def cmake_build(
     if cmake is None:
         msg = "cmake not found."
         raise FileNotFoundError(msg)
+    if generator == "Unix Makefiles" and shutil.which("ninja"):
+        generator = "Ninja"
     auto_build_dir = False
     if build_dir is None:
         build_dir = tempfile.mkdtemp(prefix="koopa-cmake-")
@@ -334,10 +341,12 @@ def cmake_build(
             env=subprocess_env,
             check=True,
         )
-        subprocess.run(
-            [cmake, "--build", build_dir, "--parallel", str(jobs)],
-            env=subprocess_env,
-            check=True,
+        _cmake_build_step(
+            cmake=cmake,
+            build_dir=build_dir,
+            jobs=jobs,
+            subprocess_env=subprocess_env,
+            use_ninja=generator == "Ninja",
         )
         subprocess.run(
             [cmake, "--install", build_dir, "--prefix", prefix],
@@ -347,6 +356,48 @@ def cmake_build(
     finally:
         if auto_build_dir:
             shutil.rmtree(build_dir, ignore_errors=True)
+
+
+def _cmake_build_step(
+    *,
+    cmake: str,
+    build_dir: str,
+    jobs: int,
+    subprocess_env: dict[str, str],
+    use_ninja: bool,
+) -> None:
+    """Run the ``cmake --build`` step, optionally parsing Ninja progress."""
+    cmd = [cmake, "--build", build_dir, "--parallel", str(jobs)]
+    if not use_ninja:
+        subprocess.run(cmd, env=subprocess_env, check=True)
+        return
+    from koopa.progress import get_active_progress
+
+    progress = get_active_progress()
+    proc = subprocess.Popen(
+        cmd,
+        env=subprocess_env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    switched = False
+    output_lines: list[str] = []
+    assert proc.stdout is not None
+    for line in proc.stdout:
+        output_lines.append(line)
+        m = _NINJA_PROGRESS_RE.match(line)
+        if m and progress is not None:
+            current, total = int(m.group(1)), int(m.group(2))
+            if not switched:
+                switched = progress.switch_to_step_mode(total)
+            progress.update_steps(current, total)
+        elif not switched:
+            sys.stderr.write(line)
+    rc = proc.wait()
+    if rc != 0:
+        sys.stderr.writelines(output_lines)
+        raise subprocess.CalledProcessError(rc, cmd)
 
 
 def _cmake_std_args(
