@@ -18,6 +18,7 @@ install_venv() {
         --all-extras \
         --editable . \
         --only-binary=':all:' \
+        --no-binary='syntactic' \
         --requirements 'pyproject.toml' \
         --upgrade
     uv lock
