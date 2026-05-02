@@ -232,12 +232,17 @@ def check_macos_system_r() -> bool:
     if not expected:
         return True
     ok = True
+    seen: set[str] = set()
     for r_bin in (
         "/usr/local/bin/R",
         "/Library/Frameworks/R.framework/Resources/bin/R",
     ):
         if not os.path.isfile(r_bin) or not os.access(r_bin, os.X_OK):
             continue
+        real = os.path.realpath(r_bin)
+        if real in seen:
+            continue
+        seen.add(real)
         try:
             result = subprocess.run(
                 [r_bin, "--version"],
@@ -275,12 +280,17 @@ def check_macos_system_python() -> bool:
     if not expected:
         return True
     ok = True
+    seen: set[str] = set()
     for python_bin in (
         "/usr/local/bin/python3",
         "/Library/Frameworks/Python.framework/Versions/Current/bin/python3",
     ):
         if not os.path.isfile(python_bin) or not os.access(python_bin, os.X_OK):
             continue
+        real = os.path.realpath(python_bin)
+        if real in seen:
+            continue
+        seen.add(real)
         try:
             result = subprocess.run(
                 [python_bin, "--version"],
