@@ -1,83 +1,219 @@
-# koopa(1) - shell bootloader for bioinformatics
+# koopa(1) - shell bootloader for data science
 
 ## SYNOPSIS
 
-`koopa` ...
+`koopa` <command> [options] [args...]
 
-## OPTIONS
+## DESCRIPTION
 
-### Unix standard (general)
+koopa is a shell bootloader for data science that manages installation,
+configuration, and updates of command-line applications and libraries.
+
+## GLOBAL OPTIONS
 
 * `--help`, `-h`:
-  Show this help message and exit.
+  Show help. Place after a command to view command-specific help.
 
 * `--version`, `-V`:
-  Version information.
+  Print version information.
 
-### System configuration
+* `--verbose`:
+  Enable verbose output.
 
-* `check`:
-  Run system dependency version checks.
+## COMMANDS
 
-* `develop`:
-  Switch koopa installation to developer mode.
+### Package management
 
-* `info`:
-  Show system information.
+* `install` <app>...:
+  Install one or more applications.
 
-* `list`:
-  List programs accessible in `PATH`.
+* `reinstall` <app>...:
+  Reinstall applications, with optional reverse dependency rebuilds.
 
-* `update`:
-  Update koopa installation to latest version.
-  Run with `--system` flag to also update the system configuration.
+* `uninstall` [<app>...]:
+  Remove installed applications. Defaults to uninstalling koopa itself.
 
-### Character string return
+* `update` [<app>...]:
+  Update applications to latest versions. Defaults to updating koopa.
 
-* `app-prefix`:
-  Application installation prefix.
-  Refers to applications that don't need to be build using `make`, and can be
-  installed on an external disk, for space-constrained virtual machines.
-  Defaults to `"/n/opt/"` (with external disk) or `"/usr/local/opt"` (without
-  external disk) on most machines.
+* `configure` <app>...:
+  Run post-install configuration for applications.
 
-* `config-prefix`:
-  User-specific local configuration prefix.
-  Defined inside `XDG_CONFIG_HOME`, following recommended XDG configuration.
+### Utility commands
+
+* `app` <subcommand>:
+  Application-specific utilities (e.g. `koopa app salmon quant`).
+
+* `system` <subcommand>:
+  System information, prefix lookups, and administration commands.
+
+* `develop` <subcommand>:
+  Developer and maintenance utilities.
+
+* `internal` <subcommand>:
+  Internal low-level utilities (not intended for direct use).
+
+* `version`:
+  Print koopa version.
 
 * `header`:
-  Shell script header file path.
-  Can be passed to `source` inside external shell scripts.
-  Useful for experimental scripts that are not currently saved inside koopa.
+  Print path to the shell script header file, for use with `source`.
 
-* `host-id`:
-  General platform identifier string.
-  Intended for identification of cloud platforms, such as `aws` (Amazon Web
-  Services), `azure` (Microsoft Azure), or `gcp` (Google Cloud Platform).
+* `install-all-apps`:
+  Install all registered applications.
 
-* `local-app-prefix`:
-  Local application prefix.
-  Defaults to `XDG_DATA_HOME` on most machines.
+* `install-default-apps`:
+  Install the default set of applications.
 
-* `make-prefix`:
-  Prefix for `make` application build scripts.
-  Defaults to `"/usr/local"` on most machines.
+## INSTALL OPTIONS
 
-* `os-string`:
-  Operating system identifier string.
-  Returns OS name and version, separated by a hyphen.
-  Example: "ubuntu-18" for Ubuntu 18 LTS or "rhel-8" for RHEL 8.
+* `--bootstrap`:
+  Bootstrap mode (minimal dependency resolution).
 
-* `prefix`:
-  Return the koopa installation path prefix.
-  Also stored as `KOOPA_PREFIX` environment variable.
+* `--no-dependencies`:
+  Skip dependency installation.
 
-* `r-home`:
-  R installation prefix (`R_HOME`).
+* `--private`:
+  Install from private sources.
 
-* `variable`:
-  Internal koopa configuration variable.
-  Recommended for use in Python and R scripts only.
+* `--reinstall`:
+  Force reinstall even if already installed.
+
+* `--system`:
+  Install in system mode.
+
+* `--user`:
+  Install in user mode.
+
+* `-D` <arg>:
+  Pass additional arguments through to the installer. Can be repeated.
+
+## REINSTALL OPTIONS
+
+* `--all-revdeps`:
+  Reinstall the specified apps and all of their reverse dependencies.
+
+* `--only-revdeps`:
+  Reinstall only the reverse dependencies, not the specified apps.
+
+## UNINSTALL / UPDATE / CONFIGURE OPTIONS
+
+* `--system`:
+  Operate in system mode.
+
+* `--user`:
+  Operate in user mode.
+
+## SYSTEM SUBCOMMANDS
+
+* `system check`:
+  Run system dependency version checks.
+
+* `system info`:
+  Show system information.
+
+* `system prefix` [<name>]:
+  Print the installation prefix for koopa or a named application.
+
+* `system version` <name>:
+  Print the installed version of an application.
+
+* `system which` <name>:
+  Print the real path of an application.
+
+* `system list` <subcommand>:
+  List system information. Subcommands: `app-versions`, `dotfiles`,
+  `launch-agents`, `path-priority`, `programs`.
+
+* `system prune-apps`:
+  Remove stale application versions.
+
+* `system update-tex-packages`:
+  Update TeX Live packages via `tlmgr`.
+
+* `system hostname`:
+  Print the system hostname.
+
+* `system os-string`:
+  Print the operating system identifier string.
+
+* `system switch-to-develop`:
+  Switch koopa installation to the development branch.
+
+* `system test`:
+  Run koopa test suite.
+
+* `system delete-cache`:
+  Delete koopa cache files.
+
+* `system enable-passwordless-sudo`:
+  Enable passwordless sudo for the current user.
+
+* `system disable-passwordless-sudo`:
+  Disable passwordless sudo for the current user.
+
+### macOS-specific system subcommands
+
+* `system clean-launch-services`:
+  Clean the macOS Launch Services database.
+
+* `system create-dmg`:
+  Create a DMG disk image.
+
+* `system enable-touch-id-sudo`:
+  Enable Touch ID for sudo authentication.
+
+* `system disable-touch-id-sudo`:
+  Disable Touch ID for sudo authentication.
+
+* `system flush-dns`:
+  Flush the DNS cache.
+
+* `system force-eject`:
+  Force eject a mounted volume.
+
+* `system ifactive`:
+  Show active network interfaces.
+
+* `system reload-autofs`:
+  Reload the autofs automount daemon.
+
+* `system spotlight` <query>:
+  Search using Spotlight.
+
+### Linux-specific system subcommands
+
+* `system fix-sudo-setrlimit-error`:
+  Fix the sudo setrlimit error on Linux.
+
+* `system zsh-compaudit-set-permissions`:
+  Fix Zsh compaudit permissions.
+
+## DEVELOP SUBCOMMANDS
+
+* `develop log`:
+  View the latest temporary log file.
+
+* `develop cache-functions`:
+  Regenerate the cached Bash function library.
+
+* `develop edit-app-json`:
+  Open `app.json` in the default editor.
+
+* `develop format-app-json`:
+  Sort and format `app.json`.
+
+* `develop push-app-build`:
+  Push a single application build to the binary cache.
+
+* `develop push-all-app-builds`:
+  Push all application builds to the binary cache.
+
+* `develop prune-app-binaries`:
+  Remove stale application binaries from the cache.
+
+* `develop roff`:
+  Regenerate man pages from ronn source files.
 
 ## COPYRIGHT
 
