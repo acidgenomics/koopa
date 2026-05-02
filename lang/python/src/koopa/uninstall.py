@@ -15,6 +15,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from koopa.system import is_admin, is_owner
 from koopa.uninstallers import get_python_uninstaller, has_python_uninstaller
 
 
@@ -41,19 +42,6 @@ def _bin_prefix() -> str:
 def _man1_prefix() -> str:
     """Return koopa man1 prefix."""
     return os.path.join(_koopa_prefix(), "share", "man", "man1")
-
-
-def _is_owner() -> bool:
-    """Check if current user is the koopa installation owner."""
-    try:
-        return os.stat(_koopa_prefix()).st_uid == os.getuid()
-    except OSError:
-        return False
-
-
-def _is_admin() -> bool:
-    """Check if current user has admin/root access."""
-    return os.getuid() == 0
 
 
 def _import_app_json_bin(name: str) -> list[str]:
@@ -112,7 +100,7 @@ def uninstall_app(config: UninstallConfig) -> None:
         os.environ["KOOPA_VERBOSE"] = "1"
     app_dir = _app_prefix()
     if config.mode == "shared":
-        if not _is_owner():
+        if not is_owner():
             msg = "Only the koopa owner can uninstall shared apps."
             raise PermissionError(msg)
         if not config.prefix:
@@ -124,10 +112,10 @@ def uninstall_app(config: UninstallConfig) -> None:
         if config.unlink_in_opt is None:
             config.unlink_in_opt = True
     elif config.mode == "system":
-        if not _is_owner():
+        if not is_owner():
             msg = "Only the koopa owner can uninstall system apps."
             raise PermissionError(msg)
-        if not _is_admin():
+        if not is_admin():
             msg = "Admin/root access required for system uninstalls."
             raise PermissionError(msg)
         config.unlink_in_bin = False
@@ -227,7 +215,7 @@ def uninstall_koopa() -> None:
     shutil.rmtree(bootstrap, ignore_errors=True)
     print("Removing config prefix.", file=sys.stderr)
     shutil.rmtree(config, ignore_errors=True)
-    if _is_shared_install() and _is_admin():
+    if _is_shared_install() and is_admin():
         if sys.platform == "linux":
             profile_d = "/etc/profile.d/zzz-koopa.sh"
             if os.path.exists(profile_d):

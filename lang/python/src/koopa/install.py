@@ -22,6 +22,7 @@ from typing import Any
 
 from koopa.archive import extract
 from koopa.download import download
+from koopa.system import is_admin, is_linux, is_macos, is_owner
 
 # -- Data classes -------------------------------------------------------------
 
@@ -105,38 +106,6 @@ def _cpu_count() -> int:
     """Return CPU count."""
     return os.cpu_count() or 1
 
-
-def _is_owner() -> bool:
-    """Check if current user is the koopa installation owner."""
-    prefix = _koopa_prefix()
-    try:
-        return os.stat(prefix).st_uid == os.getuid()
-    except OSError:
-        return False
-
-
-def _is_admin() -> bool:
-    """Check if current user is an admin (root or sudo capable)."""
-    if os.getuid() == 0:
-        return True
-    if sys.platform == "darwin":
-        import grp
-
-        try:
-            return grp.getgrnam("admin").gr_gid in os.getgroups()
-        except KeyError:
-            return False
-    return False
-
-
-def _is_linux() -> bool:
-    """Check if running on Linux."""
-    return sys.platform == "linux"
-
-
-def _is_macos() -> bool:
-    """Check if running on macOS."""
-    return sys.platform == "darwin"
 
 
 def _import_app_json() -> dict[str, Any]:
@@ -222,9 +191,9 @@ def _has_private_access() -> bool:
 
 def _os_string() -> str:
     """Get OS string for binary packages."""
-    if _is_macos():
+    if is_macos():
         return "macos"
-    if _is_linux():
+    if is_linux():
         try:
             with open("/etc/os-release") as f:
                 for line in f:
@@ -392,9 +361,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if config.mode != "shared":
         config.deps = False
     if config.mode == "system":
-        if _is_macos():
+        if is_macos():
             config.platform = "macos"
-        elif _is_linux():
+        elif is_linux():
             config.platform = _os_string()
     if not config.version_key:
         config.version_key = config.name
@@ -407,7 +376,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     app_dir = _app_prefix()
     # -- Mode-specific configuration ------------------------------------------
     if config.mode == "shared":
-        if not _is_owner():
+        if not is_owner():
             msg = "Only the koopa owner can install shared apps."
             raise PermissionError(msg)
         if not config.prefix:
@@ -429,10 +398,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if config.link_in_opt is None:
                 config.link_in_opt = True
     elif config.mode == "system":
-        if not _is_owner():
+        if not is_owner():
             msg = "Only the koopa owner can install system apps."
             raise PermissionError(msg)
-        if not _is_admin():
+        if not is_admin():
             msg = "Admin/root access is required for system installs."
             raise PermissionError(msg)
         config.isolate = False
@@ -441,7 +410,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         config.link_in_opt = False
         config.prefix_check = False
         config.push = False
-        if _is_linux():
+        if is_linux():
             config.update_ldconfig = True
     elif config.mode == "user":
         config.link_in_bin = False
@@ -1212,10 +1181,10 @@ def install_shared_apps(
 
     Converted from install-shared-apps.sh.
     """
-    if not _is_owner():
+    if not is_owner():
         msg = "Only the koopa owner can install shared apps."
         raise PermissionError(msg)
-    if _is_macos() and _arch2() == "amd64":
+    if is_macos() and _arch2() == "amd64":
         msg = "No longer supported for Intel Macs."
         raise RuntimeError(msg)
     try:
@@ -1323,7 +1292,7 @@ def install_koopa(
     )
     system_prefix = "/opt/koopa"
     user_prefix = os.path.join(xdg_data_home, "koopa")
-    if _is_admin():
+    if is_admin():
         shared = True
     if not prefix:
         prefix = system_prefix if shared else user_prefix
@@ -1334,7 +1303,7 @@ def install_koopa(
         raise FileExistsError(msg)
     # Copy source tree to target prefix.
     if shared:
-        if not _is_admin():
+        if not is_admin():
             msg = "Admin permissions required for shared install."
             raise PermissionError(msg)
         _run("cp", "-a", source_prefix, prefix, sudo=True)
@@ -1384,7 +1353,7 @@ def update_koopa(*, verbose: bool = False) -> None:
     if verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
     prefix = _koopa_prefix()
-    if not _is_owner():
+    if not is_owner():
         msg = f"Current user does not own koopa installation at '{prefix}'."
         raise PermissionError(msg)
     if not is_git_repo(prefix):

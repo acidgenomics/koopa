@@ -125,21 +125,39 @@ def is_root() -> bool:
     return os.geteuid() == 0
 
 
+def is_owner() -> bool:
+    """Check if current user is the koopa installation owner."""
+    from koopa.prefix import koopa_prefix
+
+    try:
+        return os.stat(koopa_prefix()).st_uid == os.getuid()
+    except OSError:
+        return False
+
+
 def is_admin() -> bool:
-    """Check if user has admin privileges."""
+    """Check if user has admin privileges.
+
+    On macOS, checks membership in the 'admin' group.
+    On Linux, checks if the user can run sudo (membership in 'sudo' or
+    'wheel' groups, which is the standard convention on Debian/Ubuntu and
+    Fedora/RHEL respectively).
+    """
     if is_root():
         return True
     if is_macos():
         try:
-            result = subprocess.run(
-                ["groups"],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            return "admin" in result.stdout.split()
-        except FileNotFoundError:
+            return grp.getgrnam("admin").gr_gid in os.getgroups()
+        except KeyError:
             return False
+    if is_linux():
+        user_groups = os.getgroups()
+        for name in ("sudo", "wheel"):
+            try:
+                if grp.getgrnam(name).gr_gid in user_groups:
+                    return True
+            except KeyError:
+                continue
     return False
 
 
