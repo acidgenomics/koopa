@@ -1161,29 +1161,20 @@ def install_haskell_package(
 
 
 def install_all_apps() -> None:
-    """Install all supported apps.
-
-    Converted from install-all-apps.sh.
-    """
-    install_shared_apps(all_apps=True)
-
-
-def install_default_apps() -> None:
-    """Install default apps.
-
-    Converted from install-default-apps.sh.
-    """
+    """Install the default recommended app stack."""
     install_shared_apps()
 
 
-def install_shared_apps(
-    *,
-    all_apps: bool = False,
-    update: bool = False,
-) -> None:
-    """Build and install multiple shared apps from source.
+def install_default_apps() -> None:
+    """Install the default recommended app stack."""
+    install_shared_apps()
 
-    Converted from install-shared-apps.sh.
+
+def install_shared_apps() -> None:
+    """Build and install default shared apps from source.
+
+    Skips apps that are already fully installed (have an install log).
+    Use ``koopa update`` to update outdated apps.
     """
     if not is_owner():
         msg = "Only the koopa owner can install shared apps."
@@ -1201,18 +1192,13 @@ def install_shared_apps(
             raise RuntimeError(msg)
     except ImportError:
         pass
-    # Get app names from app.json.
     data = _import_app_json()
-    if all_apps:
-        app_names = sorted(data.keys())
-    else:
-        app_names = [
-            k for k, v in sorted(data.items()) if isinstance(v, dict) and v.get("default", False)
-        ]
+    app_names = [
+        k for k, v in sorted(data.items()) if isinstance(v, dict) and v.get("default", False)
+    ]
     app_dir = _app_prefix()
     for app_name in app_names:
         app_prefix = os.path.join(app_dir, app_name)
-        # Skip if already fully installed (has log file in some version).
         if os.path.isdir(app_prefix):
             versions = [
                 d for d in os.listdir(app_prefix) if os.path.isdir(os.path.join(app_prefix, d))
@@ -1403,6 +1389,224 @@ def _update_venv(prefix: str) -> None:
          "--quiet"],
         check=True,
     )
+
+
+# -- Update pipeline ----------------------------------------------------------
+
+
+def update_bootstrap(*, verbose: bool = False) -> None:
+    """Update bootstrap if out of date."""
+    from koopa.alert import alert, warn
+    from koopa.check import check_bootstrap_version
+
+    if check_bootstrap_version():
+        return
+    alert("Updating bootstrap.")
+    try:
+        config = InstallConfig(
+            name="bootstrap",
+            mode="user",
+            reinstall=True,
+            verbose=verbose,
+        )
+        install_app(config)
+    except Exception as exc:
+        warn(f"Failed to update bootstrap: {exc}")
+
+
+def update_stale_apps(*, verbose: bool = False) -> None:
+    """Find and reinstall all outdated or broken shared apps."""
+    from koopa.alert import alert, alert_success, warn
+    from koopa.check import broken_app_installs, outdated_apps
+
+    if not is_owner():
+        return
+    outdated = outdated_apps()
+    broken = broken_app_installs()
+    apps = list(dict.fromkeys(outdated + broken))
+    if not apps:
+        alert_success("All installed apps are up to date.")
+        return
+    alert(f"Updating {len(apps)} app(s): {', '.join(apps)}")
+    failed: list[str] = []
+    for app in apps:
+        try:
+            cli_install(app, reinstall=True, verbose=verbose)
+        except Exception as exc:
+            warn(f"Failed to update '{app}': {exc}")
+            failed.append(app)
+    _update_stale_revdeps(apps, failed=failed, verbose=verbose)
+    if failed:
+        warn(f"{len(failed)} app(s) failed to update: {', '.join(failed)}")
+    else:
+        alert_success("All stale apps updated successfully.")
+
+
+def _update_stale_revdeps(
+    updated_apps: list[str],
+    *,
+    failed: list[str],
+    verbose: bool = False,
+) -> None:
+    """Reinstall reverse dependencies of successfully updated apps."""
+    from koopa.alert import alert, warn
+    from koopa.app import stale_revdeps
+
+    succeeded = [a for a in updated_apps if a not in failed]
+    if not succeeded:
+        return
+    revdeps = stale_revdeps(succeeded)
+    revdeps = [r for r in revdeps if r not in updated_apps and r not in failed]
+    if not revdeps:
+        return
+    alert(f"Updating {len(revdeps)} stale reverse dep(s): {', '.join(revdeps)}")
+    for app in revdeps:
+        try:
+            cli_install(app, reinstall=True, verbose=verbose)
+        except Exception as exc:
+            warn(f"Failed to update reverse dep '{app}': {exc}")
+            failed.append(app)
+
+
+def remove_unsupported_apps(*, verbose: bool = False) -> None:
+    """Remove installed apps that are no longer in app.json or marked removed."""
+    from koopa.alert import alert, alert_note, warn
+    from koopa.app import stale_revdeps
+    from koopa.check import unsupported_apps
+    from koopa.uninstall import UninstallConfig, uninstall_app
+
+    if not is_owner():
+        return
+    apps = unsupported_apps()
+    if not apps:
+        return
+    alert(f"Removing {len(apps)} unsupported app(s): {', '.join(apps)}")
+    revdeps = stale_revdeps(apps)
+    if revdeps:
+        alert_note(
+            f"Reverse dependencies will also be updated: {', '.join(revdeps)}",
+        )
+    for app in apps:
+        try:
+            config = UninstallConfig(name=app, verbose=verbose)
+            uninstall_app(config)
+        except Exception as exc:
+            warn(f"Failed to remove '{app}': {exc}")
+    for dep in revdeps:
+        try:
+            cli_install(dep, reinstall=True, verbose=verbose)
+        except Exception as exc:
+            warn(f"Failed to reinstall reverse dep '{dep}': {exc}")
+
+
+def update_user_apps(*, verbose: bool = False) -> None:
+    """Update outdated user-mode apps (git-based)."""
+    from koopa.alert import alert, warn
+    from koopa.check import _user_app_prefixes, outdated_user_apps
+    from koopa.git import git_checkout, git_fetch
+
+    apps = outdated_user_apps()
+    if not apps:
+        return
+    json_data = _import_app_json()
+    prefixes = _user_app_prefixes()
+    alert(f"Updating {len(apps)} user app(s): {', '.join(apps)}")
+    for app in apps:
+        prefix = prefixes.get(app, "")
+        if not prefix or not os.path.isdir(prefix):
+            continue
+        version = json_data.get(app, {}).get("version", "")
+        if not version:
+            continue
+        try:
+            git_fetch(prefix)
+            git_checkout(prefix, ref=version)
+        except Exception as exc:
+            warn(f"Failed to update user app '{app}': {exc}")
+
+
+def update_system_apps(*, verbose: bool = False) -> None:
+    """Update system-level apps (Homebrew, R, Python) when admin."""
+    from koopa.alert import alert_note
+
+    if not is_admin():
+        alert_note(
+            "Skipping system updates (admin/sudo access required).",
+        )
+        return
+    if is_macos():
+        _update_system_homebrew(verbose=verbose)
+        _update_system_r(verbose=verbose)
+        _update_system_python(verbose=verbose)
+
+
+def _update_system_homebrew(*, verbose: bool = False) -> None:
+    """Update Homebrew if installed."""
+    from koopa.alert import alert, warn
+
+    if shutil.which("brew") is None:
+        return
+    alert("Updating Homebrew.")
+    try:
+        config = InstallConfig(
+            name="homebrew",
+            mode="system",
+            reinstall=True,
+            verbose=verbose,
+        )
+        install_app(config)
+    except Exception as exc:
+        warn(f"Failed to update Homebrew: {exc}")
+
+
+def _update_system_r(*, verbose: bool = False) -> None:
+    """Update macOS system R if installed and outdated."""
+    from koopa.alert import alert, warn
+    from koopa.check import check_macos_system_r
+
+    if check_macos_system_r():
+        return
+    alert("Updating macOS system R.")
+    try:
+        config = InstallConfig(
+            name="r",
+            mode="system",
+            platform="macos",
+            reinstall=True,
+            verbose=verbose,
+        )
+        install_app(config)
+    except Exception as exc:
+        warn(f"Failed to update system R: {exc}")
+
+
+def _update_system_python(*, verbose: bool = False) -> None:
+    """Update macOS system Python if installed and outdated."""
+    from koopa.alert import alert, warn
+    from koopa.check import check_macos_system_python
+
+    if check_macos_system_python():
+        return
+    json_data = _import_app_json()
+    py_keys = sorted(
+        (k for k in json_data if k.startswith("python3.")),
+        reverse=True,
+    )
+    if not py_keys:
+        return
+    py_name = py_keys[0]
+    alert(f"Updating macOS system Python ({py_name}).")
+    try:
+        config = InstallConfig(
+            name=py_name,
+            mode="system",
+            platform="macos",
+            reinstall=True,
+            verbose=verbose,
+        )
+        install_app(config)
+    except Exception as exc:
+        warn(f"Failed to update system Python: {exc}")
 
 
 # -- Convenience CLI entry point ----------------------------------------------

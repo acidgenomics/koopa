@@ -311,11 +311,32 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
 
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
-    from koopa.install import install_app, update_koopa
+    from koopa.install import (
+        install_app,
+        remove_unsupported_apps,
+        update_bootstrap,
+        update_koopa,
+        update_stale_apps,
+        update_system_apps,
+        update_user_apps,
+    )
 
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:
-        apps = ["koopa"]
+        from koopa.alert import warn
+        from koopa.app import prune_apps
+
+        update_koopa(verbose=args.verbose)
+        update_bootstrap(verbose=args.verbose)
+        remove_unsupported_apps(verbose=args.verbose)
+        update_stale_apps(verbose=args.verbose)
+        update_user_apps(verbose=args.verbose)
+        try:
+            prune_apps()
+        except (ValueError, OSError) as exc:
+            warn(f"Prune failed: {exc}")
+        update_system_apps(verbose=args.verbose)
+        return
     if apps == ["koopa"]:
         update_koopa(verbose=args.verbose)
         return

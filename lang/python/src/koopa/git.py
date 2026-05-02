@@ -48,6 +48,16 @@ def git_clone(
     _git(*args, capture=False)
 
 
+def git_fetch(path: str = ".") -> None:
+    """Fetch from remote."""
+    _git("fetch", "--all", cwd=path, capture=False)
+
+
+def git_checkout(path: str = ".", *, ref: str = "HEAD") -> None:
+    """Checkout a specific ref."""
+    _git("checkout", ref, cwd=path, capture=False)
+
+
 def git_pull(path: str = ".", *, rebase: bool = False) -> None:
     """Pull latest changes."""
     args = ["pull"]
