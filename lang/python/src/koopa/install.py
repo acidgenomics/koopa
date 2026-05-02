@@ -1033,7 +1033,44 @@ __END__
 
 # -- Conda package installer --------------------------------------------------
 
-_conda_use_override_channels = False
+_CONDA_OVERRIDE_TTL = 86400
+_conda_use_override_channels: bool | None = None
+
+
+def _conda_override_cache_path() -> str:
+    cache_dir = os.path.join(
+        os.environ.get(
+            "XDG_CACHE_HOME",
+            os.path.join(os.path.expanduser("~"), ".cache"),
+        ),
+        "koopa",
+    )
+    return os.path.join(cache_dir, "conda-override-channels")
+
+
+def _conda_should_override() -> bool:
+    global _conda_use_override_channels  # noqa: PLW0603
+    if _conda_use_override_channels is not None:
+        return _conda_use_override_channels
+    path = _conda_override_cache_path()
+    if os.path.isfile(path):
+        import time
+
+        age = time.time() - os.path.getmtime(path)
+        if age < _CONDA_OVERRIDE_TTL:
+            _conda_use_override_channels = True
+            return True
+        os.unlink(path)
+    _conda_use_override_channels = False
+    return False
+
+
+def _conda_set_override() -> None:
+    global _conda_use_override_channels  # noqa: PLW0603
+    _conda_use_override_channels = True
+    path = _conda_override_cache_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    Path(path).touch()
 
 
 def install_conda_package(
@@ -1048,7 +1085,6 @@ def install_conda_package(
     Creates a conda env in ``<prefix>/libexec`` and links binaries into
     ``<prefix>/bin``. Converted from install-conda-package.sh.
     """
-    global _conda_use_override_channels  # noqa: PLW0603
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
     if not version:
@@ -1062,7 +1098,7 @@ def install_conda_package(
     libexec = os.path.join(prefix, "libexec")
     os.makedirs(libexec, exist_ok=True)
     pkg_spec = f"--file={yaml_file}" if yaml_file else f"{name}=={version}"
-    if _conda_use_override_channels:
+    if _conda_should_override():
         create_args = [
             conda,
             "create",
@@ -1097,7 +1133,7 @@ def install_conda_package(
         "Retrying with conda-forge/bioconda channels directly.",
         file=sys.stderr,
     )
-    _conda_use_override_channels = True
+    _conda_set_override()
     fallback_args = [
         conda,
         "create",
