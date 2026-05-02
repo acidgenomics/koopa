@@ -498,6 +498,96 @@ def _handle_r_version(args: list[str]) -> None:
     print(r_version())
 
 
+# -- brew handlers -----------------------------------------------------------
+
+
+def _handle_brew_reset_core_repo(args: list[str]) -> None:
+    import shutil
+    import subprocess
+    from koopa.git import git_default_branch
+
+    brew = shutil.which("brew")
+    if brew is None:
+        msg = "brew is not installed."
+        raise RuntimeError(msg)
+    git = shutil.which("git")
+    if git is None:
+        msg = "git is not installed."
+        raise RuntimeError(msg)
+    result = subprocess.run(
+        [brew, "--repo", "homebrew/core"],
+        capture_output=True, text=True, check=True,
+    )
+    prefix = result.stdout.strip()
+    if not os.path.isdir(prefix):
+        msg = f"Homebrew core repo not found: '{prefix}'."
+        raise FileNotFoundError(msg)
+    print(f"Resetting git repo at '{prefix}'.")
+    branch = git_default_branch(prefix)
+    origin = "origin"
+    subprocess.run(
+        [git, "checkout", "-q", branch], cwd=prefix, check=True,
+    )
+    subprocess.run(
+        [git, "branch", "-q", branch, "-u", f"{origin}/{branch}"],
+        cwd=prefix, check=True,
+    )
+    subprocess.run(
+        [git, "reset", "-q", "--hard", f"{origin}/{branch}"],
+        cwd=prefix, check=True,
+    )
+
+
+# -- git handlers ------------------------------------------------------------
+
+
+def _handle_git_pull(args: list[str]) -> None:
+    from koopa.git import git_pull
+    path = args[0] if args else "."
+    git_pull(path)
+
+
+def _handle_git_push_submodules(args: list[str]) -> None:
+    from koopa.git import git_push_submodules
+    path = args[0] if args else "."
+    git_push_submodules(path)
+
+
+def _handle_git_rename_master_to_main(args: list[str]) -> None:
+    from koopa.git import git_rename_master_to_main
+    path = args[0] if args else "."
+    git_rename_master_to_main(path)
+
+
+def _handle_git_reset(args: list[str]) -> None:
+    from koopa.git import git_reset
+    path = args[0] if args else "."
+    git_reset(path, hard=True)
+
+
+def _handle_git_reset_fork_to_upstream(args: list[str]) -> None:
+    from koopa.git import git_reset_fork_to_upstream
+    path = args[0] if args else "."
+    git_reset_fork_to_upstream(path)
+
+
+def _handle_git_rm_submodule(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app git rm-submodule <submodule>",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.git import git_rm_submodule
+    git_rm_submodule(args[0])
+
+
+def _handle_git_rm_untracked(args: list[str]) -> None:
+    from koopa.git import git_rm_untracked
+    path = args[0] if args else "."
+    git_rm_untracked(path)
+
+
 # -- handler registry --------------------------------------------------------
 
 
@@ -551,6 +641,8 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "current-wormbase-version": _handle_current_no_args(
         "current_wormbase_version",
     ),
+    # brew
+    "brew-reset-core-repo": _handle_brew_reset_core_repo,
     # docker
     "docker-build": _handle_docker_build,
     "docker-build-all-tags": _handle_docker_build_all_tags,
@@ -558,6 +650,14 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "docker-prune-old-images": _handle_docker_prune_old_images,
     "docker-remove": _handle_docker_remove,
     "docker-run": _handle_docker_run,
+    # git
+    "git-pull": _handle_git_pull,
+    "git-push-submodules": _handle_git_push_submodules,
+    "git-rename-master-to-main": _handle_git_rename_master_to_main,
+    "git-reset": _handle_git_reset,
+    "git-reset-fork-to-upstream": _handle_git_reset_fork_to_upstream,
+    "git-rm-submodule": _handle_git_rm_submodule,
+    "git-rm-untracked": _handle_git_rm_untracked,
     # r
     "r-bioconda-check": _handle_r_bioconda_check,
     "r-check": _handle_r_check,

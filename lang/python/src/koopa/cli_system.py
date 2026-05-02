@@ -92,13 +92,135 @@ def _handle_check(args: list[str]) -> None:
         sys.exit(1)
 
 
+def _handle_system_info(args: list[str]) -> None:
+    """Handle ``koopa system info``."""
+    import os
+    import shutil
+    import subprocess
+
+    from koopa.git import (
+        git_commit_date,
+        git_last_commit_local,
+        git_remote_url,
+        is_git_repo,
+    )
+    from koopa.prefix import config_prefix, koopa_prefix
+    from koopa.system import arch, arch2, is_macos
+    from koopa.version import koopa_version
+
+    prefix = koopa_prefix()
+    koopa_url = "https://koopa.acidgenomics.com"
+    info: list[str] = [
+        f"koopa {koopa_version()}",
+        f"URL: {koopa_url}",
+    ]
+    if is_git_repo(prefix):
+        info.extend([
+            "",
+            "Git repo",
+            "--------",
+            f"Remote: {git_remote_url(prefix)}",
+            f"Commit: {git_last_commit_local(prefix)}",
+            f"Date: {git_commit_date(prefix)}",
+        ])
+    bash = shutil.which("bash")
+    bash_ver = ""
+    if bash:
+        bash = os.path.realpath(bash)
+        result = subprocess.run(
+            [bash, "--version"],
+            capture_output=True, text=True, check=False,
+        )
+        first_line = result.stdout.strip().splitlines()[0] if result.stdout else ""
+        import re
+        m = re.search(r"(\d+\.\d+\.\d+)", first_line)
+        if m:
+            bash_ver = m.group(1)
+    python = shutil.which("python3") or shutil.which("python") or ""
+    if python:
+        python = os.path.realpath(python)
+    python_ver = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    if is_macos():
+        result = subprocess.run(
+            ["sw_vers"],
+            capture_output=True, text=True, check=False,
+        )
+        os_str = " ".join(result.stdout.split()) if result.stdout else "macOS"
+    else:
+        result = subprocess.run(
+            ["uname", "--all"],
+            capture_output=True, text=True, check=False,
+        )
+        os_str = result.stdout.strip() if result.stdout else "Linux"
+    info.extend([
+        "",
+        "Configuration",
+        "-------------",
+        f"Koopa Prefix: {prefix}",
+        f"Config Prefix: {config_prefix()}",
+        "",
+        "System information",
+        "------------------",
+        f"OS: {os_str}",
+        f"Architecture: {arch()} / {arch2()}",
+        f"Bash: {bash or 'not found'}",
+        f"Bash Version: {bash_ver}",
+        f"Python: {python or 'not found'}",
+        f"Python Version: {python_ver}",
+    ])
+    neofetch = shutil.which("neofetch")
+    if neofetch:
+        result = subprocess.run(
+            [neofetch, "--stdout"],
+            capture_output=True, text=True, check=False,
+        )
+        if result.stdout:
+            nf_lines = result.stdout.strip().splitlines()
+            info.extend(["", "Neofetch", "--------", *nf_lines[2:]])
+    turtle_file = os.path.join(prefix, "etc", "koopa", "ascii-turtle.txt")
+    if os.path.isfile(turtle_file):
+        with open(turtle_file) as f:
+            print(f.read(), end="")
+    print("\n".join(info))
+
+
+def _handle_switch_to_develop(args: list[str]) -> None:
+    """Handle ``koopa system switch-to-develop``."""
+    import os
+    import subprocess
+
+    from koopa.alert import alert, alert_note
+    from koopa.git import git_branch
+    from koopa.prefix import koopa_prefix
+
+    prefix = koopa_prefix()
+    branch = "develop"
+    origin = "origin"
+    alert(f"Switching koopa at '{prefix}' to '{branch}'.")
+    if git_branch(prefix) == branch:
+        alert_note(f"Already on '{branch}' branch.")
+        return
+    subprocess.run(
+        ["git", "remote", "set-branches", "--add", origin, branch],
+        cwd=prefix, check=True,
+    )
+    subprocess.run(
+        ["git", "fetch", origin],
+        cwd=prefix, check=True,
+    )
+    subprocess.run(
+        ["git", "checkout", "--track", f"{origin}/{branch}"],
+        cwd=prefix, check=True,
+    )
+    from koopa.install import _zsh_compaudit_set_permissions
+    _zsh_compaudit_set_permissions()
+
+
 _SYSTEM_COMMANDS: dict[str, str] = {
-    "info": "system-info",
     "disable-passwordless-sudo": "disable-passwordless-sudo",
     "enable-passwordless-sudo": "enable-passwordless-sudo",
     "hostname": "hostname",
     "os-string": "os-string",
-    "switch-to-develop": "switch-to-develop",
     "test": "test",
     "zsh-compaudit-set-permissions": "zsh-compaudit-set-permissions",
     "delete-cache": "delete-cache",
@@ -140,6 +262,9 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     if subcmd == "check":
         _handle_check(rest)
         return
+    if subcmd == "info":
+        _handle_system_info(rest)
+        return
     if subcmd == "prefix":
         _handle_prefix(rest)
         return
@@ -154,6 +279,9 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         return
     if subcmd == "prune-apps":
         _handle_prune_apps()
+        return
+    if subcmd == "switch-to-develop":
+        _handle_switch_to_develop(rest)
         return
     if subcmd == "update-tex-packages":
         _handle_update_tex_packages()
