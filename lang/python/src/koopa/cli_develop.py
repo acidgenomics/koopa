@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable
 
 
 def _handle_prune_app_binaries() -> None:
@@ -84,10 +85,7 @@ def _handle_cache_functions() -> None:
         if not os.path.isdir(source_prefix):
             msg = f"Source prefix not found: '{source_prefix}'."
             raise FileNotFoundError(msg)
-        if "/bash/" in target_file:
-            shebang = "#!/usr/bin/env bash"
-        else:
-            shebang = "#!/bin/sh"
+        shebang = "#!/usr/bin/env bash" if "/bash/" in target_file else "#!/bin/sh"
         alert(f"Caching functions in '{target_file}'.")
         sh_files: list[str] = []
         for root, _dirs, files in os.walk(source_prefix):
@@ -263,6 +261,18 @@ def _handle_roff() -> None:
     subprocess.run([ronn, "--roff", *ronn_files], check=True)
 
 
+_DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
+    "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
+    "format-app-json": lambda _: _handle_format_app_json(),
+    "log": lambda _: _handle_view_latest_tmp_log_file(),
+    "cache-functions": lambda _: _handle_cache_functions(),
+    "edit-app-json": lambda _: _handle_edit_app_json(),
+    "push-all-app-builds": lambda _: _handle_push_all_app_builds(),
+    "push-app-build": _handle_push_app_build,
+    "roff": lambda _: _handle_roff(),
+}
+
+
 def handle_develop(remainder: list[str]) -> None:
     """Dispatch ``koopa develop ...`` commands."""
     if not remainder:
@@ -275,29 +285,9 @@ def handle_develop(remainder: list[str]) -> None:
         return
     subcmd = remainder[0]
     rest = remainder[1:]
-    if subcmd == "prune-app-binaries":
-        _handle_prune_app_binaries()
-        return
-    if subcmd == "format-app-json":
-        _handle_format_app_json()
-        return
-    if subcmd == "log":
-        _handle_view_latest_tmp_log_file()
-        return
-    if subcmd == "cache-functions":
-        _handle_cache_functions()
-        return
-    if subcmd == "edit-app-json":
-        _handle_edit_app_json()
-        return
-    if subcmd == "push-all-app-builds":
-        _handle_push_all_app_builds()
-        return
-    if subcmd == "push-app-build":
-        _handle_push_app_build(rest)
-        return
-    if subcmd == "roff":
-        _handle_roff()
+    handler = _DEVELOP_HANDLERS.get(subcmd)
+    if handler is not None:
+        handler(rest)
         return
     print(f"Error: unknown develop command '{subcmd}'.", file=sys.stderr)
     sys.exit(1)

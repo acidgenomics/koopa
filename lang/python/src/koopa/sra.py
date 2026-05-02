@@ -110,9 +110,8 @@ def sra_fastq_dump(
         if compress:
             for fq in sorted(Path(fastq_dir).glob(f"{sample_id}*.fastq")):
                 print(f"Compressing '{fq}'.")
-                with open(fq, "rb") as f_in:
-                    with gzip.open(str(fq) + ".gz", "wb") as f_out:
-                        shutil.copyfileobj(f_in, f_out)
+                with open(fq, "rb") as f_in, gzip.open(str(fq) + ".gz", "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
                 fq.unlink()
 
 
@@ -136,7 +135,8 @@ def sra_download_accession_list(srp_id: str, output_file: str = "") -> None:
         stdout=subprocess.PIPE,
         text=True,
     )
-    esearch_proc.stdout.close()
+    if esearch_proc.stdout is not None:
+        esearch_proc.stdout.close()
     stdout, _ = efetch_proc.communicate()
     if efetch_proc.returncode != 0:
         msg = f"Failed to fetch accession list for '{srp_id}'."
@@ -170,7 +170,8 @@ def sra_download_run_info_table(srp_id: str, output_file: str = "") -> None:
         stdout=subprocess.PIPE,
         text=True,
     )
-    esearch_proc.stdout.close()
+    if esearch_proc.stdout is not None:
+        esearch_proc.stdout.close()
     stdout, _ = efetch_proc.communicate()
     if efetch_proc.returncode != 0:
         msg = f"Failed to fetch run info for '{srp_id}'."

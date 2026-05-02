@@ -5,6 +5,7 @@ Replaces the 117-line ``_koopa_cli_system`` Bash function.
 
 from __future__ import annotations
 
+import contextlib
 import os
 import re
 import shutil
@@ -472,10 +473,7 @@ def _handle_os_string() -> None:
             if id_match:
                 os_id = id_match.group(1).strip('"')
             ver_match = re.search(r"^VERSION_ID=(.+)$", content, re.MULTILINE)
-            if ver_match:
-                version = major_version(ver_match.group(1).strip('"'))
-            else:
-                version = "rolling"
+            version = major_version(ver_match.group(1).strip('"')) if ver_match else "rolling"
         else:
             os_id = "linux"
     if not os_id:
@@ -540,10 +538,8 @@ def _handle_linux_delete_cache() -> None:
                 if os.path.isdir(path):
                     shutil.rmtree(path, ignore_errors=True)
                 else:
-                    try:
+                    with contextlib.suppress(OSError):
                         os.remove(path)
-                    except OSError:
-                        pass
     # Debian-specific apt cleanup.
     from koopa.system import is_debian_like
 
@@ -555,10 +551,8 @@ def _handle_linux_delete_cache() -> None:
                 if os.path.isdir(path):
                     shutil.rmtree(path, ignore_errors=True)
                 else:
-                    try:
+                    with contextlib.suppress(OSError):
                         os.remove(path)
-                    except OSError:
-                        pass
 
 
 def _handle_linux_fix_sudo_setrlimit_error() -> None:
