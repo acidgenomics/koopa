@@ -458,6 +458,33 @@ def check_user_apps() -> bool:
     return not issues
 
 
+def check_broken_symlinks() -> bool:
+    """Check for broken symlinks in bin, opt, and man1 directories."""
+    from koopa.file_ops import find_broken_symlinks
+    from koopa.prefix import bin_prefix, man1_prefix, opt_prefix
+
+    ok = True
+    for prefix in (bin_prefix(), opt_prefix(), man1_prefix()):
+        if not isdir(prefix):
+            continue
+        broken = find_broken_symlinks(prefix)
+        for link in broken:
+            ok = False
+            print(f"broken symlink: {link}")
+    return ok
+
+
+def prune_broken_symlinks() -> None:
+    """Remove broken symlinks from bin, opt, and man1 directories."""
+    from koopa.file_ops import delete_broken_symlinks
+    from koopa.prefix import bin_prefix, man1_prefix, opt_prefix
+
+    for prefix in (bin_prefix(), opt_prefix(), man1_prefix()):
+        if not isdir(prefix):
+            continue
+        delete_broken_symlinks(prefix)
+
+
 def check_system() -> bool:
     """Run all system checks."""
     from koopa.alert import alert_success, warn
@@ -478,6 +505,8 @@ def check_system() -> bool:
     if not check_broken_app_installs():
         ok = False
     if not check_user_apps():
+        ok = False
+    if not check_broken_symlinks():
         ok = False
     if not check_disk("/"):
         ok = False
