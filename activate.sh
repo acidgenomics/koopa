@@ -51,11 +51,11 @@ details:
 
 examples:
     # Default mode.
-    . /usr/local/koopa/activate
+    . /usr/local/koopa/activate.sh
 
     # Minimal mode.
     export KOOPA_MINIMAL=1
-    . /usr/local/koopa/activate
+    . /usr/local/koopa/activate.sh
 END
 }
 
@@ -103,7 +103,7 @@ __koopa_export_koopa_prefix() {
         return 1
     fi
     # Note that running realpath on the file instead of the directory will
-    # properly resolve '~/.config/koopa/activate' symlink case.
+    # properly resolve symlinked activate scripts.
     if [ -L "$__kvar_script" ]
     then
         __kvar_script="$(__koopa_realpath "$__kvar_script")"
@@ -182,7 +182,7 @@ __koopa_posix_source() {
             "Required 'KOOPA_PREFIX' variable is unset."
         return 1
     fi
-    __koopa_print "${__kvar_prefix}/activate"
+    __koopa_print "${__kvar_prefix}/activate.sh"
     unset -v __kvar_prefix
     return 0
 }
@@ -308,10 +308,33 @@ __koopa_zsh_source() {
     return 0
 }
 
+__koopa_ensure_xdg_data_symlink() {
+    # """
+    # Ensure XDG_DATA_HOME/koopa symlink exists for shared installs.
+    # @note Updated 2026-05-02.
+    # """
+    __kvar_home="${HOME:?}"
+    case "${KOOPA_PREFIX:?}" in
+        "${__kvar_home}"*)
+            unset -v __kvar_home
+            return 0
+            ;;
+    esac
+    __kvar_xdg_data_home="${XDG_DATA_HOME:-${__kvar_home}/.local/share}"
+    __kvar_link="${__kvar_xdg_data_home}/koopa"
+    if [ ! -e "$__kvar_link" ]
+    then
+        mkdir -p "$__kvar_xdg_data_home"
+        ln -s "${KOOPA_PREFIX:?}" "$__kvar_link"
+    fi
+    unset -v __kvar_home __kvar_link __kvar_xdg_data_home
+    return 0
+}
+
 __koopa_activate() {
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2022-09-02.
+    # @note Updated 2026-05-02.
     # """
     case "${1:-}" in
         '--help' | '-h')
@@ -322,6 +345,7 @@ __koopa_activate() {
     __koopa_preflight || return 0
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
+    __koopa_ensure_xdg_data_symlink
     KOOPA_ACTIVATE="${KOOPA_ACTIVATE:-1}"
     export KOOPA_ACTIVATE
     # shellcheck source=/dev/null
