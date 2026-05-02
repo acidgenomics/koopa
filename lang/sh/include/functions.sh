@@ -221,7 +221,6 @@ _koopa_activate_asdf() {
         unset -v __kvar_prefix __kvar_script
         return 0
     fi
-    _koopa_is_alias 'asdf' && unalias 'asdf'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     . "$__kvar_script"
@@ -308,7 +307,6 @@ _koopa_activate_bottom() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
     unset -v \
         __kvar_prefix \
@@ -348,7 +346,6 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
-    _koopa_is_alias 'br' && unalias 'br'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     . "$__kvar_script"
@@ -430,7 +427,6 @@ _koopa_activate_conda() {
             __kvar_shell='posix'
             ;;
     esac
-    _koopa_is_alias 'conda' && unalias 'conda'
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
     _koopa_is_function 'conda' || return 1
@@ -500,7 +496,6 @@ _koopa_activate_delta() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns \
         "$__kvar_source_file" \
         "$__kvar_target_file" \
@@ -653,7 +648,6 @@ _koopa_activate_kitty() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
     unset -v \
         __kvar_prefix \
@@ -712,7 +706,6 @@ _koopa_activate_pipx() {
     __kvar_prefix="$(_koopa_pipx_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
-        _koopa_is_alias 'mkdir' && unalias 'mkdir'
         mkdir -p "$__kvar_prefix" >/dev/null
     fi
     _koopa_add_to_path_start "${__kvar_prefix}/bin"
@@ -767,7 +760,6 @@ _koopa_activate_pyenv() {
             __kvar_pyenv
         return 0
     fi
-    _koopa_is_alias 'pyenv' && unalias 'pyenv'
     export PYENV_ROOT="$__kvar_prefix"
     export PYENV_LOCAL_SHIM="${HOME:?}/.pyenv_local_shim"
     if [ ! -d "$PYENV_LOCAL_SHIM" ]
@@ -837,7 +829,6 @@ _koopa_activate_rbenv() {
             __kvar_rbenv
         return 0
     fi
-    _koopa_is_alias 'rbenv' && unalias 'rbenv'
     export RBENV_ROOT="$__kvar_prefix"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
@@ -909,8 +900,6 @@ _koopa_activate_today_bucket() {
             __kvar_today_subdirs
         return 0
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
-    _koopa_is_alias 'mkdir' && unalias 'mkdir'
     mkdir -p \
         "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \
         >/dev/null
@@ -967,7 +956,6 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
-    _koopa_is_alias 'z' && unalias 'z'
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
@@ -1662,7 +1650,6 @@ _koopa_spacevim() {
         _koopa_print 'SpaceVim is not installed.'
         return 1
     fi
-    _koopa_is_alias 'vim' && unalias 'vim'
     "$__kvar_vim" -u "$__kvar_vimrc" "$@"
     unset -v __kvar_vim __kvar_vimrc
     return 0
