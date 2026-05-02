@@ -217,7 +217,7 @@ def _resolve_apps_and_mode(
 
 def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
-    from koopa.install import install_app, install_koopa
+    from koopa.install import _acquire_install_lock, _release_install_lock, install_app, install_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:
@@ -226,48 +226,58 @@ def _handle_install(args: argparse.Namespace) -> None:
     if apps == ["koopa"]:
         install_koopa(verbose=args.verbose)
         return
-    extra = [f"--{p}" for p in args.passthrough] if args.passthrough else []
-    for app in apps:
-        config = _build_install_config(
-            app,
-            mode=mode,
-            bootstrap=args.bootstrap,
-            deps=not args.no_dependencies,
-            private=getattr(args, "private", False),
-            reinstall=args.reinstall,
-            verbose=args.verbose,
-            extra_passthrough=extra,
-        )
-        install_app(config)
+    acquired = _acquire_install_lock()
+    try:
+        extra = [f"--{p}" for p in args.passthrough] if args.passthrough else []
+        for app in apps:
+            config = _build_install_config(
+                app,
+                mode=mode,
+                bootstrap=args.bootstrap,
+                deps=not args.no_dependencies,
+                private=getattr(args, "private", False),
+                reinstall=args.reinstall,
+                verbose=args.verbose,
+                extra_passthrough=extra,
+            )
+            install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
 
 
 def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     from koopa.app import stale_revdeps
-    from koopa.install import install_app
+    from koopa.install import _acquire_install_lock, _release_install_lock, install_app
 
     apps = list(args.apps) if args.apps else []
     if not apps:
         print("Error: no apps specified.", file=sys.stderr)
         sys.exit(1)
-    if args.all_revdeps:
-        _reinstall_with_revdeps(apps, mode="all", verbose=args.verbose)
-        return
-    if args.only_revdeps:
-        _reinstall_with_revdeps(apps, mode="only", verbose=args.verbose)
-        return
-    for app in apps:
-        config = _build_install_config(app, reinstall=True, verbose=args.verbose)
-        install_app(config)
-    stale = stale_revdeps(apps)
-    if stale:
-        print(
-            f"Stale reverse dependencies: {', '.join(stale)}",
-            file=sys.stderr,
-        )
-        for dep in stale:
-            config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
+    acquired = _acquire_install_lock()
+    try:
+        if args.all_revdeps:
+            _reinstall_with_revdeps(apps, mode="all", verbose=args.verbose)
+            return
+        if args.only_revdeps:
+            _reinstall_with_revdeps(apps, mode="only", verbose=args.verbose)
+            return
+        for app in apps:
+            config = _build_install_config(app, reinstall=True, verbose=args.verbose)
             install_app(config)
+        stale = stale_revdeps(apps)
+        if stale:
+            print(
+                f"Stale reverse dependencies: {', '.join(stale)}",
+                file=sys.stderr,
+            )
+            for dep in stale:
+                config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
+                install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
 
 
 def _reinstall_with_revdeps(
@@ -335,6 +345,8 @@ def _configure_user_dotfiles() -> None:
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     from koopa.install import (
+        _acquire_install_lock,
+        _release_install_lock,
         fetch_user_repos,
         install_app,
         remove_unsupported_apps,
@@ -352,10 +364,15 @@ def _handle_update(args: argparse.Namespace) -> None:
         from koopa.check import prune_broken_symlinks
 
         update_koopa(verbose=args.verbose)
-        update_bootstrap(verbose=args.verbose)
-        remove_unsupported_apps(verbose=args.verbose)
-        update_stale_apps(verbose=args.verbose)
-        update_user_apps(verbose=args.verbose)
+        acquired = _acquire_install_lock()
+        try:
+            update_bootstrap(verbose=args.verbose)
+            remove_unsupported_apps(verbose=args.verbose)
+            update_stale_apps(verbose=args.verbose)
+            update_user_apps(verbose=args.verbose)
+        finally:
+            if acquired:
+                _release_install_lock()
         fetch_user_repos()
         _configure_user_dotfiles()
         prune_broken_symlinks()
@@ -368,9 +385,14 @@ def _handle_update(args: argparse.Namespace) -> None:
     if apps == ["koopa"]:
         update_koopa(verbose=args.verbose)
         return
-    for app in apps:
-        config = _build_install_config(app, mode=mode, reinstall=True, verbose=args.verbose)
-        install_app(config)
+    acquired = _acquire_install_lock()
+    try:
+        for app in apps:
+            config = _build_install_config(app, mode=mode, reinstall=True, verbose=args.verbose)
+            install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
 
 
 def _handle_configure(args: argparse.Namespace) -> None:
