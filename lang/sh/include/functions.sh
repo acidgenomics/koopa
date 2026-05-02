@@ -1776,24 +1776,6 @@ _koopa_is_alacritty() {
     [ -n "${ALACRITTY_SOCKET:-}" ]
 }
 
-_koopa_is_alias() {
-    for __kvar_cmd in "$@"
-    do
-        __kvar_string="$(command -v "$__kvar_cmd")"
-        case "$__kvar_string" in
-            'alias '*)
-                continue
-                ;;
-            *)
-                unset -v __kvar_cmd __kvar_string
-                return 1
-                ;;
-        esac
-    done
-    unset -v __kvar_cmd __kvar_string
-    return 0
-}
-
 _koopa_is_aws_ec2() {
     [ -x '/usr/bin/ec2metadata' ] && return 0
     [ "$(hostname -d)" = 'ec2.internal' ] && return 0
