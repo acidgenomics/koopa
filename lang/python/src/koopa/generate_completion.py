@@ -381,8 +381,8 @@ def _collect_app_depth_4(
 # ---------------------------------------------------------------------------
 
 
-def generate_completion(*, write: bool = False) -> str:
-    """Generate the complete ``koopa.sh`` bash completion file."""
+def generate_completion() -> None:
+    """Generate the ``koopa.sh`` bash completion file."""
     from koopa.prefix import koopa_prefix
 
     src_dir = os.path.join(koopa_prefix(), "lang", "python", "src", "koopa")
@@ -763,8 +763,6 @@ def generate_completion(*, write: bool = False) -> str:
     lines.append("")
 
     content = "\n".join(lines)
-    if write:
-        output_path = os.path.join(koopa_prefix(), "etc", "completion", "koopa.sh")
-        with open(output_path, "w") as f:
-            f.write(content)
-    return content
+    output_path = os.path.join(koopa_prefix(), "etc", "completion", "koopa.sh")
+    with open(output_path, "w") as f:
+        f.write(content)
