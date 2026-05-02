@@ -20,6 +20,7 @@ from koopa.installers import PYTHON_INSTALLERS
 from koopa.io import import_app_json
 from koopa.prefix import koopa_prefix
 from koopa.version import sanitize_version
+from koopa.xdg import xdg_cache_home
 
 
 @dataclass
@@ -53,8 +54,10 @@ class _RateLimiter:
             self._last = time.monotonic()
 
 
-_github_token: str | None = os.environ.get("GITHUB_TOKEN") or os.environ.get(
-    "GH_TOKEN"
+_github_token: str | None = (
+    os.environ.get("GITHUB_TOKEN")
+    or os.environ.get("GH_TOKEN")
+    or os.environ.get("GITHUB_PAT")
 )
 _rate_github = _RateLimiter(1.2 if _github_token else 0.8)
 _rate_default = _RateLimiter(5.0)
@@ -785,50 +788,50 @@ def check_app_versions(
     counter = {"n": 0}
     counter_lock = threading.Lock()
 
+    try:
+        from tqdm import tqdm
+
+        pbar = tqdm(total=total, desc="Checking app versions", unit="app")
+    except ModuleNotFoundError:
+        pbar = None
+        print(f"Checking {total} app versions...", file=sys.stderr)
+
     def _run_check(
         app_name: str, current: str, spec: _AppCheckSpec
     ) -> VersionCheckResult:
-        with counter_lock:
-            counter["n"] += 1
-            idx = counter["n"]
         try:
             latest = spec.check_fn(*spec.args)
             current_san = sanitize_version(current)
             latest_san = sanitize_version(latest)
             if current_san != latest_san:
-                status = "outdated"
-                print(
-                    f"  [{idx}/{total}] {spec.source}: {app_name}... "
-                    f"{current} -> {latest}",
-                    file=sys.stderr,
-                )
+                msg = f"{app_name}: {current} -> {latest}"
             else:
-                status = "current"
-                print(
-                    f"  [{idx}/{total}] {spec.source}: {app_name}... ok",
-                    file=sys.stderr,
-                )
+                msg = None
             return VersionCheckResult(
                 app_name, current, latest, spec.source, None
-            )
+            ), msg
         except Exception as exc:
-            print(
-                f"  [{idx}/{total}] {spec.source}: {app_name}... "
-                f"error: {exc}",
-                file=sys.stderr,
-            )
+            msg = f"{app_name}: error: {exc}"
             return VersionCheckResult(
                 app_name, current, None, spec.source, str(exc)
-            )
+            ), msg
 
-    print(f"Checking {total} app versions...", file=sys.stderr)
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
             pool.submit(_run_check, app_name, version, spec): app_name
             for app_name, version, spec in specs
         }
         for future in as_completed(futures):
-            results.append(future.result())
+            result, msg = future.result()
+            results.append(result)
+            if pbar is not None:
+                if msg:
+                    pbar.write(msg, file=sys.stderr)
+                pbar.update(1)
+            elif msg:
+                print(f"  {msg}", file=sys.stderr)
+    if pbar is not None:
+        pbar.close()
     results.sort(key=lambda r: r.name)
     return results
 
