@@ -27,6 +27,8 @@ Major changes:
 New apps:
 
 - `bumpver`.
+- `elvish`.
+- `powershell`.
 
 Minor changes:
 
@@ -50,6 +52,200 @@ Minor changes:
 - Improved bootstrap script reliability.
 - Improved header consistency across shell includes.
 - Optimized OS handling in completion logic.
+- Added `koopa develop shellcheck` support for linting shell scripts.
+- Added automated app version checking system for tracking upstream releases.
+- Added build progress tracking for CMake with ninja via `tqdm`.
+- Added broken symlink detection and cleanup to system checks.
+- Reworked cache handling for improved reliability.
+- Improved shell completion generation.
+- Fixed homebrew updater.
+- Fixed macOS system R and Python framework cleanup.
+- Improved Debian configuration and admin detection consistency.
+
+App version updates:
+
+- `ack` 3.9.0.
+- `air` 0.9.0.
+- `apache-spark` 4.2.0.
+- `apr` 1.7.6.
+- `armadillo` 15.2.6.
+- `aspell` 0.60.8.2.
+- `aspera-connect` 4.2.19.956.
+- `autoconf` 2.73.
+- `autodock-vina` 1.2.6.
+- `automake` 1.18.1.
+- `aws-cli` 2.34.41.
+- `aws-mountpoint-s3` 1.22.3.
+- `azure-cli` 2.85.0.
+- `bc` 1.08.2.
+- `binutils` 2.46.0.
+- `bioconda-utils` 4.4.0.
+- `blast` 2.17.0.
+- `boost` 1.91.0.
+- `bottom` 0.12.2.
+- `btop` 1.4.7.
+- `bustools` 0.45.1.
+- `c-ares` 1.34.6.
+- `claude-code` 2.1.126.
+- `cli11` 2.6.2.
+- `commitizen` 4.13.10.
+- `conda` 26.3.2-2.
+- `convmv` 2.06.
+- `coreutils` 9.11.
+- `curl` 8.20.0.
+- `dash` 0.5.13.3.
+- `databricks-cli` 0.299.0.
+- `difftastic` 0.69.0.
+- `du-dust` 1.2.4.
+- `ed` 1.22.5.
+- `elfutils` 0.195.
+- `ensembl-perl-api` 116.
+- `entrez-direct` 25.3.
+- `exiftool` 13.55.
+- `expat` 2.8.0.
+- `ffmpeg` 8.0.1.
+- `flac` 1.5.0.
+- `fltk` 1.4.5.
+- `fontconfig` 2.16.0.
+- `freetype` 2.14.3.
+- `gatk` 4.6.2.0.
+- `gawk` 5.4.0.
+- `gcc` 16.1.0.
+- `gdbm` 1.26.
+- `gemini-cli` 0.40.1.
+- `genomepy` 0.16.3.
+- `gentropy` 3.2.0.
+- `gettext` 1.0.
+- `gffutils` 0.14.
+- `gget` 0.29.0.
+- `ghostscript` 10.7.0.
+- `git-lfs` 3.7.1.
+- `gitui` 0.28.1.
+- `glib` 2.88.1.
+- `gnupg` 2.5.19.
+- `gnutls` 3.8.13.
+- `go` 1.26.2.
+- `graphviz` 14.1.5.
+- `grep` 3.12.
+- `groff` 1.24.1.
+- `gzip` 1.14.
+- `htseq` 2.1.2.
+- `huggingface-hub` 1.13.0.
+- `hugo` 0.161.1.
+- `icu4c` 78.3.
+- `illumina-ica-cli` 2.45.0.
+- `imagemagick` 7.1.2-21.
+- `ipython` 9.13.0.
+- `jfrog-cli` 2.103.0.
+- `jupyterlab` 4.5.7.
+- `krb5` 1.22.2.
+- `latch` 2.71.2.
+- `ldns` 1.9.0.
+- `less` 700.
+- `libassuan` 3.0.2.
+- `libcbor` 0.13.0.
+- `libedit` 20251016-3.1.
+- `libfido2` 1.17.0.
+- `libgcrypt` 1.12.2.
+- `libgeotiff` 1.7.4.
+- `libgpg-error` 1.60.
+- `libheif` 1.21.2.
+- `libiconv` 1.19.
+- `libidn` 2.3.8.
+- `libksba` 1.6.8.
+- `liblinear` 2.50.
+- `libluv` 1.52.1.
+- `libpcap` 1.10.6.
+- `libpng` 1.6.58.
+- `libsolv` 0.7.37.
+- `libtasn1` 4.21.0.
+- `libtiff` 4.7.1.
+- `libunistring` 1.4.2.
+- `libvterm` 0.3.3.
+- `libxml2` 2.15.3.
+- `libxslt` 1.1.45.
+- `llvm` 22.1.4.
+- `lsd` 1.1.5.
+- `lzip` 1.26.
+- `m4` 1.4.21.
+- `mamba` 2.6.0.
+- `man-db` 2.13.1.
+- `marimo` 0.23.4.
+- `mdcat` 2.7.1.
+- `mimalloc` 3.3.2.
+- `mpc` 1.4.1.
+- `mpdecimal` 4.0.1.
+- `mpfr` 4.2.2.
+- `msgpack` 7.0.0.
+- `mypy` 1.20.2.
+- `nano` 9.0.
+- `ncbi-sra-tools` 3.4.1.
+- `neovim` 0.12.2.
+- `nettle` 4.0.
+- `nextflow` 26.04.0.
+- `nim` 2.2.10.
+- `ninja` 1.13.2.
+- `nmap` 7.99.
+- `node` 25.8.2.
+- `ont-vbz-compression` 1.0.13.
+- `openjpeg` 2.5.4.
+- `openssh` 10.3p1.
+- `oracle-instant-client` 21.21.0.0.0-1.
+- `parallel` 20260422.
+- `patch` 2.8.
+- `pcre2` 10.47.
+- `perl` 5.43.10.
+- `pinentry` 1.3.2.
+- `pixman` 0.46.4.
+- `postgresql` 18.3.
+- `pymol` 3.1.0.
+- `pyrefly` 0.63.1.
+- `pyright` 1.1.409.
+- `quarto` 1.9.37.
+- `r` 4.6.0.
+- `r-devel` 89993.
+- `r-xcode-openmp` 19.1.5.
+- `rbenv` 1.3.2.
+- `rclone` 1.74.0.
+- `ripgrep-all` 0.10.10.
+- `rmate` 1.5.9.
+- `rstudio-server` 2026.04.0-526.
+- `rsync` 3.4.2.
+- `ruby` 4.0.3.
+- `scalene` 2.2.1.
+- `scanpy` 1.12.1.
+- `screen` 5.0.1.
+- `sd` 1.0.0.
+- `sed` 4.10.
+- `shellcheck` 0.11.0.
+- `simdjson` 4.6.3.
+- `snakefmt` 1.1.0.
+- `snakemake` 9.20.0.
+- `sqlfluff` 4.1.0.
+- `sqlite` 3.53.0.
+- `star-fusion` 1.15.1.
+- `starship` 1.25.1.
+- `subread` 2.1.1.
+- `swig` 4.4.1.
+- `tbb` 2023.0.0.
+- `tcl-tk` 9.0.4.
+- `tealdeer` 1.8.1.
+- `temurin` 25.0.3+9.
+- `texinfo` 7.3.
+- `tqdm` 4.67.3.
+- `tree` 2.3.2.
+- `ty` 0.0.34.
+- `units` 2.27.
+- `vim` 9.2.0433.
+- `which` 2.23.
+- `xorg-libsm` 1.2.6.
+- `xorg-libx11` 1.8.13.
+- `xorg-libxext` 1.3.7.
+- `xorg-libxrandr` 1.5.5.
+- `xorg-xorgproto` 2025.1.
+- `xorg-xtrans` 1.6.0.
+- `xsra` 0.2.28.
+- `zenith` 0.14.3.
 
 ## koopa 0.15.1 (2026-04-29)
 
