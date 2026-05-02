@@ -12,7 +12,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 
 [project.optional-dependencies]
-extra = ["syntactic"]
+extra = ["syntactic", "tqdm"]
 
 # > [build-system]
 # > requires = ["setuptools"]
@@ -81,9 +81,9 @@ quote-style = "double"
 [tool.ruff.lint]
 # List of rules: https://docs.astral.sh/ruff/rules/
 ignore = [
-  "D203", # one-blank-line-before-class
-  "D213", # multi-line-summary-second-line
-  "D401", # non-imperative-mood
+  "D203",    # one-blank-line-before-class
+  "D213",    # multi-line-summary-second-line
+  "D401",    # non-imperative-mood
   "PLC0415", # import-outside-top-level
 ]
 select = [
