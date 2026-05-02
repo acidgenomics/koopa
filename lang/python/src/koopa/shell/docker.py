@@ -8,7 +8,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from os.path import abspath, basename, expanduser, isdir, isfile, join
 from pathlib import Path
 
@@ -75,7 +75,7 @@ def build(
         tags.append(tag)
         local = os.path.realpath(local)
         tag = basename(local)
-    date_tag = datetime.now(tz=timezone.utc).strftime("%Y%m%d")
+    date_tag = datetime.now(tz=UTC).strftime("%Y%m%d")
     tags.extend([tag, f"{tag}-{date_tag}"])
     tags = sorted(set(tags))
     platforms = ["linux/amd64"]
@@ -187,7 +187,7 @@ def ghcr_push(owner: str, image_name: str, version: str) -> None:
 def is_build_recent(*images: str, days: int = 7) -> bool:
     """Check if Docker images were built within N days."""
     seconds = days * 86400
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=UTC)
     for image in images:
         _docker("pull", image, capture_output=True)
         result = _docker(
@@ -206,7 +206,7 @@ def is_build_recent(*images: str, days: int = 7) -> bool:
             return False
         dt_str = f"{match.group(1)} {match.group(2)} UTC"
         created = datetime.strptime(dt_str, "%Y-%m-%d %H:%M %Z").replace(
-            tzinfo=timezone.utc,
+            tzinfo=UTC,
         )
         diff = (now - created).total_seconds()
         if diff > seconds:

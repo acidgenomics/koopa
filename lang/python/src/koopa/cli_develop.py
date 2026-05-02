@@ -78,7 +78,7 @@ def _handle_cache_functions() -> None:
     import re
 
     from koopa.alert import alert
-    from koopa.prefix import bash_prefix, koopa_prefix, sh_prefix, zsh_prefix
+    from koopa.prefix import bash_prefix, sh_prefix, zsh_prefix
 
     def _cache_functions_dirs(target_file: str, source_prefix: str) -> None:
         if not os.path.isdir(source_prefix):
