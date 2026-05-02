@@ -1168,8 +1168,7 @@ def install_default_apps() -> None:
     from koopa.alert import alert_note
 
     alert_note(
-        "This installs missing default apps. "
-        "To update existing apps, use 'koopa update'.",
+        "This installs missing default apps. To update existing apps, use 'koopa update'.",
     )
     install_shared_apps(mode="default")
 

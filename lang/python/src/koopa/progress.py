@@ -37,7 +37,7 @@ def _load_history() -> dict[str, float]:
     try:
         with open(path) as f:
             return json.load(f)
-    except (json.JSONDecodeError, OSError):
+    except json.JSONDecodeError, OSError:
         return {}
 
 
