@@ -1,22 +1,17 @@
 """Application configuration functions.
 
 Provides ``configure_app`` -- the Python equivalent of the Bash function
-``_koopa_configure_app``. Sources configure scripts from
-``lang/bash/include/configure/{platform}/{mode}/{name}.sh`` and calls
-``main()`` in an isolated subshell.
+``_koopa_configure_app``.
 """
 
 from __future__ import annotations
 
 import os
-import shutil
-import subprocess
 import sys
-import tempfile
 from dataclasses import dataclass
 
 from koopa.configurers import get_python_configurer, has_python_configurer
-from koopa.prefix import bash_prefix, koopa_prefix
+from koopa.prefix import koopa_prefix
 
 
 @dataclass
@@ -61,70 +56,14 @@ def configure_app(config: ConfigureConfig) -> None:
         msg = "Root user cannot configure user apps."
         raise PermissionError(msg)
     print(f"Configuring '{config.name}'.", file=sys.stderr)
-    if has_python_configurer(config.name, config.platform, config.mode):
-        configurer = get_python_configurer(config.name, config.platform, config.mode)
-        configurer(
-            name=config.name,
-            platform=config.platform,
-            mode=config.mode,
-            verbose=config.verbose,
-        )
-    else:
-        config_file = os.path.join(
-            bash_prefix(),
-            "include",
-            "configure",
-            config.platform,
-            config.mode,
-            f"{config.name}.sh",
-        )
-        if not os.path.isfile(config_file):
-            msg = f"No configure script for '{config.name}' ({config.platform}/{config.mode})."
-            raise FileNotFoundError(msg)
-        _run_configure_script(config_file, config)
+    if not has_python_configurer(config.name, config.platform, config.mode):
+        msg = f"No configurer for '{config.name}' ({config.platform}/{config.mode})."
+        raise FileNotFoundError(msg)
+    configurer = get_python_configurer(config.name, config.platform, config.mode)
+    configurer(
+        name=config.name,
+        platform=config.platform,
+        mode=config.mode,
+        verbose=config.verbose,
+    )
     print(f"Successfully configured '{config.name}'.", file=sys.stderr)
-
-
-def _run_configure_script(
-    script_path: str,
-    config: ConfigureConfig,
-) -> None:
-    """Run a Bash configure script in an isolated subshell."""
-    bash = shutil.which("bash")
-    if bash is None:
-        msg = "Bash is required to run configure scripts."
-        raise RuntimeError(msg)
-    header_file = os.path.join(bash_prefix(), "include", "header.sh")
-    tmp_dir = tempfile.mkdtemp()
-    try:
-        parts = [
-            f"source '{header_file}'",
-            f"cd '{tmp_dir}'",
-            f"source '{script_path}'",
-            "main",
-        ]
-        if config.mode == "system":
-            parts.insert(1, 'PATH="${PATH}:/usr/sbin:/sbin"')
-        cmd = "; ".join(parts)
-        env = os.environ.copy()
-        env["KOOPA_INSTALL_NAME"] = config.name
-        flags = [
-            bash,
-            "--noprofile",
-            "--norc",
-            "-o",
-            "errexit",
-            "-o",
-            "errtrace",
-            "-o",
-            "nounset",
-            "-o",
-            "pipefail",
-        ]
-        if config.verbose:
-            flags.append("-o")
-            flags.append("xtrace")
-        flags.extend(["-c", cmd])
-        subprocess.run(flags, env=env, check=True)
-    finally:
-        shutil.rmtree(tmp_dir, ignore_errors=True)
