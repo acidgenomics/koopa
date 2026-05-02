@@ -89,12 +89,12 @@
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
-    "date": "2026-01-02",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": ["python3.14", "r", "temurin"],
     "prune": true,
     "url": ["https://spark.apache.org/"],
-    "version": "4.1.0"
+    "version": "4.2.0"
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
@@ -176,7 +176,7 @@
   },
   "aspera-connect": {
     "bin": ["ascp"],
-    "date": "2024-12-24",
+    "date": "2026-05-02",
     "default": false,
     "installer_platform": "linux",
     "notes": ["IBM deletes old source versions."],
@@ -191,7 +191,7 @@
       "https://www.ibm.com/aspera/connect/",
       "https://www.ibm.com/products/aspera/downloads"
     ],
-    "version": "4.2.12.780"
+    "version": "4.2.19.956"
   },
   "attr": {
     "build_dependencies": ["make", "pkg-config"],
@@ -334,7 +334,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.3.1"
+    "version": "2.34.41"
   },
   "aws-mountpoint-s3": {
     "date": "2026-05-02",
@@ -1045,7 +1045,7 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2026-04-15",
+    "date": "2026-05-02",
     "default": true,
     "prune": false,
     "supported": {
@@ -1055,7 +1055,7 @@
       "macos-arm64": true
     },
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "26.1.1-1"
+    "version": "26.3.2-2"
   },
   "convmv": {
     "bin": ["convmv"],
@@ -1349,7 +1349,7 @@
   "dash": {
     "bin": ["dash"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2023-04-12",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": ["libedit"],
     "man1": ["dash.1"],
@@ -1358,7 +1358,7 @@
       "http://gondor.apana.org.au/~herbert/dash/",
       "https://git.kernel.org/pub/scm/utils/dash/dash.git"
     ],
-    "version": "0.5.12"
+    "version": "0.5.13.3"
   },
   "databricks-cli": {
     "bin": ["databricks"],
@@ -1446,21 +1446,21 @@
     "version": "0.9.6"
   },
   "doom-emacs": {
-    "date": "2024-12-24",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": ["emacs"],
     "prune": true,
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
+    "version": "6be3337b49867bd86f90fe5ca4beeb6b38afaddb"
   },
   "dotfiles": {
-    "date": "2026-04-27",
+    "date": "2026-05-02",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4d938d366bc9c112460329043323fd4346a97c7f"
+    "version": "3ff4002d8cc9813d67765177db83f9e33c52410b"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -1564,11 +1564,11 @@
     "version": "30.2"
   },
   "ensembl-perl-api": {
-    "date": "2024-12-24",
+    "date": "2026-05-02",
     "default": false,
     "prune": true,
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
-    "version": "113"
+    "version": "116"
   },
   "entrez-direct": {
     "bin": ["efetch", "esearch"],
@@ -1630,7 +1630,7 @@
     "default": false,
     "prune": false,
     "url": ["https://libexpat.github.io/"],
-    "version": "R.2.8.0"
+    "version": "2.8.0"
   },
   "eza": {
     "bin": ["eza"],
@@ -1771,7 +1771,7 @@
   },
   "fltk": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-24",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "freetype",
@@ -1788,7 +1788,7 @@
     ],
     "prune": false,
     "url": ["https://www.fltk.org/"],
-    "version": "1.4.1"
+    "version": "1.4.5"
   },
   "fmt": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -1845,11 +1845,11 @@
   },
   "freetype": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-24",
+    "date": "2026-05-02",
     "default": false,
     "prune": false,
     "url": ["https://www.freetype.org/"],
-    "version": "2.13.3"
+    "version": "2.14.3"
   },
   "fribidi": {
     "build_dependencies": ["make", "pkg-config"],
@@ -2109,7 +2109,7 @@
     "man1": ["gs.1"],
     "prune": true,
     "url": ["https://www.ghostscript.com/"],
-    "version": "gs10070"
+    "version": "10.7.0"
   },
   "git": {
     "bin": [
@@ -2794,7 +2794,7 @@
   },
   "illumina-ica-cli": {
     "bin": ["icav2"],
-    "date": "2025-12-08",
+    "date": "2026-05-02",
     "default": false,
     "prune": true,
     "supported": {
@@ -2804,7 +2804,7 @@
       "macos-arm64": false
     },
     "url": ["https://help.ica.illumina.com/command-line-interface/"],
-    "version": "2.40.0"
+    "version": "2.45.0"
   },
   "imagemagick": {
     "bin": [
@@ -2996,12 +2996,12 @@
   },
   "krb5": {
     "build_dependencies": ["bison", "make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": ["libedit", "openssl"],
     "prune": false,
     "url": ["https://web.mit.edu/kerberos/"],
-    "version": "1.21.3"
+    "version": "1.22.2"
   },
   "ksh93": {
     "bin": ["ksh"],
@@ -3316,7 +3316,7 @@
     "default": false,
     "prune": false,
     "url": ["https://www.csie.ntu.edu.tw/~cjlin/liblinear/"],
-    "version": "250"
+    "version": "2.50"
   },
   "libluv": {
     "build_dependencies": ["cmake"],
@@ -3363,7 +3363,7 @@
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/openSUSE/libsolv/"],
-    "version": "BASE-SuSE-Code-13.1-Branch"
+    "version": "0.7.37"
   },
   "libssh2": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3448,13 +3448,13 @@
   },
   "libvterm": {
     "build_dependencies": ["libtool", "make", "pkg-config"],
-    "date": "2022-09-29",
+    "date": "2026-05-02",
     "default": false,
     "notes": ["0.2.0 is incompatible with neovim."],
     "outdated": true,
     "prune": false,
     "url": ["https://www.leonerd.org.uk/code/libvterm/"],
-    "version": "0.1.4"
+    "version": "0.3.3"
   },
   "libxcrypt": {
     "build_dependencies": ["make", "perl", "pkg-config"],
@@ -3543,7 +3543,7 @@
     ],
     "prune": true,
     "url": ["https://llvm.org/"],
-    "version": "llvmorg-22.1.4"
+    "version": "22.1.4"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3587,11 +3587,11 @@
   "luajit": {
     "bin": ["luajit"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "prune": false,
     "url": ["https://luajit.org/", "https://github.com/LuaJIT/LuaJIT"],
-    "version": "f73e649a954b599fc184726c376476e7a5c439ca"
+    "version": "e4c7d8b38040518d42599eef8ddb5e67aa967a9c"
   },
   "luarocks": {
     "bin": ["luarocks"],
@@ -3867,7 +3867,7 @@
     "dependencies": ["boost"],
     "prune": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
-    "version": "cpp-7.0.0"
+    "version": "7.0.0"
   },
   "multiqc": {
     "bin": ["multiqc"],
@@ -4066,11 +4066,11 @@
   },
   "nim": {
     "bin": ["nim"],
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "prune": true,
     "url": ["https://nim-lang.org/"],
-    "version": "2.2.0"
+    "version": "2.2.10"
   },
   "ninja": {
     "bin": ["ninja"],
@@ -4256,7 +4256,7 @@
       "https://github.com/openssh/openssh-portable",
       "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
     ],
-    "version": ".10.3.P1"
+    "version": "10.3p1"
   },
   "openssl": {
     "bin": ["openssl"],
@@ -4279,7 +4279,7 @@
     "version": "3.6.2"
   },
   "oracle-instant-client": {
-    "date": "2023-12-22",
+    "date": "2026-05-02",
     "default": false,
     "installer_platform": "fedora",
     "prune": true,
@@ -4291,7 +4291,7 @@
     },
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
-    "version": "21.12.0.0.0-1"
+    "version": "21.21.0.0.0-1"
   },
   "p7zip": {
     "bin": ["7z", "7za", "7zr"],
@@ -4527,12 +4527,12 @@
     "version": "7.6.1"
   },
   "prelude-emacs": {
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "prune": true,
     "url": ["https://github.com/bbatsov/prelude/"],
     "user": true,
-    "version": "9106aea3413c92bc8c4e9c3421efc980e1dcb6e3"
+    "version": "be4232e5643b9908c69dbfc363d1bb4f56f27053"
   },
   "prettier": {
     "bin": ["prettier"],
@@ -5323,7 +5323,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2026-02-02",
+    "date": "2026-05-02",
     "default": false,
     "installer_platform": "debian",
     "supported": {
@@ -5334,7 +5334,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2026.01.0-392"
+    "version": "2026.04.0-526"
   },
   "rsync": {
     "bin": ["rsync"],
@@ -5666,21 +5666,21 @@
     "version": "14.4.2"
   },
   "spacemacs": {
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": ["emacs"],
     "prune": true,
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
-    "version": "0898770b56d249e5099a78ac06bc5efb6f21f95c"
+    "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
   },
   "spacevim": {
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "prune": true,
     "url": ["https://spacevim.org/", "https://github.com/SpaceVim/SpaceVim"],
     "user": true,
-    "version": "a0fc3ad29004e5da49cdfff9c20fbebcfd54e8fb"
+    "version": "eed9d8f14951d9802665aa3429e449b71bb15a3a"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -5722,14 +5722,14 @@
   "sqlite": {
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2026-05-02",
     "default": false,
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "notes": ["Need to update install script for minor version bumps."],
     "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.47.2"
+    "version": "3.53.0"
   },
   "staden-io-lib": {
     "build_dependencies": ["make"],
@@ -5738,7 +5738,7 @@
     "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/jkbonfield/io_lib"],
-    "version": "1"
+    "version": "1.15.1"
   },
   "star": {
     "bin": ["STAR"],
@@ -5931,7 +5931,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "jdk-21.0.11+10"
+    "version": "25.0.3+9"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
@@ -6162,7 +6162,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.2.0432"
+    "version": "9.2.0433"
   },
   "visidata": {
     "bin": ["vd", "visidata"],
