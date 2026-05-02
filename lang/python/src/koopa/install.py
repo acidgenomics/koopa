@@ -1657,16 +1657,24 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     n = len(apps)
     label = "app" if n == 1 else "apps"
     alert(f"Updating {n} {label}: {', '.join(apps)}")
-    try:
-        from tqdm import tqdm
+    failed = []
+    for i, app in enumerate(apps, 1):
+        print(f"[{i}/{n}] Updating {app}...", file=sys.stderr)
+        try:
+            cli_install(app, reinstall=True, verbose=verbose)
+        except Exception as exc:
+            from koopa.alert import warn
 
-        pbar = tqdm(apps, desc="Updating apps", unit="app", file=sys.stderr)
-    except ImportError:
-        pbar = apps
-    for app in pbar:
-        cli_install(app, reinstall=True, verbose=verbose)
-    _update_stale_revdeps(apps, failed=[], verbose=verbose)
-    alert_success("All stale apps updated successfully.")
+            warn(f"Failed to update {app}: {exc}")
+            failed.append(app)
+    succeeded = [a for a in apps if a not in failed]
+    _update_stale_revdeps(succeeded, failed=failed, verbose=verbose)
+    if failed:
+        from koopa.alert import warn
+
+        warn(f"Failed to update: {', '.join(failed)}")
+    else:
+        alert_success("All stale apps updated successfully.")
 
 
 def _update_stale_revdeps(
@@ -1675,8 +1683,14 @@ def _update_stale_revdeps(
     failed: list[str],
     verbose: bool = False,
 ) -> None:
-    """Reinstall reverse dependencies of successfully updated apps."""
-    from koopa.alert import alert
+    """Log reverse dependencies of updated apps (informational only).
+
+    Reverse dependencies are not automatically rebuilt because shared library
+    updates typically remain ABI-compatible and the opt/ symlinks ensure apps
+    resolve to the new version. Use ``koopa reinstall --with-revdeps`` to
+    explicitly rebuild if needed.
+    """
+    from koopa.alert import alert_note
     from koopa.app import stale_revdeps
 
     succeeded = [a for a in updated_apps if a not in failed]
@@ -1688,9 +1702,10 @@ def _update_stale_revdeps(
         return
     n_revdeps = len(revdeps)
     label_revdeps = "reverse dependency" if n_revdeps == 1 else "reverse dependencies"
-    alert(f"Updating {n_revdeps} stale {label_revdeps}: {', '.join(revdeps)}")
-    for app in revdeps:
-        cli_install(app, reinstall=True, verbose=verbose)
+    alert_note(
+        f"{n_revdeps} {label_revdeps} may need rebuilding: {', '.join(revdeps)}\n"
+        "  Run 'koopa reinstall --with-revdeps <app>' to rebuild if needed.",
+    )
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
