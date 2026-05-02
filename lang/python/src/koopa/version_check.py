@@ -1019,6 +1019,41 @@ def _check_r_xcode_openmp() -> str:
     )
 
 
+def _check_aspera_connect() -> str:
+    html = _http_get_text(
+        "https://www.ibm.com/products/aspera/downloads",
+        timeout=30,
+    )
+    versions = re.findall(
+        r"aspera-connect_(\d+\.\d+\.\d+\.\d+)", html
+    )
+    if not versions:
+        msg = "No Aspera Connect versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_illumina_ica_cli() -> str:
+    html = _http_get_text(
+        "https://help.ica.illumina.com/"
+        "command-line-interface/cli-releasehistory",
+        timeout=30,
+    )
+    versions = re.findall(
+        r"s3\.amazonaws\.com/cli/(\d+\.\d+\.\d+)/", html
+    )
+    if not versions:
+        msg = "No Illumina ICA CLI versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
 def _check_miniconda() -> str:
     html = _http_get_text("https://repo.anaconda.com/miniconda/")
     versions = re.findall(
@@ -1338,6 +1373,17 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "udunits": _AppCheckSpec(
         "github", _check_github, ("Unidata", "UDUNITS-2")
     ),
+    "aspera-connect": _AppCheckSpec(
+        "dirlist", _check_aspera_connect, ()
+    ),
+    "autodock-adfr": _AppCheckSpec(
+        "dirlist",
+        lambda: "1.0",
+        (),
+    ),
+    "illumina-ica-cli": _AppCheckSpec(
+        "dirlist", _check_illumina_ica_cli, ()
+    ),
     "cellranger": _AppCheckSpec(
         "github", _check_github, ("10XGenomics", "cellranger")
     ),
@@ -1604,9 +1650,13 @@ def print_report(results: list[VersionCheckResult]) -> None:
         for r in sorted(failed, key=lambda x: x.name):
             print(f"  {r.name}: {r.error}")
         print()
-    print(f"Up to date: {len(current)}")
-    print(f"Outdated:   {len(outdated)}")
-    print(f"Failed:     {len(failed)}")
+    if unsupported:
+        print(f"Unsupported ({len(unsupported)}):")
+        for r in sorted(unsupported, key=lambda x: x.name):
+            print(f"  {r.name}: {r.current_version}")
+        print()
+    print(f"Up to date + Outdated: {len(current) + len(outdated)}")
+    print(f"Failed: {len(failed)}")
     print(f"Unsupported: {len(unsupported)}")
 
 
