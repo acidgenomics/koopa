@@ -7603,8 +7603,10 @@
     "date": "2026-02-07",
     "default": false,
     "dependencies": [
+      "libffi",
       "libyaml",
-      "openssl",
+      "openssl3",
+      "readline",
       "zlib"
     ],
     "man1": [
