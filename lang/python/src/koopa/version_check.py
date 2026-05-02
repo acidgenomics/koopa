@@ -1019,6 +1019,22 @@ def _check_r_xcode_openmp() -> str:
     )
 
 
+def _check_miniconda() -> str:
+    html = _http_get_text("https://repo.anaconda.com/miniconda/")
+    versions = re.findall(
+        r"Miniconda3-py\d+_(\d+\.\d+\.\d+-\d+)-", html
+    )
+    if not versions:
+        msg = "No Miniconda versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(
+            int(x) for x in re.split(r"[.\-]", v)
+        ),
+    )
+
+
 def _check_oracle_instant_client(current_version: str) -> str:
     major = current_version.split(".")[0]
     html = _http_get_text(
@@ -1210,9 +1226,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_github_head("chapmanb", "cloudbiolinux"),
         (),
     ),
-    "conda": _AppCheckSpec(
-        "conda", _check_conda, ("conda-forge", "conda")
-    ),
+    "conda": _AppCheckSpec("dirlist", _check_miniconda, ()),
     "dash": _AppCheckSpec("dirlist", _check_dash, ()),
     "doom-emacs": _AppCheckSpec(
         "github",
