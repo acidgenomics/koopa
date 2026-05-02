@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2026-05-02.
+    # @note Updated 2026-05-03.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -23,6 +23,57 @@ _koopa_complete() {
     # """
     local args
     COMPREPLY=()
+    local -A _flags
+    _flags=(
+        ['app/aws/batch/fetch-and-run']='--help --queue --job-definition --job-name --vcpus --memory --profile'
+        ['app/aws/batch/list-jobs']='--help --queue --status --profile'
+        ['app/aws/ec2/list-running-instances']='--help --profile'
+        ['app/aws/ec2/map-instance-ids-to-names']='--help --profile'
+        ['app/aws/ec2/stop']='--help --profile'
+        ['app/aws/ecr/login-private']='--help --region --account-id --profile'
+        ['app/aws/ecr/login-public']='--help --region'
+        ['app/aws/s3/delete-versioned-glacier-objects']='--help --bucket --prefix --profile'
+        ['app/aws/s3/delete-versioned-objects']='--help --bucket --prefix --profile'
+        ['app/aws/s3/dot-clean']='--help --dryrun --profile'
+        ['app/aws/s3/find']='--help --bucket --prefix --pattern --profile'
+        ['app/aws/s3/list-large-files']='--help --bucket --min-size-mb --prefix --profile'
+        ['app/aws/s3/ls']='--help --recursive --profile'
+        ['app/aws/s3/mv-to-parent']='--help --dryrun --profile'
+        ['app/aws/s3/sync']='--help --delete --dryrun --exclude --include --profile'
+        ['app/bowtie2/align/paired-end']='--help --index-dir --fastq-dir --output-dir'
+        ['app/bowtie2/index']='--help --genome-fasta-file --output-dir'
+        ['app/conda/create-env']='--help --file --prefix --force --latest'
+        ['app/docker/build']='--help --local --remote --memory --no-push'
+        ['app/docker/build-all-tags']='--help --local --remote'
+        ['app/docker/run']='--help --arm --x86 --bash --bind'
+        ['app/ftp/mirror']='--help --host --user --dir'
+        ['app/hisat2/align/paired-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
+        ['app/hisat2/align/single-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
+        ['app/hisat2/index']='--help --genome-fasta-file --output-dir --gtf-file'
+        ['app/kallisto/index']='--help --transcriptome-fasta-file --output-dir'
+        ['app/kallisto/quant/paired-end']='--help --index-dir --fastq-dir --output-dir'
+        ['app/kallisto/quant/single-end']='--help --index-dir --fastq-dir --output-dir'
+        ['app/miso/index']='--help --gff-file --output-dir'
+        ['app/r/shiny-run-app']='--help --port'
+        ['app/rnaeditingindexer']='--help --bam-dir --output-dir --genome --example'
+        ['app/rsem/index']='--help --genome-fasta-file --output-dir --gtf-file --num-threads'
+        ['app/rsem/quant/bam']='--help --bam-file --index-dir --output-dir'
+        ['app/salmon/detect-fastq-library-type']='--help --index-dir --r1 --r2 --threads'
+        ['app/salmon/index']='--help --transcriptome-fasta-file --output-dir'
+        ['app/salmon/quant/bam']='--help --index-dir --fastq-dir --output-dir'
+        ['app/salmon/quant/paired-end']='--help --index-dir --fastq-dir --output-dir'
+        ['app/salmon/quant/single-end']='--help --index-dir --fastq-dir --output-dir'
+        ['app/sra/download-accession-list']='--help --srp-id --file'
+        ['app/sra/download-run-info-table']='--help --srp-id --file'
+        ['app/sra/fastq-dump']='--help --prefetch-directory --fastq-directory --no-compress'
+        ['app/sra/prefetch']='--help --accession-file --output-dir'
+        ['app/ssh/generate-key']='--help --prefix'
+        ['app/star/align/paired-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
+        ['app/star/align/single-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
+        ['app/star/index']='--help --genome-fasta-file --output-dir --gtf-file'
+        ['app/wget/recursive']='--help --url --user --password'
+        ['develop/check-app-versions']='--help --json --source --update --no-cache'
+    )
     case "${COMP_CWORD:-}" in
         '1')
             args+=(
@@ -944,6 +995,49 @@ _koopa_complete() {
             esac
             ;;
     esac
+    # Flag completion: when the current word starts with '--', look up
+    # available flags for the resolved command path.
+    if [[ "${COMP_WORDS[COMP_CWORD]}" == --* ]]
+    then
+        local _path=''
+        local _i
+        for (( _i=1; _i < COMP_CWORD; _i++ ))
+        do
+            case "${COMP_WORDS[_i]}" in
+                --*)
+                    ;;
+                *)
+                    if [[ -z "$_path" ]]
+                    then
+                        _path="${COMP_WORDS[_i]}"
+                    else
+                        _path="${_path}/${COMP_WORDS[_i]}"
+                    fi
+                    ;;
+            esac
+        done
+        local _try_path="$_path"
+        while [[ -n "$_try_path" ]]
+        do
+            if [[ -n "${_flags[$_try_path]+x}" ]]
+            then
+                local _available="${_flags[$_try_path]}"
+                for (( _i=1; _i < COMP_CWORD; _i++ ))
+                do
+                    if [[ "${COMP_WORDS[_i]}" == --* ]]
+                    then
+                        _available="${_available//${COMP_WORDS[_i]}/}"
+                    fi
+                done
+                # shellcheck disable=SC2086
+                args+=($_available)
+                break
+            fi
+            local _prev="$_try_path"
+            _try_path="${_try_path%/*}"
+            [[ "$_try_path" == "$_prev" ]] && break
+        done
+    fi
     # Quoting inside the array doesn't work for Bash, but does for Zsh.
     COMPREPLY=($(compgen -W "${args[*]}" -- "${COMP_WORDS[COMP_CWORD]}"))
     return 0

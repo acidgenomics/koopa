@@ -17,7 +17,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from koopa.installers import PYTHON_INSTALLERS
-from koopa.io import import_app_json
+from koopa.io import export_app_json, import_app_json
 from koopa.prefix import koopa_prefix
 from koopa.version import sanitize_version
 from koopa.xdg import xdg_cache_home
@@ -90,10 +90,29 @@ class _RateLimiter:
             self._last = time.monotonic()
 
 
-_github_token: str | None = (
-    os.environ.get("GITHUB_TOKEN")
-    or os.environ.get("GH_TOKEN")
-)
+def _resolve_github_token() -> str | None:
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    if token:
+        return token
+    import shutil
+    import subprocess
+
+    if shutil.which("gh"):
+        try:
+            result = subprocess.run(
+                ["gh", "auth", "token"],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                return result.stdout.strip()
+        except (subprocess.TimeoutExpired, OSError):
+            pass
+    return None
+
+
+_github_token: str | None = _resolve_github_token()
 _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
 
@@ -118,11 +137,11 @@ def _http_get_json(
         return json.loads(resp.read().decode())
 
 
-def _http_get_text(url: str) -> str:
+def _http_get_text(url: str, *, timeout: int = 15) -> str:
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    with urllib.request.urlopen(req, timeout=15) as resp:
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.read().decode()
 
 
@@ -225,13 +244,17 @@ def _check_metacpan(distribution: str) -> str:
 
 
 def _check_directory_listing(
-    url: str, tarball_prefix: str, *, case_sensitive: bool = True
+    url: str,
+    tarball_prefix: str,
+    *,
+    case_sensitive: bool = True,
+    timeout: int = 15,
 ) -> str:
-    html = _http_get_text(url)
+    html = _http_get_text(url, timeout=timeout)
     flags = 0 if case_sensitive else re.IGNORECASE
     pattern = re.compile(
         rf"{re.escape(tarball_prefix)}[_-]([\d]+(?:\.[\d]+)*(?:-\d+)?)"
-        rf"(?:\.tar\.(?:gz|xz|bz2|lz)|\.zip)",
+        rf"(?:\.tar\.(?:gz|xz|bz2|lz)|\.tgz|\.zip)",
         flags,
     )
     versions: list[str] = pattern.findall(html)
@@ -394,11 +417,11 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
     args = info.get("installer_args", {})
     urls = info.get("url", [])
     version = info.get("version", "")
-    if len(version) == 40:
-        return None
     spec = _SPECIAL_CASES.get(name)
     if spec is not None:
         return spec
+    if len(version) == 40:
+        return None
     for suffix, source in _GENERIC_INSTALLER_MAP.items():
         if module_path.endswith(suffix):
             result = _classify_generic(source, name, info, args, urls)
@@ -799,6 +822,146 @@ def _check_liblinear() -> str:
     return m.group(1)
 
 
+def _check_github_head(owner: str, repo: str) -> str:
+    for branch in ("main", "master"):
+        try:
+            data = _http_get_json(
+                f"https://api.github.com/repos/{owner}/{repo}"
+                f"/commits/{branch}",
+                github=True,
+            )
+            return data["sha"]
+        except urllib.error.HTTPError:
+            continue
+    msg = f"Cannot determine HEAD for {owner}/{repo}"
+    raise RuntimeError(msg)
+
+
+def _check_anaconda() -> str:
+    html = _http_get_text("https://repo.anaconda.com/archive/")
+    versions = re.findall(r"Anaconda3-(\d{4}\.\d+(?:-\d+)?)-", html)
+    if not versions:
+        msg = "No Anaconda versions found"
+        raise RuntimeError(msg)
+    return max(set(versions))
+
+
+def _check_apache_dirlist(project: str) -> str:
+    url = f"https://archive.apache.org/dist/{project}/"
+    html = _http_get_text(url)
+    pattern = re.compile(
+        rf"{re.escape(project)}-([\d]+(?:\.[\d]+)*)"
+    )
+    versions = pattern.findall(html)
+    if not versions:
+        msg = f"No versions found for Apache {project}"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_dash() -> str:
+    html = _http_get_text(
+        "https://git.kernel.org/pub/scm/utils/dash/dash.git/refs/tags"
+    )
+    versions = re.findall(r">v([\d]+\.[\d]+(?:\.[\d]+)*)<", html)
+    if not versions:
+        msg = "No dash versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_ensembl() -> str:
+    page = 1
+    best = 0
+    while True:
+        data = _http_get_json(
+            "https://api.github.com/repos/Ensembl/ensembl"
+            f"/branches?per_page=100&page={page}",
+            github=True,
+        )
+        if not data:
+            break
+        for b in data:
+            m = re.match(r"release/(\d+)$", b["name"])
+            if m:
+                best = max(best, int(m.group(1)))
+        page += 1
+    if not best:
+        msg = "No Ensembl release branches found"
+        raise RuntimeError(msg)
+    return str(best)
+
+
+def _check_fltk() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/fltk/fltk/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    m = re.match(r"release-([\d]+(?:\.[\d]+)*)", tag)
+    if not m:
+        msg = f"Cannot parse FLTK tag: {tag}"
+        raise RuntimeError(msg)
+    return m.group(1)
+
+
+def _check_jpeg() -> str:
+    _rate_default.wait()
+    req = urllib.request.Request("https://www.ijg.org/files/")
+    req.add_header("User-Agent", "koopa-version-checker")
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        html = resp.read().decode("latin-1")
+    versions = re.findall(r"jpegsrc\.v(\d+[a-z]?)\.tar", html)
+    if not versions:
+        msg = "No JPEG versions found"
+        raise RuntimeError(msg)
+    return max(versions)
+
+
+def _check_krb5() -> str:
+    html = _http_get_text("https://kerberos.org/dist/krb5/")
+    dirs = re.findall(r"href=\"([\d]+\.[\d]+)/?\"", html)
+    if not dirs:
+        msg = "No krb5 version directories found"
+        raise RuntimeError(msg)
+    latest_dir = max(
+        set(dirs),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+    html2 = _http_get_text(
+        f"https://kerberos.org/dist/krb5/{latest_dir}/"
+    )
+    versions = re.findall(
+        r"krb5-([\d]+(?:\.[\d]+)*)\.tar", html2
+    )
+    if not versions:
+        msg = f"No krb5 tarballs found in {latest_dir}"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_sqlite() -> str:
+    html = _http_get_text("https://www.sqlite.org/download.html")
+    fvs = re.findall(r"sqlite-autoconf-(\d{7,})\.tar", html)
+    if not fvs:
+        msg = "No SQLite versions found"
+        raise RuntimeError(msg)
+    fv = max(set(fvs))
+    major = fv[0]
+    minor = str(int(fv[1:3]))
+    patch = str(int(fv[3:5]))
+    return f"{major}.{minor}.{patch}"
+
+
 def _check_r_devel() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/r-devel/r-svn"
@@ -955,6 +1118,146 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "woff2": _AppCheckSpec(
         "github", _check_github, ("google", "woff2")
+    ),
+    "anaconda": _AppCheckSpec("dirlist", _check_anaconda, ()),
+    "apache-arrow": _AppCheckSpec(
+        "github",
+        lambda: _sanitize_github_tag(
+            _http_get_json(
+                "https://api.github.com/repos/apache/arrow"
+                "/releases/latest",
+                github=True,
+            )["tag_name"],
+            "apache-arrow",
+        ),
+        (),
+    ),
+    "apache-spark": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_apache_dirlist("spark"),
+        (),
+    ),
+    "bfg": _AppCheckSpec(
+        "github", _check_github, ("rtyley", "bfg-repo-cleaner")
+    ),
+    "cloudbiolinux": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("chapmanb", "cloudbiolinux"),
+        (),
+    ),
+    "conda": _AppCheckSpec(
+        "conda", _check_conda, ("conda-forge", "conda")
+    ),
+    "dash": _AppCheckSpec("dirlist", _check_dash, ()),
+    "doom-emacs": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("doomemacs", "doomemacs"),
+        (),
+    ),
+    "dotfiles": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("acidgenomics", "dotfiles"),
+        (),
+    ),
+    "ensembl-perl-api": _AppCheckSpec(
+        "github", _check_ensembl, ()
+    ),
+    "fltk": _AppCheckSpec("github", _check_fltk, ()),
+    "freetype": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://download.savannah.gnu.org/releases/freetype/",
+            "freetype",
+        ),
+        (),
+    ),
+    "haskell-cabal": _AppCheckSpec(
+        "github",
+        lambda: _sanitize_github_tag(
+            _http_get_json(
+                "https://api.github.com/repos/haskell/cabal"
+                "/releases/latest",
+                github=True,
+            )["tag_name"],
+            "cabal-install",
+        ),
+        (),
+    ),
+    "jpeg": _AppCheckSpec("dirlist", _check_jpeg, ()),
+    "krb5": _AppCheckSpec("dirlist", _check_krb5, ()),
+    "lame": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_sourceforge_versions("lame/files/lame/"),
+        (),
+    ),
+    "libev": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "http://dist.schmorp.de/libev/",
+            "libev",
+        ),
+        (),
+    ),
+    "libvterm": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://www.leonerd.org.uk/code/libvterm/",
+            "libvterm",
+        ),
+        (),
+    ),
+    "luajit": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("LuaJIT", "LuaJIT"),
+        (),
+    ),
+    "nim": _AppCheckSpec(
+        "github", _check_github, ("nim-lang", "Nim")
+    ),
+    "openldap": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://www.openldap.org/software/download/"
+            "OpenLDAP/openldap-release/",
+            "openldap",
+        ),
+        (),
+    ),
+    "password-store": _AppCheckSpec(
+        "github", _check_github, ("zx2c4", "password-store")
+    ),
+    "pbzip2": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://launchpad.net/pbzip2/+download",
+            "pbzip2",
+            timeout=30,
+        ),
+        (),
+    ),
+    "prelude-emacs": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("bbatsov", "prelude"),
+        (),
+    ),
+    "readline": _AppCheckSpec(
+        "gnu",
+        lambda: _check_gnu("readline"),
+        (),
+    ),
+    "spacemacs": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("syl20bnr", "spacemacs"),
+        (),
+    ),
+    "spacevim": _AppCheckSpec(
+        "github",
+        lambda: _check_github_head("SpaceVim", "SpaceVim"),
+        (),
+    ),
+    "sqlite": _AppCheckSpec("dirlist", _check_sqlite, ()),
+    "udunits": _AppCheckSpec(
+        "github", _check_github, ("Unidata", "UDUNITS-2")
     ),
 }
 
@@ -1252,12 +1555,6 @@ def update_app_json(results: list[VersionCheckResult]) -> int:
             data[r.name]["version"] = r.latest_version
             data[r.name]["date"] = today
             count += 1
-    sorted_data = dict(sorted(data.items()))
-    for key, value in sorted_data.items():
-        if isinstance(value, dict):
-            sorted_data[key] = dict(sorted(value.items()))
-    json_path.write_text(
-        json.dumps(sorted_data, indent=2, ensure_ascii=False) + "\n"
-    )
+    export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
     return count
