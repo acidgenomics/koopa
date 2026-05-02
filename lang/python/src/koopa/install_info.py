@@ -1,6 +1,6 @@
 """Install metadata functions."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from json import dumps
 
 from koopa.io import import_app_json
@@ -32,7 +32,7 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
     info = {
         "name": name,
         "version": version,
-        "date": datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+        "date": datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M:%S"),
         "os_id": sys_dict["os_id"],
         "build_dependencies": build_deps,
         "dependencies": deps,

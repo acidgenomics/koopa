@@ -8,7 +8,6 @@ import subprocess
 import sys
 from typing import Any
 
-
 _APP_TREE: dict[str, Any] = {
     "aws": {
         "batch": {
@@ -481,6 +480,7 @@ def _handle_r_version(args: list[str]) -> None:
 def _handle_brew_reset_core_repo(args: list[str]) -> None:
     import shutil
     import subprocess
+
     from koopa.git import git_default_branch
 
     brew = shutil.which("brew")
@@ -1051,8 +1051,9 @@ def _handle_aws_batch_list_jobs(args: list[str]) -> None:
     parser.add_argument("--status", default="RUNNING")
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
-    from koopa.aws import aws_batch_list_jobs
     import json
+
+    from koopa.aws import aws_batch_list_jobs
 
     jobs = aws_batch_list_jobs(
         parsed.queue,

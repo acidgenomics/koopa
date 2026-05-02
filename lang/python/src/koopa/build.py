@@ -109,7 +109,7 @@ class BuildEnv:
             "PKG_CONFIG_PATH",
             "CMAKE_PREFIX_PATH",
         ):
-            if key in env and env[key]:
+            if env.get(key):
                 os.environ[key] = env[key]
 
 
