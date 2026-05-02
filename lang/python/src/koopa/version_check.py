@@ -71,6 +71,9 @@ class _VersionCache:
             "ts": time.time(),
         }
 
+    def reset(self) -> None:
+        self._data = {}
+
     def save(self) -> None:
         os.makedirs(os.path.dirname(self._path), exist_ok=True)
         with open(self._path, "w") as f:
@@ -1415,7 +1418,7 @@ def check_app_versions(
     source_filter: str | None = None,
     name_filter: list[str] | None = None,
     max_workers: int = 8,
-    use_cache: bool = True,
+    reset_cache: bool = False,
 ) -> list[VersionCheckResult]:
     """Check upstream versions for all apps in app.json."""
     if _github_token is None:
@@ -1427,7 +1430,9 @@ def check_app_versions(
         )
         raise RuntimeError(msg)
     json_data = import_app_json()
-    cache = _VersionCache() if use_cache else None
+    cache = _VersionCache()
+    if reset_cache:
+        cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
     for app_name, info in sorted(json_data.items()):

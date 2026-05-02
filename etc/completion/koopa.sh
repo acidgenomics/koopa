@@ -58,7 +58,7 @@ _koopa_complete() {
         ['app/star/align/single-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
         ['app/star/index']='--help --genome-fasta-file --output-dir --gtf-file'
         ['app/wget/recursive']='--help --url --user --password'
-        ['develop/check-app-versions']='--help --json --source --update --no-cache'
+        ['develop/check-app-versions']='--help --json --source --update --reset-cache'
     )
     case "${COMP_CWORD:-}" in
         '1')
