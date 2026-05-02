@@ -489,6 +489,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     # -- Dispatch to installer ------------------------------------------------
     from koopa.installers import get_python_installer, has_python_installer  # noqa: PLC0415
 
+    orig_cwd = os.getcwd()
+    tmp_dir = tempfile.mkdtemp(prefix="koopa-install-")
+    os.chdir(tmp_dir)
     try:
         if config.binary:
             if config.mode != "shared" or not config.prefix:
@@ -510,6 +513,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
         raise
+    finally:
+        os.chdir(orig_cwd)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
     # -- Post-install: linking ------------------------------------------------
     if config.mode == "shared":
         if config.link_in_opt:
