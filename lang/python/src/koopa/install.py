@@ -228,6 +228,9 @@ def _arch2() -> str:
 
 def link_in_opt(*, name: str, source: str) -> None:
     """Create symlink in koopa opt/ directory."""
+    if not os.path.exists(source):
+        msg = f"Link source does not exist: {source!r}"
+        raise FileNotFoundError(msg)
     target = os.path.join(_opt_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
@@ -238,6 +241,9 @@ def link_in_opt(*, name: str, source: str) -> None:
 
 def link_in_bin(*, name: str, source: str) -> None:
     """Create symlink in koopa bin/ directory."""
+    if not os.path.isfile(source):
+        msg = f"Binary does not exist: {source!r}"
+        raise FileNotFoundError(msg)
     target = os.path.join(_bin_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
@@ -248,6 +254,9 @@ def link_in_bin(*, name: str, source: str) -> None:
 
 def link_in_man1(*, name: str, source: str) -> None:
     """Create symlink in koopa man1/ directory."""
+    if not os.path.isfile(source):
+        msg = f"Man page does not exist: {source!r}"
+        raise FileNotFoundError(msg)
     target = os.path.join(_man1_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
@@ -1164,53 +1173,91 @@ def install_conda_package(
             pkg_spec,
         ]
         subprocess.run(create_args, check=True)
-        return
-    create_args = [conda, "create", "--yes", f"--prefix={libexec}"]
-    result = subprocess.run(
-        [conda, "config", "--show", "channels"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    if "conda-forge" not in result.stdout:
-        create_args.extend(
-            [
+    else:
+        create_args = [conda, "create", "--yes", f"--prefix={libexec}"]
+        result = subprocess.run(
+            [conda, "config", "--show", "channels"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        if "conda-forge" not in result.stdout:
+            create_args.extend(
+                [
+                    "--channel=conda-forge",
+                    "--channel=bioconda",
+                ]
+            )
+        create_args.append(pkg_spec)
+        result = subprocess.run(create_args, check=False)
+        if result.returncode != 0:
+            print(
+                "Retrying with conda-forge/bioconda channels directly.",
+                file=sys.stderr,
+            )
+            _conda_set_override()
+            fallback_args = [
+                conda,
+                "create",
+                "--yes",
+                f"--prefix={libexec}",
                 "--channel=conda-forge",
                 "--channel=bioconda",
+                "--override-channels",
+                pkg_spec,
             ]
-        )
-    create_args.append(pkg_spec)
-    result = subprocess.run(create_args, check=False)
-    if result.returncode == 0:
-        return
-    print(
-        "Retrying with conda-forge/bioconda channels directly.",
-        file=sys.stderr,
-    )
-    _conda_set_override()
-    fallback_args = [
-        conda,
-        "create",
-        "--yes",
-        f"--prefix={libexec}",
-        "--channel=conda-forge",
-        "--channel=bioconda",
-        "--override-channels",
-        pkg_spec,
-    ]
-    subprocess.run(fallback_args, check=True)
-    # Link binaries from libexec/bin into prefix/bin.
+            subprocess.run(fallback_args, check=True)
+    _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
+
+
+def _link_conda_binaries(
+    *,
+    name: str,
+    version: str,
+    prefix: str,
+    libexec: str,
+) -> None:
+    """Link binaries from conda env into prefix/bin using conda metadata."""
+    import glob as glob_mod
+
+    from koopa.io import extract_conda_bin_names
+
+    conda_meta = os.path.join(libexec, "conda-meta")
+    json_pattern = f"{name}-{version}-*.json"
+    if name == "snakemake":
+        json_pattern = "snakemake-minimal-*.json"
+    matches = glob_mod.glob(os.path.join(conda_meta, json_pattern))
+    if not matches:
+        matches = glob_mod.glob(os.path.join(conda_meta, f"{name}-*.json"))
+    if not matches:
+        msg = f"No conda metadata found for {name} in {conda_meta}"
+        raise FileNotFoundError(msg)
+    json_file = matches[0]
+    bin_names = extract_conda_bin_names(json_file)
+    if not bin_names:
+        msg = f"No binaries found in conda metadata: {json_file}"
+        raise RuntimeError(msg)
     libexec_bin = os.path.join(libexec, "bin")
     bin_dir = os.path.join(prefix, "bin")
-    if os.path.isdir(libexec_bin):
-        os.makedirs(bin_dir, exist_ok=True)
-        for entry in os.listdir(libexec_bin):
-            src = os.path.join(libexec_bin, entry)
-            dst = os.path.join(bin_dir, entry)
-            if os.path.isfile(src) and not os.path.isdir(src):
-                if os.path.islink(dst):
-                    os.unlink(dst)
-                os.symlink(src, dst)
+    man1_src_dir = os.path.join(libexec, "share", "man", "man1")
+    man1_dst_dir = os.path.join(prefix, "share", "man", "man1")
+    os.makedirs(bin_dir, exist_ok=True)
+    for bin_name in bin_names:
+        src = os.path.join(libexec_bin, bin_name)
+        if not os.path.isfile(src):
+            msg = f"Binary does not exist: {src!r}"
+            raise FileNotFoundError(msg)
+        dst = os.path.join(bin_dir, bin_name)
+        if os.path.islink(dst):
+            os.unlink(dst)
+        os.symlink(src, dst)
+        man1_src = os.path.join(man1_src_dir, f"{bin_name}.1")
+        if os.path.isfile(man1_src):
+            os.makedirs(man1_dst_dir, exist_ok=True)
+            man1_dst = os.path.join(man1_dst_dir, f"{bin_name}.1")
+            if os.path.islink(man1_dst):
+                os.unlink(man1_dst)
+            os.symlink(man1_src, man1_dst)
 
 
 # -- Haskell package installer ------------------------------------------------

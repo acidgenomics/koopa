@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
 import sys
 
-from koopa.archive import extract
 from koopa.download import download
 from koopa.system import arch2
 
@@ -21,4 +22,8 @@ def main(
     os_id = "darwin" if sys.platform == "darwin" else "linux"
     url = f"https://dl.google.com/go/go{version}.{os_id}-{arch}.tar.gz"
     tarball = download(url)
-    extract(tarball, prefix)
+    os.makedirs(prefix, exist_ok=True)
+    subprocess.run(
+        ["tar", "-xf", tarball, "-C", prefix, "--strip-components=1"],
+        check=True,
+    )
