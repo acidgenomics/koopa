@@ -795,6 +795,32 @@ def _handle_rsem_quant_bam(args: list[str]) -> None:
     )
 
 
+def _handle_salmon_detect_fastq_library_type(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app salmon detect-fastq-library-type",
+    )
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--r1", required=True)
+    parser.add_argument("--r2", default=None)
+    parser.add_argument(
+        "--threads",
+        type=int,
+        default=os.cpu_count() or 1,
+    )
+    parsed = parser.parse_args(args)
+    from koopa.ngs import salmon_detect_fastq_library_type
+
+    result = salmon_detect_fastq_library_type(
+        parsed.index_dir,
+        parsed.r1,
+        parsed.r2,
+        threads=parsed.threads,
+    )
+    print(result)
+
+
 def _handle_salmon_index(args: list[str]) -> None:
     import argparse
 
@@ -1324,6 +1350,23 @@ def _handle_aws_s3_ls(args: list[str]) -> None:
     print(output, end="")
 
 
+def _handle_aws_s3_mv_to_parent(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app aws s3 mv-to-parent")
+    parser.add_argument("path", help="S3 path to move up")
+    parser.add_argument("--dryrun", action="store_true")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_mv_to_parent
+
+    aws_s3_mv_to_parent(
+        parsed.path,
+        dryrun=parsed.dryrun,
+        profile=parsed.profile,
+    )
+
+
 def _handle_aws_s3_sync(args: list[str]) -> None:
     import argparse
 
@@ -1528,13 +1571,21 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
     "wget-recursive": _handle_wget_recursive,
     # aws
+    "aws-batch-fetch-and-run": _handle_aws_batch_fetch_and_run,
     "aws-batch-list-jobs": _handle_aws_batch_list_jobs,
+    "aws-ec2-instance-id": _handle_aws_ec2_instance_id,
     "aws-ec2-list-running-instances": _handle_aws_ec2_list_running_instances,
+    "aws-ec2-map-instance-ids-to-names": _handle_aws_ec2_map_instance_ids_to_names,
+    "aws-ec2-stop": _handle_aws_ec2_stop,
     "aws-ecr-login-private": _handle_aws_ecr_login_private,
     "aws-ecr-login-public": _handle_aws_ecr_login_public,
+    "aws-s3-delete-versioned-glacier-objects": _handle_aws_s3_delete_versioned_glacier_objects,
+    "aws-s3-delete-versioned-objects": _handle_aws_s3_delete_versioned_objects,
+    "aws-s3-dot-clean": _handle_aws_s3_dot_clean,
     "aws-s3-find": _handle_aws_s3_find,
     "aws-s3-list-large-files": _handle_aws_s3_list_large_files,
     "aws-s3-ls": _handle_aws_s3_ls,
+    "aws-s3-mv-to-parent": _handle_aws_s3_mv_to_parent,
     "aws-s3-sync": _handle_aws_s3_sync,
     # bioinformatics
     "bowtie2-align-paired-end": _handle_bowtie2_align_paired_end,
@@ -1561,6 +1612,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "rnaeditingindexer": _handle_rnaeditingindexer,
     "rsem-index": _handle_rsem_index,
     "rsem-quant-bam": _handle_rsem_quant_bam,
+    "salmon-detect-fastq-library-type": _handle_salmon_detect_fastq_library_type,
     "salmon-index": _handle_salmon_index,
     "salmon-quant-bam": lambda a: _handle_salmon_quant(a, mode="bam"),
     "salmon-quant-paired-end": lambda a: _handle_salmon_quant(
