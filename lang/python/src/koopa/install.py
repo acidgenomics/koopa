@@ -1323,6 +1323,11 @@ def install_koopa(
     else:
         shutil.copytree(source_prefix, prefix, symlinks=True)
     os.environ["KOOPA_PREFIX"] = prefix
+    if shared:
+        xdg_data_link = os.path.join(xdg_data_home, "koopa")
+        if not os.path.exists(xdg_data_link):
+            os.makedirs(xdg_data_home, exist_ok=True)
+            os.symlink(prefix, xdg_data_link)
     if bootstrap:
         cli_install("bash", bootstrap=True)
         cli_install("coreutils", bootstrap=True)
