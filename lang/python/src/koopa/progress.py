@@ -98,6 +98,10 @@ class BuildProgress:
         self._tqdm_bar: Any = None
         self._step_bar: Any = None
         self._in_step_mode: bool = False
+        self._saved_stdout_fd: int | None = None
+        self._saved_stderr_fd: int | None = None
+        self._log_file: Any = None
+        self._real_stderr: Any = None
 
     def __enter__(self) -> BuildProgress:
         """Enter the build progress context."""
@@ -105,6 +109,7 @@ class BuildProgress:
         _active_progress = self
         self._start = time.monotonic()
         if not self._quiet:
+            self._redirect_output()
             self._start_display()
         return self
 
@@ -114,8 +119,42 @@ class BuildProgress:
         _active_progress = None
         self._elapsed = time.monotonic() - self._start
         self._stop_display()
+        self._restore_output(failed=exc_type is not None)
         if exc_type is None:
             self._record_duration()
+
+    def _redirect_output(self) -> None:
+        """Redirect OS-level stdout/stderr to a temp log file."""
+        import tempfile
+
+        self._real_stderr = os.fdopen(os.dup(2), "w", closefd=True)
+        self._log_file = tempfile.TemporaryFile(mode="w+", prefix="koopa-build-")
+        log_fd = self._log_file.fileno()
+        self._saved_stdout_fd = os.dup(1)
+        self._saved_stderr_fd = os.dup(2)
+        os.dup2(log_fd, 1)
+        os.dup2(log_fd, 2)
+
+    def _restore_output(self, *, failed: bool = False) -> None:
+        """Restore original stdout/stderr; dump log on failure."""
+        if self._saved_stdout_fd is not None:
+            os.dup2(self._saved_stdout_fd, 1)
+            os.close(self._saved_stdout_fd)
+            self._saved_stdout_fd = None
+        if self._saved_stderr_fd is not None:
+            os.dup2(self._saved_stderr_fd, 2)
+            os.close(self._saved_stderr_fd)
+            self._saved_stderr_fd = None
+        if self._log_file is not None:
+            if failed:
+                self._log_file.seek(0)
+                sys.stderr.write(self._log_file.read())
+                sys.stderr.flush()
+            self._log_file.close()
+            self._log_file = None
+        if self._real_stderr is not None:
+            self._real_stderr.close()
+            self._real_stderr = None
 
     @property
     def elapsed(self) -> float:
