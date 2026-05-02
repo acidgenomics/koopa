@@ -182,17 +182,19 @@ def _extract_handler_flags(filepath: str) -> dict[str, list[str]]:
             if not child.args:
                 continue
             arg0 = child.args[0]
-            if isinstance(arg0, ast.Constant) and isinstance(arg0.value, str):
-                if arg0.value.startswith("--"):
-                    flags.append(arg0.value)
+            if (
+                isinstance(arg0, ast.Constant)
+                and isinstance(arg0.value, str)
+                and arg0.value.startswith("--")
+            ):
+                flags.append(arg0.value)
         if flags:
             result[node.name] = flags
     return result
 
 
 def _extract_handler_key_to_func(filepath: str) -> dict[str, str]:
-    """AST-parse ``_PYTHON_HANDLERS`` (or ``_DEVELOP_HANDLERS``) to map
-    handler keys to function names.
+    """AST-parse handler dicts to map handler keys to function names.
 
     Handles direct references, lambdas wrapping calls, and call expressions
     (factory functions).
@@ -200,28 +202,24 @@ def _extract_handler_key_to_func(filepath: str) -> dict[str, str]:
     with open(filepath) as f:
         tree = ast.parse(f.read())
     result: dict[str, str] = {}
+    _TARGET_NAMES = ("_PYTHON_HANDLERS", "_DEVELOP_HANDLERS")
     for node in ast.walk(tree):
-        is_assign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name)
-        is_plain = isinstance(node, ast.Assign)
         target_name = ""
-        if is_assign:
+        value: ast.expr | None = None
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             target_name = node.target.id
-        elif is_plain:
+            value = node.value
+        elif isinstance(node, ast.Assign):
             for t in node.targets:
                 if isinstance(t, ast.Name):
                     target_name = t.id
-        if target_name not in (
-            "_PYTHON_HANDLERS",
-            "_DEVELOP_HANDLERS",
-        ):
+            value = node.value
+        if target_name not in _TARGET_NAMES or not isinstance(value, ast.Dict):
             continue
-        d = node.value
-        if not isinstance(d, ast.Dict):
-            continue
-        for key_node, val_node in zip(d.keys, d.values):
-            if not isinstance(key_node, ast.Constant):
+        for key_node, val_node in zip(value.keys, value.values, strict=True):
+            if not isinstance(key_node, ast.Constant) or not isinstance(key_node.value, str):
                 continue
-            handler_key = key_node.value
+            handler_key: str = key_node.value
             if isinstance(val_node, ast.Name):
                 result[handler_key] = val_node.id
             elif isinstance(val_node, ast.Lambda):
@@ -372,7 +370,7 @@ def _collect_app_depth_4(
             continue
         for p_key, p_val in sorted(gp_val.items()):
             if isinstance(p_val, dict):
-                result[(gp_key, p_key)] = sorted(p_val.keys())
+                result[(gp_key, str(p_key))] = sorted(str(k) for k in p_val)
     return result
 
 
@@ -381,7 +379,7 @@ def _collect_app_depth_4(
 # ---------------------------------------------------------------------------
 
 
-def generate_completion() -> None:
+def generate_completion() -> None:  # noqa: PLR0915
     """Generate the ``koopa.sh`` bash completion file."""
     from koopa.prefix import koopa_prefix
 
@@ -530,7 +528,7 @@ def generate_completion() -> None:
     lines.extend(
         _emit_case_entry(
             "'install' | \\",
-            [f"{i4}'reinstall' | \\", f"{i4}'uninstall')"] + install_body,
+            [f"{i4}'reinstall' | \\", f"{i4}'uninstall')", *install_body],
             i4,
         )
     )
