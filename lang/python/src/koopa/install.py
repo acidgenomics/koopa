@@ -1031,6 +1031,53 @@ __END__
         shutil.rmtree(tmp_cpan, ignore_errors=True)
 
 
+# -- Install lock -------------------------------------------------------------
+
+
+def _install_lock_path() -> str:
+    cache_dir = os.path.join(
+        os.environ.get(
+            "XDG_CACHE_HOME",
+            os.path.join(os.path.expanduser("~"), ".cache"),
+        ),
+        "koopa",
+    )
+    return os.path.join(cache_dir, "install.lock")
+
+
+def _acquire_install_lock() -> bool:
+    """Acquire the install lock. Returns True if newly acquired, False if already held."""
+    path = _install_lock_path()
+    if os.path.isfile(path):
+        try:
+            pid = int(Path(path).read_text().strip())
+            if pid == os.getpid():
+                return False
+            os.kill(pid, 0)
+            msg = (
+                f"Another install process is running (PID {pid}). "
+                "Wait for it to finish or remove "
+                f"'{path}' if the process is stale."
+            )
+            raise RuntimeError(msg)
+        except (ValueError, ProcessLookupError):
+            pass
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    Path(path).write_text(str(os.getpid()))
+    return True
+
+
+def _release_install_lock() -> None:
+    path = _install_lock_path()
+    try:
+        if os.path.isfile(path):
+            pid = int(Path(path).read_text().strip())
+            if pid == os.getpid():
+                os.unlink(path)
+    except (ValueError, OSError):
+        pass
+
+
 # -- Conda package installer --------------------------------------------------
 
 _CONDA_OVERRIDE_TTL = 86400
@@ -1839,13 +1886,18 @@ def cli_install(
 
     This is the Python equivalent of ``koopa install <name>``.
     """
-    config = InstallConfig(
-        name=name,
-        reinstall=reinstall,
-        bootstrap=bootstrap,
-        verbose=verbose,
-        binary=_can_install_binary(),
-        push=_can_push_binary(),
-        passthrough_args=_build_passthrough_args(name),
-    )
-    install_app(config)
+    acquired = _acquire_install_lock()
+    try:
+        config = InstallConfig(
+            name=name,
+            reinstall=reinstall,
+            bootstrap=bootstrap,
+            verbose=verbose,
+            binary=_can_install_binary(),
+            push=_can_push_binary(),
+            passthrough_args=_build_passthrough_args(name),
+        )
+        install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()

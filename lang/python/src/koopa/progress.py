@@ -37,7 +37,7 @@ def _load_history() -> dict[str, float]:
     try:
         with open(path) as f:
             return json.load(f)
-    except json.JSONDecodeError, OSError:
+    except (json.JSONDecodeError, OSError):
         return {}
 
 
@@ -198,12 +198,13 @@ class BuildProgress:
             )
         else:
             bar_fmt = "  Building {desc}: {elapsed} elapsed"
+        out = self._real_stderr if self._real_stderr is not None else sys.stderr
         self._tqdm_bar = tqdm(
             total=total,
             desc=self._name,
             unit="s",
             bar_format=bar_fmt,
-            file=sys.stderr,
+            file=out,
             dynamic_ncols=True,
         )
         self._thread = threading.Thread(
@@ -248,15 +249,16 @@ class BuildProgress:
         estimate_str = ""
         if self._estimate is not None:
             estimate_str = f", ~{_fmt_duration(self._estimate)} remaining"
+        out = self._real_stderr if self._real_stderr is not None else sys.stderr
         while not self._stop_event.wait(timeout=1.0):
             elapsed = _fmt_duration(self.elapsed)
             frame = frames[idx % len(frames)]
             line = f"\r\033[2K{frame} Building {self._name}: {elapsed} elapsed{estimate_str}"
-            sys.stderr.write(line)
-            sys.stderr.flush()
+            out.write(line)
+            out.flush()
             idx += 1
-        sys.stderr.write("\r\033[2K")
-        sys.stderr.flush()
+        out.write("\r\033[2K")
+        out.flush()
 
     # -- ninja step-mode display ----------------------------------------------
 
@@ -279,6 +281,7 @@ class BuildProgress:
         if _has_tqdm():
             from tqdm import tqdm
 
+            out = self._real_stderr if self._real_stderr is not None else sys.stderr
             self._step_bar = tqdm(
                 total=total,
                 desc=self._name,
@@ -288,7 +291,7 @@ class BuildProgress:
                     "{percentage:3.0f}% [{n_fmt}/{total_fmt}] | "
                     "{elapsed} elapsed"
                 ),
-                file=sys.stderr,
+                file=out,
                 dynamic_ncols=True,
             )
         else:
