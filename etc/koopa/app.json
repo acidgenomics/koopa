@@ -4347,7 +4347,11 @@
     "build_dependencies": ["make"],
     "date": "2026-05-02",
     "default": true,
-    "dependencies": ["attr"],
+    "dependencies": {
+      "macos-arm64": [],
+      "macos-amd64": [],
+      "noarch": ["attr"]
+    },
     "installer": "gnu-app",
     "man1": ["patch.1"],
     "prune": false,

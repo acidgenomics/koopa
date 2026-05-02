@@ -633,6 +633,10 @@ def build_go_package(
     tags: str = "",
 ) -> None:
     """Build a Go package from source using ``go build``."""
+    from koopa.build import activate_app
+
+    env = activate_app("go", build_only=True)
+    env.apply()
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if not name:
@@ -1714,8 +1718,7 @@ def _update_stale_revdeps(
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
     """Remove installed apps that are no longer in app.json or marked removed."""
-    from koopa.alert import alert, alert_note
-    from koopa.app import stale_revdeps
+    from koopa.alert import alert
     from koopa.check import unsupported_apps
     from koopa.uninstall import UninstallConfig, uninstall_app
 
@@ -1727,16 +1730,9 @@ def remove_unsupported_apps(*, verbose: bool = False) -> None:
     n_unsupported = len(apps)
     label_unsupported = "app" if n_unsupported == 1 else "apps"
     alert(f"Removing {n_unsupported} unsupported {label_unsupported}: {', '.join(apps)}")
-    revdeps = stale_revdeps(apps)
-    if revdeps:
-        alert_note(
-            f"Reverse dependencies will also be updated: {', '.join(revdeps)}",
-        )
     for app in apps:
         config = UninstallConfig(name=app, verbose=verbose)
         uninstall_app(config)
-    for dep in revdeps:
-        cli_install(dep, reinstall=True, verbose=verbose)
 
 
 def update_user_apps(*, verbose: bool = False) -> None:
