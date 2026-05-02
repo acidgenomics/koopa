@@ -25,9 +25,7 @@ def main(
             check=False,
         )
         subprocess.run(["sudo", "apt-get", "clean"], check=False)
-    elif os.path.isfile("/etc/fedora-release") or os.path.isfile(
-        "/etc/redhat-release"
-    ):
+    elif os.path.isfile("/etc/fedora-release") or os.path.isfile("/etc/redhat-release"):
         subprocess.run(
             ["sudo", "dnf", "remove", "-y", "shiny-server"],
             check=False,

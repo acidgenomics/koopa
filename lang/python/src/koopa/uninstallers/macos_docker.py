@@ -54,23 +54,19 @@ def main(
         ),
         os.path.join(
             home,
-            "Library/Preferences/"
-            "com.electron.docker-frontend.plist",
+            "Library/Preferences/com.electron.docker-frontend.plist",
         ),
         os.path.join(
             home,
-            "Library/Preferences/"
-            "com.electron.dockerdesktop.plist",
+            "Library/Preferences/com.electron.dockerdesktop.plist",
         ),
         os.path.join(
             home,
-            "Library/Saved Application State/"
-            "com.electron.docker-frontend.savedState",
+            "Library/Saved Application State/com.electron.docker-frontend.savedState",
         ),
         os.path.join(
             home,
-            "Library/Saved Application State/"
-            "com.electron.dockerdesktop.savedState",
+            "Library/Saved Application State/com.electron.dockerdesktop.savedState",
         ),
     ]
     for path in user_paths:

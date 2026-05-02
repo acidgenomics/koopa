@@ -41,20 +41,17 @@ def main(
         ),
         os.path.join(
             home,
-            "Library/Preferences/"
-            "com.apple.java.util.prefs.plist",
+            "Library/Preferences/com.apple.java.util.prefs.plist",
         ),
         os.path.join(
             home,
-            "Library/Preferences/"
-            "com.oracle.java.JavaAppletPlugin.plist",
+            "Library/Preferences/com.oracle.java.JavaAppletPlugin.plist",
         ),
     ]
     user_patterns = [
         os.path.join(
             home,
-            "Library/Safari/LocalStorage/"
-            "https_www.java.com_0.localstorage*",
+            "Library/Safari/LocalStorage/https_www.java.com_0.localstorage*",
         ),
     ]
     for path in user_paths:

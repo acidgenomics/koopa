@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-from koopa.file_ops import append_string, chmod, write_string
+from koopa.file_ops import append_string, chmod, mkdir, write_string
 
 
 def main(
@@ -34,8 +34,6 @@ def main(
     # Write koopa.conf.
     koopa_conf_dir = os.path.dirname(koopa_file)
     if not os.path.isdir(koopa_conf_dir):
-        from koopa.file_ops import mkdir
-
         mkdir(koopa_conf_dir, sudo=True)
     write_string("AcceptEnv KOOPA_COLOR_MODE\n", koopa_file, sudo=True)
     chmod(koopa_file, "0644", sudo=True)
