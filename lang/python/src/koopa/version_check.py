@@ -183,6 +183,100 @@ def _check_metacpan(distribution: str) -> str:
     return sanitize_version(data["version"])
 
 
+def _check_directory_listing(
+    url: str, tarball_prefix: str, *, case_sensitive: bool = True
+) -> str:
+    html = _http_get_text(url)
+    flags = 0 if case_sensitive else re.IGNORECASE
+    pattern = re.compile(
+        rf"{re.escape(tarball_prefix)}[_-]([\d]+(?:\.[\d]+)*)"
+        rf"(?:\.tar\.(?:gz|xz|bz2|lz)|\.zip)",
+        flags,
+    )
+    versions: list[str] = pattern.findall(html)
+    if not versions:
+        msg = f"No versions found at {url} for {tarball_prefix}"
+        raise RuntimeError(msg)
+    best = max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+    return best
+
+
+def _check_openssl_series(major: str) -> str:
+    html = _http_get_text("https://www.openssl.org/source/")
+    pattern = re.compile(
+        rf"openssl-({re.escape(major)}\.[\d]+(?:\.[\d]+)*)\.tar"
+    )
+    versions = pattern.findall(html)
+    if not versions:
+        msg = f"No OpenSSL {major}.x versions found"
+        raise RuntimeError(msg)
+    best = max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+    return best
+
+
+def _check_directory_version_dirs(url: str, prefix: str = "") -> str:
+    html = _http_get_text(url)
+    pattern = re.compile(
+        rf'>{re.escape(prefix)}([\d]+(?:\.[\d]+)*)/?\s*<'
+    )
+    versions: list[str] = pattern.findall(html)
+    if not versions:
+        msg = f"No version directories found at {url}"
+        raise RuntimeError(msg)
+    best = max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+    return best
+
+
+def _check_xorg(subdir: str, tarball_prefix: str) -> str:
+    url = f"https://xorg.freedesktop.org/archive/individual/{subdir}/"
+    return _check_directory_listing(url, tarball_prefix)
+
+
+def _check_gnupg(package: str) -> str:
+    url = f"https://gnupg.org/ftp/gcrypt/{package}/"
+    return _check_directory_listing(url, package)
+
+
+def _check_python_org(minor: str) -> str:
+    url = "https://www.python.org/ftp/python/"
+    html = _http_get_text(url)
+    pattern = re.compile(rf">{minor}\.([\d]+)/")
+    patches: list[str] = pattern.findall(html)
+    if not patches:
+        msg = f"No versions found for Python {minor}"
+        raise RuntimeError(msg)
+    best_patch = max(int(p) for p in patches)
+    return f"{minor}.{best_patch}"
+
+
+def _check_gitlab(domain: str, project_path: str) -> str:
+    encoded = project_path.replace("/", "%2F")
+    data = _http_get_json(
+        f"https://{domain}/api/v4/projects/{encoded}/releases?per_page=1"
+    )
+    if not data:
+        data = _http_get_json(
+            f"https://{domain}/api/v4/projects/{encoded}"
+            "/repository/tags?per_page=1"
+        )
+        if not data:
+            msg = f"No releases/tags for {project_path} on {domain}"
+            raise RuntimeError(msg)
+        tag = data[0]["name"]
+    else:
+        tag = data[0].get("tag_name", data[0].get("name", ""))
+    return sanitize_version(tag)
+
+
 # ── Installer source file GitHub repo extraction ──────────────────────
 
 _installer_github_cache: dict[str, str | None] = {}
@@ -246,7 +340,10 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
         return None
     for suffix, source in _GENERIC_INSTALLER_MAP.items():
         if module_path.endswith(suffix):
-            return _classify_generic(source, name, info, args, urls)
+            result = _classify_generic(source, name, info, args, urls)
+            if result is not None:
+                return result
+            break
     if module_path:
         gh_repo = _extract_github_repo_from_installer(module_path)
         if gh_repo:
@@ -256,7 +353,292 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
     if gh_repo:
         owner, repo = gh_repo.split("/", 1)
         return _AppCheckSpec("github", _check_github, (owner, repo))
+    spec = _classify_by_known_pattern(name, info, module_path, urls)
+    if spec:
+        return spec
     return None
+
+
+# ── X.org tarball prefix mapping ──────────────────────────────────────
+
+_XORG_MAP: dict[str, tuple[str, str]] = {
+    "xorg-libice": ("lib", "libICE"),
+    "xorg-libpthread-stubs": ("lib", "libpthread-stubs"),
+    "xorg-libsm": ("lib", "libSM"),
+    "xorg-libx11": ("lib", "libX11"),
+    "xorg-libxau": ("lib", "libXau"),
+    "xorg-libxcb": ("lib", "libxcb"),
+    "xorg-libxdmcp": ("lib", "libXdmcp"),
+    "xorg-libxext": ("lib", "libXext"),
+    "xorg-libxrandr": ("lib", "libXrandr"),
+    "xorg-libxrender": ("lib", "libXrender"),
+    "xorg-libxt": ("lib", "libXt"),
+    "xorg-xcb-proto": ("proto", "xcb-proto"),
+    "xorg-xorgproto": ("proto", "xorgproto"),
+    "xorg-xtrans": ("lib", "xtrans"),
+}
+
+# ── GnuPG ecosystem package names ────────────────────────────────────
+
+_GNUPG_NAMES: dict[str, str] = {
+    "gnupg": "gnupg",
+    "libassuan": "libassuan",
+    "libgcrypt": "libgcrypt",
+    "libgpg-error": "libgpg-error",
+    "libksba": "libksba",
+    "npth": "npth",
+    "pinentry": "pinentry",
+}
+
+# ── GitLab project mappings ──────────────────────────────────────────
+
+_GITLAB_MAP: dict[str, tuple[str, str]] = {
+    "cairo": ("gitlab.freedesktop.org", "cairo/cairo"),
+    "glib": ("gitlab.gnome.org", "GNOME/glib"),
+    "graphviz": ("gitlab.com", "graphviz/graphviz"),
+    "libpipeline": ("gitlab.com", "libpipeline/libpipeline"),
+    "libxml2": ("gitlab.gnome.org", "GNOME/libxml2"),
+    "libxslt": ("gitlab.gnome.org", "GNOME/libxslt"),
+}
+
+# ── Directory listing mappings for miscellaneous apps ────────────────
+# (url, tarball_prefix)
+
+_DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
+    "apr": (
+        "https://archive.apache.org/dist/apr/",
+        "apr",
+    ),
+    "apr-util": (
+        "https://archive.apache.org/dist/apr/",
+        "apr-util",
+    ),
+    "bzip2": (
+        "https://sourceware.org/pub/bzip2/",
+        "bzip2",
+    ),
+    "ca-certificates": (
+        "https://curl.se/ca/",
+        "cacert",
+    ),
+    "convmv": (
+        "https://www.j3e.de/linux/convmv/",
+        "convmv",
+    ),
+    "elfutils": (
+        "https://sourceware.org/elfutils/ftp/",
+        "elfutils",
+    ),
+    "flac": (
+        "https://downloads.xiph.org/releases/flac/",
+        "flac",
+    ),
+    "fontconfig": (
+        "https://www.freedesktop.org/software/fontconfig/release/",
+        "fontconfig",
+    ),
+    "gmp": (
+        "https://gmplib.org/download/gmp/",
+        "gmp",
+    ),
+    "gnutls": (
+        "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/",
+        "gnutls",
+    ),
+    "imagemagick": (
+        "https://imagemagick.org/archive/releases/",
+        "ImageMagick",
+    ),
+    "ldns": (
+        "https://nlnetlabs.nl/downloads/ldns/",
+        "ldns",
+    ),
+    "libarchive": (
+        "https://www.libarchive.org/downloads/",
+        "libarchive",
+    ),
+    "libedit": (
+        "https://thrysoee.dk/editline/",
+        "libedit",
+    ),
+    "libpcap": (
+        "https://www.tcpdump.org/release/",
+        "libpcap",
+    ),
+    "libssh2": (
+        "https://www.libssh2.org/download/",
+        "libssh2",
+    ),
+    "libtermkey": (
+        "https://www.leonerd.org.uk/code/libtermkey/",
+        "libtermkey",
+    ),
+    "libtiff": (
+        "https://download.osgeo.org/libtiff/",
+        "tiff",
+    ),
+    "lzo": (
+        "https://www.oberhumer.com/opensource/lzo/download/",
+        "lzo",
+    ),
+    "mpdecimal": (
+        "https://www.bytereef.org/software/mpdecimal/releases/",
+        "mpdecimal",
+    ),
+    "ncurses": (
+        "https://ftp.gnu.org/pub/gnu/ncurses/",
+        "ncurses",
+    ),
+    "nmap": (
+        "https://nmap.org/dist/",
+        "nmap",
+    ),
+    "pcre": (
+        "https://sourceforge.net/projects/pcre/files/pcre/",
+        "pcre",
+    ),
+    "pigz": (
+        "https://zlib.net/pigz/",
+        "pigz",
+    ),
+    "pixman": (
+        "https://cairographics.org/releases/",
+        "pixman",
+    ),
+    "pkg-config": (
+        "https://pkgconfig.freedesktop.org/releases/",
+        "pkg-config",
+    ),
+    "rsync": (
+        "https://download.samba.org/pub/rsync/src/",
+        "rsync",
+    ),
+    "serf": (
+        "https://archive.apache.org/dist/serf/",
+        "serf",
+    ),
+    "subversion": (
+        "https://archive.apache.org/dist/subversion/",
+        "subversion",
+    ),
+    "zlib": (
+        "https://www.zlib.net/",
+        "zlib",
+    ),
+}
+
+
+def _classify_by_known_pattern(
+    name: str,
+    info: dict,
+    module_path: str,
+    urls: list[str],
+) -> _AppCheckSpec | None:
+    if name in _XORG_MAP:
+        subdir, prefix = _XORG_MAP[name]
+        return _AppCheckSpec("xorg", _check_xorg, (subdir, prefix))
+    if name in _GNUPG_NAMES:
+        pkg = _GNUPG_NAMES[name]
+        return _AppCheckSpec("gnupg", _check_gnupg, (pkg,))
+    if name in _GITLAB_MAP:
+        domain, project = _GITLAB_MAP[name]
+        return _AppCheckSpec("gitlab", _check_gitlab, (domain, project))
+    m = re.match(r"python(\d+\.\d+)$", name)
+    if m:
+        minor = m.group(1)
+        return _AppCheckSpec("python.org", _check_python_org, (minor,))
+    if name in _DIR_LISTING_MAP:
+        url, prefix = _DIR_LISTING_MAP[name]
+        return _AppCheckSpec(
+            "dirlist",
+            lambda u=url, p=prefix: _check_directory_listing(u, p),
+            (),
+        )
+    spec = _SPECIAL_CASES.get(name)
+    if spec is not None:
+        return spec
+    return None
+
+
+def _make_dirlist_spec(url: str, prefix: str) -> _AppCheckSpec:
+    return _AppCheckSpec(
+        "dirlist",
+        lambda u=url, p=prefix: _check_directory_version_dirs(u, p),
+        (),
+    )
+
+
+def _make_openssl_spec(major: str) -> _AppCheckSpec:
+    return _AppCheckSpec(
+        "dirlist", lambda m=major: _check_openssl_series(m), ()
+    )
+
+
+_SPECIAL_CASES: dict[str, _AppCheckSpec] = {
+    "bash": _AppCheckSpec(
+        "gnu",
+        lambda: _check_gnu("bash"),
+        (),
+    ),
+    "gcc": _make_dirlist_spec("https://ftp.gnu.org/gnu/gcc/", "gcc-"),
+    "git": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://mirrors.edge.kernel.org/pub/software/scm/git/",
+            "git",
+        ),
+        (),
+    ),
+    "go": _make_dirlist_spec("https://go.dev/dl/", "go"),
+    "hadolint": _AppCheckSpec(
+        "github", _check_github, ("hadolint", "hadolint")
+    ),
+    "libidn": _AppCheckSpec(
+        "gnu",
+        lambda: _check_gnu("libidn2", parent="libidn"),
+        (),
+    ),
+    "nano": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://www.nano-editor.org/dist/latest/",
+            "nano",
+        ),
+        (),
+    ),
+    "openssl3": _make_openssl_spec("3"),
+    "perl": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://www.cpan.org/src/5.0/",
+            "perl",
+        ),
+        (),
+    ),
+    "postgresql": _make_dirlist_spec(
+        "https://ftp.postgresql.org/pub/source/", "v"
+    ),
+    "r": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://cloud.r-project.org/src/base/R-4/",
+            "R",
+        ),
+        (),
+    ),
+    "ruby": _AppCheckSpec(
+        "github", _check_github, ("ruby", "ruby")
+    ),
+    "rust": _AppCheckSpec(
+        "github", _check_github, ("rust-lang", "rust")
+    ),
+    "screen": _AppCheckSpec(
+        "gnu",
+        lambda: _check_gnu("screen"),
+        (),
+    ),
+    "uv": _AppCheckSpec("pypi", _check_pypi, ("uv",)),
+}
 
 
 def _classify_generic(

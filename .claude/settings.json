@@ -2,6 +2,7 @@
     "permissions": {
         "allow": [
             "Bash(*)",
+            "Edit",
             "Grep",
             "Python(*)",
             "Read"
