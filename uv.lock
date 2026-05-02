@@ -6,3 +6,17 @@ requires-python = ">=3.14"
 name = "koopa"
 version = "0.16.0"
 source = { editable = "." }
+
+[package.optional-dependencies]
+extra = [
+    { name = "syntactic" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "syntactic", marker = "extra == 'extra'", git = "https://github.com/acidgenomics/py-syntactic" }]
+provides-extras = ["extra"]
+
+[[package]]
+name = "syntactic"
+version = "0.0.2"
+source = { git = "https://github.com/acidgenomics/py-syntactic#9d0b2e5c1cc8783f790dddaca68d64fe88b0c186" }
