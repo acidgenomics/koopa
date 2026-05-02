@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2026-02-07.
+    # @note Updated 2026-05-02.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -39,6 +39,7 @@ _koopa_complete() {
                 'system'
                 'uninstall'
                 'update'
+                'version'
             )
             ;;
         '2')
@@ -50,6 +51,7 @@ _koopa_complete() {
                         'bowtie2'
                         'brew'
                         'conda'
+                        'current'
                         'docker'
                         'ftp'
                         'git'
@@ -57,9 +59,9 @@ _koopa_complete() {
                         'hisat2'
                         'jekyll'
                         'kallisto'
+                        'md5sum'
                         'miso'
                         'r'
-                        'rmats'
                         'rnaeditingindexer'
                         'rsem'
                         'salmon'
@@ -67,7 +69,6 @@ _koopa_complete() {
                         'ssh'
                         'star'
                         'wget'
-                        'wget2'
                     )
                     ;;
                 'configure')
@@ -76,7 +77,9 @@ _koopa_complete() {
                 'develop')
                     args+=(
                         'cache-functions'
+                        'check-app-versions'
                         'edit-app-json'
+                        'format-app-json'
                         'log'
                         'prune-app-binaries'
                         'push-all-app-builds'
@@ -104,7 +107,6 @@ _koopa_complete() {
                         'armadillo'
                         'asdf'
                         'aspell'
-                        'attr'
                         'autoconf'
                         'autodock'
                         'autodock-adfr'
@@ -113,6 +115,8 @@ _koopa_complete() {
                         'automake'
                         'aws-azure-login'
                         'aws-cli'
+                        'aws-mountpoint-s3'
+                        'axel'
                         'azure-cli'
                         'bamtools'
                         'bandit'
@@ -123,6 +127,7 @@ _koopa_complete() {
                         'bashcov'
                         'bat'
                         'bc'
+                        'bcbio-nextgen'
                         'bedtools'
                         'bfg'
                         'binutils'
@@ -147,6 +152,7 @@ _koopa_complete() {
                         'cairo'
                         'cereal'
                         'cheat'
+                        'chemacs'
                         'chezmoi'
                         'claude-code'
                         'cli11'
@@ -154,6 +160,7 @@ _koopa_complete() {
                         'colorls'
                         'commitizen'
                         'conda'
+                        'convmv'
                         'coreutils'
                         'cpufetch'
                         'csvkit'
@@ -167,14 +174,17 @@ _koopa_complete() {
                         'difftastic'
                         'direnv'
                         'docker-credential-helpers'
+                        'doom-emacs'
                         'dotfiles'
                         'du-dust'
                         'duckdb'
                         'ed'
                         'editorconfig'
+                        'elvish'
                         'emacs'
                         'ensembl-perl-api'
                         'entrez-direct'
+                        'exa'
                         'exiftool'
                         'expat'
                         'eza'
@@ -263,7 +273,6 @@ _koopa_complete() {
                         'jupyterlab'
                         'k9s'
                         'kallisto'
-                        'koopa'
                         'krb5'
                         'ksh93'
                         'lame'
@@ -271,6 +280,7 @@ _koopa_complete() {
                         'latch'
                         'ldc'
                         'ldns'
+                        'less'
                         'lesspipe'
                         'libaec'
                         'libarchive'
@@ -290,6 +300,7 @@ _koopa_complete() {
                         'libgpg-error'
                         'libheif'
                         'libiconv'
+                        'libidn'
                         'libjpeg-turbo'
                         'libksba'
                         'liblinear'
@@ -311,6 +322,7 @@ _koopa_complete() {
                         'libxslt'
                         'libyaml'
                         'libzip'
+                        'llama'
                         'llvm'
                         'lsd'
                         'lua'
@@ -361,13 +373,16 @@ _koopa_complete() {
                         'nushell'
                         'oniguruma'
                         'ont-dorado'
+                        'ont-guppy'
                         'ont-vbz-compression'
+                        'openbb'
                         'openblas'
                         'openjpeg'
                         'openldap'
                         'openssh'
                         'openssl'
                         'openssl3'
+                        'oracle-instant-client'
                         'p7zip'
                         'pandoc'
                         'parallel'
@@ -386,8 +401,9 @@ _koopa_complete() {
                         'pkgconf'
                         'poetry'
                         'postgresql'
+                        'powershell'
+                        'prelude-emacs'
                         'prettier'
-                        'private'
                         'procs'
                         'proj'
                         'pup'
@@ -422,9 +438,10 @@ _koopa_complete() {
                         'ripgrep-all'
                         'rmate'
                         'rmats'
-                        # > 'ronn'
+                        'ronn'
                         'ronn-ng'
                         'rsem'
+                        'rstudio-server'
                         'rsync'
                         'ruby'
                         'ruff'
@@ -443,18 +460,22 @@ _koopa_complete() {
                         'seqkit'
                         'serf'
                         'shellcheck'
+                        'shiny-server'
                         'shunit2'
                         'shyaml'
                         'simdjson'
                         'snakefmt'
                         'snakemake'
                         'sox'
+                        'spacemacs'
+                        'spacevim'
                         'spdlog'
                         'sphinx'
                         'sqlfluff'
                         'sqlite'
                         'staden-io-lib'
                         'star'
+                        'star-fusion'
                         'starship'
                         'stow'
                         'streamlit'
@@ -490,6 +511,7 @@ _koopa_complete() {
                         'vulture'
                         'walk'
                         'wget'
+                        'wget2'
                         'which'
                         'woff2'
                         'xorg-libice'
@@ -513,11 +535,13 @@ _koopa_complete() {
                         'yaml-cpp'
                         'yamllint'
                         'yapf'
+                        'yq'
                         'yt-dlp'
                         'zellij'
                         'zenith'
                         'zip'
                         'zlib'
+                        'zopfli'
                         'zoxide'
                         'zsh'
                         'zstd'
@@ -527,11 +551,21 @@ _koopa_complete() {
                         args+=(
                             'apptainer'
                             'aspera-connect'
+                            'attr'
+                            'bcl2fastq'
+                            'cellranger'
                             'cloudbiolinux'
                             'elfutils'
                             'gcc'
                             'lmod'
                             'ont-bonito'
+                        )
+                    fi
+                    if _koopa_is_macos
+                    then
+                        args+=(
+                            'r-gfortran'
+                            'r-xcode-openmp'
                         )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
@@ -549,7 +583,7 @@ _koopa_complete() {
                         'check'
                         'disable-passwordless-sudo'
                         'enable-passwordless-sudo'
-                        'host-id'
+                        'hostname'
                         'info'
                         'list'
                         'os-string'
@@ -557,10 +591,18 @@ _koopa_complete() {
                         'prune-apps'
                         'switch-to-develop'
                         'test'
+                        'update-tex-packages'
                         'version'
                         'which'
                         'zsh-compaudit-set-permissions'
                     )
+                    if _koopa_is_linux
+                    then
+                        args+=(
+                            'delete-cache'
+                            'fix-sudo-setrlimit-error'
+                        )
+                    fi
                     if _koopa_is_macos
                     then
                         args+=(
@@ -684,9 +726,7 @@ _koopa_complete() {
                         'list')
                             args+=(
                                 'app-versions'
-                                'dotfiles'
                                 'path-priority'
-                                'programs'
                             )
                             if _koopa_is_macos
                             then
@@ -698,7 +738,7 @@ _koopa_complete() {
                 'app')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'aws')
-                            args+=('batch' 'codecommit' 'ec2' 'ecr' 's3')
+                            args+=('batch' 'ec2' 'ecr' 's3')
                             ;;
                         'bioconda')
                             args+=('autobump-recipe')
@@ -761,13 +801,51 @@ _koopa_complete() {
                             args+=('check-to-new-md5-file')
                             ;;
                         'miso')
-                            args+=('index' 'run')
+                            args+=('index')
+                            ;;
+                        'current')
+                            args+=(
+                                'aws-cli-version'
+                                'bioconductor-version'
+                                'conda-package-version'
+                                'ensembl-version'
+                                'flybase-version'
+                                'gencode-version'
+                                'git-version'
+                                'github-release-version'
+                                'github-tag-version'
+                                'gnu-ftp-version'
+                                'google-cloud-sdk-version'
+                                'latch-version'
+                                'pypi-package-version'
+                                'python-version'
+                                'refseq-version'
+                                'wormbase-version'
+                            )
                             ;;
                         'r')
-                            args+=('bioconda-check' 'check')
+                            args+=(
+                                'bioconda-check'
+                                'check'
+                                'configure-environ'
+                                'configure-java'
+                                'configure-ldpaths'
+                                'configure-makevars'
+                                'copy-files-into-etc'
+                                'gfortran-libs'
+                                'install-packages-in-site-library'
+                                'migrate-non-base-packages'
+                                'package-version'
+                                'paste-to-vector'
+                                'remove-packages-in-system-library'
+                                'script'
+                                'shiny-run-app'
+                                'system-packages-non-base'
+                                'version'
+                            )
                             ;;
                         'salmon')
-                            args+=('detect-fastq-library-type' 'index' 'quant')
+                            args+=('index' 'quant')
                             ;;
                         'sra')
                             args+=(
@@ -794,36 +872,19 @@ _koopa_complete() {
                         'aws')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'batch')
-                                    args+=('fetch-and-run' 'list-jobs')
-                                    ;;
-                                'codecommit')
-                                    args+=('list-repositories')
+                                    args+=('list-jobs')
                                     ;;
                                 'ec2')
-                                    args+=(
-                                        'list-running-instances'
-                                        'map-instance-ids-to-names'
-                                    )
-                                    if _koopa_is_linux
-                                    then
-                                        args+=(
-                                            'instance-id'
-                                            'stop'
-                                        )
-                                    fi
+                                    args+=('list-running-instances')
                                     ;;
                                 'ecr')
-                                    args+=('login-public' 'login-private')
+                                    args+=('login-private' 'login-public')
                                     ;;
                                 's3')
                                     args+=(
-                                        'delete-versioned-glacier-objects'
-                                        'delete-versioned-objects'
-                                        'dot-clean'
                                         'find'
                                         'list-large-files'
                                         'ls'
-                                        'mv-to-parent'
                                         'sync'
                                     )
                                     ;;

@@ -466,7 +466,7 @@
         ],
         "installer": "conda-package",
         "installer_args": {
-            "name": "awscli"
+            "name": "awscliv2"
         },
         "prune": true,
         "url": [
