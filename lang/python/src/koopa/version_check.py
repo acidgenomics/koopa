@@ -1019,6 +1019,24 @@ def _check_r_xcode_openmp() -> str:
     )
 
 
+def _check_ont_guppy() -> str:
+    html = _http_get_text(
+        "https://nanoporetech.com/software/other/guppy/history",
+        timeout=30,
+    )
+    versions = re.findall(r'"(\d+\.\d+\.\d+)"', html)
+    versions = [
+        v for v in versions if not v.startswith(("44", "26"))
+    ]
+    if not versions:
+        msg = "No ONT Guppy versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
 def _check_aspera_connect() -> str:
     html = _http_get_text(
         "https://www.ibm.com/products/aspera/downloads",
@@ -1381,9 +1399,15 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: "1.0",
         (),
     ),
+    "bcl2fastq": _AppCheckSpec(
+        "dirlist",
+        lambda: "2.20",
+        (),
+    ),
     "illumina-ica-cli": _AppCheckSpec(
         "dirlist", _check_illumina_ica_cli, ()
     ),
+    "ont-guppy": _AppCheckSpec("dirlist", _check_ont_guppy, ()),
     "cellranger": _AppCheckSpec(
         "github", _check_github, ("10XGenomics", "cellranger")
     ),
