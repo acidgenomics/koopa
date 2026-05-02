@@ -456,6 +456,43 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "uv": f"{_M}.uv",
     "woff2": f"{_M}.woff2",
     "zip": f"{_M}.zip_app",
+    # -- linux-only bioinformatics/HPC ------------------------------------------
+    "apptainer": f"{_M}.apptainer",
+    "aspera-connect": f"{_M}.aspera_connect",
+    "bcl2fastq": f"{_M}.bcl2fastq",
+    "cellranger": f"{_M}.cellranger",
+    "cloudbiolinux": f"{_M}.cloudbiolinux",
+    "elfutils": f"{_M}.elfutils",
+    "gcc": f"{_M}.gcc",
+    "lmod": f"{_M}.lmod",
+    "ont-bonito": f"{_M}.ont_bonito",
+    # -- platform-specific system installers ------------------------------------
+    "aws-mountpoint-s3": f"{_M}.aws_mountpoint_s3",
+    "docker": f"{_M}.docker_system",
+    "glibc": f"{_M}.glibc_system",
+    "oracle-instant-client": f"{_M}.oracle_instant_client",
+    "pihole": f"{_M}.pihole",
+    "pivpn": f"{_M}.pivpn",
+    "r-gfortran": f"{_M}.r_gfortran",
+    "r-xcode-openmp": f"{_M}.r_xcode_openmp",
+    "rstudio-server": f"{_M}.rstudio_server_system",
+    "shiny-server": f"{_M}.shiny_server_system",
+    "wine": f"{_M}.wine_system",
+    "xcode-clt": f"{_M}.xcode_clt",
+    # -- user-mode installers ---------------------------------------------------
+    "bootstrap": f"{_M}.bootstrap_user",
+    "doom-emacs": f"{_M}.doom_emacs",
+    "prelude-emacs": f"{_M}.prelude_emacs",
+    "spacemacs": f"{_M}.spacemacs",
+    "spacevim": f"{_M}.spacevim",
+    # -- system-mode installers -------------------------------------------------
+    "homebrew": f"{_M}.homebrew",
+    "homebrew-bundle": f"{_M}.homebrew_bundle",
+    "tex-packages": f"{_M}.tex_packages",
+    # -- platform-specific R/Python system installers ---------------------------
+    "python-macos": f"{_M}.python_macos",
+    "r-debian": f"{_M}.r_debian",
+    "r-macos": f"{_M}.r_macos",
 }
 
 

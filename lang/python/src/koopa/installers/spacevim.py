@@ -18,6 +18,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
+    """Install SpaceVim."""
     xdg_data_home = os.environ.get(
         "XDG_DATA_HOME",
         os.path.join(os.path.expanduser("~"), ".local", "share"),
