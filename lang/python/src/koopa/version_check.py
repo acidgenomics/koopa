@@ -53,7 +53,7 @@ class _VersionCache:
         try:
             with open(self._path) as f:
                 self._data = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError, OSError):
+        except FileNotFoundError, json.JSONDecodeError, OSError:
             self._data = {}
 
     def get(self, name: str) -> str | None:
@@ -113,7 +113,7 @@ def _resolve_github_token() -> str | None:
             )
             if result.returncode == 0 and result.stdout.strip():
                 return result.stdout.strip()
-        except (subprocess.TimeoutExpired, OSError):
+        except subprocess.TimeoutExpired, OSError:
             pass
     return None
 
