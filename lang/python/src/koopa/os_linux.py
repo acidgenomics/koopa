@@ -160,6 +160,11 @@ def apt_upgrade() -> None:
     _run("apt-get", "upgrade", "-y", sudo=True)
 
 
+def apt_full_upgrade() -> None:
+    """Full-upgrade apt packages."""
+    _run("apt-get", "full-upgrade", "-y", sudo=True)
+
+
 def apt_clean() -> None:
     """Clean apt cache."""
     _run("apt-get", "clean", sudo=True)
