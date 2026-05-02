@@ -923,11 +923,15 @@ def install_ruby_package(
         check=True,
     )
     subprocess.run(
+        [bundle, "config", "set", "--local", "bin", bin_dir],
+        cwd=libexec,
+        check=True,
+    )
+    subprocess.run(
         [
             bundle,
             "binstubs",
             name,
-            f"--path={bin_dir}",
             f"--shebang={ruby}",
             "--standalone",
         ],
