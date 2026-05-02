@@ -236,6 +236,21 @@ def _check_directory_version_dirs(url: str, prefix: str = "") -> str:
     return best
 
 
+def _check_sourceforge_versions(project_path: str) -> str:
+    url = f"https://sourceforge.net/projects/{project_path}"
+    html = _http_get_text(url)
+    pattern = re.compile(r'title="([\d]+(?:\.[\d]+)+)"')
+    versions: list[str] = pattern.findall(html)
+    if not versions:
+        msg = f"No versions found at {url}"
+        raise RuntimeError(msg)
+    best = max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+    return best
+
+
 def _check_xorg(subdir: str, tarball_prefix: str) -> str:
     url = f"https://xorg.freedesktop.org/archive/individual/{subdir}/"
     return _check_directory_listing(url, tarball_prefix)
@@ -409,6 +424,10 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://archive.apache.org/dist/apr/",
         "apr",
     ),
+    "armadillo": (
+        "https://sourceforge.net/projects/arma/files/",
+        "armadillo",
+    ),
     "apr-util": (
         "https://archive.apache.org/dist/apr/",
         "apr-util",
@@ -448,6 +467,10 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
     "imagemagick": (
         "https://imagemagick.org/archive/releases/",
         "ImageMagick",
+    ),
+    "isl": (
+        "https://libisl.sourceforge.io/",
+        "isl",
     ),
     "ldns": (
         "https://nlnetlabs.nl/downloads/ldns/",
@@ -598,6 +621,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_gnu("libidn2", parent="libidn"),
         (),
     ),
+    "libpng": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_sourceforge_versions("libpng/files/libpng16/"),
+        (),
+    ),
     "nano": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -636,6 +664,12 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         "gnu",
         lambda: _check_gnu("screen"),
         (),
+    ),
+    "swig": _AppCheckSpec(
+        "github", _check_github, ("swig", "swig")
+    ),
+    "tcl-tk": _make_dirlist_spec(
+        "https://sourceforge.net/projects/tcl/files/Tcl/", ""
     ),
     "uv": _AppCheckSpec("pypi", _check_pypi, ("uv",)),
 }
