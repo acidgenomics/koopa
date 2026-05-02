@@ -1116,10 +1116,187 @@ def _handle_aws_s3_sync(args: list[str]) -> None:
     )
 
 
+# -- bioconda handlers -------------------------------------------------------
+
+
+def _handle_bioconda_autobump_recipe(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app bioconda autobump-recipe <recipe>",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    git = shutil.which("git")
+    vim = shutil.which("vim")
+    if git is None:
+        msg = "git is not installed."
+        raise RuntimeError(msg)
+    if vim is None:
+        msg = "vim is not installed."
+        raise RuntimeError(msg)
+    recipe = args[0]
+    repo = os.path.join(os.path.expanduser("~"), "git", "github", "bioconda", "bioconda-recipes")
+    if not os.path.isdir(repo):
+        msg = f"Bioconda recipes repo not found: '{repo}'."
+        raise FileNotFoundError(msg)
+    branch = recipe.replace("-", "_")
+    subprocess.run([git, "checkout", "master"], cwd=repo, check=True)
+    subprocess.run([git, "fetch", "--all"], cwd=repo, check=True)
+    subprocess.run([git, "pull"], cwd=repo, check=True)
+    subprocess.run(
+        [git, "checkout", "-B", branch, f"origin/bump/{branch}"],
+        cwd=repo,
+        check=True,
+    )
+    subprocess.run([git, "pull", "origin", "master"], cwd=repo, check=True)
+    recipe_dir = os.path.join(repo, "recipes", recipe)
+    os.makedirs(recipe_dir, exist_ok=True)
+    meta_yaml = os.path.join(recipe_dir, "meta.yaml")
+    subprocess.run([vim, meta_yaml], cwd=repo, check=True)
+
+
+# -- ftp handlers ------------------------------------------------------------
+
+
+def _handle_ftp_mirror(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app ftp mirror")
+    parser.add_argument("--host", required=True)
+    parser.add_argument("--user", required=True)
+    parser.add_argument("--dir", default="")
+    parsed = parser.parse_args(args)
+    wget = shutil.which("wget")
+    if wget is None:
+        msg = "wget is not installed."
+        raise RuntimeError(msg)
+    if parsed.dir:
+        target = f"{parsed.host}/{parsed.dir}"
+    else:
+        target = parsed.host
+    subprocess.run(
+        [wget, "--ask-password", "--mirror", f"ftp://{parsed.user}@{target}/*"],
+        check=True,
+    )
+
+
+# -- jekyll handlers ---------------------------------------------------------
+
+
+def _handle_jekyll_serve(args: list[str]) -> None:
+    bundle = shutil.which("bundle")
+    if bundle is None:
+        msg = "bundle is not installed."
+        raise RuntimeError(msg)
+    from koopa.xdg import xdg_data_home
+
+    bundle_prefix = os.path.join(xdg_data_home(), "gem")
+    prefix = args[0] if args else os.getcwd()
+    prefix = os.path.realpath(prefix)
+    gemfile = os.path.join(prefix, "Gemfile")
+    if not os.path.isfile(gemfile):
+        msg = f"Gemfile not found in '{prefix}'."
+        raise FileNotFoundError(msg)
+    from koopa.alert import alert
+
+    alert(f"Serving Jekyll website in '{prefix}'.")
+    subprocess.run(
+        [bundle, "config", "set", "--local", "path", bundle_prefix],
+        cwd=prefix,
+        check=True,
+    )
+    lock = os.path.join(prefix, "Gemfile.lock")
+    if os.path.isfile(lock):
+        os.remove(lock)
+    subprocess.run([bundle, "install"], cwd=prefix, check=True)
+    subprocess.run([bundle, "exec", "jekyll", "serve"], cwd=prefix, check=True)
+    lock = os.path.join(prefix, "Gemfile.lock")
+    if os.path.isfile(lock):
+        os.remove(lock)
+
+
+# -- md5sum handlers ---------------------------------------------------------
+
+
+def _handle_md5sum_check_to_new_md5_file(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app md5sum check-to-new-md5-file <file>...",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from datetime import UTC, datetime
+
+    md5sum = shutil.which("md5sum")
+    if md5sum is None:
+        msg = "md5sum is not installed."
+        raise RuntimeError(msg)
+    dt = datetime.now(tz=UTC).strftime("%Y%m%d-%H%M%S")
+    log_file = f"md5sum-{dt}.md5"
+    if os.path.isfile(log_file):
+        msg = f"Log file already exists: '{log_file}'."
+        raise FileExistsError(msg)
+    for f in args:
+        if not os.path.isfile(f):
+            msg = f"File not found: '{f}'."
+            raise FileNotFoundError(msg)
+    with open(log_file, "w") as log_fh:
+        proc = subprocess.run(
+            [md5sum, *args],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        output = proc.stdout
+        sys.stdout.write(output)
+        log_fh.write(output)
+
+
+# -- wget handlers -----------------------------------------------------------
+
+
+def _handle_wget_recursive(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app wget recursive")
+    parser.add_argument("--url", required=True)
+    parser.add_argument("--user", required=True)
+    parser.add_argument("--password", required=True)
+    parsed = parser.parse_args(args)
+    wget = shutil.which("wget")
+    if wget is None:
+        msg = "wget is not installed."
+        raise RuntimeError(msg)
+    from datetime import UTC, datetime
+
+    dt = datetime.now(tz=UTC).strftime("%Y%m%d-%H%M%S")
+    log_file = f"wget-{dt}.log"
+    subprocess.run(
+        [
+            wget,
+            f"--output-file={log_file}",
+            f"--password={parsed.password}",
+            f"--user={parsed.user}",
+            "--continue",
+            "--debug",
+            "--no-parent",
+            "--recursive",
+            f"{parsed.url}/*",
+        ],
+        check=True,
+    )
+
+
 # -- handler registry --------------------------------------------------------
 
 
 _PYTHON_HANDLERS: dict[str, Any] = {
+    # app utilities
+    "bioconda-autobump-recipe": _handle_bioconda_autobump_recipe,
+    "ftp-mirror": _handle_ftp_mirror,
+    "jekyll-serve": _handle_jekyll_serve,
+    "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
+    "wget-recursive": _handle_wget_recursive,
     # aws
     "aws-batch-list-jobs": _handle_aws_batch_list_jobs,
     "aws-ec2-list-running-instances": _handle_aws_ec2_list_running_instances,
