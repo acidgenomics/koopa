@@ -1323,18 +1323,6 @@ _koopa_assert_has_args_ge() {
     return 0
 }
 
-_koopa_assert_has_args_le() {
-    if [[ "$#" -ne 2 ]]
-    then
-        _koopa_stop '"_koopa_assert_has_args_le" requires 2 args.'
-    fi
-    if [[ ! "${1:?}" -le "${2:?}" ]]
-    then
-        _koopa_stop 'Invalid number of arguments.'
-    fi
-    return 0
-}
-
 _koopa_assert_has_args() {
     if [[ "$#" -ne 1 ]]
     then
@@ -1371,19 +1359,6 @@ _koopa_assert_is_admin() {
             'Administrator account is required.' \
             "You may need to run 'sudo -v' to elevate current user."
     fi
-    return 0
-}
-
-_koopa_assert_is_dir() {
-    local arg
-    _koopa_assert_has_args "$#"
-    for arg in "$@"
-    do
-        if [[ ! -d "$arg" ]]
-        then
-            _koopa_stop "Not directory: '${arg}'."
-        fi
-    done
     return 0
 }
 
@@ -1606,22 +1581,6 @@ _koopa_ansi_escape() {
     return 0
 }
 
-_koopa_app_json_version() {
-    local name
-    _koopa_assert_has_args "$#"
-    for name in "$@"
-    do
-        _koopa_app_json \
-            --name="$name" \
-            --key='version'
-    done
-}
-
-_koopa_app_json() {
-    "${KOOPA_PREFIX:?}/bin/koopa" internal app-json "$@"
-    return 0
-}
-
 _koopa_arch() {
     local string
     string="$(uname -m)"
@@ -1722,17 +1681,6 @@ _koopa_color_mode() {
     fi
     [[ -n "$string" ]] || return 1
     _koopa_print "$string"
-    return 0
-}
-
-_koopa_conda_env_list() {
-    local -A app
-    local str
-    _koopa_assert_has_no_args "$#"
-    app['conda']="$(_koopa_locate_conda)"
-    _koopa_assert_is_executable "${app[@]}"
-    str="$("${app['conda']}" env list --json --quiet)"
-    _koopa_print "$str"
     return 0
 }
 
@@ -2973,20 +2921,6 @@ _koopa_locate_app() {
     fi
 }
 
-_koopa_locate_conda_python() {
-    _koopa_locate_app \
-        --app-name='conda' \
-        --bin-name='python' \
-        "$@"
-}
-
-_koopa_locate_conda() {
-    _koopa_locate_app \
-        --app-name='conda' \
-        --bin-name='conda' \
-        "$@"
-}
-
 _koopa_locate_grep() {
     _koopa_locate_app \
         --app-name='grep' \
@@ -3025,24 +2959,10 @@ _koopa_locate_man() {
         "$@"
 }
 
-_koopa_locate_r() {
-    _koopa_locate_app \
-        --app-name='r' \
-        --bin-name='R' \
-        "$@"
-}
-
 _koopa_locate_rg() {
     _koopa_locate_app \
         --app-name='ripgrep' \
         --bin-name='rg' \
-        "$@"
-}
-
-_koopa_locate_ruby() {
-    _koopa_locate_app \
-        --app-name='ruby' \
-        --bin-name='ruby' \
         "$@"
 }
 
@@ -3057,14 +2977,6 @@ _koopa_locate_sed() {
 _koopa_locate_sudo() {
     _koopa_locate_app \
         '/usr/bin/sudo' \
-        "$@"
-}
-
-_koopa_locate_tail() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gtail' \
-        --system-bin-name='tail' \
         "$@"
 }
 
@@ -3126,82 +3038,8 @@ _koopa_macos_is_dark_mode() {
     )" == 'Dark' ]]
 }
 
-_koopa_app_prefix() {
-    local -A dict
-    local -a pos
-    dict['allow_missing']=0
-    dict['app_prefix']="$(_koopa_koopa_prefix)/app"
-    if [[ "$#" -eq 0 ]]
-    then
-        _koopa_print "${dict['app_prefix']}"
-        return 0
-    fi
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--allow-missing')
-                dict['allow_missing']=1
-                shift 1
-                ;;
-            'python')
-                dict['python_version']="$(_koopa_python_major_minor_version)"
-                pos+=("python${dict['python_version']}")
-                shift 1
-                ;;
-            '-'*)
-                _koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    for app_name in "$@"
-    do
-        local -A dict2
-        dict2['app_name']="$app_name"
-        dict2['version']="$( \
-            _koopa_app_json_version "${dict2['app_name']}" \
-            2>/dev/null \
-            || true \
-        )"
-        if [[ -z "${dict2['version']}" ]]
-        then
-            _koopa_stop "Unsupported app: '${dict2['app_name']}'."
-        fi
-        if [[ "${#dict2['version']}" == 40 ]]
-        then
-            dict2['version']="${dict2['version']:0:7}"
-        fi
-        dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
-${dict2['version']}"
-        if [[ ! -d "${dict2['prefix']}" ]] && \
-            [[ "${dict['allow_missing']}" -eq 1 ]]
-        then
-            continue
-        fi
-        _koopa_assert_is_dir "${dict2['prefix']}"
-        dict2['prefix']="$(_koopa_realpath "${dict2['prefix']}")"
-        _koopa_print "${dict2['prefix']}"
-    done
-    return 0
-}
-
 _koopa_asdf_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/asdf"
-    return 0
-}
-
-_koopa_aspera_connect_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
-    return 0
-}
-
-_koopa_bash_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/lang/bash"
     return 0
 }
 
@@ -3215,68 +3053,6 @@ _koopa_bootstrap_prefix() {
     return 0
 }
 
-_koopa_conda_env_prefix() {
-    local -A app dict
-    _koopa_assert_has_args_le "$#" 1
-    app['conda']="$(_koopa_locate_conda)"
-    app['python']="$(_koopa_locate_conda_python)"
-    app['sed']="$(_koopa_locate_sed --allow-system)"
-    app['tail']="$(_koopa_locate_tail --allow-system)"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['env_name']="${1:-}"
-    dict['env_prefix']="$( \
-        "${app['conda']}" info --json \
-        | "${app['python']}" -c \
-            "import json,sys;print(json.load(sys.stdin)['envs_dirs'][0])" \
-    )"
-    [[ -n "${dict['env_prefix']}" ]] || return 1
-    if [[ -z "${dict['env_name']}" ]]
-    then
-        _koopa_print "${dict['env_prefix']}"
-        return 0
-    fi
-    dict['prefix']="${dict['env_prefix']}/${dict['env_name']}"
-    if [[ -d "${dict['prefix']}" ]]
-    then
-        _koopa_print "${dict['prefix']}"
-        return 0
-    fi
-    dict['env_list']="$(_koopa_conda_env_list)"
-    dict['env_list2']="$( \
-        _koopa_grep \
-            --pattern="${dict['env_name']}" \
-            --string="${dict['env_list']}" \
-    )"
-    [[ -n "${dict['env_list2']}" ]] || return 1
-    dict['prefix']="$( \
-        _koopa_grep \
-            --pattern="/${dict['env_name']}(@[.0-9]+)?\"" \
-            --regex \
-            --string="${dict['env_list']}" \
-        | "${app['tail']}" -n 1 \
-        | "${app['sed']}" -E 's/^.*"(.+)".*$/\1/' \
-    )"
-    [[ -d "${dict['prefix']}" ]] || return 1
-    _koopa_print "${dict['prefix']}"
-    return 0
-}
-
-_koopa_conda_pkg_cache_prefix() {
-    local -A app dict
-    _koopa_assert_has_no_args "$#"
-    app['conda']="$(_koopa_locate_conda)"
-    app['python']="$(_koopa_locate_conda_python)"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['prefix']="$( \
-        "${app['conda']}" info --json \
-        | "${app['python']}" -c \
-            "import json,sys;print(json.load(sys.stdin)['pkgs_dirs'][0])" \
-    )"
-    [[ -n "${dict['prefix']}" ]] || return 1
-    _koopa_print "${dict['prefix']}"
-    return 0
-}
-
 _koopa_conda_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/conda"
     return 0
@@ -3287,43 +3063,8 @@ _koopa_config_prefix() {
     return 0
 }
 
-_koopa_docker_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/docker"
-    return 0
-}
-
-_koopa_docker_private_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/docker-private"
-    return 0
-}
-
 _koopa_doom_emacs_prefix() {
     _koopa_print "$(_koopa_xdg_data_home)/doom"
-    return 0
-}
-
-_koopa_dotfiles_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/dotfiles"
-    return 0
-}
-
-_koopa_dotfiles_private_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
-    return 0
-}
-
-_koopa_dotfiles_work_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/dotfiles-work"
-    return 0
-}
-
-_koopa_emacs_prefix() {
-    _koopa_print "${HOME:?}/.emacs.d"
-    return 0
-}
-
-_koopa_go_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/go"
     return 0
 }
 
@@ -3359,33 +3100,8 @@ _koopa_julia_packages_prefix() {
     _koopa_print "${HOME:?}/.julia"
 }
 
-_koopa_julia_script_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/lang/julia/include"
-    return 0
-}
-
 _koopa_koopa_prefix() {
     _koopa_print "${KOOPA_PREFIX:?}"
-    return 0
-}
-
-_koopa_local_data_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)"
-    return 0
-}
-
-_koopa_man_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/share/man"
-    return 0
-}
-
-_koopa_man1_prefix() {
-    _koopa_print "$(_koopa_man_prefix)/man1"
-    return 0
-}
-
-_koopa_monorepo_prefix() {
-    _koopa_print "${HOME:?}/monorepo"
     return 0
 }
 
@@ -3409,102 +3125,8 @@ _koopa_pyenv_prefix() {
     return 0
 }
 
-_koopa_python_system_packages_prefix() {
-    local -A app dict
-    _koopa_assert_has_args_le "$#" 1
-    app['python']="${1:?}"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['prefix']="$( \
-        "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
-    )"
-    _koopa_assert_is_dir "${dict['prefix']}"
-    _koopa_print "${dict['prefix']}"
-    return 0
-}
-
-_koopa_python_virtualenvs_prefix() {
-    _koopa_print "${HOME}/.virtualenvs"
-    return 0
-}
-
-_koopa_r_library_prefix() {
-    local -A app dict
-    _koopa_assert_has_args_le "$#" 1
-    app['r']="${1:-}"
-    [[ -z "${app['r']}" ]] && app['r']="$(_koopa_locate_r)"
-    app['rscript']="${app['r']}script"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['prefix']="$( \
-        "${app['rscript']}" -e 'cat(normalizePath(.libPaths()[[1L]]))' \
-    )"
-    _koopa_assert_is_dir "${dict['prefix']}"
-    _koopa_print "${dict['prefix']}"
-    return 0
-}
-
-_koopa_r_packages_prefix() {
-    local -A app dict
-    app['r']="${1:?}"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['r_prefix']="$(_koopa_r_prefix "${app['r']}")"
-    dict['str']="${dict['r_prefix']}/site-library"
-    [[ -d "${dict['str']}" ]] || return 1
-    _koopa_print "${dict['str']}"
-    return 0
-}
-
-_koopa_r_prefix() {
-    local -A app dict
-    _koopa_assert_has_args_le "$#" 1
-    app['r']="${1:-}"
-    [[ -z "${app['r']}" ]] && app['r']="$(_koopa_locate_r)"
-    app['rscript']="${app['r']}script"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['prefix']="$( \
-        "${app['rscript']}" \
-            --vanilla \
-            -e 'cat(normalizePath(Sys.getenv("R_HOME")))' \
-        2>/dev/null \
-    )"
-    _koopa_assert_is_dir "${dict['prefix']}"
-    _koopa_print "${dict['prefix']}"
-    return 0
-}
-
-_koopa_r_scripts_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/lang/r/scripts"
-    return 0
-}
-
-_koopa_r_system_library_prefix() {
-    local -A app dict
-    _koopa_assert_has_args_le "$#" 1
-    app['r']="${1:-}"
-    [[ -z "${app['r']}" ]] && app['r']="$(_koopa_locate_r)"
-    app['rscript']="${app['r']}script"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['prefix']="$( \
-        "${app['rscript']}" \
-            --vanilla \
-            -e 'cat(normalizePath(tail(.libPaths(), n = 1L)))' \
-    )"
-    _koopa_assert_is_dir "${dict['prefix']}"
-    _koopa_print "${dict['prefix']}"
-    return 0
-}
-
 _koopa_rbenv_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/rbenv"
-    return 0
-}
-
-_koopa_ruby_gem_user_install_prefix() {
-    local -A app dict
-    app['ruby']="$(_koopa_locate_ruby)"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['str']="$("${app['ruby']}" -r rubygems -e 'puts Gem.user_dir')"
-    [[ -n "${dict['str']}" ]] || return 1
-    _koopa_print "${dict['str']}"
     return 0
 }
 
@@ -3520,16 +3142,6 @@ _koopa_spacemacs_prefix() {
 
 _koopa_spacevim_prefix() {
     _koopa_print "$(_koopa_xdg_data_home)/spacevim"
-    return 0
-}
-
-_koopa_tests_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/etc/koopa/tests"
-    return 0
-}
-
-_koopa_python_major_minor_version() {
-    _koopa_print '3.14'
     return 0
 }
 
