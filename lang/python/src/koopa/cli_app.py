@@ -1,52 +1,12 @@
-"""Dispatch table for ``koopa app`` subcommands.
-
-Replaces the 415-line ``_koopa_cli_app`` Bash function. Maps hierarchical
-command keys (e.g. ``aws-batch-list-jobs``) to Python callables where
-available, falling back to Bash function dispatch for the rest.
-"""
+"""Dispatch table for ``koopa app`` subcommands."""
 
 from __future__ import annotations
 
 import os
-import shlex
 import shutil
 import subprocess
 import sys
 from typing import Any
-
-from koopa.prefix import bash_prefix
-
-
-def _run_bash_function(key: str, *args: str) -> None:
-    """Fall back to calling a Bash function by name."""
-    bash = shutil.which("bash")
-    if bash is None:
-        msg = "Bash is required."
-        raise RuntimeError(msg)
-    header = os.path.join(bash_prefix(), "include", "header.sh")
-    fun = "_koopa_" + key.replace("-", "_")
-    parts = [f"source '{header}'", fun]
-    if args:
-        parts[1] = f"{fun} {shlex.join(args)}"
-    cmd = "; ".join(parts)
-    subprocess.run(
-        [
-            bash,
-            "--noprofile",
-            "--norc",
-            "-o",
-            "errexit",
-            "-o",
-            "errtrace",
-            "-o",
-            "nounset",
-            "-o",
-            "pipefail",
-            "-c",
-            cmd,
-        ],
-        check=True,
-    )
 
 
 _APP_TREE: dict[str, Any] = {
@@ -1462,7 +1422,7 @@ def handle_app(remainder: list[str]) -> None:
         return
     key, args = _resolve_tree(remainder)
     handler = _PYTHON_HANDLERS.get(key)
-    if handler is not None:
-        handler(args)
-        return
-    _run_bash_function(key, *args)
+    if handler is None:
+        print(f"Error: unknown app command '{key}'.", file=sys.stderr)
+        sys.exit(1)
+    handler(args)
