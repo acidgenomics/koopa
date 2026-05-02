@@ -214,7 +214,6 @@ _koopa_activate_asdf() {
     then
         return 0
     fi
-    _koopa_is_alias 'asdf' && unalias 'asdf'
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
@@ -289,7 +288,6 @@ _koopa_activate_bottom() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
@@ -318,7 +316,6 @@ _koopa_activate_broot() {
     then
         return 0
     fi
-    _koopa_is_alias 'br' && unalias 'br'
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
@@ -418,7 +415,6 @@ _koopa_activate_conda() {
             shell='posix'
             ;;
     esac
-    _koopa_is_alias 'conda' && unalias 'conda'
     local conda_setup
     conda_setup="$("$conda" "shell.${shell}" 'hook')"
     eval "$conda_setup"
@@ -479,7 +475,6 @@ _koopa_activate_delta() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns \
         "$source_file" \
         "$target_file" \
@@ -609,7 +604,6 @@ _koopa_activate_kitty() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
@@ -705,7 +699,6 @@ _koopa_activate_pipx() {
     prefix="$(_koopa_pipx_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        _koopa_is_alias 'mkdir' && unalias 'mkdir'
         mkdir -p "$prefix" >/dev/null
     fi
     _koopa_add_to_path_start "${prefix}/bin"
@@ -757,7 +750,6 @@ _koopa_activate_pyenv() {
     then
         return 0
     fi
-    _koopa_is_alias 'pyenv' && unalias 'pyenv'
     export PYENV_ROOT="$prefix"
     export PYENV_LOCAL_SHIM="${HOME:?}/.pyenv_local_shim"
     if [[ ! -d "$PYENV_LOCAL_SHIM" ]]
@@ -822,7 +814,6 @@ _koopa_activate_rbenv() {
     then
         return 0
     fi
-    _koopa_is_alias 'rbenv' && unalias 'rbenv'
     export RBENV_ROOT="$prefix"
     local nounset
     nounset="$(_koopa_boolean_nounset)"
@@ -920,8 +911,6 @@ _koopa_activate_today_bucket() {
     then
         return 0
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
-    _koopa_is_alias 'mkdir' && unalias 'mkdir'
     mkdir -p \
         "${bucket_dir}/${today_subdirs}" \
         >/dev/null
@@ -974,7 +963,6 @@ _koopa_activate_zoxide() {
     then
         return 0
     fi
-    _koopa_is_alias 'z' && unalias 'z'
     local shell
     shell="$(_koopa_shell_name)"
     local nounset
@@ -1767,7 +1755,6 @@ _koopa_spacevim() {
         _koopa_print 'SpaceVim is not installed.'
         return 1
     fi
-    _koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
     return 0
 }

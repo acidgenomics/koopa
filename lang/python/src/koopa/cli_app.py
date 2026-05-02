@@ -103,6 +103,24 @@ _APP_TREE: dict[str, Any] = {
         "create-env": "conda-create-env",
         "remove-env": "conda-remove-env",
     },
+    "current": {
+        "aws-cli-version": "current-aws-cli-version",
+        "bioconductor-version": "current-bioconductor-version",
+        "conda-package-version": "current-conda-package-version",
+        "ensembl-version": "current-ensembl-version",
+        "flybase-version": "current-flybase-version",
+        "gencode-version": "current-gencode-version",
+        "git-version": "current-git-version",
+        "github-release-version": "current-github-release-version",
+        "github-tag-version": "current-github-tag-version",
+        "gnu-ftp-version": "current-gnu-ftp-version",
+        "google-cloud-sdk-version": "current-google-cloud-sdk-version",
+        "latch-version": "current-latch-version",
+        "pypi-package-version": "current-pypi-package-version",
+        "python-version": "current-python-version",
+        "refseq-version": "current-refseq-version",
+        "wormbase-version": "current-wormbase-version",
+    },
     "docker": {
         "build": "docker-build",
         "build-all-tags": "docker-build-all-tags",
@@ -155,6 +173,21 @@ _APP_TREE: dict[str, Any] = {
     "r": {
         "bioconda-check": "r-bioconda-check",
         "check": "r-check",
+        "configure-environ": "r-configure-environ",
+        "configure-java": "r-configure-java",
+        "configure-ldpaths": "r-configure-ldpaths",
+        "configure-makevars": "r-configure-makevars",
+        "copy-files-into-etc": "r-copy-files-into-etc",
+        "gfortran-libs": "r-gfortran-libs",
+        "install-packages-in-site-library": "r-install-packages-in-site-library",
+        "migrate-non-base-packages": "r-migrate-non-base-packages",
+        "package-version": "r-package-version",
+        "paste-to-vector": "r-paste-to-vector",
+        "remove-packages-in-system-library": "r-remove-packages-in-system-library",
+        "script": "r-script",
+        "shiny-run-app": "r-shiny-run-app",
+        "system-packages-non-base": "r-system-packages-non-base",
+        "version": "r-version",
     },
     "rmats": "rmats",
     "rnaeditingindexer": "rnaeditingindexer",
@@ -220,9 +253,59 @@ def _resolve_tree(
     return last_key, remainder[consumed:]
 
 
+# -- current handlers --------------------------------------------------------
+
+
+def _handle_current_no_args(func_name: str) -> Any:
+    def handler(args: list[str]) -> None:
+        from koopa import current
+        fn = getattr(current, func_name)
+        print(fn())
+    return handler
+
+
+def _handle_current_one_arg(func_name: str, arg_name: str) -> Any:
+    def handler(args: list[str]) -> None:
+        from koopa import current
+        fn = getattr(current, func_name)
+        for a in args:
+            print(fn(a))
+    return handler
+
+
+def _handle_current_optional_arg(func_name: str) -> Any:
+    def handler(args: list[str]) -> None:
+        from koopa import current
+        fn = getattr(current, func_name)
+        if args:
+            print(fn(args[0]))
+        else:
+            print(fn())
+    return handler
+
+
+# -- docker handlers ---------------------------------------------------------
+
+
+def _handle_docker_build(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app docker build")
+    parser.add_argument("--local", required=True)
+    parser.add_argument("--remote", required=True)
+    parser.add_argument("--memory", default="")
+    parser.add_argument("--no-push", action="store_true")
+    parsed = parser.parse_args(args)
+    from koopa.shell.docker import build
+    build(
+        local=parsed.local,
+        remote=parsed.remote,
+        memory=parsed.memory,
+        no_push=parsed.no_push,
+    )
+
+
 def _handle_docker_build_all_tags(args: list[str]) -> None:
     import argparse
-
     parser = argparse.ArgumentParser(
         prog="koopa app docker build-all-tags",
     )
@@ -230,12 +313,269 @@ def _handle_docker_build_all_tags(args: list[str]) -> None:
     parser.add_argument("--remote", required=True)
     parsed = parser.parse_args(args)
     from koopa.shell.docker import build_all_tags
-
     build_all_tags(local=parsed.local, remote=parsed.remote)
 
 
+def _handle_docker_prune_all_images(args: list[str]) -> None:
+    from koopa.shell.docker import prune_all_images
+    prune_all_images()
+
+
+def _handle_docker_prune_old_images(args: list[str]) -> None:
+    from koopa.shell.docker import prune_old_images
+    prune_old_images()
+
+
+def _handle_docker_remove(args: list[str]) -> None:
+    if not args:
+        print("Usage: koopa app docker remove <pattern>...", file=sys.stderr)
+        sys.exit(1)
+    from koopa.shell.docker import remove
+    remove(*args)
+
+
+def _handle_docker_run(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app docker run")
+    parser.add_argument("--arm", action="store_true")
+    parser.add_argument("--x86", action="store_true")
+    parser.add_argument("--bash", action="store_true")
+    parser.add_argument("--bind", action="store_true")
+    parser.add_argument("image")
+    parsed = parser.parse_args(args)
+    from koopa.shell.docker import run
+    run(
+        parsed.image,
+        arm=parsed.arm,
+        x86=parsed.x86,
+        bash=parsed.bash,
+        bind=parsed.bind,
+    )
+
+
+# -- r handlers --------------------------------------------------------------
+
+
+def _handle_r_bioconda_check(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app r bioconda-check <package>...",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import r_bioconda_check
+    r_bioconda_check(*args)
+
+
+def _handle_r_check(args: list[str]) -> None:
+    if not args:
+        print("Usage: koopa app r check <path>", file=sys.stderr)
+        sys.exit(1)
+    from koopa.r import r_check
+    r_check(args[0])
+
+
+def _handle_r_configure_environ(args: list[str]) -> None:
+    from koopa.r import configure_r_environ
+    r_home = args[0] if args else None
+    configure_r_environ(r_home)
+
+
+def _handle_r_configure_java(args: list[str]) -> None:
+    from koopa.r import configure_r_java
+    configure_r_java()
+
+
+def _handle_r_configure_ldpaths(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app r configure-ldpaths <r-cmd>",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import r_configure_ldpaths
+    r_configure_ldpaths(args[0])
+
+
+def _handle_r_configure_makevars(args: list[str]) -> None:
+    from koopa.r import configure_r_makevars
+    r_home = args[0] if args else None
+    configure_r_makevars(r_home)
+
+
+def _handle_r_copy_files_into_etc(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app r copy-files-into-etc <r-cmd>",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import r_copy_files_into_etc
+    r_copy_files_into_etc(args[0])
+
+
+def _handle_r_gfortran_libs(args: list[str]) -> None:
+    from koopa.r import r_gfortran_libs
+    print(r_gfortran_libs())
+
+
+def _handle_r_install_packages(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app r install-packages-in-site-library <pkg>...",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import install_packages_in_site_library
+    install_packages_in_site_library(args)
+
+
+def _handle_r_migrate_non_base_packages(args: list[str]) -> None:
+    if len(args) != 2:
+        print(
+            "Usage: koopa app r migrate-non-base-packages"
+            " <from-lib> <to-lib>",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import r_migrate_non_base_packages
+    r_migrate_non_base_packages(args[0], args[1])
+
+
+def _handle_r_package_version(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app r package-version <package>",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import r_package_version
+    print(r_package_version(args[0]))
+
+
+def _handle_r_paste_to_vector(args: list[str]) -> None:
+    if not args:
+        print(
+            "Usage: koopa app r paste-to-vector <item>...",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    from koopa.r import r_paste_to_vector
+    print(r_paste_to_vector(args))
+
+
+def _handle_r_remove_packages(args: list[str]) -> None:
+    from koopa.r import remove_packages_in_system_library
+    remove_packages_in_system_library()
+
+
+def _handle_r_script(args: list[str]) -> None:
+    if not args:
+        print("Usage: koopa app r script <path>", file=sys.stderr)
+        sys.exit(1)
+    from koopa.r import r_script
+    r_script(args[0])
+
+
+def _handle_r_shiny_run_app(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app r shiny-run-app")
+    parser.add_argument("app_dir")
+    parser.add_argument("--port", type=int, default=3838)
+    parsed = parser.parse_args(args)
+    from koopa.r import r_shiny_run_app
+    r_shiny_run_app(parsed.app_dir, port=parsed.port)
+
+
+def _handle_r_system_packages_non_base(args: list[str]) -> None:
+    from koopa.r import r_system_packages_non_base
+    for pkg in r_system_packages_non_base():
+        print(pkg)
+
+
+def _handle_r_version(args: list[str]) -> None:
+    from koopa.r import r_version
+    print(r_version())
+
+
+# -- handler registry --------------------------------------------------------
+
+
 _PYTHON_HANDLERS: dict[str, Any] = {
+    # current
+    "current-aws-cli-version": _handle_current_no_args(
+        "current_aws_cli_version",
+    ),
+    "current-bioconductor-version": _handle_current_no_args(
+        "current_bioconductor_version",
+    ),
+    "current-conda-package-version": _handle_current_one_arg(
+        "current_conda_package_version", "name",
+    ),
+    "current-ensembl-version": _handle_current_no_args(
+        "current_ensembl_version",
+    ),
+    "current-flybase-version": _handle_current_no_args(
+        "current_flybase_version",
+    ),
+    "current-gencode-version": _handle_current_optional_arg(
+        "current_gencode_version",
+    ),
+    "current-git-version": _handle_current_no_args(
+        "current_git_version",
+    ),
+    "current-github-release-version": _handle_current_one_arg(
+        "current_github_release_version", "repo",
+    ),
+    "current-github-tag-version": _handle_current_one_arg(
+        "current_github_tag_version", "repo",
+    ),
+    "current-gnu-ftp-version": _handle_current_one_arg(
+        "current_gnu_ftp_version", "name",
+    ),
+    "current-google-cloud-sdk-version": _handle_current_no_args(
+        "current_google_cloud_sdk_version",
+    ),
+    "current-latch-version": _handle_current_no_args(
+        "current_latch_version",
+    ),
+    "current-pypi-package-version": _handle_current_one_arg(
+        "current_pypi_package_version", "name",
+    ),
+    "current-python-version": _handle_current_no_args(
+        "current_python_version",
+    ),
+    "current-refseq-version": _handle_current_no_args(
+        "current_refseq_version",
+    ),
+    "current-wormbase-version": _handle_current_no_args(
+        "current_wormbase_version",
+    ),
+    # docker
+    "docker-build": _handle_docker_build,
     "docker-build-all-tags": _handle_docker_build_all_tags,
+    "docker-prune-all-images": _handle_docker_prune_all_images,
+    "docker-prune-old-images": _handle_docker_prune_old_images,
+    "docker-remove": _handle_docker_remove,
+    "docker-run": _handle_docker_run,
+    # r
+    "r-bioconda-check": _handle_r_bioconda_check,
+    "r-check": _handle_r_check,
+    "r-configure-environ": _handle_r_configure_environ,
+    "r-configure-java": _handle_r_configure_java,
+    "r-configure-ldpaths": _handle_r_configure_ldpaths,
+    "r-configure-makevars": _handle_r_configure_makevars,
+    "r-copy-files-into-etc": _handle_r_copy_files_into_etc,
+    "r-gfortran-libs": _handle_r_gfortran_libs,
+    "r-install-packages-in-site-library": _handle_r_install_packages,
+    "r-migrate-non-base-packages": _handle_r_migrate_non_base_packages,
+    "r-package-version": _handle_r_package_version,
+    "r-paste-to-vector": _handle_r_paste_to_vector,
+    "r-remove-packages-in-system-library": _handle_r_remove_packages,
+    "r-script": _handle_r_script,
+    "r-shiny-run-app": _handle_r_shiny_run_app,
+    "r-system-packages-non-base": _handle_r_system_packages_non_base,
+    "r-version": _handle_r_version,
 }
 
 
