@@ -107,7 +107,8 @@ configuration, and updates of command-line applications and libraries.
 ## SYSTEM SUBCOMMANDS
 
 * `system check`:
-  Run system dependency version checks.
+  Run system checks, including dependency versions, broken app installs,
+  bootstrap version, and disk usage.
 
 * `system info`:
   Show system information.
@@ -122,8 +123,8 @@ configuration, and updates of command-line applications and libraries.
   Print the real path of an application.
 
 * `system list` <subcommand>:
-  List system information. Subcommands: `app-versions`, `dotfiles`,
-  `launch-agents`, `path-priority`, `programs`.
+  List system information. Subcommands: `app-versions`,
+  `launch-agents`, `path-priority`.
 
 * `system prune-apps`:
   Remove stale application versions.

@@ -18,10 +18,10 @@ def main(
 ) -> None:
     """Install ruby."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app("zlib", "openssl", "readline", "libyaml", "libffi", env=env)
+    env = activate_app("zlib", "openssl3", "readline", "libyaml", "libffi", env=env)
     libffi_prefix = app_prefix("libffi")
     libyaml_prefix = app_prefix("libyaml")
-    openssl_prefix = app_prefix("openssl")
+    openssl_prefix = app_prefix("openssl3")
     readline_prefix = app_prefix("readline")
     zlib_prefix = app_prefix("zlib")
     maj_min_ver = major_minor_version(version)

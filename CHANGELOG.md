@@ -1,12 +1,23 @@
 # Changelog
 
-## koopa 0.16.0 (2026-05-01)
+## koopa 0.16.0 (2026-05-02)
 
 Major changes:
 
+- Completed migration of all CLI dispatch from Bash to native Python. The
+  `koopa app`, `koopa system`, and `koopa develop` command trees are now
+  100% Python with zero Bash fallback.
+- Reduced the Bash function library to 182 activation-critical functions
+  (down from ~1,400). Removed all non-activation functions that have been
+  ported to the Python `koopa` package.
+- Removed the unused `env.py` module (28 Bash activation functions that had
+  no callers in the Python package) and `shell/find.py`.
+- Made `lang/bash` fully isolated from `lang/sh` — Bash now has its own
+  copies of all activation functions and does not depend on POSIX shell.
 - Reworked Bash function library from a flat alphabetical layout (`common/a/`,
-  `common/b/`, etc.) to a semantic directory structure (`activate/`, `install/`,
-  `uninstall/`, `linux/`, `macos/`, `debian/`, `fedora/`, `alpine/`, `arch/`).
+  `common/b/`, etc.) to a semantic directory structure (`activate/`, `alias/`,
+  `assert/`, `core/`, `export/`, `is/`, `locate/`, `macos/`, `prefix/`,
+  `xdg/`).
 - Reworked POSIX shell (`lang/sh`) function library to use semantic layout.
 - Made Zsh function library (`lang/zsh`) independent from POSIX shell. Zsh now
   has its own `functions.sh` cache file and no longer depends on `lang/sh`.
@@ -19,8 +30,23 @@ New apps:
 
 Minor changes:
 
+- Installer framework now runs in a temporary directory, preventing build
+  artifacts from being left in the user's working directory.
+- Failed installs now clean up their prefix directory automatically, preventing
+  stale empty directories from blocking retry attempts.
+- Dependency checks now verify the `opt/` symlink (created on successful
+  install) rather than the `app/` directory, which can exist from failed
+  installs.
+- Added `check_broken_app_installs()` to `koopa system check`, which detects
+  app directories with missing opt symlinks or empty prefixes from failed
+  installs.
+- Fixed `download_extract_cd` to descend into the single extracted
+  subdirectory, matching the `--strip-components=1` behavior.
+- Fixed `install_ruby_package` to prefer koopa-installed Ruby over system Ruby.
+- Fixed Python 2 style `except` syntax in `download.py` that prevented the
+  urllib fallback from triggering on curl failures.
+- Removed defunct `list-dotfiles` and `list-programs` system list subcommands.
 - Added `PYTHON_BUILD_MIRROR_URL` support in `install-app`.
-- Refactored and fixed `koopa_install_app` function.
 - Improved bootstrap script reliability.
 - Improved header consistency across shell includes.
 - Optimized OS handling in completion logic.
