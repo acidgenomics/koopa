@@ -420,6 +420,12 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
     spec = _SPECIAL_CASES.get(name)
     if spec is not None:
         return spec
+    if name == "oracle-instant-client" and version:
+        return _AppCheckSpec(
+            "dirlist",
+            lambda v=version: _check_oracle_instant_client(v),
+            (),
+        )
     if len(version) == 40:
         return None
     for suffix, source in _GENERIC_INSTALLER_MAP.items():
@@ -976,6 +982,65 @@ def _check_r_devel() -> str:
     return m.group(1)
 
 
+def _check_rstudio_server() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/rstudio/rstudio/tags?per_page=1",
+        github=True,
+    )
+    if not data:
+        msg = "No rstudio-server tags found"
+        raise RuntimeError(msg)
+    tag = data[0]["name"]
+    tag = tag.lstrip("vV")
+    return tag.replace("+", "-")
+
+
+def _check_r_gfortran() -> str:
+    html = _http_get_text("https://mac.r-project.org/tools/")
+    versions = re.findall(r"gfortran-(\d+\.\d+)-universal", html)
+    if not versions:
+        msg = "No r-gfortran versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_r_xcode_openmp() -> str:
+    html = _http_get_text("https://mac.r-project.org/openmp/")
+    versions = re.findall(r"openmp-(\d+(?:\.\d+)*)-darwin", html)
+    if not versions:
+        msg = "No r-xcode-openmp versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_oracle_instant_client(current_version: str) -> str:
+    major = current_version.split(".")[0]
+    html = _http_get_text(
+        "https://www.oracle.com/database/technologies/"
+        "instant-client/linux-x86-64-downloads.html",
+        timeout=30,
+    )
+    versions = re.findall(r"Version\s+(\d+(?:\.\d+)+)", html)
+    if not versions:
+        msg = "No Oracle Instant Client versions found"
+        raise RuntimeError(msg)
+    matched = [v for v in versions if v.startswith(f"{major}.")]
+    if not matched:
+        msg = f"No Oracle Instant Client {major}.x versions found"
+        raise RuntimeError(msg)
+    best = max(
+        set(matched),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+    return f"{best}-1"
+
+
 def _make_dirlist_spec(url: str, prefix: str) -> _AppCheckSpec:
     return _AppCheckSpec(
         "dirlist",
@@ -1258,6 +1323,29 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "sqlite": _AppCheckSpec("dirlist", _check_sqlite, ()),
     "udunits": _AppCheckSpec(
         "github", _check_github, ("Unidata", "UDUNITS-2")
+    ),
+    "cellranger": _AppCheckSpec(
+        "github", _check_github, ("10XGenomics", "cellranger")
+    ),
+    "r-gfortran": _AppCheckSpec("dirlist", _check_r_gfortran, ()),
+    "r-xcode-openmp": _AppCheckSpec("dirlist", _check_r_xcode_openmp, ()),
+    "rstudio-server": _AppCheckSpec(
+        "github", _check_rstudio_server, ()
+    ),
+    "shiny-server": _AppCheckSpec(
+        "github", _check_github, ("rstudio", "shiny-server")
+    ),
+    "unzip": _AppCheckSpec(
+        "dirlist",
+        lambda: "6.0",
+        (),
+    ),
+    "zip": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_sourceforge_versions(
+            "infozip/files/Zip%203.x%20%28latest%29/"
+        ),
+        (),
     ),
 }
 
