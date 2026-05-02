@@ -59,10 +59,8 @@ _APP_TREE: dict[str, Any] = {
             "list-repositories": "aws-codecommit-list-repositories",
         },
         "ec2": {
-            "instance-id": "aws-ec2-instance-id",
             "list-running-instances": "aws-ec2-list-running-instances",
             "map-instance-ids-to-names": "aws-ec2-map-instance-ids-to-names",
-            "stop": "aws-ec2-stop",
         },
         "ecr": {
             "login-public": "aws-ecr-login-public",
@@ -168,7 +166,6 @@ _APP_TREE: dict[str, Any] = {
     },
     "miso": {
         "index": "miso-index",
-        "run": "miso-run",
     },
     "r": {
         "bioconda-check": "r-bioconda-check",
@@ -189,7 +186,6 @@ _APP_TREE: dict[str, Any] = {
         "system-packages-non-base": "r-system-packages-non-base",
         "version": "r-version",
     },
-    "rmats": "rmats",
     "rnaeditingindexer": "rnaeditingindexer",
     "rsem": {
         "index": "rsem-index",
@@ -198,7 +194,6 @@ _APP_TREE: dict[str, Any] = {
         },
     },
     "salmon": {
-        "detect-fastq-library-type": "salmon-detect-fastq-library-type",
         "index": "salmon-index",
         "quant": {
             "bam": "salmon-quant-bam",
@@ -588,10 +583,460 @@ def _handle_git_rm_untracked(args: list[str]) -> None:
     git_rm_untracked(path)
 
 
+# -- bioinformatics handlers -------------------------------------------------
+
+
+def _handle_bowtie2_align_paired_end(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app bowtie2 align paired-end")
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--fastq-dir", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import bowtie2_align
+    bowtie2_align(
+        parsed.index_dir,
+        os.path.join(parsed.output_dir, "aligned.sam"),
+        r1=os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
+        r2=os.path.join(parsed.fastq_dir, "R2.fastq.gz"),
+    )
+
+
+def _handle_bowtie2_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app bowtie2 index")
+    parser.add_argument("--genome-fasta-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import bowtie2_build
+    index_prefix = os.path.join(parsed.output_dir, "bowtie2")
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    bowtie2_build(
+        parsed.genome_fasta_file,
+        index_prefix,
+        threads=os.cpu_count() or 1,
+    )
+
+
+def _handle_hisat2_align(args: list[str], *, mode: str = "paired-end") -> None:
+    import argparse
+    prog = f"koopa app hisat2 align {mode}"
+    parser = argparse.ArgumentParser(prog=prog)
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--fastq-dir", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--gtf-file", default="")
+    parsed = parser.parse_args(args)
+    hisat2 = shutil.which("hisat2")
+    if hisat2 is None:
+        msg = "hisat2 is not installed."
+        raise RuntimeError(msg)
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    hisat2_args = [
+        hisat2,
+        "-x", os.path.join(parsed.index_dir, "hisat2"),
+        "-S", os.path.join(parsed.output_dir, "aligned.sam"),
+        "--threads", str(os.cpu_count() or 1),
+    ]
+    if mode == "paired-end":
+        hisat2_args.extend([
+            "-1", os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
+            "-2", os.path.join(parsed.fastq_dir, "R2.fastq.gz"),
+        ])
+    else:
+        hisat2_args.extend([
+            "-U", os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
+        ])
+    subprocess.run(hisat2_args, check=True)
+
+
+def _handle_hisat2_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app hisat2 index")
+    parser.add_argument("--genome-fasta-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--gtf-file", default="")
+    parsed = parser.parse_args(args)
+    from koopa.ngs import hisat2_build
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    hisat2_build(
+        parsed.genome_fasta_file,
+        os.path.join(parsed.output_dir, "hisat2"),
+        threads=os.cpu_count() or 1,
+    )
+
+
+def _handle_kallisto_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app kallisto index")
+    parser.add_argument("--transcriptome-fasta-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import kallisto_index
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    kallisto_index(
+        parsed.transcriptome_fasta_file,
+        os.path.join(parsed.output_dir, "kallisto.idx"),
+    )
+
+
+def _handle_kallisto_quant(args: list[str], *, mode: str = "paired-end") -> None:
+    import argparse
+    prog = f"koopa app kallisto quant {mode}"
+    parser = argparse.ArgumentParser(prog=prog)
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--fastq-dir", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import kallisto_quant
+    index_file = os.path.join(parsed.index_dir, "kallisto.idx")
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    r1 = os.path.join(parsed.fastq_dir, "R1.fastq.gz")
+    if mode == "paired-end":
+        r2 = os.path.join(parsed.fastq_dir, "R2.fastq.gz")
+        kallisto_quant(index_file, parsed.output_dir, r1=r1, r2=r2)
+    else:
+        kallisto_quant(index_file, parsed.output_dir, r1=r1)
+
+
+def _handle_miso_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app miso index")
+    parser.add_argument("--gff-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import miso_index
+    miso_index(parsed.gff_file, parsed.output_dir)
+
+
+def _handle_rnaeditingindexer(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app rnaeditingindexer")
+    parser.add_argument("--bam-dir", default="bam")
+    parser.add_argument("--output-dir", default="rnaedit")
+    parser.add_argument("--genome", default="hg38")
+    parser.add_argument("--example", action="store_true")
+    parsed = parser.parse_args(args)
+    from koopa.ngs import rnaeditingindexer
+    rnaeditingindexer(
+        bam_dir=parsed.bam_dir,
+        output_dir=parsed.output_dir,
+        genome=parsed.genome,
+        example=parsed.example,
+    )
+
+
+def _handle_rsem_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app rsem index")
+    parser.add_argument("--genome-fasta-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--gtf-file", default="")
+    parser.add_argument("--num-threads", type=int, default=0)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import rsem_prepare_reference
+    threads = parsed.num_threads or (os.cpu_count() or 1)
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    rsem_prepare_reference(
+        parsed.genome_fasta_file,
+        os.path.join(parsed.output_dir, "rsem"),
+        gtf=parsed.gtf_file or None,
+        threads=threads,
+    )
+
+
+def _handle_rsem_quant_bam(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app rsem quant bam")
+    parser.add_argument("--bam-file", required=True)
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import rsem_calculate_expression
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    rsem_calculate_expression(
+        parsed.bam_file,
+        os.path.join(parsed.index_dir, "rsem"),
+        os.path.join(parsed.output_dir, "rsem"),
+    )
+
+
+def _handle_salmon_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app salmon index")
+    parser.add_argument("--transcriptome-fasta-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import salmon_index
+    salmon_index(
+        parsed.transcriptome_fasta_file,
+        parsed.output_dir,
+        threads=os.cpu_count() or 1,
+    )
+
+
+def _handle_salmon_quant(args: list[str], *, mode: str = "paired-end") -> None:
+    import argparse
+    prog = f"koopa app salmon quant {mode}"
+    parser = argparse.ArgumentParser(prog=prog)
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--fastq-dir", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.ngs import salmon_quant
+    r1 = os.path.join(parsed.fastq_dir, "R1.fastq.gz")
+    if mode == "paired-end":
+        r2 = os.path.join(parsed.fastq_dir, "R2.fastq.gz")
+        salmon_quant(parsed.index_dir, parsed.output_dir, r1=r1, r2=r2)
+    elif mode == "single-end":
+        salmon_quant(parsed.index_dir, parsed.output_dir, unmated=r1)
+    elif mode == "bam":
+        salmon_quant(parsed.index_dir, parsed.output_dir, r1=r1)
+
+
+def _handle_star_align(args: list[str], *, mode: str = "paired-end") -> None:
+    import argparse
+    prog = f"koopa app star align {mode}"
+    parser = argparse.ArgumentParser(prog=prog)
+    parser.add_argument("--index-dir", required=True)
+    parser.add_argument("--fastq-dir", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--gtf-file", default="")
+    parsed = parser.parse_args(args)
+    from koopa.ngs import star_align
+    os.makedirs(parsed.output_dir, exist_ok=True)
+    r1 = os.path.join(parsed.fastq_dir, "R1.fastq.gz")
+    r2 = os.path.join(parsed.fastq_dir, "R2.fastq.gz") if mode == "paired-end" else None
+    star_align(
+        parsed.index_dir,
+        os.path.join(parsed.output_dir, "star_"),
+        r1=r1,
+        r2=r2,
+        threads=os.cpu_count() or 1,
+    )
+
+
+def _handle_star_index(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app star index")
+    parser.add_argument("--genome-fasta-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--gtf-file", default="")
+    parsed = parser.parse_args(args)
+    from koopa.ngs import star_index
+    star_index(
+        parsed.genome_fasta_file,
+        parsed.output_dir,
+        gtf=parsed.gtf_file or None,
+        threads=os.cpu_count() or 1,
+    )
+
+
+# -- sra handlers ------------------------------------------------------------
+
+
+def _handle_sra_prefetch(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app sra prefetch")
+    parser.add_argument("--accession-file", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.sra import sra_prefetch
+    sra_prefetch(parsed.accession_file, parsed.output_dir)
+
+
+def _handle_sra_fastq_dump(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app sra fastq-dump")
+    parser.add_argument("--prefetch-directory", required=True)
+    parser.add_argument("--fastq-directory", required=True)
+    parser.add_argument("--no-compress", action="store_true")
+    parsed = parser.parse_args(args)
+    from koopa.sra import sra_fastq_dump
+    sra_fastq_dump(
+        parsed.prefetch_directory,
+        parsed.fastq_directory,
+        compress=not parsed.no_compress,
+    )
+
+
+def _handle_sra_download_accession_list(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog="koopa app sra download-accession-list",
+    )
+    parser.add_argument("--srp-id", required=True)
+    parser.add_argument("--file", default="")
+    parsed = parser.parse_args(args)
+    from koopa.sra import sra_download_accession_list
+    sra_download_accession_list(parsed.srp_id, parsed.file)
+
+
+def _handle_sra_download_run_info_table(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog="koopa app sra download-run-info-table",
+    )
+    parser.add_argument("--srp-id", required=True)
+    parser.add_argument("--file", default="")
+    parsed = parser.parse_args(args)
+    from koopa.sra import sra_download_run_info_table
+    sra_download_run_info_table(parsed.srp_id, parsed.file)
+
+
+# -- brew handlers (additional) ----------------------------------------------
+
+
+def _handle_brew_cleanup(args: list[str]) -> None:
+    from koopa.brew import _brew
+    _brew("cleanup", capture=False)
+
+
+def _handle_brew_dump_brewfile(args: list[str]) -> None:
+    from koopa.brew import brew_dump_brewfile
+    path = args[0] if args else "Brewfile"
+    brew_dump_brewfile(path)
+
+
+def _handle_brew_outdated(args: list[str]) -> None:
+    from koopa.brew import brew_outdated
+    for pkg in brew_outdated():
+        print(pkg)
+
+
+def _handle_brew_reset_permissions(args: list[str]) -> None:
+    from koopa.brew import brew_reset_permissions
+    brew_reset_permissions()
+
+
+def _handle_brew_uninstall_all_brews(args: list[str]) -> None:
+    from koopa.brew import brew_uninstall_all_brews
+    brew_uninstall_all_brews()
+
+
+def _handle_brew_upgrade_brews(args: list[str]) -> None:
+    from koopa.brew import brew_upgrade_brews
+    brew_upgrade_brews()
+
+
+def _handle_brew_version(args: list[str]) -> None:
+    from koopa.brew import brew_version
+    print(brew_version())
+
+
+# -- conda handlers ----------------------------------------------------------
+
+
+def _handle_conda_create_env(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app conda create-env")
+    parser.add_argument("--file", default="")
+    parser.add_argument("--prefix", default="")
+    parser.add_argument("--force", action="store_true")
+    parser.add_argument("--latest", action="store_true")
+    parser.add_argument("packages", nargs="*")
+    parsed = parser.parse_args(args)
+    from koopa.conda import conda_create_env
+    conda_create_env(
+        *parsed.packages,
+        prefix=parsed.prefix,
+        yaml_file=parsed.file,
+        force=parsed.force,
+        latest=parsed.latest,
+    )
+
+
+def _handle_conda_remove_env(args: list[str]) -> None:
+    if not args:
+        print("Usage: koopa app conda remove-env <name>...", file=sys.stderr)
+        sys.exit(1)
+    from koopa.conda import conda_remove_env
+    conda_remove_env(*args)
+
+
+# -- gpg handlers ------------------------------------------------------------
+
+
+def _handle_gpg_prompt(args: list[str]) -> None:
+    from koopa.gpg import gpg_prompt
+    gpg_prompt()
+
+
+def _handle_gpg_reload(args: list[str]) -> None:
+    from koopa.gpg import gpg_reload
+    gpg_reload()
+
+
+def _handle_gpg_restart(args: list[str]) -> None:
+    from koopa.gpg import gpg_restart
+    gpg_restart()
+
+
+# -- ssh handlers ------------------------------------------------------------
+
+
+def _handle_ssh_generate_key(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app ssh generate-key")
+    parser.add_argument("--prefix", default="")
+    parser.add_argument("key_names", nargs="*", default=["id_rsa"])
+    parsed = parser.parse_args(args)
+    from koopa.ssh import ssh_generate_key
+    ssh_generate_key(*parsed.key_names, prefix=parsed.prefix)
+
+
 # -- handler registry --------------------------------------------------------
 
 
 _PYTHON_HANDLERS: dict[str, Any] = {
+    # bioinformatics
+    "bowtie2-align-paired-end": _handle_bowtie2_align_paired_end,
+    "bowtie2-index": _handle_bowtie2_index,
+    "hisat2-align-paired-end": lambda a: _handle_hisat2_align(
+        a, mode="paired-end",
+    ),
+    "hisat2-align-single-end": lambda a: _handle_hisat2_align(
+        a, mode="single-end",
+    ),
+    "hisat2-index": _handle_hisat2_index,
+    "kallisto-index": _handle_kallisto_index,
+    "kallisto-quant-paired-end": lambda a: _handle_kallisto_quant(
+        a, mode="paired-end",
+    ),
+    "kallisto-quant-single-end": lambda a: _handle_kallisto_quant(
+        a, mode="single-end",
+    ),
+    "miso-index": _handle_miso_index,
+    "rnaeditingindexer": _handle_rnaeditingindexer,
+    "rsem-index": _handle_rsem_index,
+    "rsem-quant-bam": _handle_rsem_quant_bam,
+    "salmon-index": _handle_salmon_index,
+    "salmon-quant-bam": lambda a: _handle_salmon_quant(a, mode="bam"),
+    "salmon-quant-paired-end": lambda a: _handle_salmon_quant(
+        a, mode="paired-end",
+    ),
+    "salmon-quant-single-end": lambda a: _handle_salmon_quant(
+        a, mode="single-end",
+    ),
+    "star-align-paired-end": lambda a: _handle_star_align(
+        a, mode="paired-end",
+    ),
+    "star-align-single-end": lambda a: _handle_star_align(
+        a, mode="single-end",
+    ),
+    "star-index": _handle_star_index,
+    # brew
+    "brew-cleanup": _handle_brew_cleanup,
+    "brew-dump-brewfile": _handle_brew_dump_brewfile,
+    "brew-outdated": _handle_brew_outdated,
+    "brew-reset-core-repo": _handle_brew_reset_core_repo,
+    "brew-reset-permissions": _handle_brew_reset_permissions,
+    "brew-uninstall-all-brews": _handle_brew_uninstall_all_brews,
+    "brew-upgrade-brews": _handle_brew_upgrade_brews,
+    "brew-version": _handle_brew_version,
+    # conda
+    "conda-create-env": _handle_conda_create_env,
+    "conda-remove-env": _handle_conda_remove_env,
     # current
     "current-aws-cli-version": _handle_current_no_args(
         "current_aws_cli_version",
@@ -641,8 +1086,6 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "current-wormbase-version": _handle_current_no_args(
         "current_wormbase_version",
     ),
-    # brew
-    "brew-reset-core-repo": _handle_brew_reset_core_repo,
     # docker
     "docker-build": _handle_docker_build,
     "docker-build-all-tags": _handle_docker_build_all_tags,
@@ -658,6 +1101,10 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "git-reset-fork-to-upstream": _handle_git_reset_fork_to_upstream,
     "git-rm-submodule": _handle_git_rm_submodule,
     "git-rm-untracked": _handle_git_rm_untracked,
+    # gpg
+    "gpg-prompt": _handle_gpg_prompt,
+    "gpg-reload": _handle_gpg_reload,
+    "gpg-restart": _handle_gpg_restart,
     # r
     "r-bioconda-check": _handle_r_bioconda_check,
     "r-check": _handle_r_check,
@@ -676,6 +1123,13 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "r-shiny-run-app": _handle_r_shiny_run_app,
     "r-system-packages-non-base": _handle_r_system_packages_non_base,
     "r-version": _handle_r_version,
+    # sra
+    "sra-download-accession-list": _handle_sra_download_accession_list,
+    "sra-download-run-info-table": _handle_sra_download_run_info_table,
+    "sra-fastq-dump": _handle_sra_fastq_dump,
+    "sra-prefetch": _handle_sra_prefetch,
+    # ssh
+    "ssh-generate-key": _handle_ssh_generate_key,
 }
 
 
