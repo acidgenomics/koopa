@@ -15,7 +15,12 @@ from pathlib import Path
 from koopa.fs import list_subdirs
 
 
-def _docker(*args: str, check: bool = True, **kwargs) -> subprocess.CompletedProcess:
+def _docker(
+    *args: str,
+    check: bool = True,
+    capture_output: bool = False,
+    text: bool = False,
+) -> subprocess.CompletedProcess:
     """Run a docker command."""
     import shutil
 
@@ -32,7 +37,8 @@ def _docker(*args: str, check: bool = True, **kwargs) -> subprocess.CompletedPro
         [docker, *args],
         check=check,
         env=env,
-        **kwargs,
+        capture_output=capture_output,
+        text=text,
     )
 
 
@@ -169,7 +175,7 @@ def ghcr_login() -> None:
     if not pat or not user:
         msg = "GHCR_PAT and GHCR_USER environment variables are required."
         raise RuntimeError(msg)
-    proc = subprocess.run(
+    subprocess.run(
         ["docker", "login", "ghcr.io", "-u", user, "--password-stdin"],
         input=pat,
         text=True,

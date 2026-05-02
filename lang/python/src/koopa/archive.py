@@ -65,7 +65,7 @@ def decompress(path: str, output: str | None = None) -> str:
             shutil.copyfileobj(f_in, f_out)
     elif name.endswith((".xz", ".lzma")):
         try:
-            import lzma  # noqa: PLC0415
+            import lzma
         except ImportError as err:
             raise ImportError("lzma package is required.") from err
         with lzma.open(path, "rb") as f_in, open(output, "wb") as f_out:
@@ -124,7 +124,7 @@ def compress(
             shutil.copyfileobj(f_in, f_out)
     elif method == "xz":
         try:
-            import lzma  # noqa: PLC0415
+            import lzma
         except ImportError as err:
             raise ImportError("lzma package is required.") from err
         with open(path, "rb") as f_in, lzma.open(output, "wb") as f_out:

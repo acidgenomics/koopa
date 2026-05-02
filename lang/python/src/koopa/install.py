@@ -117,7 +117,16 @@ def _is_owner() -> bool:
 
 def _is_admin() -> bool:
     """Check if current user is an admin (root or sudo capable)."""
-    return os.getuid() == 0
+    if os.getuid() == 0:
+        return True
+    if sys.platform == "darwin":
+        import grp
+
+        try:
+            return grp.getgrnam("admin").gr_gid in os.getgroups()
+        except KeyError:
+            return False
+    return False
 
 
 def _is_linux() -> bool:
@@ -340,7 +349,8 @@ def push_app_build(name: str) -> None:
         raise FileNotFoundError(msg)
     version = versions[-1]
     prefix = os.path.join(app_dir, version)
-    tar_file = tempfile.mktemp(suffix=".tar.gz", prefix="koopa-push-")
+    fd, tar_file = tempfile.mkstemp(suffix=".tar.gz", prefix="koopa-push-")
+    os.close(fd)
     try:
         _run("tar", "-Pcz", "-f", tar_file, prefix)
         tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{version}.tar.gz"
@@ -381,6 +391,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     # Resolve mode-specific defaults.
     if config.mode != "shared":
         config.deps = False
+    if config.platform == "common" and config.mode == "system":
+        if _is_macos():
+            config.platform = "macos"
+        elif _is_linux():
+            config.platform = _os_string()
     if not config.version_key:
         config.version_key = config.name
     # Resolve version from app.json if not provided.
@@ -449,10 +464,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     f"Uninstalling '{config.name}' at '{config.prefix}'.",
                     file=sys.stderr,
                 )
-            if config.mode == "system":
-                _run("rm", "-rf", config.prefix, sudo=True)
-            else:
-                shutil.rmtree(config.prefix, ignore_errors=True)
+            shutil.rmtree(config.prefix, ignore_errors=True)
         if os.path.isdir(config.prefix):
             return
     # -- Install dependencies -------------------------------------------------
@@ -476,18 +488,21 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app(dep_config)
     # -- Start install --------------------------------------------------------
     if not config.quiet:
-        print(
-            f"Installing '{config.name}' at '{config.prefix}'.",
-            file=sys.stderr,
-        )
+        if config.prefix:
+            print(
+                f"Installing '{config.name}' at '{config.prefix}'.",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"Installing '{config.name}'.",
+                file=sys.stderr,
+            )
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
-        if config.mode == "system":
-            _run("mkdir", "-p", config.prefix, sudo=True)
-        else:
-            os.makedirs(config.prefix, exist_ok=True)
+        os.makedirs(config.prefix, exist_ok=True)
     # -- Dispatch to installer ------------------------------------------------
-    from koopa.installers import get_python_installer, has_python_installer  # noqa: PLC0415
+    from koopa.installers import get_python_installer, has_python_installer
 
     orig_cwd = os.getcwd()
     tmp_dir = tempfile.mkdtemp(prefix="koopa-install-")
@@ -546,10 +561,16 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if config.update_ldconfig:
             _run("ldconfig", sudo=True, check=False)
     if not config.quiet:
-        print(
-            f"Successfully installed '{config.name}' at '{config.prefix}'.",
-            file=sys.stderr,
-        )
+        if config.prefix:
+            print(
+                f"Successfully installed '{config.name}' at '{config.prefix}'.",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"Successfully installed '{config.name}'.",
+                file=sys.stderr,
+            )
 
 
 # -- Isolated subshell runner -------------------------------------------------
@@ -889,10 +910,7 @@ def install_ruby_package(
     if jobs is None:
         jobs = _cpu_count()
     ruby_opt = os.path.join(_opt_prefix(), "ruby")
-    if os.path.isdir(ruby_opt):
-        ruby_bin = os.path.join(os.path.realpath(ruby_opt), "bin")
-    else:
-        ruby_bin = None
+    ruby_bin = os.path.join(os.path.realpath(ruby_opt), "bin") if os.path.isdir(ruby_opt) else None
 
     def _find(cmd: str) -> str | None:
         if ruby_bin:
@@ -1201,7 +1219,7 @@ def install_shared_apps(
         msg = "No longer supported for Intel Macs."
         raise RuntimeError(msg)
     try:
-        import psutil  # noqa: PLC0415
+        import psutil  # type: ignore[import-untyped]  # ty: ignore[unresolved-import]
 
         mem_gb = psutil.virtual_memory().total / (1024**3)
         mem_gb_cutoff = 6
@@ -1339,7 +1357,7 @@ def install_koopa(
 
 def _zsh_compaudit_set_permissions() -> None:
     """Fix ZSH permissions to ensure compaudit checks pass during compinit."""
-    import stat as stat_mod  # noqa: PLC0415
+    import stat as stat_mod
 
     uid = os.getuid()
     prefixes = [
@@ -1360,8 +1378,8 @@ def _zsh_compaudit_set_permissions() -> None:
 
 def update_koopa(*, verbose: bool = False) -> None:
     """Update koopa installation via git pull."""
-    from koopa.alert import alert_note  # noqa: PLC0415
-    from koopa.git import git_pull, is_git_repo  # noqa: PLC0415
+    from koopa.alert import alert_note
+    from koopa.git import git_pull, is_git_repo
 
     if verbose:
         os.environ["KOOPA_VERBOSE"] = "1"

@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable
 from typing import Any
 
 _APP_TREE: dict[str, Any] = {
@@ -200,7 +201,7 @@ def _resolve_tree(
 # -- current handlers --------------------------------------------------------
 
 
-def _handle_current_no_args(func_name: str) -> Any:
+def _handle_current_no_args(func_name: str) -> Callable[[list[str]], None]:
     def handler(args: list[str]) -> None:
         from koopa import current
 
@@ -210,7 +211,7 @@ def _handle_current_no_args(func_name: str) -> Any:
     return handler
 
 
-def _handle_current_one_arg(func_name: str, arg_name: str) -> Any:
+def _handle_current_one_arg(func_name: str, arg_name: str) -> Callable[[list[str]], None]:
     def handler(args: list[str]) -> None:
         from koopa import current
 
@@ -221,7 +222,7 @@ def _handle_current_one_arg(func_name: str, arg_name: str) -> Any:
     return handler
 
 
-def _handle_current_optional_arg(func_name: str) -> Any:
+def _handle_current_optional_arg(func_name: str) -> Callable[[list[str]], None]:
     def handler(args: list[str]) -> None:
         from koopa import current
 
@@ -1256,10 +1257,7 @@ def _handle_ftp_mirror(args: list[str]) -> None:
     if wget is None:
         msg = "wget is not installed."
         raise RuntimeError(msg)
-    if parsed.dir:
-        target = f"{parsed.host}/{parsed.dir}"
-    else:
-        target = parsed.host
+    target = f"{parsed.host}/{parsed.dir}" if parsed.dir else parsed.host
     subprocess.run(
         [wget, "--ask-password", "--mirror", f"ftp://{parsed.user}@{target}/*"],
         check=True,
