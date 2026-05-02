@@ -668,8 +668,10 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "swig": _AppCheckSpec(
         "github", _check_github, ("swig", "swig")
     ),
-    "tcl-tk": _make_dirlist_spec(
-        "https://sourceforge.net/projects/tcl/files/Tcl/", ""
+    "tcl-tk": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_sourceforge_versions("tcl/files/Tcl/"),
+        (),
     ),
     "uv": _AppCheckSpec("pypi", _check_pypi, ("uv",)),
 }
