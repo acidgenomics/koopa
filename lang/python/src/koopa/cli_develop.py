@@ -297,10 +297,16 @@ def _handle_check_app_versions(args: list[str]) -> None:
         action="store_true",
         help="update app.json with latest versions",
     )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="bypass version cache and force fresh lookups",
+    )
     parsed = parser.parse_args(args)
     results = check_app_versions(
         source_filter=parsed.source,
         name_filter=parsed.apps or None,
+        use_cache=not parsed.no_cache,
     )
     if parsed.output_json:
         print_json_report(results)
