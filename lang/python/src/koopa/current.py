@@ -22,9 +22,21 @@ def _fetch(url: str, *, list_only: bool = False) -> str:
             msg = "curl is required for FTP directory listings."
             raise RuntimeError(msg)
         result = subprocess.run(
-            [curl, "--disable", "--fail", "--location", "--retry", "5",
-             "--show-error", "--silent", "--list-only", url],
-            capture_output=True, text=True, check=True,
+            [
+                curl,
+                "--disable",
+                "--fail",
+                "--location",
+                "--retry",
+                "5",
+                "--show-error",
+                "--silent",
+                "--list-only",
+                url,
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         return result.stdout
     req = urllib.request.Request(url)
@@ -66,7 +78,9 @@ def current_conda_package_version(name: str) -> str:
         raise RuntimeError(msg)
     result = subprocess.run(
         [conda, "search", name],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
     )
     lines = result.stdout.strip().splitlines()
     if not lines:
@@ -98,11 +112,7 @@ def current_flybase_version() -> str:
     """Current FlyBase version."""
     text = _fetch("ftp://ftp.flybase.net/releases/", list_only=True)
     pattern = re.compile(r"^(FB\d{4}_\d{2})$")
-    matches = [
-        m.group(1)
-        for line in text.splitlines()
-        if (m := pattern.match(line.strip()))
-    ]
+    matches = [m.group(1) for line in text.splitlines() if (m := pattern.match(line.strip()))]
     if not matches:
         msg = "Failed to fetch FlyBase version."
         raise RuntimeError(msg)
@@ -236,10 +246,7 @@ def current_refseq_version() -> str:
 
 def current_wormbase_version() -> str:
     """Current WormBase version."""
-    url = (
-        "ftp://ftp.wormbase.org/pub/wormbase/"
-        "releases/current-production-release/"
-    )
+    url = "ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
     text = _fetch(url, list_only=True)
     pattern = re.compile(r"(WS\d+)")
     match = pattern.search(text)

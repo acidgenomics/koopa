@@ -204,28 +204,34 @@ def _resolve_tree(
 def _handle_current_no_args(func_name: str) -> Any:
     def handler(args: list[str]) -> None:
         from koopa import current
+
         fn = getattr(current, func_name)
         print(fn())
+
     return handler
 
 
 def _handle_current_one_arg(func_name: str, arg_name: str) -> Any:
     def handler(args: list[str]) -> None:
         from koopa import current
+
         fn = getattr(current, func_name)
         for a in args:
             print(fn(a))
+
     return handler
 
 
 def _handle_current_optional_arg(func_name: str) -> Any:
     def handler(args: list[str]) -> None:
         from koopa import current
+
         fn = getattr(current, func_name)
         if args:
             print(fn(args[0]))
         else:
             print(fn())
+
     return handler
 
 
@@ -234,6 +240,7 @@ def _handle_current_optional_arg(func_name: str) -> Any:
 
 def _handle_docker_build(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app docker build")
     parser.add_argument("--local", required=True)
     parser.add_argument("--remote", required=True)
@@ -241,6 +248,7 @@ def _handle_docker_build(args: list[str]) -> None:
     parser.add_argument("--no-push", action="store_true")
     parsed = parser.parse_args(args)
     from koopa.shell.docker import build
+
     build(
         local=parsed.local,
         remote=parsed.remote,
@@ -251,6 +259,7 @@ def _handle_docker_build(args: list[str]) -> None:
 
 def _handle_docker_build_all_tags(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app docker build-all-tags",
     )
@@ -258,16 +267,19 @@ def _handle_docker_build_all_tags(args: list[str]) -> None:
     parser.add_argument("--remote", required=True)
     parsed = parser.parse_args(args)
     from koopa.shell.docker import build_all_tags
+
     build_all_tags(local=parsed.local, remote=parsed.remote)
 
 
 def _handle_docker_prune_all_images(args: list[str]) -> None:
     from koopa.shell.docker import prune_all_images
+
     prune_all_images()
 
 
 def _handle_docker_prune_old_images(args: list[str]) -> None:
     from koopa.shell.docker import prune_old_images
+
     prune_old_images()
 
 
@@ -276,11 +288,13 @@ def _handle_docker_remove(args: list[str]) -> None:
         print("Usage: koopa app docker remove <pattern>...", file=sys.stderr)
         sys.exit(1)
     from koopa.shell.docker import remove
+
     remove(*args)
 
 
 def _handle_docker_run(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app docker run")
     parser.add_argument("--arm", action="store_true")
     parser.add_argument("--x86", action="store_true")
@@ -289,6 +303,7 @@ def _handle_docker_run(args: list[str]) -> None:
     parser.add_argument("image")
     parsed = parser.parse_args(args)
     from koopa.shell.docker import run
+
     run(
         parsed.image,
         arm=parsed.arm,
@@ -309,6 +324,7 @@ def _handle_r_bioconda_check(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.r import r_bioconda_check
+
     r_bioconda_check(*args)
 
 
@@ -317,17 +333,20 @@ def _handle_r_check(args: list[str]) -> None:
         print("Usage: koopa app r check <path>", file=sys.stderr)
         sys.exit(1)
     from koopa.r import r_check
+
     r_check(args[0])
 
 
 def _handle_r_configure_environ(args: list[str]) -> None:
     from koopa.r import configure_r_environ
+
     r_home = args[0] if args else None
     configure_r_environ(r_home)
 
 
 def _handle_r_configure_java(args: list[str]) -> None:
     from koopa.r import configure_r_java
+
     configure_r_java()
 
 
@@ -339,11 +358,13 @@ def _handle_r_configure_ldpaths(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.r import r_configure_ldpaths
+
     r_configure_ldpaths(args[0])
 
 
 def _handle_r_configure_makevars(args: list[str]) -> None:
     from koopa.r import configure_r_makevars
+
     r_home = args[0] if args else None
     configure_r_makevars(r_home)
 
@@ -356,11 +377,13 @@ def _handle_r_copy_files_into_etc(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.r import r_copy_files_into_etc
+
     r_copy_files_into_etc(args[0])
 
 
 def _handle_r_gfortran_libs(args: list[str]) -> None:
     from koopa.r import r_gfortran_libs
+
     print(r_gfortran_libs())
 
 
@@ -372,18 +395,19 @@ def _handle_r_install_packages(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.r import install_packages_in_site_library
+
     install_packages_in_site_library(args)
 
 
 def _handle_r_migrate_non_base_packages(args: list[str]) -> None:
     if len(args) != 2:
         print(
-            "Usage: koopa app r migrate-non-base-packages"
-            " <from-lib> <to-lib>",
+            "Usage: koopa app r migrate-non-base-packages <from-lib> <to-lib>",
             file=sys.stderr,
         )
         sys.exit(1)
     from koopa.r import r_migrate_non_base_packages
+
     r_migrate_non_base_packages(args[0], args[1])
 
 
@@ -395,6 +419,7 @@ def _handle_r_package_version(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.r import r_package_version
+
     print(r_package_version(args[0]))
 
 
@@ -406,11 +431,13 @@ def _handle_r_paste_to_vector(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.r import r_paste_to_vector
+
     print(r_paste_to_vector(args))
 
 
 def _handle_r_remove_packages(args: list[str]) -> None:
     from koopa.r import remove_packages_in_system_library
+
     remove_packages_in_system_library()
 
 
@@ -419,27 +446,32 @@ def _handle_r_script(args: list[str]) -> None:
         print("Usage: koopa app r script <path>", file=sys.stderr)
         sys.exit(1)
     from koopa.r import r_script
+
     r_script(args[0])
 
 
 def _handle_r_shiny_run_app(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app r shiny-run-app")
     parser.add_argument("app_dir")
     parser.add_argument("--port", type=int, default=3838)
     parsed = parser.parse_args(args)
     from koopa.r import r_shiny_run_app
+
     r_shiny_run_app(parsed.app_dir, port=parsed.port)
 
 
 def _handle_r_system_packages_non_base(args: list[str]) -> None:
     from koopa.r import r_system_packages_non_base
+
     for pkg in r_system_packages_non_base():
         print(pkg)
 
 
 def _handle_r_version(args: list[str]) -> None:
     from koopa.r import r_version
+
     print(r_version())
 
 
@@ -461,7 +493,9 @@ def _handle_brew_reset_core_repo(args: list[str]) -> None:
         raise RuntimeError(msg)
     result = subprocess.run(
         [brew, "--repo", "homebrew/core"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
     )
     prefix = result.stdout.strip()
     if not os.path.isdir(prefix):
@@ -471,15 +505,19 @@ def _handle_brew_reset_core_repo(args: list[str]) -> None:
     branch = git_default_branch(prefix)
     origin = "origin"
     subprocess.run(
-        [git, "checkout", "-q", branch], cwd=prefix, check=True,
+        [git, "checkout", "-q", branch],
+        cwd=prefix,
+        check=True,
     )
     subprocess.run(
         [git, "branch", "-q", branch, "-u", f"{origin}/{branch}"],
-        cwd=prefix, check=True,
+        cwd=prefix,
+        check=True,
     )
     subprocess.run(
         [git, "reset", "-q", "--hard", f"{origin}/{branch}"],
-        cwd=prefix, check=True,
+        cwd=prefix,
+        check=True,
     )
 
 
@@ -488,30 +526,35 @@ def _handle_brew_reset_core_repo(args: list[str]) -> None:
 
 def _handle_git_pull(args: list[str]) -> None:
     from koopa.git import git_pull
+
     path = args[0] if args else "."
     git_pull(path)
 
 
 def _handle_git_push_submodules(args: list[str]) -> None:
     from koopa.git import git_push_submodules
+
     path = args[0] if args else "."
     git_push_submodules(path)
 
 
 def _handle_git_rename_master_to_main(args: list[str]) -> None:
     from koopa.git import git_rename_master_to_main
+
     path = args[0] if args else "."
     git_rename_master_to_main(path)
 
 
 def _handle_git_reset(args: list[str]) -> None:
     from koopa.git import git_reset
+
     path = args[0] if args else "."
     git_reset(path, hard=True)
 
 
 def _handle_git_reset_fork_to_upstream(args: list[str]) -> None:
     from koopa.git import git_reset_fork_to_upstream
+
     path = args[0] if args else "."
     git_reset_fork_to_upstream(path)
 
@@ -524,11 +567,13 @@ def _handle_git_rm_submodule(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.git import git_rm_submodule
+
     git_rm_submodule(args[0])
 
 
 def _handle_git_rm_untracked(args: list[str]) -> None:
     from koopa.git import git_rm_untracked
+
     path = args[0] if args else "."
     git_rm_untracked(path)
 
@@ -538,12 +583,14 @@ def _handle_git_rm_untracked(args: list[str]) -> None:
 
 def _handle_bowtie2_align_paired_end(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app bowtie2 align paired-end")
     parser.add_argument("--index-dir", required=True)
     parser.add_argument("--fastq-dir", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import bowtie2_align
+
     bowtie2_align(
         parsed.index_dir,
         os.path.join(parsed.output_dir, "aligned.sam"),
@@ -554,11 +601,13 @@ def _handle_bowtie2_align_paired_end(args: list[str]) -> None:
 
 def _handle_bowtie2_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app bowtie2 index")
     parser.add_argument("--genome-fasta-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import bowtie2_build
+
     index_prefix = os.path.join(parsed.output_dir, "bowtie2")
     os.makedirs(parsed.output_dir, exist_ok=True)
     bowtie2_build(
@@ -570,6 +619,7 @@ def _handle_bowtie2_index(args: list[str]) -> None:
 
 def _handle_hisat2_align(args: list[str], *, mode: str = "paired-end") -> None:
     import argparse
+
     prog = f"koopa app hisat2 align {mode}"
     parser = argparse.ArgumentParser(prog=prog)
     parser.add_argument("--index-dir", required=True)
@@ -584,30 +634,42 @@ def _handle_hisat2_align(args: list[str], *, mode: str = "paired-end") -> None:
     os.makedirs(parsed.output_dir, exist_ok=True)
     hisat2_args = [
         hisat2,
-        "-x", os.path.join(parsed.index_dir, "hisat2"),
-        "-S", os.path.join(parsed.output_dir, "aligned.sam"),
-        "--threads", str(os.cpu_count() or 1),
+        "-x",
+        os.path.join(parsed.index_dir, "hisat2"),
+        "-S",
+        os.path.join(parsed.output_dir, "aligned.sam"),
+        "--threads",
+        str(os.cpu_count() or 1),
     ]
     if mode == "paired-end":
-        hisat2_args.extend([
-            "-1", os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
-            "-2", os.path.join(parsed.fastq_dir, "R2.fastq.gz"),
-        ])
+        hisat2_args.extend(
+            [
+                "-1",
+                os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
+                "-2",
+                os.path.join(parsed.fastq_dir, "R2.fastq.gz"),
+            ]
+        )
     else:
-        hisat2_args.extend([
-            "-U", os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
-        ])
+        hisat2_args.extend(
+            [
+                "-U",
+                os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
+            ]
+        )
     subprocess.run(hisat2_args, check=True)
 
 
 def _handle_hisat2_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app hisat2 index")
     parser.add_argument("--genome-fasta-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--gtf-file", default="")
     parsed = parser.parse_args(args)
     from koopa.ngs import hisat2_build
+
     os.makedirs(parsed.output_dir, exist_ok=True)
     hisat2_build(
         parsed.genome_fasta_file,
@@ -618,11 +680,13 @@ def _handle_hisat2_index(args: list[str]) -> None:
 
 def _handle_kallisto_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app kallisto index")
     parser.add_argument("--transcriptome-fasta-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import kallisto_index
+
     os.makedirs(parsed.output_dir, exist_ok=True)
     kallisto_index(
         parsed.transcriptome_fasta_file,
@@ -632,6 +696,7 @@ def _handle_kallisto_index(args: list[str]) -> None:
 
 def _handle_kallisto_quant(args: list[str], *, mode: str = "paired-end") -> None:
     import argparse
+
     prog = f"koopa app kallisto quant {mode}"
     parser = argparse.ArgumentParser(prog=prog)
     parser.add_argument("--index-dir", required=True)
@@ -639,6 +704,7 @@ def _handle_kallisto_quant(args: list[str], *, mode: str = "paired-end") -> None
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import kallisto_quant
+
     index_file = os.path.join(parsed.index_dir, "kallisto.idx")
     os.makedirs(parsed.output_dir, exist_ok=True)
     r1 = os.path.join(parsed.fastq_dir, "R1.fastq.gz")
@@ -651,16 +717,19 @@ def _handle_kallisto_quant(args: list[str], *, mode: str = "paired-end") -> None
 
 def _handle_miso_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app miso index")
     parser.add_argument("--gff-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import miso_index
+
     miso_index(parsed.gff_file, parsed.output_dir)
 
 
 def _handle_rnaeditingindexer(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app rnaeditingindexer")
     parser.add_argument("--bam-dir", default="bam")
     parser.add_argument("--output-dir", default="rnaedit")
@@ -668,6 +737,7 @@ def _handle_rnaeditingindexer(args: list[str]) -> None:
     parser.add_argument("--example", action="store_true")
     parsed = parser.parse_args(args)
     from koopa.ngs import rnaeditingindexer
+
     rnaeditingindexer(
         bam_dir=parsed.bam_dir,
         output_dir=parsed.output_dir,
@@ -678,6 +748,7 @@ def _handle_rnaeditingindexer(args: list[str]) -> None:
 
 def _handle_rsem_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app rsem index")
     parser.add_argument("--genome-fasta-file", required=True)
     parser.add_argument("--output-dir", required=True)
@@ -685,6 +756,7 @@ def _handle_rsem_index(args: list[str]) -> None:
     parser.add_argument("--num-threads", type=int, default=0)
     parsed = parser.parse_args(args)
     from koopa.ngs import rsem_prepare_reference
+
     threads = parsed.num_threads or (os.cpu_count() or 1)
     os.makedirs(parsed.output_dir, exist_ok=True)
     rsem_prepare_reference(
@@ -697,12 +769,14 @@ def _handle_rsem_index(args: list[str]) -> None:
 
 def _handle_rsem_quant_bam(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app rsem quant bam")
     parser.add_argument("--bam-file", required=True)
     parser.add_argument("--index-dir", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import rsem_calculate_expression
+
     os.makedirs(parsed.output_dir, exist_ok=True)
     rsem_calculate_expression(
         parsed.bam_file,
@@ -713,11 +787,13 @@ def _handle_rsem_quant_bam(args: list[str]) -> None:
 
 def _handle_salmon_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app salmon index")
     parser.add_argument("--transcriptome-fasta-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import salmon_index
+
     salmon_index(
         parsed.transcriptome_fasta_file,
         parsed.output_dir,
@@ -727,6 +803,7 @@ def _handle_salmon_index(args: list[str]) -> None:
 
 def _handle_salmon_quant(args: list[str], *, mode: str = "paired-end") -> None:
     import argparse
+
     prog = f"koopa app salmon quant {mode}"
     parser = argparse.ArgumentParser(prog=prog)
     parser.add_argument("--index-dir", required=True)
@@ -734,6 +811,7 @@ def _handle_salmon_quant(args: list[str], *, mode: str = "paired-end") -> None:
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.ngs import salmon_quant
+
     r1 = os.path.join(parsed.fastq_dir, "R1.fastq.gz")
     if mode == "paired-end":
         r2 = os.path.join(parsed.fastq_dir, "R2.fastq.gz")
@@ -746,6 +824,7 @@ def _handle_salmon_quant(args: list[str], *, mode: str = "paired-end") -> None:
 
 def _handle_star_align(args: list[str], *, mode: str = "paired-end") -> None:
     import argparse
+
     prog = f"koopa app star align {mode}"
     parser = argparse.ArgumentParser(prog=prog)
     parser.add_argument("--index-dir", required=True)
@@ -754,6 +833,7 @@ def _handle_star_align(args: list[str], *, mode: str = "paired-end") -> None:
     parser.add_argument("--gtf-file", default="")
     parsed = parser.parse_args(args)
     from koopa.ngs import star_align
+
     os.makedirs(parsed.output_dir, exist_ok=True)
     r1 = os.path.join(parsed.fastq_dir, "R1.fastq.gz")
     r2 = os.path.join(parsed.fastq_dir, "R2.fastq.gz") if mode == "paired-end" else None
@@ -768,12 +848,14 @@ def _handle_star_align(args: list[str], *, mode: str = "paired-end") -> None:
 
 def _handle_star_index(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app star index")
     parser.add_argument("--genome-fasta-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--gtf-file", default="")
     parsed = parser.parse_args(args)
     from koopa.ngs import star_index
+
     star_index(
         parsed.genome_fasta_file,
         parsed.output_dir,
@@ -787,22 +869,26 @@ def _handle_star_index(args: list[str]) -> None:
 
 def _handle_sra_prefetch(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app sra prefetch")
     parser.add_argument("--accession-file", required=True)
     parser.add_argument("--output-dir", required=True)
     parsed = parser.parse_args(args)
     from koopa.sra import sra_prefetch
+
     sra_prefetch(parsed.accession_file, parsed.output_dir)
 
 
 def _handle_sra_fastq_dump(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app sra fastq-dump")
     parser.add_argument("--prefetch-directory", required=True)
     parser.add_argument("--fastq-directory", required=True)
     parser.add_argument("--no-compress", action="store_true")
     parsed = parser.parse_args(args)
     from koopa.sra import sra_fastq_dump
+
     sra_fastq_dump(
         parsed.prefetch_directory,
         parsed.fastq_directory,
@@ -812,6 +898,7 @@ def _handle_sra_fastq_dump(args: list[str]) -> None:
 
 def _handle_sra_download_accession_list(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app sra download-accession-list",
     )
@@ -819,11 +906,13 @@ def _handle_sra_download_accession_list(args: list[str]) -> None:
     parser.add_argument("--file", default="")
     parsed = parser.parse_args(args)
     from koopa.sra import sra_download_accession_list
+
     sra_download_accession_list(parsed.srp_id, parsed.file)
 
 
 def _handle_sra_download_run_info_table(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app sra download-run-info-table",
     )
@@ -831,6 +920,7 @@ def _handle_sra_download_run_info_table(args: list[str]) -> None:
     parser.add_argument("--file", default="")
     parsed = parser.parse_args(args)
     from koopa.sra import sra_download_run_info_table
+
     sra_download_run_info_table(parsed.srp_id, parsed.file)
 
 
@@ -839,38 +929,45 @@ def _handle_sra_download_run_info_table(args: list[str]) -> None:
 
 def _handle_brew_cleanup(args: list[str]) -> None:
     from koopa.brew import _brew
+
     _brew("cleanup", capture=False)
 
 
 def _handle_brew_dump_brewfile(args: list[str]) -> None:
     from koopa.brew import brew_dump_brewfile
+
     path = args[0] if args else "Brewfile"
     brew_dump_brewfile(path)
 
 
 def _handle_brew_outdated(args: list[str]) -> None:
     from koopa.brew import brew_outdated
+
     for pkg in brew_outdated():
         print(pkg)
 
 
 def _handle_brew_reset_permissions(args: list[str]) -> None:
     from koopa.brew import brew_reset_permissions
+
     brew_reset_permissions()
 
 
 def _handle_brew_uninstall_all_brews(args: list[str]) -> None:
     from koopa.brew import brew_uninstall_all_brews
+
     brew_uninstall_all_brews()
 
 
 def _handle_brew_upgrade_brews(args: list[str]) -> None:
     from koopa.brew import brew_upgrade_brews
+
     brew_upgrade_brews()
 
 
 def _handle_brew_version(args: list[str]) -> None:
     from koopa.brew import brew_version
+
     print(brew_version())
 
 
@@ -879,6 +976,7 @@ def _handle_brew_version(args: list[str]) -> None:
 
 def _handle_conda_create_env(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app conda create-env")
     parser.add_argument("--file", default="")
     parser.add_argument("--prefix", default="")
@@ -887,6 +985,7 @@ def _handle_conda_create_env(args: list[str]) -> None:
     parser.add_argument("packages", nargs="*")
     parsed = parser.parse_args(args)
     from koopa.conda import conda_create_env
+
     conda_create_env(
         *parsed.packages,
         prefix=parsed.prefix,
@@ -901,6 +1000,7 @@ def _handle_conda_remove_env(args: list[str]) -> None:
         print("Usage: koopa app conda remove-env <name>...", file=sys.stderr)
         sys.exit(1)
     from koopa.conda import conda_remove_env
+
     conda_remove_env(*args)
 
 
@@ -909,16 +1009,19 @@ def _handle_conda_remove_env(args: list[str]) -> None:
 
 def _handle_gpg_prompt(args: list[str]) -> None:
     from koopa.gpg import gpg_prompt
+
     gpg_prompt()
 
 
 def _handle_gpg_reload(args: list[str]) -> None:
     from koopa.gpg import gpg_reload
+
     gpg_reload()
 
 
 def _handle_gpg_restart(args: list[str]) -> None:
     from koopa.gpg import gpg_restart
+
     gpg_restart()
 
 
@@ -927,11 +1030,13 @@ def _handle_gpg_restart(args: list[str]) -> None:
 
 def _handle_ssh_generate_key(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app ssh generate-key")
     parser.add_argument("--prefix", default="")
     parser.add_argument("key_names", nargs="*", default=["id_rsa"])
     parsed = parser.parse_args(args)
     from koopa.ssh import ssh_generate_key
+
     ssh_generate_key(*parsed.key_names, prefix=parsed.prefix)
 
 
@@ -940,6 +1045,7 @@ def _handle_ssh_generate_key(args: list[str]) -> None:
 
 def _handle_aws_batch_list_jobs(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app aws batch list-jobs")
     parser.add_argument("--queue", required=True)
     parser.add_argument("--status", default="RUNNING")
@@ -947,20 +1053,25 @@ def _handle_aws_batch_list_jobs(args: list[str]) -> None:
     parsed = parser.parse_args(args)
     from koopa.aws import aws_batch_list_jobs
     import json
+
     jobs = aws_batch_list_jobs(
-        parsed.queue, status=parsed.status, profile=parsed.profile,
+        parsed.queue,
+        status=parsed.status,
+        profile=parsed.profile,
     )
     print(json.dumps(jobs, indent=2))
 
 
 def _handle_aws_ec2_list_running_instances(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app aws ec2 list-running-instances",
     )
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
     from koopa.aws import aws_ec2_list_running_instances
+
     instances = aws_ec2_list_running_instances(profile=parsed.profile)
     for inst in instances:
         parts = [inst["id"], inst["type"], inst["state"]]
@@ -973,6 +1084,7 @@ def _handle_aws_ec2_list_running_instances(args: list[str]) -> None:
 
 def _handle_aws_ecr_login_private(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app aws ecr login-private",
     )
@@ -981,6 +1093,7 @@ def _handle_aws_ecr_login_private(args: list[str]) -> None:
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
     from koopa.aws import aws_ecr_login_private
+
     aws_ecr_login_private(
         parsed.region,
         account_id=parsed.account_id,
@@ -990,17 +1103,20 @@ def _handle_aws_ecr_login_private(args: list[str]) -> None:
 
 def _handle_aws_ecr_login_public(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app aws ecr login-public",
     )
     parser.add_argument("--region", default="us-east-1")
     parsed = parser.parse_args(args)
     from koopa.aws import aws_ecr_login_public
+
     aws_ecr_login_public(parsed.region)
 
 
 def _handle_aws_s3_find(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app aws s3 find")
     parser.add_argument("--bucket", required=True)
     parser.add_argument("--prefix", default="")
@@ -1008,6 +1124,7 @@ def _handle_aws_s3_find(args: list[str]) -> None:
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
     from koopa.aws import aws_s3_find
+
     keys = aws_s3_find(
         parsed.bucket,
         prefix=parsed.prefix,
@@ -1020,6 +1137,7 @@ def _handle_aws_s3_find(args: list[str]) -> None:
 
 def _handle_aws_s3_list_large_files(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(
         prog="koopa app aws s3 list-large-files",
     )
@@ -1029,6 +1147,7 @@ def _handle_aws_s3_list_large_files(args: list[str]) -> None:
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
     from koopa.aws import aws_s3_list_large_files
+
     files = aws_s3_list_large_files(
         parsed.bucket,
         min_size_mb=parsed.min_size_mb,
@@ -1041,20 +1160,25 @@ def _handle_aws_s3_list_large_files(args: list[str]) -> None:
 
 def _handle_aws_s3_ls(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app aws s3 ls")
     parser.add_argument("path")
     parser.add_argument("--recursive", action="store_true")
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
     from koopa.aws import aws_s3_ls
+
     output = aws_s3_ls(
-        parsed.path, recursive=parsed.recursive, profile=parsed.profile,
+        parsed.path,
+        recursive=parsed.recursive,
+        profile=parsed.profile,
     )
     print(output, end="")
 
 
 def _handle_aws_s3_sync(args: list[str]) -> None:
     import argparse
+
     parser = argparse.ArgumentParser(prog="koopa app aws s3 sync")
     parser.add_argument("source")
     parser.add_argument("target")
@@ -1065,6 +1189,7 @@ def _handle_aws_s3_sync(args: list[str]) -> None:
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
     from koopa.aws import aws_s3_sync
+
     aws_s3_sync(
         parsed.source,
         parsed.target,
@@ -1270,18 +1395,22 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "bowtie2-align-paired-end": _handle_bowtie2_align_paired_end,
     "bowtie2-index": _handle_bowtie2_index,
     "hisat2-align-paired-end": lambda a: _handle_hisat2_align(
-        a, mode="paired-end",
+        a,
+        mode="paired-end",
     ),
     "hisat2-align-single-end": lambda a: _handle_hisat2_align(
-        a, mode="single-end",
+        a,
+        mode="single-end",
     ),
     "hisat2-index": _handle_hisat2_index,
     "kallisto-index": _handle_kallisto_index,
     "kallisto-quant-paired-end": lambda a: _handle_kallisto_quant(
-        a, mode="paired-end",
+        a,
+        mode="paired-end",
     ),
     "kallisto-quant-single-end": lambda a: _handle_kallisto_quant(
-        a, mode="single-end",
+        a,
+        mode="single-end",
     ),
     "miso-index": _handle_miso_index,
     "rnaeditingindexer": _handle_rnaeditingindexer,
@@ -1290,16 +1419,20 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "salmon-index": _handle_salmon_index,
     "salmon-quant-bam": lambda a: _handle_salmon_quant(a, mode="bam"),
     "salmon-quant-paired-end": lambda a: _handle_salmon_quant(
-        a, mode="paired-end",
+        a,
+        mode="paired-end",
     ),
     "salmon-quant-single-end": lambda a: _handle_salmon_quant(
-        a, mode="single-end",
+        a,
+        mode="single-end",
     ),
     "star-align-paired-end": lambda a: _handle_star_align(
-        a, mode="paired-end",
+        a,
+        mode="paired-end",
     ),
     "star-align-single-end": lambda a: _handle_star_align(
-        a, mode="single-end",
+        a,
+        mode="single-end",
     ),
     "star-index": _handle_star_index,
     # brew
@@ -1322,7 +1455,8 @@ _PYTHON_HANDLERS: dict[str, Any] = {
         "current_bioconductor_version",
     ),
     "current-conda-package-version": _handle_current_one_arg(
-        "current_conda_package_version", "name",
+        "current_conda_package_version",
+        "name",
     ),
     "current-ensembl-version": _handle_current_no_args(
         "current_ensembl_version",
@@ -1337,13 +1471,16 @@ _PYTHON_HANDLERS: dict[str, Any] = {
         "current_git_version",
     ),
     "current-github-release-version": _handle_current_one_arg(
-        "current_github_release_version", "repo",
+        "current_github_release_version",
+        "repo",
     ),
     "current-github-tag-version": _handle_current_one_arg(
-        "current_github_tag_version", "repo",
+        "current_github_tag_version",
+        "repo",
     ),
     "current-gnu-ftp-version": _handle_current_one_arg(
-        "current_gnu_ftp_version", "name",
+        "current_gnu_ftp_version",
+        "name",
     ),
     "current-google-cloud-sdk-version": _handle_current_no_args(
         "current_google_cloud_sdk_version",
@@ -1352,7 +1489,8 @@ _PYTHON_HANDLERS: dict[str, Any] = {
         "current_latch_version",
     ),
     "current-pypi-package-version": _handle_current_one_arg(
-        "current_pypi_package_version", "name",
+        "current_pypi_package_version",
+        "name",
     ),
     "current-python-version": _handle_current_no_args(
         "current_python_version",

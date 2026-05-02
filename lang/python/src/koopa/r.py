@@ -39,7 +39,9 @@ def r_prefix(r_cmd: str | None = None) -> str:
             rscript = "Rscript"
         result = subprocess.run(
             [rscript, "-e", "cat(R.home())"],
-            capture_output=True, text=True, check=True,
+            capture_output=True,
+            text=True,
+            check=True,
         )
         return result.stdout.strip()
     result = _r_eval("cat(R.home())")
@@ -188,12 +190,11 @@ def r_bioconda_check(*packages: str) -> None:
             os.makedirs(work_dir, exist_ok=True)
             conda_prefix = os.path.join(work_dir, "conda")
             tarball_url = (
-                f"https://github.com/acidgenomics/{pkg2}/"
-                "archive/refs/heads/develop.tar.gz"
+                f"https://github.com/acidgenomics/{pkg2}/archive/refs/heads/develop.tar.gz"
             )
             rscript_path = os.path.join(work_dir, "check.R")
             rscript_content = (
-                'pkgbuild::check_build_tools(debug = TRUE)\n'
+                "pkgbuild::check_build_tools(debug = TRUE)\n"
                 "install.packages(\n"
                 '    pkgs = c("AcidDevTools", "AcidTest"),\n'
                 "    repos = c(\n"
@@ -211,24 +212,31 @@ def r_bioconda_check(*packages: str) -> None:
                 msg = "conda is required."
                 raise RuntimeError(msg)
             conda_deps = [
-                "r-biocmanager", "r-desc", "r-goalie", "r-knitr",
-                "r-rcmdcheck", "r-rmarkdown", "r-testthat",
-                "r-urlchecker", pkg2,
+                "r-biocmanager",
+                "r-desc",
+                "r-goalie",
+                "r-knitr",
+                "r-rcmdcheck",
+                "r-rmarkdown",
+                "r-testthat",
+                "r-urlchecker",
+                pkg2,
             ]
             subprocess.run(
-                [conda, "create", "--yes", "--prefix", conda_prefix,
-                 *conda_deps],
+                [conda, "create", "--yes", "--prefix", conda_prefix, *conda_deps],
                 check=True,
             )
             tarball_file = os.path.join(work_dir, "develop.tar.gz")
             from koopa.download import download
+
             download(tarball_url, tarball_file)
             subprocess.run(
                 ["tar", "xzf", tarball_file, "-C", work_dir],
                 check=True,
             )
             src_dirs = [
-                d for d in os.listdir(work_dir)
+                d
+                for d in os.listdir(work_dir)
                 if os.path.isdir(os.path.join(work_dir, d))
                 and d not in ("conda",)
                 and d.startswith(pkg2)
@@ -257,7 +265,9 @@ def r_configure_ldpaths(r_cmd: str) -> None:
     elif is_macos():
         result = subprocess.run(
             ["/usr/libexec/java_home"],
-            capture_output=True, text=True, check=True,
+            capture_output=True,
+            text=True,
+            check=True,
         )
         java_home = result.stdout.strip()
     else:
@@ -270,26 +280,56 @@ def r_configure_ldpaths(r_cmd: str) -> None:
     lines.append(f": ${{JAVA_HOME={java_home}}}")
     if is_macos():
         lines.append(
-            ": ${R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/"
-            "libexec/Contents/Home/lib/server}",
+            ": ${R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/libexec/Contents/Home/lib/server}",
         )
     else:
         lines.append(
-            ": ${R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/"
-            "libexec/lib/server}",
+            ": ${R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/libexec/lib/server}",
         )
     ld_lib: list[str] = ["${R_HOME}/lib"]
     if use_apps:
         app_keys = [
-            "cairo", "curl", "fontconfig", "freetype", "fribidi",
-            "gdal", "geos", "glib", "harfbuzz", "hdf5", "icu4c",
-            "imagemagick", "libffi", "libgit2", "libiconv",
-            "libjpeg-turbo", "libpng", "libssh2", "libtiff", "libxml2",
-            "openssl", "pcre", "pcre2", "pixman", "proj", "readline",
-            "sqlite", "xorg-libice", "xorg-libpthread-stubs",
-            "xorg-libsm", "xorg-libx11", "xorg-libxau", "xorg-libxcb",
-            "xorg-libxdmcp", "xorg-libxext", "xorg-libxrandr",
-            "xorg-libxrender", "xorg-libxt", "xz", "zlib", "zstd",
+            "cairo",
+            "curl",
+            "fontconfig",
+            "freetype",
+            "fribidi",
+            "gdal",
+            "geos",
+            "glib",
+            "harfbuzz",
+            "hdf5",
+            "icu4c",
+            "imagemagick",
+            "libffi",
+            "libgit2",
+            "libiconv",
+            "libjpeg-turbo",
+            "libpng",
+            "libssh2",
+            "libtiff",
+            "libxml2",
+            "openssl",
+            "pcre",
+            "pcre2",
+            "pixman",
+            "proj",
+            "readline",
+            "sqlite",
+            "xorg-libice",
+            "xorg-libpthread-stubs",
+            "xorg-libsm",
+            "xorg-libx11",
+            "xorg-libxau",
+            "xorg-libxcb",
+            "xorg-libxdmcp",
+            "xorg-libxext",
+            "xorg-libxrandr",
+            "xorg-libxrender",
+            "xorg-libxt",
+            "xz",
+            "zlib",
+            "zstd",
         ]
         if not is_macos():
             app_keys.insert(0, "bzip2")
@@ -321,15 +361,20 @@ def r_configure_ldpaths(r_cmd: str) -> None:
     if is_system:
         if not os.path.isfile(ldpaths_bak):
             subprocess.run(
-                ["sudo", "cp", ldpaths_file, ldpaths_bak], check=True,
+                ["sudo", "cp", ldpaths_file, ldpaths_bak],
+                check=True,
             )
         subprocess.run(["sudo", "rm", "-f", ldpaths_file], check=True)
         subprocess.run(
             ["sudo", "tee", ldpaths_file],
-            input=content, text=True, check=True, capture_output=True,
+            input=content,
+            text=True,
+            check=True,
+            capture_output=True,
         )
         subprocess.run(
-            ["sudo", "chmod", "0644", ldpaths_file], check=True,
+            ["sudo", "chmod", "0644", ldpaths_file],
+            check=True,
         )
     else:
         if not os.path.isfile(ldpaths_bak):

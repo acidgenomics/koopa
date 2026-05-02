@@ -533,9 +533,12 @@ def miso_index(
             subprocess.run(
                 [
                     exon_utils,
-                    "--get-const-exons", gff_file,
-                    "--min-exon-size", str(min_exon_size),
-                    "--output-dir", tmp_exons_dir,
+                    "--get-const-exons",
+                    gff_file,
+                    "--min-exon-size",
+                    str(min_exon_size),
+                    "--output-dir",
+                    tmp_exons_dir,
                 ],
                 env=env,
                 stdout=log,
@@ -584,10 +587,7 @@ def rnaeditingindexer(
     mnt_output_dir = "/mnt/output"
     run_args: list[str] = []
     if example:
-        bam_suffix = (
-            "_sampled_with_0.1.Aligned.sortedByCoord.out."
-            "bam.AluChr1Only.bam"
-        )
+        bam_suffix = "_sampled_with_0.1.Aligned.sortedByCoord.out.bam.AluChr1Only.bam"
         mnt_bam_dir = "/bin/AEI/RNAEditingIndexer/TestResources/BAMs"
     else:
         if not os.path.isdir(bam_dir):
@@ -595,23 +595,35 @@ def rnaeditingindexer(
             raise FileNotFoundError(msg)
         bam_dir = os.path.realpath(bam_dir)
         os.makedirs(output_dir, exist_ok=True)
-        run_args.extend([
-            "-v", f"{bam_dir}:{mnt_bam_dir}:ro",
-            "-v", f"{output_dir}:{mnt_output_dir}:rw",
-        ])
+        run_args.extend(
+            [
+                "-v",
+                f"{bam_dir}:{mnt_bam_dir}:ro",
+                "-v",
+                f"{output_dir}:{mnt_output_dir}:rw",
+            ]
+        )
     run_args.append(image)
     subprocess.run(
         [
-            docker, "run", *run_args,
+            docker,
+            "run",
+            *run_args,
             "RNAEditingIndex",
-            "--genome", genome,
+            "--genome",
+            genome,
             "--keep_cmpileup",
             "--verbose",
-            "-d", mnt_bam_dir,
-            "-f", bam_suffix,
-            "-l", f"{mnt_output_dir}/logs",
-            "-o", f"{mnt_output_dir}/cmpileups",
-            "-os", f"{mnt_output_dir}/summary",
+            "-d",
+            mnt_bam_dir,
+            "-f",
+            bam_suffix,
+            "-l",
+            f"{mnt_output_dir}/logs",
+            "-o",
+            f"{mnt_output_dir}/cmpileups",
+            "-os",
+            f"{mnt_output_dir}/summary",
         ],
         check=True,
     )

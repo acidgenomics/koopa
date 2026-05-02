@@ -893,12 +893,14 @@ def install_ruby_package(
         ruby_bin = os.path.join(os.path.realpath(ruby_opt), "bin")
     else:
         ruby_bin = None
+
     def _find(cmd: str) -> str | None:
         if ruby_bin:
             candidate = os.path.join(ruby_bin, cmd)
             if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
                 return candidate
         return shutil.which(cmd)
+
     bundle = _find("bundle")
     ruby = _find("ruby")
     if bundle is None or ruby is None:
