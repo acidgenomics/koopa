@@ -35,7 +35,7 @@ def _load_history() -> dict[str, float]:
     try:
         with open(path) as f:
             return json.load(f)
-    except (json.JSONDecodeError, OSError):
+    except json.JSONDecodeError, OSError:
         return {}
 
 
@@ -151,9 +151,7 @@ class BuildProgress:
             desc=self._name,
             unit="s",
             bar_format=(
-                "{desc}: {elapsed} elapsed"
-                " | {bar} |"
-                " ~{remaining} remaining"
+                "{desc}: {elapsed} elapsed | {bar} | ~{remaining} remaining"
                 if total
                 else "{desc}: {elapsed} elapsed"
             ),
@@ -238,10 +236,7 @@ class BuildProgress:
                 desc=self._name,
                 unit="step",
                 bar_format=(
-                    "{desc}: [{n_fmt}/{total_fmt}]"
-                    " {bar}"
-                    " {percentage:3.0f}%"
-                    " | {elapsed} elapsed"
+                    "{desc}: [{n_fmt}/{total_fmt}] {bar} {percentage:3.0f}% | {elapsed} elapsed"
                 ),
                 file=sys.stderr,
                 dynamic_ncols=True,

@@ -201,9 +201,7 @@ def _extract_handler_key_to_func(filepath: str) -> dict[str, str]:
         tree = ast.parse(f.read())
     result: dict[str, str] = {}
     for node in ast.walk(tree):
-        is_assign = isinstance(node, ast.AnnAssign) and isinstance(
-            node.target, ast.Name
-        )
+        is_assign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name)
         is_plain = isinstance(node, ast.Assign)
         target_name = ""
         if is_assign:
@@ -258,9 +256,7 @@ def _build_flag_map(
                 path_str = "app/" + "/".join(path)
                 result[path_str] = ["--help", *flags]
         elif isinstance(value, dict):
-            result.update(
-                _build_flag_map(value, key_to_func, handler_flags, prefix=path)
-            )
+            result.update(_build_flag_map(value, key_to_func, handler_flags, prefix=path))
     return result
 
 
@@ -296,26 +292,18 @@ def _emit_platform_block(
         lines.extend(_emit_args_array(macos, f"{indent}{_I}"))
         lines.append(f"{indent}fi")
     if debian_or_fedora:
-        lines.append(
-            f"{indent}if grep -q 'debian' /etc/os-release 2>/dev/null || \\"
-        )
-        lines.append(
-            f"{indent}   grep -q 'fedora' /etc/os-release 2>/dev/null"
-        )
+        lines.append(f"{indent}if grep -q 'debian' /etc/os-release 2>/dev/null || \\")
+        lines.append(f"{indent}   grep -q 'fedora' /etc/os-release 2>/dev/null")
         lines.append(f"{indent}then")
         lines.extend(_emit_args_array(debian_or_fedora, f"{indent}{_I}"))
         lines.append(f"{indent}fi")
     if debian:
-        lines.append(
-            f"{indent}if grep -q 'debian' /etc/os-release 2>/dev/null"
-        )
+        lines.append(f"{indent}if grep -q 'debian' /etc/os-release 2>/dev/null")
         lines.append(f"{indent}then")
         lines.extend(_emit_args_array(debian, f"{indent}{_I}"))
         lines.append(f"{indent}fi")
     if fedora:
-        lines.append(
-            f"{indent}if grep -q 'fedora' /etc/os-release 2>/dev/null"
-        )
+        lines.append(f"{indent}if grep -q 'fedora' /etc/os-release 2>/dev/null")
         lines.append(f"{indent}then")
         lines.extend(_emit_args_array(fedora, f"{indent}{_I}"))
         lines.append(f"{indent}fi")
@@ -397,9 +385,7 @@ def generate_completion(*, write: bool = False) -> str:
     """Generate the complete ``koopa.sh`` bash completion file."""
     from koopa.prefix import koopa_prefix
 
-    src_dir = os.path.join(
-        koopa_prefix(), "lang", "python", "src", "koopa"
-    )
+    src_dir = os.path.join(koopa_prefix(), "lang", "python", "src", "koopa")
     cli_app_path = os.path.join(src_dir, "cli_app.py")
     cli_develop_path = os.path.join(src_dir, "cli_develop.py")
 
@@ -766,12 +752,8 @@ def generate_completion(*, write: bool = False) -> str:
     lines.append(f"{_I}fi")
 
     # -- Footer ---------------------------------------------------------------
-    lines.append(
-        "    # Quoting inside the array doesn't work for Bash, but does for Zsh."
-    )
-    lines.append(
-        '    COMPREPLY=($(compgen -W "${args[*]}" -- "${COMP_WORDS[COMP_CWORD]}"))'
-    )
+    lines.append("    # Quoting inside the array doesn't work for Bash, but does for Zsh.")
+    lines.append('    COMPREPLY=($(compgen -W "${args[*]}" -- "${COMP_WORDS[COMP_CWORD]}"))')
     lines.append(f"{_I}return 0")
     lines.append("}")
     lines.append("")
@@ -780,9 +762,7 @@ def generate_completion(*, write: bool = False) -> str:
 
     content = "\n".join(lines)
     if write:
-        output_path = os.path.join(
-            koopa_prefix(), "etc", "completion", "koopa.sh"
-        )
+        output_path = os.path.join(koopa_prefix(), "etc", "completion", "koopa.sh")
         with open(output_path, "w") as f:
             f.write(content)
     return content

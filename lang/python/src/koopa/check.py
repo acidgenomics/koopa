@@ -13,9 +13,7 @@ from koopa.os import koopa_opt_prefix
 from koopa.prefix import bootstrap_prefix, koopa_prefix
 
 
-def _iter_installed_app_issues() -> (
-    list[tuple[str, str, bool]]
-):
+def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
     """Return ``(app_name, reason, actionable)`` for each installed app issue.
 
     *actionable* is True when the issue can be fixed by reinstalling the app
@@ -58,20 +56,12 @@ def _iter_installed_app_issues() -> (
 
 def outdated_apps() -> list[str]:
     """Return names of installed apps that need updating."""
-    return [
-        name
-        for name, _reason, actionable in _iter_installed_app_issues()
-        if actionable
-    ]
+    return [name for name, _reason, actionable in _iter_installed_app_issues() if actionable]
 
 
 def unsupported_apps() -> list[str]:
     """Return names of installed apps no longer in app.json or marked removed."""
-    return [
-        name
-        for name, _reason, actionable in _iter_installed_app_issues()
-        if not actionable
-    ]
+    return [name for name, _reason, actionable in _iter_installed_app_issues() if not actionable]
 
 
 def check_installed_apps() -> bool:
@@ -118,9 +108,7 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
 
 def broken_app_installs() -> list[str]:
     """Return names of apps with broken or incomplete installs."""
-    return list(dict.fromkeys(
-        name for name, _reason in _iter_broken_app_installs()
-    ))
+    return list(dict.fromkeys(name for name, _reason in _iter_broken_app_installs()))
 
 
 def check_broken_app_installs() -> bool:
