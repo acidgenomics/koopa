@@ -472,27 +472,29 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         os.makedirs(config.prefix, exist_ok=True)
     # -- Dispatch to installer ------------------------------------------------
     from koopa.installers import get_python_installer, has_python_installer
+    from koopa.progress import BuildProgress
 
     orig_cwd = os.getcwd()
     tmp_dir = tempfile.mkdtemp(prefix="koopa-install-")
     os.chdir(tmp_dir)
     try:
-        if config.binary:
-            if config.mode != "shared" or not config.prefix:
-                msg = "Binary install requires shared mode and a prefix."
-                raise RuntimeError(msg)
-            install_app_from_binary_package(config.prefix)
-        elif has_python_installer(config.name, config.platform, config.mode):
-            installer_fn = get_python_installer(config.name, config.platform, config.mode)
-            installer_fn(
-                name=config.name,
-                version=config.version,
-                prefix=config.prefix,
-                passthrough_args=config.passthrough_args,
-            )
-        else:
-            msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
-            raise FileNotFoundError(msg)
+        with BuildProgress(config.name, quiet=config.quiet) as progress:
+            if config.binary:
+                if config.mode != "shared" or not config.prefix:
+                    msg = "Binary install requires shared mode and a prefix."
+                    raise RuntimeError(msg)
+                install_app_from_binary_package(config.prefix)
+            elif has_python_installer(config.name, config.platform, config.mode):
+                installer_fn = get_python_installer(config.name, config.platform, config.mode)
+                installer_fn(
+                    name=config.name,
+                    version=config.version,
+                    prefix=config.prefix,
+                    passthrough_args=config.passthrough_args,
+                )
+            else:
+                msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
+                raise FileNotFoundError(msg)
     except Exception:
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
@@ -530,14 +532,16 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if config.update_ldconfig:
             _run("ldconfig", sudo=True, check=False)
     if not config.quiet:
+        duration = progress.elapsed_formatted
         if config.prefix:
             print(
-                f"Successfully installed '{config.name}' at '{config.prefix}'.",
+                f"Successfully installed '{config.name}'"
+                f" at '{config.prefix}' in {duration}.",
                 file=sys.stderr,
             )
         else:
             print(
-                f"Successfully installed '{config.name}'.",
+                f"Successfully installed '{config.name}' in {duration}.",
                 file=sys.stderr,
             )
 
