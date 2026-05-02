@@ -465,8 +465,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     file=sys.stderr,
                 )
             for dep in deps:
-                dep_prefix = os.path.join(app_dir, dep)
-                if os.path.isdir(dep_prefix):
+                dep_opt = os.path.join(_opt_prefix(), dep)
+                if os.path.exists(dep_opt):
                     continue
                 dep_config = InstallConfig(name=dep)
                 if config.bootstrap:
@@ -489,22 +489,27 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     # -- Dispatch to installer ------------------------------------------------
     from koopa.installers import get_python_installer, has_python_installer  # noqa: PLC0415
 
-    if config.binary:
-        if config.mode != "shared" or not config.prefix:
-            msg = "Binary install requires shared mode and a prefix."
-            raise RuntimeError(msg)
-        install_app_from_binary_package(config.prefix)
-    elif has_python_installer(config.name, config.platform, config.mode):
-        installer_fn = get_python_installer(config.name, config.platform, config.mode)
-        installer_fn(
-            name=config.name,
-            version=config.version,
-            prefix=config.prefix,
-            passthrough_args=config.passthrough_args,
-        )
-    else:
-        msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
-        raise FileNotFoundError(msg)
+    try:
+        if config.binary:
+            if config.mode != "shared" or not config.prefix:
+                msg = "Binary install requires shared mode and a prefix."
+                raise RuntimeError(msg)
+            install_app_from_binary_package(config.prefix)
+        elif has_python_installer(config.name, config.platform, config.mode):
+            installer_fn = get_python_installer(config.name, config.platform, config.mode)
+            installer_fn(
+                name=config.name,
+                version=config.version,
+                prefix=config.prefix,
+                passthrough_args=config.passthrough_args,
+            )
+        else:
+            msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
+            raise FileNotFoundError(msg)
+    except Exception:
+        if config.prefix and os.path.isdir(config.prefix):
+            shutil.rmtree(config.prefix, ignore_errors=True)
+        raise
     # -- Post-install: linking ------------------------------------------------
     if config.mode == "shared":
         if config.link_in_opt:
@@ -877,8 +882,19 @@ def install_ruby_package(
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if jobs is None:
         jobs = _cpu_count()
-    bundle = shutil.which("bundle")
-    ruby = shutil.which("ruby")
+    ruby_opt = os.path.join(_opt_prefix(), "ruby")
+    if os.path.isdir(ruby_opt):
+        ruby_bin = os.path.join(os.path.realpath(ruby_opt), "bin")
+    else:
+        ruby_bin = None
+    def _find(cmd: str) -> str | None:
+        if ruby_bin:
+            candidate = os.path.join(ruby_bin, cmd)
+            if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+                return candidate
+        return shutil.which(cmd)
+    bundle = _find("bundle")
+    ruby = _find("ruby")
     if bundle is None or ruby is None:
         msg = "bundle and ruby are required."
         raise FileNotFoundError(msg)
