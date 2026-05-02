@@ -123,7 +123,12 @@ _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 
 
-def _http_get_json(url: str, *, github: bool = False, timeout: int = 15) -> Any:
+def _http_get_json(
+    url: str,
+    *,
+    github: bool = False,
+    timeout: int = 15,
+) -> Any:  # noqa: ANN401
     limiter = _rate_github if github else _rate_default
     limiter.wait()
     req = urllib.request.Request(url)

@@ -16,7 +16,6 @@ import os
 from datetime import date
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # Static data: commands that cannot be introspected from Python dispatch
 # tables.  Each entry is (name, platform) where platform is None (all),
@@ -202,7 +201,7 @@ def _extract_handler_key_to_func(filepath: str) -> dict[str, str]:
     with open(filepath) as f:
         tree = ast.parse(f.read())
     result: dict[str, str] = {}
-    _TARGET_NAMES = ("_PYTHON_HANDLERS", "_DEVELOP_HANDLERS")
+    _target_names = ("_PYTHON_HANDLERS", "_DEVELOP_HANDLERS")
     for node in ast.walk(tree):
         target_name = ""
         value: ast.expr | None = None
@@ -214,7 +213,7 @@ def _extract_handler_key_to_func(filepath: str) -> dict[str, str]:
                 if isinstance(t, ast.Name):
                     target_name = t.id
             value = node.value
-        if target_name not in _TARGET_NAMES or not isinstance(value, ast.Dict):
+        if target_name not in _target_names or not isinstance(value, ast.Dict):
             continue
         for key_node, val_node in zip(value.keys, value.values, strict=True):
             if not isinstance(key_node, ast.Constant) or not isinstance(key_node.value, str):

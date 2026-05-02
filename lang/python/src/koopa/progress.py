@@ -176,7 +176,8 @@ class BuildProgress:
             elapsed_int = int(self.elapsed)
             delta = elapsed_int - last_n
             if delta > 0 and bar is not None:
-                bar.update(delta)                last_n = elapsed_int
+                bar.update(delta)
+                last_n = elapsed_int
 
     def _stop_tqdm(self) -> None:
         bar = self._tqdm_bar
@@ -185,7 +186,9 @@ class BuildProgress:
             current = getattr(bar, "n", 0)
             delta = elapsed_int - current
             if delta > 0:
-                bar.update(delta)            bar.close()        self._tqdm_bar = None
+                bar.update(delta)
+            bar.close()
+        self._tqdm_bar = None
 
     # -- fallback spinner display ---------------------------------------------
 
@@ -253,14 +256,18 @@ class BuildProgress:
         if bar is None:
             return
         if getattr(bar, "total", None) != total:
-            bar.total = total            bar.refresh()        delta = current - getattr(bar, "n", 0)
+            bar.total = total
+            bar.refresh()
+        delta = current - getattr(bar, "n", 0)
         if delta > 0:
             bar.update(delta)
+
     def _finish_step_mode(self) -> None:
         """Close the step-mode progress bar."""
         bar = self._step_bar
         if bar is not None:
-            bar.close()        self._step_bar = None
+            bar.close()
+        self._step_bar = None
         self._in_step_mode = False
 
     # -- history --------------------------------------------------------------

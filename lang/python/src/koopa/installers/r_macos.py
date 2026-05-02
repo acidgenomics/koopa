@@ -37,6 +37,7 @@ def main(
     ]
     backup_dir = ""
     backup_site_library_src = ""
+    site_library = ""
     for candidate in r_prefix_candidates:
         sl = os.path.join(candidate, "site-library")
         if os.path.isdir(sl):
