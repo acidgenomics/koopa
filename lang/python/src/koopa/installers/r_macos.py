@@ -102,7 +102,6 @@ def main(
             ["koopa", "macos", "install-system", "r-xcode-openmp"],
             check=True,
         )
-    subprocess.run(
-        ["koopa", "configure", "r", r_bin],
-        check=True,
-    )
+    from koopa.configure import ConfigureConfig, configure_app
+
+    configure_app(ConfigureConfig(name="r", mode="system"))
