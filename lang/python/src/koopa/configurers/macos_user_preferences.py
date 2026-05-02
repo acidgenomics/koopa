@@ -1040,7 +1040,10 @@ def main(
             check=False,
         )
     # Show ~/Library folder.
-    subprocess.run([chflags, "nohidden", os.path.join(home, "Library")])
+    subprocess.run(
+        [chflags, "nohidden", os.path.join(home, "Library")],
+        check=False,
+    )
     # Kill affected apps.
     for app_name in ("Dock", "Finder", "SystemUIServer", "cfprefsd"):
         subprocess.run(

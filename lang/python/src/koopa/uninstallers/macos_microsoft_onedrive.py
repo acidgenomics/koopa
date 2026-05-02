@@ -25,18 +25,15 @@ def main(
     user_paths = [
         os.path.join(
             home,
-            "Library/Containers/"
-            "com.microsoft.OneDrive-mac.FinderSync",
+            "Library/Containers/com.microsoft.OneDrive-mac.FinderSync",
         ),
         os.path.join(
             home,
-            "Library/Application Scripts/"
-            "com.microsoft.OneDrive-mac.FinderSync",
+            "Library/Application Scripts/com.microsoft.OneDrive-mac.FinderSync",
         ),
         os.path.join(
             home,
-            "Library/Group Containers/"
-            "UBF8T346G9.OneDriveSyncClientSuite",
+            "Library/Group Containers/UBF8T346G9.OneDriveSyncClientSuite",
         ),
     ]
     for path in user_paths:

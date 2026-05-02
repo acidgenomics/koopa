@@ -2078,6 +2078,22 @@
     ],
     "version": "0.192"
   },
+  "elvish": {
+    "bin": [
+      "elvish"
+    ],
+    "build_dependencies": [
+      "go"
+    ],
+    "date": "2026-04-13",
+    "default": false,
+    "prune": true,
+    "url": [
+      "https://elv.sh/",
+      "https://github.com/elves/elvish/"
+    ],
+    "version": "0.21.0"
+  },
   "emacs": {
     "bin": [
       "ebrowse",
@@ -6438,6 +6454,18 @@
       "https://pypi.org/project/poetry/"
     ],
     "version": "2.3.4"
+  },
+  "powershell": {
+    "bin": [
+      "pwsh"
+    ],
+    "date": "2026-04-16",
+    "default": false,
+    "prune": true,
+    "url": [
+      "https://github.com/PowerShell/PowerShell/"
+    ],
+    "version": "7.5.1"
   },
   "postgresql": {
     "bin": [
