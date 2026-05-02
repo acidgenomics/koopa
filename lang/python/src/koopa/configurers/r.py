@@ -22,9 +22,7 @@ def main(
     This configurer delegates to the Bash implementation because it calls
     many R-specific Bash helper functions that haven't been ported yet.
     """
-    script = os.path.join(
-        bash_prefix(), "include", "configure", "common", "shared", "r.sh"
-    )
+    script = os.path.join(bash_prefix(), "include", "configure", "common", "shared", "r.sh")
     if not os.path.isfile(script):
         msg = "R configure script not found."
         raise FileNotFoundError(msg)
