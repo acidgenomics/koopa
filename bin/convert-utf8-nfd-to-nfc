@@ -1,4 +1,5 @@
 #!/bin/sh
 set -eu
-. "$(dirname "$0")/../lang/sh/include/bin-helper.sh"
+_s="$0";while [ -L "$_s" ];do _t="$(readlink "$_s")";case "$_t" in /*)_s="$_t";;*)_s="$(dirname "$_s")/$_t";;esac;done
+. "$(dirname "$_s")/../lang/sh/include/bin-helper.sh"
 _koopa_exec_python "$@"
