@@ -311,9 +311,31 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
         uninstall_app(config)
 
 
+def _configure_user_dotfiles() -> None:
+    """Run dotfiles configurer if dotfiles and chezmoi are available."""
+    import shutil
+
+    from koopa.prefix import opt_prefix
+
+    dotfiles_dir = os.path.join(opt_prefix(), "dotfiles")
+    if not os.path.isdir(dotfiles_dir):
+        return
+    if shutil.which("chezmoi") is None:
+        return
+    from koopa.alert import warn
+    from koopa.configure import ConfigureConfig, configure_app
+
+    try:
+        config = ConfigureConfig(name="dotfiles", mode="user")
+        configure_app(config)
+    except Exception as exc:
+        warn(f"Dotfiles configuration failed: {exc}")
+
+
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     from koopa.install import (
+        fetch_user_repos,
         install_app,
         remove_unsupported_apps,
         update_bootstrap,
@@ -334,6 +356,8 @@ def _handle_update(args: argparse.Namespace) -> None:
         remove_unsupported_apps(verbose=args.verbose)
         update_stale_apps(verbose=args.verbose)
         update_user_apps(verbose=args.verbose)
+        fetch_user_repos()
+        _configure_user_dotfiles()
         prune_broken_symlinks()
         try:
             prune_apps()

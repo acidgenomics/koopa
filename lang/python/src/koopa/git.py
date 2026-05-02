@@ -58,12 +58,20 @@ def git_checkout(path: str = ".", *, ref: str = "HEAD") -> None:
     _git("checkout", ref, cwd=path, capture=False)
 
 
-def git_pull(path: str = ".", *, rebase: bool = False) -> None:
+def git_pull(
+    path: str = ".",
+    *,
+    rebase: bool = False,
+    capture: bool = False,
+) -> subprocess.CompletedProcess | None:
     """Pull latest changes."""
     args = ["pull"]
     if rebase:
         args.append("--rebase")
-    _git(*args, cwd=path, capture=False)
+    result = _git(*args, cwd=path, capture=capture)
+    if capture:
+        return result
+    return None
 
 
 def git_branch(path: str = ".") -> str:

@@ -3652,6 +3652,7 @@
     "version": "2.10"
   },
   "m4": {
+    "bin": ["m4"],
     "build_dependencies": ["xz"],
     "date": "2026-05-02",
     "default": false,
