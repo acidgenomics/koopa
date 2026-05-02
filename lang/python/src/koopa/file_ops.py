@@ -292,6 +292,17 @@ def line_count(path: str) -> int:
         return sum(1 for _ in f)
 
 
+def delete_named_subdirs(dir_path: str, name: str) -> list[str]:
+    """Find and delete subdirectories with a given name."""
+    deleted = []
+    for root, dirs, _ in os.walk(dir_path, topdown=False):
+        if name in dirs:
+            full = os.path.join(root, name)
+            shutil.rmtree(full)
+            deleted.append(full)
+    return deleted
+
+
 def find_large_files(dir_path: str, min_size_mb: float = 100) -> list[tuple[str, float]]:
     """Find files larger than a threshold."""
     large = []

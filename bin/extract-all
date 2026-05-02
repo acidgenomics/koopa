@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-# shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../lang/bash/include/header.sh"
-
-_koopa_extract_all "$@"
+#!/bin/sh
+set -eu
+. "$(dirname "$0")/../lang/sh/include/bin-helper.sh"
+_koopa_exec_python "$@"

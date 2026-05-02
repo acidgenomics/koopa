@@ -10,6 +10,7 @@ description = "Shell bootloader for data science."
 keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
 requires-python = ">=3.14"
+dependencies = ["syntactic"]
 
 # > [build-system]
 # > requires = ["setuptools"]
@@ -108,6 +109,7 @@ select = [
 "lang/python/src/koopa/cli_main.py" = ["PLC0415"]
 "lang/python/src/koopa/cli_app.py" = ["PLC0415"]
 "lang/python/src/koopa/cli_system.py" = ["PLC0415"]
+"lang/python/src/koopa/cli_bin.py" = ["PLC0415"]
 "lang/python/src/koopa/cli_develop.py" = ["PLC0415"]
 
 [tool.ruff.lint.isort]
@@ -151,3 +153,6 @@ package = true
 [tool.uv.build-backend]
 module-name = "koopa"
 module-root = "lang/python/src"
+
+[tool.uv.sources]
+syntactic = { git = "https://github.com/acidgenomics/py-syntactic" }
