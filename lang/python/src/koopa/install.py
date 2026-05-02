@@ -391,7 +391,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     # Resolve mode-specific defaults.
     if config.mode != "shared":
         config.deps = False
-    if config.platform == "common" and config.mode == "system":
+    if config.mode == "system":
         if _is_macos():
             config.platform = "macos"
         elif _is_linux():
