@@ -78,5 +78,5 @@ def sanitize_version(version: str) -> str:
     v = version.strip()
     if v.startswith("v") or v.startswith("V"):
         v = v[1:]
-    match = re.match(r"(\d+(?:\.\d+)*)", v)
+    match = re.match(r"(\d+(?:\.\d+)*[a-zA-Z]?)", v)
     return match.group(1) if match else v
