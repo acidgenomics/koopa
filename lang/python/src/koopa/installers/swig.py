@@ -16,7 +16,7 @@ def main(
     """Install swig."""
     env = activate_app("pcre2", env=None)
     pcre2_prefix = app_prefix("pcre2")
-    url = f"https://koopa.acidgenomics.com/src/swig/{version}.tar.gz"
+    url = f"https://sourceforge.net/projects/swig/files/swig/swig-{version}/swig-{version}.tar.gz/download"
     download_extract_cd(url)
     make_build(
         conf_args=[

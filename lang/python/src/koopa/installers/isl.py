@@ -17,7 +17,7 @@ def main(
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("gmp", env=env)
     gmp_prefix = app_prefix("gmp")
-    url = f"https://koopa.acidgenomics.com/src/isl/{version}.tar.xz"
+    url = f"https://libisl.sourceforge.io/isl-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

@@ -19,7 +19,8 @@ def main(
     """Install zip."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = f"https://koopa.acidgenomics.com/src/zip/zip-{version}.tar.gz"
+    ver_nodot = version.replace(".", "")
+    url = f"https://sourceforge.net/projects/infozip/files/Zip%203.x%20%28latest%29/{version}/zip{ver_nodot}.tar.gz/download"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
