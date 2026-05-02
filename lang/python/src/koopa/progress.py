@@ -11,6 +11,12 @@ from pathlib import Path
 
 _HISTORY_FILENAME = "build-times.json"
 
+_active_progress: object | None = None
+
+
+def get_active_progress() -> BuildProgress | None:
+    return _active_progress  # type: ignore[return-value]
+
 
 def _history_path() -> str:
     """Return path to the build-times JSON file under koopa config."""
@@ -88,14 +94,20 @@ class BuildProgress:
         self._stop_event = threading.Event()
         self._thread: threading.Thread | None = None
         self._tqdm_bar: object | None = None
+        self._step_bar: object | None = None
+        self._in_step_mode: bool = False
 
     def __enter__(self) -> BuildProgress:
+        global _active_progress
+        _active_progress = self
         self._start = time.monotonic()
         if not self._quiet:
             self._start_display()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
+        global _active_progress
+        _active_progress = None
         self._elapsed = time.monotonic() - self._start
         self._stop_display()
         if exc_type is None:
@@ -120,6 +132,8 @@ class BuildProgress:
 
     def _stop_display(self) -> None:
         self._stop_event.set()
+        if self._step_bar is not None:
+            self._finish_step_mode()
         if self._tqdm_bar is not None:
             self._stop_tqdm()
         if self._thread is not None:
@@ -197,6 +211,64 @@ class BuildProgress:
             idx += 1
         sys.stderr.write("\r" + " " * 80 + "\r")
         sys.stderr.flush()
+
+    # -- ninja step-mode display ----------------------------------------------
+
+    def switch_to_step_mode(self, total: int) -> bool:
+        """Replace the time-based display with a real step-count progress bar.
+
+        Called by ``cmake_build`` when Ninja ``[N/M]`` output is detected.
+        Returns ``True`` if the switch succeeded (tqdm available, not quiet).
+        """
+        if self._quiet or self._in_step_mode:
+            return self._in_step_mode
+        self._stop_event.set()
+        if self._tqdm_bar is not None:
+            self._stop_tqdm()
+        if self._thread is not None:
+            self._thread.join(timeout=2)
+            self._thread = None
+        self._stop_event.clear()
+        self._in_step_mode = True
+        if _has_tqdm():
+            from tqdm import tqdm
+
+            self._step_bar = tqdm(
+                total=total,
+                desc=self._name,
+                unit="step",
+                bar_format=(
+                    "{desc}: [{n_fmt}/{total_fmt}]"
+                    " {bar}"
+                    " {percentage:3.0f}%"
+                    " | {elapsed} elapsed"
+                ),
+                file=sys.stderr,
+                dynamic_ncols=True,
+            )
+        else:
+            self._step_bar = None
+        return True
+
+    def update_steps(self, current: int, total: int) -> None:
+        """Update step-mode progress from a parsed ``[current/total]`` line."""
+        bar = self._step_bar
+        if bar is None:
+            return
+        if getattr(bar, "total", None) != total:
+            bar.total = total  # type: ignore[union-attr]
+            bar.refresh()  # type: ignore[union-attr]
+        delta = current - getattr(bar, "n", 0)
+        if delta > 0:
+            bar.update(delta)  # type: ignore[union-attr]
+
+    def _finish_step_mode(self) -> None:
+        """Close the step-mode progress bar."""
+        bar = self._step_bar
+        if bar is not None:
+            bar.close()  # type: ignore[union-attr]
+        self._step_bar = None
+        self._in_step_mode = False
 
     # -- history --------------------------------------------------------------
 
