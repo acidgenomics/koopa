@@ -1084,8 +1084,18 @@ def _make_openssl_spec(major: str) -> _AppCheckSpec:
     return _AppCheckSpec("dirlist", lambda m=major: _check_openssl_series(m), ())
 
 
+def _check_boost() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/boostorg/boost/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    return re.sub(r"^boost-", "", tag)
+
+
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "aws-cli": _AppCheckSpec("conda", _check_conda, ("conda-forge", "awscli")),
+    "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("bash"),
