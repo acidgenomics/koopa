@@ -6,6 +6,7 @@
 /bin/
 /bootstrap/
 /coverage/
+/etc/koopa/build-times.json
 /libexec/
 /opt/
 /share/man/man1/
