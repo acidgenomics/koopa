@@ -7282,7 +7282,7 @@
     "version": "14.2"
   },
   "r-xcode-openmp": {
-    "date": "2025-04-12",
+    "date": "2026-05-02",
     "default": true,
     "installer_platform": "macos",
     "supported": {
@@ -7295,7 +7295,7 @@
     "url": [
       "https://mac.r-project.org/openmp/"
     ],
-    "version": "19.1.0"
+    "version": "19.1.5"
   },
   "radian": {
     "bin": [
