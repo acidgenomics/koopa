@@ -16,10 +16,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import threading
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, BinaryIO, TextIO
+from typing import Any
 
 from koopa.archive import extract
 from koopa.download import download
@@ -100,11 +99,6 @@ def _bin_prefix() -> str:
 def _man1_prefix() -> str:
     """Return koopa man1 prefix."""
     return os.path.join(_koopa_prefix(), "share", "man", "man1")
-
-
-def _bash_prefix() -> str:
-    """Return koopa bash prefix."""
-    return os.path.join(_koopa_prefix(), "lang", "bash")
 
 
 def _cpu_count() -> int:
@@ -217,11 +211,6 @@ def _has_private_access() -> bool:
     return result.returncode == 0
 
 
-def _is_lmod_active() -> bool:
-    """Check if Lmod environment modules are active."""
-    return "LMOD_DIR" in os.environ
-
-
 def _os_string() -> str:
     """Get OS string for binary packages."""
     if _is_macos():
@@ -242,13 +231,6 @@ def _arch2() -> str:
     machine = platform.machine()
     mapping = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
     return mapping.get(machine, machine)
-
-
-def _tmp_log_file() -> str:
-    """Create a temporary log file."""
-    fd, path = tempfile.mkstemp(suffix=".log", prefix="koopa-")
-    os.close(fd)
-    return path
 
 
 # -- Link helpers -------------------------------------------------------------
@@ -337,77 +319,6 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 
 
 # -- Subshell installer -------------------------------------------------------
-
-
-def install_app_subshell(
-    *,
-    name: str,
-    version: str = "",
-    prefix: str = "",
-    installer: str = "",
-    platform: str = "common",
-    mode: str = "shared",
-    passthrough_args: list[str] | None = None,
-) -> None:
-    """Install an application in a hardened subshell.
-
-    Sources the installer script and invokes its ``main`` function inside
-    a subprocess with restricted environment.
-    """
-    if not installer:
-        installer = name
-    installer_file = os.path.join(
-        _bash_prefix(),
-        "include",
-        "install",
-        platform,
-        mode,
-        f"{installer}.sh",
-    )
-    if not os.path.isfile(installer_file):
-        msg = f"Installer file not found: {installer_file}"
-        raise FileNotFoundError(msg)
-    tmp_dir = tempfile.mkdtemp(prefix="koopa-install-")
-    try:
-        env = os.environ.copy()
-        env["KOOPA_INSTALL_NAME"] = name
-        env["KOOPA_INSTALL_PREFIX"] = prefix
-        env["KOOPA_INSTALL_VERSION"] = version
-        header_file = os.path.join(_bash_prefix(), "include", "header.sh")
-        helpers_file = os.path.join(_bash_prefix(), "include", "install", "helpers.sh")
-        passthrough_str = ""
-        if passthrough_args:
-            passthrough_str = " ".join(passthrough_args)
-        cmd_str = (
-            f"source '{header_file}'; source '{helpers_file}'; "
-            f"source '{installer_file}'; main {passthrough_str}"
-        )
-        bash = shutil.which("bash")
-        if bash is None:
-            msg = "bash not found."
-            raise FileNotFoundError(msg)
-        subprocess.run(
-            [
-                bash,
-                "--noprofile",
-                "--norc",
-                "-o",
-                "errexit",
-                "-o",
-                "errtrace",
-                "-o",
-                "nounset",
-                "-o",
-                "pipefail",
-                "-c",
-                cmd_str,
-            ],
-            cwd=tmp_dir,
-            env=env,
-            check=True,
-        )
-    finally:
-        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 # -- Push build helper --------------------------------------------------------
@@ -583,63 +494,17 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             msg = "Binary install requires shared mode and a prefix."
             raise RuntimeError(msg)
         install_app_from_binary_package(config.prefix)
-    elif has_python_installer(config.name):
-        installer_fn = get_python_installer(config.name)
+    elif has_python_installer(config.name, config.platform, config.mode):
+        installer_fn = get_python_installer(config.name, config.platform, config.mode)
         installer_fn(
             name=config.name,
             version=config.version,
             prefix=config.prefix,
             passthrough_args=config.passthrough_args,
         )
-    elif not config.isolate:
-        os.environ["KOOPA_INSTALL_APP_SUBSHELL"] = "1"
-        try:
-            install_app_subshell(
-                name=config.name,
-                version=config.version,
-                prefix=config.prefix,
-                installer=config.installer,
-                platform=config.platform,
-                mode=config.mode,
-                passthrough_args=config.passthrough_args,
-            )
-        finally:
-            os.environ.pop("KOOPA_INSTALL_APP_SUBSHELL", None)
     else:
-        # Isolated subshell with clean environment.
-        stdout_file = _tmp_log_file()
-        stderr_file = _tmp_log_file()
-        try:
-            _run_isolated_subshell(
-                config=config,
-                stdout_file=stdout_file,
-                stderr_file=stderr_file,
-            )
-            # Copy log files and write metadata into prefix.
-            if config.mode == "shared" and os.path.isdir(config.prefix):
-                config.copy_log_files = True
-            if config.copy_log_files and os.path.isdir(config.prefix):
-                install_dir = os.path.join(config.prefix, ".install")
-                os.makedirs(install_dir, exist_ok=True)
-                shutil.copy2(
-                    stdout_file,
-                    os.path.join(install_dir, "stdout.log"),
-                )
-                shutil.copy2(
-                    stderr_file,
-                    os.path.join(install_dir, "stderr.log"),
-                )
-                from koopa.install_info import write_install_info  # noqa: PLC0415
-
-                write_install_info(
-                    output_file=os.path.join(install_dir, "info.json"),
-                    name=config.name,
-                    version=config.version,
-                )
-        finally:
-            for f in (stdout_file, stderr_file):
-                if os.path.isfile(f):
-                    os.unlink(f)
+        msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
+        raise FileNotFoundError(msg)
     # -- Post-install: linking ------------------------------------------------
     if config.mode == "shared":
         if config.link_in_opt:
@@ -677,164 +542,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 
 
 # -- Isolated subshell runner -------------------------------------------------
-
-
-def _run_isolated_subshell(
-    *,
-    config: InstallConfig,
-    stdout_file: str,
-    stderr_file: str,
-) -> None:
-    """Run the installer in an isolated subshell with clean environment.
-
-    Constructs a minimal environment and invokes bash with the installer
-    sourced inside it, capturing stdout and stderr to log files.
-    """
-    # Locate executables.
-    if config.bootstrap:
-        bootstrap_prefix = os.environ.get("KOOPA_BOOTSTRAP_PREFIX", "")
-        bash = os.path.join(bootstrap_prefix, "bin", "bash")
-    else:
-        bash = shutil.which("bash") or "/usr/bin/bash"
-    env_bin = shutil.which("env") or "/usr/bin/env"
-    # Build environment variables.
-    env_vars: dict[str, str] = {}
-    if config.inherit_env or _is_lmod_active():
-        env_vars["PATH"] = os.environ.get("PATH", "")
-        for var in (
-            "CC",
-            "CPLUS_INCLUDE_PATH",
-            "CXX",
-            "C_INCLUDE_PATH",
-            "F77",
-            "FC",
-            "INCLUDE",
-            "LD_LIBRARY_PATH",
-            "LIBRARY_PATH",
-            "CPATH",
-            "PKG_CONFIG_PATH",
-        ):
-            val = os.environ.get(var, "")
-            if val:
-                env_vars[var] = val
-    else:
-        env_vars["PATH"] = "/usr/bin:/usr/sbin:/bin:/sbin"
-    env_vars.update(
-        {
-            "HOME": os.environ.get("HOME", ""),
-            "KOOPA_ACTIVATE": "0",
-            "KOOPA_CPU_COUNT": str(_cpu_count()),
-            "KOOPA_INSTALL_APP_SUBSHELL": "1",
-            "KOOPA_VERBOSE": "1" if config.verbose else "0",
-            "LANG": "C",
-            "LC_ALL": "C",
-            "PWD": os.environ.get("HOME", ""),
-            "TMPDIR": os.environ.get("TMPDIR", "/tmp"),
-        }
-    )
-    # Forward optional env vars.
-    for var in (
-        "KOOPA_CAN_INSTALL_BINARY",
-        "AWS_CA_BUNDLE",
-        "DEFAULT_CA_BUNDLE_PATH",
-        "NODE_EXTRA_CA_CERTS",
-        "REQUESTS_CA_BUNDLE",
-        "SSL_CERT_FILE",
-        "HTTP_PROXY",
-        "HTTPS_PROXY",
-        "http_proxy",
-        "https_proxy",
-        "GOPROXY",
-    ):
-        val = os.environ.get(var)
-        if val:
-            env_vars[var] = val
-    header_file = os.path.join(_bash_prefix(), "include", "header.sh")
-    helpers_file = os.path.join(_bash_prefix(), "include", "install", "helpers.sh")
-    installer = config.installer or config.name
-    installer_file = os.path.join(
-        _bash_prefix(),
-        "include",
-        "install",
-        config.platform,
-        config.mode,
-        f"{installer}.sh",
-    )
-    if not os.path.isfile(installer_file):
-        msg = f"Installer script not found: {installer_file}"
-        raise FileNotFoundError(msg)
-    passthrough = ""
-    if config.passthrough_args:
-        passthrough = " ".join(config.passthrough_args)
-    env_vars["KOOPA_INSTALL_NAME"] = config.name
-    env_vars["KOOPA_INSTALL_PREFIX"] = config.prefix
-    env_vars["KOOPA_INSTALL_VERSION"] = config.version
-    bash_cmd = (
-        f"source '{header_file}'; source '{helpers_file}'; "
-        f"source '{installer_file}'; main {passthrough}"
-    )
-    bash_args = [
-        "--noprofile",
-        "--norc",
-        "-o",
-        "errexit",
-        "-o",
-        "errtrace",
-        "-o",
-        "nounset",
-        "-o",
-        "pipefail",
-    ]
-    if config.verbose:
-        bash_args.extend(["-o", "verbose"])
-    # Use tee to capture output to log files while also printing.
-    with (
-        open(stdout_file, "w") as stdout_fh,
-        open(stderr_file, "w") as stderr_fh,
-    ):
-        process = subprocess.Popen(
-            [env_bin, "-i"]
-            + [f"{k}={v}" for k, v in env_vars.items()]
-            + [bash]
-            + bash_args
-            + ["-c", bash_cmd],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-
-        def _tee_stream(
-            in_stream: BinaryIO,
-            out_stream: TextIO,
-            log_fh: TextIO,
-        ) -> None:
-            """Tee a stream to both a file and another stream."""
-            for line_bytes in in_stream:
-                line = (
-                    line_bytes.decode("utf-8", errors="replace")
-                    if isinstance(line_bytes, bytes)
-                    else line_bytes
-                )
-                out_stream.write(line)
-                out_stream.flush()
-                log_fh.write(line)
-                log_fh.flush()
-
-        t_out = threading.Thread(
-            target=_tee_stream,
-            args=(process.stdout, sys.stdout, stdout_fh),
-        )
-        t_err = threading.Thread(
-            target=_tee_stream,
-            args=(process.stderr, sys.stderr, stderr_fh),
-        )
-        t_out.start()
-        t_err.start()
-        t_out.join()
-        t_err.join()
-        returncode = process.wait()
-    if returncode != 0:
-        msg = f"Installation of '{config.name}' failed with exit code {returncode}."
-        raise subprocess.CalledProcessError(returncode, bash_cmd, msg)
 
 
 # -- GNU app installer --------------------------------------------------------

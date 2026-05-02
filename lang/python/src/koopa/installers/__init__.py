@@ -489,22 +489,37 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "homebrew": f"{_M}.homebrew",
     "homebrew-bundle": f"{_M}.homebrew_bundle",
     "tex-packages": f"{_M}.tex_packages",
-    # -- platform-specific R/Python system installers ---------------------------
-    "python-macos": f"{_M}.python_macos",
-    "r-debian": f"{_M}.r_debian",
-    "r-macos": f"{_M}.r_macos",
+}
+
+PYTHON_PLATFORM_INSTALLERS: dict[tuple[str, str, str], str] = {
+    ("python", "macos", "system"): f"{_M}.python_macos",
+    ("r", "debian", "system"): f"{_M}.r_debian",
+    ("r", "macos", "system"): f"{_M}.r_macos",
 }
 
 
-def has_python_installer(name: str) -> bool:
+def has_python_installer(
+    name: str,
+    platform: str = "common",
+    mode: str = "shared",
+) -> bool:
     """Check if app has a Python-native installer."""
+    key = (name, platform, mode)
+    if key in PYTHON_PLATFORM_INSTALLERS:
+        return True
     return name in PYTHON_INSTALLERS
 
 
 def get_python_installer(
     name: str,
+    platform: str = "common",
+    mode: str = "shared",
 ) -> Callable[..., None]:
     """Dynamically import and return the installer's ``main`` function."""
-    module_path = PYTHON_INSTALLERS[name]
+    key = (name, platform, mode)
+    if key in PYTHON_PLATFORM_INSTALLERS:
+        module_path = PYTHON_PLATFORM_INSTALLERS[key]
+    else:
+        module_path = PYTHON_INSTALLERS[name]
     mod = importlib.import_module(module_path)
     return mod.main  # type: ignore[attr-defined]
