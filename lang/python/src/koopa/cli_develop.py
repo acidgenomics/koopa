@@ -22,18 +22,10 @@ def _handle_prune_app_binaries() -> None:
 
 def _handle_format_app_json() -> None:
     """Handle ``koopa develop format-app-json``."""
-    import json
-    from pathlib import Path
+    from koopa.io import export_app_json, import_app_json
 
-    from koopa.prefix import koopa_prefix
-
-    json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
-    data = json.loads(json_path.read_text())
-    sorted_data = dict(sorted(data.items()))
-    for key, value in sorted_data.items():
-        if isinstance(value, dict):
-            sorted_data[key] = dict(sorted(value.items()))
-    json_path.write_text(json.dumps(sorted_data, indent=2, ensure_ascii=False) + "\n")
+    data = import_app_json()
+    export_app_json(data)
 
 
 def _handle_view_latest_tmp_log_file() -> None:
