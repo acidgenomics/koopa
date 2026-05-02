@@ -8,6 +8,8 @@ fastqc, multiqc, etc.
 
 from __future__ import annotations
 
+import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -491,3 +493,125 @@ def minimap2_align(
         return None
     result = _run_cmd(args, capture=True)
     return result.stdout
+
+
+# -- MISO ---------------------------------------------------------------------
+
+
+def miso_index(
+    gff_file: str,
+    output_dir: str,
+    *,
+    min_exon_size: int = 1000,
+) -> None:
+    """Generate a MISO index directory."""
+    import gzip as gz
+    import tempfile
+
+    exon_utils = shutil.which("exon_utils")
+    index_gff = shutil.which("index_gff")
+    if exon_utils is None or index_gff is None:
+        msg = "MISO (exon_utils, index_gff) is required."
+        raise RuntimeError(msg)
+    if not os.path.isfile(gff_file):
+        msg = f"GFF file not found: '{gff_file}'."
+        raise FileNotFoundError(msg)
+    gff_file = os.path.realpath(gff_file)
+    os.makedirs(output_dir, exist_ok=True)
+    log_file = os.path.join(output_dir, "index.log")
+    decomp_file = None
+    if gff_file.endswith(".gz"):
+        decomp_file = tempfile.mktemp(suffix=".gff")
+        with gz.open(gff_file, "rb") as f_in, open(decomp_file, "wb") as f_out:
+            shutil.copyfileobj(f_in, f_out)
+        gff_file = decomp_file
+    print(f"Generating MISO index at '{output_dir}'.")
+    env = os.environ.copy()
+    env["PYTHONUNBUFFERED"] = "1"
+    with tempfile.TemporaryDirectory() as tmp_exons_dir:
+        with open(log_file, "a") as log:
+            subprocess.run(
+                [
+                    exon_utils,
+                    "--get-const-exons", gff_file,
+                    "--min-exon-size", str(min_exon_size),
+                    "--output-dir", tmp_exons_dir,
+                ],
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=True,
+            )
+        exon_files = list(
+            Path(tmp_exons_dir).glob(
+                f"*.min_{min_exon_size}.const_exons.gff",
+            ),
+        )
+        if exon_files:
+            dest = os.path.join(
+                output_dir,
+                f"min_{min_exon_size}.const_exons.gff",
+            )
+            shutil.move(str(exon_files[0]), dest)
+    with open(log_file, "a") as log:
+        subprocess.run(
+            [index_gff, "--index", gff_file, output_dir],
+            env=env,
+            stdout=log,
+            stderr=subprocess.STDOUT,
+            check=True,
+        )
+    if decomp_file and os.path.isfile(decomp_file):
+        os.remove(decomp_file)
+    print(f"MISO index created at '{output_dir}'.")
+
+
+def rnaeditingindexer(
+    *,
+    bam_dir: str = "bam",
+    output_dir: str = "rnaedit",
+    genome: str = "hg38",
+    bam_suffix: str = ".Aligned.sortedByCoord.out.bam",
+    example: bool = False,
+) -> None:
+    """Run dockerized RNAEditingIndexer pipeline."""
+    docker = shutil.which("docker")
+    if docker is None:
+        msg = "docker is not installed."
+        raise RuntimeError(msg)
+    image = "public.ecr.aws/acidgenomics/rnaeditingindexer"
+    mnt_bam_dir = "/mnt/bam"
+    mnt_output_dir = "/mnt/output"
+    run_args: list[str] = []
+    if example:
+        bam_suffix = (
+            "_sampled_with_0.1.Aligned.sortedByCoord.out."
+            "bam.AluChr1Only.bam"
+        )
+        mnt_bam_dir = "/bin/AEI/RNAEditingIndexer/TestResources/BAMs"
+    else:
+        if not os.path.isdir(bam_dir):
+            msg = f"BAM directory not found: '{bam_dir}'."
+            raise FileNotFoundError(msg)
+        bam_dir = os.path.realpath(bam_dir)
+        os.makedirs(output_dir, exist_ok=True)
+        run_args.extend([
+            "-v", f"{bam_dir}:{mnt_bam_dir}:ro",
+            "-v", f"{output_dir}:{mnt_output_dir}:rw",
+        ])
+    run_args.append(image)
+    subprocess.run(
+        [
+            docker, "run", *run_args,
+            "RNAEditingIndex",
+            "--genome", genome,
+            "--keep_cmpileup",
+            "--verbose",
+            "-d", mnt_bam_dir,
+            "-f", bam_suffix,
+            "-l", f"{mnt_output_dir}/logs",
+            "-o", f"{mnt_output_dir}/cmpileups",
+            "-os", f"{mnt_output_dir}/summary",
+        ],
+        check=True,
+    )
