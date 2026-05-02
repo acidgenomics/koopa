@@ -23,9 +23,7 @@ def main(
     many Debian-specific Bash helper functions (apt, dpkg, locale-gen, etc.)
     that haven't been ported yet.
     """
-    script = os.path.join(
-        bash_prefix(), "include", "configure", "debian", "system", "base.sh"
-    )
+    script = os.path.join(bash_prefix(), "include", "configure", "debian", "system", "base.sh")
     if not os.path.isfile(script):
         msg = "Debian base configure script not found."
         raise FileNotFoundError(msg)
