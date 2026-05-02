@@ -1241,7 +1241,8 @@ def _handle_aws_s3_delete_versioned_glacier_objects(args: list[str]) -> None:
         glacier=True,
         profile=parsed.profile,
     )
-    print(f"Deleted {deleted} versioned Glacier object(s).", file=sys.stderr)
+    glacier_label = "object" if deleted == 1 else "objects"
+    print(f"Deleted {deleted} versioned Glacier {glacier_label}.", file=sys.stderr)
 
 
 def _handle_aws_s3_delete_versioned_objects(args: list[str]) -> None:
@@ -1262,7 +1263,8 @@ def _handle_aws_s3_delete_versioned_objects(args: list[str]) -> None:
         glacier=False,
         profile=parsed.profile,
     )
-    print(f"Deleted {deleted} versioned object(s).", file=sys.stderr)
+    object_label = "object" if deleted == 1 else "objects"
+    print(f"Deleted {deleted} versioned {object_label}.", file=sys.stderr)
 
 
 def _handle_aws_s3_dot_clean(args: list[str]) -> None:

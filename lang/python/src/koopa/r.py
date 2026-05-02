@@ -179,7 +179,7 @@ def r_bioconda_check(*packages: str) -> None:
     import tempfile
 
     if not packages:
-        msg = "Package name(s) required."
+        msg = "Package names required."
         raise ValueError(msg)
     with tempfile.TemporaryDirectory() as tmp_dir:
         for pkg in packages:

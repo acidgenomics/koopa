@@ -475,7 +475,7 @@ def prune_broken_symlinks() -> None:
 
 def check_system() -> bool:
     """Run all system checks."""
-    from koopa.alert import alert_success, warn
+    from koopa.alert import alert_note, alert_success, warn
     from koopa.system import is_macos
 
     ok = True
@@ -500,6 +500,7 @@ def check_system() -> bool:
         ok = False
     if not ok:
         warn("System checks completed with warnings.")
+        alert_note("Run 'koopa update' to resolve these issues.")
         return False
     alert_success("System passed all checks.")
     return True

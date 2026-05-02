@@ -1421,9 +1421,6 @@ def _update_venv(prefix: str) -> None:
     if os.path.isfile(stamp_file):
         stamp_mtime = os.path.getmtime(stamp_file)
         if all(os.path.getmtime(f) <= stamp_mtime for f in dep_files if os.path.isfile(f)):
-            from koopa.alert import alert_note
-
-            alert_note("Python virtual environment is up to date.")
             return
     alert("Installing Python package with extras.")
     if uv:
@@ -1491,9 +1488,24 @@ def update_bootstrap(*, verbose: bool = False) -> None:
         warn(f"Failed to update bootstrap: {exc}")
 
 
+def _is_supported_app(name: str) -> bool:
+    """Check if an app is supported on the current platform."""
+    from koopa.os import os_id
+
+    json_data = _import_app_json()
+    entry = json_data.get(name, {})
+    if not isinstance(entry, dict):
+        return False
+    supported = entry.get("supported", {})
+    current_os = os_id()
+    if current_os in supported and not supported[current_os]:
+        return False
+    return True
+
+
 def update_stale_apps(*, verbose: bool = False) -> None:
     """Find and reinstall all outdated or broken shared apps."""
-    from koopa.alert import alert, alert_success, warn
+    from koopa.alert import alert, alert_success
     from koopa.check import broken_app_installs, outdated_apps
 
     if not is_owner():
@@ -1501,22 +1513,23 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     outdated = outdated_apps()
     broken = broken_app_installs()
     apps = list(dict.fromkeys(outdated + broken))
+    apps = [a for a in apps if _is_supported_app(a)]
     if not apps:
         alert_success("All installed apps are up to date.")
         return
-    alert(f"Updating {len(apps)} app(s): {', '.join(apps)}")
-    failed: list[str] = []
-    for app in apps:
-        try:
-            cli_install(app, reinstall=True, verbose=verbose)
-        except Exception as exc:
-            warn(f"Failed to update '{app}': {exc}")
-            failed.append(app)
-    _update_stale_revdeps(apps, failed=failed, verbose=verbose)
-    if failed:
-        warn(f"{len(failed)} app(s) failed to update: {', '.join(failed)}")
-    else:
-        alert_success("All stale apps updated successfully.")
+    n = len(apps)
+    label = "app" if n == 1 else "apps"
+    alert(f"Updating {n} {label}: {', '.join(apps)}")
+    try:
+        from tqdm import tqdm
+
+        pbar = tqdm(apps, desc="Updating apps", unit="app", file=sys.stderr)
+    except ImportError:
+        pbar = apps
+    for app in pbar:
+        cli_install(app, reinstall=True, verbose=verbose)
+    _update_stale_revdeps(apps, failed=[], verbose=verbose)
+    alert_success("All stale apps updated successfully.")
 
 
 def _update_stale_revdeps(
@@ -1526,7 +1539,7 @@ def _update_stale_revdeps(
     verbose: bool = False,
 ) -> None:
     """Reinstall reverse dependencies of successfully updated apps."""
-    from koopa.alert import alert, warn
+    from koopa.alert import alert
     from koopa.app import stale_revdeps
 
     succeeded = [a for a in updated_apps if a not in failed]
@@ -1536,18 +1549,16 @@ def _update_stale_revdeps(
     revdeps = [r for r in revdeps if r not in updated_apps and r not in failed]
     if not revdeps:
         return
-    alert(f"Updating {len(revdeps)} stale reverse dep(s): {', '.join(revdeps)}")
+    n_revdeps = len(revdeps)
+    label_revdeps = "reverse dependency" if n_revdeps == 1 else "reverse dependencies"
+    alert(f"Updating {n_revdeps} stale {label_revdeps}: {', '.join(revdeps)}")
     for app in revdeps:
-        try:
-            cli_install(app, reinstall=True, verbose=verbose)
-        except Exception as exc:
-            warn(f"Failed to update reverse dep '{app}': {exc}")
-            failed.append(app)
+        cli_install(app, reinstall=True, verbose=verbose)
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
     """Remove installed apps that are no longer in app.json or marked removed."""
-    from koopa.alert import alert, alert_note, warn
+    from koopa.alert import alert, alert_note
     from koopa.app import stale_revdeps
     from koopa.check import unsupported_apps
     from koopa.uninstall import UninstallConfig, uninstall_app
@@ -1557,23 +1568,19 @@ def remove_unsupported_apps(*, verbose: bool = False) -> None:
     apps = unsupported_apps()
     if not apps:
         return
-    alert(f"Removing {len(apps)} unsupported app(s): {', '.join(apps)}")
+    n_unsupported = len(apps)
+    label_unsupported = "app" if n_unsupported == 1 else "apps"
+    alert(f"Removing {n_unsupported} unsupported {label_unsupported}: {', '.join(apps)}")
     revdeps = stale_revdeps(apps)
     if revdeps:
         alert_note(
             f"Reverse dependencies will also be updated: {', '.join(revdeps)}",
         )
     for app in apps:
-        try:
-            config = UninstallConfig(name=app, verbose=verbose)
-            uninstall_app(config)
-        except Exception as exc:
-            warn(f"Failed to remove '{app}': {exc}")
+        config = UninstallConfig(name=app, verbose=verbose)
+        uninstall_app(config)
     for dep in revdeps:
-        try:
-            cli_install(dep, reinstall=True, verbose=verbose)
-        except Exception as exc:
-            warn(f"Failed to reinstall reverse dep '{dep}': {exc}")
+        cli_install(dep, reinstall=True, verbose=verbose)
 
 
 def update_user_apps(*, verbose: bool = False) -> None:
@@ -1587,7 +1594,9 @@ def update_user_apps(*, verbose: bool = False) -> None:
         return
     json_data = _import_app_json()
     prefixes = _user_app_prefixes()
-    alert(f"Updating {len(apps)} user app(s): {', '.join(apps)}")
+    n_user = len(apps)
+    label_user = "app" if n_user == 1 else "apps"
+    alert(f"Updating {n_user} user {label_user}: {', '.join(apps)}")
     for app in apps:
         prefix = prefixes.get(app, "")
         if not prefix or not os.path.isdir(prefix):
