@@ -1372,14 +1372,14 @@ def _update_venv(prefix: str) -> None:
     python_version_file = os.path.join(prefix, ".python-version")
     if not os.path.isfile(python_version_file):
         return
-    with open(python_version_file, "r") as f:
+    with open(python_version_file) as f:
         python_version = f.read().strip()
     venv_dir = os.path.join(prefix, ".venv")
     if os.path.isdir(venv_dir):
         pyvenv_cfg = os.path.join(venv_dir, "pyvenv.cfg")
         if os.path.isfile(pyvenv_cfg):
             venv_version = ""
-            with open(pyvenv_cfg, "r") as f:
+            with open(pyvenv_cfg) as f:
                 for line in f:
                     key, _, value = line.partition("=")
                     key = key.strip()
