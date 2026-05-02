@@ -1033,6 +1033,8 @@ __END__
 
 # -- Conda package installer --------------------------------------------------
 
+_conda_use_override_channels = False
+
 
 def install_conda_package(
     *,
@@ -1046,6 +1048,7 @@ def install_conda_package(
     Creates a conda env in ``<prefix>/libexec`` and links binaries into
     ``<prefix>/bin``. Converted from install-conda-package.sh.
     """
+    global _conda_use_override_channels  # noqa: PLW0603
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
     if not version:
@@ -1058,8 +1061,21 @@ def install_conda_package(
         raise FileNotFoundError(msg)
     libexec = os.path.join(prefix, "libexec")
     os.makedirs(libexec, exist_ok=True)
+    pkg_spec = f"--file={yaml_file}" if yaml_file else f"{name}=={version}"
+    if _conda_use_override_channels:
+        create_args = [
+            conda,
+            "create",
+            "--yes",
+            f"--prefix={libexec}",
+            "--channel=conda-forge",
+            "--channel=bioconda",
+            "--override-channels",
+            pkg_spec,
+        ]
+        subprocess.run(create_args, check=True)
+        return
     create_args = [conda, "create", "--yes", f"--prefix={libexec}"]
-    # Check if conda-forge channel is configured.
     result = subprocess.run(
         [conda, "config", "--show", "channels"],
         capture_output=True,
@@ -1073,11 +1089,26 @@ def install_conda_package(
                 "--channel=bioconda",
             ]
         )
-    if yaml_file:
-        create_args.append(f"--file={yaml_file}")
-    else:
-        create_args.append(f"{name}=={version}")
-    subprocess.run(create_args, check=True)
+    create_args.append(pkg_spec)
+    result = subprocess.run(create_args, check=False)
+    if result.returncode == 0:
+        return
+    print(
+        "Retrying with conda-forge/bioconda channels directly.",
+        file=sys.stderr,
+    )
+    _conda_use_override_channels = True
+    fallback_args = [
+        conda,
+        "create",
+        "--yes",
+        f"--prefix={libexec}",
+        "--channel=conda-forge",
+        "--channel=bioconda",
+        "--override-channels",
+        pkg_spec,
+    ]
+    subprocess.run(fallback_args, check=True)
     # Link binaries from libexec/bin into prefix/bin.
     libexec_bin = os.path.join(libexec, "bin")
     bin_dir = os.path.join(prefix, "bin")
