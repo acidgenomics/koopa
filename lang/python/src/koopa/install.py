@@ -1385,9 +1385,7 @@ def _update_venv(prefix: str) -> None:
                     key = key.strip()
                     if key in ("version", "version_info"):
                         full_ver = value.strip()
-                        venv_version = ".".join(
-                            full_ver.split(".")[:2]
-                        )
+                        venv_version = ".".join(full_ver.split(".")[:2])
                         break
             if venv_version and venv_version != python_version:
                 alert(
@@ -1422,11 +1420,7 @@ def _update_venv(prefix: str) -> None:
     ]
     if os.path.isfile(stamp_file):
         stamp_mtime = os.path.getmtime(stamp_file)
-        if all(
-            os.path.getmtime(f) <= stamp_mtime
-            for f in dep_files
-            if os.path.isfile(f)
-        ):
+        if all(os.path.getmtime(f) <= stamp_mtime for f in dep_files if os.path.isfile(f)):
             from koopa.alert import alert_note
 
             alert_note("Python virtual environment is up to date.")
