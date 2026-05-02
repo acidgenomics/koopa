@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 from pathlib import Path
+from typing import Any
 
 _HISTORY_FILENAME = "build-times.json"
 
@@ -94,8 +95,8 @@ class BuildProgress:
         self._estimate = _load_history().get(name)
         self._stop_event = threading.Event()
         self._thread: threading.Thread | None = None
-        self._tqdm_bar: object | None = None
-        self._step_bar: object | None = None
+        self._tqdm_bar: Any = None
+        self._step_bar: Any = None
         self._in_step_mode: bool = False
 
     def __enter__(self) -> BuildProgress:
@@ -125,6 +126,7 @@ class BuildProgress:
 
     @property
     def elapsed_formatted(self) -> str:
+        """Return elapsed time as a human-readable string."""
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
     def _start_display(self) -> None:
@@ -174,8 +176,7 @@ class BuildProgress:
             elapsed_int = int(self.elapsed)
             delta = elapsed_int - last_n
             if delta > 0 and bar is not None:
-                bar.update(delta)  # type: ignore[union-attr]
-                last_n = elapsed_int
+                bar.update(delta)                last_n = elapsed_int
 
     def _stop_tqdm(self) -> None:
         bar = self._tqdm_bar
@@ -184,9 +185,7 @@ class BuildProgress:
             current = getattr(bar, "n", 0)
             delta = elapsed_int - current
             if delta > 0:
-                bar.update(delta)  # type: ignore[union-attr]
-            bar.close()  # type: ignore[union-attr]
-        self._tqdm_bar = None
+                bar.update(delta)            bar.close()        self._tqdm_bar = None
 
     # -- fallback spinner display ---------------------------------------------
 
@@ -254,18 +253,14 @@ class BuildProgress:
         if bar is None:
             return
         if getattr(bar, "total", None) != total:
-            bar.total = total  # type: ignore[union-attr]
-            bar.refresh()  # type: ignore[union-attr]
-        delta = current - getattr(bar, "n", 0)
+            bar.total = total            bar.refresh()        delta = current - getattr(bar, "n", 0)
         if delta > 0:
-            bar.update(delta)  # type: ignore[union-attr]
-
+            bar.update(delta)
     def _finish_step_mode(self) -> None:
         """Close the step-mode progress bar."""
         bar = self._step_bar
         if bar is not None:
-            bar.close()  # type: ignore[union-attr]
-        self._step_bar = None
+            bar.close()        self._step_bar = None
         self._in_step_mode = False
 
     # -- history --------------------------------------------------------------
