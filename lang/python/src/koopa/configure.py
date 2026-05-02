@@ -34,7 +34,16 @@ def _is_owner() -> bool:
 
 def _is_admin() -> bool:
     """Check if current user has admin/root access."""
-    return os.getuid() == 0
+    if os.getuid() == 0:
+        return True
+    if sys.platform == "darwin":
+        import grp
+
+        try:
+            return grp.getgrnam("admin").gr_gid in os.getgroups()
+        except KeyError:
+            return False
+    return False
 
 
 def configure_app(config: ConfigureConfig) -> None:
