@@ -1,14 +1,11 @@
-"""Build progress display with optional tqdm support and historical timing."""
+"""Build progress tracking with historical timing."""
 
 from __future__ import annotations
 
 import json
 import os
-import sys
-import threading
 import time
 from pathlib import Path
-from typing import Any
 
 _HISTORY_FILENAME = "build-times.json"
 
@@ -64,27 +61,17 @@ def _fmt_duration(seconds: float) -> str:
     return f"{hours}h{minutes:02d}m"
 
 
-def _has_tqdm() -> bool:
-    """Check if tqdm is importable."""
-    try:
-        import tqdm  # noqa: F401
-
-        return True
-    except ImportError:
-        return False
-
-
 class BuildProgress:
-    """Display build progress with elapsed time and optional estimate.
+    """Track build elapsed time and record historical timing.
 
-    Uses tqdm when available for a progress bar; otherwise falls back to a
-    simple text spinner on stderr.
+    No live display — build output flows through to the terminal unimpeded.
+    Elapsed time is reported by the caller after the context exits.
 
     Usage::
 
         with BuildProgress("gcc") as progress:
             run_the_build()
-        # elapsed time is automatically recorded on success
+        print(f"Done in {progress.elapsed_formatted}")
     """
 
     def __init__(self, name: str, *, quiet: bool = False) -> None:
@@ -92,28 +79,17 @@ class BuildProgress:
         self._quiet = quiet
         self._start: float = 0.0
         self._elapsed: float = 0.0
-        self._estimate = _load_history().get(name)
-        self._stop_event = threading.Event()
-        self._thread: threading.Thread | None = None
-        self._tqdm_bar: Any = None
-        self._step_bar: Any = None
-        self._in_step_mode: bool = False
 
     def __enter__(self) -> BuildProgress:
-        """Enter the build progress context."""
         global _active_progress  # noqa: PLW0603
         _active_progress = self
         self._start = time.monotonic()
-        if not self._quiet:
-            self._start_display()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
-        """Exit the build progress context."""
         global _active_progress  # noqa: PLW0603
         _active_progress = None
         self._elapsed = time.monotonic() - self._start
-        self._stop_display()
         if exc_type is None:
             self._record_duration()
 
@@ -129,154 +105,12 @@ class BuildProgress:
         """Return elapsed time as a human-readable string."""
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
-    def _start_display(self) -> None:
-        if _has_tqdm():
-            self._start_tqdm()
-        else:
-            self._start_fallback()
-
-    def _stop_display(self) -> None:
-        self._stop_event.set()
-        if self._step_bar is not None:
-            self._finish_step_mode()
-        if self._tqdm_bar is not None:
-            self._stop_tqdm()
-        if self._thread is not None:
-            self._thread.join(timeout=2)
-            self._thread = None
-
-    # -- tqdm display ---------------------------------------------------------
-
-    def _start_tqdm(self) -> None:
-        from tqdm import tqdm
-
-        total = int(self._estimate) if self._estimate else None
-        if total:
-            bar_fmt = (
-                "  Building {desc}: {bar} "
-                "{percentage:3.0f}% | "
-                "{elapsed} elapsed, ~{remaining} remaining"
-            )
-        else:
-            bar_fmt = "  Building {desc}: {elapsed} elapsed"
-        self._tqdm_bar = tqdm(
-            total=total,
-            desc=self._name,
-            unit="s",
-            bar_format=bar_fmt,
-            file=sys.stderr,
-            dynamic_ncols=True,
-        )
-        self._thread = threading.Thread(
-            target=self._tqdm_updater,
-            daemon=True,
-        )
-        self._thread.start()
-
-    def _tqdm_updater(self) -> None:
-        bar = self._tqdm_bar
-        last_n = 0
-        while not self._stop_event.wait(timeout=1.0):
-            elapsed_int = int(self.elapsed)
-            delta = elapsed_int - last_n
-            if delta > 0 and bar is not None:
-                bar.update(delta)
-                last_n = elapsed_int
-
-    def _stop_tqdm(self) -> None:
-        bar = self._tqdm_bar
-        if bar is not None:
-            elapsed_int = int(self._elapsed)
-            current = getattr(bar, "n", 0)
-            delta = elapsed_int - current
-            if delta > 0:
-                bar.update(delta)
-            bar.close()
-        self._tqdm_bar = None
-
-    # -- fallback spinner display ---------------------------------------------
-
-    def _start_fallback(self) -> None:
-        self._thread = threading.Thread(
-            target=self._fallback_spinner,
-            daemon=True,
-        )
-        self._thread.start()
-
-    def _fallback_spinner(self) -> None:
-        frames = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-        idx = 0
-        estimate_str = ""
-        if self._estimate is not None:
-            estimate_str = f", ~{_fmt_duration(self._estimate)} remaining"
-        while not self._stop_event.wait(timeout=1.0):
-            elapsed = _fmt_duration(self.elapsed)
-            frame = frames[idx % len(frames)]
-            line = f"\r\033[2K{frame} Building {self._name}: {elapsed} elapsed{estimate_str}"
-            sys.stderr.write(line)
-            sys.stderr.flush()
-            idx += 1
-        sys.stderr.write("\r\033[2K")
-        sys.stderr.flush()
-
-    # -- ninja step-mode display ----------------------------------------------
-
     def switch_to_step_mode(self, total: int) -> bool:
-        """Replace the time-based display with a real step-count progress bar.
-
-        Called by ``cmake_build`` when Ninja ``[N/M]`` output is detected.
-        Returns ``True`` if the switch succeeded (tqdm available, not quiet).
-        """
-        if self._quiet or self._in_step_mode:
-            return self._in_step_mode
-        self._stop_event.set()
-        if self._tqdm_bar is not None:
-            self._stop_tqdm()
-        if self._thread is not None:
-            self._thread.join(timeout=2)
-            self._thread = None
-        self._stop_event.clear()
-        self._in_step_mode = True
-        if _has_tqdm():
-            from tqdm import tqdm
-
-            self._step_bar = tqdm(
-                total=total,
-                desc=self._name,
-                unit="step",
-                bar_format=(
-                    "  Building {desc}: {bar} "
-                    "{percentage:3.0f}% [{n_fmt}/{total_fmt}] | "
-                    "{elapsed} elapsed"
-                ),
-                file=sys.stderr,
-                dynamic_ncols=True,
-            )
-        else:
-            self._step_bar = None
-        return True
+        """No-op retained for API compatibility."""
+        return False
 
     def update_steps(self, current: int, total: int) -> None:
-        """Update step-mode progress from a parsed ``[current/total]`` line."""
-        bar = self._step_bar
-        if bar is None:
-            return
-        if getattr(bar, "total", None) != total:
-            bar.total = total
-            bar.refresh()
-        delta = current - getattr(bar, "n", 0)
-        if delta > 0:
-            bar.update(delta)
-
-    def _finish_step_mode(self) -> None:
-        """Close the step-mode progress bar."""
-        bar = self._step_bar
-        if bar is not None:
-            bar.close()
-        self._step_bar = None
-        self._in_step_mode = False
-
-    # -- history --------------------------------------------------------------
+        """No-op retained for API compatibility."""
 
     def _record_duration(self) -> None:
         history = _load_history()

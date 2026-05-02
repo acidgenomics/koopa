@@ -1658,8 +1658,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     label = "app" if n == 1 else "apps"
     alert(f"Updating {n} {label}: {', '.join(apps)}")
     failed = []
-    for i, app in enumerate(apps, 1):
-        print(f"[{i}/{n}] Updating {app}...", file=sys.stderr)
+    for app in apps:
         try:
             cli_install(app, reinstall=True, verbose=verbose)
         except Exception as exc:
