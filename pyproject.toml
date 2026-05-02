@@ -12,17 +12,18 @@ readme = "README.md"
 requires-python = ">=3.14"
 
 [project.optional-dependencies]
-extra = [
-  "syntactic @ git+https://github.com/acidgenomics/py-syntactic",
-  "tqdm",
-]
+extra = ["syntactic @ git+https://github.com/acidgenomics/py-syntactic", "tqdm"]
+
+[project.scripts]
+koopa = "koopa.cli_main:main"
 
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
-[project.scripts]
-koopa = "koopa.cli_main:main"
+# > [build-system]
+# > build-backend = "uv_build"
+# > requires = ["uv_build>=0.11,<1"]
 
 [tool.bumpver]
 current_version = "0.16.0"
@@ -149,3 +150,12 @@ where = ["lang/python/src"]
 [tool.ty.terminal]
 error-on-warning = true
 
+[tool.uv]
+package = true
+
+[tool.uv.build-backend]
+module-name = "koopa"
+module-root = "lang/python/src"
+
+[tool.uv.sources]
+syntactic = { git = "https://github.com/acidgenomics/py-syntactic" }
