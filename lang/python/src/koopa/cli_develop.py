@@ -253,6 +253,43 @@ def _handle_roff() -> None:
     subprocess.run([ronn, "--roff", *ronn_files], check=True)
 
 
+def _handle_shellcheck() -> None:
+    """Handle ``koopa develop shellcheck``."""
+    from koopa.alert import alert, alert_note, alert_success
+    from koopa.prefix import bash_prefix, sh_prefix
+
+    shellcheck = shutil.which("shellcheck")
+    if shellcheck is None:
+        msg = "shellcheck is not installed."
+        raise RuntimeError(msg)
+    search_dirs = [
+        os.path.join(bash_prefix(), "functions"),
+        os.path.join(sh_prefix(), "functions"),
+    ]
+    sh_files: list[str] = []
+    for search_dir in search_dirs:
+        if not os.path.isdir(search_dir):
+            continue
+        for root, _dirs, files in os.walk(search_dir):
+            for f in files:
+                if f.endswith(".sh"):
+                    sh_files.append(os.path.join(root, f))
+    sh_files.sort()
+    if not sh_files:
+        print("Error: No shell files found to check.", file=sys.stderr)
+        sys.exit(1)
+    alert(f"Running shellcheck on {len(sh_files)} files.")
+    alert_note("shellcheck does not support zsh; skipping lang/zsh/.")
+    result = subprocess.run(
+        [shellcheck, "--external-sources", *sh_files],
+        check=False,
+    )
+    if result.returncode == 0:
+        alert_success(f"shellcheck passed [{len(sh_files)} files].")
+    else:
+        sys.exit(result.returncode)
+
+
 def _handle_check_app_versions(args: list[str]) -> None:
     """Handle ``koopa develop check-app-versions``."""
     import argparse
@@ -328,6 +365,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "push-all-app-builds": lambda _: _handle_push_all_app_builds(),
     "push-app-build": _handle_push_app_build,
     "roff": lambda _: _handle_roff(),
+    "shellcheck": lambda _: _handle_shellcheck(),
     "check-app-versions": _handle_check_app_versions,
 }
 
