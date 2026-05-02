@@ -463,7 +463,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 dep_opt = os.path.join(_opt_prefix(), dep)
                 if os.path.exists(dep_opt):
                     continue
-                dep_config = InstallConfig(name=dep)
+                dep_config = InstallConfig(
+                    name=dep,
+                    passthrough_args=_build_passthrough_args(dep),
+                )
                 if config.bootstrap:
                     dep_config.bootstrap = True
                 if config.verbose:
@@ -1740,6 +1743,24 @@ def _update_system_python(*, verbose: bool = False) -> None:
 # -- Convenience CLI entry point ----------------------------------------------
 
 
+def _build_passthrough_args(name: str) -> list[str]:
+    """Build passthrough args from app.json installer_args."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    installer_args = entry.get("installer_args", {}) if isinstance(entry, dict) else {}
+    if not installer_args:
+        return []
+    result: list[str] = []
+    for key, value in installer_args.items():
+        flag = key.replace("_", "-")
+        if isinstance(value, list):
+            for item in value:
+                result.append(f"--{flag}={item}")
+        else:
+            result.append(f"--{flag}={value}")
+    return result
+
+
 def cli_install(
     name: str,
     *,
@@ -1758,5 +1779,6 @@ def cli_install(
         verbose=verbose,
         binary=_can_install_binary(),
         push=_can_push_binary(),
+        passthrough_args=_build_passthrough_args(name),
     )
     install_app(config)
