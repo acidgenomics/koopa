@@ -51,6 +51,47 @@ def check_installed_apps() -> bool:
     return ok
 
 
+def check_broken_app_installs() -> bool:
+    """Check for broken app installs.
+
+    Scans app prefix for directories that have no corresponding opt symlink,
+    indicating a failed or incomplete install. Reports empty version
+    directories that should be cleaned up.
+    """
+    from koopa.prefix import app_prefix as get_app_prefix
+
+    ok = True
+    app_dir = get_app_prefix()
+    opt_prefix = koopa_opt_prefix()
+    if not isdir(app_dir):
+        return True
+    for name in sorted(os.listdir(app_dir)):
+        app_path = join(app_dir, name)
+        if not isdir(app_path):
+            continue
+        opt_link = join(opt_prefix, name)
+        if islink(opt_link) and isdir(realpath(opt_link)):
+            continue
+        versions = [
+            v for v in os.listdir(app_path)
+            if isdir(join(app_path, v))
+        ]
+        if not versions:
+            ok = False
+            print(f"{name}: failed install (empty app directory)")
+            continue
+        for ver in versions:
+            ver_path = join(app_path, ver)
+            contents = os.listdir(ver_path)
+            if not contents:
+                ok = False
+                print(f"{name}/{ver}: failed install (empty prefix)")
+            else:
+                ok = False
+                print(f"{name}/{ver}: installed but not linked in opt")
+    return ok
+
+
 def check_circular_deps() -> list:
     """Check for circular dependencies in app.json.
 
@@ -334,6 +375,8 @@ def check_system() -> bool:
         if not check_macos_system_python():
             ok = False
     if not check_installed_apps():
+        ok = False
+    if not check_broken_app_installs():
         ok = False
     if not check_disk("/"):
         ok = False
