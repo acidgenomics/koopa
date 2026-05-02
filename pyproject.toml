@@ -10,7 +10,9 @@ description = "Shell bootloader for data science."
 keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = ["syntactic"]
+
+[project.optional-dependencies]
+extra = ["syntactic"]
 
 # > [build-system]
 # > requires = ["setuptools"]
