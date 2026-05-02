@@ -27,7 +27,6 @@ _koopa_activate_delta() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns \
         "$source_file" \
         "$target_file" \

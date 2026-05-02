@@ -2,7 +2,6 @@
 
 _koopa_major_version() {
     local str
-    _koopa_is_alias 'cut' && unalias 'cut'
     for str in "$@"
     do
         str="$( \

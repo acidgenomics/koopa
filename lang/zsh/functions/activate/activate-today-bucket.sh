@@ -27,8 +27,6 @@ _koopa_activate_today_bucket() {
     then
         return 0
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
-    _koopa_is_alias 'mkdir' && unalias 'mkdir'
     mkdir -p \
         "${bucket_dir}/${today_subdirs}" \
         >/dev/null
