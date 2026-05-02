@@ -93,9 +93,8 @@ class _RateLimiter:
 _github_token: str | None = (
     os.environ.get("GITHUB_TOKEN")
     or os.environ.get("GH_TOKEN")
-    or os.environ.get("GITHUB_PAT")
 )
-_rate_github = _RateLimiter(1.2 if _github_token else 0.8)
+_rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
 
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
@@ -228,7 +227,7 @@ def _check_directory_listing(
     html = _http_get_text(url)
     flags = 0 if case_sensitive else re.IGNORECASE
     pattern = re.compile(
-        rf"{re.escape(tarball_prefix)}[_-]([\d]+(?:\.[\d]+)*)"
+        rf"{re.escape(tarball_prefix)}[_-]([\d]+(?:\.[\d]+)*(?:-\d+)?)"
         rf"(?:\.tar\.(?:gz|xz|bz2|lz)|\.zip)",
         flags,
     )
@@ -238,7 +237,9 @@ def _check_directory_listing(
         raise RuntimeError(msg)
     best = max(
         set(versions),
-        key=lambda v: tuple(int(x) for x in v.split(".")),
+        key=lambda v: tuple(
+            int(x) for x in re.split(r"[.\-]", v)
+        ),
     )
     return best
 
@@ -392,6 +393,9 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
     version = info.get("version", "")
     if len(version) == 40:
         return None
+    spec = _SPECIAL_CASES.get(name)
+    if spec is not None:
+        return spec
     for suffix, source in _GENERIC_INSTALLER_MAP.items():
         if module_path.endswith(suffix):
             result = _classify_generic(source, name, info, args, urls)
@@ -475,10 +479,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://sourceware.org/pub/bzip2/",
         "bzip2",
     ),
-    "ca-certificates": (
-        "https://curl.se/ca/",
-        "cacert",
-    ),
     "convmv": (
         "https://www.j3e.de/linux/convmv/",
         "convmv",
@@ -499,10 +499,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/",
         "gnutls",
     ),
-    "imagemagick": (
-        "https://imagemagick.org/archive/releases/",
-        "ImageMagick",
-    ),
     "isl": (
         "https://libisl.sourceforge.io/",
         "isl",
@@ -514,10 +510,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
     "libarchive": (
         "https://www.libarchive.org/downloads/",
         "libarchive",
-    ),
-    "libedit": (
-        "https://thrysoee.dk/editline/",
-        "libedit",
     ),
     "libpcap": (
         "https://www.tcpdump.org/release/",
@@ -538,10 +530,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
     "lzo": (
         "https://www.oberhumer.com/opensource/lzo/download/",
         "lzo",
-    ),
-    "mpdecimal": (
-        "https://www.bytereef.org/software/mpdecimal/releases/",
-        "mpdecimal",
     ),
     "ncurses": (
         "https://ftp.gnu.org/pub/gnu/ncurses/",
@@ -612,9 +600,6 @@ def _classify_by_known_pattern(
             lambda u=url, p=prefix: _check_directory_listing(u, p),
             (),
         )
-    spec = _SPECIAL_CASES.get(name)
-    if spec is not None:
-        return spec
     return None
 
 
@@ -661,6 +646,38 @@ def _check_ghostscript() -> str:
     return sanitize_version(digits)
 
 
+def _check_ca_certificates() -> str:
+    html = _http_get_text("https://curl.se/docs/caextract.html")
+    dates = re.findall(r"cacert-(\d{4}-\d{2}-\d{2})", html)
+    if not dates:
+        msg = "No ca-certificates versions found"
+        raise RuntimeError(msg)
+    return max(dates)
+
+
+def _check_libedit() -> str:
+    html = _http_get_text("https://thrysoee.dk/editline/")
+    versions = re.findall(r"libedit-(\d{8}-\d+\.\d+)", html)
+    if not versions:
+        msg = "No libedit versions found"
+        raise RuntimeError(msg)
+    return max(versions)
+
+
+def _check_mpdecimal() -> str:
+    html = _http_get_text(
+        "https://www.bytereef.org/mpdecimal/download.html"
+    )
+    versions = re.findall(r"mpdecimal-([\d]+(?:\.[\d]+)*)", html)
+    if not versions:
+        msg = "No mpdecimal versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
 def _make_dirlist_spec(url: str, prefix: str) -> _AppCheckSpec:
     return _AppCheckSpec(
         "dirlist",
@@ -681,6 +698,9 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_gnu("bash"),
         (),
     ),
+    "ca-certificates": _AppCheckSpec(
+        "dirlist", _check_ca_certificates, ()
+    ),
     "elfutils": _AppCheckSpec(
         "dirlist",
         lambda: _check_elfutils(),
@@ -698,9 +718,18 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "go": _make_dirlist_spec("https://go.dev/dl/", "go"),
+    "imagemagick": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://imagemagick.org/archive/releases/",
+            "ImageMagick",
+        ),
+        (),
+    ),
     "hadolint": _AppCheckSpec(
         "github", _check_github, ("hadolint", "hadolint")
     ),
+    "libedit": _AppCheckSpec("dirlist", _check_libedit, ()),
     "libidn": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("libidn2", parent="libidn"),
@@ -759,6 +788,12 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "uv": _AppCheckSpec("pypi", _check_pypi, ("uv",)),
+    "wget2": _AppCheckSpec(
+        "gnu",
+        lambda: _check_gnu("wget2", parent="wget"),
+        (),
+    ),
+    "mpdecimal": _AppCheckSpec("dirlist", _check_mpdecimal, ()),
 }
 
 
@@ -843,12 +878,21 @@ def check_app_versions(
     max_workers: int = 8,
     use_cache: bool = True,
 ) -> list[VersionCheckResult]:
+    if _github_token is None:
+        msg = (
+            "GITHUB_TOKEN is not set. "
+            "Set it with:\n"
+            '    export GITHUB_TOKEN="$(gh auth token)"'
+        )
+        raise RuntimeError(msg)
     json_data = import_app_json()
     cache = _VersionCache() if use_cache else None
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
+            continue
+        if info.get("removed", False):
             continue
         version = info.get("version", "")
         if not version:
