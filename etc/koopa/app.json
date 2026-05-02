@@ -1174,7 +1174,11 @@
     "build_dependencies": ["gperf", "make"],
     "date": "2026-05-02",
     "default": true,
-    "dependencies": ["attr", "gmp"],
+    "dependencies": {
+      "macos-arm64": ["gmp"],
+      "macos-amd64": ["gmp"],
+      "noarch": ["attr", "gmp"]
+    },
     "installer": "gnu-app",
     "man1": [
       "gb2sum.1",

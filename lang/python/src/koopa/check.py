@@ -94,14 +94,13 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
             continue
         for ver in versions:
             ver_path = join(app_path, ver)
-            contents = os.listdir(ver_path)
-            if not contents:
+            if isdir(join(ver_path, ".install")):
                 issues.append(
-                    (name, f"{name}/{ver}: failed install (empty prefix)"),
+                    (name, f"{name}/{ver}: installed but not linked in opt"),
                 )
             else:
                 issues.append(
-                    (name, f"{name}/{ver}: installed but not linked in opt"),
+                    (name, f"{name}/{ver}: failed install (no .install marker)"),
                 )
     return issues
 
