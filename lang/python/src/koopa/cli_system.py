@@ -216,9 +216,56 @@ def _handle_switch_to_develop(args: list[str]) -> None:
     _zsh_compaudit_set_permissions()
 
 
+def _handle_disable_passwordless_sudo() -> None:
+    """Handle ``koopa system disable-passwordless-sudo``."""
+    import grp
+    import os
+
+    if os.getuid() != 0:
+        msg = "Admin/root access is required."
+        raise PermissionError(msg)
+    group = "admin" if os.path.exists("/etc/pam.d") else "sudo"
+    try:
+        grp.getgrnam(group)
+    except KeyError:
+        group = "sudo"
+    sudoers_file = f"/etc/sudoers.d/koopa-{group}"
+    if os.path.isfile(sudoers_file):
+        print(f"Removing sudo permission file at '{sudoers_file}'.")
+        os.remove(sudoers_file)
+    print("Passwordless sudo is disabled.")
+
+
+def _handle_enable_passwordless_sudo() -> None:
+    """Handle ``koopa system enable-passwordless-sudo``."""
+    import grp
+    import os
+    import stat
+
+    if os.getuid() != 0:
+        msg = "Admin/root access is required."
+        raise PermissionError(msg)
+    group = "admin" if os.path.exists("/etc/pam.d") else "sudo"
+    try:
+        grp.getgrnam(group)
+    except KeyError:
+        group = "sudo"
+    sudoers_file = f"/etc/sudoers.d/koopa-{group}"
+    if os.path.exists(sudoers_file):
+        print(
+            f"Passwordless sudo for '{group}' group "
+            f"already enabled at '{sudoers_file}'.",
+        )
+        return
+    content = f"%{group} ALL=(ALL:ALL) NOPASSWD:ALL\n"
+    print(f"Modifying '{sudoers_file}' to include '{group}'.")
+    with open(sudoers_file, "w") as f:
+        f.write(content)
+    os.chmod(sudoers_file, stat.S_IRUSR | stat.S_IRGRP)
+    print(f"Passwordless sudo enabled for '{group}' at '{sudoers_file}'.")
+
+
 _SYSTEM_COMMANDS: dict[str, str] = {
-    "disable-passwordless-sudo": "disable-passwordless-sudo",
-    "enable-passwordless-sudo": "enable-passwordless-sudo",
     "hostname": "hostname",
     "os-string": "os-string",
     "test": "test",
@@ -279,6 +326,12 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         return
     if subcmd == "prune-apps":
         _handle_prune_apps()
+        return
+    if subcmd == "disable-passwordless-sudo":
+        _handle_disable_passwordless_sudo()
+        return
+    if subcmd == "enable-passwordless-sudo":
+        _handle_enable_passwordless_sudo()
         return
     if subcmd == "switch-to-develop":
         _handle_switch_to_develop(rest)
