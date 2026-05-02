@@ -451,6 +451,8 @@ def generate_completion(*, write: bool = False) -> str:
                 "install",
                 "install-all-apps",
                 "install-default-apps",
+                "list-all-apps",
+                "list-default-apps",
                 "reinstall",
                 "system",
                 "uninstall",

@@ -1159,21 +1159,30 @@ def install_haskell_package(
 
 
 def install_all_apps() -> None:
-    """Install the default recommended app stack."""
-    install_shared_apps()
+    """Install all supported shared apps."""
+    install_shared_apps(mode="all")
 
 
 def install_default_apps() -> None:
     """Install the default recommended app stack."""
-    install_shared_apps()
+    from koopa.alert import alert_note
+
+    alert_note(
+        "This installs missing default apps. "
+        "To update existing apps, use 'koopa update'.",
+    )
+    install_shared_apps(mode="default")
 
 
-def install_shared_apps() -> None:
-    """Build and install default shared apps from source.
+def install_shared_apps(mode: str = "default") -> None:
+    """Build and install shared apps from source.
 
     Skips apps that are already fully installed (have an install log).
     Use ``koopa update`` to update outdated apps.
     """
+    if mode not in ("all", "default"):
+        msg = f"Invalid mode: {mode!r}."
+        raise ValueError(msg)
     if not is_owner():
         msg = "Only the koopa owner can install shared apps."
         raise PermissionError(msg)
@@ -1190,10 +1199,9 @@ def install_shared_apps() -> None:
             raise RuntimeError(msg)
     except ImportError:
         pass
-    data = _import_app_json()
-    app_names = [
-        k for k, v in sorted(data.items()) if isinstance(v, dict) and v.get("default", False)
-    ]
+    from koopa.app import shared_apps
+
+    app_names = shared_apps(mode=mode)
     app_dir = _app_prefix()
     for app_name in app_names:
         app_prefix = os.path.join(app_dir, app_name)
