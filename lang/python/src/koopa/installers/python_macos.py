@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 
 from koopa.download import download
 from koopa.file_ops import ln
@@ -18,6 +19,7 @@ def main(
 ) -> None:
     """Install Python framework on macOS."""
     framework_prefix = "/Library/Frameworks/Python.framework"
+    print(f"Target: {framework_prefix}", file=sys.stderr)
     maj_ver = version.split(".", maxsplit=1)[0]
     maj_min_ver = ".".join(version.split(".")[:2])
     python_prefix = os.path.join(framework_prefix, "Versions", maj_min_ver)
@@ -39,6 +41,21 @@ def main(
     if not os.path.isfile(python_bin):
         msg = f"Python binary not found: {python_bin}"
         raise RuntimeError(msg)
+    versions_prefix = os.path.join(framework_prefix, "Versions")
+    if os.path.isdir(versions_prefix):
+        for entry in os.listdir(versions_prefix):
+            entry_path = os.path.join(versions_prefix, entry)
+            if entry_path == python_prefix:
+                continue
+            if os.path.islink(entry_path):
+                continue
+            if not os.path.isdir(entry_path):
+                continue
+            print(f"Removing old version: {entry_path}", file=sys.stderr)
+            subprocess.run(
+                ["sudo", "rm", "-rf", entry_path],
+                check=True,
+            )
     ln(
         f"python{maj_ver}",
         os.path.join(python_prefix, "bin", "python"),
