@@ -263,6 +263,8 @@ def _handle_roff() -> None:
 
 def _handle_check_app_versions(args: list[str]) -> None:
     """Handle ``koopa develop check-app-versions``."""
+    import argparse
+
     from koopa.version_check import (
         check_app_versions,
         print_json_report,
@@ -270,24 +272,41 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json,
     )
 
-    update = "--update" in args
-    output_json = "--json" in args
-    source_filter = None
-    name_filter: list[str] = []
-    for arg in args:
-        if arg.startswith("--source="):
-            source_filter = arg.split("=", 1)[1]
-        elif not arg.startswith("--"):
-            name_filter.append(arg)
-    results = check_app_versions(
-        source_filter=source_filter,
-        name_filter=name_filter or None,
+    parser = argparse.ArgumentParser(
+        prog="koopa develop check-app-versions",
+        description="Check app versions against upstream sources.",
     )
-    if output_json:
+    parser.add_argument(
+        "apps",
+        nargs="*",
+        help="app names to check (default: all)",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="output_json",
+        help="output results as JSON",
+    )
+    parser.add_argument(
+        "--source",
+        default=None,
+        help="filter by source type (e.g. github, pypi, conda)",
+    )
+    parser.add_argument(
+        "--update",
+        action="store_true",
+        help="update app.json with latest versions",
+    )
+    parsed = parser.parse_args(args)
+    results = check_app_versions(
+        source_filter=parsed.source,
+        name_filter=parsed.apps or None,
+    )
+    if parsed.output_json:
         print_json_report(results)
     else:
         print_report(results)
-    if update:
+    if parsed.update:
         update_app_json(results)
 
 
@@ -309,11 +328,6 @@ def handle_develop(remainder: list[str]) -> None:
     if not remainder:
         print("Error: no develop command specified.", file=sys.stderr)
         sys.exit(1)
-    if remainder[-1] in ("--help", "-h"):
-        from koopa.cli_help import show_man_page
-
-        show_man_page("develop", *remainder[:-1])
-        return
     subcmd = remainder[0]
     rest = remainder[1:]
     handler = _DEVELOP_HANDLERS.get(subcmd)

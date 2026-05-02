@@ -413,11 +413,6 @@ def main() -> None:
 
         print(koopa_version())
         return
-    if len(argv) >= 2 and argv[-1] in ("--help", "-h"):
-        from koopa.cli_help import show_man_page
-
-        show_man_page(*argv[:-1])
-        return
     parser = _build_parser()
     args = parser.parse_args(argv)
     if args.command is None:
