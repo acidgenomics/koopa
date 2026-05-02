@@ -17,6 +17,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
+    """Install Homebrew Bundle."""
     if is_macos():
         clt_dir = "/Library/Developer/CommandLineTools"
         if not os.path.isdir(clt_dir):

@@ -12,6 +12,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
+    """Install Spacemacs."""
     git_clone(
         "https://github.com/syl20bnr/spacemacs.git",
         prefix,
