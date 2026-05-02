@@ -435,9 +435,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         raise PermissionError(msg)
     # -- Handle existing prefix -----------------------------------------------
     if config.prefix and config.prefix_check and os.path.isdir(config.prefix):
-        stdout_log = os.path.join(config.prefix, ".install", "stdout.log")
-        stdout_log_legacy = os.path.join(config.prefix, ".koopa-install-stdout.log")
-        if not os.path.isfile(stdout_log) and not os.path.isfile(stdout_log_legacy):
+        install_marker = os.path.join(config.prefix, ".install")
+        if not os.path.isdir(install_marker):
             config.reinstall = True
         if config.reinstall:
             if not config.quiet:
@@ -519,6 +518,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     finally:
         os.chdir(orig_cwd)
         shutil.rmtree(tmp_dir, ignore_errors=True)
+    # -- Post-install: success marker ------------------------------------------
+    if config.prefix:
+        os.makedirs(os.path.join(config.prefix, ".install"), exist_ok=True)
     # -- Post-install: linking ------------------------------------------------
     if config.mode == "shared":
         if config.link_in_opt:
@@ -603,9 +605,10 @@ def install_gnu_app(
     all_conf_args = list(conf_args or [])
     all_conf_args.append(f"--prefix={prefix}")
     os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
+    from koopa.download import download
+
     url = f"{mirror}/{parent_name}/{package_name}-{version}.tar.{compress_ext}"
-    _run("curl", "-LO", url)
-    tarball = os.path.basename(url)
+    tarball = download(url)
     os.makedirs("src", exist_ok=True)
     _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")
@@ -1341,12 +1344,7 @@ def install_shared_apps(mode: str = "default") -> None:
                 d for d in os.listdir(app_prefix) if os.path.isdir(os.path.join(app_prefix, d))
             ]
             if any(
-                os.path.isfile(
-                    os.path.join(app_prefix, v, ".install", "stdout.log"),
-                )
-                or os.path.isfile(
-                    os.path.join(app_prefix, v, ".koopa-install-stdout.log"),
-                )
+                os.path.isdir(os.path.join(app_prefix, v, ".install"))
                 for v in versions
             ):
                 continue
@@ -1657,23 +1655,10 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     n = len(apps)
     label = "app" if n == 1 else "apps"
     alert(f"Updating {n} {label}: {', '.join(apps)}")
-    failed = []
     for app in apps:
-        try:
-            cli_install(app, reinstall=True, verbose=verbose)
-        except Exception as exc:
-            from koopa.alert import warn
-
-            warn(f"Failed to update {app}: {exc}")
-            failed.append(app)
-    succeeded = [a for a in apps if a not in failed]
-    _update_stale_revdeps(succeeded, failed=failed, verbose=verbose)
-    if failed:
-        from koopa.alert import warn
-
-        warn(f"Failed to update: {', '.join(failed)}")
-    else:
-        alert_success("All stale apps updated successfully.")
+        cli_install(app, reinstall=True, verbose=verbose)
+    _update_stale_revdeps(apps, failed=[], verbose=verbose)
+    alert_success("All stale apps updated successfully.")
 
 
 def _update_stale_revdeps(
