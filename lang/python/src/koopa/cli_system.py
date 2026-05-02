@@ -44,10 +44,8 @@ def _handle_list(args: list[str]) -> None:
     rest = args[1:]
     list_cmds = {
         "app-versions": "list-app-versions",
-        "dotfiles": "list-dotfiles",
         "launch-agents": "macos-list-launch-agents",
         "path-priority": "list-path-priority",
-        "programs": "list-programs",
     }
     key = list_cmds.get(subcmd)
     if key is None:
