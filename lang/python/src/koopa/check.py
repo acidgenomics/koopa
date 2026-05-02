@@ -24,9 +24,17 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
     json_data = import_app_json()
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
+    from koopa.os import os_id
+
+    current_os = os_id()
     for name in names:
         if name not in json_data:
             issues.append((name, f"{name} is an unsupported app", False))
+            continue
+        entry = json_data[name]
+        supported = entry.get("supported", {})
+        if current_os in supported and not supported[current_os]:
+            issues.append((name, f"{name} is not supported on {current_os}", False))
             continue
         path = join(opt_prefix, name)
         if not islink(path):
