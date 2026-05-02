@@ -139,7 +139,7 @@ _koopa_grep() {
             app['grep']="$(_koopa_locate_grep --allow-system)"
             ;;
         'rg')
-            app['grep']="$(_koopa_locate_ripgrep)"
+            app['grep']="$(_koopa_locate_rg)"
             ;;
     esac
     # Piped input using stdin (string mode).

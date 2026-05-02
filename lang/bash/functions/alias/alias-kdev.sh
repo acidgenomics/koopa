@@ -3,8 +3,8 @@
 _koopa_alias_kdev() {
     local bin_prefix
     bin_prefix="$(_koopa_bin_prefix)"
-    local _koopa_prefix
-    _koopa_prefix="$(_koopa_koopa_prefix)"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_koopa_prefix)"
     local bash
     bash="${bin_prefix}/bash"
     local env
@@ -34,7 +34,7 @@ _koopa_alias_kdev() {
         return 1
     fi
     local rcfile
-    rcfile="${_koopa_prefix}/lang/bash/include/header.sh"
+    rcfile="${koopa_prefix}/lang/bash/include/header.sh"
     [[ -f "$rcfile" ]] || return 1
     "$env" -i \
         AWS_CLOUDFRONT_DISTRIBUTION_ID="${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" \

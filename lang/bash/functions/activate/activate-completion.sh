@@ -11,10 +11,11 @@ _koopa_activate_completion() {
             return 0
             ;;
     esac
-    local _koopa_prefix
-    _koopa_prefix="$(_koopa_koopa_prefix)"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_koopa_prefix)"
     local file
-    for file in "${_koopa_prefix}/etc/completion/"*'.sh'
+    # shellcheck source=/dev/null
+    for file in "${koopa_prefix}/etc/completion/"*'.sh'
     do
         [[ -f "$file" ]] && source "$file"
     done

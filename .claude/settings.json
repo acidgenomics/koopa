@@ -1,0 +1,18 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(*)",
+            "Grep",
+            "Python(*)",
+            "Read"
+        ],
+        "deny": [
+            "Bash(git add*)",
+            "Bash(git commit*)",
+            "Bash(git merge*)",
+            "Bash(git push*)",
+            "Bash(git rebase*)",
+            "Bash(git reset*)"
+        ]
+    }
+}
