@@ -15,6 +15,7 @@ import sys
 import tempfile
 from dataclasses import dataclass
 
+from koopa.configurers import get_python_configurer, has_python_configurer
 from koopa.prefix import bash_prefix, koopa_prefix
 
 
@@ -59,19 +60,28 @@ def configure_app(config: ConfigureConfig) -> None:
     elif config.mode == "user" and _is_admin():
         msg = "Root user cannot configure user apps."
         raise PermissionError(msg)
-    config_file = os.path.join(
-        bash_prefix(),
-        "include",
-        "configure",
-        config.platform,
-        config.mode,
-        f"{config.name}.sh",
-    )
-    if not os.path.isfile(config_file):
-        msg = f"No configure script for '{config.name}' ({config.platform}/{config.mode})."
-        raise FileNotFoundError(msg)
     print(f"Configuring '{config.name}'.", file=sys.stderr)
-    _run_configure_script(config_file, config)
+    if has_python_configurer(config.name, config.platform, config.mode):
+        configurer = get_python_configurer(config.name, config.platform, config.mode)
+        configurer(
+            name=config.name,
+            platform=config.platform,
+            mode=config.mode,
+            verbose=config.verbose,
+        )
+    else:
+        config_file = os.path.join(
+            bash_prefix(),
+            "include",
+            "configure",
+            config.platform,
+            config.mode,
+            f"{config.name}.sh",
+        )
+        if not os.path.isfile(config_file):
+            msg = f"No configure script for '{config.name}' ({config.platform}/{config.mode})."
+            raise FileNotFoundError(msg)
+        _run_configure_script(config_file, config)
     print(f"Successfully configured '{config.name}'.", file=sys.stderr)
 
 

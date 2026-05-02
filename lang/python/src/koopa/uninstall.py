@@ -16,6 +16,8 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from koopa.uninstallers import get_python_uninstaller, has_python_uninstaller
+
 
 def _koopa_prefix() -> str:
     """Return koopa installation prefix."""
@@ -156,16 +158,26 @@ def uninstall_app(config: UninstallConfig) -> None:
             file=sys.stderr,
         )
     uninstaller_bn = config.uninstaller or config.name
-    uninstaller_file = os.path.join(
-        _bash_prefix(),
-        "include",
-        "uninstall",
-        config.platform,
-        config.mode,
-        f"{uninstaller_bn}.sh",
-    )
-    if os.path.isfile(uninstaller_file):
-        _run_uninstaller_script(uninstaller_file, config)
+    if has_python_uninstaller(uninstaller_bn, config.platform, config.mode):
+        uninstaller = get_python_uninstaller(uninstaller_bn, config.platform, config.mode)
+        uninstaller(
+            name=config.name,
+            platform=config.platform,
+            mode=config.mode,
+            prefix=config.prefix,
+            verbose=config.verbose,
+        )
+    else:
+        uninstaller_file = os.path.join(
+            _bash_prefix(),
+            "include",
+            "uninstall",
+            config.platform,
+            config.mode,
+            f"{uninstaller_bn}.sh",
+        )
+        if os.path.isfile(uninstaller_file):
+            _run_uninstaller_script(uninstaller_file, config)
     if os.path.isdir(config.prefix):
         if config.mode == "system":
             subprocess.run(
