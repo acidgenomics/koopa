@@ -46,8 +46,7 @@ def _configure_timezone() -> None:
     debconf = shutil.which("debconf-set-selections")
     if debconf is not None:
         selections = (
-            "tzdata tzdata/Areas select America\n"
-            "tzdata tzdata/Zones/America select New_York\n"
+            "tzdata tzdata/Areas select America\ntzdata tzdata/Zones/America select New_York\n"
         )
         subprocess.run(
             ["sudo", debconf],

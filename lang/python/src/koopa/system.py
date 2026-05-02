@@ -376,7 +376,7 @@ def mem_gb() -> float:
                 check=True,
             )
             return round(int(result.stdout.strip()) / (1024**3), 1)
-        except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
+        except FileNotFoundError, subprocess.CalledProcessError, ValueError:
             pass
     meminfo = "/proc/meminfo"
     if os.path.isfile(meminfo):

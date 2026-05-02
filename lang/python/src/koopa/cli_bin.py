@@ -106,20 +106,14 @@ def _handle_find_and_replace(args: list[str]) -> None:
         prog="find-and-replace",
         description="Find and replace text in files.",
     )
-    parser.add_argument(
-        "--fixed", action="store_true", help="treat pattern as fixed string"
-    )
-    parser.add_argument(
-        "--regex", action="store_true", help="treat pattern as regex (default)"
-    )
+    parser.add_argument("--fixed", action="store_true", help="treat pattern as fixed string")
+    parser.add_argument("--regex", action="store_true", help="treat pattern as regex (default)")
     parser.add_argument("pattern", help="search pattern")
     parser.add_argument("replacement", help="replacement string")
     parser.add_argument("files", nargs="+", help="files to process")
     parsed = parser.parse_args(args)
     for path in parsed.files:
-        find_and_replace_in_file(
-            path, parsed.pattern, parsed.replacement, fixed=parsed.fixed
-        )
+        find_and_replace_in_file(path, parsed.pattern, parsed.replacement, fixed=parsed.fixed)
 
 
 def _handle_find_files_without_line_ending(args: list[str]) -> None:
@@ -356,9 +350,7 @@ def _handle_move_files_up_1_level(args: list[str]) -> None:
         prog="move-files-up-1-level",
         description="Move files up one directory level.",
     )
-    parser.add_argument(
-        "directory", nargs="?", default=os.getcwd(), help="directory to process"
-    )
+    parser.add_argument("directory", nargs="?", default=os.getcwd(), help="directory to process")
     parsed = parser.parse_args(args)
     prefix = os.path.realpath(parsed.directory)
     if not os.path.isdir(prefix):
@@ -590,23 +582,17 @@ def _syntactic_rename_parser(prog: str, description: str) -> argparse.ArgumentPa
 
 
 def _handle_rename_camel_case(args: list[str]) -> None:
-    parser = _syntactic_rename_parser(
-        "rename-camel-case", "Rename files to camelCase."
-    )
+    parser = _syntactic_rename_parser("rename-camel-case", "Rename files to camelCase.")
     _syntactic_rename(parser.parse_args(args), fun="camel_case")
 
 
 def _handle_rename_kebab_case(args: list[str]) -> None:
-    parser = _syntactic_rename_parser(
-        "rename-kebab-case", "Rename files to kebab-case."
-    )
+    parser = _syntactic_rename_parser("rename-kebab-case", "Rename files to kebab-case.")
     _syntactic_rename(parser.parse_args(args), fun="kebab_case")
 
 
 def _handle_rename_snake_case(args: list[str]) -> None:
-    parser = _syntactic_rename_parser(
-        "rename-snake-case", "Rename files to snake_case."
-    )
+    parser = _syntactic_rename_parser("rename-snake-case", "Rename files to snake_case.")
     _syntactic_rename(parser.parse_args(args), fun="snake_case")
 
 
@@ -617,9 +603,7 @@ def _handle_rename_lowercase(args: list[str]) -> None:
         prog="rename-lowercase",
         description="Rename files to lowercase.",
     )
-    parser.add_argument(
-        "--recursive", action="store_true", help="process directories recursively"
-    )
+    parser.add_argument("--recursive", action="store_true", help="process directories recursively")
     parser.add_argument("paths", nargs="*", help="paths to process")
     parsed = parser.parse_args(args)
     if not parsed.recursive and not parsed.paths:
@@ -674,9 +658,7 @@ def _handle_df2(args: list[str]) -> None:
         prog="df2",
         description="Wrapper around df with improved defaults.",
     )
-    parser.add_argument(
-        "args", nargs=argparse.REMAINDER, help="additional arguments passed to df"
-    )
+    parser.add_argument("args", nargs=argparse.REMAINDER, help="additional arguments passed to df")
     parsed = parser.parse_args(args)
     df = _which("df")
     cmd = [df]
@@ -697,9 +679,7 @@ def _handle_ip_address(args: list[str]) -> None:
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--local", action="store_true", help="print local IP address")
-    group.add_argument(
-        "--public", action="store_true", help="print public IP address (default)"
-    )
+    group.add_argument("--public", action="store_true", help="print public IP address (default)")
     parsed = parser.parse_args(args)
     mode = "local" if parsed.local else "public"
     if mode == "local":
@@ -889,9 +869,7 @@ def _handle_jekyll_serve(args: list[str]) -> None:
         prog="jekyll-serve",
         description="Serve a Jekyll website locally.",
     )
-    parser.add_argument(
-        "directory", nargs="?", default=os.getcwd(), help="site directory"
-    )
+    parser.add_argument("directory", nargs="?", default=os.getcwd(), help="site directory")
     parsed = parser.parse_args(args)
     prefix = os.path.realpath(parsed.directory)
     if not os.path.isdir(prefix):
