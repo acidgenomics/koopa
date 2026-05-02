@@ -39,6 +39,42 @@ class VersionCheckResult:
         )
 
 
+class _VersionCache:
+    def __init__(self, ttl_hours: int = 24) -> None:
+        self._ttl = ttl_hours * 3600
+        cache_dir = os.path.join(xdg_cache_home(), "koopa")
+        self._path = os.path.join(cache_dir, "version-check.json")
+        self._data: dict[str, dict] = {}
+        self._load()
+
+    def _load(self) -> None:
+        try:
+            with open(self._path) as f:
+                self._data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError, OSError):
+            self._data = {}
+
+    def get(self, name: str) -> str | None:
+        entry = self._data.get(name)
+        if entry is None:
+            return None
+        if time.time() - entry.get("ts", 0) > self._ttl:
+            return None
+        return entry.get("latest_version")
+
+    def put(self, name: str, latest_version: str, source: str) -> None:
+        self._data[name] = {
+            "latest_version": latest_version,
+            "source": source,
+            "ts": time.time(),
+        }
+
+    def save(self) -> None:
+        os.makedirs(os.path.dirname(self._path), exist_ok=True)
+        with open(self._path, "w") as f:
+            json.dump(self._data, f)
+
+
 class _RateLimiter:
     def __init__(self, requests_per_second: float) -> None:
         self._interval = 1.0 / requests_per_second
@@ -447,10 +483,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://www.j3e.de/linux/convmv/",
         "convmv",
     ),
-    "elfutils": (
-        "https://sourceware.org/elfutils/ftp/",
-        "elfutils",
-    ),
     "flac": (
         "https://downloads.xiph.org/releases/flac/",
         "flac",
@@ -586,6 +618,49 @@ def _classify_by_known_pattern(
     return None
 
 
+def _check_elfutils() -> str:
+    html = _http_get_text("https://sourceware.org/elfutils/ftp/")
+    versions = re.findall(r'href="(0\.\d+)/"', html)
+    if not versions:
+        msg = "No elfutils version directories found"
+        raise RuntimeError(msg)
+    return max(set(versions), key=lambda v: tuple(int(x) for x in v.split(".")))
+
+
+def _check_expat() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/libexpat/libexpat/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    tag = re.sub(r"^R[_.]?", "", tag)
+    return tag.replace("_", ".")
+
+
+def _check_ghostscript() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/ArtifexSoftware/"
+        "ghostpdl-downloads/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    m = re.match(r"gs(\d+)", tag)
+    if not m:
+        msg = f"Cannot parse ghostscript tag: {tag}"
+        raise RuntimeError(msg)
+    digits = m.group(1)
+    if len(digits) == 4:
+        major = digits[:2].lstrip("0") or "0"
+        minor = digits[2:].lstrip("0") or "0"
+        return f"{major}.{minor}"
+    if len(digits) == 5:
+        major = digits[:2].lstrip("0") or "0"
+        minor = digits[2:4].lstrip("0") or "0"
+        patch = digits[4:].lstrip("0") or "0"
+        return f"{major}.{minor}.{patch}"
+    return sanitize_version(digits)
+
+
 def _make_dirlist_spec(url: str, prefix: str) -> _AppCheckSpec:
     return _AppCheckSpec(
         "dirlist",
@@ -606,7 +681,14 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_gnu("bash"),
         (),
     ),
+    "elfutils": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_elfutils(),
+        (),
+    ),
+    "expat": _AppCheckSpec("github", _check_expat, ()),
     "gcc": _make_dirlist_spec("https://ftp.gnu.org/gnu/gcc/", "gcc-"),
+    "ghostscript": _AppCheckSpec("github", _check_ghostscript, ()),
     "git": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -759,8 +841,10 @@ def check_app_versions(
     source_filter: str | None = None,
     name_filter: list[str] | None = None,
     max_workers: int = 8,
+    use_cache: bool = True,
 ) -> list[VersionCheckResult]:
     json_data = import_app_json()
+    cache = _VersionCache() if use_cache else None
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
     for app_name, info in sorted(json_data.items()):
@@ -781,26 +865,53 @@ def check_app_versions(
         if source_filter and spec.source != source_filter:
             continue
         specs.append((app_name, version, spec))
-    total = len(specs)
     results: list[VersionCheckResult] = list(unsupported)
     if not specs:
         return results
-    counter = {"n": 0}
-    counter_lock = threading.Lock()
+    to_check: list[tuple[str, str, _AppCheckSpec]] = []
+    for app_name, version, spec in specs:
+        if cache is not None:
+            cached = cache.get(app_name)
+            if cached is not None:
+                results.append(
+                    VersionCheckResult(
+                        app_name, version, cached, spec.source, None
+                    )
+                )
+                continue
+        to_check.append((app_name, version, spec))
+    cached_count = len(specs) - len(to_check)
+    total = len(to_check)
+    if not to_check:
+        if cached_count:
+            print(
+                f"All {cached_count} apps resolved from cache.",
+                file=sys.stderr,
+            )
+        results.sort(key=lambda r: r.name)
+        return results
 
     try:
         from tqdm import tqdm
 
-        pbar = tqdm(total=total, desc="Checking app versions", unit="app")
+        desc = "Checking app versions"
+        if cached_count:
+            desc += f" ({cached_count} cached)"
+        pbar = tqdm(total=total, desc=desc, unit="app")
     except ModuleNotFoundError:
         pbar = None
-        print(f"Checking {total} app versions...", file=sys.stderr)
+        msg = f"Checking {total} app versions..."
+        if cached_count:
+            msg += f" ({cached_count} cached)"
+        print(msg, file=sys.stderr)
 
     def _run_check(
         app_name: str, current: str, spec: _AppCheckSpec
-    ) -> VersionCheckResult:
+    ) -> tuple[VersionCheckResult, str | None]:
         try:
             latest = spec.check_fn(*spec.args)
+            if cache is not None:
+                cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
             latest_san = sanitize_version(latest)
             if current_san != latest_san:
@@ -819,7 +930,7 @@ def check_app_versions(
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
             pool.submit(_run_check, app_name, version, spec): app_name
-            for app_name, version, spec in specs
+            for app_name, version, spec in to_check
         }
         for future in as_completed(futures):
             result, msg = future.result()
@@ -832,6 +943,8 @@ def check_app_versions(
                 print(f"  {msg}", file=sys.stderr)
     if pbar is not None:
         pbar.close()
+    if cache is not None:
+        cache.save()
     results.sort(key=lambda r: r.name)
     return results
 
