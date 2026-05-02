@@ -911,6 +911,16 @@ def install_ruby_package(
     Path(gemfile).write_text(gemfile_content)
     bin_dir = os.path.join(prefix, "bin")
     subprocess.run(
+        [bundle, "config", "set", "--local", "bin", bin_dir],
+        cwd=libexec,
+        check=True,
+    )
+    subprocess.run(
+        [bundle, "config", "set", "--local", "path", "bundle"],
+        cwd=libexec,
+        check=True,
+    )
+    subprocess.run(
         [
             bundle,
             "install",
@@ -919,11 +929,6 @@ def install_ruby_package(
             "--retry=3",
             "--standalone",
         ],
-        cwd=libexec,
-        check=True,
-    )
-    subprocess.run(
-        [bundle, "config", "set", "--local", "bin", bin_dir],
         cwd=libexec,
         check=True,
     )

@@ -3,7 +3,6 @@
 from datetime import datetime, timezone
 from json import dumps
 
-from koopa.app import extract_app_deps
 from koopa.io import import_app_json
 from koopa.os import os_id
 
