@@ -325,12 +325,14 @@ def _handle_update(args: argparse.Namespace) -> None:
     if not apps:
         from koopa.alert import warn
         from koopa.app import prune_apps
+        from koopa.check import prune_broken_symlinks
 
         update_koopa(verbose=args.verbose)
         update_bootstrap(verbose=args.verbose)
         remove_unsupported_apps(verbose=args.verbose)
         update_stale_apps(verbose=args.verbose)
         update_user_apps(verbose=args.verbose)
+        prune_broken_symlinks()
         try:
             prune_apps()
         except (ValueError, OSError) as exc:
