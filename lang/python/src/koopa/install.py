@@ -1367,30 +1367,90 @@ def update_koopa(*, verbose: bool = False) -> None:
 
 def _update_venv(prefix: str) -> None:
     """Create or update the Python virtual environment with extras."""
-    import venv
-
     from koopa.alert import alert
 
     python_version_file = os.path.join(prefix, ".python-version")
     if not os.path.isfile(python_version_file):
         return
+    with open(python_version_file, "r") as f:
+        python_version = f.read().strip()
     venv_dir = os.path.join(prefix, ".venv")
+    if os.path.isdir(venv_dir):
+        pyvenv_cfg = os.path.join(venv_dir, "pyvenv.cfg")
+        if os.path.isfile(pyvenv_cfg):
+            with open(pyvenv_cfg, "r") as f:
+                for line in f:
+                    if line.startswith("version"):
+                        parts = line.split("=", 1)
+                        if len(parts) == 2:
+                            full_ver = parts[1].strip()
+                            venv_version = ".".join(
+                                full_ver.split(".")[:2]
+                            )
+                            if venv_version != python_version:
+                                alert(
+                                    "Python version changed"
+                                    f" ({venv_version} -> "
+                                    f"{python_version})."
+                                    " Recreating virtual environment."
+                                )
+                                shutil.rmtree(venv_dir)
+                        break
+    uv = shutil.which("uv")
     if not os.path.isdir(venv_dir):
         alert("Creating Python virtual environment.")
-        venv.create(venv_dir, with_pip=True)
-    venv_pip = os.path.join(venv_dir, "bin", "pip")
-    if not os.path.isfile(venv_pip):
-        alert("Installing pip into virtual environment.")
-        venv_python = os.path.join(venv_dir, "bin", "python3")
+        if uv:
+            subprocess.run(
+                [
+                    uv,
+                    "venv",
+                    venv_dir,
+                    "--no-python-downloads",
+                    "--python",
+                    python_version,
+                ],
+                check=True,
+            )
+        else:
+            import venv
+
+            venv.create(venv_dir, with_pip=True, symlinks=True)
+    alert("Installing Python package with extras.")
+    if uv:
         subprocess.run(
-            [venv_python, "-m", "ensurepip", "--upgrade"],
+            [
+                uv,
+                "pip",
+                "install",
+                "--python",
+                os.path.join(venv_dir, "bin", "python3"),
+                "--editable",
+                f"{prefix}[extra]",
+                "--upgrade",
+            ],
             check=True,
         )
-    alert("Installing Python package with extras.")
-    subprocess.run(
-        [venv_pip, "install", "--editable", f"{prefix}[extra]", "--upgrade", "--quiet"],
-        check=True,
-    )
+    else:
+        venv_python = os.path.join(venv_dir, "bin", "python3")
+        if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
+            alert("Installing pip into virtual environment.")
+            subprocess.run(
+                [venv_python, "-m", "ensurepip", "--upgrade"],
+                check=True,
+            )
+        subprocess.run(
+            [
+                venv_python,
+                "-m",
+                "pip",
+                "install",
+                "--editable",
+                f"{prefix}[extra]",
+                "--upgrade",
+                "--quiet",
+            ],
+            check=True,
+        )
 
 
 # -- Update pipeline ----------------------------------------------------------
