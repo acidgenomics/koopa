@@ -167,6 +167,19 @@ def _app_dependencies(name: str) -> list[str]:
     return []
 
 
+def _app_build_dependencies(name: str) -> list[str]:
+    """Get application build dependencies from app.json."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        deps = entry.get("build_dependencies", [])
+        if isinstance(deps, str):
+            return [deps]
+        if isinstance(deps, list):
+            return deps
+    return []
+
+
 def _can_install_binary() -> bool:
     """Check if binary installation is available."""
     return os.environ.get("KOOPA_CAN_INSTALL_BINARY", "") == "1"
@@ -437,14 +450,16 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             return
     # -- Install dependencies -------------------------------------------------
     if config.deps:
+        build_deps = _app_build_dependencies(config.name)
         deps = _app_dependencies(config.name)
-        if deps:
+        all_deps = list(dict.fromkeys(build_deps + deps))
+        if all_deps:
             if not config.quiet:
                 print(
-                    f"{config.name} dependencies: {', '.join(deps)}",
+                    f"{config.name} dependencies: {', '.join(all_deps)}",
                     file=sys.stderr,
                 )
-            for dep in deps:
+            for dep in all_deps:
                 dep_opt = os.path.join(_opt_prefix(), dep)
                 if os.path.exists(dep_opt):
                     continue
@@ -1360,7 +1375,12 @@ def update_koopa(*, verbose: bool = False) -> None:
     if not is_git_repo(prefix):
         alert_note(f"Pinned release detected at '{prefix}'.")
         return
-    git_pull(prefix)
+    result = git_pull(prefix, capture=True)
+    stdout = (result.stdout or "").strip() if result else ""
+    if "Already up to date" in stdout:
+        alert_note("koopa is already up to date.")
+    elif stdout:
+        print(stdout, file=sys.stderr)
     _update_venv(prefix)
     _zsh_compaudit_set_permissions()
 
@@ -1609,6 +1629,28 @@ def update_user_apps(*, verbose: bool = False) -> None:
             git_checkout(prefix, ref=version)
         except Exception as exc:
             warn(f"Failed to update user app '{app}': {exc}")
+
+
+def fetch_user_repos() -> None:
+    """Pull latest changes for user git repos if they exist."""
+    from koopa.alert import alert_note, warn
+    from koopa.git import git_pull, is_git_repo
+
+    home = os.path.expanduser("~")
+    repos = [
+        os.path.join(home, ".config", "koopa", "dotfiles-work"),
+        os.path.join(home, ".config", "koopa", "dotfiles-private"),
+        os.path.join(home, "scripts-private"),
+    ]
+    for repo in repos:
+        if not os.path.isdir(repo) or not is_git_repo(repo):
+            continue
+        name = os.path.basename(repo)
+        alert_note(f"Pulling user repo '{name}'.")
+        try:
+            git_pull(repo)
+        except Exception as exc:
+            warn(f"Failed to pull '{name}': {exc}")
 
 
 def update_system_apps(*, verbose: bool = False) -> None:
