@@ -12,19 +12,27 @@ from typing import Any
 _APP_TREE: dict[str, Any] = {
     "aws": {
         "batch": {
+            "fetch-and-run": "aws-batch-fetch-and-run",
             "list-jobs": "aws-batch-list-jobs",
         },
         "ec2": {
+            "instance-id": "aws-ec2-instance-id",
             "list-running-instances": "aws-ec2-list-running-instances",
+            "map-instance-ids-to-names": "aws-ec2-map-instance-ids-to-names",
+            "stop": "aws-ec2-stop",
         },
         "ecr": {
             "login-private": "aws-ecr-login-private",
             "login-public": "aws-ecr-login-public",
         },
         "s3": {
+            "delete-versioned-glacier-objects": "aws-s3-delete-versioned-glacier-objects",
+            "delete-versioned-objects": "aws-s3-delete-versioned-objects",
+            "dot-clean": "aws-s3-dot-clean",
             "find": "aws-s3-find",
             "list-large-files": "aws-s3-list-large-files",
             "ls": "aws-s3-ls",
+            "mv-to-parent": "aws-s3-mv-to-parent",
             "sync": "aws-s3-sync",
         },
     },
@@ -144,6 +152,7 @@ _APP_TREE: dict[str, Any] = {
         },
     },
     "salmon": {
+        "detect-fastq-library-type": "salmon-detect-fastq-library-type",
         "index": "salmon-index",
         "quant": {
             "bam": "salmon-quant-bam",
@@ -1044,6 +1053,36 @@ def _handle_ssh_generate_key(args: list[str]) -> None:
 # -- aws handlers ------------------------------------------------------------
 
 
+def _handle_aws_batch_fetch_and_run(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws batch fetch-and-run",
+    )
+    parser.add_argument("--queue", required=True)
+    parser.add_argument("--job-definition", required=True)
+    parser.add_argument("--job-name", default="fetch-and-run")
+    parser.add_argument("--vcpus", type=int, default=1)
+    parser.add_argument("--memory", type=int, default=2048)
+    parser.add_argument("--profile", default=None)
+    parser.add_argument("command", nargs="*", help="command to run")
+    parsed = parser.parse_args(args)
+    import json
+
+    from koopa.aws import aws_batch_fetch_and_run
+
+    result = aws_batch_fetch_and_run(
+        parsed.queue,
+        parsed.job_definition,
+        job_name=parsed.job_name,
+        command=parsed.command or None,
+        vcpus=parsed.vcpus,
+        memory=parsed.memory,
+        profile=parsed.profile,
+    )
+    print(json.dumps(result, indent=2))
+
+
 def _handle_aws_batch_list_jobs(args: list[str]) -> None:
     import argparse
 
@@ -1064,6 +1103,18 @@ def _handle_aws_batch_list_jobs(args: list[str]) -> None:
     print(json.dumps(jobs, indent=2))
 
 
+def _handle_aws_ec2_instance_id(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws ec2 instance-id",
+    )
+    parser.parse_args(args)
+    from koopa.aws import aws_ec2_instance_id
+
+    print(aws_ec2_instance_id())
+
+
 def _handle_aws_ec2_list_running_instances(args: list[str]) -> None:
     import argparse
 
@@ -1082,6 +1133,38 @@ def _handle_aws_ec2_list_running_instances(args: list[str]) -> None:
         if inst["ip"]:
             parts.append(inst["ip"])
         print("\t".join(parts))
+
+
+def _handle_aws_ec2_map_instance_ids_to_names(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws ec2 map-instance-ids-to-names",
+    )
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    import json
+
+    from koopa.aws import aws_ec2_map_instance_ids_to_names
+
+    mapping = aws_ec2_map_instance_ids_to_names(profile=parsed.profile)
+    for entry in mapping:
+        name = entry.get("Name") or ""
+        print(f"{entry['Id']}\t{name}")
+
+
+def _handle_aws_ec2_stop(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws ec2 stop",
+    )
+    parser.add_argument("instance_ids", nargs="+", help="EC2 instance IDs")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_ec2_stop
+
+    aws_ec2_stop(parsed.instance_ids, profile=parsed.profile)
 
 
 def _handle_aws_ecr_login_private(args: list[str]) -> None:
@@ -1114,6 +1197,69 @@ def _handle_aws_ecr_login_public(args: list[str]) -> None:
     from koopa.aws import aws_ecr_login_public
 
     aws_ecr_login_public(parsed.region)
+
+
+def _handle_aws_s3_delete_versioned_glacier_objects(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws s3 delete-versioned-glacier-objects",
+    )
+    parser.add_argument("--bucket", required=True)
+    parser.add_argument("--prefix", default="")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_delete_versioned_objects
+
+    deleted = aws_s3_delete_versioned_objects(
+        parsed.bucket,
+        prefix=parsed.prefix,
+        glacier=True,
+        profile=parsed.profile,
+    )
+    print(f"Deleted {deleted} versioned Glacier object(s).", file=sys.stderr)
+
+
+def _handle_aws_s3_delete_versioned_objects(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws s3 delete-versioned-objects",
+    )
+    parser.add_argument("--bucket", required=True)
+    parser.add_argument("--prefix", default="")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_delete_versioned_objects
+
+    deleted = aws_s3_delete_versioned_objects(
+        parsed.bucket,
+        prefix=parsed.prefix,
+        glacier=False,
+        profile=parsed.profile,
+    )
+    print(f"Deleted {deleted} versioned object(s).", file=sys.stderr)
+
+
+def _handle_aws_s3_dot_clean(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws s3 dot-clean",
+    )
+    parser.add_argument("path", help="S3 path (e.g. s3://bucket/prefix/)")
+    parser.add_argument("--dryrun", action="store_true")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_dot_clean
+
+    removed = aws_s3_dot_clean(
+        parsed.path,
+        dryrun=parsed.dryrun,
+        profile=parsed.profile,
+    )
+    for key in removed:
+        print(key)
 
 
 def _handle_aws_s3_find(args: list[str]) -> None:

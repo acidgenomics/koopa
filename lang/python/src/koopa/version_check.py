@@ -103,7 +103,9 @@ _GITHUB_REPO_RE = re.compile(
 )
 
 
-def _http_get_json(url: str, *, github: bool = False) -> dict | list:
+def _http_get_json(
+    url: str, *, github: bool = False, timeout: int = 15
+) -> dict | list:
     limiter = _rate_github if github else _rate_default
     limiter.wait()
     req = urllib.request.Request(url)
@@ -112,7 +114,7 @@ def _http_get_json(url: str, *, github: bool = False) -> dict | list:
         req.add_header("Accept", "application/vnd.github+json")
         if _github_token:
             req.add_header("Authorization", f"Bearer {_github_token}")
-    with urllib.request.urlopen(req, timeout=15) as resp:
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode())
 
 
@@ -174,7 +176,8 @@ def _check_pypi(package: str) -> str:
 
 def _check_conda(channel: str, package: str) -> str:
     data = _http_get_json(
-        f"https://api.anaconda.org/package/{channel}/{package}"
+        f"https://api.anaconda.org/package/{channel}/{package}",
+        timeout=30,
     )
     return data["latest_version"]
 
@@ -781,6 +784,21 @@ def _check_temurin() -> str:
     return m.group(1)
 
 
+def _check_liblinear() -> str:
+    _rate_default.wait()
+    req = urllib.request.Request(
+        "https://www.csie.ntu.edu.tw/~cjlin/liblinear/"
+    )
+    req.add_header("User-Agent", "koopa-version-checker")
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        html = resp.read().decode("latin-1")
+    m = re.search(r"Version\s+(\d+\.\d+)", html)
+    if not m:
+        msg = "No liblinear version found"
+        raise RuntimeError(msg)
+    return m.group(1)
+
+
 def _check_r_devel() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/r-devel/r-svn"
@@ -903,6 +921,9 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         "dirlist",
         lambda: _check_sourceforge_versions("tcl/files/Tcl/"),
         (),
+    ),
+    "liblinear": _AppCheckSpec(
+        "github", _check_liblinear, ()
     ),
     "libheif": _AppCheckSpec(
         "github", _check_github, ("strukturag", "libheif")

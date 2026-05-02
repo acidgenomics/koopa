@@ -33,6 +33,49 @@ def _run_cmd(
 # -- Salmon ------------------------------------------------------------------
 
 
+def salmon_detect_fastq_library_type(
+    index_dir: str,
+    r1: str,
+    r2: str | None = None,
+    *,
+    threads: int = 1,
+    num_reads: int = 200000,
+) -> str:
+    """Detect FASTQ library type using Salmon."""
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        args = [
+            "salmon",
+            "quant",
+            "-i",
+            index_dir,
+            "-o",
+            tmpdir,
+            "--threads",
+            str(threads),
+            "-l",
+            "A",
+            "--skipQuant",
+        ]
+        if r2:
+            args.extend(["-1", r1, "-2", r2])
+        else:
+            args.extend(["-r", r1])
+        result = _run_cmd(args, capture=True)
+        for line in result.stderr.splitlines():
+            if "library type" in line.lower():
+                return line.strip()
+        lib_info = os.path.join(tmpdir, "lib_format_counts.json")
+        if os.path.isfile(lib_info):
+            import json
+
+            with open(lib_info) as f:
+                data = json.load(f)
+            return data.get("expected_format", "unknown")
+    return "unknown"
+
+
 def salmon_index(
     fasta: str,
     output_dir: str,
