@@ -504,10 +504,10 @@ _koopa_activate_completion() {
             return 0
             ;;
     esac
-    local _koopa_prefix
-    _koopa_prefix="$(_koopa_koopa_prefix)"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_koopa_prefix)"
     local file
-    for file in "${_koopa_prefix}/etc/completion/"*'.sh'
+    for file in "${koopa_prefix}/etc/completion/"*'.sh'
     do
         [[ -f "$file" ]] && source "$file"
     done
@@ -1433,8 +1433,8 @@ _koopa_alias_kbs() {
 _koopa_alias_kdev() {
     local bin_prefix
     bin_prefix="$(_koopa_bin_prefix)"
-    local _koopa_prefix
-    _koopa_prefix="$(_koopa_koopa_prefix)"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_koopa_prefix)"
     local bash
     bash="${bin_prefix}/bash"
     local env
@@ -1464,7 +1464,7 @@ _koopa_alias_kdev() {
         return 1
     fi
     local rcfile
-    rcfile="${_koopa_prefix}/lang/bash/include/header.sh"
+    rcfile="${koopa_prefix}/lang/bash/include/header.sh"
     [[ -f "$rcfile" ]] || return 1
     "$env" -i \
         AWS_CLOUDFRONT_DISTRIBUTION_ID="${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" \
@@ -2009,6 +2009,18 @@ _koopa_add_to_manpath_start() {
         MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$dir")"
     done
     export MANPATH
+    return 0
+}
+
+_koopa_add_to_path_end() {
+    PATH="${PATH:-}"
+    local dir
+    for dir in "$@"
+    do
+        [[ -d "$dir" ]] || continue
+        PATH="$(_koopa_add_to_path_string_end "$PATH" "$dir")"
+    done
+    export PATH
     return 0
 }
 
@@ -3468,7 +3480,7 @@ _koopa_grep() {
             app['grep']="$(_koopa_locate_grep --allow-system)"
             ;;
         'rg')
-            app['grep']="$(_koopa_locate_ripgrep)"
+            app['grep']="$(_koopa_locate_rg)"
             ;;
     esac
     if [[ "${dict['stdin']}" -eq 1 ]]
@@ -5999,27 +6011,15 @@ _koopa_linux_fix_sudo_setrlimit_error() {
     return 0
 }
 
-_koopa_locate_7z() {
-    _koopa_locate_app \
-        --app-name='p7zip' \
-        --bin-name='7z' \
-        "$@"
-}
-
-_koopa_locate_anaconda_conda() {
-    _koopa_locate_app \
-        --app-name='anaconda' \
-        --bin-name='conda' \
-        --no-allow-koopa-bin \
-        "$@"
-}
-
-_koopa_locate_anaconda_python() {
-    _koopa_locate_app \
-        --app-name='anaconda' \
-        --bin-name='python3' \
-        --no-allow-koopa-bin \
-        "$@"
+_koopa_linux_locate_ec2_metadata() {
+    local app
+    if _koopa_is_ubuntu_like
+    then
+        app='/usr/bin/ec2metadata'
+    else
+        app='/usr/bin/ec2-metadata'
+    fi
+    _koopa_locate_app "$app" "$@"
 }
 
 _koopa_locate_app() {
@@ -6166,41 +6166,6 @@ _koopa_locate_app() {
     fi
 }
 
-_koopa_locate_ar() {
-    _koopa_locate_app \
-        --app-name='binutils' \
-        --bin-name='ar' \
-        "$@"
-}
-
-_koopa_locate_ascp() {
-    _koopa_locate_app \
-        --app-name='aspera-connect' \
-        --bin-name='ascp' \
-        "$@"
-}
-
-_koopa_locate_aspell() {
-    _koopa_locate_app \
-        --app-name='aspell' \
-        --bin-name='aspell' \
-        "$@"
-}
-
-_koopa_locate_autoreconf() {
-    _koopa_locate_app \
-        --app-name='autoconf' \
-        --bin-name='autoreconf' \
-        "$@"
-}
-
-_koopa_locate_autoupdate() {
-    _koopa_locate_app \
-        --app-name='autoconf' \
-        --bin-name='autoupdate' \
-        "$@"
-}
-
 _koopa_locate_awk() {
     _koopa_locate_app \
         --app-name='gawk' \
@@ -6215,94 +6180,10 @@ _koopa_locate_aws() {
         "$@"
 }
 
-_koopa_locate_basename() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gbasename' \
-        --system-bin-name='basename' \
-        "$@"
-}
-
-_koopa_locate_bash() {
-    _koopa_locate_app \
-        --app-name='bash' \
-        --bin-name='bash' \
-        "$@"
-}
-
-_koopa_locate_bc() {
-    _koopa_locate_app \
-        --app-name='bc' \
-        --bin-name='bc' \
-        "$@"
-}
-
-_koopa_locate_bedtools() {
-    _koopa_locate_app \
-        --app-name='bedtools' \
-        --bin-name='bedtools' \
-        "$@"
-}
-
-_koopa_locate_bowtie2_build() {
-    _koopa_locate_app \
-        --app-name='bowtie2' \
-        --bin-name='bowtie2-build' \
-        "$@"
-}
-
-_koopa_locate_bowtie2() {
-    _koopa_locate_app \
-        --app-name='bowtie2' \
-        --bin-name='bowtie2' \
-        "$@"
-}
-
-_koopa_locate_brew() {
-    _koopa_locate_app \
-        "$(_koopa_homebrew_prefix)/bin/brew" \
-        "$@"
-}
-
-_koopa_locate_brotli() {
-    _koopa_locate_app \
-        --app-name='brotli' \
-        --bin-name='brotli' \
-        "$@"
-}
-
 _koopa_locate_bundle() {
     _koopa_locate_app \
         --app-name='ruby' \
         --bin-name='bundle' \
-        "$@"
-}
-
-_koopa_locate_bunzip2() {
-    _koopa_locate_app \
-        --app-name='bzip2' \
-        --bin-name='bunzip2' \
-        "$@"
-}
-
-_koopa_locate_bzip2() {
-    _koopa_locate_app \
-        --app-name='bzip2' \
-        --bin-name='bzip2' \
-        "$@"
-}
-
-_koopa_locate_cabal() {
-    _koopa_locate_app \
-        --app-name='haskell-cabal' \
-        --bin-name='cabal' \
-        "$@"
-}
-
-_koopa_locate_cargo() {
-    _koopa_locate_app \
-        --app-name='rust' \
-        --bin-name='cargo' \
         "$@"
 }
 
@@ -6311,30 +6192,6 @@ _koopa_locate_cat() {
         --app-name='coreutils' \
         --bin-name='gcat' \
         --system-bin-name='cat' \
-        "$@"
-}
-
-_koopa_locate_cc() {
-    local str
-    if _koopa_is_macos
-    then
-        str='/usr/bin/clang'
-    else
-        str='/usr/bin/gcc'
-    fi
-    _koopa_locate_app "$str"
-}
-
-_koopa_locate_chezmoi() {
-    _koopa_locate_app \
-        --app-name='chezmoi' \
-        --bin-name='chezmoi' \
-        "$@"
-}
-
-_koopa_locate_chgrp() {
-    _koopa_locate_app \
-        '/usr/bin/chgrp' \
         "$@"
 }
 
@@ -6356,33 +6213,6 @@ _koopa_locate_chown() {
     _koopa_locate_app "${args[@]}" "$@"
 }
 
-_koopa_locate_clang() {
-    _koopa_locate_app \
-        --app-name='llvm' \
-        --bin-name='clang' \
-        "$@"
-}
-
-_koopa_locate_clangxx() {
-    _koopa_locate_app \
-        --app-name='llvm' \
-        --bin-name='clang++' \
-        "$@"
-}
-
-_koopa_locate_cmake() {
-    _koopa_locate_app \
-        --app-name='cmake' \
-        --bin-name='cmake' \
-        "$@"
-}
-
-_koopa_locate_compress() {
-    _koopa_locate_app \
-        '/usr/bin/compress' \
-        "$@"
-}
-
 _koopa_locate_conda_python() {
     _koopa_locate_app \
         --app-name='conda' \
@@ -6397,66 +6227,11 @@ _koopa_locate_conda() {
         "$@"
 }
 
-_koopa_locate_convmv() {
-    _koopa_locate_app \
-        --app-name='convmv' \
-        --bin-name='convmv' \
-        "$@"
-}
-
-_koopa_locate_corepack() {
-    _koopa_locate_app \
-        --app-name='node' \
-        --bin-name='corepack' \
-        "$@"
-}
-
-_koopa_locate_cp() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gcp' \
-        --system-bin-name='cp' \
-        "$@"
-}
-
-_koopa_locate_cpan() {
-    _koopa_locate_app \
-        --app-name='perl' \
-        --bin-name='cpan' \
-        "$@"
-}
-
-_koopa_locate_ctest() {
-    _koopa_locate_app \
-        --app-name='cmake' \
-        --bin-name='ctest' \
-        "$@"
-}
-
 _koopa_locate_curl() {
     _koopa_locate_app \
         --app-name='curl' \
         --bin-name='curl' \
         "$@"
-}
-
-_koopa_locate_cut() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gcut' \
-        --system-bin-name='cut' \
-        "$@"
-}
-
-_koopa_locate_cxx() {
-    local str
-    if _koopa_is_macos
-    then
-        str='/usr/bin/clang++'
-    else
-        str='/usr/bin/g++'
-    fi
-    _koopa_locate_app "$str"
 }
 
 _koopa_locate_date() {
@@ -6467,122 +6242,10 @@ _koopa_locate_date() {
         "$@"
 }
 
-_koopa_locate_df() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gdf' \
-        --system-bin-name='df' \
-        "$@"
-}
-
-_koopa_locate_dig() {
-    _koopa_locate_app \
-        --app-name='bind' \
-        --bin-name='dig' \
-        "$@"
-}
-
-_koopa_locate_dirname() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gdirname' \
-        --system-bin-name='dirname' \
-        "$@"
-}
-
-_koopa_locate_docker() {
-    local -a args
-    args=()
-    if _koopa_is_macos
-    then
-        if [[ -x "${HOME:?}/.docker/bin/docker" ]]
-        then
-            args+=("${HOME:?}/.docker/bin/docker")
-        else
-            args+=('/usr/local/bin/docker')
-        fi
-    else
-        args+=('/usr/bin/docker')
-    fi
-    _koopa_locate_app "${args[@]}" "$@"
-}
-
-_koopa_locate_doom() {
-    _koopa_locate_app \
-        "$(_koopa_doom_emacs_prefix)/bin/doom" \
-        "$@"
-}
-
-_koopa_locate_du() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gdu' \
-        --system-bin-name='du' \
-        "$@"
-}
-
-_koopa_locate_echo() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gecho' \
-        --system-bin-name='echo' \
-        "$@"
-}
-
-_koopa_locate_efetch() {
-    _koopa_locate_app \
-        --app-name='entrez-direct' \
-        --bin-name='efetch' \
-        "$@"
-}
-
-_koopa_locate_emacs() {
-    _koopa_locate_app \
-        --app-name='emacs' \
-        --bin-name='emacs' \
-        "$@"
-}
-
-_koopa_locate_env() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='genv' \
-        --system-bin-name='env' \
-        "$@"
-}
-
-_koopa_locate_esearch() {
-    _koopa_locate_app \
-        --app-name='entrez-direct' \
-        --bin-name='esearch' \
-        "$@"
-}
-
-_koopa_locate_exiftool() {
-    _koopa_locate_app \
-        --app-name='exiftool' \
-        --bin-name='exiftool' \
-        "$@"
-}
-
-_koopa_locate_fasterq_dump() {
-    _koopa_locate_app \
-        --app-name='ncbi-sra-tools' \
-        --bin-name='fasterq-dump' \
-        "$@"
-}
-
 _koopa_locate_fd() {
     _koopa_locate_app \
         --app-name='fd-find' \
         --bin-name='fd' \
-        "$@"
-}
-
-_koopa_locate_ffmpeg() {
-    _koopa_locate_app \
-        --app-name='ffmpeg' \
-        --bin-name='ffmpeg' \
         "$@"
 }
 
@@ -6594,129 +6257,10 @@ _koopa_locate_find() {
         "$@"
 }
 
-_koopa_locate_fish() {
-    _koopa_locate_app \
-        --app-name='fish' \
-        --bin-name='fish' \
-        "$@"
-}
-
-_koopa_locate_flake8() {
-    _koopa_locate_app \
-        --app-name='flake8' \
-        --bin-name='flake8' \
-        "$@"
-}
-
-_koopa_locate_gcc() {
-    _koopa_locate_app \
-        --app-name='gcc' \
-        --bin-name='gcc' \
-        "$@"
-}
-
-_koopa_locate_gcloud() {
-    _koopa_locate_app \
-        --app-name='google-cloud-sdk' \
-        --bin-name='gcloud' \
-        "$@"
-}
-
-_koopa_locate_gcxx() {
-    _koopa_locate_app \
-        --app-name='gcc' \
-        --bin-name='g++' \
-        "$@"
-}
-
-_koopa_locate_gdal_config() {
-    _koopa_locate_app \
-        --app-name='gdal' \
-        --bin-name='gdal-config' \
-        "$@"
-}
-
-_koopa_locate_gem() {
-    _koopa_locate_app \
-        --app-name='ruby' \
-        --bin-name='gem' \
-        "$@"
-}
-
-_koopa_locate_geos_config() {
-    _koopa_locate_app \
-        --app-name='geos' \
-        --bin-name='geos-config' \
-        "$@"
-}
-
-_koopa_locate_gfortran() {
-    if _koopa_is_macos
-    then
-        _koopa_locate_app \
-            '/opt/gfortran/bin/gfortran' \
-            "$@"
-    else
-        _koopa_locate_app \
-            --app-name='gcc' \
-            --bin-name='gfortran' \
-            "$@"
-    fi
-}
-
-_koopa_locate_gh() {
-    _koopa_locate_app \
-        --app-name='gh' \
-        --bin-name='gh' \
-        "$@"
-}
-
-_koopa_locate_ghcup() {
-    _koopa_locate_app \
-        --app-name='haskell-ghcup' \
-        --bin-name='ghcup' \
-        "$@"
-}
-
 _koopa_locate_git() {
     _koopa_locate_app \
         --app-name='git' \
         --bin-name='git' \
-        "$@"
-}
-
-_koopa_locate_go() {
-    _koopa_locate_app \
-        --app-name='go' \
-        --bin-name='go' \
-        "$@"
-}
-
-_koopa_locate_gpg_agent() {
-    _koopa_locate_app \
-        --app-name='gnupg' \
-        --bin-name='gpg-agent' \
-        "$@"
-}
-
-_koopa_locate_gpg_connect_agent() {
-    _koopa_locate_app \
-        --app-name='gnupg' \
-        --bin-name='gpg-connect-agent' \
-        "$@"
-}
-
-_koopa_locate_gpg() {
-    _koopa_locate_app \
-        --app-name='gnupg' \
-        --bin-name='gpg' \
-        "$@"
-}
-
-_koopa_locate_gpgconf() {
-    _koopa_locate_app \
-        --app-name='gnupg' \
-        --bin-name='gpgconf' \
         "$@"
 }
 
@@ -6736,41 +6280,6 @@ _koopa_locate_groups() {
         "$@"
 }
 
-_koopa_locate_gs() {
-    _koopa_locate_app \
-        --app-name='ghostscript' \
-        --bin-name='gs' \
-        "$@"
-}
-
-_koopa_locate_gsl_config() {
-    _koopa_locate_app \
-        --app-name='gsl' \
-        --bin-name='gsl-config' \
-        "$@"
-}
-
-_koopa_locate_gunzip() {
-    _koopa_locate_app \
-        --app-name='gzip' \
-        --bin-name='gunzip' \
-        "$@"
-}
-
-_koopa_locate_gzip() {
-    _koopa_locate_app \
-        --app-name='gzip' \
-        --bin-name='gzip' \
-        "$@"
-}
-
-_koopa_locate_h5cc() {
-    _koopa_locate_app \
-        --app-name='hdf5' \
-        --bin-name='h5cc' \
-        "$@"
-}
-
 _koopa_locate_head() {
     _koopa_locate_app \
         --app-name='coreutils' \
@@ -6779,148 +6288,10 @@ _koopa_locate_head() {
         "$@"
 }
 
-_koopa_locate_hisat2_build() {
-    _koopa_locate_app \
-        --app-name='hisat2' \
-        --bin-name='hisat2-build' \
-        "$@"
-}
-
-_koopa_locate_hisat2_extract_exons() {
-    _koopa_locate_app \
-        --app-name='hisat2' \
-        --bin-name='hisat2_extract_exons.py' \
-        "$@"
-}
-
-_koopa_locate_hisat2_extract_splice_sites() {
-    _koopa_locate_app \
-        --app-name='hisat2' \
-        --bin-name='hisat2_extract_splice_sites.py' \
-        "$@"
-}
-
-_koopa_locate_hisat2() {
-    _koopa_locate_app \
-        --app-name='hisat2' \
-        --bin-name='hisat2' \
-        "$@"
-}
-
-_koopa_locate_hostname() {
-    _koopa_locate_app \
-        '/bin/hostname' \
-        "$@"
-}
-
-_koopa_locate_icu_config() {
-    _koopa_locate_app \
-        --app-name='icu4c' \
-        --bin-name='icu-config' \
-        "$@"
-}
-
-_koopa_locate_id() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gid' \
-        --system-bin-name='id' \
-        "$@"
-}
-
-_koopa_locate_install() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='ginstall' \
-        "$@"
-}
-
-_koopa_locate_jar() {
-    _koopa_locate_app \
-        --app-name='temurin' \
-        --bin-name='jar' \
-        "$@"
-}
-
-_koopa_locate_java() {
-    _koopa_locate_app \
-        --app-name='temurin' \
-        --bin-name='java' \
-        "$@"
-}
-
-_koopa_locate_javac() {
-    _koopa_locate_app \
-        --app-name='temurin' \
-        --bin-name='javac' \
-        "$@"
-}
-
-_koopa_locate_jq() {
-    _koopa_locate_app \
-        --app-name='jq' \
-        --bin-name='jq' \
-        "$@"
-}
-
-_koopa_locate_julia() {
-    _koopa_locate_app \
-        --app-name='julia' \
-        --bin-name='julia' \
-        "$@"
-}
-
-_koopa_locate_kallisto() {
-    _koopa_locate_app \
-        --app-name='kallisto' \
-        --bin-name='kallisto' \
-        "$@"
-}
-
-_koopa_locate_koopa() {
-    _koopa_locate_app \
-        "$(_koopa_koopa_prefix)/bin/koopa" \
-        "$@"
-}
-
-_koopa_locate_ld() {
-    _koopa_locate_app \
-        '/usr/bin/ld' \
-        "$@"
-}
-
 _koopa_locate_less() {
     _koopa_locate_app \
         --app-name='less' \
         --bin-name='less' \
-        "$@"
-}
-
-_koopa_locate_lesspipe() {
-    _koopa_locate_app \
-        --app-name='lesspipe' \
-        --bin-name='lesspipe.sh' \
-        "$@"
-}
-
-_koopa_locate_lfs() {
-    _koopa_locate_app \
-        '/usr/bin/lfs' \
-        "$@"
-}
-
-_koopa_locate_libtool() {
-    _koopa_locate_app \
-        --app-name='libtool' \
-        --bin-name='glibtool' \
-        --system-bin-name='libtool' \
-        "$@"
-}
-
-_koopa_locate_libtoolize() {
-    _koopa_locate_app \
-        --app-name='libtool' \
-        --bin-name='glibtoolize' \
         "$@"
 }
 
@@ -6938,106 +6309,11 @@ _koopa_locate_locale() {
         "$@"
 }
 
-_koopa_locate_localedef() {
-    if _koopa_is_alpine
-    then
-        _koopa_alpine_locate_localedef "$@"
-    else
-        _koopa_locate_app \
-            '/usr/bin/localedef' \
-            "$@"
-    fi
-}
-
-_koopa_locate_lpr() {
-    _koopa_locate_app \
-        '/usr/bin/lpr' \
-        "$@"
-}
-
 _koopa_locate_ls() {
     _koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gls' \
         --system-bin-name='ls' \
-        "$@"
-}
-
-_koopa_locate_lua() {
-    _koopa_locate_app \
-        --app-name='lua' \
-        --bin-name='lua' \
-        "$@"
-}
-
-_koopa_locate_luac() {
-    _koopa_locate_app \
-        --app-name='lua' \
-        --bin-name='luac' \
-        "$@"
-}
-
-_koopa_locate_luajit() {
-    _koopa_locate_app \
-        --app-name='luajit' \
-        --bin-name='luajit' \
-        "$@"
-}
-
-_koopa_locate_luarocks() {
-    _koopa_locate_app \
-        --app-name='luarocks' \
-        --bin-name='luarocks' \
-        "$@"
-}
-
-_koopa_locate_lz4() {
-    _koopa_locate_app \
-        --app-name='lz4' \
-        --bin-name='lz4' \
-        "$@"
-}
-
-_koopa_locate_lzip() {
-    _koopa_locate_app \
-        --app-name='lzip' \
-        --bin-name='lzip' \
-        "$@"
-}
-
-_koopa_locate_lzma() {
-    _koopa_locate_app \
-        --app-name='xz' \
-        --bin-name='lzma' \
-        "$@"
-}
-
-_koopa_locate_magick_core_config() {
-    _koopa_locate_app \
-        --app-name='imagemagick' \
-        --bin-name='MagickCore-config' \
-        "$@"
-}
-
-_koopa_locate_magick() {
-    _koopa_locate_app \
-        --app-name='imagemagick' \
-        --bin-name='magick' \
-        "$@"
-}
-
-_koopa_locate_make() {
-    _koopa_locate_app \
-        --app-name='make' \
-        --bin-name='gmake' \
-        --system-bin-name='make' \
-        "$@"
-}
-
-_koopa_locate_mamba() {
-    _koopa_locate_app \
-        --app-name='conda' \
-        --bin-name='mamba' \
         "$@"
 }
 
@@ -7064,48 +6340,6 @@ _koopa_locate_md5sum() {
         "$@"
 }
 
-_koopa_locate_meson() {
-    _koopa_locate_app \
-        --app-name='meson' \
-        --bin-name='meson' \
-        "$@"
-}
-
-_koopa_locate_minimap2() {
-    _koopa_locate_app \
-        --app-name='minimap2' \
-        --bin-name='minimap2' \
-        "$@"
-}
-
-_koopa_locate_miso_exon_utils() {
-    _koopa_locate_app \
-        --app-name='misopy' \
-        --bin-name='exon_utils' \
-        "$@"
-}
-
-_koopa_locate_miso_index_gff() {
-    _koopa_locate_app \
-        --app-name='misopy' \
-        --bin-name='index_gff' \
-        "$@"
-}
-
-_koopa_locate_miso_pe_utils() {
-    _koopa_locate_app \
-        --app-name='misopy' \
-        --bin-name='pe_utils' \
-        "$@"
-}
-
-_koopa_locate_miso() {
-    _koopa_locate_app \
-        --app-name='misopy' \
-        --bin-name='miso' \
-        "$@"
-}
-
 _koopa_locate_mkdir() {
     _koopa_locate_app \
         --app-name='coreutils' \
@@ -7119,161 +6353,6 @@ _koopa_locate_mktemp() {
         --app-name='coreutils' \
         --bin-name='gmktemp' \
         --system-bin-name='mktemp' \
-        "$@"
-}
-
-_koopa_locate_mount_s3() {
-    _koopa_locate_app \
-        '/usr/bin/mount-s3' \
-        "$@"
-}
-
-_koopa_locate_msgfmt() {
-    _koopa_locate_app \
-        --app-name='gettext' \
-        --bin-name='msgfmt' \
-        "$@"
-}
-
-_koopa_locate_msgmerge() {
-    _koopa_locate_app \
-        --app-name='gettext' \
-        --bin-name='msgmerge' \
-        "$@"
-}
-
-_koopa_locate_mv() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gmv' \
-        --system-bin-name='mv' \
-        "$@"
-}
-
-_koopa_locate_neofetch() {
-    _koopa_locate_app \
-        --app-name='neofetch' \
-        --bin-name='neofetch' \
-        "$@"
-}
-
-_koopa_locate_newgrp() {
-    _koopa_locate_app \
-        '/usr/bin/newgrp' \
-        "$@"
-}
-
-_koopa_locate_nim() {
-    _koopa_locate_app \
-        --app-name='nim' \
-        --bin-name='nim' \
-        "$@"
-}
-
-_koopa_locate_nimble() {
-    _koopa_locate_app \
-        --app-name='nim' \
-        --bin-name='nimble' \
-        "$@"
-}
-
-_koopa_locate_ninja() {
-    _koopa_locate_app \
-        --app-name='ninja' \
-        --bin-name='ninja' \
-        "$@"
-}
-
-_koopa_locate_node() {
-    _koopa_locate_app \
-        --app-name='node' \
-        --bin-name='node' \
-        "$@"
-}
-
-_koopa_locate_npm() {
-    _koopa_locate_app \
-        --app-name='node' \
-        --bin-name='npm' \
-        "$@"
-}
-
-_koopa_locate_nproc() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gnproc' \
-        --system-bin-name='nproc' \
-        "$@"
-}
-
-_koopa_locate_numfmt() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gnumfmt' \
-        --system-bin-name='numfmt' \
-        "$@"
-}
-
-_koopa_locate_od() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='god' \
-        --system-bin-name='od' \
-        "$@"
-}
-
-_koopa_locate_open() {
-    _koopa_locate_app \
-        '/usr/bin/open' \
-        "$@"
-}
-
-_koopa_locate_openssl() {
-    _koopa_locate_app \
-        --app-name='openssl' \
-        --bin-name='openssl' \
-        "$@"
-}
-
-_koopa_locate_parallel() {
-    _koopa_locate_app \
-        --app-name='parallel' \
-        --bin-name='parallel' \
-        "$@"
-}
-
-_koopa_locate_passwd() {
-    _koopa_locate_app \
-        '/usr/bin/passwd' \
-        "$@"
-}
-
-_koopa_locate_paste() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gpaste' \
-        --system-bin-name='paste' \
-        "$@"
-}
-
-_koopa_locate_patch() {
-    _koopa_locate_app \
-        --app-name='patch' \
-        --bin-name='patch' \
-        "$@"
-}
-
-_koopa_locate_pbzip2() {
-    _koopa_locate_app \
-        --app-name='pbzip2' \
-        --bin-name='pbzip2' \
-        "$@"
-}
-
-_koopa_locate_pcre2_config() {
-    _koopa_locate_app \
-        --app-name='pcre2' \
-        --bin-name='pcre2-config' \
         "$@"
 }
 
@@ -7291,154 +6370,10 @@ _koopa_locate_perl() {
         "$@"
 }
 
-_koopa_locate_pigz() {
-    _koopa_locate_app \
-        --app-name='pigz' \
-        --bin-name='pigz' \
-        "$@"
-}
-
-_koopa_locate_pkg_config() {
-    _koopa_locate_app \
-        --app-name='pkg-config' \
-        --bin-name='pkg-config' \
-        "$@"
-}
-
-_koopa_locate_prettier() {
-    _koopa_locate_app \
-        --app-name='prettier' \
-        --bin-name='prettier' \
-        "$@"
-}
-
-_koopa_locate_proj() {
-    _koopa_locate_app \
-        --app-name='proj' \
-        --bin-name='proj' \
-        "$@"
-}
-
-_koopa_locate_pup() {
-    _koopa_locate_app \
-        --app-name='pup' \
-        --bin-name='pup' \
-        "$@"
-}
-
-_koopa_locate_pyenv() {
-    _koopa_locate_app \
-        --app-name='pyenv' \
-        --bin-name='pyenv' \
-        "$@"
-}
-
-_koopa_locate_pylint() {
-    _koopa_locate_app \
-        --app-name='pylint' \
-        --bin-name='pylint' \
-        "$@"
-}
-
-_koopa_locate_pytest() {
-    _koopa_locate_app \
-        --app-name='pytest' \
-        --bin-name='pytest' \
-        "$@"
-}
-
-_koopa_locate_python() {
-    local -A dict
-    dict['python_version']="$(_koopa_python_major_minor_version)"
-    _koopa_locate_app \
-        --app-name="python${dict['python_version']}" \
-        --bin-name="python${dict['python_version']}" \
-        --system-bin-name='python3' \
-        "$@"
-}
-
-_koopa_locate_python310() {
-    _koopa_locate_app \
-        --app-name='python3.10' \
-        --bin-name='python3.10' \
-        "$@"
-}
-
-_koopa_locate_python311() {
-    _koopa_locate_app \
-        --app-name='python3.11' \
-        --bin-name='python3.11' \
-        "$@"
-}
-
-_koopa_locate_python312() {
-    _koopa_locate_app \
-        --app-name='python3.12' \
-        --bin-name='python3.12' \
-        "$@"
-}
-
-_koopa_locate_python313() {
-    _koopa_locate_app \
-        --app-name='python3.13' \
-        --bin-name='python3.13' \
-        "$@"
-}
-
-_koopa_locate_python314() {
-    _koopa_locate_app \
-        --app-name='python3.14' \
-        --bin-name='python3.14' \
-        "$@"
-}
-
 _koopa_locate_r() {
     _koopa_locate_app \
         --app-name='r' \
         --bin-name='R' \
-        "$@"
-}
-
-_koopa_locate_ranlib() {
-    _koopa_locate_app \
-        --app-name='binutils' \
-        --bin-name='ranlib' \
-        "$@"
-}
-
-_koopa_locate_rbenv() {
-    _koopa_locate_app \
-        --app-name='rbenv' \
-        --bin-name='rbenv' \
-        "$@"
-}
-
-_koopa_locate_readlink() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='greadlink' \
-        --system-bin-name='readlink' \
-        "$@"
-}
-
-_koopa_locate_realpath() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='grealpath' \
-        --system-bin-name='realpath' \
-        "$@"
-}
-
-_koopa_locate_rename() {
-    _koopa_locate_app \
-        --app-name='rename' \
-        --bin-name='rename' \
-        "$@"
-}
-
-_koopa_locate_rev() {
-    _koopa_locate_app \
-        '/usr/bin/rev' \
         "$@"
 }
 
@@ -7457,45 +6392,10 @@ _koopa_locate_rm() {
         "$@"
 }
 
-_koopa_locate_rmats() {
-    _koopa_locate_app \
-        --app-name='rmats' \
-        --bin-name='rmats' \
-        "$@"
-}
-
 _koopa_locate_ronn() {
     _koopa_locate_app \
         --app-name='ronn-ng' \
         --bin-name='ronn' \
-        "$@"
-}
-
-_koopa_locate_rscript() {
-    _koopa_locate_app \
-        --app-name='r' \
-        --bin-name='Rscript' \
-        "$@"
-}
-
-_koopa_locate_rsem_calculate_expression() {
-    _koopa_locate_app \
-        --app-name='rsem' \
-        --bin-name='rsem-calcualte-expression' \
-        "$@"
-}
-
-_koopa_locate_rsem_prepare_reference() {
-    _koopa_locate_app \
-        --app-name='rsem' \
-        --bin-name='rsem-prepare-reference' \
-        "$@"
-}
-
-_koopa_locate_rsync() {
-    _koopa_locate_app \
-        --app-name='rsync' \
-        --bin-name='rsync' \
         "$@"
 }
 
@@ -7506,87 +6406,11 @@ _koopa_locate_ruby() {
         "$@"
 }
 
-_koopa_locate_rustc() {
-    _koopa_locate_app \
-        --app-name='rust' \
-        --bin-name='rustc' \
-        "$@"
-}
-
-_koopa_locate_salmon() {
-    _koopa_locate_app \
-        --app-name='salmon' \
-        --bin-name='salmon' \
-        "$@"
-}
-
-_koopa_locate_sam_dump() {
-    _koopa_locate_app \
-        --app-name='ncbi-sra-tools' \
-        --bin-name='sam-dump' \
-        "$@"
-}
-
-_koopa_locate_sambamba() {
-    _koopa_locate_app \
-        --app-name='sambamba' \
-        --bin-name='sambamba' \
-        "$@"
-}
-
-_koopa_locate_samtools() {
-    _koopa_locate_app \
-        --app-name='samtools' \
-        --bin-name='samtools' \
-        "$@"
-}
-
-_koopa_locate_scons() {
-    _koopa_locate_app \
-        --app-name='scons' \
-        --bin-name='scons' \
-        "$@"
-}
-
-_koopa_locate_scp() {
-    local -a args
-    if _koopa_is_macos
-    then
-        args+=('/usr/bin/scp')
-    else
-        args+=(
-            '--app-name=openssh'
-            '--bin-name=scp'
-        )
-    fi
-    _koopa_locate_app "${args[@]}" "$@"
-}
-
 _koopa_locate_sed() {
     _koopa_locate_app \
         --app-name='sed' \
         --bin-name='gsed' \
         --system-bin-name='sed' \
-        "$@"
-}
-
-_koopa_locate_sh() {
-    _koopa_locate_app \
-        '/bin/sh' \
-        "$@"
-}
-
-_koopa_locate_shellcheck() {
-    _koopa_locate_app \
-        --app-name='shellcheck' \
-        --bin-name='shellcheck' \
-        "$@"
-}
-
-_koopa_locate_shunit2() {
-    _koopa_locate_app \
-        --app-name='shunit2' \
-        --bin-name='shunit2' \
         "$@"
 }
 
@@ -7598,52 +6422,10 @@ _koopa_locate_sort() {
         "$@"
 }
 
-_koopa_locate_sox() {
-    _koopa_locate_app \
-        --app-name='sox' \
-        --bin-name='sox' \
-        "$@"
-}
-
-_koopa_locate_sra_prefetch() {
-    _koopa_locate_app \
-        --app-name='ncbi-sra-tools' \
-        --bin-name='prefetch' \
-        "$@"
-}
-
-_koopa_locate_ssh_add() {
-    _koopa_locate_app \
-        --app-name='openssh' \
-        --bin-name='ssh-add' \
-        "$@"
-}
-
-_koopa_locate_ssh_keygen() {
-    _koopa_locate_app \
-        --app-name='openssh' \
-        --bin-name='ssh-keygen' \
-        "$@"
-}
-
 _koopa_locate_ssh() {
     _koopa_locate_app \
         --app-name='openssh' \
         --bin-name='ssh' \
-        "$@"
-}
-
-_koopa_locate_stack() {
-    _koopa_locate_app \
-        --app-name='haskell-stack' \
-        --bin-name='stack' \
-        "$@"
-}
-
-_koopa_locate_star() {
-    _koopa_locate_app \
-        --app-name='star' \
-        --bin-name='STAR' \
         "$@"
 }
 
@@ -7655,72 +6437,9 @@ _koopa_locate_stat() {
         "$@"
 }
 
-_koopa_locate_strip() {
-    _koopa_locate_app \
-        '/usr/bin/strip' \
-        "$@"
-}
-
 _koopa_locate_sudo() {
     _koopa_locate_app \
         '/usr/bin/sudo' \
-        "$@"
-}
-
-_koopa_locate_svn() {
-    _koopa_locate_app \
-        --app-name='subversion' \
-        --bin-name='svn' \
-        "$@"
-}
-
-_koopa_locate_swift() {
-    _koopa_locate_app \
-        '/usr/bin/swift' \
-        "$@"
-}
-
-_koopa_locate_swig() {
-    _koopa_locate_app \
-        --app-name='swig' \
-        --bin-name='swig' \
-        "$@"
-}
-
-_koopa_locate_system_python() {
-    _koopa_locate_app \
-        --only-system \
-        --system-bin-name='python3' \
-        "$@"
-}
-
-_koopa_locate_system_r() {
-    local cmd
-    if _koopa_is_macos
-    then
-        cmd='/Library/Frameworks/R.framework/Resources/bin/R'
-    else
-        cmd='/usr/bin/R'
-    fi
-    _koopa_locate_app "$cmd"
-}
-
-_koopa_locate_system_rscript() {
-    local cmd
-    if _koopa_is_macos
-    then
-        cmd='/Library/Frameworks/R.framework/Resources/bin/Rscript'
-    else
-        cmd='/usr/bin/Rscript'
-    fi
-    _koopa_locate_app "$cmd"
-}
-
-_koopa_locate_tac() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gtac' \
-        --system-bin-name='tac' \
         "$@"
 }
 
@@ -7748,37 +6467,6 @@ _koopa_locate_tee() {
         "$@"
 }
 
-_koopa_locate_tex() {
-    local -a args
-    args=()
-    if _koopa_is_macos
-    then
-        args+=('/Library/TeX/texbin/tex')
-    else
-        args+=('/usr/bin/tex')
-    fi
-    _koopa_locate_app "${args[@]}" "$@"
-}
-
-_koopa_locate_texi2dvi() {
-    _koopa_locate_app \
-        --app-name='texinfo' \
-        --bin-name='texi2dvi' \
-        "$@"
-}
-
-_koopa_locate_tlmgr() {
-    local -a args
-    args=()
-    if _koopa_is_macos
-    then
-        args+=('/Library/TeX/texbin/tlmgr')
-    else
-        args+=('/usr/bin/tlmgr')
-    fi
-    _koopa_locate_app "${args[@]}" "$@"
-}
-
 _koopa_locate_touch() {
     _koopa_locate_app \
         --app-name='coreutils' \
@@ -7795,46 +6483,11 @@ _koopa_locate_tr() {
         "$@"
 }
 
-_koopa_locate_umount() {
-    _koopa_locate_app \
-        '/usr/bin/umount' \
-        "$@"
-}
-
 _koopa_locate_uname() {
     _koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='guname' \
         --system-bin-name='uname' \
-        "$@"
-}
-
-_koopa_locate_uncompress() {
-    _koopa_locate_app \
-        '/usr/bin/uncompress' \
-        "$@"
-}
-
-_koopa_locate_uniq() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='guniq' \
-        --system-bin-name='uniq' \
-        "$@"
-}
-
-_koopa_locate_unzip() {
-    _koopa_locate_app \
-        --app-name='unzip' \
-        --bin-name='unzip' \
-        --system-bin-name='unzip' \
-        "$@"
-}
-
-_koopa_locate_uv() {
-    _koopa_locate_app \
-        --app-name='uv' \
-        --bin-name='uv' \
         "$@"
 }
 
@@ -7860,77 +6513,11 @@ _koopa_locate_wget() {
         "$@"
 }
 
-_koopa_locate_whoami() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gwhoami' \
-        --system-bin-name='whoami' \
-        "$@"
-}
-
 _koopa_locate_xargs() {
     _koopa_locate_app \
         --app-name='findutils' \
         --bin-name='gxargs' \
         --system-bin-name='xargs' \
-        "$@"
-}
-
-_koopa_locate_xz() {
-    _koopa_locate_app \
-        --app-name='xz' \
-        --bin-name='xz' \
-        "$@"
-}
-
-_koopa_locate_yacc() {
-    _koopa_locate_app \
-        --app-name='bison' \
-        --bin-name='yacc' \
-        "$@"
-}
-
-_koopa_locate_yes() {
-    _koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gyes' \
-        --system-bin-name='yes' \
-        "$@"
-}
-
-_koopa_locate_yq() {
-    _koopa_locate_app \
-        --app-name='yq' \
-        --bin-name='yq' \
-        "$@"
-}
-
-_koopa_locate_yt_dlp() {
-    _koopa_locate_app \
-        --app-name='yt-dlp' \
-        --bin-name='yt-dlp' \
-        "$@"
-}
-
-_koopa_locate_zcat() {
-    _koopa_locate_app \
-        --app-name='gzip' \
-        --bin-name='zcat' \
-        "$@"
-}
-
-_koopa_locate_zip() {
-    _koopa_locate_app \
-        --app-name='zip' \
-        --bin-name='zip' \
-        --system-bin-name='zip' \
-        "$@"
-}
-
-_koopa_locate_zstd() {
-    _koopa_locate_app \
-        --app-name='zstd' \
-        --bin-name='zstd' \
         "$@"
 }
 
@@ -8148,6 +6735,72 @@ _koopa_macos_locate_lsregister() {
         "/System/Library/Frameworks/CoreServices.framework\
 /Frameworks/LaunchServices.framework/Support/lsregister" \
         "$@"
+}
+
+_koopa_macos_activate_cli_colors() {
+    [[ -z "${CLICOLOR:-}" ]] && export CLICOLOR=1
+    return 0
+}
+
+_koopa_macos_activate_egnyte() {
+    _koopa_add_to_path_end "${HOME}/Library/Group Containers/\
+FELUD555VC.group.com.egnyte.DesktopApp/CLI"
+    return 0
+}
+
+_koopa_macos_activate_homebrew() {
+    local -A dict
+    dict['prefix']="$(_koopa_homebrew_prefix)"
+    if [[ ! -x "${dict['prefix']}/bin/brew" ]]
+    then
+        return 0
+    fi
+    dict['brewfile']="$(_koopa_xdg_config_home)/homebrew/Brewfile"
+    _koopa_add_to_path_start "${dict['prefix']}/bin"
+    if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] \
+        && [[ -f "${dict['brewfile']}" ]]
+    then
+        export HOMEBREW_BUNDLE_FILE_GLOBAL="${dict['brewfile']}"
+    fi
+    if [[ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ]]
+    then
+        export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
+    fi
+    if [[ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ]]
+    then
+        export HOMEBREW_INSTALL_CLEANUP=1
+    fi
+    if [[ -z "${HOMEBREW_NO_ENV_HINTS:-}" ]]
+    then
+        export HOMEBREW_NO_ENV_HINTS=1
+    fi
+    return 0
+}
+
+_koopa_macos_emacs() {
+    local homebrew_prefix
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    [[ -d "$homebrew_prefix" ]] || return 1
+    local emacs
+    emacs="${homebrew_prefix}/bin/emacs"
+    [[ -x "$emacs" ]] || return 1
+    _koopa_print "$emacs"
+    return 0
+}
+
+_koopa_macos_is_dark_mode() {
+    [[ "$( \
+        /usr/bin/defaults read -g 'AppleInterfaceStyle' \
+        2>/dev/null \
+    )" == 'Dark' ]]
+}
+
+_koopa_macos_os_version() {
+    local str
+    str="$(/usr/bin/sw_vers -productVersion)"
+    [[ -n "$str" ]] || return 1
+    _koopa_print "$str"
+    return 0
 }
 
 _koopa_macos_reload_autofs() {
