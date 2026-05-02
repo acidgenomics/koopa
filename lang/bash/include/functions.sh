@@ -537,6 +537,7 @@ _koopa_activate_conda() {
             shell='posix'
             ;;
     esac
+    [[ "$(type -t conda)" == 'alias' ]] && unalias conda
     local conda_setup
     conda_setup="$("$conda" "shell.${shell}" 'hook')"
     eval "$conda_setup"
