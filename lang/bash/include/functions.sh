@@ -13224,12 +13224,6 @@ _koopa_remove_from_path() {
     return 0
 }
 
-_koopa_rename_camel_case() {
-    _koopa_assert_has_args "$#"
-    _koopa_r_script --system 'rename-camel-case.R' "$@"
-    return 0
-}
-
 _koopa_rename_from_csv() {
     local file line
     _koopa_assert_has_args "$#"
@@ -13242,12 +13236,6 @@ _koopa_rename_from_csv() {
         to="${line#*,}"
         _koopa_mv "$from" "$to"
     done < "$file"
-    return 0
-}
-
-_koopa_rename_kebab_case() {
-    _koopa_assert_has_args "$#"
-    _koopa_r_script --system 'rename-kebab-case.R' "$@"
     return 0
 }
 
@@ -13317,12 +13305,6 @@ _koopa_rename_lowercase() {
             "${dict['pattern']}" \
             "$@"
     fi
-    return 0
-}
-
-_koopa_rename_snake_case() {
-    _koopa_assert_has_args "$#"
-    _koopa_r_script --system 'rename-snake-case.R' "$@"
     return 0
 }
 
