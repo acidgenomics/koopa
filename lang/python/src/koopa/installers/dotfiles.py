@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import subprocess
+from koopa.git import git_clone
 
 
 def main(
@@ -14,14 +14,4 @@ def main(
 ) -> None:
     """Install dotfiles."""
     url = "https://github.com/acidgenomics/dotfiles.git"
-    subprocess.run(
-        [
-            "git",
-            "clone",
-            "--depth=1",
-            f"--branch={version}",
-            url,
-            prefix,
-        ],
-        check=True,
-    )
+    git_clone(url, prefix, commit=version)

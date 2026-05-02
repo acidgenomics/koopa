@@ -527,9 +527,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     finally:
         os.chdir(orig_cwd)
         shutil.rmtree(tmp_dir, ignore_errors=True)
-    # -- Post-install: success marker ------------------------------------------
-    if config.prefix:
-        os.makedirs(os.path.join(config.prefix, ".install"), exist_ok=True)
     # -- Post-install: linking ------------------------------------------------
     if config.mode == "shared":
         if config.link_in_opt:
@@ -559,6 +556,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     elif config.mode == "system":
         if config.update_ldconfig:
             _run("ldconfig", sudo=True, check=False)
+    # -- Post-install: success marker ------------------------------------------
+    # Written after linking so a failed link = failed install = retried.
+    if config.prefix:
+        os.makedirs(os.path.join(config.prefix, ".install"), exist_ok=True)
     if not config.quiet:
         duration = progress.elapsed_formatted
         if config.prefix:
