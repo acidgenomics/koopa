@@ -1378,24 +1378,24 @@ def _update_venv(prefix: str) -> None:
     if os.path.isdir(venv_dir):
         pyvenv_cfg = os.path.join(venv_dir, "pyvenv.cfg")
         if os.path.isfile(pyvenv_cfg):
+            venv_version = ""
             with open(pyvenv_cfg, "r") as f:
                 for line in f:
-                    if line.startswith("version"):
-                        parts = line.split("=", 1)
-                        if len(parts) == 2:
-                            full_ver = parts[1].strip()
-                            venv_version = ".".join(
-                                full_ver.split(".")[:2]
-                            )
-                            if venv_version != python_version:
-                                alert(
-                                    "Python version changed"
-                                    f" ({venv_version} -> "
-                                    f"{python_version})."
-                                    " Recreating virtual environment."
-                                )
-                                shutil.rmtree(venv_dir)
+                    key, _, value = line.partition("=")
+                    key = key.strip()
+                    if key in ("version", "version_info"):
+                        full_ver = value.strip()
+                        venv_version = ".".join(
+                            full_ver.split(".")[:2]
+                        )
                         break
+            if venv_version and venv_version != python_version:
+                alert(
+                    "Python version changed"
+                    f" ({venv_version} -> {python_version})."
+                    " Recreating virtual environment."
+                )
+                shutil.rmtree(venv_dir)
     uv = shutil.which("uv")
     if not os.path.isdir(venv_dir):
         alert("Creating Python virtual environment.")
@@ -1424,8 +1424,11 @@ def _update_venv(prefix: str) -> None:
                 "install",
                 "--python",
                 os.path.join(venv_dir, "bin", "python3"),
+                "--all-extras",
                 "--editable",
-                f"{prefix}[extra]",
+                prefix,
+                "--requirements",
+                os.path.join(prefix, "pyproject.toml"),
                 "--upgrade",
             ],
             check=True,
