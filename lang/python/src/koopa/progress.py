@@ -130,7 +130,7 @@ class BuildProgress:
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
     def _start_display(self) -> None:
-        if _has_tqdm() and self._estimate is not None:
+        if _has_tqdm():
             self._start_tqdm()
         else:
             self._start_fallback()
@@ -151,15 +151,19 @@ class BuildProgress:
         from tqdm import tqdm
 
         total = int(self._estimate) if self._estimate else None
+        if total:
+            bar_fmt = (
+                "  Building {desc}: {bar} "
+                "{percentage:3.0f}% | "
+                "{elapsed} elapsed, ~{remaining} remaining"
+            )
+        else:
+            bar_fmt = "  Building {desc}: {elapsed} elapsed"
         self._tqdm_bar = tqdm(
             total=total,
             desc=self._name,
             unit="s",
-            bar_format=(
-                "{desc}: {elapsed} elapsed | {bar} | ~{remaining} remaining"
-                if total
-                else "{desc}: {elapsed} elapsed"
-            ),
+            bar_format=bar_fmt,
             file=sys.stderr,
             dynamic_ncols=True,
         )
@@ -204,15 +208,15 @@ class BuildProgress:
         idx = 0
         estimate_str = ""
         if self._estimate is not None:
-            estimate_str = f" (typically ~{_fmt_duration(self._estimate)})"
-        while not self._stop_event.wait(timeout=0.15):
+            estimate_str = f", ~{_fmt_duration(self._estimate)} remaining"
+        while not self._stop_event.wait(timeout=1.0):
             elapsed = _fmt_duration(self.elapsed)
             frame = frames[idx % len(frames)]
-            line = f"\r{frame} Building {self._name}... {elapsed}{estimate_str}"
+            line = f"\r\033[2K{frame} Building {self._name}: {elapsed} elapsed{estimate_str}"
             sys.stderr.write(line)
             sys.stderr.flush()
             idx += 1
-        sys.stderr.write("\r" + " " * 80 + "\r")
+        sys.stderr.write("\r\033[2K")
         sys.stderr.flush()
 
     # -- ninja step-mode display ----------------------------------------------
@@ -241,7 +245,9 @@ class BuildProgress:
                 desc=self._name,
                 unit="step",
                 bar_format=(
-                    "{desc}: [{n_fmt}/{total_fmt}] {bar} {percentage:3.0f}% | {elapsed} elapsed"
+                    "  Building {desc}: {bar} "
+                    "{percentage:3.0f}% [{n_fmt}/{total_fmt}] | "
+                    "{elapsed} elapsed"
                 ),
                 file=sys.stderr,
                 dynamic_ncols=True,

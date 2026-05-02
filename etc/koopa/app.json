@@ -334,7 +334,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.41"
+    "version": "2.34.31"
   },
   "aws-mountpoint-s3": {
     "date": "2026-05-02",

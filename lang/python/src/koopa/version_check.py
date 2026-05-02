@@ -1085,7 +1085,7 @@ def _make_openssl_spec(major: str) -> _AppCheckSpec:
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
-    "aws-cli": _AppCheckSpec("github", _check_github, ("aws", "aws-cli")),
+    "aws-cli": _AppCheckSpec("conda", _check_conda, ("conda-forge", "awscli")),
     "bash": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("bash"),
