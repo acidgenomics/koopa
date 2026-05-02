@@ -16,7 +16,6 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
-    _koopa_is_alias 'z' && unalias 'z'
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset

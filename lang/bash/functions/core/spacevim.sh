@@ -16,7 +16,6 @@ _koopa_spacevim() {
         _koopa_print 'SpaceVim is not installed.'
         return 1
     fi
-    _koopa_is_alias 'vim' && unalias 'vim'
     "$vim" -u "$vimrc" "$@"
     return 0
 }

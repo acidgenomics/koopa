@@ -7,7 +7,6 @@ _koopa_activate_zoxide() {
     then
         return 0
     fi
-    _koopa_is_alias 'z' && unalias 'z'
     local shell
     shell="$(_koopa_shell_name)"
     local nounset

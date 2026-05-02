@@ -46,7 +46,6 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
-    _koopa_is_alias 'br' && unalias 'br'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null

@@ -25,7 +25,6 @@ _koopa_activate_pyenv() {
             __kvar_pyenv
         return 0
     fi
-    _koopa_is_alias 'pyenv' && unalias 'pyenv'
     export PYENV_ROOT="$__kvar_prefix"
     export PYENV_LOCAL_SHIM="${HOME:?}/.pyenv_local_shim"
     if [ ! -d "$PYENV_LOCAL_SHIM" ]

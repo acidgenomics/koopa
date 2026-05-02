@@ -22,7 +22,6 @@ _koopa_activate_asdf() {
         unset -v __kvar_prefix __kvar_script
         return 0
     fi
-    _koopa_is_alias 'asdf' && unalias 'asdf'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null

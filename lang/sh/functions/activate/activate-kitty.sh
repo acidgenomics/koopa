@@ -42,7 +42,6 @@ _koopa_activate_kitty() {
             return 0
         fi
     fi
-    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
     unset -v \
         __kvar_prefix \

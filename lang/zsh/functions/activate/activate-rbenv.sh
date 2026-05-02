@@ -14,7 +14,6 @@ _koopa_activate_rbenv() {
     then
         return 0
     fi
-    _koopa_is_alias 'rbenv' && unalias 'rbenv'
     export RBENV_ROOT="$prefix"
     local nounset
     nounset="$(_koopa_boolean_nounset)"
