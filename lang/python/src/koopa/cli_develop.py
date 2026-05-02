@@ -345,6 +345,18 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json(results)
 
 
+def _handle_pytest(args: list[str]) -> None:
+    """Handle ``koopa develop pytest``."""
+    from koopa.prefix import python_prefix
+
+    tests_dir = os.path.join(python_prefix(), "tests")
+    pytest_cmd = shutil.which("pytest")
+    if pytest_cmd is None:
+        msg = "pytest is not installed."
+        raise RuntimeError(msg)
+    sys.exit(subprocess.run([pytest_cmd, tests_dir, *args], check=False).returncode)
+
+
 def _handle_generate_completion() -> None:
     """Handle ``koopa develop generate-completion``."""
     from koopa.alert import alert_note, alert_success
@@ -359,6 +371,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": lambda _: _handle_format_app_json(),
     "generate-completion": lambda _: _handle_generate_completion(),
+    "pytest": _handle_pytest,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),
