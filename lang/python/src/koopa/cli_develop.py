@@ -308,9 +308,20 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json(results)
 
 
+def _handle_generate_completion(args: list[str]) -> None:
+    """Handle ``koopa develop generate-completion``."""
+    from koopa.generate_completion import generate_completion
+
+    do_write = "--write" in args
+    output = generate_completion(write=do_write)
+    if not do_write:
+        print(output, end="")
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": lambda _: _handle_format_app_json(),
+    "generate-completion": _handle_generate_completion,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),
