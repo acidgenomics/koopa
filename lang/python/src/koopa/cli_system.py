@@ -45,7 +45,7 @@ def _handle_list(args: list[str]) -> None:
     list_cmds = {
         "app-versions": "list-app-versions",
         "dotfiles": "list-dotfiles",
-        "launch-agents": "list-launch-agents",
+        "launch-agents": "macos-list-launch-agents",
         "path-priority": "list-path-priority",
         "programs": "list-programs",
     }
@@ -270,17 +270,17 @@ _SYSTEM_COMMANDS: dict[str, str] = {
     "os-string": "os-string",
     "test": "test",
     "zsh-compaudit-set-permissions": "zsh-compaudit-set-permissions",
-    "delete-cache": "delete-cache",
-    "fix-sudo-setrlimit-error": "fix-sudo-setrlimit-error",
-    "spotlight": "spotlight-find",
-    "clean-launch-services": "clean-launch-services",
-    "create-dmg": "create-dmg",
-    "disable-touch-id-sudo": "disable-touch-id-sudo",
-    "enable-touch-id-sudo": "enable-touch-id-sudo",
-    "flush-dns": "flush-dns",
-    "force-eject": "force-eject",
-    "ifactive": "ifactive",
-    "reload-autofs": "reload-autofs",
+    "delete-cache": "linux-delete-cache",
+    "fix-sudo-setrlimit-error": "linux-fix-sudo-setrlimit-error",
+    "spotlight": "macos-spotlight-find",
+    "clean-launch-services": "macos-clean-launch-services",
+    "create-dmg": "macos-create-dmg",
+    "disable-touch-id-sudo": "macos-disable-touch-id-sudo",
+    "enable-touch-id-sudo": "macos-enable-touch-id-sudo",
+    "flush-dns": "macos-flush-dns",
+    "force-eject": "macos-force-eject",
+    "ifactive": "macos-ifactive",
+    "reload-autofs": "macos-reload-autofs",
 }
 
 _DEFUNCT_COMMANDS: dict[str, str] = {
