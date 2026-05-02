@@ -1331,6 +1331,7 @@ def install_koopa(
     if bootstrap:
         cli_install("bash", bootstrap=True)
         cli_install("coreutils", bootstrap=True)
+    _update_venv(prefix)
 
 
 def _zsh_compaudit_set_permissions() -> None:
@@ -1375,37 +1376,29 @@ def update_koopa(*, verbose: bool = False) -> None:
 
 def _update_venv(prefix: str) -> None:
     """Create or update the Python virtual environment with extras."""
-    import shutil
+    import venv
 
-    from koopa.alert import alert, alert_note
+    from koopa.alert import alert
 
-    uv = shutil.which("uv")
-    if uv is None:
-        alert_note("uv is not installed; skipping venv setup.")
-        return
     python_version_file = os.path.join(prefix, ".python-version")
     if not os.path.isfile(python_version_file):
         return
-    with open(python_version_file) as f:
-        python_version = f.read().strip()
     venv_dir = os.path.join(prefix, ".venv")
     if not os.path.isdir(venv_dir):
         alert("Creating Python virtual environment.")
+        venv.create(venv_dir, with_pip=True)
+    venv_pip = os.path.join(venv_dir, "bin", "pip")
+    if not os.path.isfile(venv_pip):
+        alert("Installing pip into virtual environment.")
+        venv_python = os.path.join(venv_dir, "bin", "python3")
         subprocess.run(
-            [uv, "venv", venv_dir,
-             "--no-python-downloads",
-             "--python", python_version],
+            [venv_python, "-m", "ensurepip", "--upgrade"],
             check=True,
         )
     alert("Installing Python package with extras.")
     subprocess.run(
-        [uv, "pip", "install",
-         "--python", os.path.join(venv_dir, "bin", "python3"),
-         "--all-extras",
-         "--editable", prefix,
-         "--only-binary=:all:",
-         "--no-binary=syntactic",
-         "--requirements", os.path.join(prefix, "pyproject.toml"),
+        [venv_pip, "install",
+         "--editable", f"{prefix}[extra]",
          "--upgrade",
          "--quiet"],
         check=True,
