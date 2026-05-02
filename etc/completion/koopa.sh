@@ -125,6 +125,7 @@ _koopa_complete() {
                         'push-all-app-builds'
                         'push-app-build'
                         'roff'
+                        'shellcheck'
                     )
                     ;;
                 'header')
