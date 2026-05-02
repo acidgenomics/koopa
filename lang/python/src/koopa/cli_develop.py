@@ -261,6 +261,36 @@ def _handle_roff() -> None:
     subprocess.run([ronn, "--roff", *ronn_files], check=True)
 
 
+def _handle_check_app_versions(args: list[str]) -> None:
+    """Handle ``koopa develop check-app-versions``."""
+    from koopa.version_check import (
+        check_app_versions,
+        print_json_report,
+        print_report,
+        update_app_json,
+    )
+
+    update = "--update" in args
+    output_json = "--json" in args
+    source_filter = None
+    name_filter: list[str] = []
+    for arg in args:
+        if arg.startswith("--source="):
+            source_filter = arg.split("=", 1)[1]
+        elif not arg.startswith("--"):
+            name_filter.append(arg)
+    results = check_app_versions(
+        source_filter=source_filter,
+        name_filter=name_filter or None,
+    )
+    if output_json:
+        print_json_report(results)
+    else:
+        print_report(results)
+    if update:
+        update_app_json(results)
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": lambda _: _handle_format_app_json(),
@@ -270,6 +300,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "push-all-app-builds": lambda _: _handle_push_all_app_builds(),
     "push-app-build": _handle_push_app_build,
     "roff": lambda _: _handle_roff(),
+    "check-app-versions": _handle_check_app_versions,
 }
 
 
