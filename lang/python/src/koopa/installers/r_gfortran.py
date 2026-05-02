@@ -5,7 +5,6 @@ from __future__ import annotations
 import subprocess
 
 from koopa.download import download
-from koopa.system import arch
 
 
 def main(
@@ -16,10 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install r-gfortran."""
-    machine = arch()
-    if machine == "aarch64":
-        machine = "arm64"
-    url = f"https://mac.r-project.org/tools/gfortran-{version}-{machine}-big-sur.pkg"
+    url = f"https://mac.r-project.org/tools/gfortran-{version}-universal.pkg"
     pkg_file = download(url)
     subprocess.run(
         ["sudo", "installer", "-pkg", pkg_file, "-target", "/"],
