@@ -905,6 +905,9 @@ def check_app_versions(
             msg += f" ({cached_count} cached)"
         print(msg, file=sys.stderr)
 
+    completed = {"n": 0}
+    completed_lock = threading.Lock()
+
     def _run_check(
         app_name: str, current: str, spec: _AppCheckSpec
     ) -> tuple[VersionCheckResult, str | None]:
@@ -939,8 +942,17 @@ def check_app_versions(
                 if msg:
                     pbar.write(msg, file=sys.stderr)
                 pbar.update(1)
-            elif msg:
-                print(f"  {msg}", file=sys.stderr)
+            else:
+                with completed_lock:
+                    completed["n"] += 1
+                    n = completed["n"]
+                if msg:
+                    print(f"  [{n}/{total}] {msg}", file=sys.stderr)
+                elif n % 50 == 0 or n == total:
+                    print(
+                        f"  [{n}/{total}] checked...",
+                        file=sys.stderr,
+                    )
     if pbar is not None:
         pbar.close()
     if cache is not None:

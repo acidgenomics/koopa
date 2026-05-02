@@ -1369,7 +1369,47 @@ def update_koopa(*, verbose: bool = False) -> None:
         alert_note(f"Pinned release detected at '{prefix}'.")
         return
     git_pull(prefix)
+    _update_venv(prefix)
     _zsh_compaudit_set_permissions()
+
+
+def _update_venv(prefix: str) -> None:
+    """Create or update the Python virtual environment with extras."""
+    import shutil
+
+    from koopa.alert import alert, alert_note
+
+    uv = shutil.which("uv")
+    if uv is None:
+        alert_note("uv is not installed; skipping venv setup.")
+        return
+    python_version_file = os.path.join(prefix, ".python-version")
+    if not os.path.isfile(python_version_file):
+        return
+    with open(python_version_file) as f:
+        python_version = f.read().strip()
+    venv_dir = os.path.join(prefix, ".venv")
+    if not os.path.isdir(venv_dir):
+        alert("Creating Python virtual environment.")
+        subprocess.run(
+            [uv, "venv", venv_dir,
+             "--no-python-downloads",
+             "--python", python_version],
+            check=True,
+        )
+    alert("Installing Python package with extras.")
+    subprocess.run(
+        [uv, "pip", "install",
+         "--python", os.path.join(venv_dir, "bin", "python3"),
+         "--all-extras",
+         "--editable", prefix,
+         "--only-binary=:all:",
+         "--no-binary=syntactic",
+         "--requirements", os.path.join(prefix, "pyproject.toml"),
+         "--upgrade",
+         "--quiet"],
+        check=True,
+    )
 
 
 # -- Convenience CLI entry point ----------------------------------------------
