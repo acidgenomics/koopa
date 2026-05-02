@@ -1415,6 +1415,22 @@ def _update_venv(prefix: str) -> None:
             import venv
 
             venv.create(venv_dir, with_pip=True, symlinks=True)
+    stamp_file = os.path.join(venv_dir, ".stamp")
+    dep_files = [
+        os.path.join(prefix, "pyproject.toml"),
+        os.path.join(prefix, "uv.lock"),
+    ]
+    if os.path.isfile(stamp_file):
+        stamp_mtime = os.path.getmtime(stamp_file)
+        if all(
+            os.path.getmtime(f) <= stamp_mtime
+            for f in dep_files
+            if os.path.isfile(f)
+        ):
+            from koopa.alert import alert_note
+
+            alert_note("Python virtual environment is up to date.")
+            return
     alert("Installing Python package with extras.")
     if uv:
         subprocess.run(
@@ -1454,6 +1470,8 @@ def _update_venv(prefix: str) -> None:
             ],
             check=True,
         )
+    with open(stamp_file, "w") as f:
+        f.write("")
 
 
 # -- Update pipeline ----------------------------------------------------------
