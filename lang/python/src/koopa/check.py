@@ -13,58 +13,75 @@ from koopa.os import koopa_opt_prefix
 from koopa.prefix import bootstrap_prefix, koopa_prefix
 
 
-def check_installed_apps() -> bool:
-    """Check system integrity."""
-    ok = True
+def _iter_installed_app_issues() -> (
+    list[tuple[str, str, bool]]
+):
+    """Return ``(app_name, reason, actionable)`` for each installed app issue.
+
+    *actionable* is True when the issue can be fixed by reinstalling the app
+    (version mismatch, broken symlink).  Unsupported or removed apps are not
+    actionable.
+    """
     opt_prefix = koopa_opt_prefix()
     json_data = import_app_json()
     names = installed_apps()
+    issues: list[tuple[str, str, bool]] = []
     for name in names:
         if name not in json_data:
-            ok = False
-            print(f"{name} is an unsupported app")
+            issues.append((name, f"{name} is an unsupported app", False))
             continue
         path = join(opt_prefix, name)
         if not islink(path):
-            ok = False
-            print(f"{name} is not linked at {path}")
+            issues.append((name, f"{name} is not linked at {path}", True))
             continue
         path = realpath(path)
         if not isdir(path):
-            ok = False
-            print(f"{name} is not a directory at {path}")
+            issues.append(
+                (name, f"{name} is not a directory at {path}", True),
+            )
             continue
         assert isdir(path)
         linked_ver = basename(path)
-        if "removed" in json_data[name] and json_data[name]["removed"]:
-            ok = False
-            print(f"{name} is a removed app")
+        if json_data[name].get("removed"):
+            issues.append((name, f"{name} is a removed app", False))
             continue
         current_ver = json_data[name]["version"]
-        # Sanitize commit hashes.
         if len(current_ver) == 40:
             current_ver = current_ver[:7]
         if linked_ver != current_ver:
-            ok = False
-            print(f"{name} ({linked_ver} != {current_ver})")
+            issues.append(
+                (name, f"{name} ({linked_ver} != {current_ver})", True),
+            )
             continue
-    return ok
+    return issues
 
 
-def check_broken_app_installs() -> bool:
-    """Check for broken app installs.
+def outdated_apps() -> list[str]:
+    """Return names of installed apps that need updating."""
+    return [
+        name
+        for name, _reason, actionable in _iter_installed_app_issues()
+        if actionable
+    ]
 
-    Scans app prefix for directories that have no corresponding opt symlink,
-    indicating a failed or incomplete install. Reports empty version
-    directories that should be cleaned up.
-    """
+
+def check_installed_apps() -> bool:
+    """Check system integrity."""
+    issues = _iter_installed_app_issues()
+    for _name, reason, _actionable in issues:
+        print(reason)
+    return not issues
+
+
+def _iter_broken_app_installs() -> list[tuple[str, str]]:
+    """Return ``(app_name, reason)`` for each broken app install."""
     from koopa.prefix import app_prefix as get_app_prefix
 
-    ok = True
     app_dir = get_app_prefix()
     opt_prefix = koopa_opt_prefix()
+    issues: list[tuple[str, str]] = []
     if not isdir(app_dir):
-        return True
+        return issues
     for name in sorted(os.listdir(app_dir)):
         app_path = join(app_dir, name)
         if not isdir(app_path):
@@ -74,19 +91,40 @@ def check_broken_app_installs() -> bool:
             continue
         versions = [v for v in os.listdir(app_path) if isdir(join(app_path, v))]
         if not versions:
-            ok = False
-            print(f"{name}: failed install (empty app directory)")
+            issues.append((name, f"{name}: failed install (empty app directory)"))
             continue
         for ver in versions:
             ver_path = join(app_path, ver)
             contents = os.listdir(ver_path)
             if not contents:
-                ok = False
-                print(f"{name}/{ver}: failed install (empty prefix)")
+                issues.append(
+                    (name, f"{name}/{ver}: failed install (empty prefix)"),
+                )
             else:
-                ok = False
-                print(f"{name}/{ver}: installed but not linked in opt")
-    return ok
+                issues.append(
+                    (name, f"{name}/{ver}: installed but not linked in opt"),
+                )
+    return issues
+
+
+def broken_app_installs() -> list[str]:
+    """Return names of apps with broken or incomplete installs."""
+    return list(dict.fromkeys(
+        name for name, _reason in _iter_broken_app_installs()
+    ))
+
+
+def check_broken_app_installs() -> bool:
+    """Check for broken app installs.
+
+    Scans app prefix for directories that have no corresponding opt symlink,
+    indicating a failed or incomplete install. Reports empty version
+    directories that should be cleaned up.
+    """
+    issues = _iter_broken_app_installs()
+    for _name, reason in issues:
+        print(reason)
+    return not issues
 
 
 def check_circular_deps() -> list:
