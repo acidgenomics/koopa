@@ -53,14 +53,14 @@ def main(
     r_home = r_prefix(r_cmd)
     is_system = mode == "system"
     site_library = os.path.join(r_home, "site-library")
+    user = pwd.getpwuid(os.getuid()).pw_name
+    group = grp.getgrgid(os.getgid()).gr_name
     if is_system:
         if not os.path.isdir(site_library):
             subprocess.run(
                 ["sudo", "mkdir", "-p", site_library],
                 check=True,
             )
-        user = pwd.getpwuid(os.getuid()).pw_name
-        group = grp.getgrgid(os.getgid()).gr_name
         subprocess.run(
             ["sudo", "chown", "-R", f"{user}:{group}", site_library],
             check=True,

@@ -1169,8 +1169,6 @@ def _handle_aws_ec2_map_instance_ids_to_names(args: list[str]) -> None:
     )
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
-    import json
-
     from koopa.aws import aws_ec2_map_instance_ids_to_names
 
     mapping = aws_ec2_map_instance_ids_to_names(profile=parsed.profile)
