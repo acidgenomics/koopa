@@ -12,7 +12,6 @@ import os
 import shutil
 import subprocess
 import sys
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -42,11 +41,6 @@ def _bin_prefix() -> str:
 def _man1_prefix() -> str:
     """Return koopa man1 prefix."""
     return os.path.join(_koopa_prefix(), "share", "man", "man1")
-
-
-def _bash_prefix() -> str:
-    """Return koopa bash prefix."""
-    return os.path.join(_koopa_prefix(), "lang", "bash")
 
 
 def _is_owner() -> bool:
@@ -167,17 +161,6 @@ def uninstall_app(config: UninstallConfig) -> None:
             prefix=config.prefix,
             verbose=config.verbose,
         )
-    else:
-        uninstaller_file = os.path.join(
-            _bash_prefix(),
-            "include",
-            "uninstall",
-            config.platform,
-            config.mode,
-            f"{uninstaller_bn}.sh",
-        )
-        if os.path.isfile(uninstaller_file):
-            _run_uninstaller_script(uninstaller_file, config)
     if os.path.isdir(config.prefix):
         if config.mode == "system":
             subprocess.run(
@@ -202,52 +185,6 @@ def uninstall_app(config: UninstallConfig) -> None:
             f"Successfully uninstalled '{config.name}'.",
             file=sys.stderr,
         )
-
-
-def _run_uninstaller_script(
-    script_path: str,
-    config: UninstallConfig,
-) -> None:
-    """Run a Bash uninstaller script in an isolated subshell."""
-    bash = shutil.which("bash")
-    if bash is None:
-        return
-    header_file = os.path.join(_bash_prefix(), "include", "header.sh")
-    tmp_dir = tempfile.mkdtemp()
-    try:
-        parts = [
-            f"source '{header_file}'",
-            f"cd '{tmp_dir}'",
-            f"source '{script_path}'",
-            "main",
-        ]
-        if config.mode == "system":
-            parts.insert(1, 'PATH="${PATH}:/usr/sbin:/sbin"')
-        cmd = "; ".join(parts)
-        env = os.environ.copy()
-        env["KOOPA_INSTALL_NAME"] = config.name
-        env["KOOPA_INSTALL_PREFIX"] = config.prefix
-        subprocess.run(
-            [
-                bash,
-                "--noprofile",
-                "--norc",
-                "-o",
-                "errexit",
-                "-o",
-                "errtrace",
-                "-o",
-                "nounset",
-                "-o",
-                "pipefail",
-                "-c",
-                cmd,
-            ],
-            env=env,
-            check=False,
-        )
-    finally:
-        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def _unlink_in_opt(name: str) -> None:
