@@ -2566,18 +2566,6 @@ _koopa_sudo() {
     return 0
 }
 
-_koopa_test() {
-    local prefix
-    _koopa_assert_has_no_args "$#"
-    prefix="$(_koopa_tests_prefix)"
-    (
-        _koopa_cd "$prefix"
-        ./linter
-        ./shunit2
-    )
-    return 0
-}
-
 _koopa_user_id() {
     local string
     string="$(id -u)"

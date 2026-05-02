@@ -14,21 +14,21 @@ import sys
 from pathlib import Path
 
 
-def _run_bash(key: str, *args: str) -> None:
-    """Delegate to a Bash function via header.sh."""
-    from koopa.cli_app import _run_bash_function
-
-    _run_bash_function(key, *args)
-
-
 def _handle_prefix(args: list[str]) -> None:
     """Handle ``koopa system prefix [name]``."""
-    from koopa.prefix import koopa_prefix
+    import koopa.prefix as pfx
 
     if not args or args[0] == "koopa":
-        print(koopa_prefix())
-    else:
-        _run_bash(f"{args[0]}-prefix", *args[1:])
+        print(pfx.koopa_prefix())
+        return
+    name = args[0]
+    func_name = name.replace("-", "_") + "_prefix"
+    func = getattr(pfx, func_name, None)
+    if func is None:
+        print(f"Error: unknown prefix '{name}'.", file=sys.stderr)
+        sys.exit(1)
+    result = func(*args[1:])
+    print(result)
 
 
 def _handle_version(args: list[str]) -> None:
@@ -816,9 +816,17 @@ def _handle_macos_reload_autofs() -> None:
     subprocess.run(["sudo", automount, "-vc"], check=True)
 
 
-_SYSTEM_COMMANDS: dict[str, str] = {
-    "test": "test",
-}
+def _handle_test() -> None:
+    """Handle ``koopa system test``."""
+    from koopa.prefix import tests_prefix
+
+    prefix = tests_prefix()
+    if not os.path.isdir(prefix):
+        print(f"Error: tests prefix does not exist: '{prefix}'.", file=sys.stderr)
+        sys.exit(1)
+    subprocess.run(["./linter"], cwd=prefix, check=True)
+    subprocess.run(["./shunit2"], cwd=prefix, check=True)
+
 
 _DEFUNCT_COMMANDS: dict[str, str] = {
     "cache-functions": "koopa develop cache-functions",
@@ -918,8 +926,8 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     if subcmd == "reload-autofs":
         _handle_macos_reload_autofs()
         return
-    key = _SYSTEM_COMMANDS.get(subcmd)
-    if key is None:
-        print(f"Error: unknown system command '{subcmd}'.", file=sys.stderr)
-        sys.exit(1)
-    _run_bash(key, *rest)
+    if subcmd == "test":
+        _handle_test()
+        return
+    print(f"Error: unknown system command '{subcmd}'.", file=sys.stderr)
+    sys.exit(1)

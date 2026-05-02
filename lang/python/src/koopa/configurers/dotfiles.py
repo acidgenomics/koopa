@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import shutil
 import subprocess
 
 from koopa.file_ops import ln
@@ -25,10 +24,6 @@ def main(
     if os.geteuid() == 0:
         msg = "Must not be run as root."
         raise RuntimeError(msg)
-    bash = shutil.which("bash")
-    if bash is None:
-        msg = "Bash is required."
-        raise RuntimeError(msg)
     opt_dotfiles = os.path.join(opt_prefix(), "dotfiles")
     if not os.path.isdir(opt_dotfiles):
         msg = f"Dotfiles directory not found: {opt_dotfiles}"
@@ -42,10 +37,10 @@ def main(
     if not os.path.isfile(install_script):
         msg = f"Install script not found: {install_script}"
         raise FileNotFoundError(msg)
-    subprocess.run([bash, install_script], check=True)
+    subprocess.run([install_script], check=True)
     work_install_script = os.path.join(dotfiles_work_prefix, "install")
     if os.path.isfile(work_install_script):
-        subprocess.run([bash, work_install_script], check=True)
+        subprocess.run([work_install_script], check=True)
     private_install_script = os.path.join(dotfiles_private_prefix, "install")
     if os.path.isfile(private_install_script):
-        subprocess.run([bash, private_install_script], check=True)
+        subprocess.run([private_install_script], check=True)
