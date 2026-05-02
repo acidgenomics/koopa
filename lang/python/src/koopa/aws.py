@@ -149,6 +149,101 @@ def aws_s3_list_large_files(
     return large
 
 
+def aws_s3_delete_versioned_objects(
+    bucket: str,
+    *,
+    prefix: str = "",
+    glacier: bool = False,
+    profile: str | None = None,
+) -> int:
+    """Delete versioned objects (optionally only Glacier storage class)."""
+    args = ["s3api", "list-object-versions", "--bucket", bucket]
+    if prefix:
+        args.extend(["--prefix", prefix])
+    if profile:
+        args.extend(["--profile", profile])
+    result = _aws(*args)
+    data = json.loads(result.stdout)
+    deleted = 0
+    for version in data.get("Versions", []):
+        if glacier and version.get("StorageClass") != "GLACIER":
+            continue
+        del_args = [
+            "s3api",
+            "delete-object",
+            "--bucket",
+            bucket,
+            "--key",
+            version["Key"],
+            "--version-id",
+            version["VersionId"],
+        ]
+        if profile:
+            del_args.extend(["--profile", profile])
+        _aws(*del_args)
+        deleted += 1
+    for marker in data.get("DeleteMarkers", []):
+        del_args = [
+            "s3api",
+            "delete-object",
+            "--bucket",
+            bucket,
+            "--key",
+            marker["Key"],
+            "--version-id",
+            marker["VersionId"],
+        ]
+        if profile:
+            del_args.extend(["--profile", profile])
+        _aws(*del_args)
+        deleted += 1
+    return deleted
+
+
+def aws_s3_dot_clean(
+    path: str,
+    *,
+    dryrun: bool = False,
+    profile: str | None = None,
+) -> list[str]:
+    """Remove dot files (macOS cruft) from an S3 path."""
+    ls_args = ["s3", "ls", path, "--recursive"]
+    if profile:
+        ls_args.extend(["--profile", profile])
+    result = _aws(*ls_args)
+    removed: list[str] = []
+    for line in result.stdout.strip().splitlines():
+        parts = line.split(maxsplit=3)
+        if len(parts) < 4:
+            continue
+        key = parts[3]
+        name = key.rsplit("/", maxsplit=1)[-1]
+        if name.startswith("._") or name == ".DS_Store":
+            full = path.rstrip("/") + "/" + key if not path.endswith(key) else path
+            if not dryrun:
+                rm_args = ["s3", "rm", full]
+                if profile:
+                    rm_args.extend(["--profile", profile])
+                _aws(*rm_args, capture=False)
+            removed.append(key)
+    return removed
+
+
+def aws_s3_mv_to_parent(
+    path: str,
+    *,
+    dryrun: bool = False,
+    profile: str | None = None,
+) -> None:
+    """Move all objects in an S3 subdirectory up to the parent."""
+    args = ["s3", "mv", path, path.rsplit("/", maxsplit=2)[0] + "/", "--recursive"]
+    if dryrun:
+        args.append("--dryrun")
+    if profile:
+        args.extend(["--profile", profile])
+    _aws(*args, capture=False)
+
+
 def aws_s3_bucket(name: str | None = None) -> str:
     """Get S3 bucket URI."""
     if name is None:
@@ -158,6 +253,56 @@ def aws_s3_bucket(name: str | None = None) -> str:
             return lines[0].split()[-1]
         return ""
     return f"s3://{name}"
+
+
+def aws_ec2_map_instance_ids_to_names(
+    *,
+    profile: str | None = None,
+) -> list[dict]:
+    """Map EC2 instance IDs to their Name tags."""
+    args = [
+        "ec2",
+        "describe-instances",
+        "--query",
+        "Reservations[].Instances[].{Id:InstanceId,Name:Tags[?Key==`Name`].Value|[0]}",
+        "--output",
+        "json",
+    ]
+    if profile:
+        args.extend(["--profile", profile])
+    result = _aws(*args)
+    return json.loads(result.stdout)
+
+
+def aws_ec2_instance_id() -> str:
+    """Get the current EC2 instance ID via instance metadata."""
+    import urllib.request
+
+    token_req = urllib.request.Request(
+        "http://169.254.169.254/latest/api/token",
+        method="PUT",
+        headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"},
+    )
+    with urllib.request.urlopen(token_req, timeout=2) as resp:
+        token = resp.read().decode()
+    id_req = urllib.request.Request(
+        "http://169.254.169.254/latest/meta-data/instance-id",
+        headers={"X-aws-ec2-metadata-token": token},
+    )
+    with urllib.request.urlopen(id_req, timeout=2) as resp:
+        return resp.read().decode().strip()
+
+
+def aws_ec2_stop(
+    instance_ids: list[str],
+    *,
+    profile: str | None = None,
+) -> None:
+    """Stop EC2 instances."""
+    args = ["ec2", "stop-instances", "--instance-ids", *instance_ids]
+    if profile:
+        args.extend(["--profile", profile])
+    _aws(*args, capture=False)
 
 
 def aws_ecr_login_private(
@@ -230,6 +375,40 @@ def aws_ec2_list_running_instances(
                 }
             )
     return instances
+
+
+def aws_batch_fetch_and_run(
+    queue: str,
+    job_definition: str,
+    *,
+    job_name: str = "fetch-and-run",
+    command: list[str] | None = None,
+    vcpus: int = 1,
+    memory: int = 2048,
+    profile: str | None = None,
+) -> dict:
+    """Submit an AWS Batch fetch-and-run job."""
+    args = [
+        "batch",
+        "submit-job",
+        "--job-name",
+        job_name,
+        "--job-queue",
+        queue,
+        "--job-definition",
+        job_definition,
+    ]
+    overrides: dict = {
+        "vcpus": vcpus,
+        "memory": memory,
+    }
+    if command:
+        overrides["command"] = command
+    args.extend(["--container-overrides", json.dumps(overrides)])
+    if profile:
+        args.extend(["--profile", profile])
+    result = _aws(*args)
+    return json.loads(result.stdout)
 
 
 def aws_batch_list_jobs(
