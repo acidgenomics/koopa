@@ -50,6 +50,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
+    """Install TeX packages."""
     activate_app("curl", "gnupg", "wget", build_only=True)
     tlmgr = shutil.which("tlmgr")
     if tlmgr is None:

@@ -18,6 +18,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
+    """Install Homebrew."""
     brew = shutil.which("brew")
     if brew is not None:
         msg = "Homebrew is already installed."
