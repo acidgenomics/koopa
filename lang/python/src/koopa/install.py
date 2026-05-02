@@ -1308,6 +1308,26 @@ def install_default_apps() -> None:
     install_shared_apps(mode="default")
 
 
+def install_missing_default_apps(*, verbose: bool = False) -> None:
+    """Install any default apps that are not yet present."""
+    from koopa.alert import alert, alert_success
+    from koopa.app import shared_apps
+
+    if not is_owner():
+        return
+    app_names = shared_apps(mode="default")
+    opt = _opt_prefix()
+    missing = [a for a in app_names if not os.path.exists(os.path.join(opt, a))]
+    if not missing:
+        return
+    n = len(missing)
+    label = "app" if n == 1 else "apps"
+    alert(f"Installing {n} missing default {label}: {', '.join(missing)}")
+    for app in missing:
+        cli_install(app, verbose=verbose)
+    alert_success("All missing default apps installed.")
+
+
 def install_shared_apps(mode: str = "default") -> None:
     """Build and install shared apps from source.
 
