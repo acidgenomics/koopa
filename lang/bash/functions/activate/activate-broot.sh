@@ -24,7 +24,6 @@ _koopa_activate_broot() {
     then
         return 0
     fi
-    _koopa_is_alias 'br' && unalias 'br'
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset

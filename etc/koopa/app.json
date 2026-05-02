@@ -7105,7 +7105,7 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-03-16",
+    "date": "2026-05-01",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -7177,7 +7177,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.5.3"
+    "version": "4.6.0"
   },
   "r-devel": {
     "build_dependencies": [
@@ -7185,7 +7185,7 @@
       "pkg-config",
       "subversion"
     ],
-    "date": "2024-12-30",
+    "date": "2026-05-01",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -7256,13 +7256,14 @@
       "macos-arm64": true
     },
     "url": [
+      "https://contributor.r-project.org/svn-dashboard/",
       "https://svn.r-project.org/R/",
       "https://stat.ethz.ch/R/daily/",
       "https://github.com/r-devel/r-svn/tree/trunk",
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "87492"
+    "version": "89993"
   },
   "r-gfortran": {
     "date": "2025-04-12",

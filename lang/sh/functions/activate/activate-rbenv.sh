@@ -20,7 +20,6 @@ _koopa_activate_rbenv() {
             __kvar_rbenv
         return 0
     fi
-    _koopa_is_alias 'rbenv' && unalias 'rbenv'
     export RBENV_ROOT="$__kvar_prefix"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset

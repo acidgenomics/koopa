@@ -13,7 +13,6 @@ _koopa_activate_pipx() {
     __kvar_prefix="$(_koopa_pipx_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
-        _koopa_is_alias 'mkdir' && unalias 'mkdir'
         mkdir -p "$__kvar_prefix" >/dev/null
     fi
     _koopa_add_to_path_start "${__kvar_prefix}/bin"

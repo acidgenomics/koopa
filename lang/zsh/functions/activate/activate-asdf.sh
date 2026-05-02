@@ -17,7 +17,6 @@ _koopa_activate_asdf() {
     then
         return 0
     fi
-    _koopa_is_alias 'asdf' && unalias 'asdf'
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset

@@ -6,7 +6,6 @@ _koopa_activate_pipx() {
     prefix="$(_koopa_pipx_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        _koopa_is_alias 'mkdir' && unalias 'mkdir'
         mkdir -p "$prefix" >/dev/null
     fi
     _koopa_add_to_path_start "${prefix}/bin"
