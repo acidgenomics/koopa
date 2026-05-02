@@ -678,6 +678,123 @@ def _check_mpdecimal() -> str:
     )
 
 
+def _check_llvm() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/llvm/llvm-project/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    m = re.match(r"llvmorg-([\d]+(?:\.[\d]+)*)", tag)
+    if not m:
+        msg = f"Cannot parse LLVM tag: {tag}"
+        raise RuntimeError(msg)
+    return m.group(1)
+
+
+def _check_libsolv() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/openSUSE/libsolv/tags?per_page=20",
+        github=True,
+    )
+    versions: list[str] = []
+    for tag in data:
+        m = re.match(r"([\d]+(?:\.[\d]+)+)$", tag["name"])
+        if m:
+            versions.append(m.group(1))
+    if not versions:
+        msg = "No libsolv version tags found"
+        raise RuntimeError(msg)
+    return max(
+        versions,
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
+def _check_msgpack() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/msgpack/msgpack-c/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    m = re.match(r"c(?:pp)?-([\d]+(?:\.[\d]+)*)", tag)
+    if not m:
+        msg = f"Cannot parse msgpack tag: {tag}"
+        raise RuntimeError(msg)
+    return m.group(1)
+
+
+def _check_openssh() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/openssh/openssh-portable"
+        "/tags?per_page=10",
+        github=True,
+    )
+    for tag in data:
+        m = re.match(r"V_(\d+)_(\d+)(?:_P(\d+))?$", tag["name"])
+        if m:
+            major, minor = m.group(1), m.group(2)
+            portable = m.group(3) or ""
+            suffix = f"p{portable}" if portable else ""
+            return f"{major}.{minor}{suffix}"
+    msg = "No openssh version tags found"
+    raise RuntimeError(msg)
+
+
+def _check_staden_io_lib() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/jkbonfield/io_lib/releases/latest",
+        github=True,
+    )
+    tag = data["tag_name"]
+    m = re.match(r"io_lib-([\d]+(?:-[\d]+)*)", tag)
+    if not m:
+        msg = f"Cannot parse staden-io-lib tag: {tag}"
+        raise RuntimeError(msg)
+    return m.group(1).replace("-", ".")
+
+
+def _check_temurin() -> str:
+    info = _http_get_json(
+        "https://api.adoptium.net/v3/info/available_releases"
+    )
+    lts = info.get("most_recent_lts")
+    if not lts:
+        msg = "Cannot determine most recent Temurin LTS"
+        raise RuntimeError(msg)
+    data = _http_get_json(
+        "https://api.adoptium.net/v3/info/release_names"
+        "?heap_size=normal&image_type=jdk"
+        "&os=linux&page=0&page_size=1"
+        "&project=jdk&release_type=ga"
+        "&semver=false&sort_method=DEFAULT"
+        "&sort_order=DESC&vendor=eclipse"
+        f"&version=%5B{lts}%2C{lts + 1})"
+    )
+    if not data.get("releases"):
+        msg = f"No Temurin JDK {lts} releases found"
+        raise RuntimeError(msg)
+    tag = data["releases"][0]
+    m = re.match(r"jdk-(\d+(?:\.\d+)*(?:\+\d+)?)", tag)
+    if not m:
+        msg = f"Cannot parse Temurin tag: {tag}"
+        raise RuntimeError(msg)
+    return m.group(1)
+
+
+def _check_r_devel() -> str:
+    data = _http_get_json(
+        "https://api.github.com/repos/r-devel/r-svn"
+        "/commits?sha=trunk&per_page=1",
+        github=True,
+    )
+    msg_text = data[0]["commit"]["message"]
+    m = re.search(r"git-svn-id:.*@(\d+)", msg_text)
+    if not m:
+        msg = "Cannot determine R-devel SVN revision"
+        raise RuntimeError(msg)
+    return m.group(1)
+
+
 def _make_dirlist_spec(url: str, prefix: str) -> _AppCheckSpec:
     return _AppCheckSpec(
         "dirlist",
@@ -787,13 +904,34 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_sourceforge_versions("tcl/files/Tcl/"),
         (),
     ),
+    "libheif": _AppCheckSpec(
+        "github", _check_github, ("strukturag", "libheif")
+    ),
+    "libsolv": _AppCheckSpec("github", _check_libsolv, ()),
+    "llvm": _AppCheckSpec("github", _check_llvm, ()),
+    "mpdecimal": _AppCheckSpec("dirlist", _check_mpdecimal, ()),
+    "msgpack": _AppCheckSpec("github", _check_msgpack, ()),
+    "openjpeg": _AppCheckSpec(
+        "github", _check_github, ("uclouvain", "openjpeg")
+    ),
+    "openssh": _AppCheckSpec("github", _check_openssh, ()),
+    "r-devel": _AppCheckSpec("svn", _check_r_devel, ()),
+    "staden-io-lib": _AppCheckSpec(
+        "github", _check_staden_io_lib, ()
+    ),
+    "taglib": _AppCheckSpec(
+        "github", _check_github, ("taglib", "taglib")
+    ),
+    "temurin": _AppCheckSpec("adoptium", _check_temurin, ()),
     "uv": _AppCheckSpec("pypi", _check_pypi, ("uv",)),
     "wget2": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("wget2", parent="wget"),
         (),
     ),
-    "mpdecimal": _AppCheckSpec("dirlist", _check_mpdecimal, ()),
+    "woff2": _AppCheckSpec(
+        "github", _check_github, ("google", "woff2")
+    ),
 }
 
 
