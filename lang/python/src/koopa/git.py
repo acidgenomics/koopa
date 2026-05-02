@@ -34,18 +34,33 @@ def git_clone(
     target: str | None = None,
     *,
     branch: str | None = None,
+    commit: str | None = None,
+    tag: str | None = None,
     recursive: bool = False,
 ) -> None:
-    """Clone a git repository."""
-    args = ["clone"]
+    """Clone a git repository.
+
+    Matches bash ``koopa_git_clone`` behaviour:
+    - branch: shallow clone with ``--depth=1 --single-branch``
+    - commit/tag: blobless clone with ``--filter=blob:none``, then checkout
+    """
+    args = ["clone", "--quiet"]
     if branch:
-        args.extend(["--branch", branch])
+        args.extend(["--depth=1", "--single-branch", "--branch", branch])
+    else:
+        args.append("--filter=blob:none")
     if recursive:
         args.append("--recursive")
     args.append(url)
     if target:
         args.append(target)
     _git(*args, capture=False)
+    cwd = target or os.path.basename(url).removesuffix(".git")
+    if commit:
+        _git("checkout", "--quiet", commit, cwd=cwd, capture=False)
+    elif tag:
+        _git("fetch", "--quiet", "--tags", cwd=cwd, capture=False)
+        _git("checkout", "--quiet", f"tags/{tag}", cwd=cwd, capture=False)
 
 
 def git_fetch(path: str = ".") -> None:
