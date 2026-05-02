@@ -845,7 +845,11 @@ _koopa_complete() {
                             )
                             ;;
                         'salmon')
-                            args+=('index' 'quant')
+                            args+=(
+                                'detect-fastq-library-type'
+                                'index'
+                                'quant'
+                            )
                             ;;
                         'sra')
                             args+=(
@@ -872,19 +876,28 @@ _koopa_complete() {
                         'aws')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'batch')
-                                    args+=('list-jobs')
+                                    args+=('fetch-and-run' 'list-jobs')
                                     ;;
                                 'ec2')
-                                    args+=('list-running-instances')
+                                    args+=(
+                                        'instance-id'
+                                        'list-running-instances'
+                                        'map-instance-ids-to-names'
+                                        'stop'
+                                    )
                                     ;;
                                 'ecr')
                                     args+=('login-private' 'login-public')
                                     ;;
                                 's3')
                                     args+=(
+                                        'delete-versioned-glacier-objects'
+                                        'delete-versioned-objects'
+                                        'dot-clean'
                                         'find'
                                         'list-large-files'
                                         'ls'
+                                        'mv-to-parent'
                                         'sync'
                                     )
                                     ;;
