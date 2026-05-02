@@ -52,29 +52,19 @@ def _run_bash_function(key: str, *args: str) -> None:
 _APP_TREE: dict[str, Any] = {
     "aws": {
         "batch": {
-            "fetch-and-run": "aws-batch-fetch-and-run",
             "list-jobs": "aws-batch-list-jobs",
-        },
-        "codecommit": {
-            "list-repositories": "aws-codecommit-list-repositories",
         },
         "ec2": {
             "list-running-instances": "aws-ec2-list-running-instances",
-            "map-instance-ids-to-names": "aws-ec2-map-instance-ids-to-names",
         },
         "ecr": {
-            "login-public": "aws-ecr-login-public",
             "login-private": "aws-ecr-login-private",
+            "login-public": "aws-ecr-login-public",
         },
         "s3": {
-            "delete-markers": "aws-s3-delete-markers",
-            "delete-versioned-glacier-objects": "aws-s3-delete-versioned-glacier-objects",
-            "delete-versioned-objects": "aws-s3-delete-versioned-objects",
-            "dot-clean": "aws-s3-dot-clean",
             "find": "aws-s3-find",
             "list-large-files": "aws-s3-list-large-files",
             "ls": "aws-s3-ls",
-            "mv-to-parent": "aws-s3-mv-to-parent",
             "sync": "aws-s3-sync",
         },
     },
@@ -985,10 +975,160 @@ def _handle_ssh_generate_key(args: list[str]) -> None:
     ssh_generate_key(*parsed.key_names, prefix=parsed.prefix)
 
 
+# -- aws handlers ------------------------------------------------------------
+
+
+def _handle_aws_batch_list_jobs(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app aws batch list-jobs")
+    parser.add_argument("--queue", required=True)
+    parser.add_argument("--status", default="RUNNING")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_batch_list_jobs
+    import json
+    jobs = aws_batch_list_jobs(
+        parsed.queue, status=parsed.status, profile=parsed.profile,
+    )
+    print(json.dumps(jobs, indent=2))
+
+
+def _handle_aws_ec2_list_running_instances(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws ec2 list-running-instances",
+    )
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_ec2_list_running_instances
+    instances = aws_ec2_list_running_instances(profile=parsed.profile)
+    for inst in instances:
+        parts = [inst["id"], inst["type"], inst["state"]]
+        if inst["name"]:
+            parts.append(inst["name"])
+        if inst["ip"]:
+            parts.append(inst["ip"])
+        print("\t".join(parts))
+
+
+def _handle_aws_ecr_login_private(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws ecr login-private",
+    )
+    parser.add_argument("--region", default="us-east-1")
+    parser.add_argument("--account-id", default=None)
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_ecr_login_private
+    aws_ecr_login_private(
+        parsed.region,
+        account_id=parsed.account_id,
+        profile=parsed.profile,
+    )
+
+
+def _handle_aws_ecr_login_public(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws ecr login-public",
+    )
+    parser.add_argument("--region", default="us-east-1")
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_ecr_login_public
+    aws_ecr_login_public(parsed.region)
+
+
+def _handle_aws_s3_find(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app aws s3 find")
+    parser.add_argument("--bucket", required=True)
+    parser.add_argument("--prefix", default="")
+    parser.add_argument("--pattern", default="")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_find
+    keys = aws_s3_find(
+        parsed.bucket,
+        prefix=parsed.prefix,
+        pattern=parsed.pattern,
+        profile=parsed.profile,
+    )
+    for key in keys:
+        print(key)
+
+
+def _handle_aws_s3_list_large_files(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws s3 list-large-files",
+    )
+    parser.add_argument("--bucket", required=True)
+    parser.add_argument("--min-size-mb", type=float, default=100)
+    parser.add_argument("--prefix", default="")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_list_large_files
+    files = aws_s3_list_large_files(
+        parsed.bucket,
+        min_size_mb=parsed.min_size_mb,
+        prefix=parsed.prefix,
+        profile=parsed.profile,
+    )
+    for key, size_mb in files:
+        print(f"{size_mb:.1f} MB\t{key}")
+
+
+def _handle_aws_s3_ls(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app aws s3 ls")
+    parser.add_argument("path")
+    parser.add_argument("--recursive", action="store_true")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_ls
+    output = aws_s3_ls(
+        parsed.path, recursive=parsed.recursive, profile=parsed.profile,
+    )
+    print(output, end="")
+
+
+def _handle_aws_s3_sync(args: list[str]) -> None:
+    import argparse
+    parser = argparse.ArgumentParser(prog="koopa app aws s3 sync")
+    parser.add_argument("source")
+    parser.add_argument("target")
+    parser.add_argument("--delete", action="store_true")
+    parser.add_argument("--dryrun", action="store_true")
+    parser.add_argument("--exclude", action="append", default=None)
+    parser.add_argument("--include", action="append", default=None)
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    from koopa.aws import aws_s3_sync
+    aws_s3_sync(
+        parsed.source,
+        parsed.target,
+        delete=parsed.delete,
+        dryrun=parsed.dryrun,
+        exclude=parsed.exclude,
+        include=parsed.include,
+        profile=parsed.profile,
+    )
+
+
 # -- handler registry --------------------------------------------------------
 
 
 _PYTHON_HANDLERS: dict[str, Any] = {
+    # aws
+    "aws-batch-list-jobs": _handle_aws_batch_list_jobs,
+    "aws-ec2-list-running-instances": _handle_aws_ec2_list_running_instances,
+    "aws-ecr-login-private": _handle_aws_ecr_login_private,
+    "aws-ecr-login-public": _handle_aws_ecr_login_public,
+    "aws-s3-find": _handle_aws_s3_find,
+    "aws-s3-list-large-files": _handle_aws_s3_list_large_files,
+    "aws-s3-ls": _handle_aws_s3_ls,
+    "aws-s3-sync": _handle_aws_s3_sync,
     # bioinformatics
     "bowtie2-align-paired-end": _handle_bowtie2_align_paired_end,
     "bowtie2-index": _handle_bowtie2_index,
