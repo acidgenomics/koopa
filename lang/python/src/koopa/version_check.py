@@ -12,9 +12,11 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Any
 
 from koopa.installers import PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
@@ -25,6 +27,8 @@ from koopa.xdg import xdg_cache_home
 
 @dataclass
 class VersionCheckResult:
+    """Result of checking one app's upstream version."""
+
     name: str
     current_version: str
     latest_version: str | None
@@ -33,6 +37,7 @@ class VersionCheckResult:
 
     @property
     def is_outdated(self) -> bool:
+        """Return whether the current version differs from the latest."""
         return self.latest_version is not None and self.current_version != self.latest_version
 
 
@@ -48,7 +53,7 @@ class _VersionCache:
         try:
             with open(self._path) as f:
                 self._data = json.load(f)
-        except FileNotFoundError, json.JSONDecodeError, OSError:
+        except (FileNotFoundError, json.JSONDecodeError, OSError):
             self._data = {}
 
     def get(self, name: str) -> str | None:
@@ -101,10 +106,11 @@ def _resolve_github_token() -> str | None:
                 capture_output=True,
                 text=True,
                 timeout=5,
+                check=False,
             )
             if result.returncode == 0 and result.stdout.strip():
                 return result.stdout.strip()
-        except subprocess.TimeoutExpired, OSError:
+        except (subprocess.TimeoutExpired, OSError):
             pass
     return None
 
@@ -117,7 +123,7 @@ _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 
 
-def _http_get_json(url: str, *, github: bool = False, timeout: int = 15) -> dict | list:
+def _http_get_json(url: str, *, github: bool = False, timeout: int = 15) -> Any:
     limiter = _rate_github if github else _rate_default
     limiter.wait()
     req = urllib.request.Request(url)
@@ -386,11 +392,12 @@ _GENERIC_INSTALLER_MAP: dict[str, str] = {
 @dataclass
 class _AppCheckSpec:
     source: str
-    check_fn: object
+    check_fn: Callable[..., str]
     args: tuple
 
 
-def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
+def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
+    """Classify an app into a version-check strategy."""
     module_path = PYTHON_INSTALLERS.get(name, "")
     args = info.get("installer_args", {})
     urls = info.get("url", [])
@@ -1037,7 +1044,7 @@ def _check_miniconda() -> str:
 
 
 def _check_oracle_instant_client(current_version: str) -> str:
-    major = current_version.split(".")[0]
+    major = current_version.split(".", maxsplit=1)[0]
     html = _http_get_text(
         "https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html",
         timeout=30,
@@ -1079,7 +1086,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "ca-certificates": _AppCheckSpec("dirlist", _check_ca_certificates, ()),
     "elfutils": _AppCheckSpec(
         "dirlist",
-        lambda: _check_elfutils(),
+        _check_elfutils,
         (),
     ),
     "expat": _AppCheckSpec("github", _check_expat, ()),
@@ -1328,7 +1335,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
 }
 
 
-def _classify_generic(
+def _classify_generic(  # noqa: PLR0911
     source: str,
     name: str,
     info: dict,
@@ -1405,8 +1412,14 @@ def check_app_versions(
     max_workers: int = 8,
     use_cache: bool = True,
 ) -> list[VersionCheckResult]:
+    """Check upstream versions for all apps in app.json."""
     if _github_token is None:
-        msg = 'GITHUB_TOKEN is not set. Set it with:\n    export GITHUB_TOKEN="$(gh auth token)"'
+        msg = (
+            "GitHub token is not available."
+            "\nChecked: GITHUB_TOKEN, GH_TOKEN, and 'gh auth token'."
+            "\nEither set GITHUB_TOKEN or authenticate the GitHub CLI:"
+            "\n    gh auth login"
+        )
         raise RuntimeError(msg)
     json_data = import_app_json()
     cache = _VersionCache() if use_cache else None
@@ -1476,10 +1489,7 @@ def check_app_versions(
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
             latest_san = sanitize_version(latest)
-            if current_san != latest_san:
-                msg = f"{app_name}: {current} -> {latest}"
-            else:
-                msg = None
+            msg = f"{app_name}: {current} -> {latest}" if current_san != latest_san else None
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except Exception as exc:
             msg = f"{app_name}: error: {exc}"
@@ -1520,6 +1530,7 @@ def check_app_versions(
 
 
 def print_report(results: list[VersionCheckResult]) -> None:
+    """Print a human-readable version check report."""
     outdated = [r for r in results if r.is_outdated]
     current = [r for r in results if r.latest_version is not None and not r.is_outdated]
     failed = [r for r in results if r.error is not None and r.source != "unsupported"]
@@ -1551,6 +1562,7 @@ def print_report(results: list[VersionCheckResult]) -> None:
 
 
 def print_json_report(results: list[VersionCheckResult]) -> None:
+    """Print a JSON-formatted version check report."""
     outdated = [asdict(r) for r in results if r.is_outdated]
     current = [asdict(r) for r in results if r.latest_version is not None and not r.is_outdated]
     failed = [asdict(r) for r in results if r.error is not None and r.source != "unsupported"]
@@ -1572,6 +1584,7 @@ def print_json_report(results: list[VersionCheckResult]) -> None:
 
 
 def update_app_json(results: list[VersionCheckResult]) -> int:
+    """Update app.json with latest versions and return count of changes."""
     outdated = [r for r in results if r.is_outdated]
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)

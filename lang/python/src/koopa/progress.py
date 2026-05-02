@@ -11,11 +11,12 @@ from pathlib import Path
 
 _HISTORY_FILENAME = "build-times.json"
 
-_active_progress: object | None = None
+_active_progress: BuildProgress | None = None
 
 
 def get_active_progress() -> BuildProgress | None:
-    return _active_progress  # type: ignore[return-value]
+    """Return the currently active build progress context, if any."""
+    return _active_progress
 
 
 def _history_path() -> str:
@@ -35,7 +36,7 @@ def _load_history() -> dict[str, float]:
     try:
         with open(path) as f:
             return json.load(f)
-    except json.JSONDecodeError, OSError:
+    except (json.JSONDecodeError, OSError):
         return {}
 
 
@@ -98,7 +99,8 @@ class BuildProgress:
         self._in_step_mode: bool = False
 
     def __enter__(self) -> BuildProgress:
-        global _active_progress
+        """Enter the build progress context."""
+        global _active_progress  # noqa: PLW0603
         _active_progress = self
         self._start = time.monotonic()
         if not self._quiet:
@@ -106,16 +108,17 @@ class BuildProgress:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
-        global _active_progress
+        """Exit the build progress context."""
+        global _active_progress  # noqa: PLW0603
         _active_progress = None
         self._elapsed = time.monotonic() - self._start
         self._stop_display()
         if exc_type is None:
             self._record_duration()
-        return None
 
     @property
     def elapsed(self) -> float:
+        """Return elapsed seconds since the build started."""
         if self._start == 0.0:
             return 0.0
         return time.monotonic() - self._start
