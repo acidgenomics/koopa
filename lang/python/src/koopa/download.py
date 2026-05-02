@@ -43,6 +43,8 @@ def _derive_filename(url: str) -> str:
     """Derive filename from URL."""
     parsed = urlparse(url)
     name = os.path.basename(parsed.path)
+    if not name or name == "download":
+        name = os.path.basename(os.path.dirname(parsed.path))
     return name if name else "download"
 
 

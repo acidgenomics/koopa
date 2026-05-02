@@ -16,7 +16,7 @@ def main(
     """Install pcre."""
     env = activate_app("autoconf", "automake", "libtool", "pkg-config", build_only=True)
     env = activate_app("zlib", "bzip2", env=env)
-    url = f"https://koopa.acidgenomics.com/src/pcre/{version}.tar.bz2"
+    url = f"https://sourceforge.net/projects/pcre/files/pcre/{version}/pcre-{version}.tar.bz2/download"
     download_extract_cd(url)
     make_build(
         conf_args=[
