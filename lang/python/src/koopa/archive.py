@@ -19,26 +19,83 @@ from pathlib import Path
 def extract(path: str, output_dir: str | None = None) -> None:
     """Extract an archive (tar, zip, 7z).
 
+    Matches bash ``koopa_extract`` behaviour: extracts to a temporary
+    directory, then flattens single top-level directories so the caller
+    always gets normalized output regardless of archive structure.
+
     Supports: .tar, .tar.gz, .tgz, .tar.bz2, .tbz2, .tar.xz, .txz,
     .tar.zst, .zip, .7z
     """
+    import glob as glob_mod
+    import tempfile
+
+    path = os.path.realpath(path)
     if output_dir is None:
-        output_dir = os.path.dirname(path) or "."
+        bn = os.path.basename(path)
+        for ext in (
+            ".tar.gz", ".tar.bz2", ".tar.xz", ".tar.zst", ".tar.zstd",
+            ".tar.lz", ".tgz", ".tbz2", ".txz",
+            ".tar", ".zip", ".7z",
+        ):
+            if bn.lower().endswith(ext):
+                bn = bn[: -len(ext)]
+                break
+        output_dir = os.path.join(os.path.dirname(path), bn)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
+    tmpdir = tempfile.mkdtemp(
+        dir=os.path.dirname(path) or ".",
+        prefix=".koopa-extract-",
+    )
+    try:
+        _extract_to(path, tmpdir)
+        entries = [
+            e for e in os.listdir(tmpdir)
+            if not e.startswith(".")
+        ]
+        if len(entries) == 1 and os.path.isdir(os.path.join(tmpdir, entries[0])):
+            src_dir = os.path.join(tmpdir, entries[0])
+            for item in glob_mod.glob(os.path.join(src_dir, "*")) + \
+                        glob_mod.glob(os.path.join(src_dir, ".*")):
+                bn_item = os.path.basename(item)
+                if bn_item in (".", ".."):
+                    continue
+                dst = os.path.join(output_dir, bn_item)
+                if os.path.exists(dst) or os.path.islink(dst):
+                    if os.path.isdir(dst) and not os.path.islink(dst):
+                        shutil.rmtree(dst)
+                    else:
+                        os.unlink(dst)
+                shutil.move(item, dst)
+        else:
+            for entry in entries:
+                src = os.path.join(tmpdir, entry)
+                dst = os.path.join(output_dir, entry)
+                if os.path.exists(dst) or os.path.islink(dst):
+                    if os.path.isdir(dst) and not os.path.islink(dst):
+                        shutil.rmtree(dst)
+                    else:
+                        os.unlink(dst)
+                shutil.move(src, dst)
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def _extract_to(path: str, target: str) -> None:
+    """Extract archive contents into target directory."""
     name = os.path.basename(path).lower()
     if name.endswith((".tar.zst", ".tar.zstd")):
         subprocess.run(
-            ["tar", "--zstd", "-xf", path, "-C", output_dir],
+            ["tar", "--zstd", "-xf", path, "-C", target],
             check=True,
         )
     elif tarfile.is_tarfile(path):
         with tarfile.open(path) as tf:
-            tf.extractall(path=output_dir)
+            tf.extractall(path=target)
     elif zipfile.is_zipfile(path):
         with zipfile.ZipFile(path) as zf:
-            zf.extractall(path=output_dir)
+            zf.extractall(path=target)
     elif name.endswith(".7z"):
-        subprocess.run(["7z", "x", path, f"-o{output_dir}"], check=True)
+        subprocess.run(["7z", "x", path, f"-o{target}"], check=True)
     else:
         msg = f"Unsupported archive format: {path}"
         raise ValueError(msg)
