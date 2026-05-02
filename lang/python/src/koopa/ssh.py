@@ -15,7 +15,7 @@ def ssh_generate_key(
     *key_names: str,
     prefix: str = "",
 ) -> None:
-    """Generate SSH key(s)."""
+    """Generate SSH keys."""
     ssh_keygen = shutil.which("ssh-keygen")
     if ssh_keygen is None:
         msg = "ssh-keygen is not installed."
