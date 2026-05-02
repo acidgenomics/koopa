@@ -1552,11 +1552,6 @@ def handle_app(remainder: list[str]) -> None:
     if not remainder:
         print("Error: no app command specified.", file=sys.stderr)
         sys.exit(1)
-    if remainder[-1] in ("--help", "-h"):
-        from koopa.cli_help import show_man_page
-
-        show_man_page("app", *remainder[:-1])
-        return
     key, args = _resolve_tree(remainder)
     handler = _PYTHON_HANDLERS.get(key)
     if handler is None:

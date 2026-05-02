@@ -856,11 +856,6 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     if not remainder:
         print("Error: no system command specified.", file=sys.stderr)
         sys.exit(1)
-    if remainder[-1] in ("--help", "-h"):
-        from koopa.cli_help import show_man_page
-
-        show_man_page("system", *remainder[:-1])
-        return
     subcmd = remainder[0]
     rest = remainder[1:]
     if subcmd in _DEFUNCT_COMMANDS:
