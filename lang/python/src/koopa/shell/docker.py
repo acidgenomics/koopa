@@ -18,6 +18,7 @@ from koopa.fs import list_subdirs
 def _docker(*args: str, check: bool = True, **kwargs) -> subprocess.CompletedProcess:
     """Run a docker command."""
     import shutil
+
     docker = shutil.which("docker")
     if docker is None:
         msg = "docker is not installed."
@@ -28,7 +29,10 @@ def _docker(*args: str, check: bool = True, **kwargs) -> subprocess.CompletedPro
     if docker_bin not in path.split(os.pathsep):
         env["PATH"] = docker_bin + os.pathsep + path
     return subprocess.run(
-        [docker, *args], check=check, env=env, **kwargs,
+        [docker, *args],
+        check=check,
+        env=env,
+        **kwargs,
     )
 
 
@@ -65,9 +69,7 @@ def build(
     tags_file = join(local, "tags.txt")
     if isfile(tags_file):
         tags.extend(
-            line.strip()
-            for line in Path(tags_file).read_text().splitlines()
-            if line.strip()
+            line.strip() for line in Path(tags_file).read_text().splitlines() if line.strip()
         )
     if os.path.islink(local):
         tags.append(tag)
@@ -80,42 +82,45 @@ def build(
     platforms_file = join(local, "platforms.txt")
     if isfile(platforms_file):
         platforms = [
-            line.strip()
-            for line in Path(platforms_file).read_text().splitlines()
-            if line.strip()
+            line.strip() for line in Path(platforms_file).read_text().splitlines() if line.strip()
         ]
     build_args: list[str] = []
     for t in tags:
         build_args.append(f"--tag={image_name}:{t}")
     build_args.append(f"--platform={','.join(platforms)}")
     if memory:
-        build_args.extend([
-            f"--memory={memory}",
-            f"--memory-swap={memory}",
-        ])
+        build_args.extend(
+            [
+                f"--memory={memory}",
+                f"--memory-swap={memory}",
+            ]
+        )
     build_args.extend(["--no-cache", "--progress=auto", "--pull"])
     if push:
         build_args.append("--push")
     build_args.append(local)
     # Prune existing locally tagged images.
     result = _docker(
-        "image", "ls", "--filter", f"reference={remote}", "--quiet",
-        capture_output=True, text=True, check=False,
+        "image",
+        "ls",
+        "--filter",
+        f"reference={remote}",
+        "--quiet",
+        capture_output=True,
+        text=True,
+        check=False,
     )
     image_ids = [x for x in result.stdout.strip().splitlines() if x]
     if image_ids:
         _docker("image", "rm", "--force", *image_ids, check=False)
     print(f"Building '{remote}' Docker image.")
     build_name = basename(image_name)
-    _docker("buildx", "rm", build_name, check=False,
-            capture_output=True)
-    _docker("buildx", "create", f"--name={build_name}", "--use",
-            capture_output=True)
+    _docker("buildx", "rm", build_name, check=False, capture_output=True)
+    _docker("buildx", "create", f"--name={build_name}", "--use", capture_output=True)
     try:
         _docker("buildx", "build", *build_args)
     finally:
-        _docker("buildx", "rm", build_name, check=False,
-                capture_output=True)
+        _docker("buildx", "rm", build_name, check=False, capture_output=True)
     _docker("image", "ls", "--filter", f"reference={remote}")
     if push:
         _docker("logout", server, check=False, capture_output=True)
@@ -126,9 +131,11 @@ def _authenticate(server: str) -> None:
     """Authenticate with a Docker registry."""
     if ".dkr.ecr." in server and ".amazonaws.com" in server:
         from koopa.aws import aws_ecr_login_private
+
         aws_ecr_login_private()
     elif server == "public.ecr.aws":
         from koopa.aws import aws_ecr_login_public
+
         aws_ecr_login_public()
     else:
         _docker("logout", server, check=False, capture_output=True)
@@ -142,7 +149,10 @@ def build_all_tags(local: str, remote: str) -> None:
         msg = f"Directory does not exist: '{local}'."
         raise FileNotFoundError(msg)
     tags = list_subdirs(
-        path=local, recursive=False, sort=True, basename_only=True,
+        path=local,
+        recursive=False,
+        sort=True,
+        basename_only=True,
     )
     for tag in tags:
         local2 = join(local, tag)
@@ -161,7 +171,9 @@ def ghcr_login() -> None:
         raise RuntimeError(msg)
     proc = subprocess.run(
         ["docker", "login", "ghcr.io", "-u", user, "--password-stdin"],
-        input=pat, text=True, check=True,
+        input=pat,
+        text=True,
+        check=True,
     )
 
 
@@ -179,12 +191,16 @@ def is_build_recent(*images: str, days: int = 7) -> bool:
     for image in images:
         _docker("pull", image, capture_output=True)
         result = _docker(
-            "inspect", "--format={{json .Created}}", image,
-            capture_output=True, text=True,
+            "inspect",
+            "--format={{json .Created}}",
+            image,
+            capture_output=True,
+            text=True,
         )
         created_str = result.stdout.strip().strip('"')
         match = re.search(
-            r"(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})", created_str,
+            r"(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})",
+            created_str,
         )
         if match is None:
             return False
@@ -211,7 +227,12 @@ def prune_old_images() -> None:
     """Prune Docker images older than 3 months."""
     print("Pruning Docker images older than 3 months.")
     _docker(
-        "image", "prune", "--all", "--filter", "until=2160h", "--force",
+        "image",
+        "prune",
+        "--all",
+        "--filter",
+        "until=2160h",
+        "--force",
         check=False,
     )
     _docker("image", "prune", "--force", check=False)
@@ -221,7 +242,10 @@ def remove(*patterns: str) -> None:
     """Remove Docker images by pattern matching."""
     for pattern in patterns:
         result = _docker(
-            "images", capture_output=True, text=True, check=False,
+            "images",
+            capture_output=True,
+            text=True,
+            check=False,
         )
         image_ids: list[str] = []
         for line in result.stdout.splitlines():
@@ -244,10 +268,12 @@ def run(
     """Run a Docker image interactively."""
     if ".dkr.ecr." in image and ".amazonaws.com/" in image:
         from koopa.aws import aws_ecr_login_private
+
         aws_ecr_login_private()
     elif image.startswith("public.ecr.aws/"):
         if os.environ.get("AWS_ECR_PROFILE"):
             from koopa.aws import aws_ecr_login_public
+
             aws_ecr_login_public()
     _docker("pull", image)
     run_args: list[str] = ["--interactive", "--tty"]
@@ -262,10 +288,12 @@ def run(
             msg = "Do not set '--bind' when running at HOME."
             raise RuntimeError(msg)
         workdir = "/mnt/work"
-        run_args.extend([
-            f"--volume={cwd}:{workdir}",
-            f"--workdir={workdir}",
-        ])
+        run_args.extend(
+            [
+                f"--volume={cwd}:{workdir}",
+                f"--workdir={workdir}",
+            ]
+        )
     if arm:
         run_args.append("--platform=linux/arm64")
     elif x86:

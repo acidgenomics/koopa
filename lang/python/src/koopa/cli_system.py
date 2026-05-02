@@ -280,21 +280,25 @@ def _handle_system_info(args: list[str]) -> None:
         f"URL: {koopa_url}",
     ]
     if is_git_repo(prefix):
-        info.extend([
-            "",
-            "Git repo",
-            "--------",
-            f"Remote: {git_remote_url(prefix)}",
-            f"Commit: {git_last_commit_local(prefix)}",
-            f"Date: {git_commit_date(prefix)}",
-        ])
+        info.extend(
+            [
+                "",
+                "Git repo",
+                "--------",
+                f"Remote: {git_remote_url(prefix)}",
+                f"Commit: {git_last_commit_local(prefix)}",
+                f"Date: {git_commit_date(prefix)}",
+            ]
+        )
     bash = shutil.which("bash")
     bash_ver = ""
     if bash:
         bash = os.path.realpath(bash)
         result = subprocess.run(
             [bash, "--version"],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         first_line = result.stdout.strip().splitlines()[0] if result.stdout else ""
         m = re.search(r"(\d+\.\d+\.\d+)", first_line)
@@ -307,36 +311,44 @@ def _handle_system_info(args: list[str]) -> None:
     if is_macos():
         result = subprocess.run(
             ["sw_vers"],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         os_str = " ".join(result.stdout.split()) if result.stdout else "macOS"
     else:
         result = subprocess.run(
             ["uname", "--all"],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         os_str = result.stdout.strip() if result.stdout else "Linux"
-    info.extend([
-        "",
-        "Configuration",
-        "-------------",
-        f"Koopa Prefix: {prefix}",
-        f"Config Prefix: {config_prefix()}",
-        "",
-        "System information",
-        "------------------",
-        f"OS: {os_str}",
-        f"Architecture: {arch()} / {arch2()}",
-        f"Bash: {bash or 'not found'}",
-        f"Bash Version: {bash_ver}",
-        f"Python: {python or 'not found'}",
-        f"Python Version: {python_ver}",
-    ])
+    info.extend(
+        [
+            "",
+            "Configuration",
+            "-------------",
+            f"Koopa Prefix: {prefix}",
+            f"Config Prefix: {config_prefix()}",
+            "",
+            "System information",
+            "------------------",
+            f"OS: {os_str}",
+            f"Architecture: {arch()} / {arch2()}",
+            f"Bash: {bash or 'not found'}",
+            f"Bash Version: {bash_ver}",
+            f"Python: {python or 'not found'}",
+            f"Python Version: {python_ver}",
+        ]
+    )
     neofetch = shutil.which("neofetch")
     if neofetch:
         result = subprocess.run(
             [neofetch, "--stdout"],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if result.stdout:
             nf_lines = result.stdout.strip().splitlines()
@@ -363,17 +375,21 @@ def _handle_switch_to_develop(args: list[str]) -> None:
         return
     subprocess.run(
         ["git", "remote", "set-branches", "--add", origin, branch],
-        cwd=prefix, check=True,
+        cwd=prefix,
+        check=True,
     )
     subprocess.run(
         ["git", "fetch", origin],
-        cwd=prefix, check=True,
+        cwd=prefix,
+        check=True,
     )
     subprocess.run(
         ["git", "checkout", "--track", f"{origin}/{branch}"],
-        cwd=prefix, check=True,
+        cwd=prefix,
+        check=True,
     )
     from koopa.install import _zsh_compaudit_set_permissions
+
     _zsh_compaudit_set_permissions()
 
 
@@ -411,8 +427,7 @@ def _handle_enable_passwordless_sudo() -> None:
     sudoers_file = f"/etc/sudoers.d/koopa-{group}"
     if os.path.exists(sudoers_file):
         print(
-            f"Passwordless sudo for '{group}' group "
-            f"already enabled at '{sudoers_file}'.",
+            f"Passwordless sudo for '{group}' group already enabled at '{sudoers_file}'.",
         )
         return
     content = f"%{group} ALL=(ALL:ALL) NOPASSWD:ALL\n"
@@ -453,10 +468,10 @@ def _handle_os_string() -> None:
         release_file = Path("/etc/os-release")
         if release_file.is_file():
             content = release_file.read_text()
-            id_match = re.search(r'^ID=(.+)$', content, re.MULTILINE)
+            id_match = re.search(r"^ID=(.+)$", content, re.MULTILINE)
             if id_match:
                 os_id = id_match.group(1).strip('"')
-            ver_match = re.search(r'^VERSION_ID=(.+)$', content, re.MULTILINE)
+            ver_match = re.search(r"^VERSION_ID=(.+)$", content, re.MULTILINE)
             if ver_match:
                 version = major_version(ver_match.group(1).strip('"'))
             else:
@@ -487,8 +502,7 @@ def _handle_zsh_compaudit_set_permissions() -> None:
         st = os.stat(prefix)
         if st.st_uid != uid:
             alert(
-                f"Changing ownership at '{prefix}' "
-                f"from '{st.st_uid}' to '{uid}'.",
+                f"Changing ownership at '{prefix}' from '{st.st_uid}' to '{uid}'.",
             )
             subprocess.run(
                 ["sudo", "chown", "-R", str(uid), prefix],
@@ -508,13 +522,9 @@ def _handle_linux_delete_cache() -> None:
     """Handle ``koopa system delete-cache``."""
     from koopa.alert import alert
 
-    is_docker = (
-        os.environ.get("KOOPA_IS_DOCKER", "0") == "1"
-        or os.path.isfile("/.dockerenv")
-    )
+    is_docker = os.environ.get("KOOPA_IS_DOCKER", "0") == "1" or os.path.isfile("/.dockerenv")
     if not is_docker:
-        print("Error: Cache removal only supported inside Docker images.",
-              file=sys.stderr)
+        print("Error: Cache removal only supported inside Docker images.", file=sys.stderr)
         sys.exit(1)
     alert("Removing caches, logs, and temporary files.")
     dirs_to_remove = [
@@ -614,14 +624,29 @@ def _handle_macos_clean_launch_services() -> None:
             sys.exit(1)
     alert("Cleaning LaunchServices 'Open With' menu.")
     subprocess.run(
-        [lsregister, "-kill", "-r",
-         "-domain", "local", "-domain", "system", "-domain", "user"],
+        [lsregister, "-kill", "-r", "-domain", "local", "-domain", "system", "-domain", "user"],
         check=True,
     )
     subprocess.run(
-        ["sudo", lsregister, "-kill", "-lint", "-seed", "-f", "-r", "-v",
-         "-dump", "-domain", "local", "-domain", "network",
-         "-domain", "system", "-domain", "user"],
+        [
+            "sudo",
+            lsregister,
+            "-kill",
+            "-lint",
+            "-seed",
+            "-f",
+            "-r",
+            "-v",
+            "-dump",
+            "-domain",
+            "local",
+            "-domain",
+            "network",
+            "-domain",
+            "system",
+            "-domain",
+            "user",
+        ],
         check=True,
     )
     subprocess.run(["sudo", killall, "Finder"], check=True)
@@ -632,8 +657,7 @@ def _handle_macos_clean_launch_services() -> None:
 def _handle_macos_create_dmg(args: list[str]) -> None:
     """Handle ``koopa system create-dmg <source-folder>``."""
     if len(args) != 1:
-        print("Error: exactly one argument (source folder) is required.",
-              file=sys.stderr)
+        print("Error: exactly one argument (source folder) is required.", file=sys.stderr)
         sys.exit(1)
     hdiutil = "/usr/bin/hdiutil"
     if not os.path.isfile(hdiutil):
@@ -646,8 +670,7 @@ def _handle_macos_create_dmg(args: list[str]) -> None:
     volname = os.path.basename(srcfolder)
     ov = f"{volname}.dmg"
     subprocess.run(
-        [hdiutil, "create", "-ov", ov,
-         "-srcfolder", srcfolder, "-volname", volname],
+        [hdiutil, "create", "-ov", ov, "-srcfolder", srcfolder, "-volname", volname],
         check=True,
     )
 
@@ -755,8 +778,7 @@ def _handle_macos_force_eject(args: list[str]) -> None:
         print("Error: Admin access is required.", file=sys.stderr)
         sys.exit(1)
     if len(args) != 1:
-        print("Error: exactly one argument (volume name) is required.",
-              file=sys.stderr)
+        print("Error: exactly one argument (volume name) is required.", file=sys.stderr)
         sys.exit(1)
     diskutil = "/usr/sbin/diskutil"
     if not os.path.isfile(diskutil):

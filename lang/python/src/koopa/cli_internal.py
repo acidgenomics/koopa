@@ -127,8 +127,7 @@ def _handle_stale_revdeps(args: list[str]) -> None:
 def _handle_write_install_info(args: list[str]) -> None:
     if len(args) != 3:
         print(
-            "Usage: koopa internal write-install-info"
-            " <output_file> <name> <version>",
+            "Usage: koopa internal write-install-info <output_file> <name> <version>",
             file=sys.stderr,
         )
         sys.exit(1)

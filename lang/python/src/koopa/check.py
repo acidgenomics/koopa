@@ -72,10 +72,7 @@ def check_broken_app_installs() -> bool:
         opt_link = join(opt_prefix, name)
         if islink(opt_link) and isdir(realpath(opt_link)):
             continue
-        versions = [
-            v for v in os.listdir(app_path)
-            if isdir(join(app_path, v))
-        ]
+        versions = [v for v in os.listdir(app_path) if isdir(join(app_path, v))]
         if not versions:
             ok = False
             print(f"{name}: failed install (empty app directory)")
@@ -297,10 +294,7 @@ def check_macos_system_r() -> bool:
         if installed and installed != expected:
             from koopa.alert import warn
 
-            warn(
-                f"System R is out of date at '{r_bin}': "
-                f"{installed} != {expected}."
-            )
+            warn(f"System R is out of date at '{r_bin}': {installed} != {expected}.")
             ok = False
     return ok
 
@@ -351,10 +345,7 @@ def check_macos_system_python() -> bool:
         if installed != expected:
             from koopa.alert import warn
 
-            warn(
-                f"System Python is out of date at '{python_bin}': "
-                f"{installed} != {expected}."
-            )
+            warn(f"System Python is out of date at '{python_bin}': {installed} != {expected}.")
             ok = False
     return ok
 

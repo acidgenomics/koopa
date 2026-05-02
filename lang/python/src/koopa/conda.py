@@ -17,7 +17,10 @@ def _conda(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
         msg = "conda is not installed."
         raise RuntimeError(msg)
     return subprocess.run(
-        [conda, *args], capture_output=capture, text=True, check=True,
+        [conda, *args],
+        capture_output=capture,
+        text=True,
+        check=True,
     )
 
 

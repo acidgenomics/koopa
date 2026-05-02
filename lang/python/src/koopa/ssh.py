@@ -36,9 +36,12 @@ def ssh_generate_key(
         print(f"Generating SSH key at '{key_file}'.")
         ssh_args = [
             ssh_keygen,
-            "-C", f"{user}@{hostname}",
-            "-N", "",
-            "-f", key_file,
+            "-C",
+            f"{user}@{hostname}",
+            "-N",
+            "",
+            "-f",
+            key_file,
             "-q",
         ]
         if key_name.endswith("-ed25519") or key_name.endswith("_ed25519"):
