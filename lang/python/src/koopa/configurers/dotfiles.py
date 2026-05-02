@@ -35,12 +35,8 @@ def main(
         raise FileNotFoundError(msg)
     home = os.path.expanduser("~")
     dotfiles_prefix = os.path.join(home, ".config", "koopa", "dotfiles")
-    dotfiles_work_prefix = os.path.join(
-        home, ".config", "koopa", "dotfiles-work"
-    )
-    dotfiles_private_prefix = os.path.join(
-        home, ".config", "koopa", "dotfiles-private"
-    )
+    dotfiles_work_prefix = os.path.join(home, ".config", "koopa", "dotfiles-work")
+    dotfiles_private_prefix = os.path.join(home, ".config", "koopa", "dotfiles-private")
     ln(opt_dotfiles, dotfiles_prefix)
     install_script = os.path.join(dotfiles_prefix, "install")
     if not os.path.isfile(install_script):
