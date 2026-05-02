@@ -39,8 +39,12 @@ def main(
     maj_min_ver = major_minor_version(version)
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
-    tcl_url = f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download"
-    tk_url = f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
+    tcl_url = (
+        f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download"
+    )
+    tk_url = (
+        f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
+    )
     tcl_tarball = download(tcl_url)
     tk_tarball = download(tk_url)
     extract(tcl_tarball, "tcl-src")

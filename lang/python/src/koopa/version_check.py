@@ -33,10 +33,7 @@ class VersionCheckResult:
 
     @property
     def is_outdated(self) -> bool:
-        return (
-            self.latest_version is not None
-            and self.current_version != self.latest_version
-        )
+        return self.latest_version is not None and self.current_version != self.latest_version
 
 
 class _VersionCache:
@@ -51,7 +48,7 @@ class _VersionCache:
         try:
             with open(self._path) as f:
                 self._data = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError, OSError):
+        except FileNotFoundError, json.JSONDecodeError, OSError:
             self._data = {}
 
     def get(self, name: str) -> str | None:
@@ -107,7 +104,7 @@ def _resolve_github_token() -> str | None:
             )
             if result.returncode == 0 and result.stdout.strip():
                 return result.stdout.strip()
-        except (subprocess.TimeoutExpired, OSError):
+        except subprocess.TimeoutExpired, OSError:
             pass
     return None
 
@@ -117,14 +114,10 @@ _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
 
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
-_GITHUB_REPO_RE = re.compile(
-    r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)"
-)
+_GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 
 
-def _http_get_json(
-    url: str, *, github: bool = False, timeout: int = 15
-) -> dict | list:
+def _http_get_json(url: str, *, github: bool = False, timeout: int = 15) -> dict | list:
     limiter = _rate_github if github else _rate_default
     limiter.wait()
     req = urllib.request.Request(url)
@@ -201,18 +194,14 @@ def _check_conda(channel: str, package: str) -> str:
     return data["latest_version"]
 
 
-def _check_gnu(
-    package: str, *, parent: str = "", non_gnu_mirror: bool = False
-) -> str:
+def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) -> str:
     name = parent or package
     if non_gnu_mirror:
         base = f"https://download.savannah.nongnu.org/releases/{name}/"
     else:
         base = f"https://ftp.gnu.org/gnu/{name}/"
     html = _http_get_text(base)
-    pattern = re.compile(
-        rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)"
-    )
+    pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions: list[str] = pattern.findall(html)
     if not versions:
         msg = f"No versions found for GNU {package}"
@@ -237,9 +226,7 @@ def _check_rubygems(gem: str) -> str:
 
 
 def _check_metacpan(distribution: str) -> str:
-    data = _http_get_json(
-        f"https://fastapi.metacpan.org/v1/release/{distribution}"
-    )
+    data = _http_get_json(f"https://fastapi.metacpan.org/v1/release/{distribution}")
     return sanitize_version(data["version"])
 
 
@@ -263,18 +250,14 @@ def _check_directory_listing(
         raise RuntimeError(msg)
     best = max(
         set(versions),
-        key=lambda v: tuple(
-            int(x) for x in re.split(r"[.\-]", v)
-        ),
+        key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v)),
     )
     return best
 
 
 def _check_openssl_series(major: str) -> str:
     html = _http_get_text("https://www.openssl.org/source/")
-    pattern = re.compile(
-        rf"openssl-({re.escape(major)}\.[\d]+(?:\.[\d]+)*)\.tar"
-    )
+    pattern = re.compile(rf"openssl-({re.escape(major)}\.[\d]+(?:\.[\d]+)*)\.tar")
     versions = pattern.findall(html)
     if not versions:
         msg = f"No OpenSSL {major}.x versions found"
@@ -288,9 +271,7 @@ def _check_openssl_series(major: str) -> str:
 
 def _check_directory_version_dirs(url: str, prefix: str = "") -> str:
     html = _http_get_text(url)
-    pattern = re.compile(
-        rf'>{re.escape(prefix)}([\d]+(?:\.[\d]+)*)/?\s*<'
-    )
+    pattern = re.compile(rf">{re.escape(prefix)}([\d]+(?:\.[\d]+)*)/?\s*<")
     versions: list[str] = pattern.findall(html)
     if not versions:
         msg = f"No version directories found at {url}"
@@ -341,13 +322,10 @@ def _check_python_org(minor: str) -> str:
 
 def _check_gitlab(domain: str, project_path: str) -> str:
     encoded = project_path.replace("/", "%2F")
-    data = _http_get_json(
-        f"https://{domain}/api/v4/projects/{encoded}/releases?per_page=1"
-    )
+    data = _http_get_json(f"https://{domain}/api/v4/projects/{encoded}/releases?per_page=1")
     if not data:
         data = _http_get_json(
-            f"https://{domain}/api/v4/projects/{encoded}"
-            "/repository/tags?per_page=1"
+            f"https://{domain}/api/v4/projects/{encoded}/repository/tags?per_page=1"
         )
         if not data:
             msg = f"No releases/tags for {project_path} on {domain}"
@@ -656,8 +634,7 @@ def _check_expat() -> str:
 
 def _check_ghostscript() -> str:
     data = _http_get_json(
-        "https://api.github.com/repos/ArtifexSoftware/"
-        "ghostpdl-downloads/releases/latest",
+        "https://api.github.com/repos/ArtifexSoftware/ghostpdl-downloads/releases/latest",
         github=True,
     )
     tag = data["tag_name"]
@@ -697,9 +674,7 @@ def _check_libedit() -> str:
 
 
 def _check_mpdecimal() -> str:
-    html = _http_get_text(
-        "https://www.bytereef.org/mpdecimal/download.html"
-    )
+    html = _http_get_text("https://www.bytereef.org/mpdecimal/download.html")
     versions = re.findall(r"mpdecimal-([\d]+(?:\.[\d]+)*)", html)
     if not versions:
         msg = "No mpdecimal versions found"
@@ -757,8 +732,7 @@ def _check_msgpack() -> str:
 
 def _check_openssh() -> str:
     data = _http_get_json(
-        "https://api.github.com/repos/openssh/openssh-portable"
-        "/tags?per_page=10",
+        "https://api.github.com/repos/openssh/openssh-portable/tags?per_page=10",
         github=True,
     )
     for tag in data:
@@ -786,9 +760,7 @@ def _check_staden_io_lib() -> str:
 
 
 def _check_temurin() -> str:
-    info = _http_get_json(
-        "https://api.adoptium.net/v3/info/available_releases"
-    )
+    info = _http_get_json("https://api.adoptium.net/v3/info/available_releases")
     lts = info.get("most_recent_lts")
     if not lts:
         msg = "Cannot determine most recent Temurin LTS"
@@ -815,9 +787,7 @@ def _check_temurin() -> str:
 
 def _check_liblinear() -> str:
     _rate_default.wait()
-    req = urllib.request.Request(
-        "https://www.csie.ntu.edu.tw/~cjlin/liblinear/"
-    )
+    req = urllib.request.Request("https://www.csie.ntu.edu.tw/~cjlin/liblinear/")
     req.add_header("User-Agent", "koopa-version-checker")
     with urllib.request.urlopen(req, timeout=15) as resp:
         html = resp.read().decode("latin-1")
@@ -832,8 +802,7 @@ def _check_github_head(owner: str, repo: str) -> str:
     for branch in ("main", "master"):
         try:
             data = _http_get_json(
-                f"https://api.github.com/repos/{owner}/{repo}"
-                f"/commits/{branch}",
+                f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}",
                 github=True,
             )
             return data["sha"]
@@ -855,9 +824,7 @@ def _check_anaconda() -> str:
 def _check_apache_dirlist(project: str) -> str:
     url = f"https://archive.apache.org/dist/{project}/"
     html = _http_get_text(url)
-    pattern = re.compile(
-        rf"{re.escape(project)}-([\d]+(?:\.[\d]+)*)"
-    )
+    pattern = re.compile(rf"{re.escape(project)}-([\d]+(?:\.[\d]+)*)")
     versions = pattern.findall(html)
     if not versions:
         msg = f"No versions found for Apache {project}"
@@ -869,9 +836,7 @@ def _check_apache_dirlist(project: str) -> str:
 
 
 def _check_dash() -> str:
-    html = _http_get_text(
-        "https://git.kernel.org/pub/scm/utils/dash/dash.git/refs/tags"
-    )
+    html = _http_get_text("https://git.kernel.org/pub/scm/utils/dash/dash.git/refs/tags")
     versions = re.findall(r">v([\d]+\.[\d]+(?:\.[\d]+)*)<", html)
     if not versions:
         msg = "No dash versions found"
@@ -887,8 +852,7 @@ def _check_ensembl() -> str:
     best = 0
     while True:
         data = _http_get_json(
-            "https://api.github.com/repos/Ensembl/ensembl"
-            f"/branches?per_page=100&page={page}",
+            f"https://api.github.com/repos/Ensembl/ensembl/branches?per_page=100&page={page}",
             github=True,
         )
         if not data:
@@ -940,12 +904,8 @@ def _check_krb5() -> str:
         set(dirs),
         key=lambda v: tuple(int(x) for x in v.split(".")),
     )
-    html2 = _http_get_text(
-        f"https://kerberos.org/dist/krb5/{latest_dir}/"
-    )
-    versions = re.findall(
-        r"krb5-([\d]+(?:\.[\d]+)*)\.tar", html2
-    )
+    html2 = _http_get_text(f"https://kerberos.org/dist/krb5/{latest_dir}/")
+    versions = re.findall(r"krb5-([\d]+(?:\.[\d]+)*)\.tar", html2)
     if not versions:
         msg = f"No krb5 tarballs found in {latest_dir}"
         raise RuntimeError(msg)
@@ -970,8 +930,7 @@ def _check_sqlite() -> str:
 
 def _check_r_devel() -> str:
     data = _http_get_json(
-        "https://api.github.com/repos/r-devel/r-svn"
-        "/commits?sha=trunk&per_page=1",
+        "https://api.github.com/repos/r-devel/r-svn/commits?sha=trunk&per_page=1",
         github=True,
     )
     msg_text = data[0]["commit"]["message"]
@@ -1025,9 +984,7 @@ def _check_ont_guppy() -> str:
         timeout=30,
     )
     versions = re.findall(r'"(\d+\.\d+\.\d+)"', html)
-    versions = [
-        v for v in versions if not v.startswith(("44", "26"))
-    ]
+    versions = [v for v in versions if not v.startswith(("44", "26"))]
     if not versions:
         msg = "No ONT Guppy versions found"
         raise RuntimeError(msg)
@@ -1042,9 +999,7 @@ def _check_aspera_connect() -> str:
         "https://www.ibm.com/products/aspera/downloads",
         timeout=30,
     )
-    versions = re.findall(
-        r"aspera-connect_(\d+\.\d+\.\d+\.\d+)", html
-    )
+    versions = re.findall(r"aspera-connect_(\d+\.\d+\.\d+\.\d+)", html)
     if not versions:
         msg = "No Aspera Connect versions found"
         raise RuntimeError(msg)
@@ -1056,13 +1011,10 @@ def _check_aspera_connect() -> str:
 
 def _check_illumina_ica_cli() -> str:
     html = _http_get_text(
-        "https://help.ica.illumina.com/"
-        "command-line-interface/cli-releasehistory",
+        "https://help.ica.illumina.com/command-line-interface/cli-releasehistory",
         timeout=30,
     )
-    versions = re.findall(
-        r"s3\.amazonaws\.com/cli/(\d+\.\d+\.\d+)/", html
-    )
+    versions = re.findall(r"s3\.amazonaws\.com/cli/(\d+\.\d+\.\d+)/", html)
     if not versions:
         msg = "No Illumina ICA CLI versions found"
         raise RuntimeError(msg)
@@ -1074,25 +1026,20 @@ def _check_illumina_ica_cli() -> str:
 
 def _check_miniconda() -> str:
     html = _http_get_text("https://repo.anaconda.com/miniconda/")
-    versions = re.findall(
-        r"Miniconda3-py\d+_(\d+\.\d+\.\d+-\d+)-", html
-    )
+    versions = re.findall(r"Miniconda3-py\d+_(\d+\.\d+\.\d+-\d+)-", html)
     if not versions:
         msg = "No Miniconda versions found"
         raise RuntimeError(msg)
     return max(
         set(versions),
-        key=lambda v: tuple(
-            int(x) for x in re.split(r"[.\-]", v)
-        ),
+        key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v)),
     )
 
 
 def _check_oracle_instant_client(current_version: str) -> str:
     major = current_version.split(".")[0]
     html = _http_get_text(
-        "https://www.oracle.com/database/technologies/"
-        "instant-client/linux-x86-64-downloads.html",
+        "https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html",
         timeout=30,
     )
     versions = re.findall(r"Version\s+(\d+(?:\.\d+)+)", html)
@@ -1119,23 +1066,17 @@ def _make_dirlist_spec(url: str, prefix: str) -> _AppCheckSpec:
 
 
 def _make_openssl_spec(major: str) -> _AppCheckSpec:
-    return _AppCheckSpec(
-        "dirlist", lambda m=major: _check_openssl_series(m), ()
-    )
+    return _AppCheckSpec("dirlist", lambda m=major: _check_openssl_series(m), ())
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
-    "aws-cli": _AppCheckSpec(
-        "github", _check_github, ("aws", "aws-cli")
-    ),
+    "aws-cli": _AppCheckSpec("github", _check_github, ("aws", "aws-cli")),
     "bash": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("bash"),
         (),
     ),
-    "ca-certificates": _AppCheckSpec(
-        "dirlist", _check_ca_certificates, ()
-    ),
+    "ca-certificates": _AppCheckSpec("dirlist", _check_ca_certificates, ()),
     "elfutils": _AppCheckSpec(
         "dirlist",
         lambda: _check_elfutils(),
@@ -1161,9 +1102,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "hadolint": _AppCheckSpec(
-        "github", _check_github, ("hadolint", "hadolint")
-    ),
+    "hadolint": _AppCheckSpec("github", _check_github, ("hadolint", "hadolint")),
     "libedit": _AppCheckSpec("dirlist", _check_libedit, ()),
     "libidn": _AppCheckSpec(
         "gnu",
@@ -1192,9 +1131,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "postgresql": _make_dirlist_spec(
-        "https://ftp.postgresql.org/pub/source/", "v"
-    ),
+    "postgresql": _make_dirlist_spec("https://ftp.postgresql.org/pub/source/", "v"),
     "r": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1203,46 +1140,30 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "ruby": _AppCheckSpec(
-        "github", _check_github, ("ruby", "ruby")
-    ),
-    "rust": _AppCheckSpec(
-        "github", _check_github, ("rust-lang", "rust")
-    ),
+    "ruby": _AppCheckSpec("github", _check_github, ("ruby", "ruby")),
+    "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "screen": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("screen"),
         (),
     ),
-    "swig": _AppCheckSpec(
-        "github", _check_github, ("swig", "swig")
-    ),
+    "swig": _AppCheckSpec("github", _check_github, ("swig", "swig")),
     "tcl-tk": _AppCheckSpec(
         "dirlist",
         lambda: _check_sourceforge_versions("tcl/files/Tcl/"),
         (),
     ),
-    "liblinear": _AppCheckSpec(
-        "github", _check_liblinear, ()
-    ),
-    "libheif": _AppCheckSpec(
-        "github", _check_github, ("strukturag", "libheif")
-    ),
+    "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
+    "libheif": _AppCheckSpec("github", _check_github, ("strukturag", "libheif")),
     "libsolv": _AppCheckSpec("github", _check_libsolv, ()),
     "llvm": _AppCheckSpec("github", _check_llvm, ()),
     "mpdecimal": _AppCheckSpec("dirlist", _check_mpdecimal, ()),
     "msgpack": _AppCheckSpec("github", _check_msgpack, ()),
-    "openjpeg": _AppCheckSpec(
-        "github", _check_github, ("uclouvain", "openjpeg")
-    ),
+    "openjpeg": _AppCheckSpec("github", _check_github, ("uclouvain", "openjpeg")),
     "openssh": _AppCheckSpec("github", _check_openssh, ()),
     "r-devel": _AppCheckSpec("svn", _check_r_devel, ()),
-    "staden-io-lib": _AppCheckSpec(
-        "github", _check_staden_io_lib, ()
-    ),
-    "taglib": _AppCheckSpec(
-        "github", _check_github, ("taglib", "taglib")
-    ),
+    "staden-io-lib": _AppCheckSpec("github", _check_staden_io_lib, ()),
+    "taglib": _AppCheckSpec("github", _check_github, ("taglib", "taglib")),
     "temurin": _AppCheckSpec("adoptium", _check_temurin, ()),
     "uv": _AppCheckSpec("pypi", _check_pypi, ("uv",)),
     "wget2": _AppCheckSpec(
@@ -1250,16 +1171,13 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_gnu("wget2", parent="wget"),
         (),
     ),
-    "woff2": _AppCheckSpec(
-        "github", _check_github, ("google", "woff2")
-    ),
+    "woff2": _AppCheckSpec("github", _check_github, ("google", "woff2")),
     "anaconda": _AppCheckSpec("dirlist", _check_anaconda, ()),
     "apache-arrow": _AppCheckSpec(
         "github",
         lambda: _sanitize_github_tag(
             _http_get_json(
-                "https://api.github.com/repos/apache/arrow"
-                "/releases/latest",
+                "https://api.github.com/repos/apache/arrow/releases/latest",
                 github=True,
             )["tag_name"],
             "apache-arrow",
@@ -1271,9 +1189,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_apache_dirlist("spark"),
         (),
     ),
-    "bfg": _AppCheckSpec(
-        "github", _check_github, ("rtyley", "bfg-repo-cleaner")
-    ),
+    "bfg": _AppCheckSpec("github", _check_github, ("rtyley", "bfg-repo-cleaner")),
     "cloudbiolinux": _AppCheckSpec(
         "github",
         lambda: _check_github_head("chapmanb", "cloudbiolinux"),
@@ -1291,9 +1207,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_github_head("acidgenomics", "dotfiles"),
         (),
     ),
-    "ensembl-perl-api": _AppCheckSpec(
-        "github", _check_ensembl, ()
-    ),
+    "ensembl-perl-api": _AppCheckSpec("github", _check_ensembl, ()),
     "fltk": _AppCheckSpec("github", _check_fltk, ()),
     "freetype": _AppCheckSpec(
         "dirlist",
@@ -1307,8 +1221,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         "github",
         lambda: _sanitize_github_tag(
             _http_get_json(
-                "https://api.github.com/repos/haskell/cabal"
-                "/releases/latest",
+                "https://api.github.com/repos/haskell/cabal/releases/latest",
                 github=True,
             )["tag_name"],
             "cabal-install",
@@ -1343,21 +1256,16 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_github_head("LuaJIT", "LuaJIT"),
         (),
     ),
-    "nim": _AppCheckSpec(
-        "github", _check_github, ("nim-lang", "Nim")
-    ),
+    "nim": _AppCheckSpec("github", _check_github, ("nim-lang", "Nim")),
     "openldap": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
-            "https://www.openldap.org/software/download/"
-            "OpenLDAP/openldap-release/",
+            "https://www.openldap.org/software/download/OpenLDAP/openldap-release/",
             "openldap",
         ),
         (),
     ),
-    "password-store": _AppCheckSpec(
-        "github", _check_github, ("zx2c4", "password-store")
-    ),
+    "password-store": _AppCheckSpec("github", _check_github, ("zx2c4", "password-store")),
     "pbzip2": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1388,12 +1296,8 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "sqlite": _AppCheckSpec("dirlist", _check_sqlite, ()),
-    "udunits": _AppCheckSpec(
-        "github", _check_github, ("Unidata", "UDUNITS-2")
-    ),
-    "aspera-connect": _AppCheckSpec(
-        "dirlist", _check_aspera_connect, ()
-    ),
+    "udunits": _AppCheckSpec("github", _check_github, ("Unidata", "UDUNITS-2")),
+    "aspera-connect": _AppCheckSpec("dirlist", _check_aspera_connect, ()),
     "autodock-adfr": _AppCheckSpec(
         "dirlist",
         lambda: "1.0",
@@ -1404,21 +1308,13 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: "2.20",
         (),
     ),
-    "illumina-ica-cli": _AppCheckSpec(
-        "dirlist", _check_illumina_ica_cli, ()
-    ),
+    "illumina-ica-cli": _AppCheckSpec("dirlist", _check_illumina_ica_cli, ()),
     "ont-guppy": _AppCheckSpec("dirlist", _check_ont_guppy, ()),
-    "cellranger": _AppCheckSpec(
-        "github", _check_github, ("10XGenomics", "cellranger")
-    ),
+    "cellranger": _AppCheckSpec("github", _check_github, ("10XGenomics", "cellranger")),
     "r-gfortran": _AppCheckSpec("dirlist", _check_r_gfortran, ()),
     "r-xcode-openmp": _AppCheckSpec("dirlist", _check_r_xcode_openmp, ()),
-    "rstudio-server": _AppCheckSpec(
-        "github", _check_rstudio_server, ()
-    ),
-    "shiny-server": _AppCheckSpec(
-        "github", _check_github, ("rstudio", "shiny-server")
-    ),
+    "rstudio-server": _AppCheckSpec("github", _check_rstudio_server, ()),
+    "shiny-server": _AppCheckSpec("github", _check_github, ("rstudio", "shiny-server")),
     "unzip": _AppCheckSpec(
         "dirlist",
         lambda: "6.0",
@@ -1426,9 +1322,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "zip": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions(
-            "infozip/files/Zip%203.x%20%28latest%29/"
-        ),
+        lambda: _check_sourceforge_versions("infozip/files/Zip%203.x%20%28latest%29/"),
         (),
     ),
 }
@@ -1454,9 +1348,7 @@ def _classify_generic(
         non_gnu = _get_str(args, "non_gnu_mirror") == "true"
         return _AppCheckSpec(
             "gnu",
-            lambda p=pkg_name, pa=parent, ng=non_gnu: _check_gnu(
-                p, parent=pa, non_gnu_mirror=ng
-            ),
+            lambda p=pkg_name, pa=parent, ng=non_gnu: _check_gnu(p, parent=pa, non_gnu_mirror=ng),
             (),
         )
     if source == "npm":
@@ -1489,9 +1381,7 @@ def _infer_conda_channel(urls: list[str]) -> str:
     return "conda-forge"
 
 
-def _resolve_pypi_name(
-    name: str, args: dict, urls: list[str]
-) -> str:
+def _resolve_pypi_name(name: str, args: dict, urls: list[str]) -> str:
     pip_name = _get_str(args, "pip_name")
     if pip_name:
         return re.sub(r"\[.*\]", "", pip_name)
@@ -1516,11 +1406,7 @@ def check_app_versions(
     use_cache: bool = True,
 ) -> list[VersionCheckResult]:
     if _github_token is None:
-        msg = (
-            "GITHUB_TOKEN is not set. "
-            "Set it with:\n"
-            '    export GITHUB_TOKEN="$(gh auth token)"'
-        )
+        msg = 'GITHUB_TOKEN is not set. Set it with:\n    export GITHUB_TOKEN="$(gh auth token)"'
         raise RuntimeError(msg)
     json_data = import_app_json()
     cache = _VersionCache() if use_cache else None
@@ -1533,15 +1419,11 @@ def check_app_versions(
             continue
         version = info.get("version", "")
         if not version:
-            unsupported.append(
-                VersionCheckResult(app_name, "", None, "none", "no version")
-            )
+            unsupported.append(VersionCheckResult(app_name, "", None, "none", "no version"))
             continue
         spec = classify_app(app_name, info)
         if spec is None:
-            unsupported.append(
-                VersionCheckResult(app_name, version, None, "unsupported", None)
-            )
+            unsupported.append(VersionCheckResult(app_name, version, None, "unsupported", None))
             continue
         if source_filter and spec.source != source_filter:
             continue
@@ -1554,11 +1436,7 @@ def check_app_versions(
         if cache is not None:
             cached = cache.get(app_name)
             if cached is not None:
-                results.append(
-                    VersionCheckResult(
-                        app_name, version, cached, spec.source, None
-                    )
-                )
+                results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
                 continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
@@ -1602,14 +1480,10 @@ def check_app_versions(
                 msg = f"{app_name}: {current} -> {latest}"
             else:
                 msg = None
-            return VersionCheckResult(
-                app_name, current, latest, spec.source, None
-            ), msg
+            return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except Exception as exc:
             msg = f"{app_name}: error: {exc}"
-            return VersionCheckResult(
-                app_name, current, None, spec.source, str(exc)
-            ), msg
+            return VersionCheckResult(app_name, current, None, spec.source, str(exc)), msg
 
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
@@ -1647,16 +1521,8 @@ def check_app_versions(
 
 def print_report(results: list[VersionCheckResult]) -> None:
     outdated = [r for r in results if r.is_outdated]
-    current = [
-        r
-        for r in results
-        if r.latest_version is not None and not r.is_outdated
-    ]
-    failed = [
-        r
-        for r in results
-        if r.error is not None and r.source != "unsupported"
-    ]
+    current = [r for r in results if r.latest_version is not None and not r.is_outdated]
+    failed = [r for r in results if r.error is not None and r.source != "unsupported"]
     unsupported = [r for r in results if r.source in ("unsupported", "none")]
     print()
     if outdated:
@@ -1686,21 +1552,9 @@ def print_report(results: list[VersionCheckResult]) -> None:
 
 def print_json_report(results: list[VersionCheckResult]) -> None:
     outdated = [asdict(r) for r in results if r.is_outdated]
-    current = [
-        asdict(r)
-        for r in results
-        if r.latest_version is not None and not r.is_outdated
-    ]
-    failed = [
-        asdict(r)
-        for r in results
-        if r.error is not None and r.source != "unsupported"
-    ]
-    unsupported = [
-        asdict(r)
-        for r in results
-        if r.source in ("unsupported", "none")
-    ]
+    current = [asdict(r) for r in results if r.latest_version is not None and not r.is_outdated]
+    failed = [asdict(r) for r in results if r.error is not None and r.source != "unsupported"]
+    unsupported = [asdict(r) for r in results if r.source in ("unsupported", "none")]
     print(
         json.dumps(
             {

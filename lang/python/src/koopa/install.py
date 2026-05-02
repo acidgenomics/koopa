@@ -107,7 +107,6 @@ def _cpu_count() -> int:
     return os.cpu_count() or 1
 
 
-
 def _import_app_json() -> dict[str, Any]:
     """Import app.json data."""
     json_path = os.path.join(
@@ -535,8 +534,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         duration = progress.elapsed_formatted
         if config.prefix:
             print(
-                f"Successfully installed '{config.name}'"
-                f" at '{config.prefix}' in {duration}.",
+                f"Successfully installed '{config.name}' at '{config.prefix}' in {duration}.",
                 file=sys.stderr,
             )
         else:
@@ -1383,10 +1381,7 @@ def _update_venv(prefix: str) -> None:
         )
     alert("Installing Python package with extras.")
     subprocess.run(
-        [venv_pip, "install",
-         "--editable", f"{prefix}[extra]",
-         "--upgrade",
-         "--quiet"],
+        [venv_pip, "install", "--editable", f"{prefix}[extra]", "--upgrade", "--quiet"],
         check=True,
     )
 
