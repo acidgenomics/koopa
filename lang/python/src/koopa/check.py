@@ -116,7 +116,7 @@ def check_circular_deps() -> list:
         for dep in graph.get(node, []):
             if dep in gray:
                 cycle_start = path.index(dep)
-                cycles.append(path[cycle_start:] + [dep])
+                cycles.append([*path[cycle_start:], dep])
             elif dep in white:
                 _dfs(dep, path)
         path.pop()
@@ -235,6 +235,7 @@ def check_build_system() -> bool:
             stop(f"'{cmd}' is not installed.")
         if key == "ld":
             continue
+        assert path is not None
         version = _get_version(path)
         if not version:
             continue

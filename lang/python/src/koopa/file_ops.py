@@ -18,7 +18,7 @@ from pathlib import Path
 def _run(args: list[str], *, sudo: bool = False) -> subprocess.CompletedProcess:
     """Run a command, optionally with sudo."""
     if sudo:
-        args = ["sudo"] + args
+        args = ["sudo", *args]
     return subprocess.run(args, check=True, capture_output=True, text=True)
 
 

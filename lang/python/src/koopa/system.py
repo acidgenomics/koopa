@@ -150,7 +150,7 @@ def is_installed(name: str) -> bool:
 
 def is_interactive() -> bool:
     """Check if running in an interactive session."""
-    return hasattr(sys, "ps1") or sys.flags.interactive
+    return bool(hasattr(sys, "ps1") or sys.flags.interactive)
 
 
 def is_alpine() -> bool:
@@ -358,14 +358,16 @@ def mem_gb() -> float:
                 check=True,
             )
             return round(int(result.stdout.strip()) / (1024**3), 1)
-        except FileNotFoundError, subprocess.CalledProcessError, ValueError:
+        except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
             pass
     meminfo = "/proc/meminfo"
     if os.path.isfile(meminfo):
         for line in Path(meminfo).read_text().splitlines():
             if line.startswith("MemTotal:"):
-                kb = int(re.search(r"(\d+)", line).group(1))
-                return round(kb / (1024**2), 1)
+                match = re.search(r"(\d+)", line)
+                if match:
+                    kb = int(match.group(1))
+                    return round(kb / (1024**2), 1)
     return 0.0
 
 
@@ -406,9 +408,7 @@ def has_firewall() -> bool:
     if not ssl_cert_file:
         return False
     kp = koopa_prefix()
-    if ssl_cert_file.startswith(kp + "/"):
-        return False
-    return True
+    return not ssl_cert_file.startswith(kp + "/")
 
 
 def boolean_nounset(value: str | bool | int | None) -> bool:

@@ -390,10 +390,7 @@ def r_gfortran_libs() -> str:
     if is_linux():
         pass
     elif is_macos():
-        if cpu_arch == "arm64":
-            search_arch = "aarch64"
-        else:
-            search_arch = cpu_arch
+        search_arch = "aarch64" if cpu_arch == "arm64" else cpu_arch
         lib_prefix = "/opt/gfortran/lib"
         if not os.path.isdir(lib_prefix):
             msg = f"gfortran lib prefix not found: '{lib_prefix}'."

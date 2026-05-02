@@ -1,7 +1,7 @@
 """Utility functions for datatype handling/coercion."""
 
 
-def argsort(object: list, reverse: bool = False) -> list:
+def argsort(object: list, reverse: bool = False) -> list[int]:
     """Return the indices that would sort an array.
 
     See Also
@@ -25,8 +25,7 @@ def argsort(object: list, reverse: bool = False) -> list:
     ['c', 'c', 'c', 'b', 'a', 'a']
     """
     iterable = range(len(object))
-    key = object.__getitem__
-    out = sorted(iterable, key=key, reverse=reverse)
+    out = sorted(iterable, key=lambda i: object[i], reverse=reverse)
     return out
 
 

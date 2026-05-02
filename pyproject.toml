@@ -84,7 +84,7 @@ ignore = [
   "D203", # one-blank-line-before-class
   "D213", # multi-line-summary-second-line
   "D401", # non-imperative-mood
-  # > "PLC0415", # import-outside-top-level
+  "PLC0415", # import-outside-top-level
 ]
 select = [
   "ANN",  # flake8-annotations
@@ -113,6 +113,7 @@ select = [
 "lang/python/src/koopa/cli_system.py" = ["PLC0415"]
 "lang/python/src/koopa/cli_bin.py" = ["PLC0415"]
 "lang/python/src/koopa/cli_develop.py" = ["PLC0415"]
+"lang/python/src/koopa/cli_internal.py" = ["PLC0415"]
 
 [tool.ruff.lint.isort]
 extra-standard-library = ["typing"]

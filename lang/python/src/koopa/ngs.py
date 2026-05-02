@@ -521,7 +521,8 @@ def miso_index(
     log_file = os.path.join(output_dir, "index.log")
     decomp_file = None
     if gff_file.endswith(".gz"):
-        decomp_file = tempfile.mktemp(suffix=".gff")
+        fd, decomp_file = tempfile.mkstemp(suffix=".gff")
+        os.close(fd)
         with gz.open(gff_file, "rb") as f_in, open(decomp_file, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
         gff_file = decomp_file

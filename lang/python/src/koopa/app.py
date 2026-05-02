@@ -85,14 +85,14 @@ def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
 
     Supports three dispatch strategies, checked in order:
 
-    1. **firewall** conditional – keys such as ``"firewall"``,
+    1. **firewall** conditional - keys such as ``"firewall"``,
        ``"firewall_linux"``, ``"firewall_macos"`` combined with a
        ``"default"`` fallback.  When ``SSL_CERT_FILE`` is set externally the
        firewall-prefixed key matching the current platform is used;
        otherwise the ``"default"`` key is used.
-    2. **os_id** dispatch – e.g. ``"macos-arm64"``, ``"linux-amd64"`` with a
+    2. **os_id** dispatch - e.g. ``"macos-arm64"``, ``"linux-amd64"`` with a
        ``"noarch"`` fallback (existing behaviour).
-    3. Plain list (not a dict) – returned as-is by the caller before this
+    3. Plain list (not a dict) - returned as-is by the caller before this
        function is reached.
     """
     from koopa.system import has_firewall, is_macos

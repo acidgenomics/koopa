@@ -226,7 +226,7 @@ def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
     pc_dirs = list({os.path.dirname(f) for f in pc_files})
     pc_env = os.environ.copy()
     existing_pc = pc_env.get("PKG_CONFIG_PATH", "")
-    pc_env["PKG_CONFIG_PATH"] = ":".join(pc_dirs + [existing_pc])
+    pc_env["PKG_CONFIG_PATH"] = ":".join([*pc_dirs, existing_pc])
     for pkg in pkg_names:
         try:
             cflags = subprocess.run(
@@ -395,7 +395,7 @@ def _macos_sdk_prefix() -> str:
             check=True,
         )
         return result.stdout.strip()
-    except subprocess.CalledProcessError, FileNotFoundError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return ""
 
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import TextIO
 
 
 def _supports_color() -> bool:
@@ -61,7 +62,7 @@ def _white() -> str:
     return ansi_escape("37")
 
 
-def msg(message: str, *, prefix: str = "", color: str = "", file: object = None) -> None:
+def msg(message: str, *, prefix: str = "", color: str = "", file: TextIO | None = None) -> None:
     """Print a formatted message."""
     if file is None:
         file = sys.stderr
@@ -80,7 +81,7 @@ def alert(message: str) -> None:
 
 def alert_info(message: str) -> None:
     """Print an info message."""
-    msg(message, prefix="ℹ", color="36")
+    msg(message, prefix="ℹ", color="36")  # noqa: RUF001
 
 
 def alert_note(message: str) -> None:

@@ -19,7 +19,8 @@ def main(
 ) -> None:
     """Uninstall Homebrew."""
     url = "https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh"
-    tmp = tempfile.mktemp(suffix=".sh", prefix="koopa-homebrew-uninstall-")
+    fd, tmp = tempfile.mkstemp(suffix=".sh", prefix="koopa-homebrew-uninstall-")
+    os.close(fd)
     subprocess.run(
         ["curl", "-fsSL", "-o", tmp, url],
         check=True,

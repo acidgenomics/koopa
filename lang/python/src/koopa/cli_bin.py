@@ -15,6 +15,7 @@ import subprocess
 import sys
 import urllib.request
 from collections import Counter
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -646,7 +647,7 @@ def _handle_jekyll_serve(args: list[str]) -> None:
 # -- Dispatch table ------------------------------------------------------------
 
 
-_HANDLERS: dict[str, object] = {
+_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "autopad-zeros": _handle_autopad_zeros,
     "clone": _handle_clone,
     "convert-utf8-nfd-to-nfc": _handle_convert_utf8_nfd_to_nfc,
