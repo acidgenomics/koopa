@@ -349,6 +349,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         _release_install_lock,
         fetch_user_repos,
         install_app,
+        install_missing_default_apps,
         remove_unsupported_apps,
         update_bootstrap,
         update_koopa,
@@ -369,6 +370,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             update_bootstrap(verbose=args.verbose)
             remove_unsupported_apps(verbose=args.verbose)
             update_stale_apps(verbose=args.verbose)
+            install_missing_default_apps(verbose=args.verbose)
             update_user_apps(verbose=args.verbose)
         finally:
             if acquired:
