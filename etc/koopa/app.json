@@ -5259,6 +5259,7 @@
         "installer": "gnu-app",
         "installer_args": {
             "compress_ext": "xz",
+            "disable-setuid": "",
             "non_gnu_mirror": "true"
         },
         "man1": [
