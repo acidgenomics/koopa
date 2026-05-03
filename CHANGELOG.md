@@ -1,51 +1,5 @@
 # Changelog
 
-## koopa 0.16.1 (2026-05-03)
-
-Minor changes:
-
-- Build output is now hidden by default behind a spinner with elapsed timer.
-  The last 100 lines of the build log are shown on failure. Use `--verbose`
-  to see full build output.
-- CMake/ninja and meson builds now display `[current/total]` step progress
-  when build output is captured.
-- Added archive validation via magic bytes (gzip, bzip2, xz, zstd) to catch
-  corrupt or HTML-masquerading downloads from mirrors.
-- Added GNU and Savannah mirror fallback system — automatically retries with
-  canonical mirrors when `ftpmirror.gnu.org` or Savannah mirrors return
-  invalid archives.
-- Added recipe revision system for forcing rebuilds when build recipes change
-  without a version bump. Uses `"revision"` key in `app.json` and
-  `.install/revision` marker file.
-- Failed binary linkage (missing expected binaries after build) now cleans up
-  the prefix directory and opt symlink, ensuring the app is detected as
-  not installed on the next update.
-- Added `--no-revdeps` flag to `koopa reinstall` to skip automatic stale
-  reverse dependency rebuilds.
-- Added `--all-system` flag to `koopa update` for opt-in system-level updates
-  requiring admin access. System updates are no longer run by default.
-- Hardened `_update_venv()` against missing venv python, added ownership
-  checks, and cleanup on failure.
-- Added `.editorconfig` to enforce project indentation conventions (2-space
-  for JSON, 4-space for Python and shell).
-- Shell bootstrap now validates that the Python interpreter actually works
-  (imports `lzma` and `subprocess`) rather than just checking the executable
-  bit.
-- `activate_app()` now resolves `alias_of` from `app.json`, fixing activation
-  of aliased apps like `python` -> `python3.14` in all installers.
-- Fixed Perl version checker to filter out odd minor versions (development
-  releases), only tracking stable even-minor releases.
-- Fixed readline build error where `pkg-config --libs ncurses` was not
-  receiving the build environment with `PKG_CONFIG_PATH`.
-- Fixed pkg-config build failure on newer Apple Clang due to
-  `-Wint-conversion` error.
-- Fixed libidn download by specifying correct `package_name="libidn2"`.
-- Fixed man-db build by adding `--disable-setuid` and `--program-prefix=g`
-  to installer args.
-- Removed `corepack` from node binary list (dropped in Node.js 25).
-- Fixed bootstrap script reliability with atomic install and improved
-  fallback Python discovery.
-
 ## koopa 0.16.0 (2026-05-02)
 
 Major changes:
@@ -69,6 +23,20 @@ Major changes:
   has its own `functions.sh` cache file and no longer depends on `lang/sh`.
 - Optimized shell activation and function caching. Split the monolithic
   `activate.sh` file into individual function files.
+- Build output is now hidden by default behind a spinner with elapsed timer.
+  The last 100 lines of the build log are shown on failure. Use `--verbose`
+  to see full build output. CMake/ninja and meson builds display
+  `[current/total]` step progress when output is captured.
+- Added archive validation via magic bytes (gzip, bzip2, xz, zstd) to catch
+  corrupt or HTML-masquerading downloads from mirrors.
+- Added GNU and Savannah mirror fallback system — automatically retries with
+  canonical mirrors when `ftpmirror.gnu.org` or Savannah mirrors return
+  invalid archives.
+- Added recipe revision system for forcing rebuilds when build recipes change
+  without a version bump. Uses `"revision"` key in `app.json` and
+  `.install/revision` marker file.
+- Added `--all-system` flag to `koopa update` for opt-in system-level updates
+  requiring admin access. System updates are no longer run by default.
 
 New apps:
 
@@ -82,25 +50,49 @@ Minor changes:
   artifacts from being left in the user's working directory.
 - Failed installs now clean up their prefix directory automatically, preventing
   stale empty directories from blocking retry attempts.
+- Failed binary linkage (missing expected binaries after build) now cleans up
+  the prefix directory and opt symlink, ensuring the app is detected as
+  not installed on the next update.
 - Dependency checks now verify the `opt/` symlink (created on successful
   install) rather than the `app/` directory, which can exist from failed
   installs.
 - Added `check_broken_app_installs()` to `koopa system check`, which detects
   app directories with missing opt symlinks or empty prefixes from failed
   installs.
+- Added `--no-revdeps` flag to `koopa reinstall` to skip automatic stale
+  reverse dependency rebuilds.
+- Hardened `_update_venv()` against missing venv python, added ownership
+  checks, and cleanup on failure.
+- Shell bootstrap now validates that the Python interpreter actually works
+  (imports `lzma` and `subprocess`) rather than just checking the executable
+  bit.
+- `activate_app()` now resolves `alias_of` from `app.json`, fixing activation
+  of aliased apps like `python` -> `python3.14` in all installers.
+- Added `.editorconfig` to enforce project indentation conventions (2-space
+  for JSON, 4-space for Python and shell).
 - Fixed `download_extract_cd` to descend into the single extracted
   subdirectory, matching the `--strip-components=1` behavior.
 - Fixed `install_ruby_package` to prefer koopa-installed Ruby over system Ruby.
 - Fixed Python 2 style `except` syntax in `download.py` that prevented the
   urllib fallback from triggering on curl failures.
+- Fixed Perl version checker to filter out odd minor versions (development
+  releases), only tracking stable even-minor releases.
+- Fixed readline build error where `pkg-config --libs ncurses` was not
+  receiving the build environment with `PKG_CONFIG_PATH`.
+- Fixed pkg-config build failure on newer Apple Clang due to
+  `-Wint-conversion` error.
+- Fixed libidn download by specifying correct `package_name="libidn2"`.
+- Fixed man-db build by adding `--disable-setuid` and `--program-prefix=g`
+  to installer args.
+- Removed `corepack` from node binary list (dropped in Node.js 25).
+- Fixed bootstrap script reliability with atomic install and improved
+  fallback Python discovery.
 - Removed defunct `list-dotfiles` and `list-programs` system list subcommands.
 - Added `PYTHON_BUILD_MIRROR_URL` support in `install-app`.
-- Improved bootstrap script reliability.
 - Improved header consistency across shell includes.
 - Optimized OS handling in completion logic.
 - Added `koopa develop shellcheck` support for linting shell scripts.
 - Added automated app version checking system for tracking upstream releases.
-- Added build progress tracking for CMake with ninja via `tqdm`.
 - Added broken symlink detection and cleanup to system checks.
 - Reworked cache handling for improved reliability.
 - Improved shell completion generation.
