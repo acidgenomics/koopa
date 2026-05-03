@@ -1782,9 +1782,7 @@ def _is_supported_app(name: str) -> bool:
         return False
     supported = entry.get("supported", {})
     current_os = os_id()
-    if current_os in supported and not supported[current_os]:
-        return False
-    return True
+    return not (current_os in supported and not supported[current_os])
 
 
 def update_stale_apps(*, verbose: bool = False) -> None:
