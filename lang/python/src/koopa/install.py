@@ -106,6 +106,16 @@ def _bash_completions_prefix() -> str:
     return os.path.join(_koopa_prefix(), "share", "bash-completion", "completions")
 
 
+def _fish_completions_prefix() -> str:
+    """Return koopa central fish completions directory."""
+    return os.path.join(_koopa_prefix(), "share", "fish", "vendor_completions.d")
+
+
+def _zsh_completions_prefix() -> str:
+    """Return koopa central zsh completions directory."""
+    return os.path.join(_koopa_prefix(), "share", "zsh", "site-functions")
+
+
 def _cpu_count() -> int:
     """Return CPU count."""
     return os.cpu_count() or 1
@@ -355,15 +365,33 @@ def link_in_man1(*, name: str, source: str) -> None:
 def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
     """Return ``(source_path, filename)`` for bash completion files in an app prefix.
 
-    Scans:
+    Scans both the prefix root and prefix/libexec for:
       - share/bash-completion/completions/
       - etc/bash_completion.d/
     """
     results: list[tuple[str, str]] = []
-    for subdir in (
-        os.path.join(prefix, "share", "bash-completion", "completions"),
-        os.path.join(prefix, "etc", "bash_completion.d"),
-    ):
+    for root in (prefix, os.path.join(prefix, "libexec")):
+        for subdir in (
+            os.path.join(root, "share", "bash-completion", "completions"),
+            os.path.join(root, "etc", "bash_completion.d"),
+        ):
+            if os.path.isdir(subdir):
+                for entry in os.listdir(subdir):
+                    source = os.path.join(subdir, entry)
+                    if os.path.isfile(source):
+                        results.append((source, entry))
+    return results
+
+
+def _find_fish_completion_files(prefix: str) -> list[tuple[str, str]]:
+    """Return ``(source_path, filename)`` for fish completion files in an app prefix.
+
+    Scans both the prefix root and prefix/libexec for:
+      - share/fish/vendor_completions.d/
+    """
+    results: list[tuple[str, str]] = []
+    for root in (prefix, os.path.join(prefix, "libexec")):
+        subdir = os.path.join(root, "share", "fish", "vendor_completions.d")
         if os.path.isdir(subdir):
             for entry in os.listdir(subdir):
                 source = os.path.join(subdir, entry)
@@ -372,23 +400,58 @@ def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
     return results
 
 
-def link_in_bash_completions(prefix: str) -> None:
-    """Scan an app prefix for bash completion files and symlink into central dir.
+def _find_zsh_completion_files(prefix: str) -> list[tuple[str, str]]:
+    """Return ``(source_path, filename)`` for zsh completion files in an app prefix.
 
-    Scans two standard locations within the app prefix:
-      - share/bash-completion/completions/  (named per command)
-      - etc/bash_completion.d/              (legacy flat dir)
-
-    Each file found is symlinked as
-    $KOOPA_PREFIX/share/bash-completion/completions/<filename>.
+    Scans both the prefix root and prefix/libexec for:
+      - share/zsh/site-functions/
     """
-    completions_dir = _bash_completions_prefix()
-    for source, name in _find_bash_completion_files(prefix):
-        os.makedirs(completions_dir, exist_ok=True)
-        target = os.path.join(completions_dir, name)
+    results: list[tuple[str, str]] = []
+    for root in (prefix, os.path.join(prefix, "libexec")):
+        subdir = os.path.join(root, "share", "zsh", "site-functions")
+        if os.path.isdir(subdir):
+            for entry in os.listdir(subdir):
+                source = os.path.join(subdir, entry)
+                if os.path.isfile(source):
+                    results.append((source, entry))
+    return results
+
+
+def _link_completions(prefix: str, central_dir: str, files: list[tuple[str, str]]) -> None:
+    """Symlink a list of completion files into a central directory."""
+    for source, name in files:
+        os.makedirs(central_dir, exist_ok=True)
+        target = os.path.join(central_dir, name)
         if os.path.islink(target):
             os.unlink(target)
         os.symlink(source, target)
+
+
+def link_in_bash_completions(prefix: str) -> None:
+    """Symlink bash completion files from an app prefix into the central dir."""
+    _link_completions(
+        prefix,
+        _bash_completions_prefix(),
+        _find_bash_completion_files(prefix),
+    )
+
+
+def link_in_fish_completions(prefix: str) -> None:
+    """Symlink fish completion files from an app prefix into the central dir."""
+    _link_completions(
+        prefix,
+        _fish_completions_prefix(),
+        _find_fish_completion_files(prefix),
+    )
+
+
+def link_in_zsh_completions(prefix: str) -> None:
+    """Symlink zsh completion files from an app prefix into the central dir."""
+    _link_completions(
+        prefix,
+        _zsh_completions_prefix(),
+        _find_zsh_completion_files(prefix),
+    )
 
 
 # -- Binary package installer -------------------------------------------------
@@ -686,6 +749,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     elif os.path.isfile(mf2):
                         link_in_man1(name=m, source=mf2)
             link_in_bash_completions(config.prefix)
+            link_in_fish_completions(config.prefix)
+            link_in_zsh_completions(config.prefix)
             if config.push:
                 push_app_build(config.name)
         elif config.mode == "system":

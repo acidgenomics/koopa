@@ -44,6 +44,21 @@ def _man1_prefix() -> str:
     return os.path.join(_koopa_prefix(), "share", "man", "man1")
 
 
+def _bash_completions_prefix() -> str:
+    """Return koopa central bash-completion completions directory."""
+    return os.path.join(_koopa_prefix(), "share", "bash-completion", "completions")
+
+
+def _fish_completions_prefix() -> str:
+    """Return koopa central fish completions directory."""
+    return os.path.join(_koopa_prefix(), "share", "fish", "vendor_completions.d")
+
+
+def _zsh_completions_prefix() -> str:
+    """Return koopa central zsh completions directory."""
+    return os.path.join(_koopa_prefix(), "share", "zsh", "site-functions")
+
+
 def _import_app_json_bin(name: str) -> list[str]:
     """Get bin names for an app from app.json."""
     json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
@@ -168,6 +183,7 @@ def uninstall_app(config: UninstallConfig) -> None:
             man1_names = _import_app_json_man1(config.name)
             for m in man1_names:
                 _unlink_in_man1(m)
+        _unlink_broken_completions()
     if not config.quiet:
         print(
             f"Successfully uninstalled '{config.name}'.",
@@ -194,6 +210,21 @@ def _unlink_in_man1(name: str) -> None:
     target = os.path.join(_man1_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
+
+
+def _unlink_broken_completions() -> None:
+    """Remove broken symlinks from all shell completion central directories."""
+    for completions_dir in (
+        _bash_completions_prefix(),
+        _fish_completions_prefix(),
+        _zsh_completions_prefix(),
+    ):
+        if not os.path.isdir(completions_dir):
+            continue
+        for entry in os.listdir(completions_dir):
+            target = os.path.join(completions_dir, entry)
+            if os.path.islink(target) and not os.path.exists(target):
+                os.unlink(target)
 
 
 def _is_shared_install() -> bool:

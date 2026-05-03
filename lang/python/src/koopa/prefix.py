@@ -66,6 +66,16 @@ def bash_completions_prefix() -> str:
     return os.path.join(koopa_prefix(), "share", "bash-completion", "completions")
 
 
+def fish_completions_prefix() -> str:
+    """Return koopa central fish completions directory."""
+    return os.path.join(koopa_prefix(), "share", "fish", "vendor_completions.d")
+
+
+def zsh_completions_prefix() -> str:
+    """Return koopa central zsh completions directory."""
+    return os.path.join(koopa_prefix(), "share", "zsh", "site-functions")
+
+
 def etc_prefix() -> str:
     """Return koopa etc prefix."""
     return os.path.join(koopa_prefix(), "etc")

@@ -6,6 +6,7 @@ _koopa_activate_zsh_fpath() {
     dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     prefixes+=(
         "${dict['koopa_prefix']}/lang/zsh/functions"
+        "${dict['koopa_prefix']}/share/zsh/site-functions"
     )
     _koopa_add_to_fpath_start "${prefixes[@]}"
     return 0
