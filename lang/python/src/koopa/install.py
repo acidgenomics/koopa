@@ -154,6 +154,26 @@ def _app_json_man1(name: str) -> list[str]:
     return []
 
 
+def _resolve_alias(name: str) -> str:
+    """Resolve app alias to its target name."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        alias = entry.get("alias_of", "")
+        if alias:
+            return alias
+    return name
+
+
+def _app_json_installer(name: str) -> str:
+    """Get installer name from app.json, if different from app name."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        return entry.get("installer", "")
+    return ""
+
+
 def _app_dependencies(name: str) -> list[str]:
     """Get application dependencies from app.json."""
     data = _import_app_json()
@@ -376,6 +396,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if not config.name:
         msg = "--name is required."
         raise ValueError(msg)
+    config.name = _resolve_alias(config.name)
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
     # Resolve mode-specific defaults.
@@ -468,7 +489,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     file=sys.stderr,
                 )
             for dep in all_deps:
-                dep_opt = os.path.join(_opt_prefix(), dep)
+                resolved_dep = _resolve_alias(dep)
+                dep_opt = os.path.join(_opt_prefix(), resolved_dep)
                 if os.path.exists(dep_opt):
                     continue
                 dep_config = InstallConfig(
@@ -518,8 +540,23 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     passthrough_args=config.passthrough_args,
                 )
             else:
-                msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
-                raise FileNotFoundError(msg)
+                installer_key = _app_json_installer(config.name)
+                if installer_key and has_python_installer(
+                    installer_key, config.platform, config.mode
+                ):
+                    installer_fn = get_python_installer(installer_key, config.platform, config.mode)
+                    installer_fn(
+                        name=config.name,
+                        version=config.version,
+                        prefix=config.prefix,
+                        passthrough_args=config.passthrough_args,
+                    )
+                else:
+                    msg = (
+                        f"No Python installer for '{config.name}'"
+                        f" ({config.platform}/{config.mode})."
+                    )
+                    raise FileNotFoundError(msg)
     except Exception:
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
