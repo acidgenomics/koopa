@@ -14,7 +14,7 @@
             "Bash(git push*)",
             "Bash(git rebase*)",
             "Bash(git reset*)",
-            "Read(./.env)",
+            "Read(.env)",
             "Read(app/)",
             "Read(opt/)",
             "Read(share/)"
