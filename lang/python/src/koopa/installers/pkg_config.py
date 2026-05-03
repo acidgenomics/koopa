@@ -40,6 +40,10 @@ def main(
         "--with-internal-glib",
         "--disable-host-tool",
     ]
+    # Bundled GLib has integer-to-pointer conversion issues in gatomic.c
+    # that newer Clang (Apple Command Line Tools) treats as errors.
+    cflags = os.environ.get("CFLAGS", "")
+    os.environ["CFLAGS"] = f"{cflags} -Wno-int-conversion".strip()
     make_build(conf_args=conf_args, env=env)
     pkg_config = os.path.join(prefix, "bin", "pkg-config")
     assert os.path.isfile(pkg_config), f"pkg-config not found at {pkg_config}"
