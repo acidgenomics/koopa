@@ -19,7 +19,7 @@ def main(
 ) -> None:
     """Install cmake."""
     env = activate_app("make", "pkg-config", build_only=True)
-    env = activate_app("zlib", "zstd", "openssl", "libssh2", "curl", env=env)
+    env = activate_app("openssl", env=env)
     make = locate("make")
     url = f"https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}.tar.gz"
     download_extract_cd(url)
@@ -30,9 +30,6 @@ def main(
     bootstrap_args = [
         f"--prefix={prefix}",
         f"--parallel={jobs}",
-        "--system-curl",
-        "--system-zlib",
-        "--system-zstd",
         "--",
         "-DCMAKE_USE_OPENSSL=ON",
     ]

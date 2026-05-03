@@ -1401,11 +1401,10 @@
     "date": "2026-04-24",
     "default": false,
     "dependencies": [
-      "curl",
-      "openssl",
-      "zlib"
+      "openssl"
     ],
     "prune": false,
+    "revision": 1,
     "url": [
       "https://cmake.org/download/"
     ],

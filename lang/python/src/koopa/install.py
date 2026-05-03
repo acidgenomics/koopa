@@ -546,10 +546,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         all_deps = list(dict.fromkeys(build_deps + deps))
         if all_deps:
             if not config.quiet:
-                print(
-                    f"{config.name} dependencies: {', '.join(all_deps)}",
-                    file=sys.stderr,
-                )
+                from koopa.alert import alert_note
+
+                alert_note(f"{config.name}: installing with dependencies: {', '.join(all_deps)}")
             for dep in all_deps:
                 resolved_dep = _resolve_alias(dep)
                 dep_opt = os.path.join(_opt_prefix(), resolved_dep)
@@ -564,16 +563,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app(dep_config)
     # -- Start install --------------------------------------------------------
     if not config.quiet:
-        if config.prefix:
-            print(
-                f"Installing '{config.name}' at '{config.prefix}'.",
-                file=sys.stderr,
-            )
-        else:
-            print(
-                f"Installing '{config.name}'.",
-                file=sys.stderr,
-            )
+        from koopa.alert import alert_install_start
+
+        alert_install_start(config.name, config.prefix or "")
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
         os.makedirs(config.prefix, exist_ok=True)
