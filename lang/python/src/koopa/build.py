@@ -368,6 +368,9 @@ def _run_ninja_with_progress(
     from koopa.progress import get_active_progress
 
     progress = get_active_progress()
+    if progress is not None and progress._verbose:
+        subprocess.run(cmd, env=env, check=True)
+        return
     proc = subprocess.Popen(
         cmd,
         env=env,
