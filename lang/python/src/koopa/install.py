@@ -1157,7 +1157,7 @@ def _acquire_install_lock() -> bool:
                 f"'{path}' if the process is stale."
             )
             raise RuntimeError(msg)
-        except (ValueError, ProcessLookupError):
+        except ValueError, ProcessLookupError:
             pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     Path(path).write_text(str(os.getpid()))
@@ -1171,7 +1171,7 @@ def _release_install_lock() -> None:
             pid = int(Path(path).read_text().strip())
             if pid == os.getpid():
                 os.unlink(path)
-    except (ValueError, OSError):
+    except ValueError, OSError:
         pass
 
 
