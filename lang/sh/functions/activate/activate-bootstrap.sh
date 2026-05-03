@@ -1,25 +1,22 @@
 #!/bin/sh
 
-# FIXME Need to document that we need to update python3.12 check here on
-# a version bump, say to python3.13.
-
 _koopa_activate_bootstrap() {
     # """
     # Conditionally activate koopa bootstrap in current path.
-    # @note Updated 2026-04-24.
+    # @note Updated 2026-05-03.
+    #
+    # Bootstrap provides Python 3.13 (plus openssl, zlib as build deps).
+    # Once koopa has installed python3.14 as an app, the bootstrap is no
+    # longer needed.
     # """
     __kvar_bootstrap_prefix="$(_koopa_bootstrap_prefix)"
-    if [ ! -d "$(_koopa_bootstrap_prefix)" ]
+    if [ ! -d "$__kvar_bootstrap_prefix" ]
     then
         unset -v __kvar_bootstrap_prefix
         return 0
     fi
     __kvar_opt_prefix="$(_koopa_opt_prefix)"
-    if [ \( -d "${__kvar_opt_prefix}/bash" \) \
-        -a \( -d "${__kvar_opt_prefix}/coreutils" \) \
-        -a \( -d "${__kvar_opt_prefix}/openssl3" \) \
-        -a \( -d "${__kvar_opt_prefix}/python3.12" \) \
-        -a \( -d "${__kvar_opt_prefix}/zlib" \) ]
+    if [ -d "${__kvar_opt_prefix}/python3.14" ]
     then
         unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
         return 0

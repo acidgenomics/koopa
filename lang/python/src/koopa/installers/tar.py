@@ -5,8 +5,9 @@ from __future__ import annotations
 import os
 import sys
 
+from koopa.archive import extract, is_valid_archive
 from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.download import download
 
 
 def main(
@@ -19,9 +20,15 @@ def main(
     """Install tar."""
     env = activate_app("make", build_only=True)
     url = f"https://ftpmirror.gnu.org/gnu/tar/tar-{version}.tar.gz"
-    download_extract_cd(url)
+    tarball = download(url)
+    if not is_valid_archive(tarball):
+        url = f"https://ftp.gnu.org/gnu/tar/tar-{version}.tar.gz"
+        tarball = download(url)
+    extract(tarball, "src")
+    os.chdir("src")
     os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
     conf_args = [
+        "--disable-nls",
         "--program-prefix=g",
         f"--prefix={prefix}",
     ]

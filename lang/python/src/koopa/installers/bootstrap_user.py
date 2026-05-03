@@ -16,5 +16,5 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install koopa bootstrap."""
-    script = os.path.join(koopa_prefix(), "etc", "koopa", "bootstrap.sh")
-    subprocess.run(["bash", script], check=True)
+    script = os.path.join(koopa_prefix(), "lang", "sh", "include", "bootstrap.sh")
+    subprocess.run([script], check=True)

@@ -477,7 +477,7 @@ def _macos_sdk_prefix() -> str:
             check=True,
         )
         return result.stdout.strip()
-    except subprocess.CalledProcessError, FileNotFoundError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return ""
 
 

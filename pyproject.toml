@@ -4,12 +4,13 @@ version = "0.16.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = [
   "Private :: Do Not Upload",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.14",
 ]
 description = "Shell bootloader for data science."
 keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 
 [project.optional-dependencies]
 extra = ["syntactic @ git+https://github.com/acidgenomics/py-syntactic", "tqdm"]
@@ -71,7 +72,7 @@ verboseOutput = true
 [tool.ruff]
 indent-width = 4
 line-length = 100
-target-version = "py314"
+target-version = "py313"
 
 [tool.ruff.format]
 docstring-code-format = true

@@ -144,8 +144,9 @@ def _handle_push_app_build(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.alert import alert, alert_note
+    from koopa.install import _os_string
     from koopa.prefix import opt_prefix
-    from koopa.system import arch2, os_string
+    from koopa.system import arch2
 
     aws = shutil.which("aws")
     tar = shutil.which("tar")
@@ -156,7 +157,7 @@ def _handle_push_app_build(args: list[str]) -> None:
         msg = "tar is not installed."
         raise RuntimeError(msg)
     architecture = arch2()
-    os_str = os_string()
+    os_str = _os_string()
     prefix = opt_prefix()
     profile = "acidgenomics"
     s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
@@ -253,39 +254,143 @@ def _handle_roff() -> None:
     subprocess.run([ronn, "--roff", *ronn_files], check=True)
 
 
+def _collect_shell_files() -> dict[str, list[str]]:
+    """Collect shell files grouped by shell type (posix, bash, zsh).
+
+    Searches functions/ subdirectories and include/ files across all lang/
+    shell prefixes. Shell type is determined by shebang line.
+    """
+    from koopa.prefix import bash_prefix, sh_prefix, zsh_prefix
+
+    search_dirs = [
+        os.path.join(sh_prefix(), "functions"),
+        os.path.join(bash_prefix(), "functions"),
+        os.path.join(zsh_prefix(), "functions"),
+        os.path.join(sh_prefix(), "include"),
+        os.path.join(bash_prefix(), "include"),
+        os.path.join(zsh_prefix(), "include"),
+    ]
+    posix: list[str] = []
+    bash: list[str] = []
+    zsh: list[str] = []
+    for search_dir in search_dirs:
+        if not os.path.isdir(search_dir):
+            continue
+        for root, _dirs, files in os.walk(search_dir):
+            for f in sorted(files):
+                if not f.endswith(".sh"):
+                    continue
+                path = os.path.join(root, f)
+                try:
+                    with open(path, errors="replace") as fh:
+                        first_line = fh.readline().rstrip()
+                except OSError:
+                    continue
+                if first_line in ("#!/bin/sh", "#!/usr/bin/env sh"):
+                    posix.append(path)
+                elif "bash" in first_line:
+                    bash.append(path)
+                elif "zsh" in first_line:
+                    zsh.append(path)
+                else:
+                    # No shebang or unknown — treat as posix
+                    posix.append(path)
+    return {"posix": sorted(posix), "bash": sorted(bash), "zsh": sorted(zsh)}
+
+
+# Illegal patterns that apply to ALL shell files regardless of shell.
+_ILLEGAL_ALL = [
+    (r"; do\b", "use newline before 'do'"),
+    (r"; then\b", "use newline before 'then'"),
+    (r"\$path\b", "$path conflicts with zsh PATH array"),
+    (r"(?m)^path=", "path= at line start conflicts with zsh PATH array"),
+    (r"[\u2018\u2019\u201c\u201d]", "unicode/curly quotes detected"),
+    (r"\b(EOF|EOL)\b", "use END instead of EOF/EOL for heredocs"),
+]
+
+# Additional illegal patterns for POSIX (#!/bin/sh) files only.
+_ILLEGAL_POSIX = [
+    (r" == ", "use = not == in POSIX [ ] tests"),
+    (r" \[\[ ", "bash-only [[ in POSIX script"),
+    (r" \]\]", "bash-only ]] in POSIX script"),
+    (r"\[@\]\}", "bash array syntax in POSIX script"),
+    (r"(?m)^\[\[ ", "bash-only [[ at start of line in POSIX script"),
+]
+
+# Additional illegal patterns for BASH files only.
+_ILLEGAL_BASH = [
+    (r"(?<!\[)\[ [^\[]", "use [[ ]] instead of [ ] in bash"),
+    (r"\[\[ [^=!<>]+ = [^=][^\]]*\]\]", "use == not = in bash [[ ]] tests"),
+]
+
+# Additional illegal patterns for ZSH files only.
+_ILLEGAL_ZSH = [
+    (r"(?<!\[)\[ [^\[]", "use [[ ]] instead of [ ] in zsh"),
+    (r"\[\[ [^=!<>]+ = [^=][^\]]*\]\]", "use == not = in zsh [[ ]] tests"),
+]
+
+
+def _check_illegal_strings(files: list[str], extra_patterns: list[tuple[str, str]]) -> list[str]:
+    """Check files for illegal string patterns. Returns list of error messages."""
+    import re
+
+    patterns = [(re.compile(p), msg) for p, msg in _ILLEGAL_ALL + extra_patterns]
+    errors: list[str] = []
+    for path in files:
+        try:
+            content = open(path, errors="replace").read()
+            lines = content.splitlines()
+        except OSError:
+            continue
+        for lineno, line in enumerate(lines, 1):
+            # Skip shellcheck disable comments and comment-only lines.
+            stripped = line.lstrip()
+            if stripped.startswith("#"):
+                continue
+            for regex, msg in patterns:
+                if regex.search(line):
+                    errors.append(f"{path}:{lineno}: {msg}")
+                    errors.append(f"  {line.rstrip()}")
+    return errors
+
+
 def _handle_shellcheck() -> None:
     """Handle ``koopa develop shellcheck``."""
     from koopa.alert import alert, alert_note, alert_success
-    from koopa.prefix import bash_prefix, sh_prefix
 
     shellcheck = shutil.which("shellcheck")
     if shellcheck is None:
         msg = "shellcheck is not installed."
         raise RuntimeError(msg)
-    search_dirs = [
-        os.path.join(bash_prefix(), "functions"),
-        os.path.join(sh_prefix(), "functions"),
-    ]
-    sh_files: list[str] = []
-    for search_dir in search_dirs:
-        if not os.path.isdir(search_dir):
-            continue
-        for root, _dirs, files in os.walk(search_dir):
-            for f in files:
-                if f.endswith(".sh"):
-                    sh_files.append(os.path.join(root, f))
-    sh_files.sort()
-    if not sh_files:
+    by_shell = _collect_shell_files()
+    posix_files = by_shell["posix"]
+    bash_files = by_shell["bash"]
+    zsh_files = by_shell["zsh"]
+    all_files = posix_files + bash_files + zsh_files
+    if not all_files:
         print("Error: No shell files found to check.", file=sys.stderr)
         sys.exit(1)
-    alert(f"Running shellcheck on {len(sh_files)} files.")
+    # --- Illegal-string checks (all shells including zsh) ---
+    alert(f"Running illegal-string checks on {len(all_files)} files.")
+    errors: list[str] = []
+    errors += _check_illegal_strings(posix_files, _ILLEGAL_POSIX)
+    errors += _check_illegal_strings(bash_files, _ILLEGAL_BASH)
+    errors += _check_illegal_strings(zsh_files, _ILLEGAL_ZSH)
+    if errors:
+        for line in errors:
+            print(line, file=sys.stderr)
+        sys.exit(1)
+    alert_success("Illegal-string checks passed.")
+    # --- shellcheck (posix + bash only) ---
+    sc_files = sorted(posix_files + bash_files)
+    alert(f"Running shellcheck on {len(sc_files)} files.")
     alert_note("shellcheck does not support zsh; skipping lang/zsh/.")
     result = subprocess.run(
-        [shellcheck, "--external-sources", *sh_files],
+        [shellcheck, "--external-sources", *sc_files],
         check=False,
     )
     if result.returncode == 0:
-        alert_success(f"shellcheck passed [{len(sh_files)} files].")
+        alert_success(f"shellcheck passed [{len(sc_files)} files].")
     else:
         sys.exit(result.returncode)
 
@@ -327,6 +432,12 @@ def _handle_check_app_versions(args: list[str]) -> None:
         help="update app.json with latest versions",
     )
     parser.add_argument(
+        "--s3-upload",
+        action="store_true",
+        dest="s3_upload",
+        help="upload source tarballs to s3://koopa.acidgenomics.com (requires acidgenomics AWS profile)",
+    )
+    parser.add_argument(
         "--reset-cache",
         action="store_true",
         help="clear version cache and force fresh lookups",
@@ -342,7 +453,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
     else:
         print_report(results)
     if parsed.update:
-        update_app_json(results)
+        update_app_json(results, s3_upload=parsed.s3_upload)
 
 
 def _handle_pytest(args: list[str]) -> None:
@@ -365,6 +476,124 @@ def _handle_generate_completion() -> None:
     generate_completion()
     alert_success("Completion file updated.")
     alert_note("Reload your shell to apply changes.")
+
+
+def _handle_mirror_src(args: list[str]) -> None:
+    """Handle ``koopa develop mirror-src [<name>...]``.
+
+    Downloads source tarballs from upstream and uploads to the
+    s3://koopa.acidgenomics.com/src/ mirror. With no args, mirrors all
+    apps with ``"mirror": true`` in app.json.
+    """
+    from koopa.io import import_app_json
+    from koopa.version_check import _has_acidgenomics_aws, _mirror_src_to_s3
+
+    if not _has_acidgenomics_aws():
+        print(
+            "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    data = import_app_json()
+    if args:
+        targets = args
+        for name in targets:
+            if name not in data:
+                print(f"Error: '{name}' not found in app.json.", file=sys.stderr)
+                sys.exit(1)
+            if not data[name].get("src_url"):
+                print(f"Error: '{name}' has no 'src_url' in app.json.", file=sys.stderr)
+                sys.exit(1)
+    else:
+        targets = sorted(k for k, v in data.items() if v.get("mirror"))
+        if not targets:
+            print("Error: No apps with 'mirror: true' found in app.json.", file=sys.stderr)
+            sys.exit(1)
+    print(f"Mirroring {len(targets)} app(s) to S3.", file=sys.stderr)
+    for name in targets:
+        entry = data[name]
+        version = entry.get("version", "")
+        src_url = entry.get("src_url", "")
+        if not version or not src_url:
+            print(f"  Skipping '{name}': missing version or src_url.", file=sys.stderr)
+            continue
+        _mirror_src_to_s3(name, version, src_url)
+
+
+def _handle_audit_src_mirror(args: list[str]) -> None:
+    """Handle ``koopa develop audit-src-mirror [<name>...]``.
+
+    Checks which mirror apps have their current source tarball present in
+    s3://koopa.acidgenomics.com/src/ using a lightweight head-object call.
+    Exits 1 if any are missing.
+    """
+    import shutil as _shutil
+
+    from koopa.io import import_app_json
+    from koopa.version_check import _expand_src_url, _has_acidgenomics_aws
+
+    if not _has_acidgenomics_aws():
+        print(
+            "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    aws = _shutil.which("aws")
+    if aws is None:
+        print("Error: aws CLI is not installed.", file=sys.stderr)
+        sys.exit(1)
+    data = import_app_json()
+    if args:
+        targets = args
+        for name in targets:
+            if name not in data:
+                print(f"Error: '{name}' not found in app.json.", file=sys.stderr)
+                sys.exit(1)
+    else:
+        targets = sorted(k for k, v in data.items() if v.get("mirror"))
+        if not targets:
+            print("Error: No apps with 'mirror: true' found in app.json.", file=sys.stderr)
+            sys.exit(1)
+    bucket = "koopa.acidgenomics.com"
+    missing: list[str] = []
+    for name in targets:
+        entry = data[name]
+        version = entry.get("version", "")
+        src_url = entry.get("src_url", "")
+        if not version or not src_url:
+            print(f"  skip  {name}: missing version or src_url.", file=sys.stderr)
+            continue
+        url = _expand_src_url(src_url, version)
+        filename = url.rsplit("/", 1)[-1]
+        key = f"src/{name}/{filename}"
+        result = subprocess.run(
+            [
+                aws,
+                "s3api",
+                "head-object",
+                "--bucket",
+                bucket,
+                "--key",
+                key,
+                "--profile",
+                "acidgenomics",
+            ],
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode == 0:
+            print(f"  ok    {name}/{filename}")
+        else:
+            print(f"  MISS  {name}/{filename}")
+            missing.append(name)
+    if missing:
+        print(
+            f"\n{len(missing)} app(s) missing from mirror: {', '.join(missing)}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    else:
+        print(f"\nAll {len(targets)} app(s) present in mirror.")
 
 
 def _handle_circular_dependencies() -> None:
@@ -395,6 +624,8 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "shellcheck": lambda _: _handle_shellcheck(),
     "check-app-versions": _handle_check_app_versions,
     "circular-dependencies": lambda _: _handle_circular_dependencies(),
+    "mirror-src": _handle_mirror_src,
+    "audit-src-mirror": _handle_audit_src_mirror,
 }
 
 

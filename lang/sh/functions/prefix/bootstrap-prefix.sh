@@ -3,8 +3,8 @@
 _koopa_bootstrap_prefix() {
     # """
     # Koopa bootstrap prefix.
-    # @note Updated 2024-06-16.
+    # @note Updated 2026-05-03.
     # """
-    _koopa_print "$(_koopa_xdg_data_home)/koopa-bootstrap"
+    _koopa_print "$(_koopa_koopa_prefix)-bootstrap"
     return 0
 }

@@ -40,6 +40,29 @@ def _os_id() -> str:
     return f"linux-{arch}"
 
 
+def _exec_restart_with_bootstrap() -> None:
+    """Replace the current process with a fresh koopa invocation.
+
+    Called after bootstrap is rebuilt so the rest of the update pipeline
+    runs under the new Python interpreter rather than the stale one.
+    """
+    from koopa.prefix import bootstrap_prefix
+
+    bp = bootstrap_prefix()
+    new_python = os.path.join(bp, "bin", "python3")
+    if not os.path.isfile(new_python):
+        return  # nothing to restart with; let the caller continue best-effort
+    koopa_prefix = _koopa_prefix()
+    main_module = os.path.join(koopa_prefix, "lang", "python", "src", "koopa", "cli_main.py")
+    # Ensure bootstrap lib dir is on LD_LIBRARY_PATH so the new Python can
+    # find its openssl/zlib on Linux (macOS uses rpath baked at build time).
+    bp_lib = os.path.join(bp, "lib")
+    ld_path = os.environ.get("LD_LIBRARY_PATH", "")
+    if bp_lib not in ld_path.split(":"):
+        os.environ["LD_LIBRARY_PATH"] = f"{bp_lib}:{ld_path}".rstrip(":")
+    os.execv(new_python, [new_python, main_module] + sys.argv[1:])
+
+
 def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
     """Abort if the app is not supported on the current platform."""
     supported = app_meta.get("supported", {})
@@ -70,7 +93,6 @@ def _build_install_config(
     *,
     mode: str = "shared",
     reinstall: bool = False,
-    bootstrap: bool = False,
     verbose: bool = False,
     deps: bool = True,
     private: bool = False,
@@ -96,7 +118,6 @@ def _build_install_config(
         mode=mode,
         installer=installer,
         platform=installer_platform,
-        bootstrap=bootstrap,
         deps=deps,
         private=is_private,
         reinstall=reinstall,
@@ -126,7 +147,6 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- install --------------------------------------------------------------
     install_p = subparsers.add_parser("install")
     install_p.add_argument("apps", nargs="*")
-    install_p.add_argument("--bootstrap", action="store_true", default=False)
     install_p.add_argument("--no-dependencies", action="store_true", default=False)
     install_p.add_argument("--private", action="store_true", default=False)
     install_p.add_argument("--reinstall", action="store_true", default=False)
@@ -233,6 +253,12 @@ def _handle_install(args: argparse.Namespace) -> None:
     if apps == ["koopa"]:
         install_koopa(verbose=args.verbose)
         return
+    if "bootstrap" in apps:
+        print(
+            "Error: bootstrap is managed automatically by 'koopa update'.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     acquired = _acquire_install_lock()
     try:
         extra = [f"--{p}" for p in args.passthrough] if args.passthrough else []
@@ -240,7 +266,6 @@ def _handle_install(args: argparse.Namespace) -> None:
             config = _build_install_config(
                 app,
                 mode=mode,
-                bootstrap=args.bootstrap,
                 deps=not args.no_dependencies,
                 private=getattr(args, "private", False),
                 reinstall=args.reinstall,
@@ -256,13 +281,18 @@ def _handle_install(args: argparse.Namespace) -> None:
 def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     from koopa.app import stale_revdeps
-    from koopa.install import _acquire_install_lock, _release_install_lock, install_app
+    from koopa.install import _release_install_lock, install_app
 
     apps = list(args.apps) if args.apps else []
     if not apps:
         print("Error: no apps specified.", file=sys.stderr)
         sys.exit(1)
-    acquired = _acquire_install_lock()
+    if "bootstrap" in apps:
+        print(
+            "Error: bootstrap is managed automatically by 'koopa update'.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     try:
         if args.all_revdeps:
             _reinstall_with_revdeps(apps, mode="all", verbose=args.verbose)
@@ -389,7 +419,15 @@ def _handle_update(args: argparse.Namespace) -> None:
         update_koopa(verbose=args.verbose)
         acquired = _acquire_install_lock()
         try:
-            update_bootstrap(verbose=args.verbose)
+            bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
+            if bootstrap_rebuilt:
+                # Bootstrap Python version changed. The running interpreter's
+                # stdlib paths are now stale. Exec-restart using the new
+                # bootstrap Python so the rest of update runs cleanly.
+                _release_install_lock()
+                acquired = False
+                _exec_restart_with_bootstrap()
+                # Only reaches here if bootstrap binary not found — best-effort.
             _update_venv(_koopa_prefix())
             remove_unsupported_apps(verbose=args.verbose)
             update_stale_apps(verbose=args.verbose)
@@ -410,7 +448,15 @@ def _handle_update(args: argparse.Namespace) -> None:
         return
     if apps == ["koopa"]:
         update_koopa(verbose=args.verbose)
+        _update_venv(_koopa_prefix())
         return
+    if apps:
+        print(
+            f"Error: 'koopa update' does not accept app names.\n"
+            f"  To reinstall an app, use: koopa reinstall {' '.join(apps)}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     acquired = _acquire_install_lock()
     try:
         for app in apps:
