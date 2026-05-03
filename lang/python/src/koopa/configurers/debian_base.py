@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 
@@ -94,6 +95,25 @@ def _configure_sshd() -> None:
     configure_sshd(name="sshd", platform="linux", mode="system")
 
 
+def _disable_motd_spam() -> None:
+    """Disable Ubuntu apt/MOTD news spam."""
+    # Disable pro/apt news fetched by update-motd.
+    pro = shutil.which("pro")
+    if pro is not None:
+        subprocess.run(
+            ["sudo", pro, "config", "set", "apt_news=false"],
+            check=False,
+        )
+    # Disable motd-news service via /etc/default/motd-news.
+    motd_news_conf = "/etc/default/motd-news"
+    if os.path.isfile(motd_news_conf):
+        with open(motd_news_conf) as fh:
+            content = fh.read()
+        updated = content.replace("ENABLED=1", "ENABLED=0")
+        if updated != content:
+            write_string(updated, motd_news_conf, sudo=True)
+
+
 def main(
     *,
     name: str,
@@ -113,4 +133,5 @@ def main(
         _configure_timezone()
     _configure_locale()
     _configure_sshd()
+    _disable_motd_spam()
     alert_success("Configuration of system defaults was successful.")
