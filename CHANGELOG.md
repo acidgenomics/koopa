@@ -95,10 +95,26 @@ Minor changes:
 - Added automated app version checking system for tracking upstream releases.
 - Added broken symlink detection and cleanup to system checks.
 - Reworked cache handling for improved reliability.
-- Improved shell completion generation.
+- Completely reworked shell completion system — pre-built Bash, Zsh, and Fish
+  completion scripts are now generated from the Python CLI tree and distributed
+  in `share/`. Completion files are loaded at shell activation rather than
+  generated at runtime.
 - Fixed homebrew updater.
 - Fixed macOS system R and Python framework cleanup.
 - Improved Debian configuration and admin detection consistency.
+- Added `description` field to all entries in `app.json`.
+- Added `reason` field to outdated app output in `koopa system check`,
+  explaining why an app is considered outdated.
+- Added mirror-src caching support to `koopa develop` for faster
+  offline/repeated source uploads.
+- Improved download timeout handling with per-request timeouts and better
+  retry logic.
+- Reduced CMake build parallelism to avoid OOM kills on memory-constrained
+  systems.
+- Hardened `koopa install` against attempted use on Windows platforms.
+- Improved NGS library batch alignment handling.
+- Removed dead apps: `libev`, `nghttp2`, `pbzip2`.
+- Fixed `man1` binary linkage in `app.json`.
 
 App version updates:
 
