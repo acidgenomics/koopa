@@ -201,6 +201,15 @@ def _app_build_dependencies(name: str) -> list[str]:
     return []
 
 
+def _app_json_revision(name: str) -> int:
+    """Get recipe revision from app.json (default 0)."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        return int(entry.get("revision", 0))
+    return 0
+
+
 def _can_install_binary() -> bool:
     """Check if binary installation is available."""
     return os.environ.get("KOOPA_CAN_INSTALL_BINARY", "") == "1"
@@ -597,7 +606,12 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     # -- Post-install: success marker ------------------------------------------
     # Written after linking so a failed link = failed install = retried.
     if config.prefix:
-        os.makedirs(os.path.join(config.prefix, ".install"), exist_ok=True)
+        install_dir = os.path.join(config.prefix, ".install")
+        os.makedirs(install_dir, exist_ok=True)
+        revision = _app_json_revision(config.name)
+        if revision > 0:
+            with open(os.path.join(install_dir, "revision"), "w") as f:
+                f.write(str(revision))
     if not config.quiet:
         duration = progress.elapsed_formatted
         if config.prefix:
