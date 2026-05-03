@@ -4431,12 +4431,12 @@
   "perl": {
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2026-05-02",
+    "date": "2026-05-03",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.43.10"
+    "version": "5.42.2"
   },
   "picard": {
     "bin": ["picard"],
