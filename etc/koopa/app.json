@@ -5828,6 +5828,7 @@
       "zlib"
     ],
     "prune": false,
+    "revision": 1,
     "url": [
       "https://nghttp2.org/",
       "https://github.com/nghttp2/nghttp2"

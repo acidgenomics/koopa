@@ -678,6 +678,119 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
         print(f"\nAll {len(targets)} app(s) present in mirror.")
 
 
+def _handle_remove_app(args: list[str]) -> None:
+    """Handle ``koopa develop remove-app <name> [--revdeps <app>...]``.
+
+    Tombstones *name* in app.json, increments the ``revision`` counter on all
+    reverse dependencies so that ``koopa update`` will automatically rebuild
+    them, and deletes the installer file if one exists.
+
+    Run this command BEFORE editing installer files or removing the dep from
+    app.json dependency lists so that auto-detection of reverse dependencies
+    still works.
+    """
+    import os
+    from datetime import date
+
+    from koopa.app import app_revdeps
+    from koopa.io import export_app_json, import_app_json
+
+    if not args or args[0].startswith("-"):
+        print("Error: remove-app requires an app name.", file=sys.stderr)
+        sys.exit(1)
+
+    name = args[0]
+    rest = args[1:]
+
+    # Parse optional --revdeps flag.
+    explicit_revdeps: list[str] | None = None
+    if rest:
+        if rest[0] == "--revdeps":
+            explicit_revdeps = rest[1:]
+        else:
+            print(f"Error: unexpected argument {rest[0]!r}.", file=sys.stderr)
+            sys.exit(1)
+
+    data = import_app_json()
+    if name not in data:
+        print(f"Error: {name!r} not found in app.json.", file=sys.stderr)
+        sys.exit(1)
+    if data[name].get("removed"):
+        print(f"Error: {name!r} is already tombstoned.", file=sys.stderr)
+        sys.exit(1)
+
+    # Detect reverse dependencies before modifying the entry.
+    if explicit_revdeps is not None:
+        revdeps = explicit_revdeps
+    else:
+        revdeps = app_revdeps(name, mode="all")
+
+    # Tombstone the entry: keep url for provenance, strip all install fields.
+    entry = data[name]
+    tombstone: dict = {"date": str(date.today()), "removed": True}
+    if "url" in entry:
+        tombstone["url"] = entry["url"]
+    data[name] = tombstone
+
+    # Bump revision on every reverse dependency.
+    bumped: list[str] = []
+    for rd in revdeps:
+        if rd not in data:
+            print(f"Warning: reverse dep {rd!r} not found in app.json, skipping.", file=sys.stderr)
+            continue
+        data[rd]["revision"] = data[rd].get("revision", 0) + 1
+        bumped.append(rd)
+
+    export_app_json(data)
+
+    # Delete the installer file if it exists.
+    pkg_dir = os.path.dirname(os.path.abspath(__file__))
+    installer_name = name.replace("-", "_")
+    installer_path = os.path.join(pkg_dir, "installers", f"{installer_name}.py")
+    deleted_installer = False
+    if os.path.isfile(installer_path):
+        os.remove(installer_path)
+        deleted_installer = True
+
+    # Report.
+    print(f"Tombstoned: {name}")
+    if deleted_installer:
+        print(f"Deleted installer: {installer_path}")
+    if bumped:
+        print(f"Bumped revision on: {', '.join(bumped)}")
+        print(
+            "Next steps: remove references to "
+            f"{name!r} from the installer file(s) of: {', '.join(bumped)}"
+        )
+    else:
+        print("No reverse dependencies found.")
+
+
+def _handle_bump_revision(args: list[str]) -> None:
+    """Handle ``koopa develop bump-revision <app>...``.
+
+    Increments the ``revision`` field by 1 for each named app in app.json.
+    This marks the app as stale so ``koopa update`` will rebuild it.
+    """
+    from koopa.io import export_app_json, import_app_json
+
+    if not args:
+        print("Error: bump-revision requires at least one app name.", file=sys.stderr)
+        sys.exit(1)
+
+    data = import_app_json()
+    unknown = [a for a in args if a not in data]
+    if unknown:
+        print(f"Error: unknown apps: {', '.join(unknown)}", file=sys.stderr)
+        sys.exit(1)
+
+    for app in args:
+        data[app]["revision"] = data[app].get("revision", 0) + 1
+        print(f"  {app}: revision -> {data[app]['revision']}")
+
+    export_app_json(data)
+
+
 def _handle_circular_dependencies() -> None:
     """Handle ``koopa develop circular-dependencies``."""
     from koopa.check import check_circular_deps
@@ -708,6 +821,8 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "circular-dependencies": lambda _: _handle_circular_dependencies(),
     "mirror-src": _handle_mirror_src,
     "audit-src-mirror": _handle_audit_src_mirror,
+    "remove-app": _handle_remove_app,
+    "bump-revision": _handle_bump_revision,
 }
 
 
