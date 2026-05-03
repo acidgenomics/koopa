@@ -174,6 +174,8 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
             continue
         json = json_data[val]
         keys = json.keys()
+        if "alias_of" in keys:
+            continue
         if "default" in keys and mode != "all" and not json["default"]:
             continue
         if "removed" in keys and json["removed"]:
@@ -348,6 +350,8 @@ def shared_apps(mode: str) -> list:
     for val in names:
         json = json_data[val]
         keys = json.keys()
+        if "alias_of" in keys:
+            continue
         if "removed" in keys and json["removed"]:
             continue
         if isdir(join(sys_dict["opt_prefix"], val)):

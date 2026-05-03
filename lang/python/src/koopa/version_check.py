@@ -1448,6 +1448,8 @@ def check_app_versions(
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
             continue
+        if info.get("alias_of"):
+            continue
         if info.get("removed", False):
             continue
         if info.get("version_pin", False):
