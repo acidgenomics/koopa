@@ -10,7 +10,13 @@ from os.path import basename, isdir, isfile, islink, join, realpath
 from koopa.app import extract_app_deps, installed_apps
 from koopa.io import import_app_json
 from koopa.os import koopa_opt_prefix
-from koopa.prefix import bash_completions_prefix, bootstrap_prefix, koopa_prefix
+from koopa.prefix import (
+    bash_completions_prefix,
+    bootstrap_prefix,
+    fish_completions_prefix,
+    koopa_prefix,
+    zsh_completions_prefix,
+)
 
 
 def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
@@ -98,17 +104,29 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                     (name, f"{name} (broken man1 symlink: {m})", True),
                 )
                 break
-        # Check for missing bash completion symlinks.
-        from koopa.install import _find_bash_completion_files
+        # Check for missing shell completion symlinks (bash, fish, zsh).
+        from koopa.install import (
+            _find_bash_completion_files,
+            _find_fish_completion_files,
+            _find_zsh_completion_files,
+        )
 
-        completions_dir = bash_completions_prefix()
-        for _source, completion_name in _find_bash_completion_files(path):
-            link = join(completions_dir, completion_name)
-            if not islink(link) or not os.path.exists(link):
-                issues.append(
-                    (name, f"{name} (missing bash completion: {completion_name})", True),
-                )
-                break
+        for find_fn, central_dir, shell in (
+            (_find_bash_completion_files, bash_completions_prefix(), "bash"),
+            (_find_fish_completion_files, fish_completions_prefix(), "fish"),
+            (_find_zsh_completion_files, zsh_completions_prefix(), "zsh"),
+        ):
+            for _source, completion_name in find_fn(path):
+                link = join(central_dir, completion_name)
+                if not islink(link) or not os.path.exists(link):
+                    issues.append(
+                        (
+                            name,
+                            f"{name} (missing {shell} completion: {completion_name})",
+                            True,
+                        ),
+                    )
+                    break
     return issues
 
 
