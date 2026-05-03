@@ -10,7 +10,7 @@ from os.path import basename, isdir, isfile, islink, join, realpath
 from koopa.app import extract_app_deps, installed_apps
 from koopa.io import import_app_json
 from koopa.os import koopa_opt_prefix
-from koopa.prefix import bootstrap_prefix, koopa_prefix
+from koopa.prefix import bash_completions_prefix, bootstrap_prefix, koopa_prefix
 
 
 def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
@@ -96,6 +96,17 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
             if islink(link) and not os.path.exists(link):
                 issues.append(
                     (name, f"{name} (broken man1 symlink: {m})", True),
+                )
+                break
+        # Check for missing bash completion symlinks.
+        from koopa.install import _find_bash_completion_files
+
+        completions_dir = bash_completions_prefix()
+        for _source, completion_name in _find_bash_completion_files(path):
+            link = join(completions_dir, completion_name)
+            if not islink(link) or not os.path.exists(link):
+                issues.append(
+                    (name, f"{name} (missing bash completion: {completion_name})", True),
                 )
                 break
     return issues

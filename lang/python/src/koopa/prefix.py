@@ -61,6 +61,11 @@ def man1_prefix() -> str:
     return os.path.join(man_prefix(), "man1")
 
 
+def bash_completions_prefix() -> str:
+    """Return koopa central bash-completion completions directory."""
+    return os.path.join(koopa_prefix(), "share", "bash-completion", "completions")
+
+
 def etc_prefix() -> str:
     """Return koopa etc prefix."""
     return os.path.join(koopa_prefix(), "etc")
