@@ -22,8 +22,6 @@ def main(
     env = activate_app(*build_deps, build_only=True)
     env = activate_app(
         "c-ares",
-        "jemalloc",
-        "libev",
         "icu4c",
         "libxml2",
         "openssl",
@@ -41,10 +39,7 @@ def main(
             "--disable-hpack-tools",
             "--disable-silent-rules",
             "--disable-static",
-            "--enable-app",
-            "--with-jemalloc",
             "--with-libcares",
-            "--with-libev",
             "--with-libxml2",
             "--with-openssl",
             "--with-zlib",
