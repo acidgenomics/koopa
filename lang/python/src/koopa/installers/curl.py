@@ -17,7 +17,7 @@ def main(
 ) -> None:
     """Install curl."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app("ca-certificates", "zlib", "zstd", "openssl", "libssh2", env=env)
+    env = activate_app("ca-certificates", "zlib", "openssl", "libssh2", env=env)
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = f"{ca_prefix}/share/ca-certificates/cacert.pem"
     version2 = version.replace(".", "_")
@@ -33,7 +33,7 @@ def main(
         "--with-libssh2",
         "--with-openssl",
         "--with-zlib",
-        "--with-zstd",
+        "--without-zstd",
         "--without-ca-path",
         "--without-gssapi",
         "--without-libidn2",

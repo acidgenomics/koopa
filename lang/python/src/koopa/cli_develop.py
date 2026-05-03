@@ -367,6 +367,20 @@ def _handle_generate_completion() -> None:
     alert_note("Reload your shell to apply changes.")
 
 
+def _handle_circular_dependencies() -> None:
+    """Handle ``koopa develop circular-dependencies``."""
+    from koopa.check import check_circular_deps
+
+    cycles = check_circular_deps()
+    if not cycles:
+        print("No circular dependencies detected.")
+        return
+    print(f"Found {len(cycles)} circular dependency chain(s):")
+    for cycle in cycles:
+        print(f"  {' -> '.join(cycle)}")
+    sys.exit(1)
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": lambda _: _handle_format_app_json(),
@@ -380,6 +394,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "roff": lambda _: _handle_roff(),
     "shellcheck": lambda _: _handle_shellcheck(),
     "check-app-versions": _handle_check_app_versions,
+    "circular-dependencies": lambda _: _handle_circular_dependencies(),
 }
 
 
