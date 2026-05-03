@@ -4134,7 +4134,7 @@
     "version": "7.99"
   },
   "node": {
-    "bin": ["corepack", "node", "npm", "npx"],
+    "bin": ["node", "npm", "npx"],
     "date": "2026-05-02",
     "default": false,
     "dependencies": ["conda"],
