@@ -20,7 +20,11 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
     (version mismatch, broken symlink).  Unsupported or removed apps are not
     actionable.
     """
+    from koopa.prefix import bin_prefix, man1_prefix
+
     opt_prefix = koopa_opt_prefix()
+    bin_dir = bin_prefix()
+    man1_dir = man1_prefix()
     json_data = import_app_json()
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
@@ -74,6 +78,26 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                     (name, f"{name} (revision {installed_rev} != {expected_rev})", True),
                 )
                 continue
+        expected_bins = entry.get("bin", [])
+        broken_bin = False
+        for b in expected_bins:
+            link = join(bin_dir, b)
+            if islink(link) and not os.path.exists(link):
+                issues.append(
+                    (name, f"{name} (broken bin symlink: {b})", True),
+                )
+                broken_bin = True
+                break
+        if broken_bin:
+            continue
+        expected_man1 = entry.get("man1", [])
+        for m in expected_man1:
+            link = join(man1_dir, m)
+            if islink(link) and not os.path.exists(link):
+                issues.append(
+                    (name, f"{name} (broken man1 symlink: {m})", True),
+                )
+                break
     return issues
 
 
