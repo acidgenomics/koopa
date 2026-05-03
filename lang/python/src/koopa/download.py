@@ -81,12 +81,12 @@ def _download_curl(url: str, output: str, *, retry: bool = True) -> None:
     curl_args = [
         "curl",
         "--connect-timeout",
-        "30",
+        "10",
         "--create-dirs",
         "--fail",
         "--location",
         "--max-time",
-        "300",
+        "120",
         "--show-error",
         "-o",
         output,
@@ -120,7 +120,7 @@ def _download_urllib(url: str, output: str) -> None:
         else None
     )
     open_fn = opener.open if opener else urllib.request.urlopen
-    with open_fn(req, timeout=120) as resp, open(output, "wb") as f:
+    with open_fn(req, timeout=30) as resp, open(output, "wb") as f:
         total = resp.headers.get("Content-Length")
         if total is not None:
             total = int(total)
