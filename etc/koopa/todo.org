@@ -1,8 +1,3 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO Review koopa install and activation support for Windows.
-* Medium priority
-** DONE Add step to generate BAM and/or CRAM files from salmon, kallisto, bowtie2 output.
-* Documentation
-** TODO Need to explain which programs are automatically supported and get activated by default more clearly. We need to write this out to the main koopa.acidgenomics.com website with better documentation support.
