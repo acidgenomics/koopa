@@ -1,5 +1,51 @@
 # Changelog
 
+## koopa 0.16.1 (2026-05-03)
+
+Minor changes:
+
+- Build output is now hidden by default behind a spinner with elapsed timer.
+  The last 100 lines of the build log are shown on failure. Use `--verbose`
+  to see full build output.
+- CMake/ninja and meson builds now display `[current/total]` step progress
+  when build output is captured.
+- Added archive validation via magic bytes (gzip, bzip2, xz, zstd) to catch
+  corrupt or HTML-masquerading downloads from mirrors.
+- Added GNU and Savannah mirror fallback system — automatically retries with
+  canonical mirrors when `ftpmirror.gnu.org` or Savannah mirrors return
+  invalid archives.
+- Added recipe revision system for forcing rebuilds when build recipes change
+  without a version bump. Uses `"revision"` key in `app.json` and
+  `.install/revision` marker file.
+- Failed binary linkage (missing expected binaries after build) now cleans up
+  the prefix directory and opt symlink, ensuring the app is detected as
+  not installed on the next update.
+- Added `--no-revdeps` flag to `koopa reinstall` to skip automatic stale
+  reverse dependency rebuilds.
+- Added `--all-system` flag to `koopa update` for opt-in system-level updates
+  requiring admin access. System updates are no longer run by default.
+- Hardened `_update_venv()` against missing venv python, added ownership
+  checks, and cleanup on failure.
+- Added `.editorconfig` to enforce project indentation conventions (2-space
+  for JSON, 4-space for Python and shell).
+- Shell bootstrap now validates that the Python interpreter actually works
+  (imports `lzma` and `subprocess`) rather than just checking the executable
+  bit.
+- `activate_app()` now resolves `alias_of` from `app.json`, fixing activation
+  of aliased apps like `python` -> `python3.14` in all installers.
+- Fixed Perl version checker to filter out odd minor versions (development
+  releases), only tracking stable even-minor releases.
+- Fixed readline build error where `pkg-config --libs ncurses` was not
+  receiving the build environment with `PKG_CONFIG_PATH`.
+- Fixed pkg-config build failure on newer Apple Clang due to
+  `-Wint-conversion` error.
+- Fixed libidn download by specifying correct `package_name="libidn2"`.
+- Fixed man-db build by adding `--disable-setuid` and `--program-prefix=g`
+  to installer args.
+- Removed `corepack` from node binary list (dropped in Node.js 25).
+- Fixed bootstrap script reliability with atomic install and improved
+  fallback Python discovery.
+
 ## koopa 0.16.0 (2026-05-02)
 
 Major changes:
