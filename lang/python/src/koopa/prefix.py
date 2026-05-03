@@ -41,7 +41,13 @@ def opt_prefix() -> str:
 
 def bootstrap_prefix() -> str:
     """Return bootstrap prefix."""
-    return os.environ.get("KOOPA_BOOTSTRAP_PREFIX", os.path.join(koopa_prefix(), "bootstrap"))
+    if "KOOPA_BOOTSTRAP_PREFIX" in os.environ:
+        return os.environ["KOOPA_BOOTSTRAP_PREFIX"]
+    xdg = os.environ.get(
+        "XDG_DATA_HOME",
+        os.path.join(os.path.expanduser("~"), ".local", "share"),
+    )
+    return os.path.join(xdg, "koopa-bootstrap")
 
 
 def config_prefix() -> str:
