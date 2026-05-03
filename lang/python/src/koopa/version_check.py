@@ -943,6 +943,26 @@ def _check_sqlite() -> str:
     return f"{major}.{minor}.{patch}"
 
 
+def _check_perl() -> str:
+    html = _http_get_text("https://www.cpan.org/src/5.0/")
+    pattern = re.compile(r"perl-([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2)")
+    versions = pattern.findall(html)
+    if not versions:
+        msg = "No Perl versions found"
+        raise RuntimeError(msg)
+    stable = [
+        v for v in versions
+        if int(v.split(".")[1]) % 2 == 0
+    ]
+    if not stable:
+        msg = "No stable Perl versions found"
+        raise RuntimeError(msg)
+    return max(
+        set(stable),
+        key=lambda v: tuple(int(x) for x in v.split(".")),
+    )
+
+
 def _check_r_devel() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/r-devel/r-svn/commits?sha=trunk&per_page=1",
@@ -1148,14 +1168,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "openssl3": _make_openssl_spec("3"),
-    "perl": _AppCheckSpec(
-        "dirlist",
-        lambda: _check_directory_listing(
-            "https://www.cpan.org/src/5.0/",
-            "perl",
-        ),
-        (),
-    ),
+    "perl": _AppCheckSpec("dirlist", _check_perl, ()),
     "postgresql": _make_dirlist_spec("https://ftp.postgresql.org/pub/source/", "v"),
     "r": _AppCheckSpec(
         "dirlist",
