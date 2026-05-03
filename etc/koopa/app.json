@@ -5918,7 +5918,6 @@
     "build_dependencies": ["make"],
     "date": "2023-08-31",
     "default": true,
-    "dependencies": ["libiconv"],
     "man1": ["gtar.1"],
     "prune": false,
     "url": [
