@@ -13,7 +13,11 @@
             "Bash(git merge*)",
             "Bash(git push*)",
             "Bash(git rebase*)",
-            "Bash(git reset*)"
+            "Bash(git reset*)",
+            "Read(./.env)",
+            "Read(app/)",
+            "Read(opt/)",
+            "Read(share/)"
         ]
     }
 }
