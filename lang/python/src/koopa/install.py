@@ -526,7 +526,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     tmp_dir = tempfile.mkdtemp(prefix="koopa-install-")
     os.chdir(tmp_dir)
     try:
-        with BuildProgress(config.name, quiet=config.quiet) as progress:
+        with BuildProgress(config.name, quiet=config.quiet, verbose=config.verbose) as progress:
             if config.binary:
                 if config.mode != "shared" or not config.prefix:
                     msg = "Binary install requires shared mode and a prefix."
