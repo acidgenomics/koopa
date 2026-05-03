@@ -26,7 +26,6 @@ def main(
         "zlib",
         "gettext",
         "openssl",
-        "zstd",
         "libssh2",
         "curl",
         "pcre2",
