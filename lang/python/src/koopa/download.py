@@ -80,9 +80,13 @@ def _download_curl(url: str, output: str, *, retry: bool = True) -> None:
     """Download using curl."""
     curl_args = [
         "curl",
+        "--connect-timeout",
+        "30",
         "--create-dirs",
         "--fail",
         "--location",
+        "--max-time",
+        "300",
         "--show-error",
         "-o",
         output,
