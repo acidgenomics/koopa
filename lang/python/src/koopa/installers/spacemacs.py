@@ -16,5 +16,5 @@ def main(
     git_clone(
         "https://github.com/syl20bnr/spacemacs.git",
         prefix,
-        branch=version,
+        commit=version,
     )

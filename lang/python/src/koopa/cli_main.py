@@ -217,7 +217,12 @@ def _resolve_apps_and_mode(
 
 def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
-    from koopa.install import _acquire_install_lock, _release_install_lock, install_app, install_koopa
+    from koopa.install import (
+        _acquire_install_lock,
+        _release_install_lock,
+        install_app,
+        install_koopa,
+    )
 
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:

@@ -40,7 +40,7 @@ def download(
     print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
     try:
         _download_curl(url, output)
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except FileNotFoundError, subprocess.CalledProcessError:
         _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
@@ -65,9 +65,11 @@ def _download_curl(url: str, output: str) -> None:
         "--create-dirs",
         "--fail",
         "--location",
-        "--retry", "5",
+        "--retry",
+        "5",
         "--show-error",
-        "-o", output,
+        "-o",
+        output,
     ]
     if "sourceforge.net/" not in url:
         curl_args.extend(["--user-agent", _USER_AGENT])

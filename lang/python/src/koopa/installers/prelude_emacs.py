@@ -18,7 +18,7 @@ def main(
     git_clone(
         "https://github.com/bbatsov/prelude.git",
         prefix,
-        branch=version,
+        commit=version,
     )
     subprocess.run(
         ["emacs", "--no-window-system", "--batch", "--load", f"{prefix}/init.el"],

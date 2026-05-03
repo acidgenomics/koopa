@@ -33,9 +33,18 @@ def extract(path: str, output_dir: str | None = None) -> None:
     if output_dir is None:
         bn = os.path.basename(path)
         for ext in (
-            ".tar.gz", ".tar.bz2", ".tar.xz", ".tar.zst", ".tar.zstd",
-            ".tar.lz", ".tgz", ".tbz2", ".txz",
-            ".tar", ".zip", ".7z",
+            ".tar.gz",
+            ".tar.bz2",
+            ".tar.xz",
+            ".tar.zst",
+            ".tar.zstd",
+            ".tar.lz",
+            ".tgz",
+            ".tbz2",
+            ".txz",
+            ".tar",
+            ".zip",
+            ".7z",
         ):
             if bn.lower().endswith(ext):
                 bn = bn[: -len(ext)]
@@ -48,14 +57,12 @@ def extract(path: str, output_dir: str | None = None) -> None:
     )
     try:
         _extract_to(path, tmpdir)
-        entries = [
-            e for e in os.listdir(tmpdir)
-            if not e.startswith(".")
-        ]
+        entries = [e for e in os.listdir(tmpdir) if not e.startswith(".")]
         if len(entries) == 1 and os.path.isdir(os.path.join(tmpdir, entries[0])):
             src_dir = os.path.join(tmpdir, entries[0])
-            for item in glob_mod.glob(os.path.join(src_dir, "*")) + \
-                        glob_mod.glob(os.path.join(src_dir, ".*")):
+            for item in glob_mod.glob(os.path.join(src_dir, "*")) + glob_mod.glob(
+                os.path.join(src_dir, ".*")
+            ):
                 bn_item = os.path.basename(item)
                 if bn_item in (".", ".."):
                     continue

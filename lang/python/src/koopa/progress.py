@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -62,23 +63,15 @@ def _fmt_duration(seconds: float) -> str:
 
 
 class BuildProgress:
-    """Track build elapsed time and record historical timing.
-
-    No live display — build output flows through to the terminal unimpeded.
-    Elapsed time is reported by the caller after the context exits.
-
-    Usage::
-
-        with BuildProgress("gcc") as progress:
-            run_the_build()
-        print(f"Done in {progress.elapsed_formatted}")
-    """
+    """Track build elapsed time and optional step progress."""
 
     def __init__(self, name: str, *, quiet: bool = False) -> None:
         self._name = name
         self._quiet = quiet
         self._start: float = 0.0
         self._elapsed: float = 0.0
+        self._total_steps: int = 0
+        self._current_step: int = 0
 
     def __enter__(self) -> BuildProgress:
         global _active_progress  # noqa: PLW0603
@@ -106,11 +99,23 @@ class BuildProgress:
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
     def switch_to_step_mode(self, total: int) -> bool:
-        """No-op retained for API compatibility."""
-        return False
+        """Switch from elapsed-time mode to step-counting mode."""
+        if total <= 0:
+            return False
+        self._total_steps = total
+        self._current_step = 0
+        return True
 
     def update_steps(self, current: int, total: int) -> None:
-        """No-op retained for API compatibility."""
+        """Update step progress with a live counter on stderr."""
+        self._current_step = current
+        self._total_steps = total
+        if not self._quiet:
+            elapsed = _fmt_duration(self.elapsed)
+            sys.stderr.write(f"\r\033[K  [{current}/{total}] {elapsed}")
+            sys.stderr.flush()
+            if current >= total:
+                sys.stderr.write("\n")
 
     def _record_duration(self) -> None:
         history = _load_history()
