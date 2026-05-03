@@ -186,7 +186,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "gzip": f"{_M}._gnu",
     "libiconv": f"{_M}._gnu",
     "libtasn1": f"{_M}._gnu",
-    "libtool": f"{_M}._gnu",
+    "libtool": f"{_M}.libtool",
     "libunistring": f"{_M}._gnu",
     "lzip": f"{_M}._gnu",
     "m4": f"{_M}._gnu",
