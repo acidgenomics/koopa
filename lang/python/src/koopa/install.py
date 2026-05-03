@@ -22,7 +22,7 @@ from typing import Any
 
 from koopa.archive import extract, is_valid_archive
 from koopa.download import download
-from koopa.system import is_admin, is_linux, is_macos, is_owner
+from koopa.system import is_admin, is_linux, is_macos, is_owner, is_windows
 
 # -- Data classes -------------------------------------------------------------
 
@@ -567,6 +567,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if not config.name:
         msg = "--name is required."
         raise ValueError(msg)
+    if is_windows():
+        msg = "App installs are not supported on Windows."
+        raise NotImplementedError(msg)
     config.name = _resolve_alias(config.name)
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
@@ -775,17 +778,15 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             with open(os.path.join(install_dir, "revision"), "w") as f:
                 f.write(str(revision))
     if not config.quiet:
+        from koopa.alert import alert_success
+
         duration = progress.elapsed_formatted
         if config.prefix:
-            print(
-                f"Successfully installed '{config.name}' at '{config.prefix}' in {duration}.",
-                file=sys.stderr,
+            alert_success(
+                f"Successfully installed '{config.name}' at '{config.prefix}' in {duration}."
             )
         else:
-            print(
-                f"Successfully installed '{config.name}' in {duration}.",
-                file=sys.stderr,
-            )
+            alert_success(f"Successfully installed '{config.name}' in {duration}.")
 
 
 # -- Isolated subshell runner -------------------------------------------------
