@@ -418,9 +418,9 @@
   "automake": {
     "bin": [
       "aclocal",
-      "aclocal-1.17",
+      "aclocal-1.18",
       "automake",
-      "automake-1.17"
+      "automake-1.18"
     ],
     "build_dependencies": [
       "make",
