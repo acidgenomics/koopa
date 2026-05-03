@@ -452,10 +452,6 @@ _koopa_activate_color_mode() {
     return 0
 }
 
-_koopa_activate_completion() {
-    return 0
-}
-
 _koopa_activate_conda() {
     local prefix
     prefix="$(_koopa_conda_prefix)"
