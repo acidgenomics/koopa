@@ -2475,9 +2475,7 @@
       "xorg-xtrans",
       "zlib"
     ],
-    "mirror": true,
     "prune": false,
-    "src_url": "https://www.fltk.org/pub/fltk/{version}/fltk-{version}-source.tar.gz",
     "url": [
       "https://www.fltk.org/"
     ],
