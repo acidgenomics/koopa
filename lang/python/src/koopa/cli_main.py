@@ -139,6 +139,7 @@ def _build_parser() -> argparse.ArgumentParser:
     reinstall_p = subparsers.add_parser("reinstall")
     reinstall_p.add_argument("apps", nargs="+")
     reinstall_p.add_argument("--all-revdeps", action="store_true", default=False)
+    reinstall_p.add_argument("--no-revdeps", action="store_true", default=False)
     reinstall_p.add_argument("--only-revdeps", action="store_true", default=False)
     _add_common_flags(reinstall_p)
 
@@ -272,15 +273,16 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
         for app in apps:
             config = _build_install_config(app, reinstall=True, verbose=args.verbose)
             install_app(config)
-        stale = stale_revdeps(apps)
-        if stale:
-            print(
-                f"Stale reverse dependencies: {', '.join(stale)}",
-                file=sys.stderr,
-            )
-            for dep in stale:
-                config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
-                install_app(config)
+        if not args.no_revdeps:
+            stale = stale_revdeps(apps)
+            if stale:
+                print(
+                    f"Stale reverse dependencies: {', '.join(stale)}",
+                    file=sys.stderr,
+                )
+                for dep in stale:
+                    config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
+                    install_app(config)
     finally:
         if acquired:
             _release_install_lock()

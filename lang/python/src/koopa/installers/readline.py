@@ -36,6 +36,7 @@ def main(
         capture_output=True,
         text=True,
         check=True,
+        env=subprocess_env,
     ).stdout.strip()
     conf_args = [
         "--disable-static",
