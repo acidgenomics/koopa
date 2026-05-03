@@ -20,12 +20,13 @@ def _handle_prune_app_binaries() -> None:
     prune_app_binaries()
 
 
-def _handle_format_app_json() -> None:
+def _handle_format_app_json(args: list[str]) -> None:
     """Handle ``koopa develop format-app-json``."""
     from koopa.io import export_app_json, import_app_json
 
+    pretty = "--pretty" in args
     data = import_app_json()
-    export_app_json(data)
+    export_app_json(data, pretty=pretty)
 
 
 def _handle_view_latest_tmp_log_file() -> None:
@@ -807,7 +808,7 @@ def _handle_circular_dependencies() -> None:
 
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
-    "format-app-json": lambda _: _handle_format_app_json(),
+    "format-app-json": _handle_format_app_json,
     "generate-completion": lambda _: _handle_generate_completion(),
     "pytest": _handle_pytest,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
