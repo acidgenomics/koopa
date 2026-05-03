@@ -89,7 +89,9 @@ _APP_TREE: dict[str, Any] = {
         "mirror": "ftp-mirror",
     },
     "file": {
+        "compress": "file-compress",
         "convert-line-endings": "file-convert-line-endings",
+        "rename-to-lowercase-ext": "file-rename-to-lowercase-ext",
     },
     "git": {
         "pull": "git-pull",
@@ -124,6 +126,9 @@ _APP_TREE: dict[str, Any] = {
     },
     "md5sum": {
         "check-to-new-md5-file": "md5sum-check-to-new-md5-file",
+    },
+    "photos": {
+        "rename-with-exiftool": "photos-rename-with-exiftool",
     },
     "miso": {
         "index": "miso-index",
@@ -1437,6 +1442,50 @@ def _handle_bioconda_autobump_recipe(args: list[str]) -> None:
 # -- ftp handlers ------------------------------------------------------------
 
 
+def _handle_file_compress(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app file compress")
+    parser.add_argument("source", help="file or directory to compress")
+    parser.add_argument(
+        "--output", "-o", default="", help="output archive name (default: <source>.tar.gz)"
+    )
+    parsed = parser.parse_args(args)
+    source = os.path.abspath(parsed.source)
+    if not os.path.exists(source):
+        msg = f"Source not found: '{source}'."
+        raise FileNotFoundError(msg)
+    output = parsed.output or (os.path.basename(source.rstrip("/")) + ".tar.gz")
+    tar = shutil.which("tar")
+    if tar is None:
+        msg = "tar is not installed."
+        raise RuntimeError(msg)
+    subprocess.run(
+        [tar, "-czvf", output, "-C", os.path.dirname(source), os.path.basename(source)],
+        check=True,
+    )
+
+
+def _handle_file_rename_to_lowercase_ext(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app file rename-to-lowercase-ext")
+    parser.add_argument("files", nargs="+", help="file(s) to rename")
+    parsed = parser.parse_args(args)
+    for path in parsed.files:
+        if not os.path.isfile(path):
+            msg = f"File not found: '{path}'."
+            raise FileNotFoundError(msg)
+        root, ext = os.path.splitext(path)
+        lower_ext = ext.lower()
+        if lower_ext != ext:
+            new_path = root + lower_ext
+            os.rename(path, new_path)
+            print(f"Renamed: {path} -> {new_path}")
+        else:
+            print(f"Already lowercase: {path}")
+
+
 def _handle_file_convert_line_endings(args: list[str]) -> None:
     """Handle ``koopa app file convert-line-endings``.
 
@@ -1517,6 +1566,74 @@ def _handle_jekyll_serve(args: list[str]) -> None:
 # -- md5sum handlers ---------------------------------------------------------
 
 
+def _handle_photos_rename_with_exiftool(args: list[str]) -> None:
+    import argparse
+    import glob
+
+    parser = argparse.ArgumentParser(prog="koopa app photos rename-with-exiftool")
+    parser.add_argument("dir", nargs="?", default=os.getcwd())
+    parsed = parser.parse_args(args)
+    target = os.path.abspath(parsed.dir)
+    if os.path.isfile(target):
+        msg = (
+            f"Expected a directory, got a file: '{target}'.\nPass the containing directory instead."
+        )
+        raise ValueError(msg)
+    if not os.path.isdir(target):
+        msg = f"Directory not found: '{target}'."
+        raise FileNotFoundError(msg)
+    exiftool = shutil.which("exiftool")
+    if exiftool is None:
+        msg = "exiftool is not installed."
+        raise RuntimeError(msg)
+    rename = shutil.which("rename")
+    if rename is None:
+        msg = "rename is not installed."
+        raise RuntimeError(msg)
+    # Remove macOS metadata stub files.
+    for stub in glob.glob(os.path.join(target, "._*")):
+        os.remove(stub)
+    # Lowercase all filenames.
+    subprocess.run([rename, "-f", "y/A-Z/a-z/", *glob.glob(os.path.join(target, "*"))], check=True)
+    # Strip img_ prefix.
+    subprocess.run([rename, "s/img_//g", *glob.glob(os.path.join(target, "*"))], check=True)
+    # Rename photos by DateTimeOriginal.
+    subprocess.run(
+        [
+            exiftool,
+            "-filename<${datetimeoriginal}-$filename",
+            "-d",
+            "%Y%m%d-%H%M%S",
+            "-ext",
+            "cr2",
+            "-ext",
+            "dng",
+            "-ext",
+            "heic",
+            "-ext",
+            "jpg",
+            target,
+        ],
+        check=True,
+    )
+    # Rename videos by CreateDate.
+    subprocess.run(
+        [
+            exiftool,
+            "-filename<${createdate}-$filename",
+            "-d",
+            "%Y%m%d-%H%M%S",
+            "-extractEmbedded",
+            "-ext",
+            "mov",
+            "-ext",
+            "mp4",
+            target,
+        ],
+        check=True,
+    )
+
+
 def _handle_md5sum_check_to_new_md5_file(args: list[str]) -> None:
     if not args:
         print(
@@ -1592,10 +1709,13 @@ def _handle_wget_recursive(args: list[str]) -> None:
 _PYTHON_HANDLERS: dict[str, Any] = {
     # app utilities
     "bioconda-autobump-recipe": _handle_bioconda_autobump_recipe,
-    "ftp-mirror": _handle_ftp_mirror,
+    "file-compress": _handle_file_compress,
     "file-convert-line-endings": _handle_file_convert_line_endings,
+    "file-rename-to-lowercase-ext": _handle_file_rename_to_lowercase_ext,
+    "ftp-mirror": _handle_ftp_mirror,
     "jekyll-serve": _handle_jekyll_serve,
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
+    "photos-rename-with-exiftool": _handle_photos_rename_with_exiftool,
     "wget-recursive": _handle_wget_recursive,
     # aws
     "aws-batch-fetch-and-run": _handle_aws_batch_fetch_and_run,

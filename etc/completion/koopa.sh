@@ -32,6 +32,7 @@ _koopa_complete() {
         ['app/docker/build']='--help --local --remote --memory --no-push'
         ['app/docker/build-all-tags']='--help --local --remote'
         ['app/docker/run']='--help --arm --x86 --bash --bind'
+        ['app/file/compress']='--help --output'
         ['app/ftp/mirror']='--help --host --user --dir'
         ['app/hisat2/align/paired-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
         ['app/hisat2/align/single-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
@@ -108,6 +109,7 @@ _koopa_complete() {
                         'kallisto'
                         'md5sum'
                         'miso'
+                        'photos'
                         'r'
                         'rnaeditingindexer'
                         'rsem'
@@ -889,7 +891,11 @@ _koopa_complete() {
                             )
                             ;;
                         'file')
-                            args+=('convert-line-endings')
+                            args+=(
+                                'compress'
+                                'convert-line-endings'
+                                'rename-to-lowercase-ext'
+                            )
                             ;;
                         'ftp')
                             args+=('mirror')
@@ -932,6 +938,9 @@ _koopa_complete() {
                             ;;
                         'miso')
                             args+=('index')
+                            ;;
+                        'photos')
+                            args+=('rename-with-exiftool')
                             ;;
                         'r')
                             args+=(
