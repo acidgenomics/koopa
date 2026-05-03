@@ -358,25 +358,18 @@ def cmake_build(
             shutil.rmtree(build_dir, ignore_errors=True)
 
 
-def _cmake_build_step(
+def _run_ninja_with_progress(
+    cmd: list[str],
     *,
-    cmake: str,
-    build_dir: str,
-    jobs: int,
-    subprocess_env: dict[str, str],
-    use_ninja: bool,
+    env: dict[str, str],
 ) -> None:
-    """Run the ``cmake --build`` step, optionally parsing Ninja progress."""
-    cmd = [cmake, "--build", build_dir, "--parallel", str(jobs)]
-    if not use_ninja:
-        subprocess.run(cmd, env=subprocess_env, check=True)
-        return
+    """Run a command that produces ninja ``[current/total]`` progress output."""
     from koopa.progress import get_active_progress
 
     progress = get_active_progress()
     proc = subprocess.Popen(
         cmd,
-        env=subprocess_env,
+        env=env,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -398,6 +391,22 @@ def _cmake_build_step(
     if rc != 0:
         sys.stderr.writelines(output_lines)
         raise subprocess.CalledProcessError(rc, cmd)
+
+
+def _cmake_build_step(
+    *,
+    cmake: str,
+    build_dir: str,
+    jobs: int,
+    subprocess_env: dict[str, str],
+    use_ninja: bool,
+) -> None:
+    """Run the ``cmake --build`` step, optionally parsing Ninja progress."""
+    cmd = [cmake, "--build", build_dir, "--parallel", str(jobs)]
+    if not use_ninja:
+        subprocess.run(cmd, env=subprocess_env, check=True)
+        return
+    _run_ninja_with_progress(cmd, env=subprocess_env)
 
 
 def _cmake_std_args(
@@ -549,10 +558,9 @@ def meson_build(
         env=subprocess_env,
         check=True,
     )
-    subprocess.run(
+    _run_ninja_with_progress(
         [ninja, "-v", "-j", str(jobs), "-C", "build"],
         env=subprocess_env,
-        check=True,
     )
     subprocess.run(
         [ninja, "-v", "-j", str(jobs), "-C", "build", "install"],

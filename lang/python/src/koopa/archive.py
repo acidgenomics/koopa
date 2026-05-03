@@ -90,9 +90,22 @@ def extract(path: str, output_dir: str | None = None) -> None:
 def _extract_to(path: str, target: str) -> None:
     """Extract archive contents into target directory."""
     name = os.path.basename(path).lower()
-    if name.endswith((".tar.zst", ".tar.zstd")):
+    if name.endswith(
+        (
+            ".tar.gz",
+            ".tgz",
+            ".tar.bz2",
+            ".tbz2",
+            ".tar.xz",
+            ".txz",
+            ".tar.zst",
+            ".tar.zstd",
+            ".tar.lz",
+            ".tar",
+        )
+    ):
         subprocess.run(
-            ["tar", "--zstd", "-xf", path, "-C", target],
+            ["tar", "-xf", path, "-C", target],
             check=True,
         )
     elif tarfile.is_tarfile(path):
@@ -128,12 +141,8 @@ def decompress(path: str, output: str | None = None) -> str:
         with bz2.open(path, "rb") as f_in, open(output, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
     elif name.endswith((".xz", ".lzma")):
-        try:
-            import lzma
-        except ImportError as err:
-            raise ImportError("lzma package is required.") from err
-        with lzma.open(path, "rb") as f_in, open(output, "wb") as f_out:
-            shutil.copyfileobj(f_in, f_out)
+        with open(output, "wb") as f_out:
+            subprocess.run(["xz", "-dc", path], stdout=f_out, check=True)
     elif name.endswith((".zst", ".zstd")):
         subprocess.run(["zstd", "-d", path, "-o", output], check=True)
     elif name.endswith(".lz4"):
@@ -187,12 +196,8 @@ def compress(
         with open(path, "rb") as f_in, bz2.open(output, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
     elif method == "xz":
-        try:
-            import lzma
-        except ImportError as err:
-            raise ImportError("lzma package is required.") from err
-        with open(path, "rb") as f_in, lzma.open(output, "wb") as f_out:
-            shutil.copyfileobj(f_in, f_out)
+        with open(output, "wb") as f_out:
+            subprocess.run(["xz", "-zc", path], stdout=f_out, check=True)
     elif method == "zstd":
         subprocess.run(["zstd", path, "-o", output], check=True)
     else:
