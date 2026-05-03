@@ -126,7 +126,7 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
         check=True,
     )
     uv_dir = "uv"
-    entries = os.listdir(uv_dir)
+    entries = [e for e in os.listdir(uv_dir) if not e.startswith(".")]
     source_dir = os.path.join(uv_dir, entries[0]) if len(entries) == 1 else uv_dir
     for item in os.listdir(source_dir):
         src = os.path.join(source_dir, item)
