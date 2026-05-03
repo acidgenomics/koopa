@@ -31,6 +31,8 @@ def download(
     *,
     decompress: bool = False,
     retry: bool = True,
+    connect_timeout: int | None = None,
+    max_time: int | None = None,
 ) -> str:
     """Download a file from a URL.
 
@@ -41,7 +43,7 @@ def download(
     Path(os.path.dirname(output) or ".").mkdir(parents=True, exist_ok=True)
     print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
     try:
-        _download_curl(url, output, retry=retry)
+        _download_curl(url, output, retry=retry, connect_timeout=connect_timeout, max_time=max_time)
     except FileNotFoundError:
         _download_urllib(url, output)
     if decompress:
@@ -76,21 +78,28 @@ def _derive_filename(url: str) -> str:
     return name if name else "download"
 
 
-def _download_curl(url: str, output: str, *, retry: bool = True) -> None:
+def _download_curl(
+    url: str,
+    output: str,
+    *,
+    retry: bool = True,
+    connect_timeout: int | None = None,
+    max_time: int | None = None,
+) -> None:
     """Download using curl."""
     curl_args = [
         "curl",
-        "--connect-timeout",
-        "10",
         "--create-dirs",
         "--fail",
         "--location",
-        "--max-time",
-        "120",
         "--show-error",
         "-o",
         output,
     ]
+    if connect_timeout is not None:
+        curl_args.extend(["--connect-timeout", str(connect_timeout)])
+    if max_time is not None:
+        curl_args.extend(["--max-time", str(max_time)])
     if retry:
         curl_args.extend(["--retry", "3", "--retry-delay", "5", "--retry-all-errors"])
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
@@ -120,7 +129,7 @@ def _download_urllib(url: str, output: str) -> None:
         else None
     )
     open_fn = opener.open if opener else urllib.request.urlopen
-    with open_fn(req, timeout=30) as resp, open(output, "wb") as f:
+    with open_fn(req, timeout=300) as resp, open(output, "wb") as f:
         total = resp.headers.get("Content-Length")
         if total is not None:
             total = int(total)
