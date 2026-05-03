@@ -366,13 +366,15 @@ def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
     """Return ``(source_path, filename)`` for bash completion files in an app prefix.
 
     Scans both the prefix root and prefix/libexec for:
-      - share/bash-completion/completions/
+      - share/bash-completion/completions/   (standard)
+      - share/bash-completions/completions/  (aws-cli non-standard spelling)
       - etc/bash_completion.d/
     """
     results: list[tuple[str, str]] = []
     for root in (prefix, os.path.join(prefix, "libexec")):
         for subdir in (
             os.path.join(root, "share", "bash-completion", "completions"),
+            os.path.join(root, "share", "bash-completions", "completions"),
             os.path.join(root, "etc", "bash_completion.d"),
         ):
             if os.path.isdir(subdir):

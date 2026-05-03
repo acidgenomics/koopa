@@ -372,12 +372,6 @@ _koopa_activate_color_mode() {
 }
 
 _koopa_activate_completion() {
-    local koopa_prefix
-    koopa_prefix="$(_koopa_koopa_prefix)"
-    local koopa_completion
-    koopa_completion="${koopa_prefix}/etc/completion/koopa.sh"
-    [[ -f "$koopa_completion" ]] || return 0
-    source "$koopa_completion"
     return 0
 }
 
@@ -996,6 +990,18 @@ _koopa_activate_zsh_compinit() {
     return 0
 }
 
+_koopa_activate_zsh_completion() {
+    local opt_prefix
+    opt_prefix="$(_koopa_opt_prefix)"
+    local aws_zsh
+    aws_zsh="${opt_prefix}/aws-cli/share/zsh/site-functions/aws_zsh_completer.sh"
+    [[ -f "$aws_zsh" ]] && source "$aws_zsh"
+    local gcloud_zsh
+    gcloud_zsh="${opt_prefix}/google-cloud-sdk/libexec/gcloud/completion.zsh.inc"
+    [[ -f "$gcloud_zsh" ]] && source "$gcloud_zsh"
+    return 0
+}
+
 _koopa_activate_zsh_editor() {
     case "${EDITOR:-}" in
         'emacs')
@@ -1020,7 +1026,7 @@ _koopa_activate_zsh_extras() {
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
     _koopa_activate_zsh_reverse_search
-    _koopa_activate_completion
+    _koopa_activate_zsh_completion
     return 0
 }
 

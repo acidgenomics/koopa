@@ -233,53 +233,12 @@ _koopa_activate_bash_aliases() {
 }
 
 _koopa_activate_bash_completion() {
-    local -A app dict
-    local -a completion_dirs completion_files
-    local completion_dir completion_file
-    dict['opt_prefix']="$(_koopa_opt_prefix)"
-    completion_files+=(
-        "${dict['opt_prefix']}/bash-completion/etc/profile.d/bash_completion.sh"
-        "${dict['opt_prefix']}/gh/share/bash-completion/completions/gh"
-        "${dict['opt_prefix']}/git/share/completion/git-completion.bash"
-        "${dict['opt_prefix']}/google-cloud-sdk/libexec/gcloud/\
-completion.bash.inc"
-    )
-    for completion_file in "${completion_files[@]}"
-    do
-        if [[ -f "$completion_file" ]]
-        then
-            source "$completion_file"
-        fi
-    done
-    completion_dirs+=(
-        '/etc/bash_completion.d'
-        '/usr/local/etc/bash_completion.d'
-        "${dict['opt_prefix']}/chezmoi/libexec/etc/bash_completion.d"
-        "${dict['opt_prefix']}/eza/libexec/etc/bash_completion.d"
-        "${dict['opt_prefix']}/gum/etc/bash_completion.d"
-        "${dict['opt_prefix']}/lesspipe/etc/bash_completion.d"
-        "${dict['opt_prefix']}/rust/etc/bash_completion.d"
-        "${dict['opt_prefix']}/tealdeer/libexec/etc/bash_completion.d"
-    )
-    for completion_dir in "${completion_dirs[@]}"
-    do
-        if [[ -d "$completion_dir" ]]
-        then
-            local rc_file
-            for rc_file in "${completion_dir}/"*
-            do
-                if [[ -f "$rc_file" ]]
-                then
-                    source "$rc_file"
-                fi
-            done
-        fi
-    done
-    app['aws_completer']="${dict['opt_prefix']}/aws-cli/bin/aws_completer"
-    if [[ -x "${app['aws_completer']}" ]]
-    then
-        complete -C "${app['aws_completer']}" 'aws'
-    fi
+    local koopa_prefix
+    koopa_prefix="$(_koopa_koopa_prefix)"
+    export BASH_COMPLETION_USER_DIR="${koopa_prefix}/share/bash-completion"
+    local framework
+    framework="${koopa_prefix}/opt/bash-completion/etc/profile.d/bash_completion.sh"
+    [[ -f "$framework" ]] && source "$framework"
     return 0
 }
 
@@ -494,36 +453,6 @@ _koopa_activate_color_mode() {
 }
 
 _koopa_activate_completion() {
-    local shell
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    local koopa_prefix
-    koopa_prefix="$(_koopa_koopa_prefix)"
-    local koopa_completion
-    koopa_completion="${koopa_prefix}/etc/completion/koopa.sh"
-    [[ -f "$koopa_completion" ]] || return 0
-    if [[ "$shell" == 'bash' ]]
-    then
-        local xdg_data_home completions_dir link
-        xdg_data_home="${XDG_DATA_HOME:-${HOME}/.local/share}"
-        completions_dir="${xdg_data_home}/bash-completion/completions"
-        link="${completions_dir}/koopa"
-        if [[ ! -L "$link" ]] || \
-            [[ "$(readlink "$link")" != "$koopa_completion" ]]
-        then
-            mkdir -p "$completions_dir"
-            ln -fns "$koopa_completion" "$link"
-        fi
-    else
-        source "$koopa_completion"
-    fi
     return 0
 }
 

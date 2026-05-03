@@ -11,6 +11,6 @@ _koopa_activate_zsh_extras() {
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
     _koopa_activate_zsh_reverse_search
-    _koopa_activate_completion
+    _koopa_activate_zsh_completion
     return 0
 }
