@@ -1874,7 +1874,7 @@ def update_koopa(*, verbose: bool = False) -> None:
     result = git_pull(prefix, capture=True)
     stdout = (result.stdout or "").strip() if result else ""
     if "Already up to date" in stdout:
-        alert_note("koopa is already up to date.")
+        alert_note("koopa source code is already up to date.")
     elif stdout:
         print(stdout, file=sys.stderr)
     _zsh_compaudit_set_permissions()
