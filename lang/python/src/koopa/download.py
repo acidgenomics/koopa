@@ -42,7 +42,7 @@ def download(
     print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
     try:
         _download_curl(url, output, retry=retry)
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except FileNotFoundError:
         _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
@@ -120,7 +120,7 @@ def _download_urllib(url: str, output: str) -> None:
         else None
     )
     open_fn = opener.open if opener else urllib.request.urlopen
-    with open_fn(req) as resp, open(output, "wb") as f:
+    with open_fn(req, timeout=120) as resp, open(output, "wb") as f:
         total = resp.headers.get("Content-Length")
         if total is not None:
             total = int(total)
