@@ -135,6 +135,13 @@ def outdated_apps() -> list[str]:
     return [name for name, _reason, actionable in _iter_installed_app_issues() if actionable]
 
 
+def outdated_apps_with_reasons() -> list[tuple[str, str]]:
+    """Return (name, reason) for installed apps that need updating."""
+    return [
+        (name, reason) for name, reason, actionable in _iter_installed_app_issues() if actionable
+    ]
+
+
 def unsupported_apps() -> list[str]:
     """Return names of installed apps no longer in app.json or marked removed."""
     return [name for name, _reason, actionable in _iter_installed_app_issues() if not actionable]
