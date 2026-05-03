@@ -2,7 +2,7 @@
 #+STARTUP: content
 * High priority
 ** TODO Review koopa install and activation support for Windows.
-** TODO We need to rework and simplify bash and zsh shell completion. We should rework our code to follow recommended practice of linking / storing completion code in a single standardized location. I don't think this is happening currently and there is room for optimization, especially for bash shell completion support currently. I think we need a place managed by koopa that intelligently links and manages these completion files.
+** DONE We need to rework and simplify bash and zsh shell completion. We should rework our code to follow recommended practice of linking / storing completion code in a single standardized location. I don't think this is happening currently and there is room for optimization, especially for bash shell completion support currently. I think we need a place managed by koopa that intelligently links and manages these completion files.
 ** TODO Add improved stack trace of error messages.
 * Medium priority
 ** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto, bowtie2 output.

@@ -372,23 +372,12 @@ _koopa_activate_color_mode() {
 }
 
 _koopa_activate_completion() {
-    local shell
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
     local koopa_prefix
     koopa_prefix="$(_koopa_koopa_prefix)"
-    local file
-    for file in "${koopa_prefix}/etc/completion/"*'.sh'
-    do
-        [[ -f "$file" ]] && source "$file"
-    done
+    local koopa_completion
+    koopa_completion="${koopa_prefix}/etc/completion/koopa.sh"
+    [[ -f "$koopa_completion" ]] || return 0
+    source "$koopa_completion"
     return 0
 }
 

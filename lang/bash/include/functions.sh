@@ -506,11 +506,24 @@ _koopa_activate_completion() {
     esac
     local koopa_prefix
     koopa_prefix="$(_koopa_koopa_prefix)"
-    local file
-    for file in "${koopa_prefix}/etc/completion/"*'.sh'
-    do
-        [[ -f "$file" ]] && source "$file"
-    done
+    local koopa_completion
+    koopa_completion="${koopa_prefix}/etc/completion/koopa.sh"
+    [[ -f "$koopa_completion" ]] || return 0
+    if [[ "$shell" == 'bash' ]]
+    then
+        local xdg_data_home completions_dir link
+        xdg_data_home="${XDG_DATA_HOME:-${HOME}/.local/share}"
+        completions_dir="${xdg_data_home}/bash-completion/completions"
+        link="${completions_dir}/koopa"
+        if [[ ! -L "$link" ]] || \
+            [[ "$(readlink "$link")" != "$koopa_completion" ]]
+        then
+            mkdir -p "$completions_dir"
+            ln -fns "$koopa_completion" "$link"
+        fi
+    else
+        source "$koopa_completion"
+    fi
     return 0
 }
 
