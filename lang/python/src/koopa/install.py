@@ -177,12 +177,17 @@ def _app_json_installer(name: str) -> str:
 
 def _app_dependencies(name: str) -> list[str]:
     """Get application dependencies from app.json."""
+    from koopa.app import _resolve_dep_dict
+    from koopa.os import os_id
+
     data = _import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         deps = entry.get("dependencies", [])
         if isinstance(deps, str):
             return [deps]
+        if isinstance(deps, dict):
+            return _resolve_dep_dict(deps, {"os_id": os_id()})
         if isinstance(deps, list):
             return deps
     return []
@@ -190,12 +195,17 @@ def _app_dependencies(name: str) -> list[str]:
 
 def _app_build_dependencies(name: str) -> list[str]:
     """Get application build dependencies from app.json."""
+    from koopa.app import _resolve_dep_dict
+    from koopa.os import os_id
+
     data = _import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         deps = entry.get("build_dependencies", [])
         if isinstance(deps, str):
             return [deps]
+        if isinstance(deps, dict):
+            return _resolve_dep_dict(deps, {"os_id": os_id()})
         if isinstance(deps, list):
             return deps
     return []
