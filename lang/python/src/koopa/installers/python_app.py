@@ -126,8 +126,17 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
         check=True,
     )
     uv_dir = "uv"
-    entries = [e for e in os.listdir(uv_dir) if not e.startswith(".")]
-    source_dir = os.path.join(uv_dir, entries[0]) if len(entries) == 1 else uv_dir
+    entries = [
+        e
+        for e in os.listdir(uv_dir)
+        if not e.startswith(".")
+        and os.path.isdir(os.path.join(uv_dir, e))
+        and not os.path.islink(os.path.join(uv_dir, e))
+    ]
+    if len(entries) != 1:
+        msg = f"Expected 1 cpython directory in {uv_dir}, found: {entries}"
+        raise RuntimeError(msg)
+    source_dir = os.path.join(uv_dir, entries[0])
     for item in os.listdir(source_dir):
         src = os.path.join(source_dir, item)
         dst = os.path.join(prefix, item)
