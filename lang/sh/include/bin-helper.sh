@@ -37,20 +37,24 @@ __koopa_resolve_prefix() {
     __koopa_bin_realpath "$(dirname "$_koopa_bin")/.."
 }
 
+__koopa_check_python() {
+    [ -x "$1" ] && "$1" -c "import subprocess" 2>/dev/null
+}
+
 __koopa_find_python() {
     _koopa_prefix="$1"
     _venv_python="${_koopa_prefix}/.venv/bin/python3"
-    if [ -x "$_venv_python" ]; then
+    if __koopa_check_python "$_venv_python"; then
         printf '%s\n' "$_venv_python"
         return 0
     fi
     _python="${_koopa_prefix}/opt/python3.14/bin/python3.14"
-    if [ -x "$_python" ]; then
+    if __koopa_check_python "$_python"; then
         printf '%s\n' "$_python"
         return 0
     fi
     _python="$(command -v python3.14 2>/dev/null || true)"
-    if [ -n "$_python" ]; then
+    if [ -n "$_python" ] && __koopa_check_python "$_python"; then
         printf '%s\n' "$_python"
         return 0
     fi
@@ -58,7 +62,8 @@ __koopa_find_python() {
     if [ -n "$_python" ] && \
         "$_python" -c \
             'import sys; sys.exit(0 if sys.version_info >= (3, 14) else 1)' \
-            2>/dev/null
+            2>/dev/null && \
+        __koopa_check_python "$_python"
     then
         printf '%s\n' "$_python"
         return 0
