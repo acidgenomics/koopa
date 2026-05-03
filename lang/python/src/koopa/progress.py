@@ -74,12 +74,14 @@ class BuildProgress:
         self._current_step: int = 0
 
     def __enter__(self) -> BuildProgress:
+        """Enter the build progress context."""
         global _active_progress  # noqa: PLW0603
         _active_progress = self
         self._start = time.monotonic()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
+        """Exit the build progress context."""
         global _active_progress  # noqa: PLW0603
         _active_progress = None
         self._elapsed = time.monotonic() - self._start
