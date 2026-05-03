@@ -53,6 +53,7 @@ class InstallConfig:
     push: bool = False
     quiet: bool = False
     reinstall: bool = False
+    reinstall_reason: str = ""
     update_ldconfig: bool = False
     verbose: bool = False
     # Passthrough configuration args (CMake -D style).
@@ -644,8 +645,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             config.reinstall = True
         if config.reinstall:
             if not config.quiet:
+                reason = f" ({config.reinstall_reason})" if config.reinstall_reason else ""
                 print(
-                    f"Uninstalling '{config.name}' at '{config.prefix}'.",
+                    f"Uninstalling '{config.name}' at '{config.prefix}'{reason}.",
                     file=sys.stderr,
                 )
             shutil.rmtree(config.prefix, ignore_errors=True)
@@ -2041,22 +2043,27 @@ def _is_supported_app(name: str) -> bool:
 def update_stale_apps(*, verbose: bool = False) -> None:
     """Find and reinstall all outdated or broken shared apps."""
     from koopa.alert import alert, alert_success
-    from koopa.check import broken_app_installs, outdated_apps
+    from koopa.check import broken_app_installs, outdated_apps_with_reasons
 
     if not is_owner():
         return
-    outdated = outdated_apps()
+    outdated = outdated_apps_with_reasons()
     broken = broken_app_installs()
-    apps = list(dict.fromkeys(outdated + broken))
-    apps = [a for a in apps if _is_supported_app(a)]
-    if not apps:
+    broken_with_reasons = [(a, "broken install") for a in broken]
+    seen: dict[str, str] = {}
+    for app, reason in outdated + broken_with_reasons:
+        if app not in seen:
+            seen[app] = reason
+    apps_with_reasons = [(a, r) for a, r in seen.items() if _is_supported_app(a)]
+    if not apps_with_reasons:
         alert_success("All installed apps are up to date.")
         return
+    apps = [a for a, _ in apps_with_reasons]
     n = len(apps)
     label = "app" if n == 1 else "apps"
     alert(f"Updating {n} {label}: {', '.join(apps)}")
-    for app in apps:
-        cli_install(app, reinstall=True, verbose=verbose)
+    for app, reason in apps_with_reasons:
+        cli_install(app, reinstall=True, reinstall_reason=reason, verbose=verbose)
     _update_stale_revdeps(apps, failed=[], verbose=verbose)
     alert_success("All stale apps updated successfully.")
 
@@ -2270,6 +2277,7 @@ def cli_install(
     name: str,
     *,
     reinstall: bool = False,
+    reinstall_reason: str = "",
     verbose: bool = False,
 ) -> None:
     """High-level CLI entry point for installing an app by name.
@@ -2281,6 +2289,7 @@ def cli_install(
         config = InstallConfig(
             name=name,
             reinstall=reinstall,
+            reinstall_reason=reinstall_reason,
             verbose=verbose,
             binary=_can_install_binary(),
             push=_can_push_binary(),
