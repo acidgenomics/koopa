@@ -5252,6 +5252,7 @@
         ],
         "date": "2026-05-02",
         "default": true,
+        "revision": 1,
         "dependencies": [
             "gdbm",
             "libpipeline"

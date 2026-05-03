@@ -59,6 +59,21 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                 (name, f"{name} ({linked_ver} != {current_ver})", True),
             )
             continue
+        expected_rev = entry.get("revision", 0)
+        if expected_rev > 0:
+            rev_file = join(path, ".install", "revision")
+            installed_rev = 0
+            if isfile(rev_file):
+                try:
+                    with open(rev_file) as f:
+                        installed_rev = int(f.read().strip() or "0")
+                except (ValueError, OSError):
+                    pass
+            if installed_rev != expected_rev:
+                issues.append(
+                    (name, f"{name} (revision {installed_rev} != {expected_rev})", True),
+                )
+                continue
     return issues
 
 
