@@ -281,7 +281,7 @@ def _handle_install(args: argparse.Namespace) -> None:
 def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     from koopa.app import stale_revdeps
-    from koopa.install import _release_install_lock, install_app
+    from koopa.install import _acquire_install_lock, _release_install_lock, install_app
 
     apps = list(args.apps) if args.apps else []
     if not apps:
@@ -293,6 +293,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
             file=sys.stderr,
         )
         sys.exit(1)
+    acquired = _acquire_install_lock()
     try:
         if args.all_revdeps:
             _reinstall_with_revdeps(apps, mode="all", verbose=args.verbose)
