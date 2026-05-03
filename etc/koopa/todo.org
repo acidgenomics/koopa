@@ -15,7 +15,7 @@ agat, aspera-connect, autodock, autodock-adfr, autodock-vina, bamtools, bcbio-ne
     - `~/.cargo`
     - `~/.conda`
     - `~/.npm`
-** TODO For configure system ubuntu, consider disable Ubuntu MOTD spam.
+** DONE For configure system ubuntu, consider disable Ubuntu MOTD spam.
     sudo pro config set apt_news=false
     /etc/default/motd-news
     Switch 'ENABLED=1' to 'ENABLED=0'.
@@ -46,13 +46,13 @@ agat, aspera-connect, autodock, autodock-adfr, autodock-vina, bamtools, bcbio-ne
     - 'url' for a URL.
     - 'val' for a generic "value".
     - 'var' for a variable name.
-** TODO Create a 'compress' function that automatically wraps 'tar -czvf XXX.tar.gz XXX/'
+** DONE Create a 'compress' function that automatically wraps 'tar -czvf XXX.tar.gz XXX/'
 ** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.
 ** TODO Consider linking some koopa tools into /opt/koopa/sbin instead of bin.
 ** TODO Add improved stack trace of error messages.
 ** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
-** TODO Need a simple batch rename utility to convert file extension to lowercase. We may simply add this in a future update to syntactic engine.
-** TODO photos_rename_exiftool needs to error on file input instead of directory more clearly.
+** DONE Need a simple batch rename utility to convert file extension to lowercase. We may simply add this in a future update to syntactic engine.
+** DONE photos_rename_exiftool needs to error on file input instead of directory more clearly.
 * Medium priority
 ** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto, bowtie2 output.
 ** DONE Consider reworking git installs to use shallow clones?

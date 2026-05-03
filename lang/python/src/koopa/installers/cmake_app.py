@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 
-from koopa.build import activate_app, locate
+from koopa.build import _cmake_std_args, activate_app, app_prefix, locate
 from koopa.installers._build_helper import download_extract_cd
 
 
@@ -27,12 +27,23 @@ def main(
     jobs = os.cpu_count() or 1
     if sys.platform != "darwin":
         jobs = 1
-    # Bootstrap compiles large C++ TUs sequentially to avoid OOM SIGKILL.
-    bootstrap_args = [
-        f"--prefix={prefix}",
-        "--parallel=1",
-        "--",
+    openssl_root = app_prefix("openssl")
+    cmake_args = _cmake_std_args(
+        prefix=prefix,
+        generator="Unix Makefiles",
+        subprocess_env=subprocess_env,
+    )
+    cmake_args += [
+        "-DCMake_BUILD_LTO=ON",
+        f"-DOPENSSL_ROOT_DIR={openssl_root}",
         "-DCMAKE_USE_OPENSSL=ON",
+    ]
+    bootstrap_args = [
+        "--no-system-libs",
+        f"--prefix={prefix}",
+        f"--parallel={jobs}",
+        "--",
+        *cmake_args,
     ]
     subprocess.run(
         ["./bootstrap", *bootstrap_args],
