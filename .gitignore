@@ -10,5 +10,5 @@
 /etc/koopa/build-times.json
 /libexec/
 /opt/
-/share/man/man1/
+/share/
 __pycache__/
