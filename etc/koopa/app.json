@@ -5260,7 +5260,8 @@
         "installer_args": {
             "compress_ext": "xz",
             "disable-setuid": "",
-            "non_gnu_mirror": "true"
+            "non_gnu_mirror": "true",
+            "program_prefix": "g"
         },
         "man1": [
             "gman.1"

@@ -154,6 +154,7 @@ def _build_parser() -> argparse.ArgumentParser:
     update_p.add_argument("apps", nargs="*")
     update_p.add_argument("--system", action="store_true", default=False)
     update_p.add_argument("--user", action="store_true", default=False)
+    update_p.add_argument("--all-system", action="store_true", default=False)
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
@@ -370,6 +371,13 @@ def _handle_update(args: argparse.Namespace) -> None:
         update_user_apps,
     )
 
+    if args.all_system or args.system:
+        from koopa.system import is_admin
+
+        if not is_admin():
+            flag = "--all-system" if args.all_system else "--system"
+            msg = f"{flag} requires admin/sudo access."
+            raise PermissionError(msg)
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:
         from koopa.alert import warn
@@ -395,7 +403,8 @@ def _handle_update(args: argparse.Namespace) -> None:
             prune_apps()
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")
-        update_system_apps(verbose=args.verbose)
+        if args.all_system:
+            update_system_apps(verbose=args.verbose)
         return
     if apps == ["koopa"]:
         update_koopa(verbose=args.verbose)
