@@ -101,6 +101,11 @@ def _man1_prefix() -> str:
     return os.path.join(_koopa_prefix(), "share", "man", "man1")
 
 
+def _bash_completions_prefix() -> str:
+    """Return koopa central bash-completion completions directory."""
+    return os.path.join(_koopa_prefix(), "share", "bash-completion", "completions")
+
+
 def _cpu_count() -> int:
     """Return CPU count."""
     return os.cpu_count() or 1
@@ -345,6 +350,45 @@ def link_in_man1(*, name: str, source: str) -> None:
     if os.path.islink(target):
         os.unlink(target)
     os.symlink(source, target)
+
+
+def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
+    """Return ``(source_path, filename)`` for bash completion files in an app prefix.
+
+    Scans:
+      - share/bash-completion/completions/
+      - etc/bash_completion.d/
+    """
+    results: list[tuple[str, str]] = []
+    for subdir in (
+        os.path.join(prefix, "share", "bash-completion", "completions"),
+        os.path.join(prefix, "etc", "bash_completion.d"),
+    ):
+        if os.path.isdir(subdir):
+            for entry in os.listdir(subdir):
+                source = os.path.join(subdir, entry)
+                if os.path.isfile(source):
+                    results.append((source, entry))
+    return results
+
+
+def link_in_bash_completions(prefix: str) -> None:
+    """Scan an app prefix for bash completion files and symlink into central dir.
+
+    Scans two standard locations within the app prefix:
+      - share/bash-completion/completions/  (named per command)
+      - etc/bash_completion.d/              (legacy flat dir)
+
+    Each file found is symlinked as
+    $KOOPA_PREFIX/share/bash-completion/completions/<filename>.
+    """
+    completions_dir = _bash_completions_prefix()
+    for source, name in _find_bash_completion_files(prefix):
+        os.makedirs(completions_dir, exist_ok=True)
+        target = os.path.join(completions_dir, name)
+        if os.path.islink(target):
+            os.unlink(target)
+        os.symlink(source, target)
 
 
 # -- Binary package installer -------------------------------------------------
@@ -641,6 +685,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                         link_in_man1(name=m, source=mf1)
                     elif os.path.isfile(mf2):
                         link_in_man1(name=m, source=mf2)
+            link_in_bash_completions(config.prefix)
             if config.push:
                 push_app_build(config.name)
         elif config.mode == "system":
