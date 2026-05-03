@@ -43,13 +43,7 @@ def main(
     download_extract_cd(url)
     make_build(
         conf_args=[
-            "--disable-dependency-tracking",
-            "--disable-editline",
-            "--disable-silent-rules",
             "--disable-static",
-            "--enable-readline",
-            "--enable-shared=yes",
-            "--enable-threadsafe",
             f"--prefix={prefix}",
         ],
         env=env,
