@@ -40,7 +40,7 @@ def download(
     print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
     try:
         _download_curl(url, output)
-    except FileNotFoundError, subprocess.CalledProcessError:
+    except (FileNotFoundError, subprocess.CalledProcessError):
         _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
