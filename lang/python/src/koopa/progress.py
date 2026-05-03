@@ -15,7 +15,7 @@ _HISTORY_FILENAME = "build-times.json"
 _active_progress: BuildProgress | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
-_LOG_TAIL_LINES = 100
+_LOG_TAIL_LINES = 200
 
 
 def get_active_progress() -> BuildProgress | None:
@@ -72,7 +72,7 @@ class BuildProgress:
 
     When ``verbose`` is False (the default), stdout and stderr are redirected
     to a temporary log file and a spinner is shown on the terminal. On failure
-    the last 100 lines of the log are printed.  When ``verbose`` is True,
+    the last 200 lines of the log are printed.  When ``verbose`` is True,
     output streams through to the terminal as before.
     """
 
@@ -164,8 +164,14 @@ class BuildProgress:
         self._total_steps = total
         if self._quiet:
             return
-        elapsed = _fmt_duration(self.elapsed)
-        line = f"\r\033[K  {self._name} [{current}/{total}] {elapsed}"
+        elapsed_secs = self.elapsed
+        elapsed = _fmt_duration(elapsed_secs)
+        if current > 0 and total > 0 and current < total:
+            remaining_secs = (elapsed_secs / current) * (total - current)
+            eta = f" ~{_fmt_duration(remaining_secs)} remaining"
+        else:
+            eta = ""
+        line = f"\r\033[K  {self._name} [{current}/{total}] {elapsed}{eta}"
         if self.capturing and self._tty_fd >= 0:
             try:
                 os.write(self._tty_fd, line.encode())
