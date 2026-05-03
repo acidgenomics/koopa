@@ -2031,6 +2031,9 @@
     "date": "2026-05-02",
     "default": false,
     "installer": "gnu-app",
+    "installer_args": {
+      "compress_ext": "lz"
+    },
     "man1": [
       "ed.1"
     ],
@@ -2844,6 +2847,9 @@
       "ncurses"
     ],
     "installer": "gnu-app",
+    "installer_args": {
+      "compress_ext": "xz"
+    },
     "prune": false,
     "url": [
       "https://www.gnu.org/software/gettext/",
@@ -5252,6 +5258,7 @@
     ],
     "installer": "gnu-app",
     "installer_args": {
+      "compress_ext": "xz",
       "non_gnu_mirror": "true"
     },
     "man1": [
@@ -6188,6 +6195,9 @@
     "date": "2026-05-02",
     "default": true,
     "installer": "gnu-app",
+    "installer_args": {
+      "compress_ext": "bz2"
+    },
     "man1": [
       "parallel.1"
     ],

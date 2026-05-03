@@ -814,16 +814,96 @@ def install_python_package(
     if extra_packages:
         pip_args.extend(extra_packages)
     subprocess.run(pip_args, check=True)
-    # Link binaries from libexec/bin into prefix/bin.
+    _link_pip_binaries(
+        egg_name=egg_name,
+        version=version,
+        prefix=prefix,
+        libexec=libexec,
+    )
+
+
+def _link_pip_binaries(
+    *,
+    egg_name: str,
+    version: str,
+    prefix: str,
+    libexec: str,
+) -> None:
+    """Link binaries from pip venv into prefix/bin using RECORD metadata."""
+    import glob as glob_mod
+    import re
+
+    venv_python = os.path.join(libexec, "bin", "python3")
+    result = subprocess.run(
+        [venv_python, "--version"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    py_version = result.stdout.strip().split()[-1]
+    py_maj_min = ".".join(py_version.split(".")[:2])
+    record_pattern = os.path.join(
+        libexec,
+        "lib",
+        f"python{py_maj_min}",
+        "site-packages",
+        f"{egg_name}-{version}*.dist-info",
+        "RECORD",
+    )
+    matches = glob_mod.glob(record_pattern)
+    if not matches:
+        record_pattern2 = os.path.join(
+            libexec,
+            "lib",
+            f"python{py_maj_min}",
+            "site-packages",
+            f"{egg_name}-*.dist-info",
+            "RECORD",
+        )
+        matches = glob_mod.glob(record_pattern2)
+    if not matches:
+        msg = f"No RECORD file found for {egg_name} in {libexec}"
+        raise FileNotFoundError(msg)
+    record_file = matches[0]
+    bin_pattern = re.compile(r"^\.\./\.\./\.\./bin/([^/,]+),")
+    man1_pattern = re.compile(r"^\.\./\.\./\.\./share/man/man1/([^/,]+),")
+    bin_names: list[str] = []
+    man1_names: list[str] = []
+    with open(record_file) as fh:
+        for line in fh:
+            m = bin_pattern.match(line)
+            if m:
+                bin_names.append(m.group(1))
+                continue
+            m = man1_pattern.match(line)
+            if m:
+                man1_names.append(m.group(1))
+    if not bin_names:
+        msg = f"No binaries found in RECORD: {record_file}"
+        raise RuntimeError(msg)
     libexec_bin = os.path.join(libexec, "bin")
-    if os.path.isdir(libexec_bin):
-        for entry in os.listdir(libexec_bin):
-            src = os.path.join(libexec_bin, entry)
-            dst = os.path.join(bin_dir, entry)
-            if os.path.isfile(src) and not entry.startswith(("python", "pip", "activate")):
-                if os.path.islink(dst):
-                    os.unlink(dst)
-                os.symlink(src, dst)
+    bin_dir = os.path.join(prefix, "bin")
+    os.makedirs(bin_dir, exist_ok=True)
+    for bin_name in bin_names:
+        src = os.path.join(libexec_bin, bin_name)
+        if not os.path.isfile(src):
+            continue
+        dst = os.path.join(bin_dir, bin_name)
+        if os.path.islink(dst):
+            os.unlink(dst)
+        os.symlink(src, dst)
+    if man1_names:
+        man1_src_dir = os.path.join(libexec, "share", "man", "man1")
+        man1_dst_dir = os.path.join(prefix, "share", "man", "man1")
+        for man1_name in man1_names:
+            src = os.path.join(man1_src_dir, man1_name)
+            if not os.path.isfile(src):
+                continue
+            os.makedirs(man1_dst_dir, exist_ok=True)
+            dst = os.path.join(man1_dst_dir, man1_name)
+            if os.path.islink(dst):
+                os.unlink(dst)
+            os.symlink(src, dst)
 
 
 # -- Rust package installer ---------------------------------------------------
@@ -1415,10 +1495,7 @@ def install_shared_apps(mode: str = "default") -> None:
             versions = [
                 d for d in os.listdir(app_prefix) if os.path.isdir(os.path.join(app_prefix, d))
             ]
-            if any(
-                os.path.isdir(os.path.join(app_prefix, v, ".install"))
-                for v in versions
-            ):
+            if any(os.path.isdir(os.path.join(app_prefix, v, ".install")) for v in versions):
                 continue
         cli_install(app_name)
 

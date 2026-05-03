@@ -22,7 +22,7 @@ def main(
     git_clone(
         "https://github.com/hlissner/doom-emacs.git",
         prefix,
-        branch=version,
+        commit=version,
     )
     doom = os.path.join(prefix, "bin", "doom")
     if not os.path.isfile(doom):

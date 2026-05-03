@@ -16,5 +16,5 @@ def main(
     git_clone(
         "https://github.com/chapmanb/cloudbiolinux.git",
         prefix,
-        branch=version,
+        commit=version,
     )
