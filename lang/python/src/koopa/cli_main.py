@@ -358,6 +358,7 @@ def _handle_update(args: argparse.Namespace) -> None:
     from koopa.install import (
         _acquire_install_lock,
         _release_install_lock,
+        _update_venv,
         fetch_user_repos,
         install_app,
         install_missing_default_apps,
@@ -379,6 +380,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         acquired = _acquire_install_lock()
         try:
             update_bootstrap(verbose=args.verbose)
+            _update_venv(_koopa_prefix())
             remove_unsupported_apps(verbose=args.verbose)
             update_stale_apps(verbose=args.verbose)
             install_missing_default_apps(verbose=args.verbose)

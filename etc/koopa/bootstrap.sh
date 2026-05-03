@@ -240,9 +240,14 @@ export CPU_COUNT PATH PREFIX
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
     printf 'This will install openssl3, xz, zlib, bash, python and coreutils.\n'
-    rm -fr "$PREFIX"
+    # Save old bootstrap so we can restore on failure.
+    __kvar_backup="${PREFIX}.backup.$$"
+    if [ -d "$PREFIX" ]
+    then
+        mv "$PREFIX" "$__kvar_backup"
+    fi
     mkdir -p "$PREFIX"
-    (
+    if ! (
         # > set -x
         export CPPFLAGS="-I${PREFIX:?}/include"
         export LDFLAGS="-L${PREFIX:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
@@ -256,9 +261,21 @@ main() {
         install_python
         install_coreutils
     )
+    then
+        printf 'Bootstrap build failed. Restoring previous bootstrap.\n' >&2
+        rm -fr "$PREFIX"
+        if [ -d "$__kvar_backup" ]
+        then
+            mv "$__kvar_backup" "$PREFIX"
+        fi
+        unset -v __kvar_backup
+        return 1
+    fi
     rm -fr "${PREFIX}/src"
+    rm -fr "$__kvar_backup"
     printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
     printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
+    unset -v __kvar_backup
     return 0
 }
 
