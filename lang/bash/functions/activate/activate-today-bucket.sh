@@ -21,9 +21,10 @@ _koopa_activate_today_bucket() {
     fi
     local today_subdirs
     today_subdirs="$(date '+%Y/%m/%d')"
-    if _koopa_str_detect_posix \
-        "$(_koopa_realpath "$today_link")" \
-        "$today_subdirs"
+    if [[ -d "$today_link" ]] && \
+        _koopa_str_detect_posix \
+            "$(_koopa_realpath "$today_link")" \
+            "$today_subdirs"
     then
         return 0
     fi

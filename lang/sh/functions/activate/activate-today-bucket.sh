@@ -37,9 +37,10 @@ _koopa_activate_today_bucket() {
         return 0
     fi
     __kvar_today_subdirs="$(date '+%Y/%m/%d')"
-    if _koopa_str_detect_posix \
-        "$(_koopa_realpath "$__kvar_today_link")" \
-        "$__kvar_today_subdirs"
+    if [ -d "$__kvar_today_link" ] && \
+        _koopa_str_detect_posix \
+            "$(_koopa_realpath "$__kvar_today_link")" \
+            "$__kvar_today_subdirs"
     then
         unset -v \
             __kvar_bucket_dir \

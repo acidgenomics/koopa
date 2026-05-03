@@ -47,6 +47,8 @@ def git_clone(
     args = ["clone", "--quiet"]
     if branch:
         args.extend(["--depth=1", "--single-branch", "--branch", branch])
+    elif tag:
+        args.extend(["--depth=1", "--single-branch", "--branch", tag])
     else:
         args.append("--filter=blob:none")
     if recursive:
@@ -58,9 +60,6 @@ def git_clone(
     cwd = target or os.path.basename(url).removesuffix(".git")
     if commit:
         _git("checkout", "--quiet", commit, cwd=cwd, capture=False)
-    elif tag:
-        _git("fetch", "--quiet", "--tags", cwd=cwd, capture=False)
-        _git("checkout", "--quiet", f"tags/{tag}", cwd=cwd, capture=False)
 
 
 def git_fetch(path: str = ".") -> None:
