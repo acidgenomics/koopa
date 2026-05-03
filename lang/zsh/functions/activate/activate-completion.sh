@@ -1,22 +1,19 @@
 #!/usr/bin/env zsh
 
 _koopa_activate_completion() {
-    local shell
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
+    # """
+    # Activate koopa shell completion.
+    # @note Updated 2026-05-03.
+    #
+    # Zsh uses bashcompinit to support bash-style 'complete' declarations,
+    # so we source our completion file directly after bashcompinit is active.
+    # """
     local koopa_prefix
     koopa_prefix="$(_koopa_koopa_prefix)"
-    local file
-    for file in "${koopa_prefix}/etc/completion/"*'.sh'
-    do
-        [[ -f "$file" ]] && source "$file"
-    done
+    local koopa_completion
+    koopa_completion="${koopa_prefix}/etc/completion/koopa.sh"
+    [[ -f "$koopa_completion" ]] || return 0
+    # shellcheck source=/dev/null
+    source "$koopa_completion"
     return 0
 }
