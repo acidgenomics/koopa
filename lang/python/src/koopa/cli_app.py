@@ -34,6 +34,7 @@ _APP_TREE: dict[str, Any] = {
             "ls": "aws-s3-ls",
             "mv-to-parent": "aws-s3-mv-to-parent",
             "sync": "aws-s3-sync",
+            "sync-git-repo": "aws-s3-sync-git-repo",
         },
     },
     "bioconda": {
@@ -176,6 +177,9 @@ _APP_TREE: dict[str, Any] = {
     },
     "ssh": {
         "generate-key": "ssh-generate-key",
+    },
+    "sys": {
+        "linker-info": "sys-linker-info",
     },
     "star": {
         "align": {
@@ -1400,6 +1404,49 @@ def _handle_aws_s3_sync(args: list[str]) -> None:
     )
 
 
+def _handle_aws_s3_sync_git_repo(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app aws s3 sync-git-repo",
+        description="Sync a local git repo to S3, respecting .gitignore.",
+    )
+    parser.add_argument("source", help="local git repo directory")
+    parser.add_argument("target", help="S3 destination URI")
+    parser.add_argument("--delete", action="store_true")
+    parser.add_argument("--dryrun", action="store_true")
+    parser.add_argument("--profile", default=None)
+    parsed = parser.parse_args(args)
+    source = os.path.abspath(parsed.source)
+    if not os.path.isdir(source):
+        msg = f"Source directory not found: '{source}'."
+        raise FileNotFoundError(msg)
+    git = shutil.which("git")
+    if git is None:
+        msg = "git is not installed."
+        raise RuntimeError(msg)
+    # Collect ignored paths from git. Use --others --ignored --directory to get
+    # directories as units (avoiding listing every file inside them).
+    result = subprocess.run(
+        [git, "ls-files", "--others", "--ignored", "--exclude-standard", "--directory"],
+        cwd=source,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    ignored = [line.rstrip("/") for line in result.stdout.splitlines() if line.strip()]
+    from koopa.aws import aws_s3_sync
+
+    aws_s3_sync(
+        source,
+        parsed.target,
+        delete=parsed.delete,
+        dryrun=parsed.dryrun,
+        exclude=ignored or None,
+        profile=parsed.profile,
+    )
+
+
 # -- bioconda handlers -------------------------------------------------------
 
 
@@ -1671,6 +1718,38 @@ def _handle_md5sum_check_to_new_md5_file(args: list[str]) -> None:
 # -- wget handlers -----------------------------------------------------------
 
 
+def _handle_sys_linker_info(args: list[str]) -> None:
+    import argparse
+
+    from koopa.system import is_macos
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app sys linker-info",
+        description="Show shared library dependencies (ldd on Linux, otool -L on macOS).",
+    )
+    parser.add_argument("files", nargs="+", help="binaries or libraries to inspect")
+    parsed = parser.parse_args(args)
+    if is_macos():
+        tool = shutil.which("otool")
+        if tool is None:
+            msg = "otool is not installed."
+            raise RuntimeError(msg)
+        cmd_fn = lambda f: [tool, "-L", f]  # noqa: E731
+    else:
+        tool = shutil.which("ldd")
+        if tool is None:
+            msg = "ldd is not installed."
+            raise RuntimeError(msg)
+        cmd_fn = lambda f: [tool, f]  # noqa: E731
+    for path in parsed.files:
+        if not os.path.exists(path):
+            msg = f"File not found: '{path}'."
+            raise FileNotFoundError(msg)
+        if len(parsed.files) > 1:
+            print(f"\n{path}:")
+        subprocess.run(cmd_fn(path), check=True)
+
+
 def _handle_wget_recursive(args: list[str]) -> None:
     import argparse
 
@@ -1717,6 +1796,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
     "photos-rename-with-exiftool": _handle_photos_rename_with_exiftool,
     "wget-recursive": _handle_wget_recursive,
+    "sys-linker-info": _handle_sys_linker_info,
     # aws
     "aws-batch-fetch-and-run": _handle_aws_batch_fetch_and_run,
     "aws-batch-list-jobs": _handle_aws_batch_list_jobs,
@@ -1734,6 +1814,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "aws-s3-ls": _handle_aws_s3_ls,
     "aws-s3-mv-to-parent": _handle_aws_s3_mv_to_parent,
     "aws-s3-sync": _handle_aws_s3_sync,
+    "aws-s3-sync-git-repo": _handle_aws_s3_sync_git_repo,
     # bioinformatics
     "bowtie2-align-paired-end": _handle_bowtie2_align_paired_end,
     "bowtie2-index": _handle_bowtie2_index,

@@ -567,6 +567,7 @@ def _syntactic_rename(parsed: argparse.Namespace, *, fun: str) -> None:
         recursive=parsed.recursive,
         quiet=parsed.quiet,
         dry_run=parsed.dry_run,
+        lowercase_ext=parsed.lowercase_ext,
     )
 
 
@@ -577,6 +578,9 @@ def _syntactic_rename_parser(prog: str, description: str) -> argparse.ArgumentPa
     parser.add_argument("--recursive", action="store_true", help="process recursively")
     parser.add_argument("--quiet", action="store_true", help="suppress output")
     parser.add_argument("--dry-run", action="store_true", help="show renames only")
+    parser.add_argument(
+        "--lowercase-ext", action="store_true", help="also convert file extension to lowercase"
+    )
     parser.add_argument("paths", nargs="+", help="paths to rename")
     return parser
 

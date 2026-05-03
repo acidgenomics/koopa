@@ -6,8 +6,8 @@
 ** DONE Add a bin script for converting CRLF to LF.
 ** TODO Improve build support for applications on Apple Silicon and Linux ARM:
 agat, aspera-connect, autodock, autodock-adfr, autodock-vina, bamtools, bcbio-nextgen, bcl2fastq, bioawk, bioconda-utils, blast, bowtie2, bustools, deeptools, entrez-direct, fastqc, ffq, fqtk, gatk, gffutils, gget, hadolint, haskell-stack, hisat2, htseq, julia, minimap2, misopy, nanopolish, ont-guppy, picard, private-bcl2fastq, private-cellranger, pymol, rmats, rsem, rstudio-server, sambamba, seqkit, shiny-server, star-fusion, subread, umis
-** TODO Write an aws s3 sync variant that automatically excludes ignored files in a git repo. Very useful for separating code and data on AWS.
-** TODO Need to check whether user-specific doom-emacs, spacemacs, spacevim installs are outdated.
+** DONE Write an aws s3 sync variant that automatically excludes ignored files in a git repo. Very useful for separating code and data on AWS.
+** DONE Need to check whether user-specific doom-emacs, spacemacs, spacevim installs are outdated.
     Could approach this by saving an invisible build file into the directory.
 ** DONE Need to ensure our build scripts don't dump temporary files.
     - `~/.cabal`
@@ -24,7 +24,7 @@ agat, aspera-connect, autodock, autodock-adfr, autodock-vina, bamtools, bcbio-ne
     - https://bugs.launchpad.net/ubuntu/+source/ubuntu-meta/+bug/1930914
     - https://bugs.launchpad.net/ubuntu/+source/ubuntu-advantage-tools/+bug/1993006
     - https://www.reddit.com/r/linux/comments/yh6xwc/ubuntu_devs_tease_rlinux_via_apt_news_of_the_day/
-** TODO Create a function that combines ldd and otool for linker lookups.
+** DONE Create a function that combines ldd and otool for linker lookups.
 ** TODO Consider adding r-cli style inline markup support for CLI messages. Is there a good Python alternative for this?
     https://cli.r-lib.org/reference/inline-markup.html
     The default theme defines the following inline classes:
@@ -50,7 +50,7 @@ agat, aspera-connect, autodock, autodock-adfr, autodock-vina, bamtools, bcbio-ne
 ** TODO Improve color and formatting of alert messages, using an r-cli style approach (e.g. '{.var XXX}' rather than just using single quotes.
 ** TODO Consider linking some koopa tools into /opt/koopa/sbin instead of bin.
 ** TODO Add improved stack trace of error messages.
-** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
+** DONE Syntactic naming functions need an option to also convert the extension to lowercase.
 ** DONE Need a simple batch rename utility to convert file extension to lowercase. We may simply add this in a future update to syntactic engine.
 ** DONE photos_rename_exiftool needs to error on file input instead of directory more clearly.
 * Medium priority
