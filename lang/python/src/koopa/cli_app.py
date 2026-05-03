@@ -610,14 +610,26 @@ def _handle_bowtie2_align_paired_end(args: list[str]) -> None:
     parser.add_argument("--index-dir", required=True)
     parser.add_argument("--fastq-dir", required=True)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument(
+        "--output-format",
+        choices=["sam", "bam", "cram"],
+        default="bam",
+    )
+    parser.add_argument("--reference-fasta", default=None)
     parsed = parser.parse_args(args)
+    if parsed.output_format == "cram" and not parsed.reference_fasta:
+        parser.error("--reference-fasta is required when --output-format is cram")
     from koopa.ngs import bowtie2_align
 
+    output = os.path.join(parsed.output_dir, f"aligned.{parsed.output_format}")
     bowtie2_align(
         parsed.index_dir,
-        os.path.join(parsed.output_dir, "aligned.sam"),
+        output,
         r1=os.path.join(parsed.fastq_dir, "R1.fastq.gz"),
         r2=os.path.join(parsed.fastq_dir, "R2.fastq.gz"),
+        threads=os.cpu_count() or 1,
+        output_fmt=parsed.output_format,
+        reference_fasta=parsed.reference_fasta,
     )
 
 
