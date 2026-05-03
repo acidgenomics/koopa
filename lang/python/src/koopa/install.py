@@ -575,34 +575,42 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         os.chdir(orig_cwd)
         shutil.rmtree(tmp_dir, ignore_errors=True)
     # -- Post-install: linking ------------------------------------------------
-    if config.mode == "shared":
-        if config.link_in_opt:
-            link_in_opt(name=config.name, source=config.prefix)
-        if config.link_in_bin:
-            bins = _app_json_bin(config.name)
-            for b in bins:
-                source = os.path.join(config.prefix, "bin", b)
-                link_in_bin(name=b, source=source)
-        if config.link_in_man1:
-            man1_names = _app_json_man1(config.name)
-            for m in man1_names:
-                mf1 = os.path.join(
-                    config.prefix,
-                    "share",
-                    "man",
-                    "man1",
-                    m,
-                )
-                mf2 = os.path.join(config.prefix, "man", "man1", m)
-                if os.path.isfile(mf1):
-                    link_in_man1(name=m, source=mf1)
-                elif os.path.isfile(mf2):
-                    link_in_man1(name=m, source=mf2)
-        if config.push:
-            push_app_build(config.name)
-    elif config.mode == "system":
-        if config.update_ldconfig:
-            _run("ldconfig", sudo=True, check=False)
+    try:
+        if config.mode == "shared":
+            if config.link_in_opt:
+                link_in_opt(name=config.name, source=config.prefix)
+            if config.link_in_bin:
+                bins = _app_json_bin(config.name)
+                for b in bins:
+                    source = os.path.join(config.prefix, "bin", b)
+                    link_in_bin(name=b, source=source)
+            if config.link_in_man1:
+                man1_names = _app_json_man1(config.name)
+                for m in man1_names:
+                    mf1 = os.path.join(
+                        config.prefix,
+                        "share",
+                        "man",
+                        "man1",
+                        m,
+                    )
+                    mf2 = os.path.join(config.prefix, "man", "man1", m)
+                    if os.path.isfile(mf1):
+                        link_in_man1(name=m, source=mf1)
+                    elif os.path.isfile(mf2):
+                        link_in_man1(name=m, source=mf2)
+            if config.push:
+                push_app_build(config.name)
+        elif config.mode == "system":
+            if config.update_ldconfig:
+                _run("ldconfig", sudo=True, check=False)
+    except Exception:
+        opt_link = os.path.join(_opt_prefix(), config.name)
+        if os.path.islink(opt_link):
+            os.unlink(opt_link)
+        if config.prefix and os.path.isdir(config.prefix):
+            shutil.rmtree(config.prefix, ignore_errors=True)
+        raise
     # -- Post-install: success marker ------------------------------------------
     # Written after linking so a failed link = failed install = retried.
     if config.prefix:
