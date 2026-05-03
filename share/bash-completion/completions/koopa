@@ -27,7 +27,7 @@ _koopa_complete() {
         ['app/aws/s3/mv-to-parent']='--help --dryrun --profile'
         ['app/aws/s3/sync']='--help --delete --dryrun --exclude --include --profile'
         ['app/aws/s3/sync-git-repo']='--help --delete --dryrun --profile'
-        ['app/bowtie2/align/paired-end']='--help --index-dir --fastq-dir --output-dir'
+        ['app/bowtie2/align/paired-end']='--help --index-dir --fastq-dir --output-dir --output-format --reference-fasta'
         ['app/bowtie2/index']='--help --genome-fasta-file --output-dir'
         ['app/conda/create-env']='--help --file --prefix --force --latest'
         ['app/docker/build']='--help --local --remote --memory --no-push'
