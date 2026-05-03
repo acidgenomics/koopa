@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import os
 
-from koopa.build import activate_app, app_prefix, locate, make_build
-from koopa.install import install_gnu_app
+from koopa.build import activate_app, app_prefix, make_build
+from koopa.installers._build_helper import download_extract_cd
 
 
 def main(
@@ -21,15 +21,15 @@ def main(
     iconv_prefix = app_prefix("libiconv")
     iconv_lib = os.path.join(iconv_prefix, "lib")
     env.ldflags.append(f"-L{iconv_lib}")
-    env.ldflags.append(f"-Wl,-rpath,{iconv_lib}")
-    env.apply()
-    os.environ["LIBS"] = f"-liconv {os.environ.get('LIBS', '')}".strip()
-    install_gnu_app(
-        name=name,
-        version=version,
-        prefix=prefix,
+    env.ldflags.append("-liconv")
+    url = f"https://ftp.gnu.org/gnu/tar/tar-{version}.tar.gz"
+    download_extract_cd(url)
+    os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
+    make_build(
         conf_args=[
             "--program-prefix=g",
+            f"--prefix={prefix}",
             f"--with-libiconv-prefix={iconv_prefix}",
         ],
+        env=env,
     )
