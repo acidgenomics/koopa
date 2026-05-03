@@ -33,7 +33,7 @@ def main(
     git_clone(
         "https://gitlab.com/SpaceVim/SpaceVim.git",
         prefix,
-        branch=version,
+        commit=version,
     )
     vimproc_prefix = os.path.join(prefix, "bundle", "vimproc.vim")
     if os.path.isdir(vimproc_prefix):
