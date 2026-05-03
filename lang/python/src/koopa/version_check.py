@@ -1657,7 +1657,7 @@ def _mirror_src_to_s3(
     with tempfile.TemporaryDirectory() as tmp:
         local = os.path.join(tmp, filename)
         try:
-            download(url, local, retry=False)
+            download(url, local, retry=False, connect_timeout=10, max_time=120)
         except Exception as exc:
             if strict:
                 raise RuntimeError(f"Download failed for '{name}': {exc}") from exc
