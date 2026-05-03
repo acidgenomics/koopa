@@ -313,6 +313,7 @@ def _reinstall_with_revdeps(
 
 def _handle_uninstall(args: argparse.Namespace) -> None:
     """Handle ``koopa uninstall`` subcommand."""
+    from koopa.install import _acquire_install_lock, _release_install_lock
     from koopa.uninstall import UninstallConfig, uninstall_app, uninstall_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
@@ -321,9 +322,14 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     if apps == ["koopa"]:
         uninstall_koopa()
         return
-    for app in apps:
-        config = UninstallConfig(name=app, mode=mode, verbose=args.verbose)
-        uninstall_app(config)
+    acquired = _acquire_install_lock()
+    try:
+        for app in apps:
+            config = UninstallConfig(name=app, mode=mode, verbose=args.verbose)
+            uninstall_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
 
 
 def _configure_user_dotfiles() -> None:
