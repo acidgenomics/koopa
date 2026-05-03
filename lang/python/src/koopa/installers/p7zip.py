@@ -33,8 +33,21 @@ def main(
     subprocess_env["CC"] = cc
     subprocess_env["CXX"] = cxx
     jobs = os.cpu_count() or 1
+    cflags = subprocess_env.get("CFLAGS", "")
+    cxxflags = subprocess_env.get("CXXFLAGS", "")
+    ldflags = subprocess_env.get("LDFLAGS", "")
     subprocess.run(
-        [make, f"--jobs={jobs}", f"-f{makefile}", "all3"],
+        [
+            make,
+            f"--jobs={jobs}",
+            f"-f{makefile}",
+            "all3",
+            f"ALLFLAGS_C={cflags}",
+            f"ALLFLAGS_CPP={cxxflags}",
+            f"CC={cc}",
+            f"CXX={cxx}",
+            f"LDFLAGS={ldflags}",
+        ],
         env=subprocess_env,
         check=True,
     )

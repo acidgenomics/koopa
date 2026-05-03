@@ -32,8 +32,18 @@ def main(
     cc = shutil.which("gcc") or "gcc"
     subprocess_env["CC"] = cc
     jobs = os.cpu_count() or 1
+    cxxflags = subprocess_env.get("CPPFLAGS", "")
+    ldflags = subprocess_env.get("LDFLAGS", "")
     subprocess.run(
-        [make, f"--jobs={jobs}"],
+        [
+            make,
+            f"--jobs={jobs}",
+            f"CC={cc}",
+            f"CXXFLAGS={cxxflags}",
+            f"LDFLAGS={ldflags}",
+            f"PREFIX={prefix}",
+            "VERBOSE=1",
+        ],
         env=subprocess_env,
         check=True,
     )
