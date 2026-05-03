@@ -38,7 +38,7 @@ __koopa_resolve_prefix() {
 }
 
 __koopa_check_python() {
-    [ -x "$1" ] && "$1" -c "import subprocess" 2>/dev/null
+    [ -x "$1" ] && "$1" -c "import lzma, subprocess" 2>/dev/null
 }
 
 __koopa_find_python() {
