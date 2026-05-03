@@ -250,7 +250,6 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
-    _koopa_activate_completion
     return 0
 }
 
