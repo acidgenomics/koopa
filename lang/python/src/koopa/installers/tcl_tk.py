@@ -54,6 +54,7 @@ def main(
     os.chdir(tcl_unix)
     tcl_conf_args = [
         f"--prefix={prefix}",
+        "--enable-shared",
         "--enable-threads",
     ]
     subprocess.run(
@@ -77,6 +78,8 @@ def main(
         "--enable-threads",
         f"--with-tcl={prefix}/lib",
     ]
+    if sys.platform == "darwin":
+        tk_conf_args.append("--enable-aqua=yes")
     subprocess.run(
         ["./configure", *tk_conf_args],
         env=subprocess_env,

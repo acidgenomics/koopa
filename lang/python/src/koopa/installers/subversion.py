@@ -30,16 +30,27 @@ def main(
     apr_prefix = app_prefix("apr")
     apr_util_prefix = app_prefix("apr-util")
     serf_prefix = app_prefix("serf")
+    sqlite_prefix = app_prefix("sqlite")
     url = f"https://archive.apache.org/dist/subversion/subversion-{version}.tar.bz2"
     download_extract_cd(url)
     conf_args = [
+        "--disable-debug",
+        "--disable-mod-activation",
+        "--disable-plaintext-password-storage",
+        "--disable-static",
+        "--enable-optimize",
         f"--prefix={prefix}",
         f"--with-apr={apr_prefix}",
         f"--with-apr-util={apr_util_prefix}",
+        "--with-apxs=no",
+        "--with-lz4=internal",
         f"--with-serf={serf_prefix}",
-        "--disable-static",
+        f"--with-sqlite={sqlite_prefix}",
+        "--with-utf8proc=internal",
+        "--without-apache-libexecdir",
         "--without-berkeley-db",
-        "--without-apxs",
+        "--without-gpg-agent",
+        "--without-jikes",
         "--without-swig",
     ]
     make_build(conf_args=conf_args, env=env)
