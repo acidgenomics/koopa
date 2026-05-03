@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.download import download_with_mirror
+from koopa.installers._build_helper import extract_cd
 
 
 def main(
@@ -18,8 +19,10 @@ def main(
     env = activate_app("zlib", "openssl", env=env)
     openssl_prefix = app_prefix("openssl")
     zlib_prefix = app_prefix("zlib")
-    url = f"https://www.libssh2.org/download/libssh2-{version}.tar.gz"
-    download_extract_cd(url)
+    filename = f"libssh2-{version}.tar.gz"
+    primary_url = f"https://www.libssh2.org/download/{filename}"
+    tarball = download_with_mirror(primary_url, name, filename)
+    extract_cd(tarball)
     make_build(
         conf_args=[
             "--disable-examples-build",

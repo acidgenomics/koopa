@@ -549,6 +549,7 @@ def _handle_mirror_src(args: list[str]) -> None:
     cache = _load_mirror_src_cache()
     now = time.time()
     _cache_ttl = 86400  # 24 hours
+    failures: dict[str, str] = {}
     for name in targets:
         entry = data[name]
         version = entry.get("version", "")
@@ -583,9 +584,22 @@ def _handle_mirror_src(args: list[str]) -> None:
             _save_mirror_src_cache(cache)
             print(f"  Already present: {cache_key}", file=sys.stderr)
             continue
-        _mirror_src_to_s3(name, version, src_url, strict=True)
-        cache[cache_key] = now
-        _save_mirror_src_cache(cache)
+        try:
+            _mirror_src_to_s3(name, version, src_url, strict=True)
+            cache[cache_key] = now
+            _save_mirror_src_cache(cache)
+        except Exception as exc:
+            failures[name] = str(exc)
+            print(f"  FAILED: {name}: {exc}", file=sys.stderr)
+
+    if failures:
+        print(
+            f"\n{len(failures)} app(s) failed to mirror:",
+            file=sys.stderr,
+        )
+        for fname, reason in sorted(failures.items()):
+            print(f"  {fname}: {reason}", file=sys.stderr)
+        sys.exit(1)
 
 
 def _handle_audit_src_mirror(args: list[str]) -> None:
