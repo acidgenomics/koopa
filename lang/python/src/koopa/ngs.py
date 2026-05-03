@@ -300,24 +300,54 @@ def bowtie2_align(
     r2: str | None = None,
     threads: int = 1,
     sensitive: bool = True,
+    output_fmt: str = "sam",
+    reference_fasta: str | None = None,
 ) -> None:
     """Align reads with Bowtie2."""
-    args = [
+    if output_fmt == "cram" and not reference_fasta:
+        msg = "reference_fasta is required when output_fmt is 'cram'."
+        raise ValueError(msg)
+    bowtie2_args = [
         "bowtie2",
         "-x",
         index_prefix,
         "-p",
         str(threads),
-        "-S",
-        output_sam,
     ]
     if sensitive:
-        args.append("--very-sensitive")
+        bowtie2_args.append("--very-sensitive")
     if r2:
-        args.extend(["-1", r1, "-2", r2])
+        bowtie2_args.extend(["-1", r1, "-2", r2])
     else:
-        args.extend(["-U", r1])
-    _run_cmd(args)
+        bowtie2_args.extend(["-U", r1])
+    if output_fmt == "sam":
+        bowtie2_args.extend(["-S", output_sam])
+        _run_cmd(bowtie2_args)
+        return
+    # Pipe bowtie2 SAM stdout → samtools sort → sorted BAM/CRAM
+    samtools_args = [
+        "samtools",
+        "sort",
+        "-@",
+        str(threads),
+        "-O",
+        output_fmt.upper(),
+        "-o",
+        output_sam,
+    ]
+    if output_fmt == "cram":
+        samtools_args.extend(["--reference", reference_fasta])
+    samtools_args.append("-")
+    bowtie2_proc = subprocess.Popen(bowtie2_args, stdout=subprocess.PIPE)
+    samtools_proc = subprocess.Popen(samtools_args, stdin=bowtie2_proc.stdout)
+    bowtie2_proc.stdout.close()
+    samtools_proc.wait()
+    bowtie2_proc.wait()
+    if bowtie2_proc.returncode != 0:
+        raise subprocess.CalledProcessError(bowtie2_proc.returncode, "bowtie2")
+    if samtools_proc.returncode != 0:
+        raise subprocess.CalledProcessError(samtools_proc.returncode, "samtools sort")
+    samtools_index(output_sam, threads=threads)
 
 
 # -- HISAT2 -------------------------------------------------------------------
