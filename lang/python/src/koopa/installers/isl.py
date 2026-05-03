@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.download import download_with_mirror
+from koopa.installers._build_helper import extract_cd
 
 
 def main(
@@ -17,8 +18,10 @@ def main(
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("gmp", env=env)
     gmp_prefix = app_prefix("gmp")
-    url = f"https://libisl.sourceforge.io/isl-{version}.tar.xz"
-    download_extract_cd(url)
+    filename = f"isl-{version}.tar.xz"
+    primary_url = f"https://libisl.sourceforge.io/{filename}"
+    tarball = download_with_mirror(primary_url, name, filename)
+    extract_cd(tarball)
     make_build(
         conf_args=[
             "--disable-dependency-tracking",
