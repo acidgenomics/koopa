@@ -5754,7 +5754,8 @@
     "url": [
       "https://ftp.gnu.org/gnu/nettle/?C=M;O=D"
     ],
-    "version": "4.0"
+    "version": "3.10.2",
+    "version_pin": true
   },
   "nextflow": {
     "bin": [
