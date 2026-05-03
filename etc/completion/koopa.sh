@@ -124,6 +124,7 @@ _koopa_complete() {
                         'prune-app-binaries'
                         'push-all-app-builds'
                         'push-app-build'
+                        'pytest'
                         'roff'
                         'shellcheck'
                     )
@@ -460,6 +461,7 @@ _koopa_complete() {
                         'pyright'
                         'pytaglib'
                         'pytest'
+                        'python'
                         'python3.10'
                         'python3.11'
                         'python3.12'
