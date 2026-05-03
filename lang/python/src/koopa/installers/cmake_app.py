@@ -27,9 +27,12 @@ def main(
     jobs = os.cpu_count() or 1
     if sys.platform != "darwin":
         jobs = 1
+    # Bootstrap is a CMake script compilation that doesn't scale well
+    # with high parallelism and can OOM on macOS with many cores.
+    bootstrap_jobs = min(jobs, 4)
     bootstrap_args = [
         f"--prefix={prefix}",
-        f"--parallel={jobs}",
+        f"--parallel={bootstrap_jobs}",
         "--",
         "-DCMAKE_USE_OPENSSL=ON",
     ]
