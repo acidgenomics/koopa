@@ -625,7 +625,7 @@ def main() -> None:
         sys.exit(130)
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
-        if getattr(args, "verbose", False):
+        if getattr(args, "verbose", False) or "--verbose" in sys.argv:
             import traceback
 
             traceback.print_exc()
