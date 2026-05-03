@@ -76,8 +76,8 @@ download_and_extract() {
     __kvar_name="${1:?}"
     __kvar_url="${2:?}"
     __kvar_dirname="${3:?}"
-    mkdir -p "${PREFIX}/src/${__kvar_name}"
-    cd "${PREFIX}/src/${__kvar_name}" || return 1
+    mkdir -p "${DESTDIR}${PREFIX}/src/${__kvar_name}"
+    cd "${DESTDIR}${PREFIX}/src/${__kvar_name}" || return 1
     curl \
         --create-dirs \
         --fail \
@@ -106,8 +106,8 @@ install_bash() {
         || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install
-    [ -x "${PREFIX}/bin/bash" ] || return 1
+    make install DESTDIR="$DESTDIR"
+    [ -x "${DESTDIR}${PREFIX}/bin/bash" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -126,8 +126,8 @@ install_coreutils() {
     fi
     ./configure --prefix="$PREFIX" --program-prefix='g'
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install
-    [ -x "${PREFIX}/bin/gcp" ] || return 1
+    make install DESTDIR="$DESTDIR"
+    [ -x "${DESTDIR}${PREFIX}/bin/gcp" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -149,8 +149,8 @@ install_openssl() {
         'shared'
     make VERBOSE=1 --jobs=1 depend
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install_sw
-    [ -x "${PREFIX}/bin/openssl" ] || return 1
+    make install_sw DESTDIR="$DESTDIR"
+    [ -x "${DESTDIR}${PREFIX}/bin/openssl" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -166,16 +166,16 @@ install_python() {
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --prefix="$PREFIX" \
-        --with-openssl="$PREFIX"
+        --with-openssl="${DESTDIR}${PREFIX}"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install
+    make install DESTDIR="$DESTDIR"
     unset -v LDLIBS
-    [ -x "${PREFIX}/bin/python3" ] || return 1
+    [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
-    "${PREFIX}/bin/python3" -c 'import hashlib'
-    "${PREFIX}/bin/python3" -c 'import lzma'
-    "${PREFIX}/bin/python3" -c 'import ssl'
-    "${PREFIX}/bin/python3" -c 'import zlib'
+    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import hashlib'
+    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import lzma'
+    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import ssl'
+    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import zlib'
     unset -v __kvar_version
     return 0
 }
@@ -190,8 +190,8 @@ install_xz() {
         || return 1
     ./configure --prefix="$PREFIX" --disable-static
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install
-    [ -x "${PREFIX}/bin/xz" ] || return 1
+    make install DESTDIR="$DESTDIR"
+    [ -x "${DESTDIR}${PREFIX}/bin/xz" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -206,8 +206,8 @@ install_zlib() {
         || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install
-    [ -f "${PREFIX}/lib/libz.a" ] || return 1
+    make install DESTDIR="$DESTDIR"
+    [ -f "${DESTDIR}${PREFIX}/lib/libz.a" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -235,25 +235,23 @@ then
 fi
 PATH="${PREFIX}/bin:/usr/bin:/bin"
 CPU_COUNT="$(cpu_count)"
-export CPU_COUNT PATH PREFIX
+DESTDIR=''
+export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
     printf 'This will install openssl3, xz, zlib, bash, python and coreutils.\n'
-    # Save old bootstrap so we can restore on failure.
-    __kvar_backup="${PREFIX}.backup.$$"
-    if [ -d "$PREFIX" ]
-    then
-        mv "$PREFIX" "$__kvar_backup"
-    fi
-    mkdir -p "$PREFIX"
+    __kvar_destdir="${PREFIX}.staging.$$"
+    rm -fr "$__kvar_destdir"
     if ! (
-        # > set -x
-        export CPPFLAGS="-I${PREFIX:?}/include"
-        export LDFLAGS="-L${PREFIX:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
-        export LIBRARY_PATH="${PREFIX:?}/lib:/usr/lib"
-        export PKG_CONFIG_PATH="${PREFIX:?}/lib/pkgconfig"
-        # > declare -x | sort
+        DESTDIR="$__kvar_destdir"
+        export DESTDIR
+        __kvar_staged="${DESTDIR}${PREFIX}"
+        mkdir -p "$__kvar_staged"
+        export CPPFLAGS="-I${__kvar_staged:?}/include"
+        export LDFLAGS="-L${__kvar_staged:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
+        export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
+        export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
         install_openssl
         install_xz
         install_zlib
@@ -262,20 +260,24 @@ main() {
         install_coreutils
     )
     then
-        printf 'Bootstrap build failed. Restoring previous bootstrap.\n' >&2
-        rm -fr "$PREFIX"
-        if [ -d "$__kvar_backup" ]
-        then
-            mv "$__kvar_backup" "$PREFIX"
-        fi
-        unset -v __kvar_backup
+        printf 'Bootstrap build failed.\n' >&2
+        rm -fr "$__kvar_destdir"
+        unset -v __kvar_destdir
         return 1
     fi
-    rm -fr "${PREFIX}/src"
-    rm -fr "$__kvar_backup"
+    __kvar_staged="${__kvar_destdir}${PREFIX}"
+    rm -fr "${__kvar_staged}/src"
+    if [ -d "$PREFIX" ]
+    then
+        rm -fr "${PREFIX}.old"
+        mv "$PREFIX" "${PREFIX}.old"
+    fi
+    mv "$__kvar_staged" "$PREFIX"
+    rm -fr "${PREFIX}.old"
+    rm -fr "$__kvar_destdir"
     printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
     printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
-    unset -v __kvar_backup
+    unset -v __kvar_destdir
     return 0
 }
 
