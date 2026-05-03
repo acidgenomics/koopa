@@ -478,6 +478,35 @@ def _handle_generate_completion() -> None:
     alert_note("Reload your shell to apply changes.")
 
 
+def _mirror_src_cache_path() -> str:
+    from koopa.xdg import xdg_cache_home
+
+    return os.path.join(xdg_cache_home(), "koopa", "mirror-src-presence.json")
+
+
+def _load_mirror_src_cache() -> dict[str, float]:
+    import json
+
+    path = _mirror_src_cache_path()
+    if not os.path.isfile(path):
+        return {}
+    try:
+        with open(path) as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_mirror_src_cache(cache: dict[str, float]) -> None:
+    import json
+
+    path = _mirror_src_cache_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(cache, f, indent=2)
+
+
 def _handle_mirror_src(args: list[str]) -> None:
     """Handle ``koopa develop mirror-src [<name>...]``.
 
@@ -485,6 +514,8 @@ def _handle_mirror_src(args: list[str]) -> None:
     s3://koopa.acidgenomics.com/src/ mirror. With no args, mirrors all
     apps with ``"mirror": true`` in app.json.
     """
+    import time
+
     from koopa.io import import_app_json
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
 
@@ -515,6 +546,9 @@ def _handle_mirror_src(args: list[str]) -> None:
             sys.exit(1)
     print(f"Mirroring {len(targets)} app(s) to S3.", file=sys.stderr)
     bucket = "koopa.acidgenomics.com"
+    cache = _load_mirror_src_cache()
+    now = time.time()
+    _cache_ttl = 86400  # 24 hours
     for name in targets:
         entry = data[name]
         version = entry.get("version", "")
@@ -524,7 +558,11 @@ def _handle_mirror_src(args: list[str]) -> None:
             continue
         url = _expand_src_url(src_url, version)
         filename = url.rsplit("/", 1)[-1]
-        key = f"src/{name}/{filename}"
+        cache_key = f"{name}/{filename}"
+        if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
+            print(f"  Already present (cached): {cache_key}", file=sys.stderr)
+            continue
+        key = f"src/{cache_key}"
         head = subprocess.run(
             [
                 aws,
@@ -541,9 +579,13 @@ def _handle_mirror_src(args: list[str]) -> None:
             check=False,
         )
         if head.returncode == 0:
-            print(f"  Already present: {name}/{filename}", file=sys.stderr)
+            cache[cache_key] = now
+            _save_mirror_src_cache(cache)
+            print(f"  Already present: {cache_key}", file=sys.stderr)
             continue
         _mirror_src_to_s3(name, version, src_url, strict=True)
+        cache[cache_key] = now
+        _save_mirror_src_cache(cache)
 
 
 def _handle_audit_src_mirror(args: list[str]) -> None:
