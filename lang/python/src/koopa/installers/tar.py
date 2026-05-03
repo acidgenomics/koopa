@@ -18,13 +18,15 @@ def main(
 ) -> None:
     """Install tar."""
     env = activate_app("make", build_only=True)
-    url = f"https://ftp.gnu.org/gnu/tar/tar-{version}.tar.gz"
+    if sys.platform == "darwin":
+        env.ldflags.append("-liconv")
+    url = f"https://ftpmirror.gnu.org/gnu/tar/tar-{version}.tar.gz"
     download_extract_cd(url)
     os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
-    conf_args = [
-        "--program-prefix=g",
-        f"--prefix={prefix}",
-    ]
-    if sys.platform == "darwin":
-        conf_args.append("LIBS=-liconv")
-    make_build(conf_args=conf_args, env=env)
+    make_build(
+        conf_args=[
+            "--program-prefix=g",
+            f"--prefix={prefix}",
+        ],
+        env=env,
+    )
