@@ -24,8 +24,8 @@ def main(
         name=name,
         version=version,
         prefix=prefix,
-        conf_args=["--disable-static"],
+        conf_args=["--disable-static", "--program-prefix=g"],
     )
     bin_dir = os.path.join(prefix, "bin")
-    ln("libtool", os.path.join(bin_dir, "glibtool"))
-    ln("libtoolize", os.path.join(bin_dir, "glibtoolize"))
+    ln("glibtool", os.path.join(bin_dir, "libtool"))
+    ln("glibtoolize", os.path.join(bin_dir, "libtoolize"))
