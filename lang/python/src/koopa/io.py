@@ -30,11 +30,8 @@ def extract_conda_bin_names(json_file: str) -> list:
     return bin_names
 
 
-def export_app_json(data: dict) -> None:
+def export_app_json(data: dict, pretty: bool = False) -> None:
     """Sort and write 'app.json' data file."""
-    from shutil import which
-    from subprocess import run
-
     sorted_data = dict(sorted(data.items()))
     for key, value in sorted_data.items():
         if isinstance(value, dict):
@@ -43,9 +40,13 @@ def export_app_json(data: dict) -> None:
     with open(file, "w", encoding="utf-8") as con:
         dump(sorted_data, con, indent=2, ensure_ascii=False)
         con.write("\n")
-    prettier = which("prettier")
-    if prettier is not None:
-        run([prettier, "--write", file], check=False)
+    if pretty:
+        from shutil import which
+        from subprocess import run
+
+        prettier = which("prettier")
+        if prettier is not None:
+            run([prettier, "--write", file], check=False)
 
 
 def import_app_json() -> dict:
