@@ -662,8 +662,13 @@ def install_gnu_app(
         if not is_valid_archive(tarball):
             raise OSError(f"Downloaded file is not a valid archive: '{tarball}'")
     except (subprocess.CalledProcessError, OSError):
-        if mirror == "https://ftpmirror.gnu.org":
-            fallback = f"https://ftp.gnu.org/gnu/{tarball_path}"
+        _mirror_fallbacks = {
+            "https://ftpmirror.gnu.org": "https://ftp.gnu.org/gnu",
+            "https://download.savannah.nongnu.org/releases": "https://download-mirror.savannah.gnu.org/releases",
+        }
+        fallback_base = _mirror_fallbacks.get(mirror)
+        if fallback_base:
+            fallback = f"{fallback_base}/{tarball_path}"
             print(
                 f"Mirror failed, retrying from '{fallback}'.",
                 file=sys.stderr,
