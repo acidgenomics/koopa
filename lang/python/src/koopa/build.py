@@ -7,6 +7,7 @@ Python equivalents of the Bash functions ``_koopa_activate_app``,
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -30,6 +31,22 @@ def _opt_prefix() -> str:
 def _app_prefix() -> str:
     """Return koopa app prefix."""
     return os.path.join(_koopa_prefix(), "app")
+
+
+def _resolve_alias(name: str) -> str:
+    """Resolve app alias via app.json (e.g. 'python' -> 'python3.14')."""
+    json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
+    try:
+        with open(json_path) as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return name
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        alias = entry.get("alias_of", "")
+        if alias:
+            return alias
+    return name
 
 
 def _cpu_count() -> int:
@@ -163,9 +180,10 @@ def activate_app(
         env = BuildEnv()
     opt = _opt_prefix()
     for name in names:
-        app_link = os.path.join(opt, name)
+        resolved = _resolve_alias(name)
+        app_link = os.path.join(opt, resolved)
         if not os.path.exists(app_link):
-            msg = f"App not installed: {name!r} (expected at {app_link})"
+            msg = f"App not installed: {resolved!r} (expected at {app_link})"
             raise FileNotFoundError(msg)
         prefix = os.path.realpath(app_link)
         bin_dir = os.path.join(prefix, "bin")
