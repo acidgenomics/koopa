@@ -199,7 +199,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "patch": f"{_M}._gnu",
     "sed": f"{_M}._gnu",
     "stow": f"{_M}._gnu",
-    "tar": f"{_M}._gnu",
+    "tar": f"{_M}.tar",
     "texinfo": f"{_M}._gnu",
     "units": f"{_M}._gnu",
     "wget": f"{_M}._gnu",
