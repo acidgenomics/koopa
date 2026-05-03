@@ -26,6 +26,7 @@ _koopa_complete() {
         ['app/aws/s3/ls']='--help --recursive --profile'
         ['app/aws/s3/mv-to-parent']='--help --dryrun --profile'
         ['app/aws/s3/sync']='--help --delete --dryrun --exclude --include --profile'
+        ['app/aws/s3/sync-git-repo']='--help --delete --dryrun --profile'
         ['app/bowtie2/align/paired-end']='--help --index-dir --fastq-dir --output-dir'
         ['app/bowtie2/index']='--help --genome-fasta-file --output-dir'
         ['app/conda/create-env']='--help --file --prefix --force --latest'
@@ -117,6 +118,7 @@ _koopa_complete() {
                         'sra'
                         'ssh'
                         'star'
+                        'sys'
                         'wget'
                     )
                     ;;
@@ -993,6 +995,9 @@ _koopa_complete() {
                                 'index'
                             )
                             ;;
+                        'sys')
+                            args+=('linker-info')
+                            ;;
                         'wget')
                             args+=('recursive')
                             ;;
@@ -1036,6 +1041,7 @@ _koopa_complete() {
                                         'ls'
                                         'mv-to-parent'
                                         'sync'
+                                        'sync-git-repo'
                                     )
                                     ;;
                             esac
