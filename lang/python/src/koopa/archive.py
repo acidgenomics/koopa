@@ -16,6 +16,26 @@ import zipfile
 from pathlib import Path
 
 
+def is_valid_archive(path: str) -> bool:
+    """Check if a file looks like a valid compressed archive via magic bytes."""
+    try:
+        with open(path, "rb") as f:
+            header = f.read(6)
+    except OSError:
+        return False
+    if len(header) < 3:
+        return False
+    if header[:2] == b"\x1f\x8b":
+        return True
+    if header[:3] == b"BZh":
+        return True
+    if header[:6] == b"\xfd7zXZ\x00":
+        return True
+    if header[:4] == b"\x28\xb5\x2f\xfd":
+        return True
+    return False
+
+
 def extract(path: str, output_dir: str | None = None) -> None:
     """Extract an archive (tar, zip, 7z).
 
@@ -89,6 +109,11 @@ def extract(path: str, output_dir: str | None = None) -> None:
 
 def _extract_to(path: str, target: str) -> None:
     """Extract archive contents into target directory."""
+    if not is_valid_archive(path) and not zipfile.is_zipfile(path):
+        name_lower = os.path.basename(path).lower()
+        if not name_lower.endswith(".7z"):
+            msg = f"Not a valid archive (corrupt or not an archive): {path}"
+            raise ValueError(msg)
     name = os.path.basename(path).lower()
     if name.endswith(
         (

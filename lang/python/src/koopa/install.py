@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from koopa.archive import extract
+from koopa.archive import extract, is_valid_archive
 from koopa.download import download
 from koopa.system import is_admin, is_linux, is_macos, is_owner
 
@@ -105,6 +105,7 @@ def _man1_prefix() -> str:
 def _cpu_count() -> int:
     """Return CPU count."""
     return os.cpu_count() or 1
+
 
 
 def _import_app_json() -> dict[str, Any]:
@@ -658,6 +659,8 @@ def install_gnu_app(
     url = f"{mirror}/{tarball_path}"
     try:
         tarball = download(url)
+        if not is_valid_archive(tarball):
+            raise OSError(f"Downloaded file is not a valid archive: '{tarball}'")
     except (subprocess.CalledProcessError, OSError):
         if mirror == "https://ftpmirror.gnu.org":
             fallback = f"https://ftp.gnu.org/gnu/{tarball_path}"
