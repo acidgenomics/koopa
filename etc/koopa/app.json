@@ -4820,9 +4820,7 @@
   "libtool": {
     "bin": [
       "glibtool",
-      "glibtoolize",
-      "libtool",
-      "libtoolize"
+      "glibtoolize"
     ],
     "build_dependencies": [
       "make"
