@@ -1450,6 +1450,8 @@ def check_app_versions(
             continue
         if info.get("removed", False):
             continue
+        if info.get("version_pin", False):
+            continue
         version = info.get("version", "")
         if not version:
             unsupported.append(VersionCheckResult(app_name, "", None, "none", "no version"))
