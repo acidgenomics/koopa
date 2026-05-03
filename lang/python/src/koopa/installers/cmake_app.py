@@ -64,9 +64,9 @@ def main(
     jobs = os.cpu_count() or 1
     if sys.platform != "darwin":
         jobs = 1
-    # Cap bootstrap parallelism to avoid OOM on macOS; bootstrap compiles
-    # cmake itself and 12+ parallel C++ jobs exhaust memory quickly.
-    bootstrap_jobs = min(jobs, 4)
+    # Bootstrap compiles cmake itself; even modest parallelism exhausts memory
+    # on macOS and triggers SIGKILL.  Run it single-threaded to be safe.
+    bootstrap_jobs = 1 if sys.platform == "darwin" else jobs
     openssl_root = app_prefix("openssl3")
     cmake_args = _cmake_std_args(
         prefix=prefix,
