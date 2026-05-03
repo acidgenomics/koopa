@@ -64,6 +64,9 @@ def main(
     jobs = os.cpu_count() or 1
     if sys.platform != "darwin":
         jobs = 1
+    # Cap bootstrap parallelism to avoid OOM on macOS; bootstrap compiles
+    # cmake itself and 12+ parallel C++ jobs exhaust memory quickly.
+    bootstrap_jobs = min(jobs, 4)
     openssl_root = app_prefix("openssl3")
     cmake_args = _cmake_std_args(
         prefix=prefix,
@@ -80,7 +83,7 @@ def main(
     bootstrap_args = [
         "--no-system-libs",
         f"--prefix={prefix}",
-        f"--parallel={jobs}",
+        f"--parallel={bootstrap_jobs}",
         "--",
         *cmake_args,
     ]
