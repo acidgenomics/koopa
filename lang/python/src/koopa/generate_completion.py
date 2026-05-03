@@ -115,6 +115,26 @@ _UPDATE_SYSTEM: list[tuple[str, str | None]] = [
     ("tex-packages", None),
 ]
 
+# Flags for top-level subcommands defined in _build_parser() — these cannot
+# be discovered via AST (they live outside handler functions) so they are
+# maintained as a static mapping.
+_MAIN_COMMAND_FLAGS: dict[str, list[str]] = {
+    "configure": ["--help", "--system", "--user", "--verbose"],
+    "install": [
+        "--help",
+        "--no-dependencies",
+        "--private",
+        "--reinstall",
+        "--system",
+        "--user",
+        "--verbose",
+    ],
+    "reinstall": ["--help", "--all-revdeps", "--no-revdeps", "--only-revdeps", "--verbose"],
+    "uninstall": ["--help", "--system", "--user", "--verbose"],
+    "update": ["--help", "--all-system", "--system", "--user", "--verbose"],
+    "develop/remove-app": ["--help", "--revdeps"],
+}
+
 
 # ---------------------------------------------------------------------------
 # Data loaders
@@ -400,6 +420,7 @@ def generate_completion() -> None:  # noqa: PLR0915
         flags = dev_handler_flags.get(dev_func, [])
         if flags:
             flag_map[f"develop/{dev_key}"] = ["--help", *flags]
+    flag_map.update(_MAIN_COMMAND_FLAGS)
 
     today = date.today().strftime("%Y-%m-%d")
     i2 = _I * 2
@@ -448,6 +469,7 @@ def generate_completion() -> None:  # noqa: PLR0915
                 "install",
                 "install-all-apps",
                 "install-default-apps",
+                "internal",
                 "list-all-apps",
                 "list-default-apps",
                 "reinstall",
@@ -521,7 +543,7 @@ def generate_completion() -> None:  # noqa: PLR0915
     install_body.append(f"{i6}{_I}args+=('private' 'system' 'user')")
     install_body.append(f"{i6}{_I};;")
     install_body.append(f"{i6}'reinstall')")
-    install_body.append(f"{i6}{_I}args+=('--all-revdeps' '--only-revdeps')")
+    install_body.append(f"{i6}{_I}args+=('--all-revdeps' '--no-revdeps' '--only-revdeps')")
     install_body.append(f"{i6}{_I};;")
     install_body.append(f"{i5}esac")
     lines.extend(
