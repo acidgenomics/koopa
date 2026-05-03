@@ -1643,7 +1643,9 @@ def _expand_src_url(template: str, version: str) -> str:
     )
 
 
-def _mirror_src_to_s3(name: str, version: str, src_url_template: str) -> None:
+def _mirror_src_to_s3(
+    name: str, version: str, src_url_template: str, *, strict: bool = False
+) -> None:
     """Download source tarball and upload to s3://koopa.acidgenomics.com/src/."""
     import tempfile
 
@@ -1657,6 +1659,8 @@ def _mirror_src_to_s3(name: str, version: str, src_url_template: str) -> None:
         try:
             download(url, local, retry=False)
         except Exception as exc:
+            if strict:
+                raise RuntimeError(f"Download failed for '{name}': {exc}") from exc
             print(f"  Mirror upload skipped for '{name}': download failed: {exc}", file=sys.stderr)
             return
         result = subprocess.run(
@@ -1667,7 +1671,10 @@ def _mirror_src_to_s3(name: str, version: str, src_url_template: str) -> None:
         if result.returncode == 0:
             print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
         else:
-            print(f"  Mirror upload failed for '{name}': {result.stderr.strip()}", file=sys.stderr)
+            msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
+            if strict:
+                raise RuntimeError(msg)
+            print(f"  {msg}", file=sys.stderr)
 
 
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:

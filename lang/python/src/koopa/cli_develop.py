@@ -486,13 +486,17 @@ def _handle_mirror_src(args: list[str]) -> None:
     apps with ``"mirror": true`` in app.json.
     """
     from koopa.io import import_app_json
-    from koopa.version_check import _has_acidgenomics_aws, _mirror_src_to_s3
+    from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
 
     if not _has_acidgenomics_aws():
         print(
             "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
             file=sys.stderr,
         )
+        sys.exit(1)
+    aws = shutil.which("aws")
+    if aws is None:
+        print("Error: aws CLI is not installed.", file=sys.stderr)
         sys.exit(1)
     data = import_app_json()
     if args:
@@ -510,6 +514,7 @@ def _handle_mirror_src(args: list[str]) -> None:
             print("Error: No apps with 'mirror: true' found in app.json.", file=sys.stderr)
             sys.exit(1)
     print(f"Mirroring {len(targets)} app(s) to S3.", file=sys.stderr)
+    bucket = "koopa.acidgenomics.com"
     for name in targets:
         entry = data[name]
         version = entry.get("version", "")
@@ -517,7 +522,28 @@ def _handle_mirror_src(args: list[str]) -> None:
         if not version or not src_url:
             print(f"  Skipping '{name}': missing version or src_url.", file=sys.stderr)
             continue
-        _mirror_src_to_s3(name, version, src_url)
+        url = _expand_src_url(src_url, version)
+        filename = url.rsplit("/", 1)[-1]
+        key = f"src/{name}/{filename}"
+        head = subprocess.run(
+            [
+                aws,
+                "s3api",
+                "head-object",
+                "--bucket",
+                bucket,
+                "--key",
+                key,
+                "--profile",
+                "acidgenomics",
+            ],
+            capture_output=True,
+            check=False,
+        )
+        if head.returncode == 0:
+            print(f"  Already present: {name}/{filename}", file=sys.stderr)
+            continue
+        _mirror_src_to_s3(name, version, src_url, strict=True)
 
 
 def _handle_audit_src_mirror(args: list[str]) -> None:
