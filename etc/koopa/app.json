@@ -19,6 +19,7 @@
     "dependencies": [
       "perl"
     ],
+    "description": "grep-like text finder optimized for source code",
     "installer": "perl-package",
     "installer_args": {
       "cpan_path": "PETDANCE/ack"
@@ -44,6 +45,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "toolkit for working with GFF/GTF annotation files",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -61,6 +63,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "R code formatter",
     "prune": true,
     "url": [
       "https://posit-dev.github.io/air/",
@@ -71,6 +74,7 @@
   "anaconda": {
     "date": "2026-02-22",
     "default": false,
+    "description": "full Anaconda Python distribution",
     "prune": true,
     "url": [
       "https://repo.anaconda.com/archive/"
@@ -86,6 +90,7 @@
     "dependencies": [
       "python3.13"
     ],
+    "description": "workflow orchestration platform",
     "installer": "python-package",
     "installer_args": {
       "egg_name": "apache_airflow_core",
@@ -112,6 +117,7 @@
       "boost",
       "openssl"
     ],
+    "description": "cross-language columnar in-memory data format",
     "prune": false,
     "url": [
       "https://arrow.apache.org/"
@@ -130,6 +136,7 @@
       "r",
       "temurin"
     ],
+    "description": "distributed large-scale data processing engine",
     "prune": true,
     "url": [
       "https://spark.apache.org/"
@@ -144,6 +151,7 @@
     ],
     "date": "2025-12-05",
     "default": false,
+    "description": "container runtime for HPC environments",
     "installer_platform": "linux",
     "prune": true,
     "supported": {
@@ -164,6 +172,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Apache Portable Runtime library",
     "prune": false,
     "url": [
       "https://apr.apache.org/"
@@ -182,6 +191,7 @@
       "expat",
       "openssl"
     ],
+    "description": "Apache Portable Runtime utility library",
     "prune": false,
     "url": [
       "https://apr.apache.org/"
@@ -206,6 +216,7 @@
       "sqlite",
       "zlib"
     ],
+    "description": "lightweight multi-protocol download utility",
     "prune": true,
     "url": [
       "https://github.com/aria2/aria2/"
@@ -223,6 +234,7 @@
       "hdf5",
       "zlib"
     ],
+    "description": "C++ linear algebra library",
     "prune": false,
     "url": [
       "http://arma.sourceforge.net/download.html"
@@ -235,6 +247,7 @@
     ],
     "date": "2026-04-29",
     "default": false,
+    "description": "multi-language runtime version manager",
     "prune": false,
     "url": [
       "https://github.com/asdf-vm/asdf/"
@@ -250,6 +263,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "spell checker",
     "installer": "gnu-app",
     "man1": [
       "aspell.1"
@@ -266,6 +280,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "high-speed file transfer client by IBM",
     "installer_platform": "linux",
     "notes": [
       "IBM deletes old source versions."
@@ -290,6 +305,7 @@
     ],
     "date": "2024-12-24",
     "default": false,
+    "description": "utilities for managing extended filesystem attributes",
     "installer": "gnu-app",
     "installer_args": {
       "non_gnu_mirror": "true"
@@ -326,6 +342,7 @@
     "dependencies": [
       "m4"
     ],
+    "description": "generates configure scripts for build systems",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -342,6 +359,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "molecular docking software",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -359,6 +377,7 @@
   "autodock-adfr": {
     "date": "2023-10-16",
     "default": false,
+    "description": "AutoDock Flexible Receptor docking suite",
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -380,6 +399,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast molecular docking software",
     "installer": "conda-package",
     "installer_args": {
       "name": "vina"
@@ -407,6 +427,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "removes unused imports from Python files",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -431,6 +452,7 @@
     "dependencies": [
       "autoconf"
     ],
+    "description": "generates Makefiles from simple descriptions",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -448,6 +470,7 @@
       "aws-cli",
       "node"
     ],
+    "description": "authenticates to AWS via Azure Active Directory",
     "installer": "node-package",
     "prune": true,
     "url": [
@@ -464,6 +487,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
     "installer_args": {
       "name": "awscli"
@@ -478,6 +502,7 @@
   "aws-mountpoint-s3": {
     "date": "2026-05-02",
     "default": false,
+    "description": "mount S3 buckets as local filesystems",
     "installer_platform": "debian",
     "supported": {
       "linux-amd64": true,
@@ -507,6 +532,7 @@
       "gettext",
       "openssl"
     ],
+    "description": "lightweight command-line download accelerator",
     "man1": [
       "axel.1"
     ],
@@ -526,6 +552,7 @@
     "dependencies": [
       "python3.13"
     ],
+    "description": "official Microsoft Azure command-line interface",
     "installer": "python-package",
     "installer_args": {
       "python_version": "3.13"
@@ -546,6 +573,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "C++ API and toolkit for working with BAM files",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -569,6 +597,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "security linting tool for Python code",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -586,6 +615,7 @@
     ],
     "date": "2024-10-14",
     "default": false,
+    "description": "terminal bandwidth utilization tool",
     "installer": "rust-package",
     "prune": true,
     "url": [
@@ -603,6 +633,7 @@
     ],
     "date": "2025-08-21",
     "default": true,
+    "description": "GNU Bourne Again Shell",
     "man1": [
       "bash.1"
     ],
@@ -623,6 +654,7 @@
     "dependencies": [
       "bash"
     ],
+    "description": "programmable completion functions for bash",
     "prune": true,
     "url": [
       "https://github.com/scop/bash-completion"
@@ -638,6 +670,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "LSP server for bash scripts",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -655,6 +688,7 @@
     "dependencies": [
       "ruby"
     ],
+    "description": "code coverage tool for bash scripts",
     "installer": "ruby-package",
     "prune": true,
     "url": [
@@ -672,6 +706,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "cat clone with syntax highlighting and Git integration",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -692,6 +727,7 @@
     "dependencies": [
       "ed"
     ],
+    "description": "arbitrary-precision numeric processing language",
     "installer": "gnu-app",
     "man1": [
       "bc.1"
@@ -707,6 +743,7 @@
       "bcbio_nextgen.py"
     ],
     "date": "2024-09-27",
+    "description": "validated, scalable variant and RNA-seq analysis pipeline",
     "removed": true,
     "url": [
       "https://github.com/bcbio/bcbio-nextgen/"
@@ -729,6 +766,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "Illumina BCL to FASTQ conversion software",
     "install_note": "Installation requires agreement to terms of service at: https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html",
     "installer_platform": "linux",
     "private": true,
@@ -769,6 +807,7 @@
         "conda"
       ]
     },
+    "description": "swiss-army knife for genome interval arithmetic",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -793,6 +832,7 @@
     "dependencies": [
       "temurin"
     ],
+    "description": "removes large files and secrets from Git history",
     "prune": true,
     "url": [
       "https://rtyley.github.io/bfg-repo-cleaner/"
@@ -810,6 +850,7 @@
       "texinfo",
       "zlib"
     ],
+    "description": "GNU binary file utilities (ld, as, objdump, etc.)",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -826,6 +867,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "awk extended with bioinformatics-aware field parsing",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -846,6 +888,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "helper tools for building Bioconda packages",
     "installer": "conda-package",
     "notes": [
       "This is hanging on macOS currently."
@@ -873,6 +916,7 @@
     "dependencies": [
       "m4"
     ],
+    "description": "GNU parser generator (YACC-compatible)",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -891,6 +935,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "opinionated Python code formatter",
     "installer": "python-package",
     "installer_args": {
       "pip_name": "black[d]"
@@ -912,6 +957,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "NCBI sequence similarity search tool",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -936,6 +982,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "peer-reviewed portable C++ libraries",
     "prune": false,
     "url": [
       "https://www.boost.org/",
@@ -952,6 +999,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "cross-platform graphical process and system monitor",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -968,6 +1016,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast short-read aligner for long reference sequences",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -991,6 +1040,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "resource monitor with a stylish terminal UI",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -1008,6 +1058,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -1026,6 +1077,7 @@
     ],
     "date": "2025-10-28",
     "default": false,
+    "description": "lossless compression algorithm and library by Google",
     "prune": false,
     "url": [
       "https://github.com/google/brotli/"
@@ -1041,6 +1093,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "resource monitor showing CPU, memory, disks, and network",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -1057,6 +1110,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "version bumping tool for Python projects",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -1074,6 +1128,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "utilities for processing BUS format single-cell data",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -1128,6 +1183,7 @@
       "gettext",
       "tmux"
     ],
+    "description": "text-based window manager and terminal multiplexer",
     "man1": [
       "byobu-config.1",
       "byobu-ctrl-a.1",
@@ -1184,6 +1240,7 @@
     ],
     "date": "2022-09-26",
     "default": true,
+    "description": "high-quality block-sorting file compressor",
     "man1": [
       "bzcmp.1",
       "bzdiff.1",
@@ -1207,6 +1264,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "asynchronous DNS resolver library",
     "prune": false,
     "url": [
       "https://c-ares.org/"
@@ -1216,6 +1274,7 @@
   "ca-certificates": {
     "date": "2026-04-15",
     "default": false,
+    "description": "Mozilla CA certificate bundle",
     "prune": false,
     "url": [
       "https://curl.se/docs/caextract.html"
@@ -1253,6 +1312,7 @@
       "xorg-xorgproto",
       "zlib"
     ],
+    "description": "2D graphics library with multiple output targets",
     "prune": false,
     "url": [
       "https://www.cairographics.org/releases/?C=M;O=D",
@@ -1267,6 +1327,7 @@
     ],
     "date": "2025-12-11",
     "default": false,
+    "description": "10x Genomics single-cell RNA-seq pipeline",
     "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
     "installer_platform": "linux",
     "outdated": true,
@@ -1289,6 +1350,7 @@
       "make"
     ],
     "default": false,
+    "description": "C++11 header-only serialization library",
     "prune": false,
     "url": [
       "https://uscilab.github.io/cereal/",
@@ -1305,6 +1367,7 @@
     ],
     "date": "2026-02-16",
     "default": false,
+    "description": "interactive cheatsheet tool for the command line",
     "prune": true,
     "url": [
       "https://github.com/cheat/cheat/"
@@ -1313,6 +1376,7 @@
   },
   "chemacs": {
     "date": "2023-09-13",
+    "description": "Emacs profile switcher",
     "removed": true
   },
   "chezmoi": {
@@ -1333,6 +1397,7 @@
         "conda"
       ]
     },
+    "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -1350,6 +1415,7 @@
     "dependencies": [
       "node"
     ],
+    "description": "Anthropic Claude AI coding assistant CLI",
     "installer": "node-package",
     "installer_args": {
       "name": "@anthropic-ai/claude-code"
@@ -1367,6 +1433,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "command-line argument parser library for C++11",
     "prune": false,
     "url": [
       "https://github.com/CLIUtils/CLI11/"
@@ -1376,6 +1443,7 @@
   "cloudbiolinux": {
     "date": "2023-12-22",
     "default": false,
+    "description": "automated bioinformatics environment setup",
     "installer_platform": "linux",
     "prune": true,
     "supported": {
@@ -1403,6 +1471,7 @@
     "dependencies": [
       "openssl3"
     ],
+    "description": "cross-platform build system generator",
     "prune": false,
     "revision": 2,
     "url": [
@@ -1419,6 +1488,7 @@
     "dependencies": [
       "ruby"
     ],
+    "description": "colorized ls replacement written in Ruby",
     "installer": "ruby-package",
     "prune": true,
     "url": [
@@ -1437,6 +1507,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "conventional commit message tooling for Python projects",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -1452,6 +1523,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "cross-platform package and environment manager",
     "prune": false,
     "supported": {
       "linux-amd64": true,
@@ -1473,6 +1545,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "converts filenames between character encodings",
     "mirror": true,
     "prune": true,
     "src_url": "https://www.j3e.de/linux/convmv/convmv-{version}.tar.gz",
@@ -1602,6 +1675,7 @@
         "gmp"
       ]
     },
+    "description": "GNU file, text, and shell utilities",
     "installer": "gnu-app",
     "installer_args": {
       "program_prefix": "g"
@@ -1725,6 +1799,7 @@
     ],
     "date": "2025-11-03",
     "default": false,
+    "description": "simple CPU microarchitecture information tool",
     "man1": [
       "cpufetch.1"
     ],
@@ -1756,6 +1831,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "suite of command-line tools for working with CSV files",
     "homebrew": true,
     "installer": "python-package",
     "prune": true,
@@ -1774,6 +1850,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "cross-platform CSV/TSV toolkit",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -1798,6 +1875,7 @@
       "openssl",
       "zlib"
     ],
+    "description": "command-line tool for transferring data with URLs",
     "man1": [
       "curl.1",
       "curl-config.1"
@@ -1823,6 +1901,7 @@
     "dependencies": [
       "libedit"
     ],
+    "description": "POSIX-compliant shell, faster and lighter than bash",
     "man1": [
       "dash.1"
     ],
@@ -1844,6 +1923,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "command-line interface for Databricks",
     "prune": true,
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
@@ -1859,6 +1939,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "tools for analysis of deep-sequencing data",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -1884,6 +1965,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "syntax-highlighting pager for git and diff output",
     "installer": "conda-package",
     "installer_args": {
       "name": "git-delta"
@@ -1900,6 +1982,7 @@
     ],
     "date": "2026-04-15",
     "default": true,
+    "description": "human-readable diff output for git",
     "prune": true,
     "url": [
       "https://github.com/so-fancy/diff-so-fancy/"
@@ -1915,6 +1998,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "structural diff tool that understands syntax",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -1937,6 +2021,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "loads and unloads environment variables per directory",
     "installer": "conda-package",
     "prune": false,
     "url": [
@@ -1952,6 +2037,7 @@
     ],
     "date": "2026-04-22",
     "default": false,
+    "description": "credential helpers for Docker",
     "prune": true,
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
@@ -1964,6 +2050,7 @@
     "dependencies": [
       "emacs"
     ],
+    "description": "opinionated Emacs configuration framework",
     "prune": true,
     "url": [
       "https://github.com/doomemacs/doomemacs/"
@@ -1977,6 +2064,7 @@
     "dependencies": [
       "chezmoi"
     ],
+    "description": "acidgenomics personal dotfiles managed with chezmoi",
     "prune": true,
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
@@ -1992,6 +2080,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "more intuitive disk usage tool (du + rust = dust)",
     "installer": "conda-package",
     "installer_args": {
       "name": "dust"
@@ -2014,6 +2103,7 @@
     ],
     "date": "2026-04-15",
     "default": false,
+    "description": "in-process analytical SQL database",
     "prune": true,
     "url": [
       "https://duckdb.org/",
@@ -2033,6 +2123,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "classic line-oriented text editor",
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "lz"
@@ -2061,6 +2152,7 @@
     "dependencies": [
       "pcre2"
     ],
+    "description": "maintain consistent coding styles across editors",
     "notes": [
       "0.12.10 has build error on Ubuntu 22."
     ],
@@ -2084,6 +2176,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "utilities for ELF files and DWARF debug information",
     "installer_platform": "linux",
     "prune": false,
     "supported": {
@@ -2106,6 +2199,7 @@
     ],
     "date": "2026-04-13",
     "default": false,
+    "description": "expressive shell with structured data pipelines",
     "prune": true,
     "url": [
       "https://elv.sh/",
@@ -2136,6 +2230,7 @@
       "nettle",
       "texinfo"
     ],
+    "description": "extensible, customizable GNU text editor",
     "installer": "gnu-app",
     "man1": [
       "ebrowse.1.gz",
@@ -2152,6 +2247,7 @@
   "ensembl-perl-api": {
     "date": "2026-05-02",
     "default": false,
+    "description": "Perl API for Ensembl genomics databases",
     "prune": true,
     "url": [
       "https://useast.ensembl.org/info/docs/api/api_installation.html"
@@ -2168,6 +2264,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "NCBI E-utilities command-line tools",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -2187,6 +2284,7 @@
       "exa"
     ],
     "date": "2023-09-07",
+    "description": "modern ls replacement with color and Git support (deprecated; use eza)",
     "removed": true,
     "url": [
       "https://github.com/ogham/exa/"
@@ -2212,6 +2310,7 @@
     "dependencies": [
       "perl"
     ],
+    "description": "read and write metadata in image and media files",
     "installer": "perl-package",
     "installer_args": {
       "cpan_path": "EXIFTOOL/Image-ExifTool"
@@ -2235,6 +2334,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "fast stream-oriented XML parser library",
     "prune": false,
     "url": [
       "https://libexpat.github.io/"
@@ -2250,6 +2350,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "modern ls replacement with color, icons, and Git support",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -2268,6 +2369,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "quality control analysis for high-throughput sequencing data",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -2291,6 +2393,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "simple, fast alternative to the find command",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -2308,6 +2411,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "record, convert, and stream audio and video",
     "installer": "conda-package",
     "man1": [
       "ffmpeg.1",
@@ -2329,6 +2433,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "retrieve metadata from sequencing data repositories",
     "installer": "conda-package",
     "supported": {
       "linux-amd64": true,
@@ -2348,6 +2453,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "tools for working with genomic and sequencing data",
     "installer": "conda-package",
     "url": [
       "https://bioconda.github.io/recipes/fgbio/README.html"
@@ -2366,6 +2472,7 @@
     ],
     "date": "2024-12-24",
     "default": true,
+    "description": "GNU find, locate, updatedb, and xargs utilities",
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "xz",
@@ -2392,6 +2499,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "friendly interactive shell",
     "installer": "conda-package",
     "man1": [
       "fish.1"
@@ -2412,6 +2520,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "free lossless audio codec",
     "man1": [
       "flac.1"
     ],
@@ -2429,6 +2538,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python style guide enforcement and linting tool",
     "installer": "python-package",
     "url": [
       "https://pypi.org/project/flake8/",
@@ -2448,6 +2558,7 @@
       "gettext",
       "m4"
     ],
+    "description": "fast lexical analyzer generator",
     "prune": false,
     "url": [
       "https://github.com/westes/flex/"
@@ -2474,6 +2585,7 @@
       "xorg-xtrans",
       "zlib"
     ],
+    "description": "cross-platform C++ GUI toolkit",
     "prune": false,
     "url": [
       "https://www.fltk.org/"
@@ -2487,6 +2599,7 @@
     ],
     "date": "2025-10-31",
     "default": false,
+    "description": "modern C++ formatting library",
     "prune": false,
     "url": [
       "https://fmt.dev/",
@@ -2506,6 +2619,7 @@
       "freetype",
       "libxml2"
     ],
+    "description": "font configuration and customization library",
     "prune": false,
     "url": [
       "https://www.freedesktop.org/wiki/Software/fontconfig/"
@@ -2521,6 +2635,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "bioformat-aware FASTQ file toolkit",
     "installer": "conda-package",
     "supported": {
       "linux-amd64": true,
@@ -2543,6 +2658,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "full-featured FASTQ toolkit for genomics",
     "installer": "conda-package",
     "supported": {
       "linux-amd64": true,
@@ -2563,6 +2679,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "font rendering library",
     "prune": false,
     "url": [
       "https://www.freetype.org/"
@@ -2576,6 +2693,7 @@
     ],
     "date": "2024-09-27",
     "default": false,
+    "description": "implementation of the Unicode Bidirectional Algorithm",
     "prune": false,
     "url": [
       "https://github.com/fribidi/fribidi/"
@@ -2591,6 +2709,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "command-line fuzzy finder",
     "installer": "conda-package",
     "man1": [
       "fzf.1"
@@ -2609,6 +2728,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "GATK variant discovery toolkit from Broad Institute",
     "installer": "conda-package",
     "installer_args": {
       "name": "gatk4"
@@ -2641,6 +2761,7 @@
       "mpfr",
       "readline"
     ],
+    "description": "GNU implementation of the awk programming language",
     "installer": "gnu-app",
     "installer_args": {
       "disable_pma": ""
@@ -2669,6 +2790,7 @@
       "mpc",
       "mpfr"
     ],
+    "description": "GNU Compiler Collection (C, C++, Fortran, and more)",
     "installer_platform": "linux",
     "prune": false,
     "supported": {
@@ -2717,6 +2839,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "geospatial data abstraction library",
     "man1": [
       "gdal-config.1"
     ],
@@ -2735,6 +2858,7 @@
     "dependencies": [
       "readline"
     ],
+    "description": "GNU dbm key-value database library",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -2751,6 +2875,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "NCI Genomic Data Commons data transfer tool",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -2769,6 +2894,7 @@
     "dependencies": [
       "node"
     ],
+    "description": "Google Gemini AI assistant CLI",
     "installer": "node-package",
     "installer_args": {
       "name": "@google/gemini-cli"
@@ -2789,6 +2915,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "download and manage genomic sequences and annotation",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -2806,6 +2933,7 @@
     "dependencies": [
       "python3.10"
     ],
+    "description": "open-source genetics evidence platform",
     "installer": "python-package",
     "installer_args": {
       "python_version": "3.10"
@@ -2828,6 +2956,7 @@
     ],
     "date": "2025-10-28",
     "default": false,
+    "description": "geometry engine for geographic information systems",
     "prune": false,
     "url": [
       "https://github.com/libgeos/geos/"
@@ -2849,6 +2978,7 @@
       "libxml2",
       "ncurses"
     ],
+    "description": "GNU internationalization and localization tools",
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "xz"
@@ -2869,6 +2999,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "Python interface for working with GFF and GTF files",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -2892,6 +3023,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "efficient querying of genomic databases",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -2916,6 +3048,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "official GitHub command-line interface",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -2933,6 +3066,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "PostScript and PDF interpreter",
     "man1": [
       "gs.1"
     ],
@@ -2973,6 +3107,7 @@
       "vim",
       "zlib"
     ],
+    "description": "distributed version control system",
     "prune": false,
     "url": [
       "https://git-scm.com/"
@@ -2988,6 +3123,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "fast and flexible rewriting of Git history",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -3005,6 +3141,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Git extension for versioning large files",
     "prune": true,
     "url": [
       "https://git-lfs.github.com/"
@@ -3020,6 +3157,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "blazing fast terminal UI for Git",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -3038,6 +3176,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "cross-platform system monitoring tool",
     "installer": "python-package",
     "installer_args": {
       "egg_name": "Glances"
@@ -3064,6 +3203,7 @@
       "pcre2",
       "zlib"
     ],
+    "description": "low-level core library for GNOME",
     "prune": false,
     "url": [
       "https://docs.gtk.org/glib/",
@@ -3081,6 +3221,7 @@
     "dependencies": [
       "m4"
     ],
+    "description": "GNU multiple precision arithmetic library",
     "mirror": true,
     "prune": false,
     "src_url": "https://gmplib.org/download/gmp/gmp-{version}.tar.xz",
@@ -3114,6 +3255,7 @@
       "sqlite",
       "zlib"
     ],
+    "description": "GNU Privacy Guard for encryption and signing",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -3133,6 +3275,7 @@
       "libunistring",
       "nettle"
     ],
+    "description": "secure communications library implementing TLS and SSL",
     "prune": false,
     "url": [
       "https://www.gnutls.org/"
@@ -3145,6 +3288,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Go programming language toolchain",
     "prune": true,
     "url": [
       "https://golang.org/dl/"
@@ -3161,6 +3305,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
     "prune": true,
     "python_version_pin": true,
@@ -3176,6 +3321,7 @@
     ],
     "date": "2025-05-01",
     "default": false,
+    "description": "Google C++ testing and mocking framework",
     "prune": true,
     "url": [
       "https://github.com/google/googletest/"
@@ -3188,6 +3334,7 @@
     ],
     "date": "2026-02-07",
     "default": false,
+    "description": "perfect hash function generator",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -3206,6 +3353,7 @@
     "dependencies": [
       "expat"
     ],
+    "description": "graph visualization software",
     "prune": false,
     "url": [
       "https://www.graphviz.org/download/source/",
@@ -3227,6 +3375,7 @@
     "dependencies": [
       "pcre2"
     ],
+    "description": "GNU pattern-matching text search utility",
     "installer": "gnu-app",
     "installer_args": {
       "disable_dependency_tracking": "",
@@ -3252,6 +3401,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "generate regular expressions from example test cases",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -3275,6 +3425,7 @@
       "m4",
       "perl"
     ],
+    "description": "GNU document formatting system",
     "installer": "gnu-app",
     "man1": [
       "groff.1"
@@ -3297,6 +3448,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "gene set enrichment analysis in Python",
     "prune": true,
     "url": [
       "https://gseapy.readthedocs.io/",
@@ -3311,6 +3463,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "GNU Scientific Library for numerical computation",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -3328,6 +3481,7 @@
     "dependencies": [
       "node"
     ],
+    "description": "graphical process viewer in the terminal",
     "installer": "node-package",
     "prune": true,
     "url": [
@@ -3345,6 +3499,7 @@
     ],
     "date": "2025-10-08",
     "default": false,
+    "description": "tool for building charming interactive shell scripts",
     "man1": [
       "gum.1"
     ],
@@ -3378,6 +3533,7 @@
     "dependencies": [
       "less"
     ],
+    "description": "GNU file compression and decompression utility",
     "installer": "gnu-app",
     "man1": [
       "gunzip.1",
@@ -3411,6 +3567,7 @@
     ],
     "date": "2025-10-08",
     "default": false,
+    "description": "Dockerfile linter that enforces best practices",
     "installer": "haskell-package",
     "prune": true,
     "supported": {
@@ -3442,6 +3599,7 @@
       "pcre2",
       "zlib"
     ],
+    "description": "text shaping engine",
     "prune": false,
     "url": [
       "https://github.com/harfbuzz/harfbuzz/"
@@ -3457,6 +3615,7 @@
     ],
     "date": "2026-01-09",
     "default": false,
+    "description": "Haskell package and build manager",
     "prune": true,
     "url": [
       "https://www.haskell.org/cabal/download.html"
@@ -3472,6 +3631,7 @@
     ],
     "date": "2025-05-22",
     "default": false,
+    "description": "Haskell toolchain installer",
     "prune": true,
     "url": [
       "https://www.haskell.org/ghcup/",
@@ -3485,6 +3645,7 @@
     ],
     "date": "2026-02-22",
     "default": false,
+    "description": "cross-platform Haskell build tool",
     "prune": true,
     "url": [
       "https://haskellstack.org/",
@@ -3521,6 +3682,7 @@
       "libaec",
       "zlib"
     ],
+    "description": "library for the HDF5 hierarchical data format",
     "prune": false,
     "url": [
       "https://www.hdfgroup.org/downloads/hdf5/",
@@ -3537,6 +3699,7 @@
     ],
     "date": "2026-02-16",
     "default": false,
+    "description": "command-line hex viewer with color output",
     "installer": "rust-package",
     "notes": [
       "Currently outdated on conda."
@@ -3556,6 +3719,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "graph-based aligner for spliced RNA-seq reads",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -3584,6 +3748,7 @@
     "dependencies": [
       "ncurses"
     ],
+    "description": "interactive process viewer",
     "man1": [
       "htop.1"
     ],
@@ -3603,6 +3768,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "Python framework for processing NGS data",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -3637,6 +3803,7 @@
       "xz",
       "zlib"
     ],
+    "description": "C library for high-throughput sequencing data formats",
     "man1": [
       "bgzip.1",
       "htsfile.1",
@@ -3659,6 +3826,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "user-friendly command-line HTTP client",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -3677,6 +3845,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "fully featured HTTP client library for Python",
     "installer": "python-package",
     "installer_args": {
       "pip_name": "httpx[cli]"
@@ -3698,6 +3867,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "client library for the Hugging Face Hub",
     "installer": "python-package",
     "installer_args": {
       "egg_name": "huggingface_hub",
@@ -3719,6 +3889,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "fast static site generator written in Go",
     "notes": [
       "Bump on minor release update only."
     ],
@@ -3738,6 +3909,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "command-line benchmarking tool",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -3766,6 +3938,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "International Components for Unicode C and C++ libraries",
     "man1": [
       "derb.1",
       "genbrk.1",
@@ -3797,6 +3970,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "command-line interface for Illumina Connected Analytics",
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -3851,6 +4025,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "create, edit, compose, and convert images",
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -3876,6 +4051,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "enhanced interactive Python shell",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -3894,6 +4070,7 @@
     "dependencies": [
       "gmp"
     ],
+    "description": "integer set library for polyhedral compilation",
     "mirror": true,
     "prune": false,
     "src_url": "https://downloads.sourceforge.net/project/libisl/isl-{version}.tar.xz",
@@ -3911,6 +4088,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "sort Python imports automatically",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -3926,6 +4104,7 @@
     ],
     "date": "2026-04-15",
     "default": false,
+    "description": "general-purpose malloc implementation with profiling support",
     "prune": false,
     "url": [
       "http://jemalloc.net/",
@@ -3939,6 +4118,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "JFrog platform command-line interface",
     "prune": true,
     "url": [
       "https://github.com/jfrog/jfrog-cli",
@@ -3961,6 +4141,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "description": "command-line JSON viewer and pager",
     "installer": "rust-package",
     "notes": [
       "Available on conda only for amd64."
@@ -3979,6 +4160,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "IJG JPEG image compression library",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.ijg.org/files/jpegsrc.v{version}.tar.gz",
@@ -3996,6 +4178,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "lightweight command-line JSON processor",
     "installer": "conda-package",
     "man1": [
       "jq.1"
@@ -4012,6 +4195,7 @@
     ],
     "date": "2026-04-15",
     "default": false,
+    "description": "high-performance dynamic programming language",
     "prune": true,
     "url": [
       "https://anaconda.org/conda-forge/julia",
@@ -4029,6 +4213,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "web-based interactive development environment for notebooks",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -4046,6 +4231,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "terminal UI for managing Kubernetes clusters",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -4063,6 +4249,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast RNA-seq quantification via pseudoalignment",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -4085,6 +4272,7 @@
       "libedit",
       "openssl"
     ],
+    "description": "MIT Kerberos 5 authentication system",
     "mirror": true,
     "prune": false,
     "src_url": "https://kerberos.org/dist/krb5/{major}.{minor}/krb5-{version}.tar.gz",
@@ -4102,6 +4290,7 @@
     ],
     "date": "2024-08-19",
     "default": false,
+    "description": "KornShell 93 POSIX-compatible shell",
     "man1": [
       "ksh.1"
     ],
@@ -4120,6 +4309,7 @@
     ],
     "date": "2022-08-30",
     "default": false,
+    "description": "LAME MP3 encoder",
     "man1": [
       "lame.1"
     ],
@@ -4136,6 +4326,7 @@
     ],
     "date": "2025-01-08",
     "default": false,
+    "description": "linear algebra package for numerical computation",
     "notes": [
       "LAPACK is written in Fortran, which is why we require system gfortran."
     ],
@@ -4154,6 +4345,7 @@
     "dependencies": [
       "python3.13"
     ],
+    "description": "bioinformatics platform SDK and CLI",
     "installer": "python-package",
     "installer_args": {
       "python_version": "3.12"
@@ -4175,6 +4367,7 @@
     ],
     "date": "2026-03-19",
     "default": false,
+    "description": "LLVM-based D programming language compiler",
     "prune": true,
     "url": [
       "https://wiki.dlang.org/LDC",
@@ -4191,6 +4384,7 @@
     "dependencies": [
       "openssl"
     ],
+    "description": "library for DNS programming",
     "mirror": true,
     "prune": true,
     "src_url": "https://nlnetlabs.nl/downloads/ldns/ldns-{version}.tar.gz",
@@ -4214,6 +4408,7 @@
       "ncurses",
       "pcre2"
     ],
+    "description": "terminal pager with backward navigation",
     "man1": [
       "less.1"
     ],
@@ -4235,6 +4430,7 @@
     ],
     "date": "2026-04-29",
     "default": true,
+    "description": "preprocessor for less to display non-text files",
     "prune": true,
     "url": [
       "https://github.com/wofr06/lesspipe/"
@@ -4248,6 +4444,7 @@
     ],
     "date": "2026-03-19",
     "default": false,
+    "description": "adaptive entropy coding library",
     "prune": false,
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
@@ -4270,6 +4467,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "library for reading and writing archive files",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.libarchive.org/downloads/libarchive-{version}.tar.xz",
@@ -4288,6 +4486,7 @@
     "dependencies": [
       "libgpg-error"
     ],
+    "description": "IPC library used by GnuPG",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -4301,6 +4500,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "C implementation of the CBOR serialization format",
     "prune": false,
     "url": [
       "https://github.com/PJK/libcbor/"
@@ -4313,6 +4513,7 @@
     ],
     "date": "2026-01-02",
     "default": false,
+    "description": "C and C++ library for processing configuration files",
     "prune": false,
     "url": [
       "https://hyperrealm.github.io/libconfig/",
@@ -4326,6 +4527,7 @@
     ],
     "date": "2026-03-19",
     "default": false,
+    "description": "open H.265/HEVC video codec implementation",
     "prune": false,
     "url": [
       "https://github.com/strukturag/libde265/"
@@ -4338,6 +4540,7 @@
     ],
     "date": "2025-11-03",
     "default": false,
+    "description": "fast DEFLATE, zlib, and gzip compression library",
     "prune": false,
     "url": [
       "https://github.com/ebiggers/libdeflate/"
@@ -4354,6 +4557,7 @@
     "dependencies": [
       "ncurses"
     ],
+    "description": "command-line editing library",
     "mirror": true,
     "prune": false,
     "src_url": "https://thrysoee.dk/editline/libedit-{version}.tar.gz",
@@ -4361,6 +4565,14 @@
       "https://thrysoee.dk/editline/"
     ],
     "version": "20251016-3.1"
+  },
+  "libev": {
+    "date": "2026-05-03",
+    "description": "high-performance event loop library",
+    "removed": true,
+    "url": [
+      "http://software.schmorp.de/pkg/libev.html"
+    ]
   },
   "libevent": {
     "build_dependencies": [
@@ -4372,19 +4584,13 @@
     "dependencies": [
       "openssl"
     ],
+    "description": "asynchronous event notification library",
     "prune": false,
     "url": [
       "https://libevent.org/",
       "https://github.com/libevent/libevent/"
     ],
     "version": "2.1.12"
-  },
-  "libev": {
-    "date": "2026-05-03",
-    "removed": true,
-    "url": [
-      "http://software.schmorp.de/pkg/libev.html"
-    ]
   },
   "libffi": {
     "build_dependencies": [
@@ -4393,6 +4599,7 @@
     ],
     "date": "2025-08-10",
     "default": false,
+    "description": "foreign function interface library",
     "prune": false,
     "url": [
       "https://sourceware.org/libffi/",
@@ -4410,6 +4617,7 @@
     "dependencies": [
       "libcbor"
     ],
+    "description": "library for FIDO2 and WebAuthn authentication",
     "prune": false,
     "url": [
       "https://developers.yubico.com/libfido2/Releases/"
@@ -4426,6 +4634,7 @@
     "dependencies": [
       "libgpg-error"
     ],
+    "description": "cryptographic library used by GnuPG",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -4451,6 +4660,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "library for georeferenced TIFF files",
     "mirror": true,
     "prune": false,
     "src_url": "https://download.osgeo.org/geotiff/libgeotiff/libgeotiff-{version}.tar.gz",
@@ -4472,6 +4682,7 @@
       "pcre",
       "zlib"
     ],
+    "description": "portable C library implementing Git core",
     "prune": false,
     "url": [
       "https://github.com/libgit2/libgit2/"
@@ -4486,6 +4697,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "common error codes library for GnuPG components",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -4505,6 +4717,7 @@
       "libpng",
       "zlib"
     ],
+    "description": "HEIF and HEVC image format library",
     "prune": false,
     "url": [
       "https://www.libde265.org/",
@@ -4518,6 +4731,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "character set conversion library",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -4533,6 +4747,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "internationalized domain names library",
     "prune": false,
     "url": [
       "https://www.gnu.org/software/libidn/",
@@ -4548,6 +4763,7 @@
     ],
     "date": "2026-04-15",
     "default": false,
+    "description": "SIMD-accelerated JPEG encoding and decoding library",
     "prune": false,
     "url": [
       "https://www.libjpeg-turbo.org/",
@@ -4566,6 +4782,7 @@
     "dependencies": [
       "libgpg-error"
     ],
+    "description": "library for X.509 and CMS structures used by GnuPG",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -4579,6 +4796,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "library for large linear classification",
     "prune": false,
     "url": [
       "https://www.csie.ntu.edu.tw/~cjlin/liblinear/"
@@ -4595,6 +4813,7 @@
       "libuv",
       "luajit"
     ],
+    "description": "async I/O bindings for Lua used by Neovim",
     "prune": false,
     "url": [
       "https://github.com/luvit/luv/"
@@ -4610,6 +4829,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "portable C library for network traffic capture",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.tcpdump.org/release/libpcap-{version}.tar.gz",
@@ -4625,6 +4845,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "pipeline manipulation library",
     "prune": false,
     "url": [
       "https://libpipeline.nongnu.org/",
@@ -4646,6 +4867,7 @@
     "dependencies": [
       "zlib"
     ],
+    "description": "official PNG reference library",
     "prune": false,
     "url": [
       "http://www.libpng.org/pub/png/libpng.html"
@@ -4662,6 +4884,7 @@
     "dependencies": [
       "zlib"
     ],
+    "description": "dependency solver library",
     "prune": false,
     "url": [
       "https://github.com/openSUSE/libsolv/"
@@ -4679,6 +4902,7 @@
       "openssl",
       "zlib"
     ],
+    "description": "C library implementing the SSH2 protocol",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.libssh2.org/download/libssh2-{version}.tar.gz",
@@ -4694,6 +4918,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "ASN.1 parsing library",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -4714,6 +4939,7 @@
       "ncurses",
       "unibilium"
     ],
+    "description": "library for processing keyboard input in terminals",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.leonerd.org.uk/code/libtermkey/libtermkey-{version}.tar.gz",
@@ -4733,6 +4959,7 @@
       "libjpeg-turbo",
       "zstd"
     ],
+    "description": "library for reading and writing TIFF files",
     "mirror": true,
     "prune": false,
     "src_url": "https://download.osgeo.org/libtiff/tiff-{version}.tar.xz",
@@ -4755,6 +4982,7 @@
     "dependencies": [
       "m4"
     ],
+    "description": "generic shared library support scripts",
     "installer": "libtool",
     "man1": [
       "glibtool.1",
@@ -4772,6 +5000,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Unicode string processing library",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -4791,6 +5020,7 @@
     ],
     "date": "2026-03-19",
     "default": false,
+    "description": "multi-platform async I/O library used by Node.js",
     "prune": false,
     "url": [
       "https://github.com/libuv/libuv/"
@@ -4805,11 +5035,12 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "VT220/xterm/256-color terminal emulator library",
+    "mirror": true,
     "notes": [
       "0.2.0 is incompatible with neovim."
     ],
     "outdated": true,
-    "mirror": true,
     "prune": false,
     "src_url": "https://www.leonerd.org.uk/code/libvterm/libvterm-{version}.tar.gz",
     "url": [
@@ -4825,6 +5056,7 @@
     ],
     "date": "2025-11-11",
     "default": false,
+    "description": "extended crypt library for password hashing",
     "prune": false,
     "url": [
       "https://github.com/besser82/libxcrypt/"
@@ -4847,6 +5079,7 @@
       "xz",
       "zlib"
     ],
+    "description": "XML parsing library",
     "man1": [
       "xml2-config.1"
     ],
@@ -4868,6 +5101,7 @@
       "libgcrypt",
       "libxml2"
     ],
+    "description": "XSLT transformation library",
     "prune": false,
     "url": [
       "http://xmlsoft.org/XSLT/",
@@ -4886,6 +5120,7 @@
     ],
     "date": "2023-01-04",
     "default": false,
+    "description": "YAML parser and emitter in C",
     "prune": false,
     "url": "https://github.com/yaml/libyaml/",
     "version": "0.2.5"
@@ -4906,6 +5141,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "library for reading, creating, and modifying ZIP files",
     "prune": false,
     "url": [
       "https://libzip.org/"
@@ -4917,6 +5153,7 @@
       "llama"
     ],
     "date": "2023-08-31",
+    "description": "large language model inference engine",
     "notes": [
       "Renamed to walk."
     ],
@@ -4946,6 +5183,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "LLVM compiler infrastructure",
     "prune": true,
     "url": [
       "https://llvm.org/"
@@ -4965,6 +5203,7 @@
       "tcl-tk",
       "zlib"
     ],
+    "description": "Lua-based environment modules system",
     "installer_platform": "linux",
     "outdated": true,
     "prune": false,
@@ -4989,6 +5228,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "colorized ls replacement with icons",
     "installer": "conda-package",
     "installer_args": {
       "name": "lsd-rust"
@@ -5010,6 +5250,7 @@
     ],
     "date": "2026-01-02",
     "default": false,
+    "description": "lightweight embeddable scripting language",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.lua.org/ftp/lua-{version}.tar.gz",
@@ -5029,6 +5270,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "just-in-time compiler for Lua",
     "prune": false,
     "url": [
       "https://luajit.org/",
@@ -5049,6 +5291,7 @@
     "dependencies": [
       "lua"
     ],
+    "description": "package manager for Lua modules",
     "prune": false,
     "url": [
       "https://github.com/luarocks/luarocks/"
@@ -5064,6 +5307,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "Python workflow manager by Spotify",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -5085,6 +5329,7 @@
     ],
     "date": "2024-07-22",
     "default": false,
+    "description": "extremely fast lossless compression algorithm",
     "man1": [
       "lz4.1",
       "lz4c.1",
@@ -5108,6 +5353,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "lossless data compressor based on LZMA",
     "installer": "gnu-app",
     "installer_args": {
       "non_gnu_mirror": "true"
@@ -5129,6 +5375,7 @@
     ],
     "date": "2022-08-29",
     "default": false,
+    "description": "fast lossless data compression library",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.oberhumer.com/opensource/lzo/download/lzo-{version}.tar.gz",
@@ -5146,6 +5393,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "GNU macro processor",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -5160,6 +5408,7 @@
     ],
     "date": "2023-03-07",
     "default": true,
+    "description": "GNU build automation tool",
     "installer": "gnu-app",
     "installer_args": {
       "program_prefix": "g"
@@ -5182,6 +5431,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast conda-compatible package manager",
     "installer": "conda-package",
     "outdated": true,
     "prune": false,
@@ -5204,6 +5454,7 @@
       "gdbm",
       "libpipeline"
     ],
+    "description": "utilities for reading Unix manual pages",
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "xz",
@@ -5231,6 +5482,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "reactive Python notebook environment",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -5248,6 +5500,7 @@
     "dependencies": [
       "node"
     ],
+    "description": "linter for Markdown files",
     "installer": "node-package",
     "prune": true,
     "url": [
@@ -5264,6 +5517,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "smart shell history search with neural networks",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -5280,6 +5534,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -5297,6 +5552,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "fast, user-friendly build system",
     "installer": "python-package",
     "prune": false,
     "url": [
@@ -5315,6 +5571,7 @@
     ],
     "date": "2026-04-22",
     "default": false,
+    "description": "like awk/sed/cut/join for name-indexed data formats",
     "prune": true,
     "url": [
       "https://miller.readthedocs.io/",
@@ -5329,6 +5586,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "compact general-purpose memory allocator by Microsoft",
     "prune": false,
     "url": [
       "https://github.com/microsoft/mimalloc"
@@ -5344,6 +5602,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "versatile pairwise sequence aligner",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -5361,6 +5620,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "mixture-of-isoforms model for alternative splicing analysis",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -5389,6 +5649,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "high-speed linker for ELF binaries",
     "prune": false,
     "url": [
       "https://github.com/rui314/mold/"
@@ -5404,6 +5665,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "MosaicML training platform CLI",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -5421,6 +5683,7 @@
       "gmp",
       "mpfr"
     ],
+    "description": "C library for arbitrary-precision complex arithmetic",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -5434,6 +5697,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "C library for correct decimal floating point",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-{version}.tar.gz",
@@ -5452,6 +5716,7 @@
     "dependencies": [
       "gmp"
     ],
+    "description": "C library for multiple-precision floating-point arithmetic",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -5468,6 +5733,7 @@
     "dependencies": [
       "boost"
     ],
+    "description": "efficient binary serialization format library",
     "prune": false,
     "url": [
       "https://msgpack.org/",
@@ -5484,6 +5750,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "aggregate QC reports from bioinformatics tools",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -5501,6 +5768,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python library for reading and writing audio metadata",
     "installer": "python-package",
     "installer_args": {
       "extra_packages": [
@@ -5529,6 +5797,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "static type checker for Python",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -5552,6 +5821,7 @@
       "gettext",
       "ncurses"
     ],
+    "description": "simple, user-friendly terminal text editor",
     "mirror": true,
     "prune": true,
     "src_url": "https://www.nano-editor.org/dist/v{major}/nano-{version}.tar.xz",
@@ -5569,6 +5839,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "signal-level analysis of Oxford Nanopore sequencing data",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -5594,6 +5865,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "tools for the NCBI Sequence Read Archive",
     "installer": "conda-package",
     "installer_args": {
       "name": "sra-tools"
@@ -5613,6 +5885,7 @@
   },
   "ncbi-vdb": {
     "date": "2024-05-31",
+    "description": "database engine for the NCBI Sequence Read Archive",
     "removed": true
   },
   "ncurses": {
@@ -5636,6 +5909,7 @@
     ],
     "date": "2026-02-07",
     "default": false,
+    "description": "terminal-independent text UI library",
     "man1": [
       "captoinfo.1",
       "clear.1",
@@ -5661,6 +5935,7 @@
     ],
     "date": "2022-08-30",
     "default": false,
+    "description": "fast system information display tool",
     "man1": [
       "neofetch.1"
     ],
@@ -5679,6 +5954,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "hyperextensible Vim-based text editor",
     "installer": "conda-package",
     "installer_args": {
       "name": "nvim"
@@ -5704,6 +5980,7 @@
       "m4",
       "openssl"
     ],
+    "description": "low-level cryptographic library",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -5721,6 +5998,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -5745,6 +6023,7 @@
       "openssl",
       "zlib"
     ],
+    "description": "HTTP/2 C library",
     "prune": false,
     "revision": 1,
     "url": [
@@ -5759,6 +6038,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "statically typed compiled systems programming language",
     "prune": true,
     "url": [
       "https://nim-lang.org/"
@@ -5774,6 +6054,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "small, fast build system",
     "prune": false,
     "url": [
       "https://ninja-build.org/",
@@ -5788,6 +6069,7 @@
     ],
     "date": "2025-04-11",
     "default": false,
+    "description": "modern JSON library for C++",
     "prune": false,
     "url": [
       "https://github.com/nlohmann/json/"
@@ -5814,6 +6096,7 @@
       "pcre2",
       "zlib"
     ],
+    "description": "network exploration and security auditing tool",
     "mirror": true,
     "prune": true,
     "src_url": "https://nmap.org/dist/nmap-{version}.tar.bz2",
@@ -5831,6 +6114,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
     "installer_args": {
       "name": "nodejs"
@@ -5856,6 +6140,7 @@
     ],
     "date": "2024-12-24",
     "default": false,
+    "description": "New GNU Portable Threads library",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -5871,6 +6156,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -5889,6 +6175,7 @@
     ],
     "date": "2025-01-02",
     "default": false,
+    "description": "regular expressions library",
     "prune": false,
     "url": [
       "https://github.com/kkos/oniguruma/"
@@ -5905,6 +6192,7 @@
       "python",
       "zlib"
     ],
+    "description": "Oxford Nanopore basecaller",
     "installer_platform": "linux",
     "prune": true,
     "supported": {
@@ -5924,6 +6212,7 @@
     ],
     "date": "2026-02-22",
     "default": false,
+    "description": "Oxford Nanopore high-accuracy basecaller",
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -5942,6 +6231,7 @@
     ],
     "date": "2023-05-31",
     "default": false,
+    "description": "Oxford Nanopore production basecaller",
     "install_note": "Installation requires agreement to terms of service at: https://nanoporetech.com/support/nanopore-sequencing-data-analysis",
     "private": true,
     "prune": true,
@@ -5962,6 +6252,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "VBZ compression plugin for Oxford Nanopore data",
     "prune": false,
     "url": [
       "https://github.com/nanoporetech/vbz_compression/"
@@ -5970,6 +6261,7 @@
   },
   "openbb": {
     "date": "2024-05-16",
+    "description": "open-source investment research platform",
     "removed": true
   },
   "openblas": {
@@ -5979,6 +6271,7 @@
     ],
     "date": "2026-04-29",
     "default": false,
+    "description": "optimized BLAS (Basic Linear Algebra Subprograms) library",
     "prune": false,
     "url": [
       "https://www.openblas.net/",
@@ -6001,6 +6294,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "open-source JPEG 2000 codec",
     "prune": false,
     "url": [
       "https://www.openjpeg.org/"
@@ -6017,6 +6311,7 @@
     "dependencies": [
       "openssl"
     ],
+    "description": "open-source LDAP directory service",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-{version}.tgz",
@@ -6041,6 +6336,7 @@
       "openssl",
       "zlib"
     ],
+    "description": "OpenBSD SSH connectivity tools",
     "mirror": true,
     "prune": false,
     "src_url": "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz",
@@ -6065,6 +6361,7 @@
     "dependencies": [
       "ca-certificates"
     ],
+    "description": "toolkit for TLS and general-purpose cryptography (v1)",
     "prune": false,
     "url": [
       "https://www.openssl.org/source/"
@@ -6082,6 +6379,7 @@
     "dependencies": [
       "ca-certificates"
     ],
+    "description": "toolkit for TLS and general-purpose cryptography (v3)",
     "installer": "openssl",
     "prune": false,
     "url": [
@@ -6092,6 +6390,7 @@
   "oracle-instant-client": {
     "date": "2026-05-02",
     "default": false,
+    "description": "Oracle Database client libraries",
     "installer_platform": "fedora",
     "prune": true,
     "supported": {
@@ -6117,6 +6416,7 @@
     ],
     "date": "2023-05-31",
     "default": true,
+    "description": "port of 7-zip for POSIX systems",
     "man1": [
       "7z.1.gz",
       "7za.1.gz",
@@ -6137,6 +6437,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "universal document format converter",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -6154,6 +6455,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "GNU shell tool for executing jobs in parallel",
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "bz2"
@@ -6177,6 +6479,7 @@
     ],
     "date": "2022-08-30",
     "default": false,
+    "description": "simple password manager using GPG and Git",
     "man1": [
       "pass.1"
     ],
@@ -6204,6 +6507,7 @@
         "attr"
       ]
     },
+    "description": "GNU patch for applying unified diff files",
     "installer": "gnu-app",
     "man1": [
       "patch.1"
@@ -6216,6 +6520,7 @@
   },
   "pbzip2": {
     "date": "2026-05-03",
+    "description": "parallel implementation of bzip2",
     "removed": true,
     "url": [
       "https://web.archive.org/web/20180226093549/compression.ca/pbzip2/"
@@ -6240,6 +6545,7 @@
       "bzip2",
       "zlib"
     ],
+    "description": "Perl-compatible regular expressions library (v1)",
     "man1": [
       "pcre-config.1",
       "pcregrep.1",
@@ -6270,6 +6576,7 @@
       "bzip2",
       "zlib"
     ],
+    "description": "Perl-compatible regular expressions library (v2)",
     "man1": [
       "pcre2-config.1",
       "pcre2grep.1",
@@ -6292,6 +6599,7 @@
     ],
     "date": "2026-05-03",
     "default": true,
+    "description": "Practical Extraction and Report Language",
     "man1": [
       "cpan.1",
       "perl.1"
@@ -6311,6 +6619,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "Java tools for high-throughput sequencing data",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -6339,6 +6648,7 @@
     "dependencies": [
       "zlib"
     ],
+    "description": "parallel gzip for fast multi-threaded compression",
     "man1": [
       "pigz.1",
       "unpigz.1"
@@ -6362,6 +6672,7 @@
       "libiconv",
       "ncurses"
     ],
+    "description": "collection of dialog programs for GnuPG passphrase entry",
     "prune": false,
     "url": [
       "https://gnupg.org/download/"
@@ -6377,6 +6688,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "install and run Python CLI apps in isolated environments",
     "installer": "python-package",
     "outdated": true,
     "prune": false,
@@ -6394,6 +6706,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "pixel manipulation library",
     "mirror": true,
     "prune": false,
     "src_url": "https://cairographics.org/releases/pixman-{version}.tar.gz",
@@ -6412,6 +6725,7 @@
     ],
     "date": "2022-08-29",
     "default": true,
+    "description": "helper tool for querying installed library info",
     "man1": [
       "pkg-config.1"
     ],
@@ -6431,6 +6745,7 @@
     ],
     "date": "2025-11-05",
     "default": false,
+    "description": "drop-in replacement for pkg-config",
     "man1": [
       "pkgconf.1"
     ],
@@ -6451,6 +6766,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python dependency management and packaging tool",
     "installer": "python-package",
     "prune": false,
     "url": [
@@ -6481,6 +6797,7 @@
       "perl",
       "readline"
     ],
+    "description": "powerful open-source relational database",
     "prune": true,
     "url": [
       "https://www.postgresql.org/",
@@ -6494,6 +6811,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "cross-platform task automation shell by Microsoft",
     "prune": true,
     "url": [
       "https://github.com/PowerShell/PowerShell/"
@@ -6503,6 +6821,7 @@
   "prelude-emacs": {
     "date": "2026-05-02",
     "default": false,
+    "description": "community-maintained Emacs configuration",
     "prune": true,
     "url": [
       "https://github.com/bbatsov/prelude/"
@@ -6519,6 +6838,7 @@
     "dependencies": [
       "node"
     ],
+    "description": "opinionated code formatter for JS, CSS, HTML, and more",
     "installer": "node-package",
     "prune": true,
     "url": [
@@ -6536,6 +6856,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "modern replacement for ps with color output",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -6564,6 +6885,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "cartographic projections and coordinate transformations library",
     "man1": [
       "proj.1",
       "projinfo.1"
@@ -6586,6 +6908,7 @@
     ],
     "date": "2023-12-22",
     "default": false,
+    "description": "command-line HTML parsing tool",
     "prune": true,
     "url": [
       "https://github.com/ericchiang/pup"
@@ -6601,6 +6924,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "sampling profiler for Python programs",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6616,6 +6940,7 @@
     ],
     "date": "2026-04-22",
     "default": false,
+    "description": "C++11 header-only bindings between C++ and Python",
     "prune": false,
     "url": [
       "https://pybind11.readthedocs.io/"
@@ -6631,6 +6956,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python style guide checker (PEP 8)",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6648,6 +6974,7 @@
     ],
     "date": "2026-04-29",
     "default": false,
+    "description": "manage multiple Python versions",
     "man1": [
       "pyenv.1"
     ],
@@ -6666,6 +6993,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "passive checker for Python programs",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6683,6 +7011,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "syntax highlighter for many programming languages",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6701,6 +7030,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "source code analyzer and linter for Python",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6719,6 +7049,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "molecular visualization system",
     "installer": "conda-package",
     "installer_args": {
       "name": "pymol-open-source"
@@ -6744,6 +7075,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "fast Python type checker",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6765,6 +7097,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "static type checker for Python by Microsoft",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6783,6 +7116,7 @@
       "python",
       "taglib"
     ],
+    "description": "Python bindings for the taglib audio metadata library",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -6800,6 +7134,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "feature-rich Python testing framework",
     "installer": "python-package",
     "installer_args": {
       "extra_packages": [
@@ -6815,7 +7150,8 @@
     "version": "9.0.3"
   },
   "python": {
-    "alias_of": "python3.14"
+    "alias_of": "python3.14",
+    "description": "generic Python shim (resolved at runtime)"
   },
   "python3.10": {
     "bin": [
@@ -6861,6 +7197,7 @@
         "xz"
       ]
     },
+    "description": "Python 3.10 interpreter",
     "installer": "python",
     "man1": [
       "python3.10.1"
@@ -6915,6 +7252,7 @@
         "xz"
       ]
     },
+    "description": "Python 3.11 interpreter",
     "installer": "python",
     "man1": [
       "python3.11.1"
@@ -6969,6 +7307,7 @@
         "xz"
       ]
     },
+    "description": "Python 3.12 interpreter",
     "installer": "python",
     "man1": [
       "python3.12.1"
@@ -7023,6 +7362,7 @@
         "xz"
       ]
     },
+    "description": "Python 3.13 interpreter",
     "installer": "python",
     "man1": [
       "python3.13.1"
@@ -7087,6 +7427,7 @@
         "xz"
       ]
     },
+    "description": "Python 3.14 interpreter",
     "installer": "python",
     "man1": [
       "python.1",
@@ -7105,6 +7446,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "scientific and technical publishing system",
     "prune": true,
     "url": [
       "https://quarto.org/",
@@ -7179,6 +7521,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "R statistical computing language and environment",
     "installer_platform": "debian",
     "man1": [
       "R.1",
@@ -7259,6 +7602,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "R development version (SVN build)",
     "installer": "r",
     "prune": true,
     "supported": {
@@ -7280,6 +7624,7 @@
   "r-gfortran": {
     "date": "2025-04-12",
     "default": true,
+    "description": "gfortran toolchain for building R packages on macOS",
     "installer_platform": "macos",
     "supported": {
       "linux-amd64": false,
@@ -7296,6 +7641,7 @@
   "r-xcode-openmp": {
     "date": "2026-05-02",
     "default": true,
+    "description": "OpenMP support for R packages on macOS",
     "installer_platform": "macos",
     "supported": {
       "linux-amd64": false,
@@ -7318,6 +7664,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "modern R console with syntax highlighting and completion",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -7335,6 +7682,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "vim-inspired terminal file manager",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -7349,6 +7697,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Ruby version manager",
     "prune": false,
     "url": [
       "https://github.com/rbenv/rbenv/"
@@ -7364,6 +7713,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "sync files to and from cloud storage providers",
     "installer": "conda-package",
     "man1": [
       "rclone.1"
@@ -7385,6 +7735,7 @@
     "dependencies": [
       "ncurses"
     ],
+    "description": "library for editing command-line input",
     "prune": false,
     "url": [
       "https://tiswww.cwru.edu/php/chet/readline/rltop.html"
@@ -7411,6 +7762,7 @@
     "dependencies": [
       "perl"
     ],
+    "description": "Perl-based file renaming tool",
     "installer": "perl-package",
     "installer_args": {
       "cpan_path": "PEDERMDl/File-Rename"
@@ -7431,6 +7783,7 @@
     ],
     "date": "2026-04-15",
     "default": false,
+    "description": "cross-platform child process library",
     "prune": false,
     "url": [
       "https://github.com/DaanDeMeyer/reproc/"
@@ -7446,6 +7799,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "recursively search directories with regex patterns",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -7462,6 +7816,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "ripgrep with support for searching many file formats",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -7478,6 +7833,7 @@
     "dependencies": [
       "ruby"
     ],
+    "description": "TextMate remote file editing tool",
     "installer": "ruby-package",
     "prune": true,
     "url": [
@@ -7494,6 +7850,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "rMATS splicing analysis from RNA-seq data",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -7513,6 +7870,7 @@
       "ronn"
     ],
     "date": "2022-09-26",
+    "description": "builds man pages from Markdown",
     "removed": true,
     "url": [
       "https://github.com/rtomayko/ronn/",
@@ -7528,6 +7886,7 @@
     "dependencies": [
       "ruby"
     ],
+    "description": "actively maintained fork of ronn",
     "installer": "ruby-package",
     "prune": true,
     "url": [
@@ -7546,6 +7905,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "accurate quantification of gene and isoform expression",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -7563,6 +7923,7 @@
   "rstudio-server": {
     "date": "2026-05-02",
     "default": false,
+    "description": "web-based RStudio IDE server",
     "installer_platform": "debian",
     "supported": {
       "linux-amd64": true,
@@ -7592,6 +7953,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "fast, versatile remote and local file-copying tool",
     "man1": [
       "rsync.1"
     ],
@@ -7623,6 +7985,7 @@
       "readline",
       "zlib"
     ],
+    "description": "dynamic, open-source programming language",
     "man1": [
       "ruby.1"
     ],
@@ -7642,6 +8005,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "extremely fast Python linter and formatter",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -7658,6 +8022,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "LSP server for ruff",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -7680,6 +8045,7 @@
     ],
     "date": "2026-04-22",
     "default": false,
+    "description": "systems programming language focused on safety and speed",
     "prune": true,
     "url": [
       "https://www.rust-lang.org/"
@@ -7695,6 +8061,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "very fast S3 and object storage CLI tool",
     "prune": true,
     "url": [
       "https://github.com/peak/s5cmd/"
@@ -7710,6 +8077,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -7727,6 +8095,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast parallel tools for working with SAM/BAM files",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -7764,6 +8133,7 @@
         "conda"
       ]
     },
+    "description": "tools for manipulating alignments in SAM and BAM format",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -7788,6 +8158,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "high-performance CPU, GPU, and memory profiler for Python",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -7805,6 +8176,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "single-cell analysis in Python",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -7818,6 +8190,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python-based software construction tool",
     "installer": "python-package",
     "installer_args": {
       "egg_name": "SCons"
@@ -7842,6 +8215,7 @@
       "libxcrypt",
       "ncurses"
     ],
+    "description": "terminal multiplexer with detachable sessions",
     "man1": [
       "screen.1"
     ],
@@ -7861,6 +8235,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "intuitive find and replace CLI tool",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -7877,6 +8252,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "GNU stream editor for filtering and transforming text",
     "installer": "gnu-app",
     "installer_args": {
       "program_prefix": "g"
@@ -7900,6 +8276,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "cross-platform and ultrafast FASTQ/FASTA toolkit",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -7929,6 +8306,7 @@
       "scons",
       "zlib"
     ],
+    "description": "high-performance C-based HTTP client library",
     "prune": false,
     "url": [
       "https://serf.apache.org/"
@@ -7944,6 +8322,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "static analysis tool for shell scripts",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -7955,6 +8334,7 @@
   "shiny-server": {
     "date": "2025-05-08",
     "default": false,
+    "description": "server for deploying R Shiny web applications",
     "installer_platform": "debian",
     "supported": {
       "linux-amd64": true,
@@ -7974,6 +8354,7 @@
     ],
     "date": "2022-08-30",
     "default": false,
+    "description": "xUnit-based unit test framework for shell scripts",
     "prune": true,
     "url": [
       "https://github.com/kward/shunit2/"
@@ -7989,6 +8370,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "YAML parsing tool for the command line",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8003,6 +8385,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "JSON parser using SIMD instructions for high throughput",
     "prune": false,
     "url": [
       "https://simdjson.org"
@@ -8018,6 +8401,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "formatter for Snakemake workflow files",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8036,6 +8420,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -8054,6 +8439,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "Swiss army knife of audio manipulation tools",
     "installer": "conda-package",
     "man1": [
       "sox.1"
@@ -8071,6 +8457,7 @@
     "dependencies": [
       "emacs"
     ],
+    "description": "Emacs configuration centered around evil-mode",
     "prune": true,
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
@@ -8081,6 +8468,7 @@
   "spacevim": {
     "date": "2026-05-02",
     "default": false,
+    "description": "modular Vim and Neovim configuration",
     "prune": true,
     "url": [
       "https://spacevim.org/",
@@ -8099,6 +8487,7 @@
     "dependencies": [
       "fmt"
     ],
+    "description": "fast C++ logging library",
     "prune": false,
     "url": [
       "https://github.com/gabime/spdlog/"
@@ -8116,6 +8505,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python documentation generator",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8134,6 +8524,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "SQL linter and auto-formatter",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8156,6 +8547,7 @@
       "readline",
       "zlib"
     ],
+    "description": "self-contained, serverless SQL database engine",
     "man1": [
       "sqlite3.1"
     ],
@@ -8182,6 +8574,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "library for reading and writing sequencing data formats",
     "prune": false,
     "url": [
       "https://github.com/jkbonfield/io_lib"
@@ -8197,6 +8590,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "ultrafast universal RNA-seq aligner",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -8221,6 +8615,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "detects gene fusions using STAR alignments",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -8245,6 +8640,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast, customizable cross-shell prompt",
     "installer": "conda-package",
     "prune": false,
     "url": [
@@ -8265,6 +8661,7 @@
     "dependencies": [
       "perl"
     ],
+    "description": "symlink farm manager for managing dotfiles",
     "installer": "gnu-app",
     "prune": true,
     "url": [
@@ -8281,6 +8678,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "build and share data web apps in Python",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8299,6 +8697,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "toolkit including featureCounts for RNA-seq counting",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -8334,6 +8733,7 @@
       "sqlite",
       "zlib"
     ],
+    "description": "centralized version control system",
     "man1": [
       "svn.1"
     ],
@@ -8355,6 +8755,7 @@
     "dependencies": [
       "pcre2"
     ],
+    "description": "interface compiler connecting C/C++ to scripting languages",
     "prune": false,
     "url": [
       "http://www.swig.org/"
@@ -8372,6 +8773,7 @@
     "dependencies": [
       "zlib"
     ],
+    "description": "library for reading and editing audio file metadata",
     "prune": false,
     "url": [
       "https://github.com/taglib/taglib/"
@@ -8387,6 +8789,7 @@
     ],
     "date": "2023-08-31",
     "default": true,
+    "description": "GNU archiving utility",
     "man1": [
       "gtar.1"
     ],
@@ -8405,6 +8808,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Intel oneAPI Threading Building Blocks for parallel C++",
     "prune": false,
     "url": [
       "https://github.com/oneapi-src/oneTBB"
@@ -8427,6 +8831,7 @@
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
+    "description": "Tcl/Tk scripting language and GUI toolkit",
     "prune": false,
     "url": [
       "https://www.tcl-lang.org/"
@@ -8442,6 +8847,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast tldr client for concise command examples",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -8458,6 +8864,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "Eclipse Temurin OpenJDK distribution",
     "notes": [
       "Tracking the LTS release series."
     ],
@@ -8473,6 +8880,7 @@
     ],
     "date": "2022-11-05",
     "default": false,
+    "description": "Python library for ANSI color output",
     "prune": false,
     "url": [
       "https://termcolor.readthedocs.io/",
@@ -8500,6 +8908,7 @@
       "ncurses",
       "perl"
     ],
+    "description": "GNU documentation system",
     "installer": "gnu-app",
     "man1": [
       "pdftexi2dvi.1",
@@ -8521,6 +8930,7 @@
     ],
     "date": "2025-10-08",
     "default": false,
+    "description": "C++ implementation of std::expected",
     "prune": false,
     "url": [
       "https://github.com/TartanLlama/expected/"
@@ -8543,6 +8953,7 @@
       "ncurses",
       "utf8proc"
     ],
+    "description": "terminal multiplexer with persistent sessions",
     "man1": [
       "tmux.1"
     ],
@@ -8561,6 +8972,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "count lines of code quickly",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -8577,6 +8989,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "fast, extensible progress bar for Python",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8593,6 +9006,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "display directory contents in a tree structure",
     "man1": [
       "tree.1"
     ],
@@ -8609,6 +9023,7 @@
     ],
     "date": "2026-04-15",
     "default": false,
+    "description": "incremental parsing library for syntax trees",
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
@@ -8625,6 +9040,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python anti-pattern linter",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8641,6 +9057,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "cut text by fields, bytes, or characters",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -8657,6 +9074,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "extremely fast Python type checker",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8677,6 +9095,7 @@
     "dependencies": [
       "expat"
     ],
+    "description": "library and utilities for units of physical quantities",
     "mirror": true,
     "prune": false,
     "src_url": "https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz",
@@ -8695,6 +9114,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "tools for processing reads with UMI barcodes",
     "installer": "conda-package",
     "prune": true,
     "supported": {
@@ -8717,6 +9137,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "terminfo parser and utility library",
     "prune": false,
     "url": [
       "https://github.com/neovim/unibilium/"
@@ -8735,6 +9156,7 @@
     "dependencies": [
       "readline"
     ],
+    "description": "GNU units conversion and calculation utility",
     "installer": "gnu-app",
     "installer_args": {
       "program_prefix": "g"
@@ -8763,6 +9185,7 @@
     ],
     "date": "2023-04-06",
     "default": false,
+    "description": "extraction utility for ZIP archives",
     "man1": [
       "funzip.1",
       "unzip.1",
@@ -8783,6 +9206,7 @@
     ],
     "date": "2026-01-02",
     "default": false,
+    "description": "C library for Unicode and UTF-8 processing",
     "prune": false,
     "url": [
       "https://juliastrings.github.io/utf8proc/",
@@ -8797,6 +9221,7 @@
     ],
     "date": "2026-04-29",
     "default": true,
+    "description": "extremely fast Python package and project manager",
     "prune": true,
     "url": [
       "https://pypi.org/project/uv/"
@@ -8824,6 +9249,7 @@
       "ncurses",
       "python"
     ],
+    "description": "highly configurable text editor",
     "man1": [
       "ex.1",
       "rview.1",
@@ -8850,6 +9276,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "terminal spreadsheet multitool for tabular data",
     "installer": "python-package",
     "man1": [
       "vd.1",
@@ -8871,6 +9298,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "find dead Python code",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -8888,6 +9316,7 @@
     ],
     "date": "2025-02-20",
     "default": false,
+    "description": "terminal file manager for navigating directories",
     "prune": true,
     "url": [
       "https://github.com/antonmedv/walk/"
@@ -8914,6 +9343,7 @@
       "openssl",
       "pcre2"
     ],
+    "description": "non-interactive command-line file downloader",
     "installer": "gnu-app",
     "man1": [
       "wget.1"
@@ -8953,6 +9383,7 @@
       "zlib",
       "zstd"
     ],
+    "description": "successor to wget with HTTP/2 support",
     "installer": "gnu-app",
     "prune": false,
     "url": [
@@ -8970,6 +9401,7 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "description": "shows the full path of shell commands",
     "installer": "gnu-app",
     "installer_args": {
       "program_prefix": "g"
@@ -8996,6 +9428,7 @@
     ],
     "date": "2023-05-15",
     "default": false,
+    "description": "encode and decode WOFF2 web font format",
     "prune": true,
     "url": [
       "https://github.com/google/woff2/"
@@ -9013,6 +9446,7 @@
       "xorg-xorgproto",
       "xorg-xtrans"
     ],
+    "description": "Inter-Client Exchange library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9027,6 +9461,7 @@
     ],
     "date": "2023-08-31",
     "default": false,
+    "description": "pthread stubs used by X.org build system",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9046,6 +9481,7 @@
       "xorg-xorgproto",
       "xorg-xtrans"
     ],
+    "description": "X Session Management library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9069,6 +9505,7 @@
       "xorg-xorgproto",
       "xorg-xtrans"
     ],
+    "description": "core X11 protocol client library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9086,6 +9523,7 @@
     "dependencies": [
       "xorg-xorgproto"
     ],
+    "description": "X authority file management library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9108,6 +9546,7 @@
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
+    "description": "X protocol C-language binding library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9125,6 +9564,7 @@
     "dependencies": [
       "xorg-xorgproto"
     ],
+    "description": "X Display Manager Control Protocol library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9147,6 +9587,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "description": "X11 miscellaneous extension library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9171,6 +9612,7 @@
       "xorg-libxrender",
       "xorg-xorgproto"
     ],
+    "description": "X resize and rotate extension library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9193,6 +9635,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "description": "X render extension library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9217,6 +9660,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "description": "X toolkit intrinsics library",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9232,6 +9676,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "XCB protocol descriptions",
     "notes": [
       "This must match xorg-libxcb version."
     ],
@@ -9249,6 +9694,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "X.Org X11 protocol headers",
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
@@ -9266,6 +9712,7 @@
     "dependencies": [
       "xorg-xorgproto"
     ],
+    "description": "X transport library",
     "outdated": true,
     "prune": false,
     "url": [
@@ -9283,6 +9730,7 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "description": "extended SRA download and processing tools",
     "installer": "rust-package",
     "prune": true,
     "url": [
@@ -9300,6 +9748,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "fast CSV command-line toolkit",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -9314,6 +9763,7 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "description": "extremely fast non-cryptographic hash algorithm library",
     "prune": false,
     "url": [
       "https://github.com/Cyan4973/xxHash/"
@@ -9352,6 +9802,7 @@
     ],
     "date": "2026-04-15",
     "default": true,
+    "description": "general-purpose lossless data compressor using LZMA",
     "man1": [
       "lzcat.1",
       "lzcmp.1",
@@ -9391,6 +9842,7 @@
     ],
     "date": "2026-02-06",
     "default": false,
+    "description": "YAML parser and emitter for C++",
     "prune": false,
     "url": [
       "https://github.com/jbeder/yaml-cpp/"
@@ -9406,6 +9858,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "linter for YAML files",
     "installer": "python-package",
     "prune": true,
     "version": "1.38.0"
@@ -9419,6 +9872,7 @@
     "dependencies": [
       "python"
     ],
+    "description": "Python code formatter by Google",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -9436,6 +9890,7 @@
     ],
     "date": "2026-04-22",
     "default": false,
+    "description": "YAML, JSON, and XML command-line processor",
     "notes": [
       "Switch to conda recipe in the future."
     ],
@@ -9455,6 +9910,7 @@
       "ffmpeg",
       "python"
     ],
+    "description": "download videos from YouTube and many other sites",
     "installer": "python-package",
     "prune": true,
     "url": [
@@ -9472,6 +9928,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "terminal workspace with layouts and plugins",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -9488,6 +9945,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "graphical terminal process monitor",
     "installer": "conda-package",
     "outdated": true,
     "prune": true,
@@ -9509,6 +9967,7 @@
     "dependencies": [
       "bzip2"
     ],
+    "description": "create and manage ZIP archives",
     "man1": [
       "zip.1"
     ],
@@ -9525,6 +9984,7 @@
     ],
     "date": "2026-04-24",
     "default": false,
+    "description": "lossless data compression library",
     "mirror": true,
     "prune": false,
     "src_url": "https://www.zlib.net/zlib-{version}.tar.gz",
@@ -9535,6 +9995,7 @@
   },
   "zopfli": {
     "date": "2026-01-05",
+    "description": "high-quality but slow zlib/gzip/zip compressor by Google",
     "removed": true,
     "url": [
       "https://github.com/google/zopfli/"
@@ -9550,6 +10011,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "smarter cd command that learns your habits",
     "installer": "conda-package",
     "prune": true,
     "url": [
@@ -9566,6 +10028,7 @@
     "dependencies": [
       "conda"
     ],
+    "description": "Z shell, extended Bourne-compatible shell",
     "installer": "conda-package",
     "man1": [
       "zsh.1"
@@ -9596,6 +10059,7 @@
       "lz4",
       "zlib"
     ],
+    "description": "fast lossless compression algorithm by Facebook",
     "man1": [
       "unzstd.1",
       "zstd.1",
