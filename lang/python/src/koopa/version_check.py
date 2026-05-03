@@ -7,6 +7,7 @@ import inspect
 import json
 import os
 import re
+import subprocess
 import sys
 import threading
 import time
@@ -53,7 +54,7 @@ class _VersionCache:
         try:
             with open(self._path) as f:
                 self._data = json.load(f)
-        except FileNotFoundError, json.JSONDecodeError, OSError:
+        except (FileNotFoundError, json.JSONDecodeError, OSError):
             self._data = {}
 
     def get(self, name: str) -> str | None:
@@ -113,7 +114,7 @@ def _resolve_github_token() -> str | None:
             )
             if result.returncode == 0 and result.stdout.strip():
                 return result.stdout.strip()
-        except subprocess.TimeoutExpired, OSError:
+        except (subprocess.TimeoutExpired, OSError):
             pass
     return None
 
@@ -950,10 +951,7 @@ def _check_perl() -> str:
     if not versions:
         msg = "No Perl versions found"
         raise RuntimeError(msg)
-    stable = [
-        v for v in versions
-        if int(v.split(".")[1]) % 2 == 0
-    ]
+    stable = [v for v in versions if int(v.split(".")[1]) % 2 == 0]
     if not stable:
         msg = "No stable Perl versions found"
         raise RuntimeError(msg)
@@ -1620,7 +1618,59 @@ def print_json_report(results: list[VersionCheckResult]) -> None:
 # ── app.json updater ─────────────────────────────────────────────────
 
 
-def update_app_json(results: list[VersionCheckResult]) -> int:
+def _has_acidgenomics_aws() -> bool:
+    """Return True if the acidgenomics AWS profile is present in ~/.aws/credentials."""
+    import re
+
+    credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
+    if not os.path.isfile(credentials):
+        return False
+    with open(credentials) as f:
+        return bool(re.search(r"^\[acidgenomics\]$", f.read(), re.MULTILINE))
+
+
+def _expand_src_url(template: str, version: str) -> str:
+    """Expand a src_url template with version components.
+
+    Supports {version}, {major}, {minor}, {patch} placeholders.
+    """
+    parts = version.split(".")
+    return template.format(
+        version=version,
+        major=parts[0] if len(parts) > 0 else "",
+        minor=parts[1] if len(parts) > 1 else "",
+        patch=parts[2] if len(parts) > 2 else "",
+    )
+
+
+def _mirror_src_to_s3(name: str, version: str, src_url_template: str) -> None:
+    """Download source tarball and upload to s3://koopa.acidgenomics.com/src/."""
+    import tempfile
+
+    from koopa.download import download
+
+    url = _expand_src_url(src_url_template, version)
+    filename = url.rsplit("/", 1)[-1]
+    s3_key = f"s3://koopa.acidgenomics.com/src/{name}/{filename}"
+    with tempfile.TemporaryDirectory() as tmp:
+        local = os.path.join(tmp, filename)
+        try:
+            download(url, local, retry=False)
+        except Exception as exc:
+            print(f"  Mirror upload skipped for '{name}': download failed: {exc}", file=sys.stderr)
+            return
+        result = subprocess.run(
+            ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
+        else:
+            print(f"  Mirror upload failed for '{name}': {result.stderr.strip()}", file=sys.stderr)
+
+
+def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes."""
     outdated = [r for r in results if r.is_outdated]
     if not outdated:
@@ -1643,23 +1693,32 @@ def update_app_json(results: list[VersionCheckResult]) -> int:
             f"Updated {bootstrap_count} versions in bootstrap.sh.",
             file=sys.stderr,
         )
+    if s3_upload:
+        if not _has_acidgenomics_aws():
+            print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
+        else:
+            print("Uploading source tarballs to S3 mirror.", file=sys.stderr)
+            for r in outdated:
+                if r.name not in data or not r.latest_version:
+                    continue
+                src_url = data[r.name].get("src_url", "")
+                if not src_url:
+                    continue
+                _mirror_src_to_s3(r.name, r.latest_version, src_url)
     return count
 
 
 _BOOTSTRAP_APP_MAP: dict[str, str] = {
-    "bash": "bash",
-    "coreutils": "coreutils",
     "openssl": "openssl3",
-    "python": "python3.14",
-    "xz": "xz",
+    "python": "python3.12",
     "zlib": "zlib",
 }
 
 
 def update_bootstrap(app_data: dict[str, Any]) -> int:
     """Sync bootstrap.sh versions with app.json and bump bootstrap version."""
-    bootstrap_path = Path(koopa_prefix()) / "etc" / "koopa" / "bootstrap.sh"
-    version_path = Path(koopa_prefix()) / "etc" / "koopa" / "bootstrap-version.txt"
+    bootstrap_path = Path(koopa_prefix()) / "lang" / "sh" / "include" / "bootstrap.sh"
+    version_path = Path(koopa_prefix()) / "lang" / "sh" / "include" / "bootstrap-version.txt"
     if not bootstrap_path.is_file():
         return 0
     text = bootstrap_path.read_text()

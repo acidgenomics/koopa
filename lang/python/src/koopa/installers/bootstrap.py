@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 
 from koopa.prefix import koopa_prefix
@@ -15,8 +16,5 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install koopa bootstrap."""
-    script = f"{koopa_prefix()}/etc/koopa/bootstrap.sh"
-    subprocess.run(
-        [script],
-        check=True,
-    )
+    script = os.path.join(koopa_prefix(), "lang", "sh", "include", "bootstrap.sh")
+    subprocess.run([script], check=True)

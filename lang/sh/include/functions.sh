@@ -1026,7 +1026,7 @@ _koopa_alias_kb() {
 }
 
 _koopa_alias_kbs() {
-    _koopa_add_to_path_start "$(_koopa_xdg_data_home)/koopa-bootstrap/bin"
+    _koopa_add_to_path_start "$(_koopa_bootstrap_prefix)/bin"
     return 0
 }
 
@@ -1922,7 +1922,7 @@ _koopa_bin_prefix() {
 }
 
 _koopa_bootstrap_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/koopa-bootstrap"
+    _koopa_print "$(_koopa_koopa_prefix)-bootstrap"
     return 0
 }
 
@@ -2031,7 +2031,7 @@ _koopa_xdg_cache_home() {
 
 _koopa_xdg_config_dirs() {
     __kvar_string="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$__kvar_string" ] 
+    if [ -z "$__kvar_string" ]
     then
         __kvar_string='/etc/xdg'
     fi

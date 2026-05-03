@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-05-02.
+# @note Updated 2026-05-03.
 # """
 
 # Can debug with:
@@ -10,6 +10,10 @@
 
 set -o errexit
 set -o nounset
+
+is_macos() {
+    [ "$(uname -s)" = 'Darwin' ]
+}
 
 cpu_count() {
     __kvar_num="${KOOPA_CPU_COUNT:-}"
@@ -76,10 +80,10 @@ download_and_extract() {
     __kvar_name="${1:?}"
     __kvar_url="${2:?}"
     __kvar_dirname="${3:?}"
+    rm -fr "${DESTDIR}${PREFIX}/src/${__kvar_name}"
     mkdir -p "${DESTDIR}${PREFIX}/src/${__kvar_name}"
     cd "${DESTDIR}${PREFIX}/src/${__kvar_name}" || return 1
     curl \
-        --create-dirs \
         --fail \
         --location \
         --retry 5 \
@@ -96,42 +100,6 @@ download_and_extract() {
     return 0
 }
 
-install_bash() {
-    __kvar_version='5.3'
-    printf 'Installing bash.\n'
-    download_and_extract \
-        'bash' \
-        "https://ftpmirror.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
-        "bash-${__kvar_version}" \
-        || return 1
-    ./configure --prefix="$PREFIX"
-    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
-    [ -x "${DESTDIR}${PREFIX}/bin/bash" ] || return 1
-    unset -v __kvar_version
-    return 0
-}
-
-install_coreutils() {
-    __kvar_version='9.11'
-    printf 'Installing coreutils.\n'
-    download_and_extract \
-        'coreutils' \
-        "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-${__kvar_version}.tar.gz" \
-        "coreutils-${__kvar_version}" \
-        || return 1
-    if is_root
-    then
-        export FORCE_UNSAFE_CONFIGURE=1
-    fi
-    ./configure --prefix="$PREFIX" --program-prefix='g'
-    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
-    [ -x "${DESTDIR}${PREFIX}/bin/gcp" ] || return 1
-    unset -v __kvar_version
-    return 0
-}
-
 install_openssl() {
     __kvar_version='3.6.2'
     printf 'Installing openssl.\n'
@@ -145,6 +113,9 @@ install_openssl() {
         --openssldir="$PREFIX" \
         --prefix="$PREFIX" \
         "-Wl,-rpath,${PREFIX}/lib" \
+        'no-docs' \
+        'no-legacy' \
+        'no-tests' \
         'no-zlib' \
         'shared'
     make VERBOSE=1 --jobs=1 depend
@@ -156,8 +127,18 @@ install_openssl() {
 }
 
 install_python() {
-    __kvar_version='3.14.4'
+    __kvar_version='3.12.10'
     printf 'Installing python.\n'
+    # On macOS, dylib install_names are baked in as absolute paths at build
+    # time. Symlink PREFIX/lib -> staged lib so they resolve during build and
+    # integrity checks. Not needed on Linux where LD_LIBRARY_PATH suffices.
+    __kvar_remove_lib_symlink=0
+    if is_macos && [ -n "$DESTDIR" ] && [ ! -d "${PREFIX}/lib" ]
+    then
+        mkdir -p "$PREFIX"
+        ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
+        __kvar_remove_lib_symlink=1
+    fi
     download_and_extract \
         'python' \
         "https://www.python.org/ftp/python/${__kvar_version}/Python-${__kvar_version}.tgz" \
@@ -165,6 +146,7 @@ install_python() {
         || return 1
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
+        --disable-test-modules \
         --prefix="$PREFIX" \
         --with-openssl="${DESTDIR}${PREFIX}"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
@@ -172,26 +154,21 @@ install_python() {
     unset -v LDLIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
-    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import hashlib'
-    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import lzma'
-    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import ssl'
-    PYTHONHOME="${DESTDIR}${PREFIX}" "${DESTDIR}${PREFIX}/bin/python3" -c 'import zlib'
-    unset -v __kvar_version
-    return 0
-}
-
-install_xz() {
-    __kvar_version='5.8.3'
-    printf 'Installing xz.\n'
-    download_and_extract \
-        'xz' \
-        "https://github.com/tukaani-project/xz/releases/download/v${__kvar_version}/xz-${__kvar_version}.tar.gz" \
-        "xz-${__kvar_version}" \
-        || return 1
-    ./configure --prefix="$PREFIX" --disable-static
-    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
-    [ -x "${DESTDIR}${PREFIX}/bin/xz" ] || return 1
+    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        PYTHONHOME="${DESTDIR}${PREFIX}" \
+        "${DESTDIR}${PREFIX}/bin/python3" -c 'import hashlib'
+    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        PYTHONHOME="${DESTDIR}${PREFIX}" \
+        "${DESTDIR}${PREFIX}/bin/python3" -c 'import ssl'
+    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        PYTHONHOME="${DESTDIR}${PREFIX}" \
+        "${DESTDIR}${PREFIX}/bin/python3" -c 'import zlib'
+    if [ "$__kvar_remove_lib_symlink" -eq 1 ]
+    then
+        rm -f "${PREFIX}/lib"
+        rmdir "$PREFIX" 2>/dev/null || true
+    fi
+    unset -v __kvar_remove_lib_symlink
     unset -v __kvar_version
     return 0
 }
@@ -212,26 +189,14 @@ install_zlib() {
     return 0
 }
 
-is_macos() {
-    [ "$(uname -s)" = 'Darwin' ]
-}
-
-is_root() {
-    [ "$(id -u)" -eq 0 ]
-}
-
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BOOTSTRAP_VERSION="$(cat "${SCRIPT_DIR}/bootstrap-version.txt")"
 
 PREFIX="${PREFIX:-}"
 if [ -z "$PREFIX" ]
 then
-    XDG_DATA_HOME="${XDG_DATA_HOME:-}"
-    if [ -z "$XDG_DATA_HOME" ]
-    then
-        XDG_DATA_HOME="${HOME:?}/.local/share"
-    fi
-    PREFIX="${XDG_DATA_HOME}/koopa-bootstrap"
+    PREFIX="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
+    PREFIX="${PREFIX%/}-bootstrap"
 fi
 PATH="${PREFIX}/bin:/usr/bin:/bin"
 CPU_COUNT="$(cpu_count)"
@@ -240,7 +205,7 @@ export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
-    printf 'This will install openssl3, xz, zlib, bash, python and coreutils.\n'
+    printf 'This will install openssl3, zlib, and python.\n'
     __kvar_destdir="${PREFIX}.staging.$$"
     rm -fr "$__kvar_destdir"
     if ! (
@@ -253,11 +218,8 @@ main() {
         export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
         export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
         install_openssl
-        install_xz
         install_zlib
-        install_bash
         install_python
-        install_coreutils
     )
     then
         printf 'Bootstrap build failed.\n' >&2
