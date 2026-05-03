@@ -22,10 +22,6 @@ koopa = "koopa.cli_main:main"
 build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
-# > [build-system]
-# > build-backend = "uv_build"
-# > requires = ["uv_build>=0.11,<1"]
-
 [tool.bumpver]
 current_version = "0.16.0"
 version_pattern = "MAJOR.MINOR.PATCH"
@@ -150,13 +146,3 @@ where = ["lang/python/src"]
 
 [tool.ty.terminal]
 error-on-warning = true
-
-[tool.uv]
-package = true
-
-[tool.uv.build-backend]
-module-name = "koopa"
-module-root = "lang/python/src"
-
-[tool.uv.sources]
-syntactic = { git = "https://github.com/acidgenomics/py-syntactic" }
