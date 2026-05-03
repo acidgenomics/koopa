@@ -176,6 +176,9 @@ def main(
         bzip2 = shutil.which("bzip2") or "bzip2"
         conf_args.append(f"R_BZIPCMD={bzip2}")
     if sys.platform == "darwin":
+        texbin = "/Library/TeX/texbin"
+        if os.path.isdir(texbin):
+            subprocess_env["PATH"] = texbin + ":" + subprocess_env.get("PATH", "")
         conf_args.append("--without-aqua")
     if is_devel:
         conf_args.append("--program-suffix=dev")

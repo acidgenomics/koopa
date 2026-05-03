@@ -28,6 +28,7 @@ def main(
         "geos",
         "hdf5",
         "libdeflate",
+        "libiconv",
         "libjpeg-turbo",
         "libpng",
         "libtiff",
@@ -45,6 +46,7 @@ def main(
     )
     curl_prefix = app_prefix("curl")
     geos_prefix = app_prefix("geos")
+    libiconv_prefix = app_prefix("libiconv")
     hdf5_prefix = app_prefix("hdf5")
     libjpeg_prefix = app_prefix("libjpeg-turbo")
     libpng_prefix = app_prefix("libpng")
@@ -88,6 +90,8 @@ def main(
             "-DGDAL_USE_ZLIB=ON",
             "-DGDAL_USE_ZSTD=ON",
             "-DOGR_BUILD_OPTIONAL_DRIVERS=OFF",
+            f"-DIconv_INCLUDE_DIR={libiconv_prefix}/include",
+            f"-DIconv_LIBRARY={libiconv_prefix}/lib/libiconv.{ext}",
             f"-DGEOS_INCLUDE_DIR={geos_prefix}/include",
             f"-DGEOS_LIBRARY={geos_prefix}/lib/libgeos.{ext}",
             f"-DHDF5_C_LIBRARY_hdf5={hdf5_prefix}/lib/libhdf5.{ext}",

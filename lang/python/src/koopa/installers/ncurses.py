@@ -25,6 +25,9 @@ def main(
     maj_min_ver = major_minor_version(version)
     pkgconfig_dir = os.path.join(prefix, "lib", "pkgconfig")
     os.makedirs(pkgconfig_dir, exist_ok=True)
+    existing_ldflags = os.environ.get("LDFLAGS", "")
+    rpath = f"-Wl,-rpath,{prefix}/lib"
+    os.environ["LDFLAGS"] = f"{rpath} {existing_ldflags}".strip()
     install_gnu_app(
         name=name,
         version=version,

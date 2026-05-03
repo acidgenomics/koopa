@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 
-from koopa.build import activate_app, locate, make_build
+from koopa.build import activate_app, app_prefix, locate, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
@@ -19,6 +20,16 @@ def main(
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("ncurses", "python", env=env)
     python = locate("python3")
+    python_config = f"{python}-config"
+    python_config_dir = subprocess.run(
+        [python_config, "--configdir"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    python_prefix = app_prefix("python")
+    env.ldflags.insert(0, f"-Wl,-rpath,{python_prefix}/lib")
+    env.ldflags.insert(0, f"-Wl,-rpath,{prefix}/lib")
     url = f"https://github.com/vim/vim/archive/v{version}.tar.gz"
     download_extract_cd(url)
     conf_args = [
@@ -27,6 +38,7 @@ def main(
         "--enable-python3interp",
         "--enable-terminal",
         f"--with-python3-command={python}",
+        f"--with-python3-config-dir={python_config_dir}",
         "--with-tlib=ncurses",
         f"--prefix={prefix}",
     ]
