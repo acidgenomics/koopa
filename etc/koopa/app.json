@@ -4832,11 +4832,7 @@
     "dependencies": [
       "m4"
     ],
-    "installer": "gnu-app",
-    "installer_args": {
-      "disable_static": "",
-      "program_prefix": "g"
-    },
+    "installer": "libtool",
     "man1": [
       "glibtool.1",
       "glibtoolize.1"
