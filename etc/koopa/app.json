@@ -3970,11 +3970,9 @@
     "dependencies": [
       "gmp"
     ],
-    "mirror": true,
     "prune": false,
-    "src_url": "https://libisl.sourceforge.io/isl-{version}.tar.xz",
     "url": [
-      "https://libisl.sourceforge.io/?C=M;O=D"
+      "https://gcc.gnu.org/pub/gcc/infrastructure/"
     ],
     "version": "0.27"
   },
