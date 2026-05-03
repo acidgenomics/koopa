@@ -141,20 +141,40 @@ class BuildProgress:
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
     def switch_to_step_mode(self, total: int) -> bool:
-        """Switch from elapsed-time mode to step-counting mode."""
+        """Switch from elapsed-time mode to step-counting mode.
+
+        When capturing, this pauses the spinner so update_steps can
+        take over the tty line.
+        """
         if total <= 0:
             return False
         self._total_steps = total
         self._current_step = 0
+        if self.capturing:
+            self._spinner_stop.set()
         return True
 
     def update_steps(self, current: int, total: int) -> None:
-        """Update step progress with a live counter on stderr."""
+        """Update step progress with a live counter.
+
+        In verbose mode writes to stderr. In capture mode writes to the
+        saved tty fd so the progress line replaces the spinner.
+        """
         self._current_step = current
         self._total_steps = total
-        if not self._quiet and self._verbose:
-            elapsed = _fmt_duration(self.elapsed)
-            sys.stderr.write(f"\r\033[K  [{current}/{total}] {elapsed}")
+        if self._quiet:
+            return
+        elapsed = _fmt_duration(self.elapsed)
+        line = f"\r\033[K  {self._name} [{current}/{total}] {elapsed}"
+        if self.capturing and self._tty_fd >= 0:
+            try:
+                os.write(self._tty_fd, line.encode())
+                if current >= total:
+                    os.write(self._tty_fd, b"\n")
+            except OSError:
+                pass
+        elif self._verbose:
+            sys.stderr.write(line)
             sys.stderr.flush()
             if current >= total:
                 sys.stderr.write("\n")
