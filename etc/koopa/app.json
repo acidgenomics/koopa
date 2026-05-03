@@ -2748,7 +2748,6 @@
   },
   "gawk": {
     "bin": [
-      "awk",
       "gawk"
     ],
     "build_dependencies": [
@@ -2767,7 +2766,6 @@
       "disable_pma": ""
     },
     "man1": [
-      "awk.1",
       "gawk.1"
     ],
     "prune": false,
