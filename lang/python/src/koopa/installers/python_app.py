@@ -103,18 +103,7 @@ def _install_from_source(*, version: str, prefix: str) -> None:
         check=True,
     )
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
-    for mod in (
-        "_bz2",
-        "_ctypes",
-        "_decimal",
-        "hashlib",
-        "pyexpat",
-        "readline",
-        "sqlite3",
-        "ssl",
-        "zlib",
-    ):
-        subprocess.run([python, "-c", f"import {mod}"], check=True)
+    _check_python_install(python)
     _create_unversioned_symlinks(prefix)
 
 
@@ -147,19 +136,31 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
         else:
             shutil.copy2(src, dst)
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
-    for mod in (
+    _check_python_install(python)
+    _create_unversioned_symlinks(prefix)
+
+
+def _check_python_install(python: str) -> None:
+    print("Checking module integrity.", file=sys.stderr)
+    modules = (
         "_bz2",
         "_ctypes",
         "_decimal",
         "hashlib",
+        "lzma",
         "pyexpat",
         "readline",
         "sqlite3",
         "ssl",
         "zlib",
-    ):
+    )
+    for mod in modules:
         subprocess.run([python, "-c", f"import {mod}"], check=True)
-    _create_unversioned_symlinks(prefix)
+        print(f"  {mod}: ok", file=sys.stderr)
+    print("Checking sysconfig.", file=sys.stderr)
+    subprocess.run([python, "-m", "sysconfig"], check=True)
+    print("Checking pip.", file=sys.stderr)
+    subprocess.run([python, "-m", "pip", "list"], check=True)
 
 
 def _create_unversioned_symlinks(prefix: str) -> None:
