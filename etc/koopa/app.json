@@ -1474,7 +1474,9 @@
     ],
     "date": "2026-05-02",
     "default": true,
+    "mirror": true,
     "prune": true,
+    "src_url": "https://www.j3e.de/linux/convmv/convmv-{version}.tar.gz",
     "url": "https://www.j3e.de/linux/convmv/?C=M;O=D",
     "version": "2.06"
   },
@@ -1825,7 +1827,9 @@
     "man1": [
       "dash.1"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/dash-{version}.tar.gz",
     "url": [
       "http://gondor.apana.org.au/~herbert/dash/",
       "https://git.kernel.org/pub/scm/utils/dash/dash.git"
@@ -2471,7 +2475,9 @@
       "xorg-xtrans",
       "zlib"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.fltk.org/pub/fltk/{version}/fltk-{version}-source.tar.gz",
     "url": [
       "https://www.fltk.org/"
     ],
@@ -3078,7 +3084,9 @@
     "dependencies": [
       "m4"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://gmplib.org/download/gmp/gmp-{version}.tar.xz",
     "url": [
       "https://gmplib.org/"
     ],
@@ -3929,7 +3937,9 @@
       "magick.1",
       "magick-script.1"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://imagemagick.org/archive/releases/ImageMagick-{version}.tar.xz",
     "url": [
       "https://imagemagick.org/"
     ],
@@ -3962,7 +3972,9 @@
     "dependencies": [
       "gmp"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://libisl.sourceforge.io/isl-{version}.tar.xz",
     "url": [
       "https://libisl.sourceforge.io/?C=M;O=D"
     ],
@@ -4045,7 +4057,9 @@
     ],
     "date": "2024-12-30",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.ijg.org/files/jpegsrc.v{version}.tar.gz",
     "url": [
       "https://www.ijg.org/"
     ],
@@ -4149,7 +4163,9 @@
       "libedit",
       "openssl"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://kerberos.org/dist/krb5/{major}.{minor}/krb5-{version}.tar.gz",
     "url": [
       "https://web.mit.edu/kerberos/"
     ],
@@ -4253,7 +4269,9 @@
     "dependencies": [
       "openssl"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://nlnetlabs.nl/downloads/ldns/ldns-{version}.tar.gz",
     "url": [
       "https://nlnetlabs.nl/projects/ldns/about/"
     ],
@@ -4330,7 +4348,9 @@
       "zlib",
       "zstd"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.libarchive.org/downloads/libarchive-{version}.tar.xz",
     "url": [
       "https://www.libarchive.org/"
     ],
@@ -4412,7 +4432,9 @@
     "dependencies": [
       "ncurses"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://thrysoee.dk/editline/libedit-{version}.tar.gz",
     "url": [
       "https://thrysoee.dk/editline/"
     ],
@@ -4424,7 +4446,9 @@
     ],
     "date": "2022-09-26",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://fossies.org/linux/misc/libev-{version}.tar.gz",
     "url": [
       "http://dist.schmorp.de/libev/",
       "http://software.schmorp.de/pkg/libev.html"
@@ -4513,7 +4537,9 @@
       "zlib",
       "zstd"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://download.osgeo.org/geotiff/libgeotiff/libgeotiff-{version}.tar.gz",
     "url": [
       "https://github.com/OSGeo/libgeotiff/"
     ],
@@ -4670,7 +4696,9 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.tcpdump.org/release/libpcap-{version}.tar.gz",
     "url": [
       "https://www.tcpdump.org/"
     ],
@@ -4737,7 +4765,9 @@
       "openssl",
       "zlib"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.libssh2.org/download/libssh2-{version}.tar.gz",
     "url": [
       "https://www.libssh2.org/"
     ],
@@ -4770,7 +4800,9 @@
       "ncurses",
       "unibilium"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.leonerd.org.uk/code/libtermkey/libtermkey-{version}.tar.gz",
     "url": [
       "https://www.leonerd.org.uk/code/libtermkey/"
     ],
@@ -4787,7 +4819,9 @@
       "libjpeg-turbo",
       "zstd"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://download.osgeo.org/libtiff/tiff-{version}.tar.xz",
     "url": [
       "https://download.osgeo.org/libtiff/",
       "https://download.osgeo.org/libtiff/?C=M&O=D"
@@ -4867,7 +4901,9 @@
       "0.2.0 is incompatible with neovim."
     ],
     "outdated": true,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://launchpad.net/libvterm/trunk/v{major}.{minor}/+download/libvterm-{version}.tar.gz",
     "url": [
       "https://www.leonerd.org.uk/code/libvterm/"
     ],
@@ -5066,7 +5102,9 @@
     ],
     "date": "2026-01-02",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.lua.org/ftp/lua-{version}.tar.gz",
     "url": [
       "http://www.lua.org/",
       "https://github.com/lua/lua/"
@@ -5183,7 +5221,9 @@
     ],
     "date": "2022-08-29",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.oberhumer.com/opensource/lzo/download/lzo-{version}.tar.gz",
     "url": [
       "https://www.oberhumer.com/opensource/lzo/"
     ],
@@ -5486,7 +5526,9 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-{version}.tar.gz",
     "url": [
       "https://www.bytereef.org/mpdecimal/"
     ],
@@ -5602,7 +5644,9 @@
       "gettext",
       "ncurses"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://www.nano-editor.org/dist/v{major}/nano-{version}.tar.xz",
     "url": [
       "https://www.nano-editor.org/"
     ],
@@ -5863,7 +5907,9 @@
       "pcre2",
       "zlib"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://nmap.org/dist/nmap-{version}.tar.bz2",
     "url": "https://nmap.org/",
     "version": "7.99"
   },
@@ -6064,7 +6110,9 @@
     "dependencies": [
       "openssl"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-{version}.tgz",
     "url": [
       "https://www.openldap.org/software/"
     ],
@@ -6086,7 +6134,9 @@
       "openssl",
       "zlib"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz",
     "url": [
       "https://www.openssh.com/portable.html",
       "https://github.com/openssh/openssh-portable",
@@ -6223,7 +6273,9 @@
     "man1": [
       "pass.1"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://git.zx2c4.com/password-store/snapshot/password-store-{version}.tar.xz",
     "url": [
       "https://www.passwordstore.org/"
     ],
@@ -6269,7 +6321,9 @@
     "man1": [
       "pbzip2.1"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://launchpad.net/pbzip2/{major}.{minor}.x/{version}/+download/pbzip2-{version}.tar.gz",
     "url": [
       "https://web.archive.org/web/20180226093549/compression.ca/pbzip2/"
     ],
@@ -6448,7 +6502,9 @@
     ],
     "date": "2026-05-02",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://cairographics.org/releases/pixman-{version}.tar.gz",
     "url": [
       "https://cairographics.org/releases/?C=M;O=D",
       "http://www.pixman.org/"
@@ -6486,7 +6542,9 @@
     "man1": [
       "pkgconf.1"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://distfiles.ariadne.space/pkgconf/pkgconf-{version}.tar.xz",
     "url": [
       "https://github.com/pkgconf/pkgconf"
     ],
@@ -6618,7 +6676,9 @@
       "proj.1",
       "projinfo.1"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://download.osgeo.org/proj/proj-{version}.tar.gz",
     "url": [
       "https://proj.org/",
       "https://github.com/OSGeo/PROJ/"
@@ -7643,7 +7703,9 @@
     "man1": [
       "rsync.1"
     ],
+    "mirror": true,
     "prune": true,
+    "src_url": "https://download.samba.org/pub/rsync/src/rsync-{version}.tar.gz",
     "url": [
       "https://download.samba.org/pub/rsync/src/?C=M;O=D"
     ],
@@ -8723,7 +8785,9 @@
     "dependencies": [
       "expat"
     ],
+    "mirror": true,
     "prune": false,
+    "src_url": "https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz",
     "url": [
       "https://www.unidata.ucar.edu/software/udunits/",
       "https://downloads.unidata.ucar.edu/udunits/"
@@ -9569,7 +9633,9 @@
     ],
     "date": "2026-04-24",
     "default": false,
+    "mirror": true,
     "prune": false,
+    "src_url": "https://www.zlib.net/zlib-{version}.tar.gz",
     "url": [
       "https://www.zlib.net/"
     ],

@@ -12,6 +12,11 @@ from koopa.download import download
 def download_extract_cd(url: str) -> None:
     """Download a tarball, extract into ``src/``, and chdir into it."""
     tarball = download(url)
+    extract_cd(tarball)
+
+
+def extract_cd(tarball: str) -> None:
+    """Extract a tarball into ``src/`` and chdir into it."""
     extract(tarball, "src")
     os.chdir("src")
 

@@ -205,7 +205,7 @@ def _is_shared_install() -> bool:
 def uninstall_koopa() -> None:
     """Uninstall koopa itself."""
     kp = _koopa_prefix()
-    bootstrap = os.path.join(kp, "bootstrap")
+    bootstrap = kp.rstrip(os.sep) + "-bootstrap"
     config = os.path.join(kp, "etc", "koopa")
     if sys.stdin.isatty():
         answer = input("Proceed with koopa uninstall? [Y/n] ").strip().lower()

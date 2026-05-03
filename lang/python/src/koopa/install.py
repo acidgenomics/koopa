@@ -41,7 +41,6 @@ class InstallConfig:
     # Boolean flags.
     auto_prefix: bool = False
     binary: bool = False
-    bootstrap: bool = False
     copy_log_files: bool = False
     deps: bool = True
     inherit_env: bool = False
@@ -105,7 +104,6 @@ def _man1_prefix() -> str:
 def _cpu_count() -> int:
     """Return CPU count."""
     return os.cpu_count() or 1
-
 
 
 def _import_app_json() -> dict[str, Any]:
@@ -220,37 +218,81 @@ def _app_json_revision(name: str) -> int:
     return 0
 
 
-def _can_install_binary() -> bool:
-    """Check if binary installation is available."""
-    return os.environ.get("KOOPA_CAN_INSTALL_BINARY", "") == "1"
-
-
-def _can_push_binary() -> bool:
-    """Check if binary push is available."""
-    return os.environ.get("KOOPA_CAN_PUSH_BINARY", "") == "1"
+def _can_build_binary() -> bool:
+    """Check if running on a designated builder machine (KOOPA_BUILDER=1)."""
+    return os.environ.get("KOOPA_BUILDER", "0") == "1"
 
 
 def _has_private_access() -> bool:
-    """Check if user has private AWS S3 access."""
-    result = subprocess.run(
-        ["aws", "sts", "get-caller-identity", "--profile", "acidgenomics"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    return result.returncode == 0
+    """Check for the acidgenomics profile in ~/.aws/credentials."""
+    credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
+    if not os.path.isfile(credentials):
+        return False
+    import re
+
+    with open(credentials) as f:
+        return bool(re.search(r"^\[acidgenomics\]$", f.read(), re.MULTILINE))
+
+
+def _can_install_binary() -> bool:
+    """Check if binary installation is available.
+
+    Mirrors koopa_can_install_binary:
+    - KOOPA_CAN_INSTALL_BINARY=0 -> deny
+    - KOOPA_CAN_INSTALL_BINARY=1 -> allow
+    - KOOPA_BUILDER=1 -> deny (builders always build from source)
+    - otherwise: allow only if acidgenomics AWS profile is present
+    """
+    flag = os.environ.get("KOOPA_CAN_INSTALL_BINARY", "")
+    if flag == "0":
+        return False
+    if flag == "1":
+        return True
+    if _can_build_binary():
+        return False
+    return _has_private_access()
+
+
+def _can_push_binary() -> bool:
+    """Check if binary push to S3 is available.
+
+    Mirrors koopa_can_push_binary:
+    - acidgenomics AWS profile must be present in ~/.aws/credentials
+    - KOOPA_BUILDER=1 must be set
+    - AWS_CLOUDFRONT_DISTRIBUTION_ID must be set
+    - aws CLI must be executable
+
+    Note: aws-cli cannot push its own binary during its own post-install
+    (aws not yet in PATH at that point). Use 'koopa develop push-app-build
+    aws-cli' after installation completes.
+    """
+    if not _has_private_access():
+        return False
+    if not _can_build_binary():
+        return False
+    if not os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", ""):
+        return False
+    return shutil.which("aws") is not None
 
 
 def _os_string() -> str:
-    """Get OS string for binary packages."""
+    """Get OS string for binary package S3 paths (e.g. 'macos-15', 'ubuntu-24')."""
     if is_macos():
-        return "macos"
+        ver = platform.mac_ver()[0]
+        major = ver.split(".")[0] if ver else ""
+        return f"macos-{major}" if major else "macos"
     if is_linux():
         try:
+            data: dict[str, str] = {}
             with open("/etc/os-release") as f:
                 for line in f:
-                    if line.startswith("ID="):
-                        return line.split("=", 1)[1].strip().strip('"')
+                    if "=" in line:
+                        k, v = line.strip().split("=", 1)
+                        data[k] = v.strip('"')
+            os_id = data.get("ID", "linux")
+            version = data.get("VERSION_ID", "")
+            major = version.split(".")[0] if version else ""
+            return f"{os_id}-{major}" if major else os_id
         except FileNotFoundError:
             pass
     return "linux"
@@ -258,8 +300,8 @@ def _os_string() -> str:
 
 def _arch2() -> str:
     """Get architecture string (e.g. 'amd64', 'arm64')."""
-    machine = platform.machine()
-    mapping = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
+    machine = platform.machine().lower()
+    mapping = {"x86_64": "amd64", "amd64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
     return mapping.get(machine, machine)
 
 
@@ -517,8 +559,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     name=dep,
                     passthrough_args=_build_passthrough_args(dep),
                 )
-                if config.bootstrap:
-                    dep_config.bootstrap = True
                 if config.verbose:
                     dep_config.verbose = True
                 install_app(dep_config)
@@ -1246,7 +1286,7 @@ def _acquire_install_lock() -> bool:
                 f"'{path}' if the process is stale."
             )
             raise RuntimeError(msg)
-        except ValueError, ProcessLookupError:
+        except (ValueError, ProcessLookupError):
             pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     Path(path).write_text(str(os.getpid()))
@@ -1260,7 +1300,7 @@ def _release_install_lock() -> None:
             pid = int(Path(path).read_text().strip())
             if pid == os.getpid():
                 os.unlink(path)
-    except ValueError, OSError:
+    except (ValueError, OSError):
         pass
 
 
@@ -1638,7 +1678,6 @@ def install_koopa(
     *,
     prefix: str = "",
     shared: bool = False,
-    bootstrap: bool = False,
     add_to_user_profile: bool = True,
     interactive: bool = True,
     verbose: bool = False,
@@ -1687,9 +1726,6 @@ def install_koopa(
         if not os.path.exists(xdg_data_link):
             os.makedirs(xdg_data_home, exist_ok=True)
             os.symlink(prefix, xdg_data_link)
-    if bootstrap:
-        cli_install("bash", bootstrap=True)
-        cli_install("coreutils", bootstrap=True)
     _update_venv(prefix)
 
 
@@ -1734,7 +1770,6 @@ def update_koopa(*, verbose: bool = False) -> None:
         alert_note("koopa is already up to date.")
     elif stdout:
         print(stdout, file=sys.stderr)
-    _update_venv(prefix)
     _zsh_compaudit_set_permissions()
 
 
@@ -1769,31 +1804,17 @@ def _update_venv(prefix: str) -> None:
                     " Recreating virtual environment."
                 )
                 shutil.rmtree(venv_dir)
-    uv = shutil.which("uv")
     if not os.path.isdir(venv_dir):
         alert("Creating Python virtual environment.")
         try:
-            if uv:
-                subprocess.run(
-                    [
-                        uv,
-                        "venv",
-                        venv_dir,
-                        "--no-python-downloads",
-                        "--python",
-                        python_version,
-                    ],
-                    check=True,
-                )
-            else:
-                import venv
+            import venv
 
-                venv.create(venv_dir, with_pip=True, symlinks=True)
-        except (subprocess.CalledProcessError, OSError) as exc:
+            venv.create(venv_dir, with_pip=True, symlinks=True)
+        except Exception as exc:
             warn(
                 f"Failed to create virtual environment: {exc}\n"
                 f"  Run bootstrap to install Python {python_version}:\n"
-                f"    sh '{os.path.join(prefix, 'etc', 'koopa', 'bootstrap.sh')}'"
+                f"    sh '{os.path.join(prefix, 'lang', 'sh', 'include', 'bootstrap.sh')}'"
             )
             if os.path.isdir(venv_dir):
                 shutil.rmtree(venv_dir)
@@ -1803,7 +1824,7 @@ def _update_venv(prefix: str) -> None:
         warn(
             f"Virtual environment python not found at '{venv_python}'.\n"
             f"  Run bootstrap to install Python {python_version}:\n"
-            f"    sh '{os.path.join(prefix, 'etc', 'koopa', 'bootstrap.sh')}'"
+            f"    sh '{os.path.join(prefix, 'lang', 'sh', 'include', 'bootstrap.sh')}'"
         )
         if os.path.isdir(venv_dir):
             shutil.rmtree(venv_dir)
@@ -1811,50 +1832,31 @@ def _update_venv(prefix: str) -> None:
     stamp_file = os.path.join(venv_dir, ".stamp")
     dep_files = [
         os.path.join(prefix, "pyproject.toml"),
-        os.path.join(prefix, "uv.lock"),
     ]
     if os.path.isfile(stamp_file):
         stamp_mtime = os.path.getmtime(stamp_file)
         if all(os.path.getmtime(f) <= stamp_mtime for f in dep_files if os.path.isfile(f)):
             return
-    alert("Installing Python package with extras.")
-    if uv:
+    alert("Installing koopa Python package.")
+    if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
+        alert("Installing pip into virtual environment.")
         subprocess.run(
-            [
-                uv,
-                "pip",
-                "install",
-                "--python",
-                venv_python,
-                "--all-extras",
-                "--editable",
-                prefix,
-                "--requirements",
-                os.path.join(prefix, "pyproject.toml"),
-                "--upgrade",
-            ],
+            [venv_python, "-m", "ensurepip", "--upgrade"],
             check=True,
         )
-    else:
-        if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
-            alert("Installing pip into virtual environment.")
-            subprocess.run(
-                [venv_python, "-m", "ensurepip", "--upgrade"],
-                check=True,
-            )
-        subprocess.run(
-            [
-                venv_python,
-                "-m",
-                "pip",
-                "install",
-                "--editable",
-                f"{prefix}[extra]",
-                "--upgrade",
-                "--quiet",
-            ],
-            check=True,
-        )
+    subprocess.run(
+        [
+            venv_python,
+            "-m",
+            "pip",
+            "install",
+            "--editable",
+            f"{prefix}[extra]",
+            "--upgrade",
+            "--quiet",
+        ],
+        check=True,
+    )
     with open(stamp_file, "w") as f:
         f.write("")
 
@@ -1862,13 +1864,47 @@ def _update_venv(prefix: str) -> None:
 # -- Update pipeline ----------------------------------------------------------
 
 
-def update_bootstrap(*, verbose: bool = False) -> None:
-    """Update bootstrap if out of date."""
+def update_bootstrap(*, verbose: bool = False) -> bool:
+    """Update bootstrap if out of date.
+
+    Returns True if bootstrap was rebuilt, False if already current.
+    """
     from koopa.alert import alert, warn
     from koopa.check import check_bootstrap_version
+    from koopa.prefix import bootstrap_prefix
 
-    if check_bootstrap_version():
-        return
+    bp = bootstrap_prefix()
+    bootstrap_absent = not os.path.isdir(bp)
+    system_python_adequate = sys.version_info >= (3, 12)
+
+    # If bootstrap is absent and system Python is adequate, nothing to do.
+    if bootstrap_absent and system_python_adequate:
+        return False
+    # If bootstrap is present and up to date, also verify Python version matches.
+    if not bootstrap_absent and check_bootstrap_version():
+        from koopa.prefix import koopa_prefix
+
+        python_version_file = os.path.join(koopa_prefix(), ".python-version")
+        if os.path.isfile(python_version_file):
+            with open(python_version_file) as _f:
+                desired_version = _f.read().strip()
+            bootstrap_python = os.path.join(bp, "bin", "python3")
+            if os.path.isfile(bootstrap_python):
+                _res = subprocess.run(
+                    [bootstrap_python, "--version"],
+                    capture_output=True,
+                    text=True,
+                )
+                if _res.returncode == 0:
+                    actual = _res.stdout.strip().split()[-1]
+                    actual_minor = ".".join(actual.split(".")[:2])
+                    if actual_minor == desired_version:
+                        return False
+                    # Python version mismatch — fall through to rebuild
+            else:
+                return False
+        else:
+            return False
     alert("Updating bootstrap.")
     try:
         config = InstallConfig(
@@ -1880,6 +1916,8 @@ def update_bootstrap(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update bootstrap: {exc}")
+        return False
+    return True
 
 
 def _is_supported_app(name: str) -> bool:
@@ -2127,7 +2165,6 @@ def cli_install(
     name: str,
     *,
     reinstall: bool = False,
-    bootstrap: bool = False,
     verbose: bool = False,
 ) -> None:
     """High-level CLI entry point for installing an app by name.
@@ -2139,7 +2176,6 @@ def cli_install(
         config = InstallConfig(
             name=name,
             reinstall=reinstall,
-            bootstrap=bootstrap,
             verbose=verbose,
             binary=_can_install_binary(),
             push=_can_push_binary(),
