@@ -113,7 +113,7 @@ install_bash() {
 }
 
 install_coreutils() {
-    __kvar_version='9.10'
+    __kvar_version='9.11'
     printf 'Installing coreutils.\n'
     download_and_extract \
         'coreutils' \
@@ -181,7 +181,7 @@ install_python() {
 }
 
 install_xz() {
-    __kvar_version='5.8.1'
+    __kvar_version='5.8.3'
     printf 'Installing xz.\n'
     download_and_extract \
         'xz' \

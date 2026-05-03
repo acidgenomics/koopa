@@ -1624,4 +1624,55 @@ def update_app_json(results: list[VersionCheckResult]) -> int:
             count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
+    bootstrap_count = update_bootstrap(data)
+    if bootstrap_count > 0:
+        print(
+            f"Updated {bootstrap_count} versions in bootstrap.sh.",
+            file=sys.stderr,
+        )
+    return count
+
+
+_BOOTSTRAP_APP_MAP: dict[str, str] = {
+    "bash": "bash",
+    "coreutils": "coreutils",
+    "openssl": "openssl3",
+    "python": "python3.14",
+    "xz": "xz",
+    "zlib": "zlib",
+}
+
+
+def update_bootstrap(app_data: dict[str, Any]) -> int:
+    """Sync bootstrap.sh versions with app.json and bump bootstrap version."""
+    bootstrap_path = Path(koopa_prefix()) / "etc" / "koopa" / "bootstrap.sh"
+    version_path = Path(koopa_prefix()) / "etc" / "koopa" / "bootstrap-version.txt"
+    if not bootstrap_path.is_file():
+        return 0
+    text = bootstrap_path.read_text()
+    count = 0
+    for func_name, app_key in _BOOTSTRAP_APP_MAP.items():
+        entry = app_data.get(app_key, {})
+        if not isinstance(entry, dict):
+            continue
+        new_version = entry.get("version", "")
+        if not new_version:
+            continue
+        pattern = re.compile(
+            rf"(install_{re.escape(func_name)}\(\) \{{\n"
+            rf"    __kvar_version=')([^']+)(')",
+        )
+        match = pattern.search(text)
+        if match and match.group(2) != new_version:
+            text = pattern.sub(rf"\g<1>{new_version}\g<3>", text)
+            count += 1
+            print(
+                f"  bootstrap {func_name}: {match.group(2)} -> {new_version}",
+                file=sys.stderr,
+            )
+    if count > 0:
+        bootstrap_path.write_text(text)
+        today = time.strftime("%Y.%m.%d")
+        version_path.write_text(today + "\n")
+        print(f"  bootstrap version: {today}", file=sys.stderr)
     return count
