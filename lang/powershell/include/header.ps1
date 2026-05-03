@@ -38,6 +38,14 @@ function __koopa_activate_koopa {
         }
     }
 
+    # Windows-specific: Scoop and WinGet.
+    if (_koopa_is_windows) {
+        _koopa_add_to_path_start @(
+            (Join-Path $env:USERPROFILE 'scoop\shims'),
+            (Join-Path $env:LOCALAPPDATA 'Microsoft\WindowsApps')
+        )
+    }
+
     # Final PATH additions.
     _koopa_add_to_path_start @(
         '/usr/local/sbin',
