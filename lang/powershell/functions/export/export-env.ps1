@@ -18,6 +18,8 @@ function _koopa_export_env {
     # KOOPA_CPU_COUNT.
     if (_koopa_is_macos) {
         $env:KOOPA_CPU_COUNT = (sysctl -n hw.ncpu 2>$null)
+    } elseif (_koopa_is_windows) {
+        $env:KOOPA_CPU_COUNT = $env:NUMBER_OF_PROCESSORS
     } else {
         $env:KOOPA_CPU_COUNT = (nproc 2>$null)
     }
@@ -30,13 +32,21 @@ function _koopa_export_env {
         $env:XDG_CACHE_HOME = Join-Path $HOME '.cache'
     }
     if (-not $env:XDG_CONFIG_DIRS) {
-        $env:XDG_CONFIG_DIRS = '/etc/xdg'
+        if (_koopa_is_windows) {
+            $env:XDG_CONFIG_DIRS = $env:PROGRAMDATA
+        } else {
+            $env:XDG_CONFIG_DIRS = '/etc/xdg'
+        }
     }
     if (-not $env:XDG_CONFIG_HOME) {
         $env:XDG_CONFIG_HOME = Join-Path $HOME '.config'
     }
     if (-not $env:XDG_DATA_DIRS) {
-        $env:XDG_DATA_DIRS = '/usr/local/share:/usr/share'
+        if (_koopa_is_windows) {
+            $env:XDG_DATA_DIRS = $env:LOCALAPPDATA
+        } else {
+            $env:XDG_DATA_DIRS = '/usr/local/share:/usr/share'
+        }
     }
     if (-not $env:XDG_DATA_HOME) {
         $env:XDG_DATA_HOME = Join-Path $HOME '.local/share'

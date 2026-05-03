@@ -10,7 +10,7 @@ function _koopa_activate_bootstrap {
         (Test-Path (Join-Path $optPrefix 'bash')) -and
         (Test-Path (Join-Path $optPrefix 'coreutils')) -and
         (Test-Path (Join-Path $optPrefix 'openssl3')) -and
-        (Test-Path (Join-Path $optPrefix 'python3.12')) -and
+        (Test-Path (Join-Path $optPrefix 'python3.14')) -and
         (Test-Path (Join-Path $optPrefix 'zlib'))
     )
     if ($hasAll) {
