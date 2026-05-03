@@ -488,7 +488,6 @@ def check_system() -> bool:
     ok = True
     check_build_system()
     if not check_bootstrap_version():
-        warn("Run 'koopa install user bootstrap' to update.")
         ok = False
     if is_macos():
         if not check_macos_system_r():
