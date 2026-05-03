@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-04-24.
+# @note Updated 2026-05-02.
 # """
 
 # Can debug with:
@@ -171,6 +171,27 @@ install_python() {
     make install
     unset -v LDLIBS
     [ -x "${PREFIX}/bin/python3" ] || return 1
+    printf 'Checking python module integrity.\n'
+    "${PREFIX}/bin/python3" -c 'import hashlib'
+    "${PREFIX}/bin/python3" -c 'import lzma'
+    "${PREFIX}/bin/python3" -c 'import ssl'
+    "${PREFIX}/bin/python3" -c 'import zlib'
+    unset -v __kvar_version
+    return 0
+}
+
+install_xz() {
+    __kvar_version='5.8.1'
+    printf 'Installing xz.\n'
+    download_and_extract \
+        'xz' \
+        "https://github.com/tukaani-project/xz/releases/download/v${__kvar_version}/xz-${__kvar_version}.tar.gz" \
+        "xz-${__kvar_version}" \
+        || return 1
+    ./configure --prefix="$PREFIX" --disable-static
+    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
+    make install
+    [ -x "${PREFIX}/bin/xz" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -218,7 +239,7 @@ export CPU_COUNT PATH PREFIX
 
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
-    printf 'This will install openssl3, zlib, bash, python and coreutils.\n'
+    printf 'This will install openssl3, xz, zlib, bash, python and coreutils.\n'
     rm -fr "$PREFIX"
     mkdir -p "$PREFIX"
     (
@@ -229,6 +250,7 @@ main() {
         export PKG_CONFIG_PATH="${PREFIX:?}/lib/pkgconfig"
         # > declare -x | sort
         install_openssl
+        install_xz
         install_zlib
         install_bash
         install_python
