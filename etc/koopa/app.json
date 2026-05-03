@@ -5918,6 +5918,7 @@
     "build_dependencies": ["make"],
     "date": "2023-08-31",
     "default": true,
+    "dependencies": ["libiconv"],
     "installer": "gnu-app",
     "installer_args": {
       "program_prefix": "g"
