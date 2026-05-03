@@ -1700,10 +1700,12 @@ def update_koopa(*, verbose: bool = False) -> None:
 
 def _update_venv(prefix: str) -> None:
     """Create or update the Python virtual environment with extras."""
-    from koopa.alert import alert
+    from koopa.alert import alert, warn
 
     python_version_file = os.path.join(prefix, ".python-version")
     if not os.path.isfile(python_version_file):
+        return
+    if not is_owner():
         return
     with open(python_version_file) as f:
         python_version = f.read().strip()
@@ -1730,22 +1732,42 @@ def _update_venv(prefix: str) -> None:
     uv = shutil.which("uv")
     if not os.path.isdir(venv_dir):
         alert("Creating Python virtual environment.")
-        if uv:
-            subprocess.run(
-                [
-                    uv,
-                    "venv",
-                    venv_dir,
-                    "--no-python-downloads",
-                    "--python",
-                    python_version,
-                ],
-                check=True,
-            )
-        else:
-            import venv
+        try:
+            if uv:
+                subprocess.run(
+                    [
+                        uv,
+                        "venv",
+                        venv_dir,
+                        "--no-python-downloads",
+                        "--python",
+                        python_version,
+                    ],
+                    check=True,
+                )
+            else:
+                import venv
 
-            venv.create(venv_dir, with_pip=True, symlinks=True)
+                venv.create(venv_dir, with_pip=True, symlinks=True)
+        except (subprocess.CalledProcessError, OSError) as exc:
+            warn(
+                f"Failed to create virtual environment: {exc}\n"
+                f"  Run bootstrap to install Python {python_version}:\n"
+                f"    sh '{os.path.join(prefix, 'etc', 'koopa', 'bootstrap.sh')}'"
+            )
+            if os.path.isdir(venv_dir):
+                shutil.rmtree(venv_dir)
+            return
+    venv_python = os.path.join(venv_dir, "bin", "python3")
+    if not os.path.isfile(venv_python):
+        warn(
+            f"Virtual environment python not found at '{venv_python}'.\n"
+            f"  Run bootstrap to install Python {python_version}:\n"
+            f"    sh '{os.path.join(prefix, 'etc', 'koopa', 'bootstrap.sh')}'"
+        )
+        if os.path.isdir(venv_dir):
+            shutil.rmtree(venv_dir)
+        return
     stamp_file = os.path.join(venv_dir, ".stamp")
     dep_files = [
         os.path.join(prefix, "pyproject.toml"),
@@ -1763,7 +1785,7 @@ def _update_venv(prefix: str) -> None:
                 "pip",
                 "install",
                 "--python",
-                os.path.join(venv_dir, "bin", "python3"),
+                venv_python,
                 "--all-extras",
                 "--editable",
                 prefix,
@@ -1774,7 +1796,6 @@ def _update_venv(prefix: str) -> None:
             check=True,
         )
     else:
-        venv_python = os.path.join(venv_dir, "bin", "python3")
         if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
             alert("Installing pip into virtual environment.")
             subprocess.run(
