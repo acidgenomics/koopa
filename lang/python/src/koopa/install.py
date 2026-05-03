@@ -654,8 +654,20 @@ def install_gnu_app(
     os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
     from koopa.download import download
 
-    url = f"{mirror}/{parent_name}/{package_name}-{version}.tar.{compress_ext}"
-    tarball = download(url)
+    tarball_path = f"{parent_name}/{package_name}-{version}.tar.{compress_ext}"
+    url = f"{mirror}/{tarball_path}"
+    try:
+        tarball = download(url)
+    except (subprocess.CalledProcessError, OSError):
+        if mirror == "https://ftpmirror.gnu.org":
+            fallback = f"https://ftp.gnu.org/gnu/{tarball_path}"
+            print(
+                f"Mirror failed, retrying from '{fallback}'.",
+                file=sys.stderr,
+            )
+            tarball = download(fallback)
+        else:
+            raise
     os.makedirs("src", exist_ok=True)
     _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")
