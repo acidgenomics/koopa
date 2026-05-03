@@ -17,5 +17,6 @@ def main(
         name=name,
         version=version,
         prefix=prefix,
+        package_name="libidn2",
         conf_args=["--disable-static"],
     )
