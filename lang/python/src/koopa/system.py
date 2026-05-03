@@ -120,6 +120,11 @@ def is_macos() -> bool:
     return platform.system() == "Darwin"
 
 
+def is_windows() -> bool:
+    """Check if running on Windows."""
+    return platform.system() == "Windows"
+
+
 def is_root() -> bool:
     """Check if effective user is root."""
     return os.geteuid() == 0
