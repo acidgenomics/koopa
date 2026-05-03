@@ -254,17 +254,13 @@ _koopa_activate_bat() {
 
 _koopa_activate_bootstrap() {
     __kvar_bootstrap_prefix="$(_koopa_bootstrap_prefix)"
-    if [ ! -d "$(_koopa_bootstrap_prefix)" ]
+    if [ ! -d "$__kvar_bootstrap_prefix" ]
     then
         unset -v __kvar_bootstrap_prefix
         return 0
     fi
     __kvar_opt_prefix="$(_koopa_opt_prefix)"
-    if [ \( -d "${__kvar_opt_prefix}/bash" \) \
-        -a \( -d "${__kvar_opt_prefix}/coreutils" \) \
-        -a \( -d "${__kvar_opt_prefix}/openssl3" \) \
-        -a \( -d "${__kvar_opt_prefix}/python3.12" \) \
-        -a \( -d "${__kvar_opt_prefix}/zlib" \) ]
+    if [ -d "${__kvar_opt_prefix}/python3.14" ]
     then
         unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
         return 0
@@ -891,9 +887,10 @@ _koopa_activate_today_bucket() {
         return 0
     fi
     __kvar_today_subdirs="$(date '+%Y/%m/%d')"
-    if _koopa_str_detect_posix \
-        "$(_koopa_realpath "$__kvar_today_link")" \
-        "$__kvar_today_subdirs"
+    if [ -d "$__kvar_today_link" ] && \
+        _koopa_str_detect_posix \
+            "$(_koopa_realpath "$__kvar_today_link")" \
+            "$__kvar_today_subdirs"
     then
         unset -v \
             __kvar_bucket_dir \
@@ -2031,7 +2028,7 @@ _koopa_xdg_cache_home() {
 
 _koopa_xdg_config_dirs() {
     __kvar_string="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$__kvar_string" ]
+    if [ -z "$__kvar_string" ] 
     then
         __kvar_string='/etc/xdg'
     fi

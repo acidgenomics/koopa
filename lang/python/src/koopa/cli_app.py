@@ -88,6 +88,9 @@ _APP_TREE: dict[str, Any] = {
     "ftp": {
         "mirror": "ftp-mirror",
     },
+    "file": {
+        "convert-line-endings": "file-convert-line-endings",
+    },
     "git": {
         "pull": "git-pull",
         "push-submodules": "git-push-submodules",
@@ -1434,6 +1437,29 @@ def _handle_bioconda_autobump_recipe(args: list[str]) -> None:
 # -- ftp handlers ------------------------------------------------------------
 
 
+def _handle_file_convert_line_endings(args: list[str]) -> None:
+    """Handle ``koopa app file convert-line-endings``.
+
+    Converts CRLF (\\r\\n) line endings to LF (\\n) in place.
+    Accepts one or more file paths as arguments.
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app file convert-line-endings")
+    parser.add_argument("files", nargs="+", help="file(s) to convert")
+    parsed = parser.parse_args(args)
+    for path in parsed.files:
+        with open(path, "rb") as fh:
+            data = fh.read()
+        converted = data.replace(b"\r\n", b"\n")
+        if converted != data:
+            with open(path, "wb") as fh:
+                fh.write(converted)
+            print(f"Converted: {path}")
+        else:
+            print(f"Already LF: {path}")
+
+
 def _handle_ftp_mirror(args: list[str]) -> None:
     import argparse
 
@@ -1567,6 +1593,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     # app utilities
     "bioconda-autobump-recipe": _handle_bioconda_autobump_recipe,
     "ftp-mirror": _handle_ftp_mirror,
+    "file-convert-line-endings": _handle_file_convert_line_endings,
     "jekyll-serve": _handle_jekyll_serve,
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
     "wget-recursive": _handle_wget_recursive,

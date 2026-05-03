@@ -168,6 +168,7 @@ def _build_parser() -> argparse.ArgumentParser:
     uninstall_p.add_argument("apps", nargs="*")
     uninstall_p.add_argument("--system", action="store_true", default=False)
     uninstall_p.add_argument("--user", action="store_true", default=False)
+    uninstall_p.add_argument("--no-revdeps", action="store_true", default=False)
     _add_common_flags(uninstall_p)
 
     # -- update ---------------------------------------------------------------
@@ -332,6 +333,8 @@ def _reinstall_with_revdeps(
     all_targets: list[str] = []
     if mode != "only":
         all_targets.extend(apps)
+    # Collect the union of revdeps across ALL input apps before reinstalling,
+    # so shared reverse dependencies are only rebuilt once.
     for app in apps:
         revdeps = app_revdeps(app, mode="all")
         for rd in revdeps:
@@ -347,6 +350,7 @@ def _reinstall_with_revdeps(
 
 def _handle_uninstall(args: argparse.Namespace) -> None:
     """Handle ``koopa uninstall`` subcommand."""
+    from koopa.app import app_revdeps, installed_apps
     from koopa.install import _acquire_install_lock, _release_install_lock
     from koopa.uninstall import UninstallConfig, uninstall_app, uninstall_koopa
 
@@ -356,6 +360,23 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     if apps == ["koopa"]:
         uninstall_koopa()
         return
+    # Block uninstall of apps that have installed reverse dependencies.
+    if not args.no_revdeps:
+        installed = set(installed_apps())
+        blocked: dict[str, list[str]] = {}
+        for app in apps:
+            revdeps = [r for r in app_revdeps(app, mode="all") if r in installed and r not in apps]
+            if revdeps:
+                blocked[app] = revdeps
+        if blocked:
+            lines = ["Cannot uninstall — the following apps have installed reverse dependencies:"]
+            for app, revdeps in sorted(blocked.items()):
+                lines.append(f"  {app}: required by {', '.join(revdeps)}")
+            lines.append(
+                "Uninstall the dependent apps first, or use 'koopa uninstall --no-revdep-check' to override."
+            )
+            print("\n".join(lines), file=sys.stderr)
+            sys.exit(1)
     acquired = _acquire_install_lock()
     try:
         for app in apps:

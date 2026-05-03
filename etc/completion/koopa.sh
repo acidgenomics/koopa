@@ -63,7 +63,7 @@ _koopa_complete() {
         ['develop/remove-app']='--help --revdeps'
         ['install']='--help --no-dependencies --private --reinstall --system --user --verbose'
         ['reinstall']='--help --all-revdeps --no-revdeps --only-revdeps --verbose'
-        ['uninstall']='--help --system --user --verbose'
+        ['uninstall']='--help --no-revdeps --system --user --verbose'
         ['update']='--help --all-system --system --user --verbose'
     )
     case "${COMP_CWORD:-}" in
@@ -99,6 +99,7 @@ _koopa_complete() {
                         'conda'
                         'current'
                         'docker'
+                        'file'
                         'ftp'
                         'git'
                         'gpg'
@@ -886,6 +887,9 @@ _koopa_complete() {
                                 'remove'
                                 'run'
                             )
+                            ;;
+                        'file')
+                            args+=('convert-line-endings')
                             ;;
                         'ftp')
                             args+=('mirror')
