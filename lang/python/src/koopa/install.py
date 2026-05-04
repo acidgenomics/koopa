@@ -1886,7 +1886,13 @@ def update_koopa(*, verbose: bool = False) -> None:
     if not is_git_repo(prefix):
         alert_note(f"Pinned release detected at '{prefix}'.")
         return
-    result = git_pull(prefix, capture=True)
+    try:
+        result = git_pull(prefix, capture=True)
+    except Exception as e:
+        from koopa.alert import warn
+
+        warn(f"Failed to update koopa source code: {e}")
+        return
     stdout = (result.stdout or "").strip() if result else ""
     if "Already up to date" in stdout:
         alert_note("koopa source code is already up to date.")
