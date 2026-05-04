@@ -178,9 +178,14 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
         for ver in versions:
             ver_path = join(app_path, ver)
             if isdir(join(ver_path, ".install")):
-                issues.append(
-                    (name, f"{name}/{ver}: installed but not linked in opt"),
-                )
+                if not isfile(join(ver_path, ".install", "info.json")):
+                    issues.append(
+                        (name, f"{name}/{ver}: failed install (empty .install directory)"),
+                    )
+                else:
+                    issues.append(
+                        (name, f"{name}/{ver}: installed but not linked in opt"),
+                    )
             else:
                 issues.append(
                     (name, f"{name}/{ver}: failed install (no .install marker)"),
