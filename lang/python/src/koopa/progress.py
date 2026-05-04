@@ -15,7 +15,7 @@ _HISTORY_FILENAME = "build-times.json"
 _active_progress: BuildProgress | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
-_LOG_TAIL_LINES = 200
+_LOG_TAIL_LINES = 100
 
 
 def get_active_progress() -> BuildProgress | None:
@@ -72,7 +72,7 @@ class BuildProgress:
 
     When ``verbose`` is False (the default), stdout and stderr are redirected
     to a temporary log file and a spinner is shown on the terminal. On failure
-    the last 200 lines of the log are printed.  When ``verbose`` is True,
+    the last 100 lines of the log are printed.  When ``verbose`` is True,
     output streams through to the terminal as before.
     """
 
