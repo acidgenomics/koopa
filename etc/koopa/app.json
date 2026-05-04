@@ -5447,7 +5447,8 @@
       "gman"
     ],
     "build_dependencies": [
-      "make"
+      "make",
+      "pkg-config"
     ],
     "date": "2026-05-02",
     "default": true,
