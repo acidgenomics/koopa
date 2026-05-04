@@ -779,6 +779,15 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if revision > 0:
             with open(os.path.join(install_dir, "revision"), "w") as f:
                 f.write(str(revision))
+        from koopa.install_info import write_install_info
+
+        write_install_info(
+            output_file=os.path.join(install_dir, "info.json"),
+            name=config.name,
+            version=config.version,
+        )
+        if progress.saved_log_path:
+            shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
     if not config.quiet:
         from koopa.alert import alert_success
 
