@@ -170,6 +170,11 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
             continue
         opt_link = join(opt_prefix, name)
         if islink(opt_link) and isdir(realpath(opt_link)):
+            linked_path = realpath(opt_link)
+            if not isfile(join(linked_path, ".install", "info.json")):
+                issues.append(
+                    (name, f"{name}: failed install (empty .install directory)"),
+                )
             continue
         versions = [v for v in os.listdir(app_path) if isdir(join(app_path, v))]
         if not versions:
