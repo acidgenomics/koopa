@@ -583,8 +583,31 @@ def _handle_list_default_apps(_args: argparse.Namespace) -> None:
 # -- Entry point --------------------------------------------------------------
 
 
+def _prepend_koopa_bin_to_path() -> None:
+    """Prepend koopa bin/ to PATH if not already present.
+
+    When koopa is invoked directly (e.g. /opt/koopa/bin/koopa) without the
+    shell activation scripts having run, PATH does not include koopa's own
+    bin/ directory. This means koopa-managed tools such as aws, conda, and
+    git are invisible to shutil.which() and subprocess.run(). Prepending
+    here mirrors what the shell activation scripts do and ensures all
+    downstream code can locate koopa-managed executables.
+    """
+    prefix = _koopa_prefix()
+    if not prefix:
+        return
+    koopa_bin = os.path.join(prefix, "bin")
+    if not os.path.isdir(koopa_bin):
+        return
+    path = os.environ.get("PATH", "")
+    parts = path.split(os.pathsep) if path else []
+    if koopa_bin not in parts:
+        os.environ["PATH"] = koopa_bin + os.pathsep + path if path else koopa_bin
+
+
 def main() -> None:
     """Primary CLI entry point."""
+    _prepend_koopa_bin_to_path()
     argv = sys.argv[1:]
     if argv and argv[0] in ("--version", "-V"):
         from koopa.version import koopa_version
