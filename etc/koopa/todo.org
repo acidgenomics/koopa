@@ -7,3 +7,4 @@
 ** TODO Rethink our concept of pruning. We probably should use a "cli_tool" or "cli" key to indicate this. Let's consider reviewing our app pruning approach using Claude Code. This is an opportunity to consider whether we should use "prune" key, and can we support more intelligently pruning for all apps.
 ** TODO We need to review and potentially improve our mechanism for revision tracking related to our internal .venv. If we update external syntactic repo, we need to be able to trigger reinstall without having to change pyproject.toml file. Alternatively, we could version pin in the pyproject.toml? Is that better?
 ** TODO We need to make sure that koopa develop push-app-build is smart and knows to reupload a build after a revision bump.
+** TODO Do we need to configure custom SSL_CERT_FILE support in our bootstrap environment?
