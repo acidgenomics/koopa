@@ -700,6 +700,16 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     orig_cwd = os.getcwd()
     tmp_dir = tempfile.mkdtemp(prefix="koopa-install-")
     os.chdir(tmp_dir)
+    _build_env_keys = (
+        "PATH",
+        "CPPFLAGS",
+        "LDFLAGS",
+        "LDLIBS",
+        "LIBRARY_PATH",
+        "PKG_CONFIG_PATH",
+        "CMAKE_PREFIX_PATH",
+    )
+    saved_env = {k: os.environ.get(k) for k in _build_env_keys}
     try:
         with BuildProgress(config.name, quiet=config.quiet, verbose=config.verbose) as progress:
             if config.binary:
@@ -740,6 +750,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     finally:
         os.chdir(orig_cwd)
         shutil.rmtree(tmp_dir, ignore_errors=True)
+        for k, v in saved_env.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
     # -- Post-install: linking ------------------------------------------------
     try:
         if config.mode == "shared":
