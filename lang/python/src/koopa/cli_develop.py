@@ -231,6 +231,23 @@ def _handle_push_all_app_builds() -> None:
     _handle_push_app_build(app_names)
 
 
+def _handle_push_app_builds() -> None:
+    """Handle ``koopa develop push-app-builds``.
+
+    Checks all installed apps against S3 and pushes any missing builds.
+    """
+    from koopa.install import _can_push_binary, push_missing_app_builds
+
+    if not _can_push_binary():
+        print(
+            "Error: push requires KOOPA_BUILDER=1, acidgenomics AWS profile, "
+            "AWS_CLOUDFRONT_DISTRIBUTION_ID, and aws CLI.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    push_missing_app_builds()
+
+
 def _handle_roff() -> None:
     """Handle ``koopa develop roff``.
 
@@ -816,6 +833,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "edit-app-json": lambda _: _handle_edit_app_json(),
     "push-all-app-builds": lambda _: _handle_push_all_app_builds(),
     "push-app-build": _handle_push_app_build,
+    "push-app-builds": lambda _: _handle_push_app_builds(),
     "roff": lambda _: _handle_roff(),
     "shellcheck": lambda _: _handle_shellcheck(),
     "check-app-versions": _handle_check_app_versions,
