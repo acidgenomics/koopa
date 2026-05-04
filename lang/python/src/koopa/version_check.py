@@ -1152,15 +1152,17 @@ def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
     Returns the floored version if it is strictly greater than the current
     version, otherwise returns the current version (no-op / no downgrade).
     """
-    m = re.match(r'^(\d+\.\d+\.)(\d+)$', latest)
+    m = re.match(r"^(\d+\.\d+\.)(\d+)$", latest)
     if not m:
         return latest
     prefix = m.group(1)
     patch = int(m.group(2))
     floored_patch = (patch // batch_size) * batch_size
     floored = f"{prefix}{floored_patch:04d}"
+
     def _parts(v: str) -> tuple[int, ...]:
         return tuple(int(x) for x in v.split("."))
+
     if _parts(floored) <= _parts(current):
         return current
     return floored
