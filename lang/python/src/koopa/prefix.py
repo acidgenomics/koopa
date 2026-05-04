@@ -96,6 +96,14 @@ def scripts_private_prefix() -> str:
     return os.environ.get("KOOPA_SCRIPTS_PRIVATE_PREFIX", os.path.expanduser("~/scripts-private"))
 
 
+def website_prefix() -> str:
+    """Return koopa website prefix."""
+    return os.environ.get(
+        "KOOPA_WEBSITE_PREFIX",
+        os.path.expanduser("~/git/koopa-acidgenomics-com"),
+    )
+
+
 def tests_prefix() -> str:
     """Return koopa tests prefix."""
     return os.path.join(config_prefix(), "tests")
