@@ -648,7 +648,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             config.reinstall_reason = config.reinstall_reason or "empty .install directory"
         if config.reinstall:
             if not config.quiet:
-                reason = f" ({config.reinstall_reason})" if config.reinstall_reason else ""
+                reason = f" (reason: {config.reinstall_reason})" if config.reinstall_reason else ""
                 print(
                     f"Uninstalling '{config.name}' at '{config.prefix}'{reason}.",
                     file=sys.stderr,
@@ -665,7 +665,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if not config.quiet:
                 from koopa.alert import alert_note
 
-                reason_suffix = f" (reinstall reason: {config.reinstall_reason})" if config.reinstall_reason else ""
+                reason_suffix = (
+                    f" (reinstall reason: {config.reinstall_reason})"
+                    if config.reinstall_reason
+                    else ""
+                )
                 alert_note(
                     f"{config.name}{reason_suffix}: installing with dependencies: {', '.join(all_deps)}"
                 )
