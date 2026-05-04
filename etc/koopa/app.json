@@ -27,7 +27,7 @@
     "man1": [
       "ack.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://beyondgrep.com/"
     ],
@@ -47,7 +47,7 @@
     ],
     "description": "toolkit for working with GFF/GTF annotation files",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/agat/README.html",
       "https://github.com/NBISweden/AGAT/"
@@ -64,7 +64,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "R code formatter",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://posit-dev.github.io/air/",
       "https://github.com/posit-dev/air"
@@ -75,7 +75,7 @@
     "date": "2026-02-22",
     "default": false,
     "description": "full Anaconda Python distribution",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://repo.anaconda.com/archive/"
     ],
@@ -96,8 +96,8 @@
       "egg_name": "apache_airflow_core",
       "python_version": "3.13"
     },
-    "prune": true,
     "python_version_pin": true,
+    "type": "cli",
     "url": [
       "https://airflow.apache.org/"
     ],
@@ -118,7 +118,7 @@
       "openssl"
     ],
     "description": "cross-language columnar in-memory data format",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://arrow.apache.org/"
     ],
@@ -137,7 +137,7 @@
       "temurin"
     ],
     "description": "distributed large-scale data processing engine",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://spark.apache.org/"
     ],
@@ -153,13 +153,13 @@
     "default": false,
     "description": "container runtime for HPC environments",
     "installer_platform": "linux",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/apptainer/apptainer/"
     ],
@@ -173,7 +173,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Apache Portable Runtime library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://apr.apache.org/"
     ],
@@ -192,7 +192,7 @@
       "openssl"
     ],
     "description": "Apache Portable Runtime utility library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://apr.apache.org/"
     ],
@@ -217,7 +217,7 @@
       "zlib"
     ],
     "description": "lightweight multi-protocol download utility",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/aria2/aria2/"
     ],
@@ -235,7 +235,7 @@
       "zlib"
     ],
     "description": "C++ linear algebra library",
-    "prune": false,
+    "type": "library",
     "url": [
       "http://arma.sourceforge.net/download.html"
     ],
@@ -248,7 +248,7 @@
     "date": "2026-04-29",
     "default": false,
     "description": "multi-language runtime version manager",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/asdf-vm/asdf/"
     ],
@@ -268,7 +268,7 @@
     "man1": [
       "aspell.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "http://aspell.net/"
     ],
@@ -285,13 +285,13 @@
     "notes": [
       "IBM deletes old source versions."
     ],
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://www.ibm.com/aspera/connect/",
       "https://www.ibm.com/products/aspera/downloads"
@@ -311,13 +311,13 @@
       "non_gnu_mirror": "true"
     },
     "installer_platform": "linux",
-    "prune": false,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "library",
     "url": [
       "https://download.savannah.nongnu.org/releases/attr/?C=M&O=D"
     ],
@@ -344,7 +344,7 @@
     ],
     "description": "generates configure scripts for build systems",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/autoconf/?C=M;O=D"
     ],
@@ -361,13 +361,13 @@
     ],
     "description": "molecular docking software",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://autodock.scripps.edu/",
       "https://bioconda.github.io/recipes/autodock/README.html"
@@ -378,13 +378,13 @@
     "date": "2023-10-16",
     "default": false,
     "description": "AutoDock Flexible Receptor docking suite",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://ccsb.scripps.edu/adfr/"
     ],
@@ -405,13 +405,13 @@
       "name": "vina"
     },
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://vina.scripps.edu/",
       "https://github.com/ccsb-scripps/AutoDock-Vina/"
@@ -429,7 +429,7 @@
     ],
     "description": "removes unused imports from Python files",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
@@ -454,7 +454,7 @@
     ],
     "description": "generates Makefiles from simple descriptions",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/automake/?C=M;O=D"
     ],
@@ -472,7 +472,7 @@
     ],
     "description": "authenticates to AWS via Azure Active Directory",
     "installer": "node-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.npmjs.com/package/aws-azure-login"
     ],
@@ -492,7 +492,7 @@
     "installer_args": {
       "name": "awscli"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
@@ -511,6 +511,7 @@
       "macos-arm64": false
     },
     "system": true,
+    "type": "cli",
     "url": [
       "https://aws.amazon.com/s3/features/mountpoint/",
       "https://github.com/awslabs/mountpoint-s3"
@@ -537,7 +538,7 @@
       "axel.1"
     ],
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
     ],
@@ -557,8 +558,8 @@
     "installer_args": {
       "python_version": "3.13"
     },
-    "prune": true,
     "python_version_pin": true,
+    "type": "cli",
     "url": [
       "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
     ],
@@ -575,13 +576,13 @@
     ],
     "description": "C++ API and toolkit for working with BAM files",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/bamtools/README.html",
       "https://github.com/pezmaster31/bamtools"
@@ -599,7 +600,7 @@
     ],
     "description": "security linting tool for Python code",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://bandit.readthedocs.io/en/latest/",
       "https://github.com/PyCQA/bandit/"
@@ -617,7 +618,7 @@
     "default": false,
     "description": "terminal bandwidth utilization tool",
     "installer": "rust-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/imsnif/bandwhich/"
     ],
@@ -637,7 +638,7 @@
     "man1": [
       "bash.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/bash/",
       "https://ftp.gnu.org/gnu/bash/?C=M;O=D"
@@ -655,7 +656,7 @@
       "bash"
     ],
     "description": "programmable completion functions for bash",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/scop/bash-completion"
     ],
@@ -672,7 +673,7 @@
     ],
     "description": "LSP server for bash scripts",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
@@ -690,7 +691,7 @@
     ],
     "description": "code coverage tool for bash scripts",
     "installer": "ruby-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
@@ -708,7 +709,7 @@
     ],
     "description": "cat clone with syntax highlighting and Git integration",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/sharkdp/bat"
     ],
@@ -732,7 +733,7 @@
     "man1": [
       "bc.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://ftp.gnu.org/gnu/bc/?C=M;O=D"
     ],
@@ -745,6 +746,7 @@
     "date": "2024-09-27",
     "description": "validated, scalable variant and RNA-seq analysis pipeline",
     "removed": true,
+    "type": "cli",
     "url": [
       "https://github.com/bcbio/bcbio-nextgen/"
     ]
@@ -770,13 +772,13 @@
     "install_note": "Installation requires agreement to terms of service at: https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html",
     "installer_platform": "linux",
     "private": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
     ],
@@ -809,13 +811,13 @@
     },
     "description": "swiss-army knife for genome interval arithmetic",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": true
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/bedtools/README.html",
       "https://bedtools.readthedocs.io/",
@@ -833,7 +835,7 @@
       "temurin"
     ],
     "description": "removes large files and secrets from Git history",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://rtyley.github.io/bfg-repo-cleaner/"
     ],
@@ -852,7 +854,7 @@
     ],
     "description": "GNU binary file utilities (ld, as, objdump, etc.)",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://ftp.gnu.org/gnu/binutils/?C=M;O=D"
     ],
@@ -869,13 +871,13 @@
     ],
     "description": "awk extended with bioinformatics-aware field parsing",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/bioawk/README.html",
       "https://github.com/lh3/bioawk"
@@ -893,13 +895,13 @@
     "notes": [
       "This is hanging on macOS currently."
     ],
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/bioconda-utils/README.html",
       "https://github.com/bioconda/bioconda-utils/"
@@ -918,7 +920,7 @@
     ],
     "description": "GNU parser generator (YACC-compatible)",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/bison/",
       "https://ftp.gnu.org/gnu/bison/?C=M;O=D"
@@ -940,7 +942,7 @@
     "installer_args": {
       "pip_name": "black[d]"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/black/",
       "https://github.com/psf/black/"
@@ -959,13 +961,13 @@
     ],
     "description": "NCBI sequence similarity search tool",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
@@ -983,7 +985,7 @@
       "zstd"
     ],
     "description": "peer-reviewed portable C++ libraries",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.boost.org/",
       "https://github.com/boostorg/boost/"
@@ -1001,7 +1003,7 @@
     ],
     "description": "cross-platform graphical process and system monitor",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/ClementTsang/bottom/"
     ],
@@ -1018,13 +1020,13 @@
     ],
     "description": "fast short-read aligner for long reference sequences",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/bowtie2/README.html",
       "https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"
@@ -1042,7 +1044,7 @@
     ],
     "description": "resource monitor with a stylish terminal UI",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/bpytop/",
       "https://github.com/aristocratos/bpytop/"
@@ -1060,7 +1062,7 @@
     ],
     "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
@@ -1078,7 +1080,7 @@
     "date": "2025-10-28",
     "default": false,
     "description": "lossless compression algorithm and library by Google",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/google/brotli/"
     ],
@@ -1095,7 +1097,7 @@
     ],
     "description": "resource monitor showing CPU, memory, disks, and network",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/aristocratos/btop"
     ],
@@ -1112,7 +1114,7 @@
     ],
     "description": "version bumping tool for Python projects",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/bumpver/",
       "https://github.com/mbarkhau/bumpver/"
@@ -1130,13 +1132,13 @@
     ],
     "description": "utilities for processing BUS format single-cell data",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bustools.github.io/",
       "https://github.com/BUStools/bustools/",
@@ -1213,8 +1215,8 @@
       "byobu-ulevel.1",
       "byobu.1"
     ],
-    "prune": true,
     "removed": true,
+    "type": "cli",
     "url": [
       "https://www.byobu.org/",
       "https://launchpad.net/byobu/+download"
@@ -1251,7 +1253,7 @@
       "bzless.1",
       "bzmore.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.sourceware.org/bzip2/"
     ],
@@ -1265,7 +1267,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "asynchronous DNS resolver library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://c-ares.org/"
     ],
@@ -1275,7 +1277,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "Mozilla CA certificate bundle",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://curl.se/docs/caextract.html"
     ],
@@ -1313,7 +1315,7 @@
       "zlib"
     ],
     "description": "2D graphics library with multiple output targets",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.cairographics.org/releases/?C=M;O=D",
       "https://cairographics.org/",
@@ -1332,13 +1334,13 @@
     "installer_platform": "linux",
     "outdated": true,
     "private": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
@@ -1351,7 +1353,7 @@
     ],
     "default": false,
     "description": "C++11 header-only serialization library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://uscilab.github.io/cereal/",
       "https://github.com/USCiLab/cereal"
@@ -1368,7 +1370,7 @@
     "date": "2026-02-16",
     "default": false,
     "description": "interactive cheatsheet tool for the command line",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/cheat/cheat/"
     ],
@@ -1377,7 +1379,8 @@
   "chemacs": {
     "date": "2023-09-13",
     "description": "Emacs profile switcher",
-    "removed": true
+    "removed": true,
+    "type": "library"
   },
   "chezmoi": {
     "bin": [
@@ -1399,7 +1402,7 @@
     },
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
@@ -1420,7 +1423,7 @@
     "installer_args": {
       "name": "@anthropic-ai/claude-code"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
@@ -1434,7 +1437,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "command-line argument parser library for C++11",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/CLIUtils/CLI11/"
     ],
@@ -1445,13 +1448,13 @@
     "default": false,
     "description": "automated bioinformatics environment setup",
     "installer_platform": "linux",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/chapmanb/cloudbiolinux/"
     ],
@@ -1472,8 +1475,8 @@
       "openssl3"
     ],
     "description": "cross-platform build system generator",
-    "prune": false,
     "revision": 2,
+    "type": "build_tool",
     "url": [
       "https://cmake.org/download/"
     ],
@@ -1490,7 +1493,7 @@
     ],
     "description": "colorized ls replacement written in Ruby",
     "installer": "ruby-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/athityakumar/colorls/",
       "https://rubygems.org/gems/colorls/"
@@ -1509,7 +1512,7 @@
     ],
     "description": "conventional commit message tooling for Python projects",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/commitizen/",
       "https://github.com/commitizen-tools/commitizen/",
@@ -1524,13 +1527,13 @@
     "date": "2026-05-02",
     "default": true,
     "description": "cross-platform package and environment manager",
-    "prune": false,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": true
     },
+    "type": "build_tool",
     "url": [
       "https://repo.anaconda.com/miniconda/"
     ],
@@ -1547,8 +1550,8 @@
     "default": true,
     "description": "converts filenames between character encodings",
     "mirror": true,
-    "prune": true,
     "src_url": "https://www.j3e.de/linux/convmv/convmv-{version}.tar.gz",
+    "type": "cli",
     "url": "https://www.j3e.de/linux/convmv/?C=M;O=D",
     "version": "2.06"
   },
@@ -1783,7 +1786,7 @@
       "gwhoami.1",
       "gyes.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
@@ -1803,7 +1806,7 @@
     "man1": [
       "cpufetch.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/Dr-Noob/cpufetch/"
     ],
@@ -1834,7 +1837,7 @@
     "description": "suite of command-line tools for working with CSV files",
     "homebrew": true,
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://csvkit.readthedocs.io/",
       "https://pypi.org/project/csvkit/"
@@ -1852,7 +1855,7 @@
     ],
     "description": "cross-platform CSV/TSV toolkit",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/shenwei356/csvtk/"
     ],
@@ -1880,8 +1883,8 @@
       "curl.1",
       "curl-config.1"
     ],
-    "prune": false,
     "revision": 2,
+    "type": "build_tool",
     "url": [
       "https://curl.se/"
     ],
@@ -1906,8 +1909,8 @@
       "dash.1"
     ],
     "mirror": true,
-    "prune": true,
     "src_url": "https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/dash-{version}.tar.gz",
+    "type": "cli",
     "url": [
       "http://gondor.apana.org.au/~herbert/dash/",
       "https://git.kernel.org/pub/scm/utils/dash/dash.git"
@@ -1924,7 +1927,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "command-line interface for Databricks",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
@@ -1942,13 +1945,13 @@
     "description": "tools for analysis of deep-sequencing data",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/deeptools/README.html",
       "https://deeptools.readthedocs.io/",
@@ -1970,7 +1973,7 @@
     "installer_args": {
       "name": "git-delta"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/dandavison/delta/"
     ],
@@ -1983,7 +1986,7 @@
     "date": "2026-04-15",
     "default": true,
     "description": "human-readable diff output for git",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/so-fancy/diff-so-fancy/"
     ],
@@ -2000,13 +2003,13 @@
     ],
     "description": "structural diff tool that understands syntax",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": true
     },
+    "type": "cli",
     "url": [
       "https://github.com/Wilfred/difftastic/"
     ],
@@ -2023,7 +2026,7 @@
     ],
     "description": "loads and unloads environment variables per directory",
     "installer": "conda-package",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/direnv/direnv"
     ],
@@ -2038,7 +2041,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "credential helpers for Docker",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
     ],
@@ -2051,7 +2054,7 @@
       "emacs"
     ],
     "description": "opinionated Emacs configuration framework",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
@@ -2065,7 +2068,7 @@
       "chezmoi"
     ],
     "description": "acidgenomics personal dotfiles managed with chezmoi",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
@@ -2086,7 +2089,7 @@
       "name": "dust"
     },
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
@@ -2104,7 +2107,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "in-process analytical SQL database",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
@@ -2131,7 +2134,7 @@
     "man1": [
       "ed.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/ed/ed.html",
       "http://mirror.rit.edu/gnu/ed/?C=M;O=D"
@@ -2156,7 +2159,7 @@
     "notes": [
       "0.12.10 has build error on Ubuntu 22."
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
@@ -2178,13 +2181,13 @@
     ],
     "description": "utilities for ELF files and DWARF debug information",
     "installer_platform": "linux",
-    "prune": false,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "library",
     "url": [
       "https://fedorahosted.org/elfutils/"
     ],
@@ -2200,7 +2203,7 @@
     "date": "2026-04-13",
     "default": false,
     "description": "expressive shell with structured data pipelines",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://elv.sh/",
       "https://github.com/elves/elvish/"
@@ -2238,7 +2241,7 @@
       "emacsclient.1.gz",
       "etags.1.gz"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/emacs/"
     ],
@@ -2248,7 +2251,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Perl API for Ensembl genomics databases",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://useast.ensembl.org/info/docs/api/api_installation.html"
     ],
@@ -2266,13 +2269,13 @@
     ],
     "description": "NCBI E-utilities command-line tools",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://www.ncbi.nlm.nih.gov/home/tools/",
       "https://bioconda.github.io/recipes/entrez-direct/README.html"
@@ -2286,6 +2289,7 @@
     "date": "2023-09-07",
     "description": "modern ls replacement with color and Git support (deprecated; use eza)",
     "removed": true,
+    "type": "cli",
     "url": [
       "https://github.com/ogham/exa/"
     ]
@@ -2319,7 +2323,7 @@
       "exiftool.1"
     ],
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
@@ -2335,7 +2339,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "fast stream-oriented XML parser library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://libexpat.github.io/"
     ],
@@ -2353,7 +2357,7 @@
     "description": "modern ls replacement with color, icons, and Git support",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
@@ -2371,13 +2375,13 @@
     ],
     "description": "quality control analysis for high-throughput sequencing data",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/fastqc/README.html",
       "https://github.com/s-andrews/FastQC/"
@@ -2395,7 +2399,7 @@
     ],
     "description": "simple, fast alternative to the find command",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/sharkdp/fd/"
     ],
@@ -2417,7 +2421,7 @@
       "ffmpeg.1",
       "ffprobe.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://ffmpeg.org/",
       "https://github.com/FFmpeg/FFmpeg/"
@@ -2441,6 +2445,7 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/pachterlab/ffq/",
       "https://bioconda.github.io/recipes/ffq/README.html"
@@ -2455,6 +2460,7 @@
     ],
     "description": "tools for working with genomic and sequencing data",
     "installer": "conda-package",
+    "type": "library",
     "url": [
       "https://bioconda.github.io/recipes/fgbio/README.html"
     ],
@@ -2484,6 +2490,7 @@
       "gupdatedb.1",
       "gxargs.1"
     ],
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/findutils/",
       "https://ftp.gnu.org/gnu/findutils/?C=M;O=D"
@@ -2504,6 +2511,7 @@
     "man1": [
       "fish.1"
     ],
+    "type": "build_tool",
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
@@ -2524,6 +2532,7 @@
     "man1": [
       "flac.1"
     ],
+    "type": "cli",
     "url": [
       "https://xiph.org/flac/"
     ],
@@ -2540,6 +2549,7 @@
     ],
     "description": "Python style guide enforcement and linting tool",
     "installer": "python-package",
+    "type": "cli",
     "url": [
       "https://pypi.org/project/flake8/",
       "https://flake8.pycqa.org/",
@@ -2559,7 +2569,7 @@
       "m4"
     ],
     "description": "fast lexical analyzer generator",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/westes/flex/"
     ],
@@ -2586,7 +2596,7 @@
       "zlib"
     ],
     "description": "cross-platform C++ GUI toolkit",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.fltk.org/"
     ],
@@ -2600,7 +2610,7 @@
     "date": "2025-10-31",
     "default": false,
     "description": "modern C++ formatting library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://fmt.dev/",
       "https://github.com/fmtlib/fmt/"
@@ -2620,7 +2630,7 @@
       "libxml2"
     ],
     "description": "font configuration and customization library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.freedesktop.org/wiki/Software/fontconfig/"
     ],
@@ -2643,6 +2653,7 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
@@ -2666,6 +2677,7 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/fulcrumgenomics/fqtk/",
       "https://bioconda.github.io/recipes/fqtk/README.html"
@@ -2680,7 +2692,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "font rendering library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.freetype.org/"
     ],
@@ -2694,7 +2706,7 @@
     "date": "2024-09-27",
     "default": false,
     "description": "implementation of the Unicode Bidirectional Algorithm",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/fribidi/fribidi/"
     ],
@@ -2714,6 +2726,7 @@
     "man1": [
       "fzf.1"
     ],
+    "type": "cli",
     "url": [
       "https://github.com/junegunn/fzf/"
     ],
@@ -2740,6 +2753,7 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
@@ -2768,7 +2782,7 @@
     "man1": [
       "gawk.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/gawk/?C=M;O=D"
     ],
@@ -2790,13 +2804,13 @@
     ],
     "description": "GNU Compiler Collection (C, C++, Fortran, and more)",
     "installer_platform": "linux",
-    "prune": false,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "build_tool",
     "url": [
       "https://gcc.gnu.org/"
     ],
@@ -2841,7 +2855,7 @@
     "man1": [
       "gdal-config.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://gdal.org/"
     ],
@@ -2858,7 +2872,7 @@
     ],
     "description": "GNU dbm key-value database library",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org.ua/software/gdbm/download.html"
     ],
@@ -2875,7 +2889,7 @@
     ],
     "description": "NCI Genomic Data Commons data transfer tool",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://gdc.cancer.gov/access-data/gdc-data-transfer-tool",
       "https://github.com/NCI-GDC/gdc-client",
@@ -2897,7 +2911,7 @@
     "installer_args": {
       "name": "@google/gemini-cli"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://geminicli.com/",
       "https://www.npmjs.com/package/@google/gemini-cli"
@@ -2915,7 +2929,7 @@
     ],
     "description": "download and manage genomic sequences and annotation",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/vanheeringen-lab/genomepy/",
       "https://bioconda.github.io/recipes/genomepy/README.html"
@@ -2936,7 +2950,7 @@
     "installer_args": {
       "python_version": "3.10"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/gentropy/",
       "https://github.com/opentargets/gentropy"
@@ -2955,7 +2969,7 @@
     "date": "2025-10-28",
     "default": false,
     "description": "geometry engine for geographic information systems",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/libgeos/geos/"
     ],
@@ -2988,8 +3002,8 @@
       "without-cvs": "",
       "disable-openmp": ""
     },
-    "prune": false,
     "revision": 1,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/gettext/",
       "https://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
@@ -3007,13 +3021,13 @@
     ],
     "description": "Python interface for working with GFF and GTF files",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/daler/gffutils/",
       "https://bioconda.github.io/recipes/gffutils/README.html"
@@ -3032,13 +3046,13 @@
     "description": "efficient querying of genomic databases",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/gget/README.html",
       "https://github.com/pachterlab/gget"
@@ -3056,7 +3070,7 @@
     ],
     "description": "official GitHub command-line interface",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/cli/cli/"
     ],
@@ -3076,7 +3090,7 @@
     "man1": [
       "gs.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.ghostscript.com/"
     ],
@@ -3114,7 +3128,7 @@
       "zlib"
     ],
     "description": "distributed version control system",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://git-scm.com/"
     ],
@@ -3131,7 +3145,7 @@
     ],
     "description": "fast and flexible rewriting of Git history",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/git-filter-repo/"
     ],
@@ -3148,7 +3162,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Git extension for versioning large files",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://git-lfs.github.com/"
     ],
@@ -3166,7 +3180,7 @@
     "description": "blazing fast terminal UI for Git",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
@@ -3187,7 +3201,7 @@
     "installer_args": {
       "egg_name": "Glances"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
@@ -3210,7 +3224,7 @@
       "zlib"
     ],
     "description": "low-level core library for GNOME",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/-/releases"
@@ -3229,8 +3243,8 @@
     ],
     "description": "GNU multiple precision arithmetic library",
     "mirror": true,
-    "prune": false,
     "src_url": "https://gmplib.org/download/gmp/gmp-{version}.tar.xz",
+    "type": "library",
     "url": [
       "https://gmplib.org/"
     ],
@@ -3262,7 +3276,7 @@
       "zlib"
     ],
     "description": "GNU Privacy Guard for encryption and signing",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -3282,7 +3296,7 @@
       "nettle"
     ],
     "description": "secure communications library implementing TLS and SSL",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnutls.org/"
     ],
@@ -3295,7 +3309,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Go programming language toolchain",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://golang.org/dl/"
     ],
@@ -3313,8 +3327,8 @@
     ],
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
-    "prune": true,
     "python_version_pin": true,
+    "type": "cli",
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
@@ -3328,7 +3342,7 @@
     "date": "2025-05-01",
     "default": false,
     "description": "Google C++ testing and mocking framework",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/google/googletest/"
     ],
@@ -3342,7 +3356,7 @@
     "default": false,
     "description": "perfect hash function generator",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/gperf/",
       "https://ftp.gnu.org/pub/gnu/gperf/?C=M;O=D"
@@ -3360,7 +3374,7 @@
       "expat"
     ],
     "description": "graph visualization software",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.graphviz.org/download/source/",
       "https://gitlab.com/graphviz/graphviz/-/releases"
@@ -3391,7 +3405,7 @@
     "man1": [
       "ggrep.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
       "https://ftp.gnu.org/gnu/grep/?C=M;O=D"
@@ -3409,7 +3423,7 @@
     ],
     "description": "generate regular expressions from example test cases",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/pemistahl/grex/"
     ],
@@ -3436,7 +3450,7 @@
     "man1": [
       "groff.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/groff/?C=M;O=D"
     ],
@@ -3455,7 +3469,7 @@
       "python"
     ],
     "description": "gene set enrichment analysis in Python",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
@@ -3471,7 +3485,7 @@
     "default": false,
     "description": "GNU Scientific Library for numerical computation",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/gsl/",
       "https://mirror.ibcp.fr/pub/gnu/gsl/?C=M;O=D"
@@ -3489,7 +3503,7 @@
     ],
     "description": "graphical process viewer in the terminal",
     "installer": "node-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/aksakalli/gtop/",
       "https://www.npmjs.com/package/gtop/"
@@ -3509,7 +3523,7 @@
     "man1": [
       "gum.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/charmbracelet/gum/"
     ],
@@ -3554,7 +3568,7 @@
       "zmore.1",
       "znew.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/gzip/",
       "https://ftp.gnu.org/gnu/gzip/?C=M;O=D"
@@ -3575,13 +3589,13 @@
     "default": false,
     "description": "Dockerfile linter that enforces best practices",
     "installer": "haskell-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/hadolint/hadolint/"
     ],
@@ -3606,7 +3620,7 @@
       "zlib"
     ],
     "description": "text shaping engine",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/harfbuzz/harfbuzz/"
     ],
@@ -3622,7 +3636,7 @@
     "date": "2026-01-09",
     "default": false,
     "description": "Haskell package and build manager",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.haskell.org/cabal/download.html"
     ],
@@ -3638,7 +3652,7 @@
     "date": "2025-05-22",
     "default": false,
     "description": "Haskell toolchain installer",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
@@ -3652,7 +3666,7 @@
     "date": "2026-02-22",
     "default": false,
     "description": "cross-platform Haskell build tool",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
@@ -3689,7 +3703,7 @@
       "zlib"
     ],
     "description": "library for the HDF5 hierarchical data format",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.hdfgroup.org/downloads/hdf5/",
       "https://support.hdfgroup.org/downloads/index.html"
@@ -3710,7 +3724,7 @@
     "notes": [
       "Currently outdated on conda."
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/sharkdp/hexyl/"
     ],
@@ -3727,13 +3741,13 @@
     ],
     "description": "graph-based aligner for spliced RNA-seq reads",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://daehwankimlab.github.io/hisat2/",
       "https://bioconda.github.io/recipes/hisat2/README.html"
@@ -3758,7 +3772,7 @@
     "man1": [
       "htop.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://hisham.hm/htop/",
       "https://github.com/htop-dev/htop/"
@@ -3776,13 +3790,13 @@
     ],
     "description": "Python framework for processing NGS data",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://htseq.readthedocs.io/",
       "https://github.com/htseq/htseq/",
@@ -3815,7 +3829,7 @@
       "htsfile.1",
       "tabix.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -3834,7 +3848,7 @@
     ],
     "description": "user-friendly command-line HTTP client",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://httpie.io/",
       "https://github.com/httpie/httpie/",
@@ -3856,7 +3870,7 @@
     "installer_args": {
       "pip_name": "httpx[cli]"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/httpx/",
       "https://www.python-httpx.org",
@@ -3879,7 +3893,7 @@
       "egg_name": "huggingface_hub",
       "pip_name": "huggingface_hub[cli]"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
@@ -3899,7 +3913,7 @@
     "notes": [
       "Bump on minor release update only."
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
@@ -3917,7 +3931,7 @@
     ],
     "description": "command-line benchmarking tool",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/sharkdp/hyperfine/"
     ],
@@ -3963,7 +3977,7 @@
       "libxml2 currently doesn't support ICU 76."
     ],
     "outdated": true,
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://icu.unicode.org/",
       "https://icu.unicode.org/download/75"
@@ -3977,13 +3991,13 @@
     "date": "2026-05-02",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://help.ica.illumina.com/command-line-interface/"
     ],
@@ -4041,8 +4055,8 @@
       "magick-script.1"
     ],
     "mirror": true,
-    "prune": false,
     "src_url": "https://imagemagick.org/archive/releases/ImageMagick-{version}.tar.xz",
+    "type": "build_tool",
     "url": [
       "https://imagemagick.org/"
     ],
@@ -4059,7 +4073,7 @@
     ],
     "description": "enhanced interactive Python shell",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://ipython.org/",
       "https://pypi.org/project/ipython/"
@@ -4078,8 +4092,8 @@
     ],
     "description": "integer set library for polyhedral compilation",
     "mirror": true,
-    "prune": false,
     "src_url": "https://downloads.sourceforge.net/project/libisl/isl-{version}.tar.xz",
+    "type": "library",
     "url": [
       "https://libisl.sourceforge.io/?C=M;O=D"
     ],
@@ -4096,7 +4110,7 @@
     ],
     "description": "sort Python imports automatically",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
@@ -4111,7 +4125,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "general-purpose malloc implementation with profiling support",
-    "prune": false,
+    "type": "library",
     "url": [
       "http://jemalloc.net/",
       "https://github.com/jemalloc/jemalloc/"
@@ -4125,7 +4139,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "JFrog platform command-line interface",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
@@ -4152,7 +4166,7 @@
     "notes": [
       "Available on conda only for amd64."
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://jless.io/",
       "https://github.com/PaulJuliusMartinez/jless/"
@@ -4168,8 +4182,8 @@
     "default": false,
     "description": "IJG JPEG image compression library",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.ijg.org/files/jpegsrc.v{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.ijg.org/"
     ],
@@ -4189,7 +4203,7 @@
     "man1": [
       "jq.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/stedolan/jq/"
     ],
@@ -4202,7 +4216,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "high-performance dynamic programming language",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://anaconda.org/conda-forge/julia",
       "https://julialang.org/",
@@ -4221,7 +4235,7 @@
     ],
     "description": "web-based interactive development environment for notebooks",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://jupyter.org/",
       "https://pypi.org/project/jupyterlab/"
@@ -4239,7 +4253,7 @@
     ],
     "description": "terminal UI for managing Kubernetes clusters",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://k9scli.io/",
       "https://github.com/derailed/k9s"
@@ -4258,7 +4272,7 @@
     "description": "fast RNA-seq quantification via pseudoalignment",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -4280,8 +4294,8 @@
     ],
     "description": "MIT Kerberos 5 authentication system",
     "mirror": true,
-    "prune": false,
     "src_url": "https://kerberos.org/dist/krb5/{major}.{minor}/krb5-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://web.mit.edu/kerberos/"
     ],
@@ -4300,7 +4314,7 @@
     "man1": [
       "ksh.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/ksh93/ksh/"
     ],
@@ -4319,7 +4333,7 @@
     "man1": [
       "lame.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://lame.sourceforge.io/"
     ],
@@ -4336,7 +4350,7 @@
     "notes": [
       "LAPACK is written in Fortran, which is why we require system gfortran."
     ],
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.netlib.org/lapack/"
     ],
@@ -4356,8 +4370,8 @@
     "installer_args": {
       "python_version": "3.12"
     },
-    "prune": true,
     "python_version_pin": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
@@ -4374,7 +4388,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "LLVM-based D programming language compiler",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://wiki.dlang.org/LDC",
       "https://github.com/ldc-developers/ldc/"
@@ -4392,8 +4406,8 @@
     ],
     "description": "library for DNS programming",
     "mirror": true,
-    "prune": true,
     "src_url": "https://nlnetlabs.nl/downloads/ldns/ldns-{version}.tar.gz",
+    "type": "cli",
     "url": [
       "https://nlnetlabs.nl/projects/ldns/about/"
     ],
@@ -4418,7 +4432,7 @@
     "man1": [
       "less.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
       "https://github.com/gwsw/less/",
@@ -4437,7 +4451,7 @@
     "date": "2026-04-29",
     "default": true,
     "description": "preprocessor for less to display non-text files",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/wofr06/lesspipe/"
     ],
@@ -4451,7 +4465,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "adaptive entropy coding library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
       "https://github.com/MathisRosenhauer/libaec/"
@@ -4475,8 +4489,8 @@
     ],
     "description": "library for reading and writing archive files",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.libarchive.org/downloads/libarchive-{version}.tar.xz",
+    "type": "library",
     "url": [
       "https://www.libarchive.org/"
     ],
@@ -4493,7 +4507,7 @@
       "libgpg-error"
     ],
     "description": "IPC library used by GnuPG",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -4507,7 +4521,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "C implementation of the CBOR serialization format",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/PJK/libcbor/"
     ],
@@ -4520,7 +4534,7 @@
     "date": "2026-01-02",
     "default": false,
     "description": "C and C++ library for processing configuration files",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://hyperrealm.github.io/libconfig/",
       "https://github.com/hyperrealm/libconfig/"
@@ -4534,7 +4548,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "open H.265/HEVC video codec implementation",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/strukturag/libde265/"
     ],
@@ -4547,7 +4561,7 @@
     "date": "2025-11-03",
     "default": false,
     "description": "fast DEFLATE, zlib, and gzip compression library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/ebiggers/libdeflate/"
     ],
@@ -4565,8 +4579,8 @@
     ],
     "description": "command-line editing library",
     "mirror": true,
-    "prune": false,
     "src_url": "https://thrysoee.dk/editline/libedit-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://thrysoee.dk/editline/"
     ],
@@ -4576,6 +4590,7 @@
     "date": "2026-05-03",
     "description": "high-performance event loop library",
     "removed": true,
+    "type": "library",
     "url": [
       "http://software.schmorp.de/pkg/libev.html"
     ]
@@ -4591,7 +4606,7 @@
       "openssl"
     ],
     "description": "asynchronous event notification library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://libevent.org/",
       "https://github.com/libevent/libevent/"
@@ -4606,7 +4621,7 @@
     "date": "2025-08-10",
     "default": false,
     "description": "foreign function interface library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://sourceware.org/libffi/",
       "https://github.com/libffi/libffi"
@@ -4624,7 +4639,7 @@
       "libcbor"
     ],
     "description": "library for FIDO2 and WebAuthn authentication",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://developers.yubico.com/libfido2/Releases/"
     ],
@@ -4641,7 +4656,7 @@
       "libgpg-error"
     ],
     "description": "cryptographic library used by GnuPG",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -4668,8 +4683,8 @@
     ],
     "description": "library for georeferenced TIFF files",
     "mirror": true,
-    "prune": false,
     "src_url": "https://download.osgeo.org/geotiff/libgeotiff/libgeotiff-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://github.com/OSGeo/libgeotiff/"
     ],
@@ -4689,7 +4704,7 @@
       "zlib"
     ],
     "description": "portable C library implementing Git core",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/libgit2/libgit2/"
     ],
@@ -4704,7 +4719,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "common error codes library for GnuPG components",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -4724,7 +4739,7 @@
       "zlib"
     ],
     "description": "HEIF and HEVC image format library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.libde265.org/",
       "https://github.com/strukturag/libheif"
@@ -4739,7 +4754,7 @@
     "default": false,
     "description": "character set conversion library",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/libiconv/",
       "https://ftp.gnu.org/pub/gnu/libiconv/?C=M;O=D"
@@ -4754,7 +4769,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "internationalized domain names library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/libidn/",
       "https://ftp.gnu.org/gnu/libidn/?C=M;O=D"
@@ -4770,7 +4785,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "SIMD-accelerated JPEG encoding and decoding library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.libjpeg-turbo.org/",
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
@@ -4789,7 +4804,7 @@
       "libgpg-error"
     ],
     "description": "library for X.509 and CMS structures used by GnuPG",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -4803,7 +4818,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "library for large linear classification",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.csie.ntu.edu.tw/~cjlin/liblinear/"
     ],
@@ -4820,7 +4835,7 @@
       "luajit"
     ],
     "description": "async I/O bindings for Lua used by Neovim",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/luvit/luv/"
     ],
@@ -4837,8 +4852,8 @@
     "default": false,
     "description": "portable C library for network traffic capture",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.tcpdump.org/release/libpcap-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.tcpdump.org/"
     ],
@@ -4852,7 +4867,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "pipeline manipulation library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://libpipeline.nongnu.org/",
       "https://gitlab.com/libpipeline/libpipeline/-/releases"
@@ -4874,7 +4889,7 @@
       "zlib"
     ],
     "description": "official PNG reference library",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "http://www.libpng.org/pub/png/libpng.html"
     ],
@@ -4891,7 +4906,7 @@
       "zlib"
     ],
     "description": "dependency solver library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/openSUSE/libsolv/"
     ],
@@ -4910,8 +4925,8 @@
     ],
     "description": "C library implementing the SSH2 protocol",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.libssh2.org/download/libssh2-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.libssh2.org/"
     ],
@@ -4926,7 +4941,7 @@
     "default": false,
     "description": "ASN.1 parsing library",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/libtasn1/",
       "https://ftp.gnu.org/gnu/libtasn1/?C=M;O=D"
@@ -4947,8 +4962,8 @@
     ],
     "description": "library for processing keyboard input in terminals",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.leonerd.org.uk/code/libtermkey/libtermkey-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.leonerd.org.uk/code/libtermkey/"
     ],
@@ -4967,8 +4982,8 @@
     ],
     "description": "library for reading and writing TIFF files",
     "mirror": true,
-    "prune": false,
     "src_url": "https://download.osgeo.org/libtiff/tiff-{version}.tar.xz",
+    "type": "library",
     "url": [
       "https://download.osgeo.org/libtiff/",
       "https://download.osgeo.org/libtiff/?C=M&O=D"
@@ -4994,7 +5009,7 @@
       "glibtool.1",
       "glibtoolize.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/libtool/?C=M;O=D"
     ],
@@ -5008,7 +5023,7 @@
     "default": false,
     "description": "Unicode string processing library",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.gnu.org/software/libunistring/",
       "https://ftp.gnu.org/gnu/libunistring/?C=M;O=D"
@@ -5027,7 +5042,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "multi-platform async I/O library used by Node.js",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/libuv/libuv/"
     ],
@@ -5047,8 +5062,8 @@
       "0.2.0 is incompatible with neovim."
     ],
     "outdated": true,
-    "prune": false,
     "src_url": "https://www.leonerd.org.uk/code/libvterm/libvterm-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.leonerd.org.uk/code/libvterm/"
     ],
@@ -5063,7 +5078,7 @@
     "date": "2025-11-11",
     "default": false,
     "description": "extended crypt library for password hashing",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/besser82/libxcrypt/"
     ],
@@ -5083,8 +5098,8 @@
       "zlib"
     ],
     "description": "XML parsing library",
-    "prune": false,
     "revision": 2,
+    "type": "library",
     "url": [
       "https://gitlab.gnome.org/GNOME/libxml2/-/releases"
     ],
@@ -5103,7 +5118,7 @@
       "libxml2"
     ],
     "description": "XSLT transformation library",
-    "prune": false,
+    "type": "library",
     "url": [
       "http://xmlsoft.org/XSLT/",
       "https://gitlab.gnome.org/GNOME/libxslt/-/releases"
@@ -5122,7 +5137,7 @@
     "date": "2023-01-04",
     "default": false,
     "description": "YAML parser and emitter in C",
-    "prune": false,
+    "type": "library",
     "url": "https://github.com/yaml/libyaml/",
     "version": "0.2.5"
   },
@@ -5143,7 +5158,7 @@
       "zstd"
     ],
     "description": "library for reading, creating, and modifying ZIP files",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://libzip.org/"
     ],
@@ -5158,7 +5173,8 @@
     "notes": [
       "Renamed to walk."
     ],
-    "removed": true
+    "removed": true,
+    "type": "cli"
   },
   "llvm": {
     "build_dependencies": [
@@ -5185,7 +5201,7 @@
       "zstd"
     ],
     "description": "LLVM compiler infrastructure",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://llvm.org/"
     ],
@@ -5207,13 +5223,13 @@
     "description": "Lua-based environment modules system",
     "installer_platform": "linux",
     "outdated": true,
-    "prune": false,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "library",
     "url": [
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
@@ -5234,7 +5250,7 @@
     "installer_args": {
       "name": "lsd-rust"
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/lsd-rs/lsd/"
     ],
@@ -5253,8 +5269,8 @@
     "default": false,
     "description": "lightweight embeddable scripting language",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.lua.org/ftp/lua-{version}.tar.gz",
+    "type": "build_tool",
     "url": [
       "http://www.lua.org/",
       "https://github.com/lua/lua/"
@@ -5272,7 +5288,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "just-in-time compiler for Lua",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
@@ -5293,7 +5309,7 @@
       "lua"
     ],
     "description": "package manager for Lua modules",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/luarocks/luarocks/"
     ],
@@ -5310,7 +5326,7 @@
     ],
     "description": "Python workflow manager by Spotify",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
@@ -5337,7 +5353,7 @@
       "lz4cat.1",
       "unlz4.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://lz4.github.io/lz4/",
       "https://github.com/lz4/lz4/"
@@ -5362,7 +5378,7 @@
     "man1": [
       "lzip.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.nongnu.org/lzip/",
       "http://download.savannah.gnu.org/releases/lzip/?C=M&O=D"
@@ -5378,8 +5394,8 @@
     "default": false,
     "description": "fast lossless data compression library",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.oberhumer.com/opensource/lzo/download/lzo-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.oberhumer.com/opensource/lzo/"
     ],
@@ -5396,7 +5412,7 @@
     "default": false,
     "description": "GNU macro processor",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/m4/",
       "https://ftp.gnu.org/gnu/m4/?C=M;O=D"
@@ -5417,7 +5433,7 @@
     "man1": [
       "gmake.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/make/?C=M;O=D"
     ],
@@ -5435,7 +5451,7 @@
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
     "outdated": true,
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -5468,8 +5484,8 @@
     "man1": [
       "gman.1"
     ],
-    "prune": true,
     "revision": 1,
+    "type": "cli",
     "url": [
       "https://man-db.nongnu.org/",
       "https://gitlab.com/man-db/man-db/-/releases"
@@ -5487,7 +5503,7 @@
     ],
     "description": "reactive Python notebook environment",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://marimo.io/",
       "https://pypi.org/project/marimo/"
@@ -5505,7 +5521,7 @@
     ],
     "description": "linter for Markdown files",
     "installer": "node-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.npmjs.com/package/markdownlint-cli/"
     ],
@@ -5522,7 +5538,7 @@
     ],
     "description": "smart shell history search with neural networks",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/cantino/mcfly/"
     ],
@@ -5540,7 +5556,7 @@
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/lunaryorn/mdcat/"
     ],
@@ -5557,7 +5573,7 @@
     ],
     "description": "fast, user-friendly build system",
     "installer": "python-package",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://mesonbuild.com/",
       "https://github.com/mesonbuild/meson/",
@@ -5575,7 +5591,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "like awk/sed/cut/join for name-indexed data formats",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
@@ -5590,7 +5606,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "compact general-purpose memory allocator by Microsoft",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/microsoft/mimalloc"
     ],
@@ -5607,7 +5623,7 @@
     ],
     "description": "versatile pairwise sequence aligner",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
@@ -5625,13 +5641,13 @@
     ],
     "description": "mixture-of-isoforms model for alternative splicing analysis",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "http://hollywood.mit.edu/burgelab/miso/",
       "https://github.com/yarden/MISO/",
@@ -5653,7 +5669,7 @@
       "zstd"
     ],
     "description": "high-speed linker for ELF binaries",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/rui314/mold/"
     ],
@@ -5670,7 +5686,7 @@
     ],
     "description": "MosaicML training platform CLI",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/mosaicml-cli/"
     ],
@@ -5688,7 +5704,7 @@
     ],
     "description": "C library for arbitrary-precision complex arithmetic",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "http://www.multiprecision.org/mpc/"
     ],
@@ -5702,8 +5718,8 @@
     "default": false,
     "description": "C library for correct decimal floating point",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.bytereef.org/mpdecimal/"
     ],
@@ -5721,7 +5737,7 @@
     ],
     "description": "C library for multiple-precision floating-point arithmetic",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.mpfr.org/"
     ],
@@ -5737,7 +5753,7 @@
       "boost"
     ],
     "description": "efficient binary serialization format library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://msgpack.org/",
       "https://github.com/msgpack/msgpack-c/"
@@ -5755,7 +5771,7 @@
     ],
     "description": "aggregate QC reports from bioinformatics tools",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/multiqc/",
       "https://bioconda.github.io/recipes/multiqc/README.html"
@@ -5781,7 +5797,7 @@
     "man1": [
       "mutagen-inspect.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://mutagen.readthedocs.io/",
       "https://github.com/quodlibet/mutagen/",
@@ -5802,7 +5818,7 @@
     ],
     "description": "static type checker for Python",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.mypy-lang.org/",
       "https://github.com/python/mypy/",
@@ -5826,8 +5842,8 @@
     ],
     "description": "simple, user-friendly terminal text editor",
     "mirror": true,
-    "prune": true,
     "src_url": "https://www.nano-editor.org/dist/v{major}/nano-{version}.tar.xz",
+    "type": "cli",
     "url": [
       "https://www.nano-editor.org/"
     ],
@@ -5844,13 +5860,13 @@
     ],
     "description": "signal-level analysis of Oxford Nanopore sequencing data",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/nanopolish/README.html"
     ],
@@ -5873,13 +5889,13 @@
     "installer_args": {
       "name": "sra-tools"
     },
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/sra-tools/README.html",
       "https://github.com/ncbi/sra-tools/"
@@ -5889,7 +5905,8 @@
   "ncbi-vdb": {
     "date": "2024-05-31",
     "description": "database engine for the NCBI Sequence Read Archive",
-    "removed": true
+    "removed": true,
+    "type": "library"
   },
   "ncurses": {
     "bin": [
@@ -5926,7 +5943,7 @@
       "tput.1",
       "tset.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/pub/gnu/ncurses/?C=M;O=D"
     ],
@@ -5942,7 +5959,7 @@
     "man1": [
       "neofetch.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/dylanaraps/neofetch/"
     ],
@@ -5965,7 +5982,7 @@
     "man1": [
       "nvim.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/neovim/neovim/"
     ],
@@ -5985,7 +6002,7 @@
     ],
     "description": "low-level cryptographic library",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://ftp.gnu.org/gnu/nettle/?C=M;O=D"
     ],
@@ -6003,7 +6020,7 @@
     ],
     "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/",
@@ -6027,8 +6044,8 @@
       "zlib"
     ],
     "description": "HTTP/2 C library",
-    "prune": false,
     "revision": 1,
+    "type": "library",
     "url": [
       "https://nghttp2.org/",
       "https://github.com/nghttp2/nghttp2"
@@ -6042,7 +6059,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "statically typed compiled systems programming language",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://nim-lang.org/"
     ],
@@ -6058,7 +6075,7 @@
       "python"
     ],
     "description": "small, fast build system",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ninja-build.org/",
       "https://pypi.org/project/ninja/"
@@ -6073,7 +6090,7 @@
     "date": "2025-04-11",
     "default": false,
     "description": "modern JSON library for C++",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/nlohmann/json/"
     ],
@@ -6101,8 +6118,8 @@
     ],
     "description": "network exploration and security auditing tool",
     "mirror": true,
-    "prune": true,
     "src_url": "https://nmap.org/dist/nmap-{version}.tar.bz2",
+    "type": "cli",
     "url": "https://nmap.org/",
     "version": "7.99"
   },
@@ -6130,7 +6147,7 @@
     "notes": [
       "Tracking the LTS release series."
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://nodejs.org/"
     ],
@@ -6144,7 +6161,7 @@
     "date": "2024-12-24",
     "default": false,
     "description": "New GNU Portable Threads library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -6161,7 +6178,7 @@
     ],
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/nushell/nushell/"
     ],
@@ -6179,7 +6196,7 @@
     "date": "2025-01-02",
     "default": false,
     "description": "regular expressions library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/kkos/oniguruma/"
     ],
@@ -6197,13 +6214,13 @@
     ],
     "description": "Oxford Nanopore basecaller",
     "installer_platform": "linux",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/nanoporetech/bonito/"
     ],
@@ -6216,13 +6233,13 @@
     "date": "2026-02-22",
     "default": false,
     "description": "Oxford Nanopore high-accuracy basecaller",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
       "macos-amd64": false,
       "macos-arm64": true
     },
+    "type": "cli",
     "url": [
       "https://github.com/nanoporetech/dorado/"
     ],
@@ -6237,7 +6254,7 @@
     "description": "Oxford Nanopore production basecaller",
     "install_note": "Installation requires agreement to terms of service at: https://nanoporetech.com/support/nanopore-sequencing-data-analysis",
     "private": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
@@ -6256,7 +6273,7 @@
       "zstd"
     ],
     "description": "VBZ compression plugin for Oxford Nanopore data",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/nanoporetech/vbz_compression/"
     ],
@@ -6265,7 +6282,8 @@
   "openbb": {
     "date": "2024-05-16",
     "description": "open-source investment research platform",
-    "removed": true
+    "removed": true,
+    "type": "library"
   },
   "openblas": {
     "build_dependencies": [
@@ -6275,7 +6293,7 @@
     "date": "2026-04-29",
     "default": false,
     "description": "optimized BLAS (Basic Linear Algebra Subprograms) library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.openblas.net/",
       "https://github.com/xianyi/OpenBLAS/"
@@ -6298,7 +6316,7 @@
       "zstd"
     ],
     "description": "open-source JPEG 2000 codec",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.openjpeg.org/"
     ],
@@ -6316,9 +6334,9 @@
     ],
     "description": "open-source LDAP directory service",
     "mirror": true,
-    "prune": false,
     "revision": 1,
     "src_url": "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-{version}.tgz",
+    "type": "library",
     "url": [
       "https://www.openldap.org/software/"
     ],
@@ -6342,8 +6360,8 @@
     ],
     "description": "OpenBSD SSH connectivity tools",
     "mirror": true,
-    "prune": false,
     "src_url": "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.openssh.com/portable.html",
       "https://github.com/openssh/openssh-portable",
@@ -6366,8 +6384,8 @@
       "ca-certificates"
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v1)",
-    "prune": false,
     "revision": 1,
+    "type": "build_tool",
     "url": [
       "https://www.openssl.org/source/"
     ],
@@ -6386,7 +6404,7 @@
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v3)",
     "installer": "openssl",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.openssl.org/source/"
     ],
@@ -6397,7 +6415,6 @@
     "default": false,
     "description": "Oracle Database client libraries",
     "installer_platform": "fedora",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -6405,6 +6422,7 @@
       "macos-arm64": false
     },
     "system": true,
+    "type": "cli",
     "url": [
       "https://www.oracle.com/database/technologies/instant-client.html"
     ],
@@ -6427,7 +6445,7 @@
       "7za.1.gz",
       "7zr.1.gz"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/p7zip-project/p7zip/"
     ],
@@ -6444,7 +6462,7 @@
     ],
     "description": "universal document format converter",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pandoc.org/",
       "https://github.com/jgm/pandoc/"
@@ -6468,7 +6486,7 @@
     "man1": [
       "parallel.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.gnu.org/software/parallel/",
       "https://ftp.gnu.org/gnu/parallel/?C=M;O=D"
@@ -6489,8 +6507,8 @@
       "pass.1"
     ],
     "mirror": true,
-    "prune": true,
     "src_url": "https://git.zx2c4.com/password-store/snapshot/password-store-{version}.tar.xz",
+    "type": "cli",
     "url": [
       "https://www.passwordstore.org/"
     ],
@@ -6517,7 +6535,7 @@
     "man1": [
       "patch.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/patch/?C=M;O=D"
     ],
@@ -6527,6 +6545,7 @@
     "date": "2026-05-03",
     "description": "parallel implementation of bzip2",
     "removed": true,
+    "type": "library",
     "url": [
       "https://web.archive.org/web/20180226093549/compression.ca/pbzip2/"
     ]
@@ -6556,7 +6575,7 @@
       "pcregrep.1",
       "pcretest.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://sourceforge.net/projects/pcre/"
     ],
@@ -6587,7 +6606,7 @@
       "pcre2grep.1",
       "pcre2test.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/PCRE2Project/pcre2/",
       "https://www.pcre.org/"
@@ -6609,7 +6628,7 @@
       "cpan.1",
       "perl.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.perl.org/get.html"
     ],
@@ -6626,13 +6645,13 @@
     ],
     "description": "Java tools for high-throughput sequencing data",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
@@ -6658,7 +6677,7 @@
       "pigz.1",
       "unpigz.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://zlib.net/pigz/"
     ],
@@ -6678,7 +6697,7 @@
       "ncurses"
     ],
     "description": "collection of dialog programs for GnuPG passphrase entry",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://gnupg.org/download/"
     ],
@@ -6696,7 +6715,7 @@
     "description": "install and run Python CLI apps in isolated environments",
     "installer": "python-package",
     "outdated": true,
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
@@ -6713,8 +6732,8 @@
     "default": false,
     "description": "pixel manipulation library",
     "mirror": true,
-    "prune": false,
     "src_url": "https://cairographics.org/releases/pixman-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://cairographics.org/releases/?C=M;O=D",
       "http://www.pixman.org/"
@@ -6734,7 +6753,7 @@
     "man1": [
       "pkg-config.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://pkg-config.freedesktop.org/"
     ],
@@ -6755,8 +6774,8 @@
       "pkgconf.1"
     ],
     "mirror": true,
-    "prune": false,
     "src_url": "https://distfiles.ariadne.space/pkgconf/pkgconf-{version}.tar.xz",
+    "type": "build_tool",
     "url": [
       "https://github.com/pkgconf/pkgconf"
     ],
@@ -6773,7 +6792,7 @@
     ],
     "description": "Python dependency management and packaging tool",
     "installer": "python-package",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://python-poetry.org/",
       "https://pypi.org/project/poetry/"
@@ -6803,7 +6822,7 @@
       "readline"
     ],
     "description": "powerful open-source relational database",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
@@ -6817,7 +6836,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "cross-platform task automation shell by Microsoft",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/PowerShell/PowerShell/"
     ],
@@ -6827,7 +6846,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "community-maintained Emacs configuration",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/bbatsov/prelude/"
     ],
@@ -6845,7 +6864,7 @@
     ],
     "description": "opinionated code formatter for JS, CSS, HTML, and more",
     "installer": "node-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://prettier.io/",
       "https://www.npmjs.com/package/prettier/"
@@ -6863,7 +6882,7 @@
     ],
     "description": "modern replacement for ps with color output",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/dalance/procs/"
     ],
@@ -6896,8 +6915,8 @@
       "projinfo.1"
     ],
     "mirror": true,
-    "prune": false,
     "src_url": "https://download.osgeo.org/proj/proj-{version}.tar.gz",
+    "type": "build_tool",
     "url": [
       "https://proj.org/",
       "https://github.com/OSGeo/PROJ/"
@@ -6914,7 +6933,7 @@
     "date": "2023-12-22",
     "default": false,
     "description": "command-line HTML parsing tool",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/ericchiang/pup"
     ],
@@ -6931,7 +6950,7 @@
     ],
     "description": "sampling profiler for Python programs",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/benfred/py-spy/",
       "https://pypi.org/project/py-spy/"
@@ -6946,7 +6965,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "C++11 header-only bindings between C++ and Python",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://pybind11.readthedocs.io/"
     ],
@@ -6963,7 +6982,7 @@
     ],
     "description": "Python style guide checker (PEP 8)",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
@@ -6983,7 +7002,7 @@
     "man1": [
       "pyenv.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
@@ -7000,7 +7019,7 @@
     ],
     "description": "passive checker for Python programs",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
@@ -7018,7 +7037,7 @@
     ],
     "description": "syntax highlighter for many programming languages",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pygments.org/",
       "https://github.com/pygments/pygments/",
@@ -7037,7 +7056,7 @@
     ],
     "description": "source code analyzer and linter for Python",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pylint.pycqa.org/",
       "https://github.com/PyCQA/pylint/",
@@ -7059,13 +7078,13 @@
     "installer_args": {
       "name": "pymol-open-source"
     },
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://pymol.org/conda/"
     ],
@@ -7082,7 +7101,7 @@
     ],
     "description": "fast Python type checker",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/pyrefly/",
       "https://github.com/facebook/pyrefly/",
@@ -7104,7 +7123,7 @@
     ],
     "description": "static type checker for Python by Microsoft",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
@@ -7123,7 +7142,7 @@
     ],
     "description": "Python bindings for the taglib audio metadata library",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
@@ -7146,7 +7165,7 @@
         "pytest-cov"
       ]
     },
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
@@ -7156,7 +7175,8 @@
   },
   "python": {
     "alias_of": "python3.14",
-    "description": "generic Python shim (resolved at runtime)"
+    "description": "generic Python shim (resolved at runtime)",
+    "type": "library"
   },
   "python3.10": {
     "bin": [
@@ -7207,7 +7227,7 @@
     "man1": [
       "python3.10.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
@@ -7262,7 +7282,7 @@
     "man1": [
       "python3.11.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
@@ -7317,7 +7337,7 @@
     "man1": [
       "python3.12.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
@@ -7372,7 +7392,7 @@
     "man1": [
       "python3.13.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
@@ -7439,7 +7459,7 @@
       "python3.1",
       "python3.14.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
@@ -7452,7 +7472,7 @@
     "date": "2026-05-02",
     "default": true,
     "description": "scientific and technical publishing system",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://quarto.org/",
       "https://github.com/quarto-dev/quarto-cli/"
@@ -7532,7 +7552,7 @@
       "R.1",
       "Rscript.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
@@ -7609,13 +7629,13 @@
     ],
     "description": "R development version (SVN build)",
     "installer": "r",
-    "prune": true,
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": true
     },
+    "type": "cli",
     "url": [
       "https://contributor.r-project.org/svn-dashboard/",
       "https://svn.r-project.org/R/",
@@ -7638,6 +7658,7 @@
       "macos-arm64": true
     },
     "system": true,
+    "type": "library",
     "url": [
       "https://mac.r-project.org/tools/"
     ],
@@ -7655,6 +7676,7 @@
       "macos-arm64": true
     },
     "system": true,
+    "type": "library",
     "url": [
       "https://mac.r-project.org/openmp/"
     ],
@@ -7671,7 +7693,7 @@
     ],
     "description": "modern R console with syntax highlighting and completion",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/randy3k/radian/",
       "https://pypi.org/project/radian/"
@@ -7689,7 +7711,7 @@
     ],
     "description": "vim-inspired terminal file manager",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/ranger-fm/",
       "https://github.com/ranger/ranger/"
@@ -7703,7 +7725,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Ruby version manager",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/rbenv/rbenv/"
     ],
@@ -7724,7 +7746,7 @@
       "rclone.1"
     ],
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://rclone.org/"
     ],
@@ -7741,7 +7763,7 @@
       "ncurses"
     ],
     "description": "library for editing command-line input",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://tiswww.cwru.edu/php/chet/readline/rltop.html"
     ],
@@ -7775,7 +7797,7 @@
     "man1": [
       "rename.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://metacpan.org/dist/File-Rename/"
     ],
@@ -7789,7 +7811,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "cross-platform child process library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/DaanDeMeyer/reproc/"
     ],
@@ -7806,7 +7828,7 @@
     ],
     "description": "recursively search directories with regex patterns",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/BurntSushi/ripgrep/"
     ],
@@ -7823,7 +7845,7 @@
     ],
     "description": "ripgrep with support for searching many file formats",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/phiresky/ripgrep-all/"
     ],
@@ -7840,7 +7862,7 @@
     ],
     "description": "TextMate remote file editing tool",
     "installer": "ruby-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/textmate/rmate/"
     ],
@@ -7857,13 +7879,13 @@
     ],
     "description": "rMATS splicing analysis from RNA-seq data",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://rnaseq-mats.sourceforge.io/",
       "https://bioconda.github.io/recipes/rmats/README.html"
@@ -7877,6 +7899,7 @@
     "date": "2022-09-26",
     "description": "builds man pages from Markdown",
     "removed": true,
+    "type": "cli",
     "url": [
       "https://github.com/rtomayko/ronn/",
       "https://rubygems.org/gems/ronn/"
@@ -7893,7 +7916,7 @@
     ],
     "description": "actively maintained fork of ronn",
     "installer": "ruby-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/apjanke/ronn-ng/",
       "https://rubygems.org/gems/ronn-ng/"
@@ -7912,13 +7935,13 @@
     ],
     "description": "accurate quantification of gene and isoform expression",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/deweylab/RSEM/",
       "https://bioconda.github.io/recipes/rsem/README.html"
@@ -7937,6 +7960,7 @@
       "macos-arm64": false
     },
     "system": true,
+    "type": "library",
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
@@ -7963,8 +7987,8 @@
       "rsync.1"
     ],
     "mirror": true,
-    "prune": true,
     "src_url": "https://download.samba.org/pub/rsync/src/rsync-{version}.tar.gz",
+    "type": "cli",
     "url": [
       "https://download.samba.org/pub/rsync/src/?C=M;O=D"
     ],
@@ -7995,7 +8019,7 @@
       "ruby.1"
     ],
     "outdated": true,
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
     ],
@@ -8012,7 +8036,7 @@
     ],
     "description": "extremely fast Python linter and formatter",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/ruff/"
     ],
@@ -8029,7 +8053,7 @@
     ],
     "description": "LSP server for ruff",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/ruff-lsp/"
     ],
@@ -8051,7 +8075,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "systems programming language focused on safety and speed",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.rust-lang.org/"
     ],
@@ -8067,7 +8091,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "very fast S3 and object storage CLI tool",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/peak/s5cmd/"
     ],
@@ -8084,7 +8108,7 @@
     ],
     "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
@@ -8103,13 +8127,13 @@
     "description": "fast parallel tools for working with SAM/BAM files",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
@@ -8141,13 +8165,13 @@
     "description": "tools for manipulating alignments in SAM and BAM format",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": true
     },
+    "type": "cli",
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -8165,7 +8189,7 @@
     ],
     "description": "high-performance CPU, GPU, and memory profiler for Python",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
@@ -8183,7 +8207,7 @@
     ],
     "description": "single-cell analysis in Python",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://scanpy.readthedocs.io/"
     ],
@@ -8200,7 +8224,7 @@
     "installer_args": {
       "egg_name": "SCons"
     },
-    "prune": false,
+    "type": "library",
     "url": [
       "https://scons.org/",
       "https://pypi.org/project/SCons/"
@@ -8224,7 +8248,7 @@
     "man1": [
       "screen.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
       "https://ftp.gnu.org/gnu/screen/?C=M;O=D"
@@ -8242,7 +8266,7 @@
     ],
     "description": "intuitive find and replace CLI tool",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/chmln/sd/"
     ],
@@ -8265,7 +8289,7 @@
     "man1": [
       "gsed.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/sed/",
       "https://ftp.gnu.org/gnu/sed/?C=M;O=D"
@@ -8284,13 +8308,13 @@
     "description": "cross-platform and ultrafast FASTQ/FASTA toolkit",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
@@ -8312,7 +8336,7 @@
       "zlib"
     ],
     "description": "high-performance C-based HTTP client library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://serf.apache.org/"
     ],
@@ -8330,7 +8354,7 @@
     "description": "static analysis tool for shell scripts",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/koalaman/shellcheck/"
     ],
@@ -8348,6 +8372,7 @@
       "macos-arm64": false
     },
     "system": true,
+    "type": "library",
     "url": [
       "https://www.rstudio.com/products/shiny/download-server/"
     ],
@@ -8360,7 +8385,7 @@
     "date": "2022-08-30",
     "default": false,
     "description": "xUnit-based unit test framework for shell scripts",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/kward/shunit2/"
     ],
@@ -8377,7 +8402,7 @@
     ],
     "description": "YAML parsing tool for the command line",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/0k/shyaml/",
       "https://pypi.org/project/shyaml/"
@@ -8391,7 +8416,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "JSON parser using SIMD instructions for high throughput",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://simdjson.org"
     ],
@@ -8408,7 +8433,7 @@
     ],
     "description": "formatter for Snakemake workflow files",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html",
@@ -8427,7 +8452,7 @@
     ],
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://pypi.org/project/snakemake/",
@@ -8449,7 +8474,7 @@
     "man1": [
       "sox.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "http://sox.sourceforge.net/sox.html",
       "https://sourceforge.net/projects/sox/files/sox/"
@@ -8463,7 +8488,7 @@
       "emacs"
     ],
     "description": "Emacs configuration centered around evil-mode",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
@@ -8474,7 +8499,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "modular Vim and Neovim configuration",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://spacevim.org/",
       "https://github.com/SpaceVim/SpaceVim"
@@ -8493,7 +8518,7 @@
       "fmt"
     ],
     "description": "fast C++ logging library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/gabime/spdlog/"
     ],
@@ -8512,7 +8537,7 @@
     ],
     "description": "Python documentation generator",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/",
@@ -8531,7 +8556,7 @@
     ],
     "description": "SQL linter and auto-formatter",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
@@ -8559,7 +8584,7 @@
     "notes": [
       "Need to update install script for minor version bumps."
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.sqlite.org/download.html"
     ],
@@ -8580,7 +8605,7 @@
       "zstd"
     ],
     "description": "library for reading and writing sequencing data formats",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/jkbonfield/io_lib"
     ],
@@ -8598,13 +8623,13 @@
     "description": "ultrafast universal RNA-seq aligner",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
@@ -8623,13 +8648,13 @@
     "description": "detects gene fusions using STAR alignments",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
@@ -8647,7 +8672,7 @@
     ],
     "description": "fast, customizable cross-shell prompt",
     "installer": "conda-package",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://starship.rs/",
       "https://github.com/starship/starship/"
@@ -8668,7 +8693,7 @@
     ],
     "description": "symlink farm manager for managing dotfiles",
     "installer": "gnu-app",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://www.gnu.org/software/stow/"
     ],
@@ -8685,7 +8710,7 @@
     ],
     "description": "build and share data web apps in Python",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/streamlit/",
       "https://streamlit.io/",
@@ -8704,13 +8729,13 @@
     ],
     "description": "toolkit including featureCounts for RNA-seq counting",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://subread.sourceforge.net/",
       "https://bioconda.github.io/recipes/subread/README.html"
@@ -8742,7 +8767,7 @@
     "man1": [
       "svn.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://subversion.apache.org/"
     ],
@@ -8761,7 +8786,7 @@
       "pcre2"
     ],
     "description": "interface compiler connecting C/C++ to scripting languages",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "http://www.swig.org/"
     ],
@@ -8779,7 +8804,7 @@
       "zlib"
     ],
     "description": "library for reading and editing audio file metadata",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/taglib/taglib/"
     ],
@@ -8798,7 +8823,7 @@
     "man1": [
       "gtar.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/tar/",
       "https://ftp.gnu.org/gnu/tar/?C=M;O=D"
@@ -8814,7 +8839,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Intel oneAPI Threading Building Blocks for parallel C++",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/oneapi-src/oneTBB"
     ],
@@ -8837,7 +8862,7 @@
       "xorg-xorgproto"
     ],
     "description": "Tcl/Tk scripting language and GUI toolkit",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.tcl-lang.org/"
     ],
@@ -8855,7 +8880,7 @@
     "description": "fast tldr client for concise command examples",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/dbrgn/tealdeer/"
     ],
@@ -8873,7 +8898,7 @@
     "notes": [
       "Tracking the LTS release series."
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://adoptium.net/"
     ],
@@ -8886,7 +8911,7 @@
     "date": "2022-11-05",
     "default": false,
     "description": "Python library for ANSI color output",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://termcolor.readthedocs.io/",
       "https://github.com/ikalnytskyi/termcolor/"
@@ -8923,7 +8948,7 @@
       "texi2pdf.1",
       "texindex.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://ftp.gnu.org/gnu/texinfo/?C=M;O=D"
     ],
@@ -8936,7 +8961,7 @@
     "date": "2025-10-08",
     "default": false,
     "description": "C++ implementation of std::expected",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/TartanLlama/expected/"
     ],
@@ -8962,7 +8987,7 @@
     "man1": [
       "tmux.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/tmux/tmux/"
     ],
@@ -8979,7 +9004,7 @@
     ],
     "description": "count lines of code quickly",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/XAMPPRocky/tokei/"
     ],
@@ -8996,7 +9021,7 @@
     ],
     "description": "fast, extensible progress bar for Python",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/tqdm/"
     ],
@@ -9015,7 +9040,7 @@
     "man1": [
       "tree.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/Old-Man-Programmer/tree"
     ],
@@ -9029,7 +9054,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "incremental parsing library for syntax trees",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
@@ -9047,7 +9072,7 @@
     ],
     "description": "Python anti-pattern linter",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/tryceratops/"
     ],
@@ -9064,7 +9089,7 @@
     ],
     "description": "cut text by fields, bytes, or characters",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/riquito/tuc/"
     ],
@@ -9081,7 +9106,7 @@
     ],
     "description": "extremely fast Python type checker",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
@@ -9102,8 +9127,8 @@
     ],
     "description": "library and utilities for units of physical quantities",
     "mirror": true,
-    "prune": false,
     "src_url": "https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz",
+    "type": "build_tool",
     "url": [
       "https://www.unidata.ucar.edu/software/udunits/",
       "https://downloads.unidata.ucar.edu/udunits/"
@@ -9121,13 +9146,13 @@
     ],
     "description": "tools for processing reads with UMI barcodes",
     "installer": "conda-package",
-    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
       "macos-arm64": false
     },
+    "type": "cli",
     "url": [
       "https://github.com/vals/umis/",
       "https://bioconda.github.io/recipes/umis/README.html"
@@ -9143,7 +9168,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "terminfo parser and utility library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/neovim/unibilium/"
     ],
@@ -9169,7 +9194,7 @@
     "man1": [
       "gunits.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/units/",
       "https://ftp.gnu.org/gnu/units/?C=M;O=D"
@@ -9198,7 +9223,7 @@
       "zipgrep.1",
       "zipinfo.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "http://infozip.sourceforge.net/UnZip.html"
     ],
@@ -9212,7 +9237,7 @@
     "date": "2026-01-02",
     "default": false,
     "description": "C library for Unicode and UTF-8 processing",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://juliastrings.github.io/utf8proc/",
       "https://github.com/JuliaStrings/utf8proc/"
@@ -9227,7 +9252,7 @@
     "date": "2026-04-29",
     "default": true,
     "description": "extremely fast Python package and project manager",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
@@ -9265,7 +9290,7 @@
       "vimtutor.1",
       "xxd.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://github.com/vim/vim/"
     ],
@@ -9287,7 +9312,7 @@
       "vd.1",
       "visidata.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
@@ -9305,7 +9330,7 @@
     ],
     "description": "find dead Python code",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
@@ -9322,7 +9347,7 @@
     "date": "2025-02-20",
     "default": false,
     "description": "terminal file manager for navigating directories",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/antonmedv/walk/"
     ],
@@ -9353,7 +9378,7 @@
     "man1": [
       "wget.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/wget/",
       "https://ftp.gnu.org/gnu/wget/?C=M;O=D"
@@ -9390,7 +9415,7 @@
     ],
     "description": "successor to wget with HTTP/2 support",
     "installer": "gnu-app",
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://gitlab.com/gnuwget/wget2"
     ],
@@ -9414,7 +9439,7 @@
     "man1": [
       "gwhich.1"
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://ftp.gnu.org/gnu/which/?C=M;O=D"
     ],
@@ -9434,7 +9459,7 @@
     "date": "2023-05-15",
     "default": false,
     "description": "encode and decode WOFF2 web font format",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/google/woff2/"
     ],
@@ -9452,7 +9477,7 @@
       "xorg-xtrans"
     ],
     "description": "Inter-Client Exchange library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libice/-/tags"
@@ -9467,7 +9492,7 @@
     "date": "2023-08-31",
     "default": false,
     "description": "pthread stubs used by X.org build system",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/-/tags"
@@ -9487,7 +9512,7 @@
       "xorg-xtrans"
     ],
     "description": "X Session Management library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libsm/-/tags"
@@ -9511,7 +9536,7 @@
       "xorg-xtrans"
     ],
     "description": "core X11 protocol client library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libx11/-/tags"
@@ -9529,7 +9554,7 @@
       "xorg-xorgproto"
     ],
     "description": "X authority file management library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxau/-/tags"
@@ -9552,7 +9577,7 @@
       "xorg-xorgproto"
     ],
     "description": "X protocol C-language binding library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxcb/-/tags"
@@ -9570,7 +9595,7 @@
       "xorg-xorgproto"
     ],
     "description": "X Display Manager Control Protocol library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxdmcp/-/tags"
@@ -9593,7 +9618,7 @@
       "xorg-xorgproto"
     ],
     "description": "X11 miscellaneous extension library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxext/-/tags"
@@ -9618,7 +9643,7 @@
       "xorg-xorgproto"
     ],
     "description": "X resize and rotate extension library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/tags"
@@ -9641,7 +9666,7 @@
       "xorg-xorgproto"
     ],
     "description": "X render extension library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxrender/-/tags"
@@ -9666,7 +9691,7 @@
       "xorg-xorgproto"
     ],
     "description": "X toolkit intrinsics library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxt/-/tags"
@@ -9685,7 +9710,7 @@
     "notes": [
       "This must match xorg-libxcb version."
     ],
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/proto/xcbproto/-/tags"
@@ -9700,7 +9725,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "X.Org X11 protocol headers",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/tags"
@@ -9719,7 +9744,7 @@
     ],
     "description": "X transport library",
     "outdated": true,
-    "prune": false,
+    "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxtrans/-/tags"
@@ -9737,7 +9762,7 @@
     "default": false,
     "description": "extended SRA download and processing tools",
     "installer": "rust-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/arcInstitute/xsra",
       "https://crates.io/crates/xsra"
@@ -9755,7 +9780,7 @@
     ],
     "description": "fast CSV command-line toolkit",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/BurntSushi/xsv/"
     ],
@@ -9769,7 +9794,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "extremely fast non-cryptographic hash algorithm library",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/Cyan4973/xxHash/"
     ],
@@ -9833,7 +9858,7 @@
       "xzless.1",
       "xzmore.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://tukaani.org/xz/",
       "https://github.com/tukaani-project/xz"
@@ -9848,7 +9873,7 @@
     "date": "2026-02-06",
     "default": false,
     "description": "YAML parser and emitter for C++",
-    "prune": false,
+    "type": "library",
     "url": [
       "https://github.com/jbeder/yaml-cpp/"
     ],
@@ -9865,7 +9890,7 @@
     ],
     "description": "linter for YAML files",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "version": "1.38.0"
   },
   "yapf": {
@@ -9879,7 +9904,7 @@
     ],
     "description": "Python code formatter by Google",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://pypi.org/project/yapf/",
       "https://github.com/google/yapf/"
@@ -9899,7 +9924,7 @@
     "notes": [
       "Switch to conda recipe in the future."
     ],
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/mikefarah/yq/"
     ],
@@ -9917,7 +9942,7 @@
     ],
     "description": "download videos from YouTube and many other sites",
     "installer": "python-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
@@ -9935,7 +9960,7 @@
     ],
     "description": "terminal workspace with layouts and plugins",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/zellij-org/zellij/"
     ],
@@ -9953,7 +9978,7 @@
     "description": "graphical terminal process monitor",
     "installer": "conda-package",
     "outdated": true,
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/bvaisvil/zenith/"
     ],
@@ -9976,7 +10001,7 @@
     "man1": [
       "zip.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "http://infozip.sourceforge.net/Zip.html"
     ],
@@ -9991,8 +10016,8 @@
     "default": false,
     "description": "lossless data compression library",
     "mirror": true,
-    "prune": false,
     "src_url": "https://www.zlib.net/zlib-{version}.tar.gz",
+    "type": "library",
     "url": [
       "https://www.zlib.net/"
     ],
@@ -10002,6 +10027,7 @@
     "date": "2026-01-05",
     "description": "high-quality but slow zlib/gzip/zip compressor by Google",
     "removed": true,
+    "type": "library",
     "url": [
       "https://github.com/google/zopfli/"
     ],
@@ -10018,7 +10044,7 @@
     ],
     "description": "smarter cd command that learns your habits",
     "installer": "conda-package",
-    "prune": true,
+    "type": "cli",
     "url": [
       "https://github.com/ajeetdsouza/zoxide/"
     ],
@@ -10038,7 +10064,7 @@
     "man1": [
       "zsh.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "http://zsh.sourceforge.net/Arc/source.html"
     ],
@@ -10072,7 +10098,7 @@
       "zstdgrep.1",
       "zstdless.1"
     ],
-    "prune": false,
+    "type": "build_tool",
     "url": [
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
