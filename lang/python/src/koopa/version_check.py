@@ -133,6 +133,8 @@ del _ca_bundle
 
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
+_VERSION_RE = re.compile(r"^\d[\d.\-]*$")
+_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def _http_get_json(
@@ -1590,16 +1592,22 @@ def check_app_versions(
     for app_name, version, spec in specs:
         if cache is not None:
             cached = cache.get(app_name)
-            if cached is not None and re.match(r"^\d[\d.]*$", cached):
-                current_parts = tuple(
-                    int(x) for x in re.split(r"[.\-]", sanitize_version(version)) if x.isdigit()
-                )
-                cached_parts = tuple(
-                    int(x) for x in re.split(r"[.\-]", sanitize_version(cached)) if x.isdigit()
-                )
-                if cached_parts >= current_parts:
+            if cached is not None:
+                if _SHA_RE.match(cached):
                     results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
                     continue
+                if _VERSION_RE.match(cached):
+                    current_parts = tuple(
+                        int(x) for x in re.split(r"[.\-]", sanitize_version(version)) if x.isdigit()
+                    )
+                    cached_parts = tuple(
+                        int(x) for x in re.split(r"[.\-]", sanitize_version(cached)) if x.isdigit()
+                    )
+                    if cached_parts >= current_parts:
+                        results.append(
+                            VersionCheckResult(app_name, version, cached, spec.source, None)
+                        )
+                        continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
     total = len(to_check)
@@ -1634,20 +1642,20 @@ def check_app_versions(
     ) -> tuple[VersionCheckResult, str | None]:
         try:
             latest = spec.check_fn(*spec.args)
-            if not re.match(r"^\d[\d.]*$", latest):
+            if not (_VERSION_RE.match(latest) or _SHA_RE.match(latest)):
                 msg = f"Invalid version string for {app_name}: {latest!r}"
                 raise RuntimeError(msg)
             if spec.batch_size is not None:
                 latest = _apply_batch_version(latest, current, spec.batch_size)
-            current_parts = tuple(
-                int(x) for x in re.split(r"[.\-]", sanitize_version(current)) if x.isdigit()
-            )
-            latest_parts = tuple(
-                int(x) for x in re.split(r"[.\-]", sanitize_version(latest)) if x.isdigit()
-            )
-            if latest_parts < current_parts:
-                msg = f"Version regression for {app_name}: {latest!r} < current {current!r}"
-                raise RuntimeError(msg)
+            if not _SHA_RE.match(latest):
+                current_parts = tuple(
+                    int(x) for x in re.split(r"[.\-]", sanitize_version(current)) if x.isdigit()
+                )
+                latest_parts = tuple(
+                    int(x) for x in re.split(r"[.\-]", sanitize_version(latest)) if x.isdigit()
+                )
+                if latest_parts < current_parts:
+                    latest = current
             if cache is not None:
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
