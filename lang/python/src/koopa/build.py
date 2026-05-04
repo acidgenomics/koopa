@@ -89,17 +89,13 @@ class BuildEnv:
         """Convert to a dict suitable for ``subprocess`` ``env`` param.
 
         Merges accumulated values with the current ``os.environ``, placing
-        our values at the front of each path variable. The koopa ``bin/``
-        directory is stripped from the inherited PATH so only explicitly
-        activated app bins are present during builds.
+        our values at the front of each path variable. PATH is rebuilt from
+        KOOPA_DEFAULT_SYSTEM_PATH (minimal system paths) plus the explicitly
+        activated app bins, isolating builds from the ambient environment.
         """
         env = os.environ.copy()
-        koopa_bin = os.path.join(_koopa_prefix(), "bin")
-        existing_path = env.get("PATH", "")
-        filtered_path = ":".join(p for p in existing_path.split(":") if p and p != koopa_bin)
-        env["PATH"] = filtered_path
-        if self.path:
-            env["PATH"] = _merge_colon(self.path, env["PATH"])
+        base_path = env.get("KOOPA_DEFAULT_SYSTEM_PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
+        env["PATH"] = _merge_colon(self.path, base_path) if self.path else base_path
         if self.cppflags:
             existing = env.get("CPPFLAGS", "")
             env["CPPFLAGS"] = _merge_space(self.cppflags, existing)
