@@ -471,6 +471,9 @@ def _handle_update(args: argparse.Namespace) -> None:
                 push_missing_app_builds()
             if args.all_system:
                 update_system_apps(verbose=args.verbose)
+            from koopa.alert import alert_success
+
+            alert_success("koopa update was successful.")
             return
         if apps == ["koopa"]:
             update_koopa(verbose=args.verbose)
