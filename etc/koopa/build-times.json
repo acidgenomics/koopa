@@ -148,11 +148,11 @@
   "utf8proc": 2.2,
   "uv": 6.1,
   "vim": 57.2,
-  "wget": 125.3,
-  "which": 10.8,
+  "wget": 142.2,
+  "which": 37.0,
   "xxhash": 3.1,
   "xz": 33.7,
   "zlib": 5.0,
-  "zoxide": 2.6,
+  "zoxide": 6.7,
   "zstd": 13.0
 }
