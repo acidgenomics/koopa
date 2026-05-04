@@ -2062,7 +2062,7 @@
     "version": "6be3337b49867bd86f90fe5ca4beeb6b38afaddb"
   },
   "dotfiles": {
-    "date": "2026-05-02",
+    "date": "2026-05-04",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2072,7 +2072,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "a88b1193b935cd78b0b14b14e9d6f051d7902892"
+    "version": "ebf415451ab28d4935c0f96435a9b0e9e792760a"
   },
   "du-dust": {
     "bin": [
