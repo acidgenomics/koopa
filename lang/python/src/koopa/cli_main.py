@@ -415,7 +415,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         _release_install_lock,
         _update_venv,
         fetch_user_repos,
-        install_app,
         install_missing_default_apps,
         remove_unsupported_apps,
         update_bootstrap,
@@ -432,15 +431,19 @@ def _handle_update(args: argparse.Namespace) -> None:
             flag = "--all-system" if args.all_system else "--system"
             msg = f"{flag} requires admin/sudo access."
             raise PermissionError(msg)
-    apps, mode = _resolve_apps_and_mode(args)
-    if not apps:
-        from koopa.alert import warn
-        from koopa.app import prune_apps
-        from koopa.check import prune_broken_symlinks
-
-        update_koopa(verbose=args.verbose)
+    try:
         acquired = _acquire_install_lock()
-        try:
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
+    try:
+        apps, mode = _resolve_apps_and_mode(args)
+        if not apps:
+            from koopa.alert import warn
+            from koopa.app import prune_apps
+            from koopa.check import prune_broken_symlinks
+
+            update_koopa(verbose=args.verbose)
             bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
             if bootstrap_rebuilt:
                 # Bootstrap Python version changed. The running interpreter's
@@ -455,35 +458,27 @@ def _handle_update(args: argparse.Namespace) -> None:
             update_stale_apps(verbose=args.verbose)
             install_missing_default_apps(verbose=args.verbose)
             update_user_apps(verbose=args.verbose)
-        finally:
-            if acquired:
-                _release_install_lock()
-        fetch_user_repos()
-        _configure_user_dotfiles()
-        prune_broken_symlinks()
-        try:
-            prune_apps()
-        except (ValueError, OSError) as exc:
-            warn(f"Prune failed: {exc}")
-        if args.all_system:
-            update_system_apps(verbose=args.verbose)
-        return
-    if apps == ["koopa"]:
-        update_koopa(verbose=args.verbose)
-        _update_venv(_koopa_prefix())
-        return
-    if apps:
-        print(
-            f"Error: 'koopa update' does not accept app names.\n"
-            f"  To reinstall an app, use: koopa reinstall {' '.join(apps)}",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    acquired = _acquire_install_lock()
-    try:
-        for app in apps:
-            config = _build_install_config(app, mode=mode, reinstall=True, verbose=args.verbose)
-            install_app(config)
+            fetch_user_repos()
+            _configure_user_dotfiles()
+            prune_broken_symlinks()
+            try:
+                prune_apps()
+            except (ValueError, OSError) as exc:
+                warn(f"Prune failed: {exc}")
+            if args.all_system:
+                update_system_apps(verbose=args.verbose)
+            return
+        if apps == ["koopa"]:
+            update_koopa(verbose=args.verbose)
+            _update_venv(_koopa_prefix())
+            return
+        if apps:
+            print(
+                f"Error: 'koopa update' does not accept app names.\n"
+                f"  To reinstall an app, use: koopa reinstall {' '.join(apps)}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
     finally:
         if acquired:
             _release_install_lock()

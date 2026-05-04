@@ -310,10 +310,11 @@ def _get_version(path: str) -> str:
             text=True,
             check=False,
         )
-        output = result.stdout or result.stderr
     except OSError:
         return ""
-    return extract_version(output)
+    if result.returncode != 0:
+        return ""
+    return extract_version(result.stdout or result.stderr)
 
 
 def check_build_system() -> bool:
