@@ -5084,6 +5084,7 @@
     ],
     "description": "XML parsing library",
     "prune": false,
+    "revision": 1,
     "url": [
       "https://gitlab.gnome.org/GNOME/libxml2/-/releases"
     ],
