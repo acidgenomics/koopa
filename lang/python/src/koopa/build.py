@@ -96,9 +96,7 @@ class BuildEnv:
         env = os.environ.copy()
         koopa_bin = os.path.join(_koopa_prefix(), "bin")
         existing_path = env.get("PATH", "")
-        filtered_path = ":".join(
-            p for p in existing_path.split(":") if p and p != koopa_bin
-        )
+        filtered_path = ":".join(p for p in existing_path.split(":") if p and p != koopa_bin)
         env["PATH"] = filtered_path
         if self.path:
             env["PATH"] = _merge_colon(self.path, env["PATH"])

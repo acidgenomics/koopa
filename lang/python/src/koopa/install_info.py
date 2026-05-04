@@ -1,5 +1,6 @@
 """Install metadata functions."""
 
+import os
 from datetime import UTC, datetime
 from json import dumps
 
@@ -36,6 +37,7 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
         "os_id": sys_dict["os_id"],
         "build_dependencies": build_deps,
         "dependencies": deps,
+        "environ": dict(sorted(os.environ.items())),
     }
     with open(output_file, "w") as fh:
         fh.write(dumps(info, indent=2, sort_keys=False))
