@@ -19,7 +19,7 @@ def main(
 ) -> None:
     """Install tar."""
     env = activate_app("make", build_only=True)
-    url = f"https://ftpmirror.gnu.org/gnu/tar/tar-{version}.tar.gz"
+    url = f"https://mirrors.kernel.org/gnu/tar/tar-{version}.tar.gz"
     tarball = download(url)
     if not is_valid_archive(tarball):
         url = f"https://ftp.gnu.org/gnu/tar/tar-{version}.tar.gz"

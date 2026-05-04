@@ -18,7 +18,7 @@ def main(
     """Install screen."""
     env = activate_app("autoconf", "automake", build_only=True)
     env = activate_app("libxcrypt", "ncurses", env=env)
-    url = f"https://ftpmirror.gnu.org/gnu/screen/screen-{version}.tar.gz"
+    url = f"https://mirrors.kernel.org/gnu/screen/screen-{version}.tar.gz"
     download_extract_cd(url)
     subprocess.run(
         ["./autogen.sh"],
