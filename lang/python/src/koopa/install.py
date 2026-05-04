@@ -1490,10 +1490,9 @@ def install_conda_package(
         version = os.environ.get("KOOPA_INSTALL_VERSION", "")
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
-    conda = shutil.which("conda")
-    if conda is None:
-        msg = "conda not found."
-        raise FileNotFoundError(msg)
+    from koopa.build import locate
+
+    conda = locate("conda")
     libexec = os.path.join(prefix, "libexec")
     os.makedirs(libexec, exist_ok=True)
     pkg_spec = f"--file={yaml_file}" if yaml_file else f"{name}=={version}"
