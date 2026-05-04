@@ -251,13 +251,19 @@ main() {
     rm -fr "${__kvar_staged}/src"
     if [ -d "$PREFIX" ]
     then
-        rm -fr "${PREFIX}.old"
         if [ "$__kvar_use_sudo" -eq 1 ]
         then
+            sudo /bin/rm -fr "${PREFIX}.old"
             sudo /bin/mv "$PREFIX" "${PREFIX}.old"
         else
+            rm -fr "${PREFIX}.old"
             mv "$PREFIX" "${PREFIX}.old"
         fi
+    elif [ "$__kvar_use_sudo" -eq 1 ]
+    then
+        sudo /bin/rm -fr "${PREFIX}.old"
+    else
+        rm -fr "${PREFIX}.old"
     fi
     if [ "$__kvar_use_sudo" -eq 1 ]
     then
