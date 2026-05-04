@@ -1413,7 +1413,7 @@
     "bin": [
       "claude"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-04",
     "default": false,
     "dependencies": [
       "node"
@@ -1427,7 +1427,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.126"
+    "version": "2.1.128"
   },
   "cli11": {
     "build_dependencies": [
@@ -1505,7 +1505,7 @@
       "cz",
       "git-cz"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-04",
     "default": true,
     "dependencies": [
       "python"
@@ -1518,7 +1518,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.13.10"
+    "version": "4.15.0"
   },
   "conda": {
     "bin": [
@@ -2048,7 +2048,7 @@
     "version": "0.9.6"
   },
   "doom-emacs": {
-    "date": "2026-05-02",
+    "date": "2026-05-04",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2059,7 +2059,7 @@
       "https://github.com/doomemacs/doomemacs/"
     ],
     "user": true,
-    "version": "6be3337b49867bd86f90fe5ca4beeb6b38afaddb"
+    "version": "ee7e6d60b1c2ba4b7dff955f6647a09c94e58e6d"
   },
   "dotfiles": {
     "date": "2026-05-04",
@@ -2410,7 +2410,7 @@
       "ffmpeg",
       "ffprobe"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-04",
     "default": false,
     "dependencies": [
       "conda"
@@ -2426,7 +2426,7 @@
       "https://ffmpeg.org/",
       "https://github.com/FFmpeg/FFmpeg/"
     ],
-    "version": "8.0.1"
+    "version": "8.1.1"
   },
   "ffq": {
     "bin": [
@@ -4695,7 +4695,7 @@
       "cmake",
       "pkg-config"
     ],
-    "date": "2025-12-11",
+    "date": "2026-05-04",
     "default": false,
     "dependencies": [
       "libssh2",
@@ -4708,7 +4708,7 @@
     "url": [
       "https://github.com/libgit2/libgit2/"
     ],
-    "version": "1.9.2"
+    "version": "1.9.3"
   },
   "libgpg-error": {
     "build_dependencies": [
@@ -5496,7 +5496,7 @@
     "bin": [
       "marimo"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-04",
     "default": false,
     "dependencies": [
       "python"
@@ -5508,7 +5508,7 @@
       "https://marimo.io/",
       "https://pypi.org/project/marimo/"
     ],
-    "version": "0.23.4"
+    "version": "0.23.5"
   },
   "markdownlint-cli": {
     "bin": [
@@ -6785,7 +6785,7 @@
     "bin": [
       "poetry"
     ],
-    "date": "2026-04-15",
+    "date": "2026-05-04",
     "default": true,
     "dependencies": [
       "python"
@@ -6797,7 +6797,7 @@
       "https://python-poetry.org/",
       "https://pypi.org/project/poetry/"
     ],
-    "version": "2.3.4"
+    "version": "2.4.0"
   },
   "postgresql": {
     "bin": [
@@ -7425,7 +7425,7 @@
         "pkg-config"
       ]
     },
-    "date": "2026-04-15",
+    "date": "2026-05-04",
     "default": true,
     "dependencies": {
       "default": [],
@@ -7463,7 +7463,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.14.4"
+    "version": "3.14.5"
   },
   "quarto": {
     "bin": [
