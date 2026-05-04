@@ -36,7 +36,6 @@ def main(
         f"--prefix={prefix}",
         f"-Wl,-rpath,{prefix}/lib",
         "-fPIC",
-        "no-libxml2",
         "no-zlib",
         "shared",
     ]

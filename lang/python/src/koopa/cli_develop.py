@@ -823,9 +823,19 @@ def _handle_circular_dependencies() -> None:
     sys.exit(1)
 
 
+def _handle_update_docs(_: list[str]) -> None:
+    """Handle ``koopa develop update-docs``."""
+    from koopa.alert import alert_success
+    from koopa.update_docs import update_docs
+
+    update_docs()
+    alert_success("Documentation updated.")
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
+    "update-docs": _handle_update_docs,
     "generate-completion": lambda _: _handle_generate_completion(),
     "pytest": _handle_pytest,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
