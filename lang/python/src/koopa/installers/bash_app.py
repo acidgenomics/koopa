@@ -20,7 +20,7 @@ def main(
 ) -> None:
     """Install bash."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://ftpmirror.gnu.org/bash/bash-{version}.tar.gz"
+    url = f"https://mirrors.kernel.org/gnu/bash/bash-{version}.tar.gz"
     tarball = download(url)
     if not is_valid_archive(tarball):
         url = f"https://ftp.gnu.org/gnu/bash/bash-{version}.tar.gz"
