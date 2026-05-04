@@ -7,6 +7,7 @@ import inspect
 import json
 import os
 import re
+import ssl
 import subprocess
 import sys
 import threading
@@ -122,6 +123,13 @@ def _resolve_github_token() -> str | None:
 _github_token: str | None = _resolve_github_token()
 _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
+_ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
+if _ca_bundle and not os.path.isfile(_ca_bundle):
+    _ca_bundle = None
+_ssl_ctx: ssl.SSLContext | None = (
+    ssl.create_default_context(cafile=_ca_bundle) if _ca_bundle else None
+)
+del _ca_bundle
 
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
@@ -141,7 +149,7 @@ def _http_get_json(
         req.add_header("Accept", "application/vnd.github+json")
         if _github_token:
             req.add_header("Authorization", f"Bearer {_github_token}")
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
         return json.loads(resp.read().decode())
 
 
@@ -149,7 +157,7 @@ def _http_get_text(url: str, *, timeout: int = 15) -> str:
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
         return resp.read().decode()
 
 
