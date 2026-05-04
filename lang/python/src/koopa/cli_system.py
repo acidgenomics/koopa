@@ -257,7 +257,19 @@ def _handle_update_tex_packages() -> None:
 def _handle_check(args: list[str]) -> None:
     """Handle ``koopa system check``."""
     from koopa.check import check_system
+    from koopa.install import _install_lock_path
 
+    lock_path = _install_lock_path()
+    if os.path.isfile(lock_path):
+        try:
+            pid = int(Path(lock_path).read_text().strip())
+            os.kill(pid, 0)
+            from koopa.alert import alert_note
+
+            alert_note(f"Skipping system check: install in progress (PID {pid}).")
+            return
+        except (ValueError, ProcessLookupError, OSError):
+            pass
     if not check_system():
         sys.exit(1)
 
