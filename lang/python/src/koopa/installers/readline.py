@@ -22,7 +22,7 @@ def main(
     env = activate_app("ncurses", env=env)
     make = locate("make")
     pkg_config = locate("pkg-config")
-    gnu_mirror = "https://ftp.gnu.org/gnu"
+    gnu_mirror = "https://ftpmirror.gnu.org/gnu"
     url = f"{gnu_mirror}/readline/readline-{version}.tar.gz"
     download_extract_cd(url)
     with open("readline.pc.in") as fh:
