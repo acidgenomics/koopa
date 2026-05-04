@@ -8,7 +8,9 @@
 /bootstrap/
 /coverage/
 /etc/koopa/build-times.json
+/etc/koopa/build-times.json
 /libexec/
 /opt/
 /share/
+/share/zsh/site-functions/
 __pycache__/
