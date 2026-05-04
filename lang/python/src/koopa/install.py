@@ -665,8 +665,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if not config.quiet:
                 from koopa.alert import alert_note
 
-                reason_suffix = f" ({config.reinstall_reason})" if config.reinstall_reason else ""
-                alert_note(f"{config.name}{reason_suffix}: installing with dependencies: {', '.join(all_deps)}")
+                reason_suffix = f" (reinstall reason: {config.reinstall_reason})" if config.reinstall_reason else ""
+                alert_note(
+                    f"{config.name}{reason_suffix}: installing with dependencies: {', '.join(all_deps)}"
+                )
             for dep in all_deps:
                 resolved_dep = _resolve_alias(dep)
                 dep_opt = os.path.join(_opt_prefix(), resolved_dep)
