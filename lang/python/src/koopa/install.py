@@ -1881,8 +1881,22 @@ def update_koopa(*, verbose: bool = False) -> None:
         os.environ["KOOPA_VERBOSE"] = "1"
     prefix = _koopa_prefix()
     if not is_owner():
-        msg = f"Current user does not own koopa installation at '{prefix}'."
-        raise PermissionError(msg)
+        uid = os.getuid()
+        st = os.stat(prefix)
+        if st.st_uid == 0:
+            from koopa.alert import warn
+            warn(
+                f"koopa prefix '{prefix}' is owned by root. "
+                "Attempting to repair ownership."
+            )
+            gid = os.getgid()
+            _run("chown", "-R", f"{uid}:{gid}", prefix, sudo=True)
+            if not is_owner():
+                msg = f"Failed to repair ownership of '{prefix}'."
+                raise PermissionError(msg)
+        else:
+            msg = f"Current user does not own koopa installation at '{prefix}'."
+            raise PermissionError(msg)
     if not is_git_repo(prefix):
         alert_note(f"Pinned release detected at '{prefix}'.")
         return
