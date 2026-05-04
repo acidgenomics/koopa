@@ -15,7 +15,7 @@ def main(
 ) -> None:
     """Install openldap."""
     env = activate_app("groff", build_only=True)
-    env = activate_app("openssl", env=env)
+    env = activate_app("openssl3", env=env)
     url = (
         f"https://www.openldap.org/software/download/OpenLDAP/"
         f"openldap-release/openldap-{version}.tgz"

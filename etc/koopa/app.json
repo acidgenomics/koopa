@@ -6312,14 +6312,15 @@
       "groff",
       "make"
     ],
-    "date": "2026-04-24",
+    "date": "2026-05-04",
     "default": false,
     "dependencies": [
-      "openssl"
+      "openssl3"
     ],
     "description": "open-source LDAP directory service",
     "mirror": true,
     "prune": false,
+    "revision": 1,
     "src_url": "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-{version}.tgz",
     "url": [
       "https://www.openldap.org/software/"
