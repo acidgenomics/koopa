@@ -6,8 +6,10 @@ import os
 import re
 import subprocess
 
+from koopa.archive import is_valid_archive
 from koopa.build import activate_app, locate
-from koopa.installers._build_helper import download_extract_cd
+from koopa.download import download
+from koopa.installers._build_helper import extract_cd
 
 
 def main(
@@ -22,9 +24,15 @@ def main(
     env = activate_app("ncurses", env=env)
     make = locate("make")
     pkg_config = locate("pkg-config")
-    gnu_mirror = "https://mirrors.kernel.org/gnu"
-    url = f"{gnu_mirror}/readline/readline-{version}.tar.gz"
-    download_extract_cd(url)
+    for url in [
+        f"https://mirrors.kernel.org/gnu/readline/readline-{version}.tar.gz",
+        f"https://ftpmirror.gnu.org/gnu/readline/readline-{version}.tar.gz",
+        f"https://ftp.gnu.org/gnu/readline/readline-{version}.tar.gz",
+    ]:
+        tarball = download(url)
+        if is_valid_archive(tarball):
+            break
+    extract_cd(tarball)
     with open("readline.pc.in") as fh:
         text = fh.read()
     text = re.sub(r"^(Requires\.private: .*)$", r"# \1", text, flags=re.MULTILINE)

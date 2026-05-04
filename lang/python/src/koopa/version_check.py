@@ -210,6 +210,24 @@ def _check_pypi(package: str) -> str:
 
 
 def _check_conda(channel: str, package: str) -> str:
+    try:
+        result = subprocess.run(
+            ["conda", "search", package, "--json"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        if result.returncode == 0:
+            data = json.loads(result.stdout)
+            versions = [e["version"] for e in data.get(package, [])]
+            if versions:
+                return max(
+                    versions,
+                    key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v) if x.isdigit()),
+                )
+    except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError):
+        pass
     data = _http_get_json(
         f"https://api.anaconda.org/package/{channel}/{package}",
         timeout=30,
@@ -220,10 +238,27 @@ def _check_conda(channel: str, package: str) -> str:
 def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) -> str:
     name = parent or package
     if non_gnu_mirror:
-        base = f"https://download.savannah.nongnu.org/releases/{name}/"
+        bases = [
+            f"https://download.savannah.nongnu.org/releases/{name}/",
+            f"https://download-mirror.savannah.gnu.org/releases/{name}/",
+        ]
     else:
-        base = f"https://mirrors.kernel.org/gnu/{name}/"
-    html = _http_get_text(base)
+        bases = [
+            f"https://mirrors.kernel.org/gnu/{name}/",
+            f"https://ftpmirror.gnu.org/gnu/{name}/",
+            f"https://ftp.gnu.org/gnu/{name}/",
+        ]
+    last_exc: Exception | None = None
+    html: str | None = None
+    for base in bases:
+        try:
+            html = _http_get_text(base)
+            break
+        except (urllib.error.URLError, OSError) as exc:
+            last_exc = exc
+            continue
+    if html is None:
+        raise last_exc  # type: ignore[misc]
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions: list[str] = pattern.findall(html)
     if not versions:
@@ -411,6 +446,7 @@ class _AppCheckSpec:
     source: str
     check_fn: Callable[..., str]
     args: tuple
+    batch_size: int | None = None
 
 
 def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
@@ -1110,6 +1146,26 @@ def _make_openssl_spec(major: str) -> _AppCheckSpec:
     return _AppCheckSpec("dirlist", lambda m=major: _check_openssl_series(m), ())
 
 
+def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
+    """Floor latest version's patch component to the nearest batch boundary.
+
+    Returns the floored version if it is strictly greater than the current
+    version, otherwise returns the current version (no-op / no downgrade).
+    """
+    m = re.match(r'^(\d+\.\d+\.)(\d+)$', latest)
+    if not m:
+        return latest
+    prefix = m.group(1)
+    patch = int(m.group(2))
+    floored_patch = (patch // batch_size) * batch_size
+    floored = f"{prefix}{floored_patch:04d}"
+    def _parts(v: str) -> tuple[int, ...]:
+        return tuple(int(x) for x in v.split("."))
+    if _parts(floored) <= _parts(current):
+        return current
+    return floored
+
+
 def _check_boost() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/boostorg/boost/releases/latest",
@@ -1121,6 +1177,7 @@ def _check_boost() -> str:
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "aws-cli": _AppCheckSpec("conda", _check_conda, ("conda-forge", "awscli")),
+    "vim": _AppCheckSpec("github", _check_github, ("vim", "vim"), batch_size=100),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",
@@ -1528,6 +1585,8 @@ def check_app_versions(
     ) -> tuple[VersionCheckResult, str | None]:
         try:
             latest = spec.check_fn(*spec.args)
+            if spec.batch_size is not None:
+                latest = _apply_batch_version(latest, current, spec.batch_size)
             if cache is not None:
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
