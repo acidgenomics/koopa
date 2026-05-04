@@ -214,13 +214,11 @@ def prune_apps(dry_run: bool = False) -> None:
     installed_names = installed_apps()
     opt_prefix = koopa_opt_prefix()
     for name in installed_names:
-        prune = True
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
         json = json_data[name]
-        if "prune" in json and not json["prune"]:
-            prune = False
-        if not prune:
+        app_type = json.get("type", "library")
+        if app_type != "cli":
             continue
         opt_path = join(opt_prefix, name)
         if not islink(opt_path):
