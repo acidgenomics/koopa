@@ -222,7 +222,7 @@ def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) 
     if non_gnu_mirror:
         base = f"https://download.savannah.nongnu.org/releases/{name}/"
     else:
-        base = f"https://ftp.gnu.org/gnu/{name}/"
+        base = f"https://ftpmirror.gnu.org/gnu/{name}/"
     html = _http_get_text(base)
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions: list[str] = pattern.findall(html)
@@ -566,7 +566,7 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "lzo",
     ),
     "ncurses": (
-        "https://ftp.gnu.org/pub/gnu/ncurses/",
+        "https://ftpmirror.gnu.org/gnu/ncurses/",
         "ncurses",
     ),
     "nmap": (
@@ -1134,7 +1134,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "expat": _AppCheckSpec("github", _check_expat, ()),
-    "gcc": _make_dirlist_spec("https://ftp.gnu.org/gnu/gcc/", "gcc-"),
+    "gcc": _make_dirlist_spec("https://ftpmirror.gnu.org/gnu/gcc/", "gcc-"),
     "ghostscript": _AppCheckSpec("github", _check_ghostscript, ()),
     "git": _AppCheckSpec(
         "dirlist",

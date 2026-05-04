@@ -346,7 +346,7 @@
     "installer": "gnu-app",
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/autoconf/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/autoconf/?C=M;O=D"
     ],
     "version": "2.73"
   },
@@ -456,7 +456,7 @@
     "installer": "gnu-app",
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/automake/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/automake/?C=M;O=D"
     ],
     "version": "1.18.1"
   },
@@ -641,7 +641,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/bash/",
-      "https://ftp.gnu.org/gnu/bash/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/bash/?C=M;O=D"
     ],
     "version": "5.3"
   },
@@ -735,7 +735,7 @@
     ],
     "type": "cli",
     "url": [
-      "https://ftp.gnu.org/gnu/bc/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/bc/?C=M;O=D"
     ],
     "version": "1.08.2"
   },
@@ -856,7 +856,7 @@
     "installer": "gnu-app",
     "type": "library",
     "url": [
-      "https://ftp.gnu.org/gnu/binutils/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/binutils/?C=M;O=D"
     ],
     "version": "2.46.0"
   },
@@ -923,7 +923,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/bison/",
-      "https://ftp.gnu.org/gnu/bison/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/bison/?C=M;O=D"
     ],
     "version": "3.8.2"
   },
@@ -1789,7 +1789,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/coreutils/",
-      "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
     "version": "9.11"
   },
@@ -2493,7 +2493,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/findutils/",
-      "https://ftp.gnu.org/gnu/findutils/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/findutils/?C=M;O=D"
     ],
     "version": "4.10.0"
   },
@@ -2784,7 +2784,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/gawk/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/gawk/?C=M;O=D"
     ],
     "version": "5.4.0"
   },
@@ -3006,7 +3006,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gettext/",
-      "https://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/gettext/?C=M;O=D"
     ],
     "version": "1.0"
   },
@@ -3359,7 +3359,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gperf/",
-      "https://ftp.gnu.org/pub/gnu/gperf/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/gperf/?C=M;O=D"
     ],
     "version": "3.3"
   },
@@ -3408,7 +3408,7 @@
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
-      "https://ftp.gnu.org/gnu/grep/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/grep/?C=M;O=D"
     ],
     "version": "3.12"
   },
@@ -3452,7 +3452,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/groff/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/groff/?C=M;O=D"
     ],
     "version": "1.24.1"
   },
@@ -3571,7 +3571,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/gzip/",
-      "https://ftp.gnu.org/gnu/gzip/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/gzip/?C=M;O=D"
     ],
     "version": "1.14"
   },
@@ -4436,7 +4436,7 @@
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
       "https://github.com/gwsw/less/",
-      "https://ftp.gnu.org/gnu/less/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/less/?C=M;O=D"
     ],
     "version": "700"
   },
@@ -4757,7 +4757,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libiconv/",
-      "https://ftp.gnu.org/pub/gnu/libiconv/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/libiconv/?C=M;O=D"
     ],
     "version": "1.19"
   },
@@ -4772,7 +4772,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libidn/",
-      "https://ftp.gnu.org/gnu/libidn/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/libidn/?C=M;O=D"
     ],
     "version": "2.3.8"
   },
@@ -4944,7 +4944,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libtasn1/",
-      "https://ftp.gnu.org/gnu/libtasn1/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/libtasn1/?C=M;O=D"
     ],
     "version": "4.21.0"
   },
@@ -5011,7 +5011,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/libtool/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/libtool/?C=M;O=D"
     ],
     "version": "2.5.4"
   },
@@ -5026,7 +5026,7 @@
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libunistring/",
-      "https://ftp.gnu.org/gnu/libunistring/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/libunistring/?C=M;O=D"
     ],
     "version": "1.4.2"
   },
@@ -5415,7 +5415,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/m4/",
-      "https://ftp.gnu.org/gnu/m4/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/m4/?C=M;O=D"
     ],
     "version": "1.4.21"
   },
@@ -5435,7 +5435,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/make/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/make/?C=M;O=D"
     ],
     "version": "4.4.1"
   },
@@ -5945,7 +5945,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/pub/gnu/ncurses/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/ncurses/?C=M;O=D"
     ],
     "version": "6.6"
   },
@@ -6004,7 +6004,7 @@
     "installer": "gnu-app",
     "type": "library",
     "url": [
-      "https://ftp.gnu.org/gnu/nettle/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/nettle/?C=M;O=D"
     ],
     "version": "3.10.2",
     "version_pin": true
@@ -6489,7 +6489,7 @@
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/parallel/",
-      "https://ftp.gnu.org/gnu/parallel/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/parallel/?C=M;O=D"
     ],
     "version": "20260422"
   },
@@ -6537,7 +6537,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/patch/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/patch/?C=M;O=D"
     ],
     "version": "2.8"
   },
@@ -8251,7 +8251,7 @@
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
-      "https://ftp.gnu.org/gnu/screen/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/screen/?C=M;O=D"
     ],
     "version": "5.0.1"
   },
@@ -8292,7 +8292,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/sed/",
-      "https://ftp.gnu.org/gnu/sed/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/sed/?C=M;O=D"
     ],
     "version": "4.10"
   },
@@ -8827,7 +8827,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/tar/",
-      "https://ftp.gnu.org/gnu/tar/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/tar/?C=M;O=D"
     ],
     "version": "1.35"
   },
@@ -8951,7 +8951,7 @@
     ],
     "type": "build_tool",
     "url": [
-      "https://ftp.gnu.org/gnu/texinfo/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/texinfo/?C=M;O=D"
     ],
     "version": "7.3"
   },
@@ -9198,7 +9198,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/units/",
-      "https://ftp.gnu.org/gnu/units/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/units/?C=M;O=D"
     ],
     "version": "2.27"
   },
@@ -9383,7 +9383,7 @@
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/wget/",
-      "https://ftp.gnu.org/gnu/wget/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/wget/?C=M;O=D"
     ],
     "version": "1.25.0"
   },
@@ -9443,7 +9443,7 @@
     ],
     "type": "cli",
     "url": [
-      "https://ftp.gnu.org/gnu/which/?C=M;O=D"
+      "https://ftpmirror.gnu.org/gnu/which/?C=M;O=D"
     ],
     "version": "2.23"
   },
