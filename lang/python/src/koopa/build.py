@@ -243,8 +243,9 @@ def _find_pc_files(prefix: str) -> list[str]:
 
 def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
     """Extract compiler/linker flags from .pc files via pkg-config."""
-    pkg_config = shutil.which("pkg-config")
-    if pkg_config is None:
+    try:
+        pkg_config = locate("pkg-config")
+    except FileNotFoundError:
         return
     pkg_names = [os.path.splitext(os.path.basename(f))[0] for f in pc_files]
     pc_dirs = list({os.path.dirname(f) for f in pc_files})
@@ -329,12 +330,13 @@ def cmake_build(
     """
     if jobs is None:
         jobs = _cpu_count()
-    cmake = shutil.which("cmake")
-    if cmake is None:
-        msg = "cmake not found."
-        raise FileNotFoundError(msg)
-    if generator == "Unix Makefiles" and shutil.which("ninja"):
-        generator = "Ninja"
+    cmake = locate("cmake")
+    if generator == "Unix Makefiles":
+        try:
+            locate("ninja")
+            generator = "Ninja"
+        except FileNotFoundError:
+            pass
     auto_build_dir = False
     if build_dir is None:
         build_dir = tempfile.mkdtemp(prefix="koopa-cmake-")
@@ -514,10 +516,7 @@ def make_build(
         jobs = _cpu_count()
     if targets is None:
         targets = ["install"]
-    make = shutil.which("make")
-    if make is None:
-        msg = "make not found."
-        raise FileNotFoundError(msg)
+    make = locate("make")
     subprocess_env = env.to_env_dict() if env else os.environ.copy()
     if extra_env:
         subprocess_env.update(extra_env)
@@ -566,14 +565,8 @@ def meson_build(
     """
     if jobs is None:
         jobs = _cpu_count()
-    meson = shutil.which("meson")
-    ninja = shutil.which("ninja")
-    if meson is None:
-        msg = "meson not found."
-        raise FileNotFoundError(msg)
-    if ninja is None:
-        msg = "ninja not found."
-        raise FileNotFoundError(msg)
+    meson = locate("meson")
+    ninja = locate("ninja")
     subprocess_env = env.to_env_dict() if env else os.environ.copy()
     meson_args = [
         "--buildtype=release",
