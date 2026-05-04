@@ -46,7 +46,7 @@ def main(
         conf_args.extend(
             [
                 "--with-default-ssl-backend=openssl",
-                "--with-secure-transport",
+                "--without-secure-transport",
             ]
         )
     make_build(conf_args=conf_args, env=env)

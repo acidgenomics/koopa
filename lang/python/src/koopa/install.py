@@ -2179,6 +2179,56 @@ def _is_supported_app(name: str) -> bool:
     return not (current_os in supported and not supported[current_os])
 
 
+def _topo_sort_apps(apps_with_reasons: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    """Sort stale apps in dependency order (dependencies first).
+
+    Uses Kahn's algorithm over the subset of stale apps. Apps not in the stale
+    set are ignored — they will be activated at install time as usual.
+    """
+    from koopa.app import extract_app_deps
+    from koopa.io import import_app_json
+
+    stale_set = {a for a, _ in apps_with_reasons}
+    reason_map = {a: r for a, r in apps_with_reasons}
+    json_data = import_app_json()
+
+    # Build in-degree and adjacency among stale apps only.
+    in_degree: dict[str, int] = {a: 0 for a in stale_set}
+    dependents: dict[str, list[str]] = {a: [] for a in stale_set}
+    for app in stale_set:
+        try:
+            deps = extract_app_deps(app, json_data)
+        except NameError:
+            continue
+        for dep in deps:
+            if dep in stale_set:
+                dependents[dep].append(app)
+                in_degree[app] += 1
+
+    # Kahn's algorithm — process zero-in-degree nodes first, preserving
+    # original order among ties to keep output deterministic.
+    original_order = [a for a, _ in apps_with_reasons]
+    queue = sorted(
+        [a for a in stale_set if in_degree[a] == 0],
+        key=lambda x: original_order.index(x),
+    )
+    result: list[str] = []
+    while queue:
+        node = queue.pop(0)
+        result.append(node)
+        for dependent in dependents[node]:
+            in_degree[dependent] -= 1
+            if in_degree[dependent] == 0:
+                queue.append(dependent)
+                queue.sort(key=lambda x: original_order.index(x))
+
+    # If there's a cycle (shouldn't happen), fall back to original order.
+    if len(result) != len(stale_set):
+        return apps_with_reasons
+
+    return [(a, reason_map[a]) for a in result]
+
+
 def update_stale_apps(*, verbose: bool = False) -> None:
     """Find and reinstall all outdated or broken shared apps."""
     from koopa.alert import alert, alert_success
@@ -2197,6 +2247,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     if not apps_with_reasons:
         alert_success("All installed apps are up to date.")
         return
+    apps_with_reasons = _topo_sort_apps(apps_with_reasons)
     apps = [a for a, _ in apps_with_reasons]
     n = len(apps)
     label = "app" if n == 1 else "apps"
