@@ -5,6 +5,18 @@
         }
     ],
     "settings": {
+        "chat.editing.autoAcceptDelay": 10,
+        "chat.tools.global.autoApprove": false,
+        "chat.tools.terminal.autoApprove": {
+            "/^.*$/": true
+        },
+        "chat.tools.terminal.enableAutoApprove": true,
+        "chat.tools.urls.autoApprove": {
+            "https://*/*": {
+                "approveRequest": true,
+                "approveResponse": true
+            }
+        },
         "python.analysis.exclude": [
             "./app",
             "./bin",
