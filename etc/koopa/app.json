@@ -9361,7 +9361,8 @@
     "build_dependencies": [
       "autoconf",
       "automake",
-      "make"
+      "make",
+      "pkg-config"
     ],
     "date": "2026-04-24",
     "default": true,
