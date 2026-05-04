@@ -33,14 +33,17 @@ def main(
     dotfiles_work_prefix = os.path.join(home, ".config", "koopa", "dotfiles-work")
     dotfiles_private_prefix = os.path.join(home, ".config", "koopa", "dotfiles-private")
     ln(opt_dotfiles, dotfiles_prefix)
+    env = os.environ.copy()
+    koopa_bin = os.path.join(koopa_prefix(), "bin")
+    env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
     install_script = os.path.join(dotfiles_prefix, "install")
     if not os.path.isfile(install_script):
         msg = f"Install script not found: {install_script}"
         raise FileNotFoundError(msg)
-    subprocess.run([install_script], check=True)
+    subprocess.run([install_script], check=True, env=env)
     work_install_script = os.path.join(dotfiles_work_prefix, "install")
     if os.path.isfile(work_install_script):
-        subprocess.run([work_install_script], check=True)
+        subprocess.run([work_install_script], check=True, env=env)
     private_install_script = os.path.join(dotfiles_private_prefix, "install")
     if os.path.isfile(private_install_script):
-        subprocess.run([private_install_script], check=True)
+        subprocess.run([private_install_script], check=True, env=env)

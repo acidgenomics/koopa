@@ -387,7 +387,7 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
             _release_install_lock()
 
 
-def _configure_user_dotfiles() -> None:
+def _configure_user_dotfiles(verbose: bool = False) -> None:
     """Run dotfiles configurer if dotfiles and chezmoi are available."""
     import shutil
 
@@ -406,7 +406,7 @@ def _configure_user_dotfiles() -> None:
     from koopa.configure import ConfigureConfig, configure_app
 
     try:
-        config = ConfigureConfig(name="dotfiles", mode="user")
+        config = ConfigureConfig(name="dotfiles", mode="user", verbose=verbose)
         configure_app(config)
     except Exception as exc:
         warn(f"Dotfiles configuration failed: {exc}")
@@ -463,7 +463,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             install_missing_default_apps(verbose=args.verbose)
             update_user_apps(verbose=args.verbose)
             fetch_user_repos()
-            _configure_user_dotfiles()
+            _configure_user_dotfiles(verbose=args.verbose)
             prune_broken_symlinks()
             try:
                 prune_apps()
