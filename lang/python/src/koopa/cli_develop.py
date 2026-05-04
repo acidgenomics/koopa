@@ -488,6 +488,14 @@ def _handle_check_app_versions(args: list[str]) -> None:
                     f"'{lock_path}' if the process is stale."
                 )
                 sys.exit(1)
+            except PermissionError:
+                # Process exists but owned by another user — still block.
+                alert_danger(
+                    f"Cannot update app.json: install in progress (PID {pid}). "
+                    "Wait for it to finish or remove "
+                    f"'{lock_path}' if the process is stale."
+                )
+                sys.exit(1)
             except (ValueError, ProcessLookupError, OSError):
                 pass
         update_app_json(results, s3_upload=parsed.s3_upload)
