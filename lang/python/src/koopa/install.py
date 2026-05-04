@@ -2060,7 +2060,7 @@ def _update_venv(prefix: str) -> None:
             warn(
                 f"Failed to create virtual environment: {exc}\n"
                 f"  Run bootstrap to install Python {python_version}:\n"
-                f"    sh '{os.path.join(prefix, 'lang', 'sh', 'include', 'bootstrap.sh')}'"
+                f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
             )
             if os.path.isdir(venv_dir):
                 shutil.rmtree(venv_dir)
@@ -2070,13 +2070,14 @@ def _update_venv(prefix: str) -> None:
         warn(
             f"Virtual environment python not found at '{venv_python}'.\n"
             f"  Run bootstrap to install Python {python_version}:\n"
-            f"    sh '{os.path.join(prefix, 'lang', 'sh', 'include', 'bootstrap.sh')}'"
+            f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
         )
         if os.path.isdir(venv_dir):
             shutil.rmtree(venv_dir)
         return
     stamp_file = os.path.join(venv_dir, ".stamp")
     dep_files = [
+        os.path.join(prefix, "etc", "koopa", "venv-revision.txt"),
         os.path.join(prefix, "pyproject.toml"),
     ]
     if os.path.isfile(stamp_file):

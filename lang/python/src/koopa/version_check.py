@@ -1724,8 +1724,8 @@ _BOOTSTRAP_APP_MAP: dict[str, str] = {
 
 def update_bootstrap(app_data: dict[str, Any]) -> int:
     """Sync bootstrap.sh versions with app.json and bump bootstrap version."""
-    bootstrap_path = Path(koopa_prefix()) / "lang" / "sh" / "include" / "bootstrap.sh"
-    version_path = Path(koopa_prefix()) / "lang" / "sh" / "include" / "bootstrap-version.txt"
+    bootstrap_path = Path(koopa_prefix()) / "bootstrap.sh"
+    version_path = Path(koopa_prefix()) / "etc" / "koopa" / "bootstrap-version.txt"
     if not bootstrap_path.is_file():
         return 0
     text = bootstrap_path.read_text()
