@@ -1,1 +1,0 @@
-/Users/username/.local/share/koopa/app/aws-cli/2.34.31/share/zsh/site-functions/aws_zsh_completer.sh
