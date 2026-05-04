@@ -2979,9 +2979,17 @@
     "description": "GNU internationalization and localization tools",
     "installer": "gnu-app",
     "installer_args": {
-      "compress_ext": "xz"
+      "compress_ext": "xz",
+      "disable-java": "",
+      "disable-native-java": "",
+      "disable-csharp": "",
+      "without-emacs": "",
+      "without-git": "",
+      "without-cvs": "",
+      "disable-openmp": ""
     },
     "prune": false,
+    "revision": 1,
     "url": [
       "https://www.gnu.org/software/gettext/",
       "https://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
