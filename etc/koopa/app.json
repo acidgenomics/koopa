@@ -1881,7 +1881,7 @@
       "curl-config.1"
     ],
     "prune": false,
-    "revision": 1,
+    "revision": 2,
     "url": [
       "https://curl.se/"
     ],
@@ -5084,7 +5084,7 @@
     ],
     "description": "XML parsing library",
     "prune": false,
-    "revision": 1,
+    "revision": 2,
     "url": [
       "https://gitlab.gnome.org/GNOME/libxml2/-/releases"
     ],
@@ -6366,6 +6366,7 @@
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v1)",
     "prune": false,
+    "revision": 1,
     "url": [
       "https://www.openssl.org/source/"
     ],
