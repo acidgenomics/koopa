@@ -5070,9 +5070,6 @@
     "version": "4.5.2"
   },
   "libxml2": {
-    "bin": [
-      "xml2-config"
-    ],
     "build_dependencies": [
       "make",
       "pkg-config"
@@ -5086,9 +5083,6 @@
       "zlib"
     ],
     "description": "XML parsing library",
-    "man1": [
-      "xml2-config.1"
-    ],
     "prune": false,
     "url": [
       "https://gitlab.gnome.org/GNOME/libxml2/-/releases"
