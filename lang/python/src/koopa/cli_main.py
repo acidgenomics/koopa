@@ -391,6 +391,10 @@ def _configure_user_dotfiles() -> None:
     """Run dotfiles configurer if dotfiles and chezmoi are available."""
     import shutil
 
+    from koopa.system import is_root
+
+    if is_root():
+        return
     from koopa.prefix import opt_prefix
 
     dotfiles_dir = os.path.join(opt_prefix(), "dotfiles")

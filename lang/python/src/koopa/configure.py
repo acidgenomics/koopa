@@ -11,7 +11,7 @@ import sys
 from dataclasses import dataclass
 
 from koopa.configurers import get_python_configurer, has_python_configurer
-from koopa.system import is_admin, is_owner
+from koopa.system import is_admin, is_owner, is_root
 
 
 @dataclass
@@ -39,7 +39,7 @@ def configure_app(config: ConfigureConfig) -> None:
         if not is_admin():
             msg = "Admin/root access required for system configuration."
             raise PermissionError(msg)
-    elif config.mode == "user" and is_admin():
+    elif config.mode == "user" and is_root():
         msg = "Root user cannot configure user apps."
         raise PermissionError(msg)
     print(f"Configuring '{config.name}'.", file=sys.stderr)
