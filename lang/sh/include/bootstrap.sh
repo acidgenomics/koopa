@@ -135,8 +135,14 @@ install_python() {
     __kvar_remove_lib_symlink=0
     if is_macos && [ -n "$DESTDIR" ] && [ ! -d "${PREFIX}/lib" ]
     then
-        mkdir -p "$PREFIX"
-        ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
+        if [ "${__kvar_use_sudo:-0}" -eq 1 ]
+        then
+            sudo mkdir -p "$PREFIX"
+            sudo ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
+        else
+            mkdir -p "$PREFIX"
+            ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
+        fi
         __kvar_remove_lib_symlink=1
     fi
     download_and_extract \
@@ -165,8 +171,14 @@ install_python() {
         "${DESTDIR}${PREFIX}/bin/python3" -c 'import zlib'
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
-        rm -f "${PREFIX}/lib"
-        rmdir "$PREFIX" 2>/dev/null || true
+        if [ "${__kvar_use_sudo:-0}" -eq 1 ]
+        then
+            sudo rm -f "${PREFIX}/lib"
+            sudo rmdir "$PREFIX" 2>/dev/null || true
+        else
+            rm -f "${PREFIX}/lib"
+            rmdir "$PREFIX" 2>/dev/null || true
+        fi
     fi
     unset -v __kvar_remove_lib_symlink
     unset -v __kvar_version
