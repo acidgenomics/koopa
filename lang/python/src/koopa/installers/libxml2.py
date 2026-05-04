@@ -25,7 +25,6 @@ def main(
     url = f"https://download.gnome.org/sources/libxml2/{mm}/libxml2-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
-        extra_env={"AWK": "/usr/bin/awk"},
         conf_args=[
             "--disable-dependency-tracking",
             "--enable-static=no",
