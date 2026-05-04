@@ -91,10 +91,10 @@ class _RateLimiter:
     def wait(self) -> None:
         with self._lock:
             now = time.monotonic()
-            wait = self._interval - (now - self._last)
-            if wait > 0:
-                time.sleep(wait)
-            self._last = time.monotonic()
+            gap = self._interval - (now - self._last)
+            self._last = now + max(gap, 0)
+        if gap > 0:
+            time.sleep(gap)
 
 
 def _resolve_github_token() -> str | None:
@@ -209,24 +209,31 @@ def _check_pypi(package: str) -> str:
     return data["info"]["version"]
 
 
+_conda_semaphore = threading.Semaphore(2)
+
+
 def _conda_exe() -> str | None:
     import shutil
 
     return os.environ.get("CONDA_EXE") or shutil.which("conda")
 
 
-def _check_conda(channel: str, package: str) -> str:
+def _check_conda(package: str) -> str:
     exe = _conda_exe()
     if exe:
-        try:
-            result = subprocess.run(
-                [exe, "search", package, "--json"],
-                capture_output=True,
-                text=True,
-                timeout=15,
-                check=False,
-            )
-            if result.returncode == 0:
+        with _conda_semaphore:
+            try:
+                result = subprocess.run(
+                    [exe, "search", package, "--json"],
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                    check=False,
+                )
+            except (subprocess.TimeoutExpired, OSError):
+                result = None
+        if result is not None and result.returncode == 0:
+            try:
                 data = json.loads(result.stdout)
                 versions = [e["version"] for e in data.get(package, [])]
                 if versions:
@@ -234,8 +241,8 @@ def _check_conda(channel: str, package: str) -> str:
                         versions,
                         key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v) if x.isdigit()),
                     )
-        except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError):
-            pass
+            except (json.JSONDecodeError, ValueError):
+                pass
     msg = f"Cannot determine conda version for {package}: conda CLI unavailable"
     raise RuntimeError(msg)
 
@@ -1215,10 +1222,10 @@ def _check_boost() -> str:
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
-    "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("conda-forge", "google-cloud-sdk")),
+    "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("google-cloud-sdk",)),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
-    "aws-cli": _AppCheckSpec("conda", _check_conda, ("conda-forge", "awscli")),
+    "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli",)),
     "vim": _AppCheckSpec("github", _check_github, ("vim", "vim"), batch_size=100),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
@@ -1474,7 +1481,7 @@ def _classify_generic(  # noqa: PLR0911
     if source == "conda":
         pkg = _get_str(args, "name") or name
         channel = _infer_conda_channel(urls)
-        return _AppCheckSpec("conda", _check_conda, (channel, pkg))
+        return _AppCheckSpec("conda", _check_conda, (pkg,))
     if source == "pypi":
         pkg = _resolve_pypi_name(name, args, urls)
         return _AppCheckSpec("pypi", _check_pypi, (pkg,))
@@ -1538,7 +1545,7 @@ def check_app_versions(
     *,
     source_filter: str | None = None,
     name_filter: list[str] | None = None,
-    max_workers: int = 8,
+    max_workers: int = 16,
     reset_cache: bool = False,
 ) -> list[VersionCheckResult]:
     """Check upstream versions for all apps in app.json."""
@@ -1583,9 +1590,16 @@ def check_app_versions(
     for app_name, version, spec in specs:
         if cache is not None:
             cached = cache.get(app_name)
-            if cached is not None:
-                results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
-                continue
+            if cached is not None and re.match(r"^\d[\d.]*$", cached):
+                current_parts = tuple(
+                    int(x) for x in re.split(r"[.\-]", sanitize_version(version)) if x.isdigit()
+                )
+                cached_parts = tuple(
+                    int(x) for x in re.split(r"[.\-]", sanitize_version(cached)) if x.isdigit()
+                )
+                if cached_parts >= current_parts:
+                    results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
+                    continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
     total = len(to_check)
