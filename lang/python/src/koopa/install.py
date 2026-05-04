@@ -666,7 +666,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 from koopa.alert import alert_note
 
                 reason_suffix = (
-                    f" (reinstall reason: {config.reinstall_reason})"
+                    f" (reason: {config.reinstall_reason})"
                     if config.reinstall_reason
                     else ""
                 )
