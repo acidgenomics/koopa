@@ -206,7 +206,16 @@ export CPU_COUNT DESTDIR PATH PREFIX
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
     printf 'This will install openssl3, zlib, and python.\n'
-    __kvar_destdir="${PREFIX}.staging.$$"
+    __kvar_prefix_parent="$(dirname "$PREFIX")"
+    if [ -w "$__kvar_prefix_parent" ]
+    then
+        __kvar_destdir="${PREFIX}.staging.$$"
+        __kvar_use_sudo=0
+    else
+        __kvar_destdir="$(mktemp -d -t koopa-bootstrap-XXXXXX)"
+        __kvar_use_sudo=1
+    fi
+    unset -v __kvar_prefix_parent
     rm -fr "$__kvar_destdir"
     if ! (
         DESTDIR="$__kvar_destdir"
@@ -224,7 +233,7 @@ main() {
     then
         printf 'Bootstrap build failed.\n' >&2
         rm -fr "$__kvar_destdir"
-        unset -v __kvar_destdir
+        unset -v __kvar_destdir __kvar_use_sudo
         return 1
     fi
     __kvar_staged="${__kvar_destdir}${PREFIX}"
@@ -232,14 +241,26 @@ main() {
     if [ -d "$PREFIX" ]
     then
         rm -fr "${PREFIX}.old"
-        mv "$PREFIX" "${PREFIX}.old"
+        if [ "$__kvar_use_sudo" -eq 1 ]
+        then
+            sudo mv "$PREFIX" "${PREFIX}.old"
+        else
+            mv "$PREFIX" "${PREFIX}.old"
+        fi
     fi
-    mv "$__kvar_staged" "$PREFIX"
-    rm -fr "${PREFIX}.old"
-    rm -fr "$__kvar_destdir"
+    if [ "$__kvar_use_sudo" -eq 1 ]
+    then
+        sudo mkdir -p "$(dirname "$PREFIX")"
+        sudo mv "$__kvar_staged" "$PREFIX"
+        sudo chown -R "$(id -u):$(id -g)" "$PREFIX"
+        sudo rm -fr "${PREFIX}.old" "$__kvar_destdir"
+    else
+        mv "$__kvar_staged" "$PREFIX"
+        rm -fr "${PREFIX}.old" "$__kvar_destdir"
+    fi
     printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
     printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
-    unset -v __kvar_destdir
+    unset -v __kvar_destdir __kvar_use_sudo
     return 0
 }
 
