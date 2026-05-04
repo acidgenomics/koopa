@@ -6,78 +6,53 @@ from os.path import isdir, islink, join, realpath
 from shutil import rmtree
 from subprocess import run
 
-from koopa.data import argsort, flatten, unique_pos
+from koopa.data import argsort, unique_pos
 from koopa.fs import list_subdirs
 from koopa.io import import_app_json
 from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
 
 
 def app_deps(name: str) -> list:
-    """Get application dependencies."""
+    """Get application dependencies in topological order (deepest first)."""
     json_data = import_app_json()
-    keys = json_data.keys()
-    if name not in keys:
+    if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
-    lst = []
-    deps = extract_app_deps(name=name, json_data=json_data)
-    if not deps:
-        return lst
-    visited = {name}
-    i = 0
-    lst.append(deps)
-    while i < len(lst):
-        lvl1 = []
-        for lvl2 in lst[i]:
-            if isinstance(lvl2, list):
-                for lvl3 in lvl2:
-                    if lvl3 in visited:
-                        continue
-                    visited.add(lvl3)
-                    lvl4 = extract_app_deps(name=lvl3, json_data=json_data)
-                    if lvl4:
-                        lvl1.append(lvl4)
-            else:
-                if lvl2 in visited:
-                    continue
-                visited.add(lvl2)
-                lvl3 = extract_app_deps(name=lvl2, json_data=json_data)
-                if lvl3:
-                    lvl1.append(lvl3)
-        if not lvl1:
-            break
-        lst.append(lvl1)
-        i = i + 1
-    lst.reverse()
-    lst = flatten(lst)
-    lst = list(dict.fromkeys(lst))
-    if name in lst:
-        lst.remove(name)
-    lst = filter_app_deps(names=lst, json_data=json_data)
-    return lst
+    order: list[str] = []
+    visited: set[str] = set()
+
+    def _dfs(node: str) -> None:
+        if node in visited:
+            return
+        visited.add(node)
+        for dep in extract_app_deps(name=node, json_data=json_data):
+            if dep in json_data:
+                _dfs(dep)
+        order.append(node)
+
+    for dep in extract_app_deps(name=name, json_data=json_data):
+        if dep in json_data:
+            _dfs(dep)
+    return filter_app_deps(names=order, json_data=json_data)
 
 
 def app_revdeps(name: str, mode: str, include_build_deps: bool = True) -> list:
     """Get reverse application dependencies."""
     json_data = import_app_json()
-    keys = list(json_data.keys())
-    if name not in keys:
+    if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
-    all_deps = []
-    for key in keys:
-        key_deps = extract_app_deps(
-            name=key, json_data=json_data, include_build_deps=include_build_deps
+    lst = [
+        key
+        for key in json_data
+        if name
+        in extract_app_deps(
+            name=key,
+            json_data=json_data,
+            include_build_deps=include_build_deps,
         )
-        all_deps.append(key_deps)
-    lst = []
-    i = 0
-    while i < len(all_deps):
-        if name in all_deps[i]:
-            lst.append(keys[i])
-        i += 1
+    ]
     if not lst:
         return lst
-    lst = filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
-    return lst
+    return filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
 
 
 def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
