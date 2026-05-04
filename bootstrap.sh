@@ -125,7 +125,7 @@ install_openssl() {
 }
 
 install_python() {
-    __kvar_version='3.12.10'
+    __kvar_version='3.12.13'
     printf 'Installing python.\n'
     # On macOS, dylib install_names are baked in as absolute paths at build
     # time. Symlink PREFIX/lib -> staged lib so they resolve during build and
