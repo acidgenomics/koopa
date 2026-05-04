@@ -91,11 +91,17 @@ class BuildProgress:
         self._total_steps: int = 0
         self._current_step: int = 0
         self._log_file: tempfile._TemporaryFileWrapper | None = None
+        self._saved_log_path: str | None = None
         self._saved_stdout_fd: int = -1
         self._saved_stderr_fd: int = -1
         self._spinner_stop = threading.Event()
         self._spinner_thread: threading.Thread | None = None
         self._tty_fd: int = -1
+
+    @property
+    def saved_log_path(self) -> str | None:
+        """Path to the preserved build log after a successful build."""
+        return self._saved_log_path
 
     @property
     def capturing(self) -> bool:
@@ -231,10 +237,13 @@ class BuildProgress:
         if self._log_file is not None:
             log_path = self._log_file.name
             self._log_file.close()
-            try:
-                os.unlink(log_path)
-            except OSError:
-                pass
+            if failed:
+                try:
+                    os.unlink(log_path)
+                except OSError:
+                    pass
+            else:
+                self._saved_log_path = log_path
             self._log_file = None
 
     def _spin(self) -> None:
