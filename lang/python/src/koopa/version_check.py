@@ -1632,14 +1632,28 @@ def _has_acidgenomics_aws() -> bool:
 def _expand_src_url(template: str, version: str) -> str:
     """Expand a src_url template with version components.
 
-    Supports {version}, {major}, {minor}, {patch} placeholders.
+    Supports {version}, {major}, {minor}, {patch}, {year}, {file_version}
+    placeholders. {year} is the current UTC year. {file_version} is the
+    zero-padded concatenation used by SQLite: {major}{minor:02d}{patch:02d}00.
     """
+    import datetime
+
     parts = version.split(".")
+    major = parts[0] if len(parts) > 0 else ""
+    minor = parts[1] if len(parts) > 1 else ""
+    patch = parts[2] if len(parts) > 2 else ""
+    try:
+        file_version = f"{major}{int(minor):02d}{int(patch):02d}00"
+    except ValueError:
+        file_version = ""
+    year = str(datetime.datetime.now(tz=datetime.UTC).year)
     return template.format(
         version=version,
-        major=parts[0] if len(parts) > 0 else "",
-        minor=parts[1] if len(parts) > 1 else "",
-        patch=parts[2] if len(parts) > 2 else "",
+        major=major,
+        minor=minor,
+        patch=patch,
+        year=year,
+        file_version=file_version,
     )
 
 

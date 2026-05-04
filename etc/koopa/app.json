@@ -8584,6 +8584,7 @@
     "notes": [
       "Need to update install script for minor version bumps."
     ],
+    "src_url": "https://www.sqlite.org/{year}/sqlite-autoconf-{file_version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.sqlite.org/download.html"
