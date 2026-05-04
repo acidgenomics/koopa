@@ -550,6 +550,98 @@ def push_app_build(name: str) -> None:
             os.unlink(tar_file)
 
 
+def push_missing_app_builds() -> None:
+    """Push any installed app builds that are missing from S3.
+
+    Iterates all symlinks in opt/, checks whether the corresponding binary
+    tarball exists in s3://private.koopa.acidgenomics.com/binaries via a
+    lightweight head-object call, and pushes any that are absent.
+
+    Intended as a post-update sweep to catch apps (e.g. conda, aws-cli) that
+    were installed before the aws CLI was available in PATH.
+    """
+    import subprocess as _subprocess
+
+    from koopa.alert import alert, alert_note, alert_success
+
+    arch = _arch2()
+    os_str = _os_string()
+    s3_bucket_bare = "private.koopa.acidgenomics.com"
+    opt = _opt_prefix()
+    app_dir = _app_prefix()
+    aws = shutil.which("aws")
+    if aws is None:
+        return
+
+    try:
+        entries = sorted(os.listdir(opt))
+    except OSError:
+        return
+
+    missing: list[str] = []
+    for entry in entries:
+        link = os.path.join(opt, entry)
+        if not os.path.islink(link):
+            continue
+        name_dir = os.path.join(app_dir, entry)
+        if not os.path.isdir(name_dir):
+            continue
+        try:
+            versions = sorted(os.listdir(name_dir))
+        except OSError:
+            continue
+        if not versions:
+            continue
+        version = versions[-1]
+        prefix = os.path.join(name_dir, version)
+        # Skip binaries installed from S3 (not built locally).
+        if os.path.isfile(os.path.join(prefix, ".koopa-binary")):
+            continue
+        key = f"binaries/{os_str}/{arch}/{entry}/{version}.tar.gz"
+        result = _subprocess.run(
+            [
+                aws,
+                "s3api",
+                "head-object",
+                "--bucket",
+                s3_bucket_bare,
+                "--key",
+                key,
+                "--profile",
+                "acidgenomics",
+            ],
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            missing.append(entry)
+
+    if not missing:
+        alert_success("All installed app builds are present on S3.")
+        return
+
+    n = len(missing)
+    label = "app" if n == 1 else "apps"
+    alert(f"Pushing {n} missing {label} to S3: {', '.join(missing)}")
+    failed: list[str] = []
+    for name in missing:
+        try:
+            push_app_build(name)
+        except Exception as exc:
+            alert_note(f"Failed to push '{name}': {exc}")
+            failed.append(name)
+
+    if failed:
+        import sys as _sys
+
+        print(
+            f"Warning: {len(failed)} app(s) failed to push: {', '.join(failed)}",
+            file=_sys.stderr,
+        )
+    else:
+        alert_success(f"Pushed {n} missing {label} to S3.")
+
+
 # -- Main install function ----------------------------------------------------
 
 
@@ -666,9 +758,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 from koopa.alert import alert_note
 
                 reason_suffix = (
-                    f" (reason: {config.reinstall_reason})"
-                    if config.reinstall_reason
-                    else ""
+                    f" (reason: {config.reinstall_reason})" if config.reinstall_reason else ""
                 )
                 alert_note(
                     f"{config.name}{reason_suffix}: installing with dependencies: {', '.join(all_deps)}"
@@ -681,6 +771,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 dep_config = InstallConfig(
                     name=dep,
                     passthrough_args=_build_passthrough_args(dep),
+                    push=config.push,
                 )
                 if config.verbose:
                     dep_config.verbose = True
@@ -1900,10 +1991,8 @@ def update_koopa(*, verbose: bool = False) -> None:
         st = os.stat(prefix)
         if st.st_uid == 0:
             from koopa.alert import warn
-            warn(
-                f"koopa prefix '{prefix}' is owned by root. "
-                "Attempting to repair ownership."
-            )
+
+            warn(f"koopa prefix '{prefix}' is owned by root. Attempting to repair ownership.")
             gid = os.getgid()
             _run("chown", "-R", f"{uid}:{gid}", prefix, sudo=True)
             if not is_owner():
