@@ -898,7 +898,7 @@ def build_go_package(
     tags: str = "",
 ) -> None:
     """Build a Go package from source using ``go build``."""
-    from koopa.build import activate_app
+    from koopa.build import activate_app, locate
 
     env = activate_app("go", build_only=True)
     env.apply()
@@ -908,10 +908,7 @@ def build_go_package(
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
     if not version:
         version = os.environ.get("KOOPA_INSTALL_VERSION", "")
-    go = shutil.which("go")
-    if go is None:
-        msg = "go not found."
-        raise FileNotFoundError(msg)
+    go = locate("go")
     if not bin_name:
         bin_name = name
     gobin = os.path.join(prefix, "bin")
