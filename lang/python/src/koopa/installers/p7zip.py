@@ -36,11 +36,11 @@ def main(
     cflags = subprocess_env.get("CFLAGS", "")
     cxxflags = subprocess_env.get("CXXFLAGS", "")
     ldflags = subprocess_env.get("LDFLAGS", "")
+    shutil.copy(makefile, "makefile.machine")
     subprocess.run(
         [
             make,
             f"--jobs={jobs}",
-            f"-f{makefile}",
             "all3",
             f"ALLFLAGS_C={cflags}",
             f"ALLFLAGS_CPP={cxxflags}",
@@ -54,7 +54,6 @@ def main(
     subprocess.run(
         [
             make,
-            f"-f{makefile}",
             "install",
             f"DEST_HOME={prefix}",
             f"DEST_BIN={prefix}/bin",
