@@ -471,6 +471,25 @@ def _handle_check_app_versions(args: list[str]) -> None:
     else:
         print_report(results)
     if parsed.update:
+        import os
+        from pathlib import Path
+
+        from koopa.alert import alert_danger
+        from koopa.install import _install_lock_path
+
+        lock_path = _install_lock_path()
+        if os.path.isfile(lock_path):
+            try:
+                pid = int(Path(lock_path).read_text().strip())
+                os.kill(pid, 0)
+                alert_danger(
+                    f"Cannot update app.json: install in progress (PID {pid}). "
+                    "Wait for it to finish or remove "
+                    f"'{lock_path}' if the process is stale."
+                )
+                sys.exit(1)
+            except (ValueError, ProcessLookupError, OSError):
+                pass
         update_app_json(results, s3_upload=parsed.s3_upload)
 
 
