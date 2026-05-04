@@ -178,7 +178,7 @@ def current_github_tag_version(repo: str) -> str:
 
 def current_gnu_ftp_version(name: str) -> str:
     """Get current version from GNU FTP server."""
-    url = f"https://ftp.gnu.org/gnu/{name}/?C=M;O=D"
+    url = f"https://ftpmirror.gnu.org/gnu/{name}/?C=M;O=D"
     text = _fetch(url)
     pattern = re.compile(rf"{re.escape(name)}-([\d.a-z]+)\.tar")
     matches = pattern.findall(text)
