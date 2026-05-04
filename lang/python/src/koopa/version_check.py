@@ -121,37 +121,6 @@ def _resolve_github_token() -> str | None:
 
 
 _github_token: str | None = _resolve_github_token()
-
-
-def _resolve_artifactory_conda_urls() -> list[str]:
-    urls: list[str] = []
-    env_url = os.environ.get("ARTIFACTORY_CONDA_URL")
-    if env_url:
-        urls.append(env_url.rstrip("/"))
-    import shutil
-
-    if shutil.which("conda"):
-        try:
-            result = subprocess.run(
-                ["conda", "config", "--show", "channels"],
-                capture_output=True,
-                text=True,
-                timeout=10,
-                check=False,
-            )
-            if result.returncode == 0:
-                for line in result.stdout.splitlines():
-                    line = line.strip().lstrip("- ").strip()
-                    if line.startswith("http") and "/artifactory/" in line:
-                        url = line.rstrip("/")
-                        if url not in urls:
-                            urls.append(url)
-        except (subprocess.TimeoutExpired, OSError):
-            pass
-    return urls
-
-
-_artifactory_conda_urls: list[str] = _resolve_artifactory_conda_urls()
 _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
 _ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
@@ -240,34 +209,34 @@ def _check_pypi(package: str) -> str:
     return data["info"]["version"]
 
 
+def _conda_exe() -> str | None:
+    import shutil
+
+    return os.environ.get("CONDA_EXE") or shutil.which("conda")
+
+
 def _check_conda(channel: str, package: str) -> str:
-    try:
-        result = subprocess.run(
-            ["conda", "search", package, "--json"],
-            capture_output=True,
-            text=True,
-            timeout=15,
-            check=False,
-        )
-        if result.returncode == 0:
-            data = json.loads(result.stdout)
-            versions = [e["version"] for e in data.get(package, [])]
-            if versions:
-                return max(
-                    versions,
-                    key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v) if x.isdigit()),
-                )
-    except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError):
-        pass
-    for base in _artifactory_conda_urls:
+    exe = _conda_exe()
+    if exe:
         try:
-            data = _http_get_json(f"{base}/channeldata.json", timeout=30)
-            pkg = data.get("packages", {}).get(package)
-            if pkg and pkg.get("version"):
-                return pkg["version"]
-        except Exception:
-            continue
-    msg = f"Cannot determine conda version for {package}: conda CLI unavailable and no Artifactory channel reachable"
+            result = subprocess.run(
+                [exe, "search", package, "--json"],
+                capture_output=True,
+                text=True,
+                timeout=15,
+                check=False,
+            )
+            if result.returncode == 0:
+                data = json.loads(result.stdout)
+                versions = [e["version"] for e in data.get(package, [])]
+                if versions:
+                    return max(
+                        versions,
+                        key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v) if x.isdigit()),
+                    )
+        except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError):
+            pass
+    msg = f"Cannot determine conda version for {package}: conda CLI unavailable"
     raise RuntimeError(msg)
 
 
@@ -1220,6 +1189,22 @@ def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
     return latest
 
 
+def _check_freetype() -> str:
+    tags = _http_get_json(
+        "https://api.github.com/repos/freetype/freetype/tags?per_page=100",
+        github=True,
+    )
+    versions: list[str] = []
+    for tag in tags:
+        m = re.match(r"VER-(\d+)-(\d+)-(\d+)$", tag["name"])
+        if m:
+            versions.append(f"{m.group(1)}.{m.group(2)}.{m.group(3)}")
+    if not versions:
+        msg = "No freetype version tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
+
+
 def _check_boost() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/boostorg/boost/releases/latest",
@@ -1367,7 +1352,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "ensembl-perl-api": _AppCheckSpec("github", _check_ensembl, ()),
     "fltk": _AppCheckSpec("github", _check_fltk, ()),
-    "freetype": _AppCheckSpec("github", _check_github, ("freetype", "freetype")),
+    "freetype": _AppCheckSpec("github", _check_freetype, ()),
     "haskell-cabal": _AppCheckSpec(
         "github",
         lambda: _sanitize_github_tag(
@@ -1635,8 +1620,20 @@ def check_app_versions(
     ) -> tuple[VersionCheckResult, str | None]:
         try:
             latest = spec.check_fn(*spec.args)
+            if not re.match(r"^\d[\d.]*$", latest):
+                msg = f"Invalid version string for {app_name}: {latest!r}"
+                raise RuntimeError(msg)
             if spec.batch_size is not None:
                 latest = _apply_batch_version(latest, current, spec.batch_size)
+            current_parts = tuple(
+                int(x) for x in re.split(r"[.\-]", sanitize_version(current)) if x.isdigit()
+            )
+            latest_parts = tuple(
+                int(x) for x in re.split(r"[.\-]", sanitize_version(latest)) if x.isdigit()
+            )
+            if latest_parts < current_parts:
+                msg = f"Version regression for {app_name}: {latest!r} < current {current!r}"
+                raise RuntimeError(msg)
             if cache is not None:
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
