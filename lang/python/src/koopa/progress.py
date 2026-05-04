@@ -263,6 +263,9 @@ class BuildProgress:
         except OSError:
             return
         tail = lines[-_LOG_TAIL_LINES:]
+        if not tail:
+            os.write(tty, b"  Build failed.\n")
+            return
         sep = "─" * 40
         os.write(tty, f"  Build failed. Last {_LOG_TAIL_LINES} lines:\n".encode())
         os.write(tty, f"  {sep}\n".encode())
