@@ -260,7 +260,7 @@ def check_bootstrap_version() -> bool:
     """Check if bootstrap installation is current.
 
     Compares the installed bootstrap VERSION file against the expected
-    version defined in 'lang/sh/include/bootstrap-version.txt'.
+    version defined in 'etc/koopa/bootstrap-version.txt'.
 
     Returns
     -------
@@ -269,7 +269,7 @@ def check_bootstrap_version() -> bool:
     """
     bp = bootstrap_prefix()
     kp = koopa_prefix()
-    expected_version_file = join(kp, "lang", "sh", "include", "bootstrap-version.txt")
+    expected_version_file = join(kp, "etc", "koopa", "bootstrap-version.txt")
     installed_version_file = join(bp, "VERSION")
     if not isfile(expected_version_file):
         return True

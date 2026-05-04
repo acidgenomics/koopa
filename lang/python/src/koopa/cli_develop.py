@@ -809,6 +809,25 @@ def _handle_bump_revision(args: list[str]) -> None:
     export_app_json(data)
 
 
+def _handle_bump_venv_revision(_: list[str]) -> None:
+    """Handle ``koopa develop bump-venv-revision``.
+
+    Increments the venv revision counter in etc/koopa/venv-revision.txt.
+    This marks the .venv as stale so ``koopa update`` will reinstall it.
+    """
+    from koopa.os import koopa_prefix
+
+    revision_file = os.path.join(koopa_prefix(), "etc", "koopa", "venv-revision.txt")
+    current = 0
+    if os.path.isfile(revision_file):
+        with open(revision_file) as f:
+            current = int(f.read().strip() or "0")
+    new = current + 1
+    with open(revision_file, "w") as f:
+        f.write(f"{new}\n")
+    print(f"  venv-revision: {current} -> {new}")
+
+
 def _handle_circular_dependencies() -> None:
     """Handle ``koopa develop circular-dependencies``."""
     from koopa.check import check_circular_deps
@@ -852,6 +871,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "audit-src-mirror": _handle_audit_src_mirror,
     "remove-app": _handle_remove_app,
     "bump-revision": _handle_bump_revision,
+    "bump-venv-revision": _handle_bump_venv_revision,
 }
 
 

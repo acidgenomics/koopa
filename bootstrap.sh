@@ -200,13 +200,13 @@ install_zlib() {
 }
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-BOOTSTRAP_VERSION="$(cat "${SCRIPT_DIR}/bootstrap-version.txt")"
+KOOPA_PREFIX="$SCRIPT_DIR"
+BOOTSTRAP_VERSION="$(cat "${KOOPA_PREFIX}/etc/koopa/bootstrap-version.txt")"
 
 PREFIX="${PREFIX:-}"
 if [ -z "$PREFIX" ]
 then
-    PREFIX="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
-    PREFIX="${PREFIX%/}-bootstrap"
+    PREFIX="${KOOPA_PREFIX}-bootstrap"
 fi
 PATH="${PREFIX}/bin:/usr/bin:/bin"
 CPU_COUNT="$(cpu_count)"
