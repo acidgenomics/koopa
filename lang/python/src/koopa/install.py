@@ -643,6 +643,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         install_marker = os.path.join(config.prefix, ".install")
         if not os.path.isdir(install_marker):
             config.reinstall = True
+        elif not os.path.isfile(os.path.join(install_marker, "info.json")):
+            config.reinstall = True
+            config.reinstall_reason = config.reinstall_reason or "empty .install directory"
         if config.reinstall:
             if not config.quiet:
                 reason = f" ({config.reinstall_reason})" if config.reinstall_reason else ""
