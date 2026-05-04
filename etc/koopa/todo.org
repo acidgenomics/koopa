@@ -1,7 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-TODO koopa update isn't solving logic of dependencies correctly after a corresponding revision bump. For example, if we bump openssl, libxml2, and curl. Our installer logic tries to install curl first, which is incorrect. curl depends on openssl, so openssl should install first when both have revision bumps.
-TODO We need to sync the documentation between koopa website and git repo README.md file.
-TODO Let's consider reworking where we save our `bootstrap.sh` file. I think it may be better to put it at the top of the repo, named `bootstrap`. And we can store the corresponding version file as `.bootstrap-version.txt` instead of bootstrap-version.txt? What if we just use `.bootstrap-version`?
-TODO Rethink our concept of pruning. We probably should use a "cli_tool" or "cli" key to indicate this. Let's consider reviewing our app pruning approach using Claude Code. This is an opportunity to consider whether we should use "prune" key, and can we support more intelligently pruning for all apps.
+** DONE koopa update isn't solving logic of dependencies correctly after a corresponding revision bump. For example, if we bump openssl, libxml2, and curl. Our installer logic tries to install curl first, which is incorrect. curl depends on openssl, so openssl should install first when both have revision bumps.
+** DONE We need to sync the documentation between koopa website and git repo README.md file.
+** TODO Let's consider reworking where we save our `bootstrap.sh` file. I think it may be better to put it at the top of the repo, named `bootstrap`. And we can store the corresponding version file as `.bootstrap-version.txt` instead of bootstrap-version.txt? What if we just use `.bootstrap-version`?
+** TODO Rethink our concept of pruning. We probably should use a "cli_tool" or "cli" key to indicate this. Let's consider reviewing our app pruning approach using Claude Code. This is an opportunity to consider whether we should use "prune" key, and can we support more intelligently pruning for all apps.
+** TODO We need to review and potentially improve our mechanism for revision tracking related to our internal .venv. If we update external syntactic repo, we need to be able to trigger reinstall without having to change pyproject.toml file. Alternatively, we could version pin in the pyproject.toml? Is that better?
