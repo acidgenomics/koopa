@@ -22,6 +22,7 @@ from typing import Any
 
 from koopa.installers import PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
+from koopa.os import os_id
 from koopa.prefix import koopa_prefix
 from koopa.version import sanitize_version
 from koopa.xdg import xdg_cache_home
@@ -133,7 +134,7 @@ del _ca_bundle
 
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
-_VERSION_RE = re.compile(r"^\d[\d.\-]*$")
+_VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -1565,6 +1566,7 @@ def check_app_versions(
         cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
+    platform = os_id()
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
             continue
@@ -1577,6 +1579,14 @@ def check_app_versions(
         version = info.get("version", "")
         if not version:
             unsupported.append(VersionCheckResult(app_name, "", None, "none", "no version"))
+            continue
+        supported_map = info.get("supported", {})
+        if supported_map and not supported_map.get(platform, False):
+            unsupported.append(
+                VersionCheckResult(
+                    app_name, version, None, "unsupported", f"not supported on {platform}"
+                )
+            )
             continue
         spec = classify_app(app_name, info)
         if spec is None:
