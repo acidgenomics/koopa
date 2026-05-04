@@ -768,8 +768,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             link_in_bash_completions(config.prefix)
             link_in_fish_completions(config.prefix)
             link_in_zsh_completions(config.prefix)
-            if config.push:
-                push_app_build(config.name)
         elif config.mode == "system":
             if config.update_ldconfig:
                 _run("ldconfig", sudo=True, check=False)
@@ -780,6 +778,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
         raise
+    if config.mode == "shared" and config.push:
+        push_app_build(config.name)
     # -- Post-install: success marker ------------------------------------------
     # Written after linking so a failed link = failed install = retried.
     if config.prefix:
