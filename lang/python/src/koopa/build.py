@@ -490,6 +490,7 @@ def make_build(
     jobs: int | None = None,
     targets: list[str] | None = None,
     env: BuildEnv | None = None,
+    extra_env: dict[str, str] | None = None,
 ) -> None:
     """Run ``./configure && make && make install``.
 
@@ -513,6 +514,8 @@ def make_build(
         msg = "make not found."
         raise FileNotFoundError(msg)
     subprocess_env = env.to_env_dict() if env else os.environ.copy()
+    if extra_env:
+        subprocess_env.update(extra_env)
     all_conf_args = list(conf_args or [])
     if os.path.isfile("./configure"):
         subprocess.run(
