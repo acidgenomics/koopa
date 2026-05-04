@@ -1152,20 +1152,26 @@ def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
     Returns the floored version if it is strictly greater than the current
     version, otherwise returns the current version (no-op / no downgrade).
     """
-    m = re.match(r"^(\d+\.\d+\.)(\d+)$", latest)
-    if not m:
-        return latest
-    prefix = m.group(1)
-    patch = int(m.group(2))
-    floored_patch = (patch // batch_size) * batch_size
-    floored = f"{prefix}{floored_patch:04d}"
 
     def _parts(v: str) -> tuple[int, ...]:
         return tuple(int(x) for x in v.split("."))
 
-    if _parts(floored) <= _parts(current):
-        return current
-    return floored
+    m = re.match(r"^(\d+\.\d+\.)(\d+)$", latest)
+    if m:
+        prefix = m.group(1)
+        patch = int(m.group(2))
+        floored_patch = (patch // batch_size) * batch_size
+        floored = f"{prefix}{floored_patch:04d}"
+        if _parts(floored) <= _parts(current):
+            return current
+        return floored
+    m = re.match(r"^(\d+)$", latest)
+    if m:
+        floored = str((int(latest) // batch_size) * batch_size)
+        if _parts(floored) <= _parts(current):
+            return current
+        return floored
+    return latest
 
 
 def _check_boost() -> str:
@@ -1264,7 +1270,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "msgpack": _AppCheckSpec("github", _check_msgpack, ()),
     "openjpeg": _AppCheckSpec("github", _check_github, ("uclouvain", "openjpeg")),
     "openssh": _AppCheckSpec("github", _check_openssh, ()),
-    "r-devel": _AppCheckSpec("svn", _check_r_devel, ()),
+    "r-devel": _AppCheckSpec("svn", _check_r_devel, (), batch_size=100),
     "staden-io-lib": _AppCheckSpec("github", _check_staden_io_lib, ()),
     "taglib": _AppCheckSpec("github", _check_github, ("taglib", "taglib")),
     "temurin": _AppCheckSpec("adoptium", _check_temurin, ()),
