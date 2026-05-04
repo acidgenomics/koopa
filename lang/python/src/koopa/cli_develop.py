@@ -474,7 +474,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
         import os
         from pathlib import Path
 
-        from koopa.alert import alert_danger
+        from koopa.alert import alert_note
         from koopa.install import _install_lock_path
 
         lock_path = _install_lock_path()
@@ -482,7 +482,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
             try:
                 pid = int(Path(lock_path).read_text().strip())
                 os.kill(pid, 0)
-                alert_danger(
+                alert_note(
                     f"Cannot update app.json: install in progress (PID {pid}). "
                     "Wait for it to finish or remove "
                     f"'{lock_path}' if the process is stale."
@@ -490,7 +490,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
                 sys.exit(1)
             except PermissionError:
                 # Process exists but owned by another user — still block.
-                alert_danger(
+                alert_note(
                     f"Cannot update app.json: install in progress (PID {pid}). "
                     "Wait for it to finish or remove "
                     f"'{lock_path}' if the process is stale."

@@ -382,7 +382,17 @@ def _check_sourceforge_versions(project_path: str) -> str:
 
 def _check_xorg(subdir: str, tarball_prefix: str) -> str:
     url = f"https://xorg.freedesktop.org/archive/individual/{subdir}/"
-    return _check_directory_listing(url, tarball_prefix)
+    try:
+        return _check_directory_listing(url, tarball_prefix)
+    except (urllib.error.URLError, TimeoutError) as exc:
+        _raise_network_unavailable(exc)
+
+
+def _check_pkg_config() -> str:
+    try:
+        return _check_directory_listing("https://pkgconfig.freedesktop.org/releases/", "pkg-config")
+    except (urllib.error.URLError, TimeoutError) as exc:
+        _raise_network_unavailable(exc)
 
 
 def _check_gnupg(package: str) -> str:
@@ -650,6 +660,7 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://pkgconfig.freedesktop.org/releases/",
         "pkg-config",
     ),
+    # NOTE: pkg-config is overridden in _SPECIAL_CASES to handle SSL failures gracefully.
     "rsync": (
         "https://download.samba.org/pub/rsync/src/",
         "rsync",
@@ -1113,10 +1124,10 @@ def _check_aspera_connect() -> str:
 
 def _check_illumina_ica_cli() -> str:
     html = _http_get_text(
-        "https://help.ica.illumina.com/command-line-interface/cli-releasehistory",
+        "https://help.ica.illumina.com/reference/software-release-notes",
         timeout=30,
     )
-    versions = re.findall(r"s3\.amazonaws\.com/cli/(\d+\.\d+\.\d+)/", html)
+    versions = re.findall(r"ICA v(\d+\.\d+\.\d+)", html)
     if not versions:
         msg = "No Illumina ICA CLI versions found"
         raise RuntimeError(msg)
@@ -1295,6 +1306,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "ruby": _AppCheckSpec("github", _check_github, ("ruby", "ruby")),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
+    "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
     "screen": _AppCheckSpec(
         "gnu",
         lambda: _check_gnu("screen"),
@@ -1455,6 +1467,17 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "illumina-ica-cli": _AppCheckSpec("dirlist", _check_illumina_ica_cli, ()),
+    "pkgconf": _AppCheckSpec(
+        "github",
+        lambda: _sanitize_github_tag(
+            _http_get_json(
+                "https://api.github.com/repos/pkgconf/pkgconf/tags?per_page=1",
+                github=True,
+            )[0]["name"],
+            "pkgconf",
+        ),
+        (),
+    ),
     "ont-guppy": _AppCheckSpec("dirlist", _check_ont_guppy, ()),
     "cellranger": _AppCheckSpec("github", _check_github, ("10XGenomics", "cellranger")),
     "r-gfortran": _AppCheckSpec("dirlist", _check_r_gfortran, ()),
@@ -1581,7 +1604,11 @@ def check_app_versions(
             unsupported.append(VersionCheckResult(app_name, "", None, "none", "no version"))
             continue
         supported_map = info.get("supported", {})
-        if supported_map and not supported_map.get(platform, False):
+        if (
+            supported_map
+            and not supported_map.get(platform, False)
+            and info.get("installer") == "conda-package"
+        ):
             unsupported.append(
                 VersionCheckResult(
                     app_name, version, None, "unsupported", f"not supported on {platform}"
