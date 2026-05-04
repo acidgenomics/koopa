@@ -135,8 +135,8 @@ install_python() {
     then
         if [ "${__kvar_use_sudo:-0}" -eq 1 ]
         then
-            sudo mkdir -p "$PREFIX"
-            sudo ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
+            sudo /bin/mkdir -p "$PREFIX"
+            sudo /bin/ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
         else
             mkdir -p "$PREFIX"
             ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
@@ -171,8 +171,8 @@ install_python() {
     then
         if [ "${__kvar_use_sudo:-0}" -eq 1 ]
         then
-            sudo rm -f "${PREFIX}/lib"
-            sudo rmdir "$PREFIX" 2>/dev/null || true
+            sudo /bin/rm -f "${PREFIX}/lib"
+            sudo /bin/rmdir "$PREFIX" 2>/dev/null || true
         else
             rm -f "${PREFIX}/lib"
             rmdir "$PREFIX" 2>/dev/null || true
@@ -235,6 +235,7 @@ main() {
         export CPPFLAGS="-I${__kvar_staged:?}/include"
         export LDFLAGS="-L${__kvar_staged:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
         export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
+        export PIP_NO_WARN_SCRIPT_LOCATION=1
         export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
         install_openssl
         install_zlib
@@ -253,17 +254,17 @@ main() {
         rm -fr "${PREFIX}.old"
         if [ "$__kvar_use_sudo" -eq 1 ]
         then
-            sudo mv "$PREFIX" "${PREFIX}.old"
+            sudo /bin/mv "$PREFIX" "${PREFIX}.old"
         else
             mv "$PREFIX" "${PREFIX}.old"
         fi
     fi
     if [ "$__kvar_use_sudo" -eq 1 ]
     then
-        sudo mkdir -p "$(dirname "$PREFIX")"
-        sudo mv "$__kvar_staged" "$PREFIX"
-        sudo chown -R "$(id -u):$(id -g)" "$PREFIX"
-        sudo rm -fr "${PREFIX}.old" "$__kvar_destdir"
+        sudo /bin/mkdir -p "$(dirname "$PREFIX")"
+        sudo /bin/mv "$__kvar_staged" "$PREFIX"
+        sudo /usr/sbin/chown -R "$(id -u):$(id -g)" "$PREFIX"
+        sudo /bin/rm -fr "${PREFIX}.old" "$__kvar_destdir"
     else
         mv "$__kvar_staged" "$PREFIX"
         rm -fr "${PREFIX}.old" "$__kvar_destdir"
