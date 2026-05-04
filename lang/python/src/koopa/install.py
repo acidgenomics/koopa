@@ -288,7 +288,13 @@ def _can_push_binary() -> bool:
         return False
     if not os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", ""):
         return False
-    return shutil.which("aws") is not None
+    from koopa.build import locate
+
+    try:
+        locate("aws")
+    except FileNotFoundError:
+        return False
+    return True
 
 
 def _os_string() -> str:
