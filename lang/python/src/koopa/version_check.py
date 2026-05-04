@@ -121,6 +121,37 @@ def _resolve_github_token() -> str | None:
 
 
 _github_token: str | None = _resolve_github_token()
+
+
+def _resolve_artifactory_conda_urls() -> list[str]:
+    urls: list[str] = []
+    env_url = os.environ.get("ARTIFACTORY_CONDA_URL")
+    if env_url:
+        urls.append(env_url.rstrip("/"))
+    import shutil
+
+    if shutil.which("conda"):
+        try:
+            result = subprocess.run(
+                ["conda", "config", "--show", "channels"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+            if result.returncode == 0:
+                for line in result.stdout.splitlines():
+                    line = line.strip().lstrip("- ").strip()
+                    if line.startswith("http") and "/artifactory/" in line:
+                        url = line.rstrip("/")
+                        if url not in urls:
+                            urls.append(url)
+        except (subprocess.TimeoutExpired, OSError):
+            pass
+    return urls
+
+
+_artifactory_conda_urls: list[str] = _resolve_artifactory_conda_urls()
 _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
 _ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
@@ -228,11 +259,25 @@ def _check_conda(channel: str, package: str) -> str:
                 )
     except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError):
         pass
-    data = _http_get_json(
-        f"https://api.anaconda.org/package/{channel}/{package}",
-        timeout=30,
-    )
-    return data["latest_version"]
+    for base in _artifactory_conda_urls:
+        try:
+            data = _http_get_json(f"{base}/channeldata.json", timeout=30)
+            pkg = data.get("packages", {}).get(package)
+            if pkg and pkg.get("version"):
+                return pkg["version"]
+        except Exception:
+            continue
+    msg = f"Cannot determine conda version for {package}: conda CLI unavailable and no Artifactory channel reachable"
+    raise RuntimeError(msg)
+
+
+class _NetworkUnavailableError(RuntimeError):
+    """Raised when all network sources for a check are unreachable (e.g. SSL/timeout in corporate env)."""
+
+
+def _raise_network_unavailable(exc: Exception | None) -> None:
+    msg = f"Network unavailable: {exc}"
+    raise _NetworkUnavailableError(msg) from exc
 
 
 def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) -> str:
@@ -258,7 +303,7 @@ def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) 
             last_exc = exc
             continue
     if html is None:
-        raise last_exc  # type: ignore[misc]
+        _raise_network_unavailable(last_exc)
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions: list[str] = pattern.findall(html)
     if not versions:
@@ -527,6 +572,7 @@ _GITLAB_MAP: dict[str, tuple[str, str]] = {
     "libpipeline": ("gitlab.com", "libpipeline/libpipeline"),
     "libxml2": ("gitlab.gnome.org", "GNOME/libxml2"),
     "libxslt": ("gitlab.gnome.org", "GNOME/libxslt"),
+    "man-db": ("gitlab.com", "man-db/man-db"),
 }
 
 # ── Directory listing mappings for miscellaneous apps ────────────────
@@ -1184,6 +1230,9 @@ def _check_boost() -> str:
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
+    "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("conda-forge", "google-cloud-sdk")),
+    "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
+    "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-cli": _AppCheckSpec("conda", _check_conda, ("conda-forge", "awscli")),
     "vim": _AppCheckSpec("github", _check_github, ("vim", "vim"), batch_size=100),
     "boost": _AppCheckSpec("github", _check_boost, ()),
@@ -1318,14 +1367,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "ensembl-perl-api": _AppCheckSpec("github", _check_ensembl, ()),
     "fltk": _AppCheckSpec("github", _check_fltk, ()),
-    "freetype": _AppCheckSpec(
-        "dirlist",
-        lambda: _check_directory_listing(
-            "https://download.savannah.gnu.org/releases/freetype/",
-            "freetype",
-        ),
-        (),
-    ),
+    "freetype": _AppCheckSpec("github", _check_github, ("freetype", "freetype")),
     "haskell-cabal": _AppCheckSpec(
         "github",
         lambda: _sanitize_github_tag(
@@ -1601,6 +1643,8 @@ def check_app_versions(
             latest_san = sanitize_version(latest)
             msg = f"{app_name}: {current} -> {latest}" if current_san != latest_san else None
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
+        except _NetworkUnavailableError:
+            return VersionCheckResult(app_name, current, current, spec.source, None), None
         except Exception as exc:
             msg = f"{app_name}: error: {exc}"
             return VersionCheckResult(app_name, current, None, spec.source, str(exc)), msg
