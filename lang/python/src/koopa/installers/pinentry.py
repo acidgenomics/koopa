@@ -43,7 +43,8 @@ def main(
             f"--with-libassuan-prefix={libassuan_prefix}",
             f"--with-libgpg-error-prefix={lgpe_prefix}",
             f"--with-libiconv-prefix={libiconv_prefix}",
-            f"--with-ncurses-include-dir={ncurses_prefix}/include",
+            f"--with-ncurses-include-dir={ncurses_prefix}/include/ncursesw",
         ],
         env=env,
+        extra_env={"CFLAGS": "-DNCURSES_WIDECHAR=1"},
     )
