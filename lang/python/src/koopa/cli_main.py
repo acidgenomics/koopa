@@ -588,9 +588,14 @@ def _handle_version(_args: argparse.Namespace) -> None:
 
 def _handle_header(_args: argparse.Namespace) -> None:
     """Handle ``koopa header`` subcommand."""
-    from koopa.prefix import bash_prefix
-
-    print(os.path.join(bash_prefix(), "include", "header.sh"))
+    print(
+        "Error: 'koopa header' is deprecated.\n"
+        "Scripts using 'source \"$(koopa header bash)\"' must be updated.\n"
+        "Add 'set -Eeuo pipefail' to your script and source koopa\n"
+        "functions directly instead.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 def _handle_install_all_apps(_args: argparse.Namespace) -> None:
