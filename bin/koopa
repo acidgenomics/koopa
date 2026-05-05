@@ -37,25 +37,19 @@ _koopa_prefix="$(__koopa_realpath "$(dirname "$_koopa_bin")/..")"
 [ -d "$_koopa_prefix" ] || exit 1
 
 _python=""
-_venv_python="${_koopa_prefix}/.venv/bin/python3"
-if __koopa_check_python "$_venv_python"; then
-    _python="$_venv_python"
+if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
+    _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
+else
+    _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
+fi
+if __koopa_check_python "$_bootstrap_python"; then
+    _python="$_bootstrap_python"
 fi
 if [ -z "$_python" ]; then
-    if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
-        _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
-    else
-        _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
-    fi
-    if __koopa_check_python "$_bootstrap_python"; then
-        _python="$_bootstrap_python"
-    fi
-fi
-if [ -z "$_python" ]; then
-    _sys_python="$(command -v python3 2>/dev/null || true)"
-    if [ -n "$_sys_python" ] && \
+    _sys_python="/usr/bin/python3"
+    if [ -x "$_sys_python" ] && \
         "$_sys_python" -c \
-            'import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)' \
+            'import sys; sys.exit(0 if sys.version_info[:2] == (3, 12) else 1)' \
             2>/dev/null && \
         __koopa_check_python "$_sys_python"
     then
@@ -64,7 +58,7 @@ if [ -z "$_python" ]; then
 fi
 if [ -z "$_python" ]; then
     printf '%s\n' \
-        'Error: koopa virtual environment not found.' \
+        'Error: koopa bootstrap Python not found.' \
         '' \
         'Run the following to set up koopa:' \
         "  sh '${_koopa_prefix}/etc/koopa/install.sh'" \
@@ -76,12 +70,5 @@ if [ -z "$_python" ]; then
 fi
 
 export KOOPA_PREFIX="$_koopa_prefix"
-case "$_python" in
-    */.venv/*)
-        exec "$_python" -m koopa.cli_main "$@"
-        ;;
-    *)
-        PYTHONPATH="${_koopa_prefix}/lang/python/src${PYTHONPATH:+:${PYTHONPATH}}" \
-            exec "$_python" -m koopa.cli_main "$@"
-        ;;
-esac
+PYTHONPATH="${_koopa_prefix}/lang/python/src${PYTHONPATH:+:${PYTHONPATH}}" \
+    exec "$_python" -m koopa.cli_main "$@"
