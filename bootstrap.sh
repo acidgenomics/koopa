@@ -265,6 +265,9 @@ main() {
         mkdir -p "$__kvar_staged"
         export CPPFLAGS="-I${__kvar_staged:?}/include"
         export LDFLAGS="-L${__kvar_staged:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
+        if ! is_macos; then
+            export LD_LIBRARY_PATH="${__kvar_staged:?}/lib"
+        fi
         export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
         export PIP_NO_WARN_SCRIPT_LOCATION=1
         export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
