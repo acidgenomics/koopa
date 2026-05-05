@@ -1574,44 +1574,53 @@ def _release_install_lock() -> None:
 
 # -- Conda package installer --------------------------------------------------
 
-_CONDA_OVERRIDE_TTL = 86400
-_conda_use_override_channels: bool | None = None
+_cached_conda_channels: list[str] | None = None
 
 
-def _conda_override_cache_path() -> str:
-    cache_dir = os.path.join(
-        os.environ.get(
-            "XDG_CACHE_HOME",
-            os.path.join(os.path.expanduser("~"), ".cache"),
-        ),
-        "koopa",
+def _get_conda_channels() -> list[str]:
+    global _cached_conda_channels  # noqa: PLW0603
+    if _cached_conda_channels is not None:
+        return _cached_conda_channels
+    from koopa.build import locate
+
+    conda = locate("conda")
+    result = subprocess.run(
+        [conda, "config", "--show", "channels"],
+        capture_output=True,
+        text=True,
+        check=False,
     )
-    return os.path.join(cache_dir, "conda-override-channels")
+    channels: list[str] = []
+    if result.returncode == 0:
+        for line in result.stdout.splitlines():
+            line = line.strip().lstrip("- ")
+            if line and not line.startswith("channels"):
+                channels.append(line)
+    _cached_conda_channels = channels
+    return channels
 
 
-def _conda_should_override() -> bool:
-    global _conda_use_override_channels  # noqa: PLW0603
-    if _conda_use_override_channels is not None:
-        return _conda_use_override_channels
-    path = _conda_override_cache_path()
-    if os.path.isfile(path):
-        import time
+def _resolve_conda_channel_url(channel_name: str) -> str:
+    """Resolve conda channel name to configured URL.
 
-        age = time.time() - os.path.getmtime(path)
-        if age < _CONDA_OVERRIDE_TTL:
-            _conda_use_override_channels = True
-            return True
-        os.unlink(path)
-    _conda_use_override_channels = False
-    return False
+    Queries configured channels and matches against the channel name
+    (e.g., 'bioconda' or 'conda-forge'). Returns the full URL if a
+    custom mirror is configured, otherwise returns the bare channel name.
+    """
+    channels = _get_conda_channels()
+    for ch in channels:
+        if channel_name in ch:
+            return ch
+    return channel_name
 
 
-def _conda_set_override() -> None:
-    global _conda_use_override_channels  # noqa: PLW0603
-    _conda_use_override_channels = True
-    path = _conda_override_cache_path()
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    Path(path).touch()
+def _app_json_conda_channel(name: str) -> str:
+    """Get conda channel for app from app.json (default 'conda-forge')."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        return entry.get("conda_channel", "conda-forge")
+    return "conda-forge"
 
 
 def install_conda_package(
@@ -1624,7 +1633,7 @@ def install_conda_package(
     """Install a conda environment as an application.
 
     Creates a conda env in ``<prefix>/libexec`` and links binaries into
-    ``<prefix>/bin``. Converted from install-conda-package.sh.
+    ``<prefix>/bin``. Uses a single channel resolved from conda config.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1638,52 +1647,18 @@ def install_conda_package(
     libexec = os.path.join(prefix, "libexec")
     os.makedirs(libexec, exist_ok=True)
     pkg_spec = f"--file={yaml_file}" if yaml_file else f"{name}=={version}"
-    if _conda_should_override():
-        create_args = [
-            conda,
-            "create",
-            "--yes",
-            f"--prefix={libexec}",
-            "--channel=conda-forge",
-            "--channel=bioconda",
-            "--override-channels",
-            pkg_spec,
-        ]
-        subprocess.run(create_args, check=True)
-    else:
-        create_args = [conda, "create", "--yes", f"--prefix={libexec}"]
-        result = subprocess.run(
-            [conda, "config", "--show", "channels"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        if "conda-forge" not in result.stdout:
-            create_args.extend(
-                [
-                    "--channel=conda-forge",
-                    "--channel=bioconda",
-                ]
-            )
-        create_args.append(pkg_spec)
-        result = subprocess.run(create_args, check=False)
-        if result.returncode != 0:
-            print(
-                "Retrying with conda-forge/bioconda channels directly.",
-                file=sys.stderr,
-            )
-            _conda_set_override()
-            fallback_args = [
-                conda,
-                "create",
-                "--yes",
-                f"--prefix={libexec}",
-                "--channel=conda-forge",
-                "--channel=bioconda",
-                "--override-channels",
-                pkg_spec,
-            ]
-            subprocess.run(fallback_args, check=True)
+    channel_name = _app_json_conda_channel(name)
+    channel_url = _resolve_conda_channel_url(channel_name)
+    create_args = [
+        conda,
+        "create",
+        "--yes",
+        f"--prefix={libexec}",
+        f"--channel={channel_url}",
+        "--override-channels",
+        pkg_spec,
+    ]
+    subprocess.run(create_args, check=True)
     _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
 
 
