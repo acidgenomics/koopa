@@ -238,10 +238,6 @@ def uninstall_koopa() -> None:
     kp = _koopa_prefix()
     bootstrap = kp.rstrip(os.sep) + "-bootstrap"
     config = os.path.join(kp, "etc", "koopa")
-    if sys.stdin.isatty():
-        answer = input("Proceed with koopa uninstall? [Y/n] ").strip().lower()
-        if answer in ("n", "no"):
-            return
     print("Removing bootstrap prefix.", file=sys.stderr)
     shutil.rmtree(bootstrap, ignore_errors=True)
     print("Removing config prefix.", file=sys.stderr)
