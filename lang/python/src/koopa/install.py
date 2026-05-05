@@ -2003,18 +2003,22 @@ def _zsh_compaudit_set_permissions() -> None:
 
 
 def _cleanup_legacy_config() -> None:
-    """Remove legacy ~/.config/koopa/activate symlink and warn about shell profile references."""
+    """Fix legacy ~/.config/koopa/activate symlink and warn about shell profile references."""
     xdg_config_home = os.environ.get(
         "XDG_CONFIG_HOME",
         os.path.join(os.path.expanduser("~"), ".config"),
     )
     legacy_activate = os.path.join(xdg_config_home, "koopa", "activate")
     if os.path.islink(legacy_activate):
-        os.unlink(legacy_activate)
-        print(
-            f"Removed legacy symlink: {legacy_activate}",
-            file=sys.stderr,
-        )
+        target = os.readlink(legacy_activate)
+        activate_sh = os.path.join(_koopa_prefix(), "activate.sh")
+        if target != activate_sh:
+            os.unlink(legacy_activate)
+            os.symlink(activate_sh, legacy_activate)
+            print(
+                f"Repointed legacy symlink: {legacy_activate} -> {activate_sh}",
+                file=sys.stderr,
+            )
     shell_profiles = [
         os.path.join(os.path.expanduser("~"), name)
         for name in (".profile", ".bashrc", ".bash_profile", ".zshrc", ".zprofile")
