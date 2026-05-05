@@ -208,6 +208,10 @@ def _build_parser() -> argparse.ArgumentParser:
     internal_p = subparsers.add_parser("internal")
     internal_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
+    # -- run ------------------------------------------------------------------
+    run_p = subparsers.add_parser("run")
+    run_p.add_argument("remainder", nargs=argparse.REMAINDER)
+
     # -- simple commands ------------------------------------------------------
     subparsers.add_parser("version")
     header_p = subparsers.add_parser("header")
@@ -580,6 +584,24 @@ def _handle_develop(args: argparse.Namespace) -> None:
     handle_develop(args.remainder)
 
 
+def _handle_run(args: argparse.Namespace) -> None:
+    """Handle ``koopa run`` subcommand."""
+    from koopa.cli_bin import _HANDLERS
+
+    remainder = args.remainder
+    if not remainder:
+        print("Available commands:", file=sys.stderr)
+        for name in sorted(_HANDLERS.keys()):
+            print(f"  {name}", file=sys.stderr)
+        sys.exit(1)
+    script_name = remainder[0]
+    handler = _HANDLERS.get(script_name)
+    if handler is None:
+        print(f"Error: unknown run command '{script_name}'.", file=sys.stderr)
+        sys.exit(1)
+    handler(remainder[1:])
+
+
 def _handle_version(_args: argparse.Namespace) -> None:
     """Handle ``koopa version`` subcommand."""
     from koopa.version import koopa_version
@@ -668,6 +690,7 @@ def main() -> None:
         "update": _handle_update,
         "configure": _handle_configure,
         "app": _handle_app,
+        "run": _handle_run,
         "internal": _handle_internal,
         "system": _handle_system,
         "develop": _handle_develop,

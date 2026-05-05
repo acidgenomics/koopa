@@ -23,6 +23,7 @@ _koopa() {
         list-all-apps) return 0 ;;
         list-default-apps) return 0 ;;
         reinstall) _koopa_install ;;
+        run) _koopa_run ;;
         system) return 0 ;;
         uninstall) _koopa_install ;;
         update) return 0 ;;
@@ -43,6 +44,7 @@ _koopa_cmds() {
         'list-all-apps:List all available apps'
         'list-default-apps:List default apps'
         'reinstall:Reinstall an app'
+        'run:Run a utility command'
         'system:System operations'
         'uninstall:Uninstall an app'
         'update:Update installed apps'
@@ -367,6 +369,7 @@ _koopa_app_hisat2_align() {
 _koopa_app_jekyll() {
     local -a cmds
     cmds=(
+        'deploy-to-aws'
         'serve'
     )
     _describe -t commands 'jekyll command' cmds
@@ -608,6 +611,56 @@ _koopa_develop() {
         'update-docs'
     )
     _describe -t commands 'develop command' cmds
+}
+
+_koopa_run() {
+    local -a cmds
+    cmds=(
+        'autopad-zeros'
+        'clone'
+        'convert-svg-to-png'
+        'convert-utf8-nfd-to-nfc'
+        'delete-broken-symlinks'
+        'delete-empty-dirs'
+        'delete-named-subdirs'
+        'detab'
+        'df2'
+        'dot-clean'
+        'download'
+        'download-cran-latest'
+        'download-github-latest'
+        'entab'
+        'eol-lf'
+        'extract'
+        'extract-all'
+        'file-count'
+        'find-and-move-in-sequence'
+        'find-and-replace'
+        'find-broken-symlinks'
+        'find-empty-dirs'
+        'find-files-without-line-ending'
+        'find-large-dirs'
+        'find-large-files'
+        'ip-address'
+        'ip-info'
+        'line-count'
+        'merge-pdf'
+        'move-files-in-batch'
+        'move-files-up-1-level'
+        'move-into-dated-dirs-by-filename'
+        'move-into-dated-dirs-by-timestamp'
+        'nfiletypes'
+        'rename-camel-case'
+        'rename-from-csv'
+        'rename-kebab-case'
+        'rename-lowercase'
+        'rename-snake-case'
+        'rg-sort'
+        'rg-unique'
+        'sort-lines'
+        'tar-multiple-dirs'
+    )
+    _describe -t commands 'run command' cmds
 }
 
 _koopa_install() {

@@ -107,6 +107,7 @@ _TOP_COMMANDS: list[tuple[str, str, str]] = [
     ("update", "[app...]", "Update applications to latest versions. Defaults to updating koopa."),
     ("configure", "app...", "Run post-install configuration for applications."),
     ("app", "subcommand", "Application-specific utilities (e.g. koopa app salmon quant)."),
+    ("run", "command", "Run a utility command (e.g. koopa run rename-snake-case)."),
     ("system", "subcommand", "System information, prefix lookups, and administration commands."),
     ("develop", "subcommand", "Developer and maintenance utilities."),
     ("internal", "subcommand", "Internal low-level utilities (not intended for direct use)."),
@@ -265,6 +266,13 @@ def generate_man() -> str:
         if synopsis:
             term += f" {_italic(synopsis)}"
         lines += _tp(term, _DEVELOP_DESCRIPTIONS.get(name, ""))
+
+    # RUN SUBCOMMANDS — utility commands accessed via 'koopa run'.
+    lines += _section("RUN SUBCOMMANDS")
+    from koopa.cli_bin import _HANDLERS as _RUN_HANDLERS
+
+    for name in sorted(_RUN_HANDLERS.keys()):
+        lines += _tp(_bold(f"run {_roff_name(name)}"), "")
 
     lines += _section("COPYRIGHT")
     lines.append("This software is provided under the GNU General Public License v3.0.")

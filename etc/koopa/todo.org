@@ -3,5 +3,4 @@
 * High complexity
 ** TODO Improve our code coverage with additional unit tests.
 * Medium complexity
-** TODO Consider not putting any other koopa command line apps in `bin` except koopa. Things like `rename-snake-case`.
 * Low complexity
