@@ -16,7 +16,6 @@ _koopa() {
         app) _koopa_app ;;
         configure) return 0 ;;
         develop) _koopa_develop ;;
-        header) return 0 ;;
         install) _koopa_install ;;
         install-all-apps) return 0 ;;
         install-default-apps) return 0 ;;
@@ -37,7 +36,6 @@ _koopa_cmds() {
         'app:Application management'
         'configure:Configure system'
         'develop:Development utilities'
-        'header:Print koopa header'
         'install:Install an app'
         'install-all-apps:Install all apps'
         'install-default-apps:Install default apps'

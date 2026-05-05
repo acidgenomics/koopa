@@ -400,7 +400,6 @@ _TOP_CMDS = [
     "app",
     "configure",
     "develop",
-    "header",
     "install",
     "install-all-apps",
     "install-default-apps",
@@ -418,7 +417,6 @@ _TOP_CMD_DESCS = {
     "app": "Application management",
     "configure": "Configure system",
     "develop": "Development utilities",
-    "header": "Print koopa header",
     "install": "Install an app",
     "install-all-apps": "Install all apps",
     "install-default-apps": "Install default apps",
@@ -883,7 +881,6 @@ def generate_completion() -> None:  # noqa: PLR0915
                 "app",
                 "configure",
                 "develop",
-                "header",
                 "install",
                 "install-all-apps",
                 "install-default-apps",
@@ -929,15 +926,6 @@ def generate_completion() -> None:  # noqa: PLR0915
         _emit_case_entry(
             "'develop')",
             _emit_args_array(develop_cmds, i5),
-            i4,
-        )
-    )
-
-    # header
-    lines.extend(
-        _emit_case_entry(
-            "'header')",
-            [f"{i5}args+=('bash' 'posix' 'zsh')"],
             i4,
         )
     )

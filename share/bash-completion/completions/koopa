@@ -64,7 +64,6 @@ _koopa_complete() {
         ['configure']='--help --system --user --verbose'
         ['develop']='--help'
         ['develop/check-app-versions']='--help --json --source --update --s3-upload --reset-cache'
-        ['develop/generate-man']='--help --write'
         ['develop/remove-app']='--help --revdeps'
         ['header']='--help'
         ['install']='--help --no-dependencies --private --reinstall --system --user --verbose'
@@ -87,7 +86,6 @@ _koopa_complete() {
                 'app'
                 'configure'
                 'develop'
-                'header'
                 'install'
                 'install-all-apps'
                 'install-default-apps'
@@ -161,9 +159,6 @@ _koopa_complete() {
                         'shellcheck'
                         'update-docs'
                     )
-                    ;;
-                'header')
-                    args+=('bash' 'posix' 'zsh')
                     ;;
                 'install' | \
                 'reinstall' | \
