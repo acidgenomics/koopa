@@ -210,7 +210,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # -- simple commands ------------------------------------------------------
     subparsers.add_parser("version")
-    subparsers.add_parser("header")
+    header_p = subparsers.add_parser("header")
+    header_p.add_argument("remainder", nargs=argparse.REMAINDER)
     subparsers.add_parser("install-all-apps")
     subparsers.add_parser("install-default-apps")
     subparsers.add_parser("list-all-apps")
@@ -595,6 +596,7 @@ def _handle_header(_args: argparse.Namespace) -> None:
         "functions directly instead.",
         file=sys.stderr,
     )
+    print("/nonexistent/koopa-header-deprecated")
     sys.exit(1)
 
 
