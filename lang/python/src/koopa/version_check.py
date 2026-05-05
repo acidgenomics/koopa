@@ -638,7 +638,7 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "convmv",
     ),
     "flac": (
-        "https://downloads.xiph.org/releases/flac/",
+        "https://ftp.osuosl.org/pub/xiph/releases/flac/",
         "flac",
     ),
     "fontconfig": (

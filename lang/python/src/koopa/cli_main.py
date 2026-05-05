@@ -182,7 +182,7 @@ def _build_parser() -> argparse.ArgumentParser:
     update_p.add_argument("--system", action="store_true", default=False)
     update_p.add_argument("--user", action="store_true", default=False)
     update_p.add_argument("--all-system", action="store_true", default=False)
-    update_p.add_argument("--user-repos", action="store_true", default=False)
+    update_p.add_argument("--all-user-repos", action="store_true", default=False)
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
@@ -502,7 +502,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             update_stale_apps(verbose=args.verbose)
             install_missing_default_apps(verbose=args.verbose)
             update_user_apps(verbose=args.verbose)
-            if args.user_repos:
+            if args.all_user_repos:
                 from koopa.install import fetch_user_repos
 
                 fetch_user_repos()
