@@ -195,7 +195,7 @@ class BuildProgress:
 
     def _start_capture(self) -> None:
         """Redirect stdout/stderr to a temp log file and start spinner."""
-        self._log_file = tempfile.NamedTemporaryFile(
+        self._log_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
             mode="w+",
             prefix="koopa-build-",
             suffix=".log",
@@ -238,10 +238,10 @@ class BuildProgress:
             log_path = self._log_file.name
             self._log_file.close()
             if failed:
-                try:
+                import contextlib
+
+                with contextlib.suppress(OSError):
                     os.unlink(log_path)
-                except OSError:
-                    pass
             else:
                 self._saved_log_path = log_path
             self._log_file = None

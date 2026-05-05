@@ -31,9 +31,7 @@ def is_valid_archive(path: str) -> bool:
         return True
     if header[:6] == b"\xfd7zXZ\x00":
         return True
-    if header[:4] == b"\x28\xb5\x2f\xfd":
-        return True
-    return False
+    return header[:4] == b"\x28\xb5\x2f\xfd"
 
 
 def extract(path: str, output_dir: str | None = None) -> None:

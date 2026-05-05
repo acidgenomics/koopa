@@ -356,7 +356,8 @@ def _check_illegal_strings(files: list[str], extra_patterns: list[tuple[str, str
     errors: list[str] = []
     for path in files:
         try:
-            content = open(path, errors="replace").read()
+            with open(path, errors="replace") as _fh:
+                content = _fh.read()
             lines = content.splitlines()
         except OSError:
             continue
@@ -453,7 +454,10 @@ def _handle_check_app_versions(args: list[str]) -> None:
         "--s3-upload",
         action="store_true",
         dest="s3_upload",
-        help="upload source tarballs to s3://koopa.acidgenomics.com (requires acidgenomics AWS profile)",
+        help=(
+            "upload source tarballs to s3://koopa.acidgenomics.com"
+            " (requires acidgenomics AWS profile)"
+        ),
     )
     parser.add_argument(
         "--reset-cache",
@@ -479,6 +483,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
 
         lock_path = _install_lock_path()
         if os.path.isfile(lock_path):
+            pid = -1
             try:
                 pid = int(Path(lock_path).read_text().strip())
                 os.kill(pid, 0)
@@ -765,10 +770,7 @@ def _handle_remove_app(args: list[str]) -> None:
         sys.exit(1)
 
     # Detect reverse dependencies before modifying the entry.
-    if explicit_revdeps is not None:
-        revdeps = explicit_revdeps
-    else:
-        revdeps = app_revdeps(name, mode="all")
+    revdeps = explicit_revdeps if explicit_revdeps is not None else app_revdeps(name, mode="all")
 
     # Tombstone the entry: keep url for provenance, strip all install fields.
     entry = data[name]

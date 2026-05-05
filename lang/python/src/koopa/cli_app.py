@@ -1546,7 +1546,7 @@ def _handle_file_rename_to_lowercase_ext(args: list[str]) -> None:
 
 
 def _handle_file_convert_line_endings(args: list[str]) -> None:
-    """Handle ``koopa app file convert-line-endings``.
+    r"""Handle ``koopa app file convert-line-endings``.
 
     Converts CRLF (\\r\\n) line endings to LF (\\n) in place.
     Accepts one or more file paths as arguments.
@@ -1759,7 +1759,7 @@ def _handle_sys_linker_info(args: list[str]) -> None:
             raise FileNotFoundError(msg)
         if len(parsed.files) > 1:
             print(f"\n{path}:")
-        subprocess.run(cmd_fn(path), check=True)
+        subprocess.run(cmd_fn(path), check=True)  # ty: ignore[no-matching-overload]
 
 
 def _handle_wget_recursive(args: list[str]) -> None:
