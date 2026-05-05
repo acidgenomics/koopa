@@ -232,6 +232,14 @@ def _app_json_revision(name: str) -> int:
     return 0
 
 
+def _binary_tarball_basename(name: str, version: str) -> str:
+    """Construct S3 tarball filename, including revision suffix when > 0."""
+    revision = _app_json_revision(name)
+    if revision > 0:
+        return f"{version}-r{revision}.tar.gz"
+    return f"{version}.tar.gz"
+
+
 
 
 def can_build_binary() -> bool:
@@ -494,8 +502,9 @@ def install_app_from_binary_package(*prefixes: str) -> None:
             prefix_path = os.path.realpath(prefix)
             name = os.path.basename(os.path.dirname(prefix_path))
             version = os.path.basename(prefix_path)
+            tarball_name = _binary_tarball_basename(name, version)
             tar_file = os.path.join(tmp_dir, f"{name}-{version}.tar.gz")
-            tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{version}.tar.gz"
+            tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{tarball_name}"
             _run(
                 "aws",
                 "s3",
@@ -530,18 +539,18 @@ def push_app_build(name: str) -> None:
     if not os.path.isdir(app_dir):
         msg = f"App directory does not exist: {app_dir}"
         raise FileNotFoundError(msg)
-    # Find the version directory.
     versions = sorted(os.listdir(app_dir))
     if not versions:
         msg = f"No version found for app: {name}"
         raise FileNotFoundError(msg)
     version = versions[-1]
     prefix = os.path.join(app_dir, version)
+    tarball_name = _binary_tarball_basename(name, version)
     fd, tar_file = tempfile.mkstemp(suffix=".tar.gz", prefix="koopa-push-")
     os.close(fd)
     try:
         _run("tar", "-Pcz", "-f", tar_file, prefix)
-        tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{version}.tar.gz"
+        tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{tarball_name}"
         _run(
             "aws",
             "s3",
@@ -603,7 +612,8 @@ def push_missing_app_builds() -> None:
         # Skip binaries installed from S3 (not built locally).
         if os.path.isfile(os.path.join(prefix, ".koopa-binary")):
             continue
-        key = f"binaries/{os_str}/{arch}/{entry}/{version}.tar.gz"
+        tarball_name = _binary_tarball_basename(entry, version)
+        key = f"binaries/{os_str}/{arch}/{entry}/{tarball_name}"
         result = _subprocess.run(
             [
                 aws,

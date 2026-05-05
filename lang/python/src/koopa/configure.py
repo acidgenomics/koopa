@@ -6,9 +6,9 @@ Provides ``configure_app`` -- the Python equivalent of the Bash function
 
 
 import os
-import sys
 from dataclasses import dataclass
 
+from koopa.alert import alert_configure_start, alert_configure_success
 from koopa.configurers import get_python_configurer, has_python_configurer
 from koopa.system import is_admin, is_owner, is_root
 
@@ -41,7 +41,7 @@ def configure_app(config: ConfigureConfig) -> None:
     elif config.mode == "user" and is_root():
         msg = "Root user cannot configure user apps."
         raise PermissionError(msg)
-    print(f"Configuring '{config.name}'.", file=sys.stderr)
+    alert_configure_start(config.name)
     if not has_python_configurer(config.name, config.platform, config.mode):
         msg = f"No configurer for '{config.name}' ({config.platform}/{config.mode})."
         raise FileNotFoundError(msg)
@@ -52,4 +52,4 @@ def configure_app(config: ConfigureConfig) -> None:
         mode=config.mode,
         verbose=config.verbose,
     )
-    print(f"Successfully configured '{config.name}'.", file=sys.stderr)
+    alert_configure_success(config.name)

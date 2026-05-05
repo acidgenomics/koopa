@@ -143,7 +143,7 @@ def _handle_push_app_build(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.alert import alert, alert_note
-    from koopa.install import _os_string
+    from koopa.install import _binary_tarball_basename, _os_string
     from koopa.prefix import opt_prefix
     from koopa.system import arch2
 
@@ -173,10 +173,11 @@ def _handle_push_app_build(args: list[str]) -> None:
                 alert_note(f"'{name}' was installed as a binary.")
                 continue
             version = os.path.basename(app_prefix)
+            tarball_name = _binary_tarball_basename(name, version)
             local_tar_dir = os.path.join(tmp_dir, name)
             os.makedirs(local_tar_dir, exist_ok=True)
-            local_tar = os.path.join(local_tar_dir, f"{version}.tar.gz")
-            s3_rel = f"/{os_str}/{architecture}/{name}/{version}.tar.gz"
+            local_tar = os.path.join(local_tar_dir, tarball_name)
+            s3_rel = f"/{os_str}/{architecture}/{name}/{tarball_name}"
             remote_tar = f"{s3_bucket}{s3_rel}"
             alert(f"Pushing '{app_prefix}' to '{remote_tar}'.")
             alert(f"Creating archive at '{local_tar}'.")
