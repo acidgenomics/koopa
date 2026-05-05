@@ -4,9 +4,8 @@ import os
 import platform
 import sys
 
-from koopa.archive import extract, is_valid_archive
 from koopa.build import activate_app, make_build
-from koopa.download import download
+from koopa.installers._build_helper import download_extract_cd
 
 
 def main(
@@ -18,16 +17,7 @@ def main(
 ) -> None:
     """Install bash."""
     env = activate_app("pkg-config", build_only=True)
-    for url in [
-        f"https://mirrors.kernel.org/gnu/bash/bash-{version}.tar.gz",
-        f"https://ftpmirror.gnu.org/gnu/bash/bash-{version}.tar.gz",
-        f"https://ftp.gnu.org/gnu/bash/bash-{version}.tar.gz",
-    ]:
-        tarball = download(url)
-        if is_valid_archive(tarball):
-            break
-    extract(tarball, "src")
-    os.chdir("src")
+    download_extract_cd()
     conf_args = [f"--prefix={prefix}"]
     if sys.platform == "darwin":
         cflags = os.environ.get("CFLAGS", "")
