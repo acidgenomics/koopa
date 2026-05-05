@@ -194,6 +194,9 @@ install_python() {
     LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
         PYTHONHOME="${DESTDIR}${PREFIX}" \
         "${DESTDIR}${PREFIX}/bin/python3" -c 'import zlib'
+    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        PYTHONHOME="${DESTDIR}${PREFIX}" \
+        "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2'
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
         if [ "${__kvar_use_sudo:-0}" -eq 1 ]
@@ -206,6 +209,29 @@ install_python() {
         fi
     fi
     unset -v __kvar_remove_lib_symlink
+    unset -v __kvar_version
+    return 0
+}
+
+install_bzip2() {
+    __kvar_version='1.0.8'
+    printf 'Installing bzip2.\n'
+    __kvar_filename="bzip2-${__kvar_version}.tar.gz"
+    download_with_fallback \
+        'bzip2' \
+        "$__kvar_filename" \
+        "bzip2-${__kvar_version}" \
+        "https://sourceware.org/pub/bzip2/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/bzip2/${__kvar_filename}" \
+        || return 1
+    unset -v __kvar_filename
+    make \
+        VERBOSE=1 \
+        --jobs="${CPU_COUNT:?}" \
+        PREFIX="${DESTDIR}${PREFIX}" \
+        install
+    [ -f "${DESTDIR}${PREFIX}/lib/libbz2.a" ] || return 1
+    [ -f "${DESTDIR}${PREFIX}/include/bzlib.h" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -246,7 +272,7 @@ export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
-    printf 'This will install openssl3, zlib, and python.\n'
+    printf 'This will install openssl3, zlib, bzip2, and python.\n'
     __kvar_prefix_parent="$(dirname "$PREFIX")"
     if [ -w "$__kvar_prefix_parent" ]
     then
@@ -273,6 +299,7 @@ main() {
         export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
         install_openssl
         install_zlib
+        install_bzip2
         install_python
     )
     then

@@ -1981,6 +1981,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
 def _bootstrap_app_map() -> dict[str, str]:
     py_ver = (Path(koopa_prefix()) / ".python-version").read_text().strip()
     return {
+        "bzip2": "bzip2",
         "openssl": "openssl3",
         "python": f"python{py_ver}",
         "zlib": "zlib",
