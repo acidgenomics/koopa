@@ -4,10 +4,10 @@ import os
 import re
 import subprocess
 
-from koopa.archive import extract
 from koopa.build import activate_app, app_prefix
-from koopa.download import download
+from koopa.download import download_with_mirror
 from koopa.file_ops import init_dir
+from koopa.installers._build_helper import _resolve_src_url, extract_cd
 from koopa.system import cpu_count
 
 
@@ -31,10 +31,10 @@ def main(
     init_dir(libexec)
     apps_dir = os.path.join(prefix, "apps")
     data_dir = os.path.join(libexec, "moduleData")
-    url = f"https://github.com/TACC/Lmod/archive/{version}.tar.gz"
-    tarball = download(url)
-    extract(tarball, "src")
-    os.chdir("src")
+    url = _resolve_src_url(name, version)
+    filename = os.path.basename(url)
+    tarball = download_with_mirror(url, name, filename)
+    extract_cd(tarball)
     rocks = ["luaposix", "luafilesystem"]
     for rock in rocks:
         subprocess.run(
