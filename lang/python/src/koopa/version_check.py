@@ -486,7 +486,9 @@ def _gitlab_get_json(url: str, *, retries: int = 2, delay: float = 2.0) -> Any: 
                 last_exc = exc
                 continue
             raise
-    raise last_exc  # type: ignore[misc]
+    if last_exc is not None:
+        raise last_exc
+    raise RuntimeError("Exceeded retries without capturing an exception")
 
 
 def _check_gitlab(domain: str, project_path: str) -> str:
