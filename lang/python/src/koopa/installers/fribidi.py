@@ -13,10 +13,7 @@ def main(
 ) -> None:
     """Install fribidi."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/fribidi/fribidi/releases/download/v{version}/fribidi-{version}.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-debug",

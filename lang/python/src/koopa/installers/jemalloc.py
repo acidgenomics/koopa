@@ -13,11 +13,7 @@ def main(
 ) -> None:
     """Install jemalloc."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/jemalloc/jemalloc/releases/"
-        f"download/{version}/jemalloc-{version}.tar.bz2"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-debug",

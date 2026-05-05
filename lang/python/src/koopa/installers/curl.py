@@ -18,9 +18,7 @@ def main(
     env = activate_app("ca-certificates", "zlib", "openssl", "libssh2", env=env)
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = f"{ca_prefix}/share/ca-certificates/cacert.pem"
-    version2 = version.replace(".", "_")
-    url = f"https://github.com/curl/curl/releases/download/curl-{version2}/curl-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--disable-debug",
         "--disable-ldap",

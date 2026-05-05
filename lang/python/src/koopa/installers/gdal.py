@@ -57,8 +57,7 @@ def main(
     sqlite_prefix = app_prefix("sqlite")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
-    url = f"https://github.com/OSGeo/gdal/releases/download/v{version}/gdal-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

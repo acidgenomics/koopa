@@ -13,7 +13,7 @@ def main(
 ) -> None:
     """Install jpeg."""
     env = activate_app("pkg-config", build_only=True)
-    download_extract_cd(f"https://www.ijg.org/files/jpegsrc.v{version}.tar.gz")
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

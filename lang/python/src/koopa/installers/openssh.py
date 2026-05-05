@@ -29,8 +29,7 @@ def main(
     )
     openssl_prefix = app_prefix("openssl")
     libedit_prefix = app_prefix("libedit")
-    url = f"https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         f"--mandir={prefix}/share/man",
         f"--prefix={prefix}",

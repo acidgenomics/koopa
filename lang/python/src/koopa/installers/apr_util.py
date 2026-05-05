@@ -17,8 +17,7 @@ def main(
     apr_pfx = app_prefix("apr")
     expat_pfx = app_prefix("expat")
     openssl_pfx = app_prefix("openssl")
-    url = f"https://archive.apache.org/dist/apr/apr-util-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             f"--prefix={prefix}",

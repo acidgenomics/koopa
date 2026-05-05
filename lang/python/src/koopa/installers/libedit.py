@@ -14,8 +14,7 @@ def main(
     """Install libedit."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("ncurses", env=env)
-    url = f"https://thrysoee.dk/editline/libedit-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install nlohmann-json."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/nlohmann/json/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DJSON_BuildTests=OFF", "-DJSON_MultipleHeaders=ON"],

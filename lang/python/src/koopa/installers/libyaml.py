@@ -23,8 +23,7 @@ def main(
         build_only=True,
     )
     libtool_prefix = app_prefix("libtool")
-    url = f"https://github.com/yaml/libyaml/archive/{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess_env["ACLOCAL_PATH"] = f"{libtool_prefix}/share/aclocal"
     subprocess.run(["autoupdate"], env=subprocess_env, check=True)

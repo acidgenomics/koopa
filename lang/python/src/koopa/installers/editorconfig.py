@@ -20,8 +20,7 @@ def main(
     pcre2_lib = os.path.join(pcre2_prefix, "lib")
     pcre2_include = os.path.join(pcre2_prefix, "include")
     ext = shared_ext()
-    url = f"https://github.com/editorconfig/editorconfig-core-c/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

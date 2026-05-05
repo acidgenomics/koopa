@@ -19,8 +19,7 @@ def main(
     lz4_prefix = app_prefix("lz4")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
-    url = f"https://github.com/facebook/zstd/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     os.chdir("build/cmake")
     cmake_build(
         prefix=prefix,

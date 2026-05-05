@@ -19,8 +19,7 @@ def main(
     if sys.platform != "darwin":
         deps.append("bzip2")
     env = activate_app(*deps, env=env)
-    url = f"https://www.libarchive.org/downloads/libarchive-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-static",

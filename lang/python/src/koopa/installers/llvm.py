@@ -60,11 +60,7 @@ def main(
         ]
     )
     runtimes = ";".join(["libcxx", "libcxxabi", "libunwind"])
-    url = (
-        f"https://github.com/llvm/llvm-project/releases/download/"
-        f"llvmorg-{version}/llvm-project-{version}.src.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     os.chdir("llvm")
     cmake_args = [
         f"-DCURSES_INCLUDE_DIRS={ncurses_prefix}/include",

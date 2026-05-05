@@ -16,11 +16,7 @@ def main(
 ) -> None:
     """Install icu4c."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/unicode-org/icu/releases/download/"
-        f"release-{version}/icu4c-{version}-sources.tgz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     if os.path.islink("LICENSE") and not os.path.exists("LICENSE"):
         os.unlink("LICENSE")
         Path("LICENSE").touch()

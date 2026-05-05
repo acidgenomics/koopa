@@ -18,8 +18,7 @@ def main(
     """Install ninja."""
     env = activate_app("python", build_only=True)
     python = locate("python3")
-    url = f"https://github.com/ninja-build/ninja/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         [python, "configure.py", "--bootstrap"],
         env=env.to_env_dict(),

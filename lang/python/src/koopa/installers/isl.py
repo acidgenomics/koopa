@@ -15,8 +15,7 @@ def main(
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("gmp", env=env)
     gmp_prefix = app_prefix("gmp")
-    url = f"https://downloads.sourceforge.net/project/libisl/isl-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

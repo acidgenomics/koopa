@@ -201,9 +201,7 @@ def main(
         with open("SVNINFO", "w") as fh:
             fh.write(f"Revision: {version}\n")
     else:
-        maj_ver = major_version(version)
-        url = f"https://cloud.r-project.org/src/base/R-{maj_ver}/R-{version}.tar.gz"
-        download_extract_cd(url)
+        download_extract_cd()
     subprocess_env["r_cv_have_curl728"] = "yes"
     jobs = os.cpu_count() or 1
     subprocess.run(

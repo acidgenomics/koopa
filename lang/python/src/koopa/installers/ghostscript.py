@@ -17,14 +17,7 @@ def main(
     """Install ghostscript."""
     env = activate_app("make", "pkg-config", build_only=True)
     make = locate("make")
-    gs_ver = version.replace(".", "")
-    while len(gs_ver) < 4:
-        gs_ver = gs_ver + "0"
-    url = (
-        f"https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/"
-        f"download/gs{gs_ver}/ghostscript-{version}.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         f"--prefix={prefix}",
         "--disable-gtk",

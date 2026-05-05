@@ -13,6 +13,5 @@ def main(
 ) -> None:
     """Install miller."""
     env = activate_app("go", build_only=True)
-    url = f"https://github.com/johnkerl/miller/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(conf_args=[f"--prefix={prefix}"], env=env)

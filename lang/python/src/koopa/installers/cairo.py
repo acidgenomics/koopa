@@ -44,8 +44,7 @@ def main(
             ]
         )
     env = activate_app(*deps, env=env)
-    url = f"https://cairographics.org/releases/cairo-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     meson_args = [
         "-Dfontconfig=enabled",
         "-Dfreetype=enabled",

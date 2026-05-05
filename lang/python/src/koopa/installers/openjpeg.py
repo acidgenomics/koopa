@@ -18,8 +18,7 @@ def main(
     libpng_prefix = app_prefix("libpng")
     libtiff_prefix = app_prefix("libtiff")
     ext = shared_ext()
-    url = f"https://github.com/uclouvl/openjpeg/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

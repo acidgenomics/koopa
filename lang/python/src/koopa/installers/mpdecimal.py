@@ -12,8 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install mpdecimal."""
-    url = f"https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=["--disable-static", f"--prefix={prefix}"],
     )

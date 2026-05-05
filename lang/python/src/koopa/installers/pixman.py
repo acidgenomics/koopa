@@ -13,6 +13,5 @@ def main(
 ) -> None:
     """Install pixman."""
     env = activate_app("meson", "ninja", "pkg-config", build_only=True)
-    url = f"https://cairographics.org/releases/pixman-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     meson_build(prefix=prefix, env=env)

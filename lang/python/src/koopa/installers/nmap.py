@@ -25,8 +25,7 @@ def main(
     openssl_prefix = app_prefix("openssl")
     pcre2_prefix = app_prefix("pcre2")
     zlib_prefix = app_prefix("zlib")
-    url = f"https://nmap.org/dist/nmap-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         f"--prefix={prefix}",
         "--disable-nmap-update",

@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install libcbor."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/PJK/libcbor/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DBUILD_SHARED_LIBS=ON", "-DWITH_EXAMPLES=OFF"],

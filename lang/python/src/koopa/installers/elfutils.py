@@ -41,6 +41,5 @@ def main(
     ]
     if sys.platform == "darwin":
         conf_args.append(f"--with-libintl-prefix={gettext_prefix}")
-    url = f"https://sourceware.org/elfutils/ftp/{version}/elfutils-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(conf_args=conf_args, env=env)

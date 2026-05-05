@@ -15,8 +15,7 @@ def main(
 ) -> None:
     """Install rsync."""
     env = activate_app("zlib", "zstd", "lz4", "openssl", "xxhash", env=None)
-    url = f"https://www.mirrorservice.org/sites/rsync.samba.org/rsync-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--disable-debug",
         "--enable-ipv6",

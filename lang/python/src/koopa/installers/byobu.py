@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install byobu."""
     env = activate_app("gettext", "tmux", env=None)
-    url = f"https://launchpad.net/byobu/trunk/{version}/+download/byobu_{version}.orig.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[f"--prefix={prefix}"],
         env=env,

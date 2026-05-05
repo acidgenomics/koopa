@@ -18,8 +18,7 @@ def main(
     """Install dash."""
     env = activate_app("autoconf", "automake", build_only=True)
     env = activate_app("libedit", env=env)
-    url = f"https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/dash-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--disable-dependency-tracking",
         f"--prefix={prefix}",

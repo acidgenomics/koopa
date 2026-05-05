@@ -16,8 +16,7 @@ def main(
     libaec_prefix = app_prefix("libaec")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
-    url = f"https://github.com/HDFGroup/hdf5/releases/download/{version}/hdf5-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

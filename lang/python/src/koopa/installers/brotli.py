@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install brotli."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/google/brotli/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DBUILD_STATIC_LIBS=OFF"],

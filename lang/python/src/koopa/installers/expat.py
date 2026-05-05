@@ -13,12 +13,7 @@ def main(
 ) -> None:
     """Install expat."""
     env = activate_app("pkg-config", build_only=True)
-    version_tag = version.replace(".", "_")
-    url = (
-        f"https://github.com/libexpat/libexpat/releases/"
-        f"download/R_{version_tag}/expat-{version}.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=["--disable-static", f"--prefix={prefix}"],
         env=env,

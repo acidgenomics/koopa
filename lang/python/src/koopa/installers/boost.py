@@ -27,11 +27,7 @@ def main(
     toolset = os.path.basename(cc)
     if sys.platform == "darwin" and toolset == "gcc":
         toolset = "clang"
-    url = (
-        f"https://github.com/boostorg/boost/releases/download/"
-        f"boost-{version}/boost-{version}-b2-nodocs.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     jobs = os.cpu_count() or 1
     bootstrap_args = [
         f"--libdir={prefix}/lib",

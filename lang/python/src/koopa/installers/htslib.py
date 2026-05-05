@@ -18,8 +18,7 @@ def main(
     if sys.platform != "darwin":
         deps.append("bzip2")
     env = activate_app(*deps, env=None)
-    url = f"https://github.com/samtools/htslib/releases/download/{version}/htslib-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--enable-gcs",

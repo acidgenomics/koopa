@@ -14,8 +14,7 @@ def main(
     """Install fontconfig."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("gperf", "freetype", "icu4c", "libxml2", env=env)
-    url = f"https://www.freedesktop.org/software/fontconfig/release/fontconfig-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--enable-libxml2",

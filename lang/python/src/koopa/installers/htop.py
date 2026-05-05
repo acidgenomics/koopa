@@ -16,8 +16,7 @@ def main(
     """Install htop."""
     env = activate_app("autoconf", "automake", build_only=True)
     env = activate_app("ncurses", env=env)
-    url = f"https://github.com/htop-dev/htop/archive/{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess.run(["./autogen.sh"], env=subprocess_env, check=True)
     make_build(

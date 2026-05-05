@@ -32,8 +32,7 @@ def main(
             ]
         )
     env = activate_app(*deps, env=env)
-    url = f"https://github.com/fltk/fltk/releases/download/release-{version}/fltk-{version}-source.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

@@ -18,8 +18,7 @@ def main(
     """Install lua."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = f"https://www.lua.org/ftp/lua-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     platform = "macosx" if sys.platform == "darwin" else "linux"
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1

@@ -28,8 +28,7 @@ def main(
     python_prefix = app_prefix("python")
     env.ldflags.insert(0, f"-Wl,-rpath,{python_prefix}/lib")
     env.ldflags.insert(0, f"-Wl,-rpath,{prefix}/lib")
-    url = f"https://github.com/vim/vim/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--enable-huge",
         "--enable-multibyte",

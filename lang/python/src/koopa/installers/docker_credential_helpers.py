@@ -19,8 +19,7 @@ def main(
     """Install docker-credential-helpers."""
     env = activate_app("go", "make", "pkg-config", build_only=True)
     make = locate("make")
-    url = f"https://github.com/docker/docker-credential-helpers/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)

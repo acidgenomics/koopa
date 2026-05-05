@@ -22,8 +22,7 @@ def main(
     ext = shared_ext()
     cc = os.environ.get("CC", "gcc")
     use_openmp = 0 if sys.platform == "darwin" else 1
-    url = f"https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     makefile_rule = f"""\
 CC={cc}
 NOFORTRAN=1

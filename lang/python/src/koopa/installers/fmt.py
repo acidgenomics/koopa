@@ -12,8 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install fmt."""
-    url = f"https://github.com/fmtlib/fmt/archive/refs/tags/{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

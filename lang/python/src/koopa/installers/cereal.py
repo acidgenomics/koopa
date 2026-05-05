@@ -12,8 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install cereal."""
-    url = f"https://github.com/USCiLab/cereal/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DJUST_INSTALL_CEREAL=ON"],

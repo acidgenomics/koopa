@@ -14,8 +14,7 @@ def main(
     """Install swig."""
     env = activate_app("pcre2", env=None)
     pcre2_prefix = app_prefix("pcre2")
-    url = f"https://sourceforge.net/projects/swig/files/swig/swig-{version}/swig-{version}.tar.gz/download"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

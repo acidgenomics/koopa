@@ -50,8 +50,7 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     maj_min_ver = major_minor_version(version)
     os.makedirs(os.path.join(prefix, "bin"), exist_ok=True)
     os.makedirs(os.path.join(prefix, "lib"), exist_ok=True)
-    url = f"https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess_env["PATH"] = os.path.join(prefix, "bin") + ":" + subprocess_env.get("PATH", "")
     ldflags = subprocess_env.get("LDFLAGS", "")

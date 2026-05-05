@@ -23,8 +23,7 @@ def main(
     env = activate_app("zlib", "readline", env=env)
     file_version = _file_version(version)
     year = datetime.datetime.now(tz=datetime.UTC).year
-    url = f"https://www.sqlite.org/{year}/sqlite-autoconf-{file_version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-static",

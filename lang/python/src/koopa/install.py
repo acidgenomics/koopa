@@ -828,9 +828,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app_from_binary_package(config.prefix)
             elif has_python_installer(config.name, config.platform, config.mode):
                 installer_fn = get_python_installer(config.name, config.platform, config.mode)
-                from koopa.installers._context import set_app_name
+                from koopa.installers._context import set_app_name, set_app_version
 
                 set_app_name(config.name)
+                set_app_version(config.version)
                 installer_fn(
                     name=config.name,
                     version=config.version,
@@ -843,9 +844,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     installer_key, config.platform, config.mode
                 ):
                     installer_fn = get_python_installer(installer_key, config.platform, config.mode)
-                    from koopa.installers._context import set_app_name
+                    from koopa.installers._context import set_app_name, set_app_version
 
                     set_app_name(config.name)
+                    set_app_version(config.version)
                     installer_fn(
                         name=config.name,
                         version=config.version,

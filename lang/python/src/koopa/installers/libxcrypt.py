@@ -13,11 +13,7 @@ def main(
 ) -> None:
     """Install libxcrypt."""
     env = activate_app("perl", "pkg-config", build_only=True)
-    url = (
-        f"https://github.com/besser82/libxcrypt/releases/download/"
-        f"v{version}/libxcrypt-{version}.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-failure-tokens",

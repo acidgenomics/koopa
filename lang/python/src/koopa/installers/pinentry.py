@@ -18,9 +18,7 @@ def main(
     libassuan_prefix = app_prefix("libassuan")
     libiconv_prefix = app_prefix("libiconv")
     ncurses_prefix = app_prefix("ncurses")
-    gcrypt_url = "https://gnupg.org/ftp/gcrypt"
-    url = f"{gcrypt_url}/pinentry/pinentry-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

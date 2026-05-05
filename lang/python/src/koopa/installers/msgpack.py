@@ -16,11 +16,7 @@ def main(
     """Install msgpack."""
     env = activate_app("boost", env=None)
     boost_prefix = app_prefix("boost")
-    url = (
-        f"https://github.com/msgpack/msgpack-c/releases/download/"
-        f"cpp-{version}/msgpack-cxx-{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[f"-DBoost_INCLUDE_DIR={os.path.join(boost_prefix, 'include')}"],

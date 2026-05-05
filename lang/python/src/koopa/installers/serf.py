@@ -22,8 +22,7 @@ def main(
     apr_prefix = app_prefix("apr")
     apr_util_prefix = app_prefix("apr-util")
     openssl_prefix = app_prefix("openssl")
-    url = f"https://archive.apache.org/dist/serf/serf-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     with open("SConstruct") as fh:
         text = fh.read()
     text = text.replace(

@@ -12,9 +12,5 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install bash-completion."""
-    url = (
-        f"https://github.com/scop/bash-completion/releases/download/"
-        f"{version}/bash-completion-{version}.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(conf_args=[f"--prefix={prefix}"])

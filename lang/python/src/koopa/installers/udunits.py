@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install udunits."""
     env = activate_app("expat", env=None)
-    url = f"https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-static",

@@ -22,8 +22,7 @@ def main(
         env=env,
     )
     python = locate("python3")
-    url = f"https://xorg.freedesktop.org/archive/individual/lib/libxcb-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

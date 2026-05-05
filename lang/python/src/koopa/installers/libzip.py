@@ -23,8 +23,7 @@ def main(
     zstd_prefix = app_prefix("zstd")
     openssl_prefix = app_prefix("openssl")
     ext = shared_ext()
-    url = f"https://github.com/nih-at/libzip/releases/download/v{version}/libzip-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_args = [
         "-DENABLE_BZIP2=ON",
         "-DENABLE_ZSTD=ON",

@@ -16,8 +16,7 @@ def main(
     """Install less."""
     env = activate_app("autoconf", "groff", build_only=True)
     env = activate_app("ncurses", "pcre2", env=env)
-    url = f"https://github.com/gwsw/less/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess.run(
         ["make", "-f", "Makefile.aut", "distfiles"],

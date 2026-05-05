@@ -25,10 +25,7 @@ def main(
         "sqlite",
         env=env,
     )
-    url = (
-        f"https://github.com/aria2/aria2/releases/download/release-{version}/aria2-{version}.tar.xz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--disable-bittorrent",
         "--disable-dependency-tracking",

@@ -13,6 +13,5 @@ def main(
 ) -> None:
     """Install unibilium."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/neovim/unibilium/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(prefix=prefix, env=env)

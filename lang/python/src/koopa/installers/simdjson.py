@@ -12,6 +12,5 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install simdjson."""
-    url = f"https://github.com/simdjson/simdjson/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(prefix=prefix)

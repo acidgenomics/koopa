@@ -18,10 +18,7 @@ def main(
     """Install git-lfs."""
     env = activate_app("go", "make", build_only=True)
     make = locate("make")
-    url = (
-        f"https://github.com/git-lfs/git-lfs/releases/download/v{version}/git-lfs-v{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
     subprocess.run(
