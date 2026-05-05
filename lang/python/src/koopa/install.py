@@ -234,7 +234,7 @@ def _app_json_revision(name: str) -> int:
     return 0
 
 
-def _can_build_binary() -> bool:
+def can_build_binary() -> bool:
     """Check if running on a designated builder machine (KOOPA_BUILDER=1)."""
     return os.environ.get("KOOPA_BUILDER", "0") == "1"
 
@@ -264,7 +264,7 @@ def _can_install_binary() -> bool:
         return False
     if flag == "1":
         return True
-    if _can_build_binary():
+    if can_build_binary():
         return False
     return _has_private_access()
 
@@ -284,7 +284,7 @@ def _can_push_binary() -> bool:
     """
     if not _has_private_access():
         return False
-    if not _can_build_binary():
+    if not can_build_binary():
         return False
     if not os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", ""):
         return False

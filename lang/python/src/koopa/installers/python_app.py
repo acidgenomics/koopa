@@ -9,6 +9,7 @@ import sys
 
 from koopa.build import activate_app, app_prefix, locate
 from koopa.file_ops import ln
+from koopa.install import can_build_binary
 from koopa.installers._build_helper import download_extract_cd
 from koopa.system import has_firewall
 from koopa.version import major_minor_version
@@ -22,7 +23,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install python."""
-    if has_firewall():
+    if has_firewall() or can_build_binary():
         _install_from_source(version=version, prefix=prefix)
     else:
         _install_from_uv(version=version, prefix=prefix)
