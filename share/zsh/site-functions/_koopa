@@ -585,6 +585,20 @@ _koopa_app_wget() {
 }
 
 _koopa_develop() {
+    local context state line
+    typeset -A opt_args
+    _arguments -C \
+        '1: :_koopa_develop_cmds' \
+        '*:: :->subcmd'
+    [[ $state == subcmd ]] || return 0
+    case $words[1] in
+        check-app-versions) _arguments '*--help[--help]' '*--json[--json]' '*--reset-cache[--reset-cache]' '*--s3-upload[--s3-upload]' '*--source[--source]' '*--update[--update]' ;;
+        format-app-json) _arguments '*--help[--help]' '*--prettier[--prettier]' ;;
+        remove-app) _arguments '*--help[--help]' '*--revdeps[--revdeps]' ;;
+    esac
+}
+
+_koopa_develop_cmds() {
     local -a cmds
     cmds=(
         'audit-src-mirror'
