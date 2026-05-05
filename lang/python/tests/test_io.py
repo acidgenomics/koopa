@@ -2,7 +2,6 @@
 
 import json
 from pathlib import Path
-from unittest.mock import patch
 
 from koopa.io import extract_conda_bin_names, import_json
 

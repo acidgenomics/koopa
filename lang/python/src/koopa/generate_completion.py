@@ -127,10 +127,9 @@ def _get_configure_apps() -> tuple[list[tuple[str, str | None]], list[tuple[str,
             if name not in seen_system:
                 seen_system.add(name)
                 system_apps.append((name, plat))
-        elif mode == "user":
-            if name not in seen_user:
-                seen_user.add(name)
-                user_apps.append((name, plat))
+        elif mode == "user" and name not in seen_user:
+            seen_user.add(name)
+            user_apps.append((name, plat))
     return system_apps, user_apps
 
 

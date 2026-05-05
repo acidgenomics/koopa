@@ -588,6 +588,7 @@ _koopa_develop() {
     local -a cmds
     cmds=(
         'audit-src-mirror'
+        'bump-bootstrap'
         'bump-revision'
         'bump-venv-revision'
         'cache-functions'

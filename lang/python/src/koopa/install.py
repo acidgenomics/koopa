@@ -1602,9 +1602,9 @@ def _get_conda_channels() -> list[str]:
     channels: list[str] = []
     if result.returncode == 0:
         for line in result.stdout.splitlines():
-            line = line.strip().lstrip("- ")
-            if line and not line.startswith("channels"):
-                channels.append(line)
+            stripped = line.strip().lstrip("- ")
+            if stripped and not stripped.startswith("channels"):
+                channels.append(stripped)
     _cached_conda_channels = channels
     return channels
 
@@ -2094,7 +2094,7 @@ def update_koopa(*, verbose: bool = False) -> None:
     _zsh_compaudit_set_permissions()
 
 
-def _update_venv(prefix: str) -> None:
+def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     """Create or update the Python virtual environment with extras."""
     from koopa.alert import alert, warn
 
@@ -2227,15 +2227,14 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
 
     Returns True if bootstrap was rebuilt, False if already current.
     """
-    from koopa.alert import alert, warn
+    from koopa.alert import alert
     from koopa.check import check_bootstrap_version
-    from koopa.prefix import bootstrap_prefix
-
-    from koopa.prefix import koopa_prefix
+    from koopa.prefix import bootstrap_prefix, koopa_prefix
 
     bp = bootstrap_prefix()
     bootstrap_absent = not os.path.isdir(bp)
-    required_ver = open(os.path.join(koopa_prefix(), ".python-version")).read().strip()
+    with open(os.path.join(koopa_prefix(), ".python-version")) as _pvf:
+        required_ver = _pvf.read().strip()
     _sys_python = "/usr/bin/python3"
     system_python_adequate = False
     if os.path.isfile(_sys_python):

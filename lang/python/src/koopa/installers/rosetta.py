@@ -3,7 +3,7 @@
 import subprocess
 
 
-def main(*, name: str, **kwargs) -> None:
+def main(*, name: str, **kwargs: object) -> None:
     """Install Rosetta 2 via softwareupdate."""
     subprocess.run(
         ["softwareupdate", "--install-rosetta", "--agree-to-license"],

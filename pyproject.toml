@@ -66,6 +66,7 @@ override_SS05 = ['^Access ', '^Assess ', '^Process ']
 
 [tool.pyright]
 verboseOutput = true
+extraPaths = ["app/pytest/9.0.3/libexec/lib/python3.12/site-packages"]
 
 [tool.ruff]
 indent-width = 4
@@ -137,7 +138,7 @@ max-doc-length = 100
 convention = "numpy"
 
 [tool.ruff.lint.pylint]
-allow-magic-value-types = ["bytes", "int", "str"]
+allow-magic-value-types = ["bytes", "float", "int", "str"]
 max-args = 30
 max-branches = 30
 max-positional-args = 2
@@ -148,3 +149,6 @@ where = ["lang/python/src"]
 
 [tool.ty.terminal]
 error-on-warning = true
+
+[tool.ty.environment]
+extra-paths = ["app/pytest/9.0.3/libexec/lib/python3.12/site-packages"]

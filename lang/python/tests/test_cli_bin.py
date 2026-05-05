@@ -1,5 +1,6 @@
 """CLI bin dispatch module unit tests."""
 
+import pytest
 from koopa.cli_bin import _HANDLERS
 
 
@@ -35,10 +36,8 @@ def test_jekyll_serve_not_in_handlers() -> None:
     assert "jekyll-serve" not in _HANDLERS
 
 
-def test_handler_rename_snake_case_help(capsys) -> None:
+def test_handler_rename_snake_case_help(capsys: pytest.CaptureFixture[str]) -> None:
     """Test rename-snake-case --help exits cleanly."""
-    import pytest
-
     with pytest.raises(SystemExit) as exc_info:
         _HANDLERS["rename-snake-case"](["--help"])
     assert exc_info.value.code == 0
@@ -46,10 +45,8 @@ def test_handler_rename_snake_case_help(capsys) -> None:
     assert "snake_case" in captured.out.lower() or "snake" in captured.out.lower()
 
 
-def test_handler_download_help(capsys) -> None:
+def test_handler_download_help(capsys: pytest.CaptureFixture[str]) -> None:
     """Test download --help exits cleanly."""
-    import pytest
-
     with pytest.raises(SystemExit) as exc_info:
         _HANDLERS["download"](["--help"])
     assert exc_info.value.code == 0
