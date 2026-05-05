@@ -70,12 +70,13 @@ def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
     3. Plain list (not a dict) - returned as-is by the caller before this
        function is reached.
     """
+    from koopa.install import can_build_binary
     from koopa.system import has_firewall, is_macos
 
-    # Strategy 1: firewall conditional.
+    # Strategy 1: firewall / builder conditional.
     has_fw_keys = any(k.startswith("firewall") for k in dep_dict)
     if has_fw_keys:
-        if has_firewall():
+        if has_firewall() or can_build_binary():
             platform_key = "firewall_macos" if is_macos() else "firewall_linux"
             if platform_key in dep_dict:
                 return list(dep_dict[platform_key])
