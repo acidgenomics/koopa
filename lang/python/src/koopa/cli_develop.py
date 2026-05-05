@@ -22,7 +22,7 @@ def _handle_format_app_json(args: list[str]) -> None:
     """Handle ``koopa develop format-app-json``."""
     from koopa.io import export_app_json, import_app_json
 
-    pretty = "--pretty" in args
+    pretty = "--prettier" in args
     data = import_app_json()
     export_app_json(data, pretty=pretty)
 
