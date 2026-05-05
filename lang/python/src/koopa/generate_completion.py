@@ -152,6 +152,12 @@ def _load_develop_commands() -> list[str]:
     return sorted(_DEVELOP_HANDLERS.keys())
 
 
+def _load_run_commands() -> list[str]:
+    from koopa.cli_bin import _HANDLERS
+
+    return sorted(_HANDLERS.keys())
+
+
 def _load_app_names() -> tuple[list[str], list[str], list[str]]:
     """Return (common, linux_only, macos_only) app name lists."""
     from koopa.io import import_app_json
@@ -407,6 +413,7 @@ _TOP_CMDS = [
     "list-all-apps",
     "list-default-apps",
     "reinstall",
+    "run",
     "system",
     "uninstall",
     "update",
@@ -424,6 +431,7 @@ _TOP_CMD_DESCS = {
     "list-all-apps": "List all available apps",
     "list-default-apps": "List default apps",
     "reinstall": "Reinstall an app",
+    "run": "Run a utility command",
     "system": "System operations",
     "uninstall": "Uninstall an app",
     "update": "Update installed apps",
@@ -505,6 +513,17 @@ def _generate_fish_completion(
             f" -a '{cmd}'"
         )
 
+    run_cmds = _load_run_commands()
+    run_seen = " ".join(run_cmds)
+    lines += ["", "# run subcommands."]
+    for cmd in run_cmds:
+        lines.append(
+            f"complete -c koopa"
+            f" -n '__fish_seen_subcommand_from run;"
+            f" and not __fish_seen_subcommand_from {run_seen}'"
+            f" -a '{cmd}'"
+        )
+
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
     lines += ["", "# install/reinstall/uninstall: app names."]
     for install_cmd in ("install", "reinstall", "uninstall"):
@@ -561,6 +580,8 @@ def _generate_zsh_completion(
             lines.append(f"        {cmd}) _koopa_app ;;")
         elif cmd == "develop":
             lines.append(f"        {cmd}) _koopa_develop ;;")
+        elif cmd == "run":
+            lines.append(f"        {cmd}) _koopa_run ;;")
         elif cmd in ("install", "reinstall", "uninstall"):
             lines.append(f"        {cmd}) _koopa_install ;;")
         else:
@@ -680,6 +701,13 @@ def _generate_zsh_completion(
         lines.append(f"        '{cmd}'")
     lines += ["    )", "    _describe -t commands 'develop command' cmds", "}", ""]
 
+    # -- run ------------------------------------------------------------------
+    run_cmds = _load_run_commands()
+    lines += ["_koopa_run() {", "    local -a cmds", "    cmds=("]
+    for cmd in run_cmds:
+        lines.append(f"        '{cmd}'")
+    lines += ["    )", "    _describe -t commands 'run command' cmds", "}", ""]
+
     # -- install/reinstall/uninstall ------------------------------------------
     lines += ["_koopa_install() {", "    local -a apps", "    apps=("]
     for app in all_apps:
@@ -742,6 +770,7 @@ def _generate_powershell_completion(
         f"                'app'       {{ $completions = @({_ps_array(app_ns)}) }}",
         "                'configure' { $completions = @('system', 'user') }",
         f"                'develop'   {{ $completions = @({_ps_array(develop_cmds)}) }}",
+        f"                'run'       {{ $completions = @({_ps_array(_load_run_commands())}) }}",
         f"                'install'   {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'reinstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'uninstall' {{ $completions = @({_ps_array(all_apps)}) }}",
@@ -888,6 +917,7 @@ def generate_completion() -> None:  # noqa: PLR0915
                 "list-all-apps",
                 "list-default-apps",
                 "reinstall",
+                "run",
                 "system",
                 "uninstall",
                 "update",
@@ -926,6 +956,16 @@ def generate_completion() -> None:  # noqa: PLR0915
         _emit_case_entry(
             "'develop')",
             _emit_args_array(develop_cmds, i5),
+            i4,
+        )
+    )
+
+    # run
+    run_cmds = _load_run_commands()
+    lines.extend(
+        _emit_case_entry(
+            "'run')",
+            _emit_args_array(run_cmds, i5),
             i4,
         )
     )
