@@ -20,7 +20,6 @@ from typing import Any
 
 from koopa.installers import PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
-from koopa.os import os_id
 from koopa.prefix import koopa_prefix
 from koopa.version import sanitize_version
 from koopa.xdg import xdg_cache_home
@@ -1658,7 +1657,6 @@ def check_app_versions(  # noqa: C901, PLR0915
         cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
-    platform = os_id()
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
             continue

@@ -77,7 +77,7 @@ _koopa_complete() {
         ['run']='--help'
         ['system']='--help'
         ['uninstall']='--help --no-revdeps --system --user --verbose --yes'
-        ['update']='--all-system --help --system --user --user-repos --verbose'
+        ['update']='--all-system --all-user-repos --help --system --user --verbose'
         ['version']='--help'
     )
     case "${COMP_CWORD:-}" in
@@ -140,6 +140,7 @@ _koopa_complete() {
                 'develop')
                     args+=(
                         'audit-src-mirror'
+                        'bump-bootstrap'
                         'bump-revision'
                         'bump-venv-revision'
                         'cache-functions'

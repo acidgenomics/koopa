@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-05-03.
+# @note Updated 2026-05-05.
 # """
 
 set -o errexit
@@ -83,10 +83,9 @@ cpu_count() {
 }
 
 download_with_fallback() {
-    # usage: download_with_fallback <name> <filename> <dirname> <url> [url...]
+    # usage: download_with_fallback <name> <dirname> <url> [url...]
     # Tries each URL in order. Validates each with 'tar -tf' before extracting.
     __dwf_name="${1:?}"; shift
-    __dwf_filename="${1:?}"; shift
     __dwf_dirname="${1:?}"; shift
     __dwf_src_dir="${DESTDIR}${PREFIX}/src/${__dwf_name}"
     rm -fr "$__dwf_src_dir"
@@ -114,13 +113,13 @@ download_with_fallback() {
     if [ "$__dwf_ok" -eq 0 ]
     then
         printf 'All download sources failed for %s.\n' "$__dwf_name" >&2
-        unset -v __dwf_dirname __dwf_filename __dwf_name __dwf_ok __dwf_src_dir __dwf_url
+        unset -v __dwf_dirname __dwf_name __dwf_ok __dwf_src_dir __dwf_url
         return 1
     fi
     cd "$__dwf_src_dir" || return 1
     tar -xf 'src.archive'
     cd "$__dwf_dirname" || return 1
-    unset -v __dwf_dirname __dwf_filename __dwf_name __dwf_ok __dwf_src_dir __dwf_url
+    unset -v __dwf_dirname __dwf_name __dwf_ok __dwf_src_dir __dwf_url
     return 0
 }
 
@@ -130,7 +129,6 @@ install_openssl() {
     __kvar_filename="openssl-${__kvar_version}.tar.gz"
     download_with_fallback \
         'openssl' \
-        "$__kvar_filename" \
         "openssl-${__kvar_version}" \
         "https://github.com/openssl/openssl/releases/download/openssl-${__kvar_version}/${__kvar_filename}" \
         "https://koopa.acidgenomics.com/src/openssl/${__kvar_filename}" \
@@ -176,13 +174,12 @@ install_python() {
     __kvar_filename="Python-${__kvar_version}.tar.xz"
     download_with_fallback \
         'python' \
-        "$__kvar_filename" \
         "Python-${__kvar_version}" \
         "https://www.python.org/ftp/python/${__kvar_version}/${__kvar_filename}" \
         "https://koopa.acidgenomics.com/src/python/${__kvar_filename}" \
         || return 1
     unset -v __kvar_filename
-    export LDLIBS='-lcrypto -lssl -lz'
+    export LDLIBS='-lbz2 -lcrypto -lssl -lz'
     ./configure \
         --disable-test-modules \
         --prefix="$PREFIX" \
@@ -192,18 +189,15 @@ install_python() {
     unset -v LDLIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
-    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
-        PYTHONHOME="${DESTDIR}${PREFIX}" \
-        "${DESTDIR}${PREFIX}/bin/python3" -c 'import hashlib'
-    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
-        PYTHONHOME="${DESTDIR}${PREFIX}" \
-        "${DESTDIR}${PREFIX}/bin/python3" -c 'import ssl'
-    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
-        PYTHONHOME="${DESTDIR}${PREFIX}" \
-        "${DESTDIR}${PREFIX}/bin/python3" -c 'import zlib'
-    LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
-        PYTHONHOME="${DESTDIR}${PREFIX}" \
-        "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2'
+    if is_macos; then
+        DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+            PYTHONHOME="${DESTDIR}${PREFIX}" \
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2, hashlib, ssl, zlib'
+    else
+        LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+            PYTHONHOME="${DESTDIR}${PREFIX}" \
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2, hashlib, ssl, zlib'
+    fi
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
         if [ "${__kvar_use_sudo:-0}" -eq 1 ]
@@ -226,7 +220,6 @@ install_bzip2() {
     __kvar_filename="bzip2-${__kvar_version}.tar.gz"
     download_with_fallback \
         'bzip2' \
-        "$__kvar_filename" \
         "bzip2-${__kvar_version}" \
         "https://sourceware.org/pub/bzip2/${__kvar_filename}" \
         "https://koopa.acidgenomics.com/src/bzip2/${__kvar_filename}" \
@@ -250,7 +243,6 @@ install_zlib() {
     __kvar_filename="zlib-${__kvar_version}.tar.gz"
     download_with_fallback \
         'zlib' \
-        "$__kvar_filename" \
         "zlib-${__kvar_version}" \
         "https://koopa.acidgenomics.com/src/zlib/${__kvar_filename}" \
         "https://www.zlib.net/${__kvar_filename}" \
@@ -303,7 +295,6 @@ main() {
             export LD_LIBRARY_PATH="${__kvar_staged:?}/lib"
         fi
         export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
-        export PIP_NO_WARN_SCRIPT_LOCATION=1
         export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
         install_openssl
         install_zlib
