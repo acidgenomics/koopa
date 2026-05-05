@@ -120,6 +120,7 @@
       "openssl"
     ],
     "description": "cross-language columnar in-memory data format",
+    "src_url": "https://archive.apache.org/dist/arrow/arrow-{version}/apache-arrow-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://arrow.apache.org/"
@@ -175,6 +176,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Apache Portable Runtime library",
+    "src_url": "https://archive.apache.org/dist/apr/apr-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://apr.apache.org/"
@@ -194,6 +196,7 @@
       "openssl"
     ],
     "description": "Apache Portable Runtime utility library",
+    "src_url": "https://archive.apache.org/dist/apr/apr-util-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://apr.apache.org/"
@@ -219,6 +222,7 @@
       "zlib"
     ],
     "description": "lightweight multi-protocol download utility",
+    "src_url": "https://github.com/aria2/aria2/releases/download/release-{version}/aria2-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://github.com/aria2/aria2/"
@@ -237,6 +241,7 @@
       "zlib"
     ],
     "description": "C++ linear algebra library",
+    "src_url": "https://sourceforge.net/projects/arma/files/armadillo-{version}.tar.xz/download",
     "type": "library",
     "url": [
       "http://arma.sourceforge.net/download.html"
@@ -270,6 +275,7 @@
     "man1": [
       "aspell.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/aspell/aspell-{version}.tar.gz",
     "type": "cli",
     "url": [
       "http://aspell.net/"
@@ -313,6 +319,7 @@
       "non_gnu_mirror": "true"
     },
     "installer_platform": "linux",
+    "src_url": "https://download.savannah.nongnu.org/releases/attr/attr-{version}.tar.gz",
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -346,6 +353,7 @@
     ],
     "description": "generates configure scripts for build systems",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/autoconf/autoconf-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/autoconf/?C=M;O=D"
@@ -458,6 +466,7 @@
     ],
     "description": "generates Makefiles from simple descriptions",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/automake/automake-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/automake/?C=M;O=D"
@@ -543,6 +552,7 @@
       "axel.1"
     ],
     "outdated": true,
+    "src_url": "https://github.com/axel-download-accelerator/axel/releases/download/v{version}/axel-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
@@ -662,6 +672,7 @@
       "bash"
     ],
     "description": "programmable completion functions for bash",
+    "src_url": "https://github.com/scop/bash-completion/releases/download/{version}/bash-completion-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://github.com/scop/bash-completion"
@@ -741,6 +752,7 @@
     "man1": [
       "bc.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/bc/bc-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/bc/?C=M;O=D"
@@ -887,6 +899,7 @@
     ],
     "description": "GNU binary file utilities (ld, as, objdump, etc.)",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/binutils/binutils-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://mirrors.kernel.org/gnu/binutils/?C=M;O=D"
@@ -955,6 +968,7 @@
     ],
     "description": "GNU parser generator (YACC-compatible)",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/bison/bison-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/bison/",
@@ -1021,6 +1035,7 @@
       "zstd"
     ],
     "description": "peer-reviewed portable C++ libraries",
+    "src_url": "https://github.com/boostorg/boost/releases/download/boost-{version}/boost-{version}-b2-nodocs.tar.gz",
     "type": "library",
     "url": [
       "https://www.boost.org/",
@@ -1119,6 +1134,7 @@
     "date": "2025-10-28",
     "default": false,
     "description": "lossless compression algorithm and library by Google",
+    "src_url": "https://github.com/google/brotli/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/google/brotli/"
@@ -1257,6 +1273,7 @@
       "byobu.1"
     ],
     "removed": true,
+    "src_url": "https://launchpad.net/byobu/trunk/{version}/+download/byobu_{version}.orig.tar.gz",
     "type": "cli",
     "url": [
       "https://www.byobu.org/",
@@ -1294,6 +1311,7 @@
       "bzless.1",
       "bzmore.1"
     ],
+    "src_url": "https://sourceware.org/pub/bzip2/bzip2-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.sourceware.org/bzip2/"
@@ -1308,6 +1326,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "asynchronous DNS resolver library",
+    "src_url": "https://github.com/c-ares/c-ares/releases/download/v{version}/c-ares-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://c-ares.org/"
@@ -1356,6 +1375,7 @@
       "zlib"
     ],
     "description": "2D graphics library with multiple output targets",
+    "src_url": "https://cairographics.org/releases/cairo-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.cairographics.org/releases/?C=M;O=D",
@@ -1394,6 +1414,7 @@
     ],
     "default": false,
     "description": "C++11 header-only serialization library",
+    "src_url": "https://github.com/USCiLab/cereal/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://uscilab.github.io/cereal/",
@@ -1479,6 +1500,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "command-line argument parser library for C++11",
+    "src_url": "https://github.com/CLIUtils/CLI11/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/CLIUtils/CLI11/"
@@ -1518,6 +1540,7 @@
     ],
     "description": "cross-platform build system generator",
     "revision": 2,
+    "src_url": "https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://cmake.org/download/"
@@ -1828,6 +1851,7 @@
       "gwhoami.1",
       "gyes.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/coreutils/coreutils-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/coreutils/",
@@ -1848,6 +1872,7 @@
     "man1": [
       "cpufetch.1"
     ],
+    "src_url": "https://github.com/Dr-Noob/cpufetch/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/Dr-Noob/cpufetch/"
@@ -1927,6 +1952,7 @@
       "curl-config.1"
     ],
     "revision": 2,
+    "src_url": "https://github.com/curl/curl/releases/download/curl-{version_underscore}/curl-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://curl.se/"
@@ -2088,6 +2114,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "credential helpers for Docker",
+    "src_url": "https://github.com/docker/docker-credential-helpers/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
@@ -2182,6 +2209,7 @@
     "man1": [
       "ed.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/ed/ed-{version}.tar.lz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/ed/ed.html",
@@ -2207,6 +2235,7 @@
     "notes": [
       "0.12.10 has build error on Ubuntu 22."
     ],
+    "src_url": "https://github.com/editorconfig/editorconfig-core-c/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://editorconfig.org/",
@@ -2229,6 +2258,7 @@
     ],
     "description": "utilities for ELF files and DWARF debug information",
     "installer_platform": "linux",
+    "src_url": "https://sourceware.org/elfutils/ftp/{version}/elfutils-{version}.tar.bz2",
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -2289,6 +2319,7 @@
       "emacsclient.1.gz",
       "etags.1.gz"
     ],
+    "src_url": "https://ftpmirror.gnu.org/emacs/emacs-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/emacs/"
@@ -2388,6 +2419,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "fast stream-oriented XML parser library",
+    "src_url": "https://github.com/libexpat/libexpat/releases/download/R_{version_underscore}/expat-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://libexpat.github.io/"
@@ -2545,6 +2577,7 @@
       "gupdatedb.1",
       "gxargs.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/findutils/findutils-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/findutils/",
@@ -2588,6 +2621,7 @@
     "man1": [
       "flac.1"
     ],
+    "src_url": "https://downloads.xiph.org/releases/flac/flac-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://xiph.org/flac/"
@@ -2625,6 +2659,7 @@
       "m4"
     ],
     "description": "fast lexical analyzer generator",
+    "src_url": "https://github.com/westes/flex/releases/download/v{version}/flex-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/westes/flex/"
@@ -2652,6 +2687,7 @@
       "zlib"
     ],
     "description": "cross-platform C++ GUI toolkit",
+    "src_url": "https://github.com/fltk/fltk/releases/download/release-{version}/fltk-{version}-source.tar.gz",
     "type": "library",
     "url": [
       "https://www.fltk.org/"
@@ -2666,6 +2702,7 @@
     "date": "2025-10-31",
     "default": false,
     "description": "modern C++ formatting library",
+    "src_url": "https://github.com/fmtlib/fmt/archive/refs/tags/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://fmt.dev/",
@@ -2686,6 +2723,7 @@
       "libxml2"
     ],
     "description": "font configuration and customization library",
+    "src_url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.freedesktop.org/wiki/Software/fontconfig/"
@@ -2764,6 +2802,7 @@
     "date": "2024-09-27",
     "default": false,
     "description": "implementation of the Unicode Bidirectional Algorithm",
+    "src_url": "https://github.com/fribidi/fribidi/releases/download/v{version}/fribidi-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://github.com/fribidi/fribidi/"
@@ -2842,6 +2881,7 @@
     "man1": [
       "gawk.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/gawk/gawk-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/gawk/?C=M;O=D"
@@ -2915,6 +2955,7 @@
     "man1": [
       "gdal-config.1"
     ],
+    "src_url": "https://github.com/OSGeo/gdal/releases/download/v{version}/gdal-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://gdal.org/"
@@ -2932,6 +2973,7 @@
     ],
     "description": "GNU dbm key-value database library",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/gdbm/gdbm-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org.ua/software/gdbm/download.html"
@@ -3031,6 +3073,7 @@
     "date": "2025-10-28",
     "default": false,
     "description": "geometry engine for geographic information systems",
+    "src_url": "https://github.com/libgeos/geos/archive/{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/libgeos/geos/"
@@ -3065,6 +3108,7 @@
       "disable-openmp": ""
     },
     "revision": 1,
+    "src_url": "https://ftpmirror.gnu.org/gettext/gettext-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gettext/",
@@ -3155,6 +3199,7 @@
     "man1": [
       "gs.1"
     ],
+    "src_url": "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs{version_nodot}/ghostscript-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.ghostscript.com/"
@@ -3193,6 +3238,7 @@
       "zlib"
     ],
     "description": "distributed version control system",
+    "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://git-scm.com/"
@@ -3227,6 +3273,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Git extension for versioning large files",
+    "src_url": "https://github.com/git-lfs/git-lfs/releases/download/v{version}/git-lfs-v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://git-lfs.github.com/"
@@ -3290,6 +3337,7 @@
       "zlib"
     ],
     "description": "low-level core library for GNOME",
+    "src_url": "https://download.gnome.org/sources/glib/{major_minor}/glib-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://docs.gtk.org/glib/",
@@ -3342,6 +3390,7 @@
       "zlib"
     ],
     "description": "GNU Privacy Guard for encryption and signing",
+    "src_url": "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -3362,6 +3411,7 @@
       "nettle"
     ],
     "description": "secure communications library implementing TLS and SSL",
+    "src_url": "https://gnupg.org/ftp/gcrypt/gnutls/v{major_minor}/gnutls-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.gnutls.org/"
@@ -3409,6 +3459,7 @@
     "date": "2025-05-01",
     "default": false,
     "description": "Google C++ testing and mocking framework",
+    "src_url": "https://github.com/google/googletest/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/google/googletest/"
@@ -3423,6 +3474,7 @@
     "default": false,
     "description": "perfect hash function generator",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/gperf/gperf-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gperf/",
@@ -3441,6 +3493,7 @@
       "expat"
     ],
     "description": "graph visualization software",
+    "src_url": "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/{version}/graphviz-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.graphviz.org/download/source/",
@@ -3472,6 +3525,7 @@
     "man1": [
       "ggrep.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/grep/grep-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
@@ -3518,6 +3572,7 @@
     "man1": [
       "groff.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/groff/groff-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
@@ -3553,6 +3608,7 @@
     "default": false,
     "description": "GNU Scientific Library for numerical computation",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/gsl/gsl-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gsl/",
@@ -3636,6 +3692,7 @@
       "zmore.1",
       "znew.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/gzip/gzip-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/gzip/",
@@ -3688,6 +3745,7 @@
       "zlib"
     ],
     "description": "text shaping engine",
+    "src_url": "https://github.com/harfbuzz/harfbuzz/archive/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/harfbuzz/harfbuzz/"
@@ -3771,6 +3829,7 @@
       "zlib"
     ],
     "description": "library for the HDF5 hierarchical data format",
+    "src_url": "https://github.com/HDFGroup/hdf5/releases/download/{version}/hdf5-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.hdfgroup.org/downloads/hdf5/",
@@ -3841,6 +3900,7 @@
     "man1": [
       "htop.1"
     ],
+    "src_url": "https://github.com/htop-dev/htop/archive/{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://hisham.hm/htop/",
@@ -3899,6 +3959,7 @@
       "htsfile.1",
       "tabix.1"
     ],
+    "src_url": "https://github.com/samtools/htslib/releases/download/{version}/htslib-{version}.tar.bz2",
     "type": "build_tool",
     "url": [
       "https://github.com/samtools/samtools/",
@@ -4048,6 +4109,7 @@
       "libxml2 currently doesn't support ICU 76."
     ],
     "outdated": true,
+    "src_url": "https://github.com/unicode-org/icu/releases/download/release-{version}/icu4c-{version}-sources.tgz",
     "type": "build_tool",
     "url": [
       "https://icu.unicode.org/",
@@ -4196,6 +4258,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "general-purpose malloc implementation with profiling support",
+    "src_url": "https://github.com/jemalloc/jemalloc/releases/download/{version}/jemalloc-{version}.tar.bz2",
     "type": "library",
     "url": [
       "http://jemalloc.net/",
@@ -4388,6 +4451,7 @@
     "man1": [
       "ksh.1"
     ],
+    "src_url": "https://github.com/ksh93/ksh/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/ksh93/ksh/"
@@ -4407,6 +4471,7 @@
     "man1": [
       "lame.1"
     ],
+    "src_url": "https://sourceforge.net/projects/lame/files/lame/{version}/lame-{version}.tar.gz/download",
     "type": "cli",
     "url": [
       "https://lame.sourceforge.io/"
@@ -4424,6 +4489,7 @@
     "notes": [
       "LAPACK is written in Fortran, which is why we require system gfortran."
     ],
+    "src_url": "https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.netlib.org/lapack/"
@@ -4506,6 +4572,7 @@
     "man1": [
       "less.1"
     ],
+    "src_url": "https://github.com/gwsw/less/archive/refs/tags/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
@@ -4525,6 +4592,7 @@
     "date": "2026-04-29",
     "default": true,
     "description": "preprocessor for less to display non-text files",
+    "src_url": "https://github.com/wofr06/lesspipe/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/wofr06/lesspipe/"
@@ -4539,6 +4607,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "adaptive entropy coding library",
+    "src_url": "https://gitlab.dkrz.de/k202009/libaec/-/archive/v{version}/libaec-v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
@@ -4581,6 +4650,7 @@
       "libgpg-error"
     ],
     "description": "IPC library used by GnuPG",
+    "src_url": "https://gnupg.org/ftp/gcrypt/libassuan/libassuan-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -4595,6 +4665,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "C implementation of the CBOR serialization format",
+    "src_url": "https://github.com/PJK/libcbor/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/PJK/libcbor/"
@@ -4608,6 +4679,7 @@
     "date": "2026-01-02",
     "default": false,
     "description": "C and C++ library for processing configuration files",
+    "src_url": "https://github.com/hyperrealm/libconfig/releases/download/v{version}/libconfig-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://hyperrealm.github.io/libconfig/",
@@ -4622,6 +4694,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "open H.265/HEVC video codec implementation",
+    "src_url": "https://github.com/strukturag/libde265/releases/download/v{version}/libde265-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/strukturag/libde265/"
@@ -4635,6 +4708,7 @@
     "date": "2025-11-03",
     "default": false,
     "description": "fast DEFLATE, zlib, and gzip compression library",
+    "src_url": "https://github.com/ebiggers/libdeflate/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/ebiggers/libdeflate/"
@@ -4680,6 +4754,7 @@
       "openssl"
     ],
     "description": "asynchronous event notification library",
+    "src_url": "https://github.com/libevent/libevent/releases/download/release-{version}-stable/libevent-{version}-stable.tar.gz",
     "type": "library",
     "url": [
       "https://libevent.org/",
@@ -4695,6 +4770,7 @@
     "date": "2025-08-10",
     "default": false,
     "description": "foreign function interface library",
+    "src_url": "https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://sourceware.org/libffi/",
@@ -4713,6 +4789,7 @@
       "libcbor"
     ],
     "description": "library for FIDO2 and WebAuthn authentication",
+    "src_url": "https://github.com/Yubico/libfido2/archive/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://developers.yubico.com/libfido2/Releases/"
@@ -4730,6 +4807,7 @@
       "libgpg-error"
     ],
     "description": "cryptographic library used by GnuPG",
+    "src_url": "https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -4778,6 +4856,7 @@
       "zlib"
     ],
     "description": "portable C library implementing Git core",
+    "src_url": "https://github.com/libgit2/libgit2/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/libgit2/libgit2/"
@@ -4792,6 +4871,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "common error codes library for GnuPG components",
+    "src_url": "https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -4812,6 +4892,7 @@
       "zlib"
     ],
     "description": "HEIF and HEVC image format library",
+    "src_url": "https://github.com/nicolo-ribaudo/libheif/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.libde265.org/",
@@ -4827,6 +4908,7 @@
     "default": false,
     "description": "character set conversion library",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/libiconv/libiconv-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libiconv/",
@@ -4858,6 +4940,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "SIMD-accelerated JPEG encoding and decoding library",
+    "src_url": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/{version}/libjpeg-turbo-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.libjpeg-turbo.org/",
@@ -4877,6 +4960,7 @@
       "libgpg-error"
     ],
     "description": "library for X.509 and CMS structures used by GnuPG",
+    "src_url": "https://gnupg.org/ftp/gcrypt/libksba/libksba-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -4891,6 +4975,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "library for large linear classification",
+    "src_url": "https://github.com/cjlin1/liblinear/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.csie.ntu.edu.tw/~cjlin/liblinear/"
@@ -4908,6 +4993,7 @@
       "luajit"
     ],
     "description": "async I/O bindings for Lua used by Neovim",
+    "src_url": "https://github.com/luvit/luv/archive/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/luvit/luv/"
@@ -4962,6 +5048,7 @@
       "zlib"
     ],
     "description": "official PNG reference library",
+    "src_url": "https://sourceforge.net/projects/libpng/files/libpng16/{version}/libpng-{version}.tar.xz/download",
     "type": "build_tool",
     "url": [
       "http://www.libpng.org/pub/png/libpng.html"
@@ -4979,6 +5066,7 @@
       "zlib"
     ],
     "description": "dependency solver library",
+    "src_url": "https://github.com/openSUSE/libsolv/archive/refs/tags/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/openSUSE/libsolv/"
@@ -5013,6 +5101,7 @@
     "default": false,
     "description": "ASN.1 parsing library",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/libtasn1/libtasn1-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libtasn1/",
@@ -5095,6 +5184,7 @@
     "default": false,
     "description": "Unicode string processing library",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/libunistring/libunistring-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libunistring/",
@@ -5114,6 +5204,7 @@
     "date": "2026-03-19",
     "default": false,
     "description": "multi-platform async I/O library used by Node.js",
+    "src_url": "https://github.com/libuv/libuv/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/libuv/libuv/"
@@ -5150,6 +5241,7 @@
     "date": "2025-11-11",
     "default": false,
     "description": "extended crypt library for password hashing",
+    "src_url": "https://github.com/besser82/libxcrypt/releases/download/v{version}/libxcrypt-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://github.com/besser82/libxcrypt/"
@@ -5171,6 +5263,7 @@
     ],
     "description": "XML parsing library",
     "revision": 2,
+    "src_url": "https://download.gnome.org/sources/libxml2/{major_minor}/libxml2-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://gitlab.gnome.org/GNOME/libxml2/-/releases"
@@ -5190,6 +5283,7 @@
       "libxml2"
     ],
     "description": "XSLT transformation library",
+    "src_url": "https://download.gnome.org/sources/libxslt/{major_minor}/libxslt-{version}.tar.xz",
     "type": "library",
     "url": [
       "http://xmlsoft.org/XSLT/",
@@ -5209,6 +5303,7 @@
     "date": "2023-01-04",
     "default": false,
     "description": "YAML parser and emitter in C",
+    "src_url": "https://github.com/yaml/libyaml/archive/{version}.tar.gz",
     "type": "library",
     "url": "https://github.com/yaml/libyaml/",
     "version": "0.2.5"
@@ -5230,6 +5325,7 @@
       "zstd"
     ],
     "description": "library for reading, creating, and modifying ZIP files",
+    "src_url": "https://github.com/nih-at/libzip/releases/download/v{version}/libzip-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://libzip.org/"
@@ -5273,6 +5369,7 @@
       "zstd"
     ],
     "description": "LLVM compiler infrastructure",
+    "src_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/llvm-project-{version}.src.tar.xz",
     "type": "cli",
     "url": [
       "https://llvm.org/"
@@ -5361,6 +5458,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "just-in-time compiler for Lua",
+    "src_url": "https://github.com/LuaJIT/LuaJIT/archive/refs/tags/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://luajit.org/",
@@ -5382,6 +5480,7 @@
       "lua"
     ],
     "description": "package manager for Lua modules",
+    "src_url": "https://luarocks.org/releases/luarocks-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/luarocks/luarocks/"
@@ -5427,6 +5526,7 @@
       "lz4cat.1",
       "unlz4.1"
     ],
+    "src_url": "https://github.com/lz4/lz4/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://lz4.github.io/lz4/",
@@ -5451,6 +5551,7 @@
     "man1": [
       "lzip.1"
     ],
+    "src_url": "https://download.savannah.nongnu.org/releases/lzip/lzip-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.nongnu.org/lzip/",
@@ -5485,6 +5586,7 @@
     "default": false,
     "description": "GNU macro processor",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/m4/m4-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/m4/",
@@ -5506,6 +5608,7 @@
     "man1": [
       "gmake.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/make/make-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/make/?C=M;O=D"
@@ -5559,6 +5662,7 @@
       "gman.1"
     ],
     "revision": 1,
+    "src_url": "https://download.savannah.nongnu.org/releases/man-db/man-db-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://man-db.nongnu.org/",
@@ -5667,6 +5771,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "like awk/sed/cut/join for name-indexed data formats",
+    "src_url": "https://github.com/johnkerl/miller/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://miller.readthedocs.io/",
@@ -5682,6 +5787,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "compact general-purpose memory allocator by Microsoft",
+    "src_url": "https://github.com/microsoft/mimalloc/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/microsoft/mimalloc"
@@ -5747,6 +5853,7 @@
       "zstd"
     ],
     "description": "high-speed linker for ELF binaries",
+    "src_url": "https://github.com/rui314/mold/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/rui314/mold/"
@@ -5782,6 +5889,7 @@
     ],
     "description": "C library for arbitrary-precision complex arithmetic",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/mpc/mpc-{version}.tar.gz",
     "type": "library",
     "url": [
       "http://www.multiprecision.org/mpc/"
@@ -5814,6 +5922,7 @@
     ],
     "description": "C library for multiple-precision floating-point arithmetic",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/mpfr/mpfr-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.mpfr.org/"
@@ -5830,6 +5939,7 @@
       "boost"
     ],
     "description": "efficient binary serialization format library",
+    "src_url": "https://github.com/msgpack/msgpack-c/releases/download/cpp-{version}/msgpack-cxx-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://msgpack.org/",
@@ -6037,6 +6147,7 @@
     "man1": [
       "neofetch.1"
     ],
+    "src_url": "https://github.com/dylanaraps/neofetch/archive/{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/dylanaraps/neofetch/"
@@ -6081,6 +6192,7 @@
     ],
     "description": "low-level cryptographic library",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/nettle/nettle-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://mirrors.kernel.org/gnu/nettle/?C=M;O=D"
@@ -6125,6 +6237,7 @@
     ],
     "description": "HTTP/2 C library",
     "revision": 1,
+    "src_url": "https://github.com/nghttp2/nghttp2/releases/download/v{version}/nghttp2-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://nghttp2.org/",
@@ -6139,6 +6252,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "statically typed compiled systems programming language",
+    "src_url": "https://nim-lang.org/download/nim-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://nim-lang.org/"
@@ -6155,6 +6269,7 @@
       "python"
     ],
     "description": "small, fast build system",
+    "src_url": "https://github.com/ninja-build/ninja/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://ninja-build.org/",
@@ -6170,6 +6285,7 @@
     "date": "2025-04-11",
     "default": false,
     "description": "modern JSON library for C++",
+    "src_url": "https://github.com/nlohmann/json/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/nlohmann/json/"
@@ -6242,6 +6358,7 @@
     "date": "2024-12-24",
     "default": false,
     "description": "New GNU Portable Threads library",
+    "src_url": "https://gnupg.org/ftp/gcrypt/npth/npth-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -6278,6 +6395,7 @@
     "date": "2025-01-02",
     "default": false,
     "description": "regular expressions library",
+    "src_url": "https://github.com/kkos/oniguruma/releases/download/v{version}/onig-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/kkos/oniguruma/"
@@ -6355,6 +6473,7 @@
       "zstd"
     ],
     "description": "VBZ compression plugin for Oxford Nanopore data",
+    "src_url": "https://github.com/nanoporetech/vbz_compression/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/nanoporetech/vbz_compression/"
@@ -6375,6 +6494,7 @@
     "date": "2026-04-29",
     "default": false,
     "description": "optimized BLAS (Basic Linear Algebra Subprograms) library",
+    "src_url": "https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.openblas.net/",
@@ -6398,6 +6518,7 @@
       "zstd"
     ],
     "description": "open-source JPEG 2000 codec",
+    "src_url": "https://github.com/uclouvl/openjpeg/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.openjpeg.org/"
@@ -6529,6 +6650,7 @@
       "7za.1.gz",
       "7zr.1.gz"
     ],
+    "src_url": "https://github.com/p7zip-project/p7zip/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/p7zip-project/p7zip/"
@@ -6571,6 +6693,7 @@
     "man1": [
       "parallel.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/parallel/parallel-{version}.tar.bz2",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/parallel/",
@@ -6620,6 +6743,7 @@
     "man1": [
       "patch.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/patch/patch-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/patch/?C=M;O=D"
@@ -6660,6 +6784,7 @@
       "pcregrep.1",
       "pcretest.1"
     ],
+    "src_url": "https://sourceforge.net/projects/pcre/files/pcre/{version}/pcre-{version}.tar.bz2/download",
     "type": "build_tool",
     "url": [
       "https://sourceforge.net/projects/pcre/"
@@ -6691,6 +6816,7 @@
       "pcre2grep.1",
       "pcre2test.1"
     ],
+    "src_url": "https://github.com/PhilipHazel/pcre2/releases/download/pcre2-{version}/pcre2-{version}.tar.bz2",
     "type": "build_tool",
     "url": [
       "https://github.com/PCRE2Project/pcre2/",
@@ -6713,6 +6839,7 @@
       "cpan.1",
       "perl.1"
     ],
+    "src_url": "https://www.cpan.org/src/{major}.0/perl-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.perl.org/get.html"
@@ -6763,6 +6890,7 @@
       "pigz.1",
       "unpigz.1"
     ],
+    "src_url": "https://zlib.net/pigz/pigz-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://zlib.net/pigz/"
@@ -6783,6 +6911,7 @@
       "ncurses"
     ],
     "description": "collection of dialog programs for GnuPG passphrase entry",
+    "src_url": "https://gnupg.org/ftp/gcrypt/pinentry/pinentry-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://gnupg.org/download/"
@@ -6839,6 +6968,7 @@
     "man1": [
       "pkg-config.1"
     ],
+    "src_url": "https://pkgconfig.freedesktop.org/releases/pkg-config-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://pkg-config.freedesktop.org/"
@@ -6908,6 +7038,7 @@
       "readline"
     ],
     "description": "powerful open-source relational database",
+    "src_url": "https://ftp.postgresql.org/pub/source/v{version}/postgresql-{version}.tar.bz2",
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
@@ -7052,6 +7183,7 @@
     "date": "2026-04-22",
     "default": false,
     "description": "C++11 header-only bindings between C++ and Python",
+    "src_url": "https://github.com/pybind/pybind11/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://pybind11.readthedocs.io/"
@@ -7264,6 +7396,7 @@
   "python": {
     "alias_of": "python3.14",
     "description": "generic Python shim (resolved at runtime)",
+    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "library"
   },
   "python3.10": {
@@ -7645,6 +7778,7 @@
       "R.1",
       "Rscript.1"
     ],
+    "src_url": "https://cloud.r-project.org/src/base/R-{major}/R-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.r-project.org/",
@@ -7907,6 +8041,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "cross-platform child process library",
+    "src_url": "https://github.com/DaanDeMeyer/reproc/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/DaanDeMeyer/reproc/"
@@ -8118,6 +8253,7 @@
       "ruby.1"
     ],
     "outdated": true,
+    "src_url": "https://cache.ruby-lang.org/pub/ruby/{major_minor}/ruby-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
@@ -8392,6 +8528,7 @@
     "man1": [
       "gsed.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/sed/sed-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/sed/",
@@ -8440,6 +8577,7 @@
       "zlib"
     ],
     "description": "high-performance C-based HTTP client library",
+    "src_url": "https://archive.apache.org/dist/serf/serf-{version}.tar.bz2",
     "type": "library",
     "url": [
       "https://serf.apache.org/"
@@ -8521,6 +8659,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "JSON parser using SIMD instructions for high throughput",
+    "src_url": "https://github.com/simdjson/simdjson/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://simdjson.org"
@@ -8625,6 +8764,7 @@
       "fmt"
     ],
     "description": "fast C++ logging library",
+    "src_url": "https://github.com/gabime/spdlog/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/gabime/spdlog/"
@@ -8713,6 +8853,7 @@
       "zstd"
     ],
     "description": "library for reading and writing sequencing data formats",
+    "src_url": "https://github.com/jkbonfield/io_lib/releases/download/io_lib-{version_kebab}/io_lib-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/jkbonfield/io_lib"
@@ -8804,6 +8945,7 @@
     ],
     "description": "symlink farm manager for managing dotfiles",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/stow/stow-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/stow/"
@@ -8879,6 +9021,7 @@
     "man1": [
       "svn.1"
     ],
+    "src_url": "https://archive.apache.org/dist/subversion/subversion-{version}.tar.bz2",
     "type": "build_tool",
     "url": [
       "https://subversion.apache.org/"
@@ -8898,6 +9041,7 @@
       "pcre2"
     ],
     "description": "interface compiler connecting C/C++ to scripting languages",
+    "src_url": "https://sourceforge.net/projects/swig/files/swig/swig-{version}/swig-{version}.tar.gz/download",
     "type": "build_tool",
     "url": [
       "http://www.swig.org/"
@@ -8916,6 +9060,7 @@
       "zlib"
     ],
     "description": "library for reading and editing audio file metadata",
+    "src_url": "https://github.com/nicolo-ribaudo/taglib/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/taglib/taglib/"
@@ -8951,6 +9096,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Intel oneAPI Threading Building Blocks for parallel C++",
+    "src_url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/oneapi-src/oneTBB"
@@ -9024,6 +9170,7 @@
     "date": "2022-11-05",
     "default": false,
     "description": "Python library for ANSI color output",
+    "src_url": "https://github.com/ikalnytskyi/termcolor/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://termcolor.readthedocs.io/",
@@ -9061,6 +9208,7 @@
       "texi2pdf.1",
       "texindex.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/texinfo/texinfo-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/texinfo/?C=M;O=D"
@@ -9074,6 +9222,7 @@
     "date": "2025-10-08",
     "default": false,
     "description": "C++ implementation of std::expected",
+    "src_url": "https://github.com/TartanLlama/expected/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/TartanLlama/expected/"
@@ -9100,6 +9249,7 @@
     "man1": [
       "tmux.1"
     ],
+    "src_url": "https://github.com/tmux/tmux/releases/download/{version}/tmux-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/tmux/tmux/"
@@ -9154,6 +9304,7 @@
     "man1": [
       "tree.1"
     ],
+    "src_url": "https://github.com/Old-Man-Programmer/tree/archive/refs/tags/{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/Old-Man-Programmer/tree"
@@ -9168,6 +9319,7 @@
     "date": "2026-04-15",
     "default": false,
     "description": "incremental parsing library for syntax trees",
+    "src_url": "https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
@@ -9284,6 +9436,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "terminfo parser and utility library",
+    "src_url": "https://github.com/neovim/unibilium/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/neovim/unibilium/"
@@ -9310,6 +9463,7 @@
     "man1": [
       "gunits.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/units/units-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/units/",
@@ -9339,6 +9493,7 @@
       "zipgrep.1",
       "zipinfo.1"
     ],
+    "src_url": "https://sourceforge.net/projects/infozip/files/UnZip%206.x%20%28latest%29/UnZip%20{version}/unzip{version_nodot}.tar.gz/download",
     "type": "build_tool",
     "url": [
       "http://infozip.sourceforge.net/UnZip.html"
@@ -9353,6 +9508,7 @@
     "date": "2026-01-02",
     "default": false,
     "description": "C library for Unicode and UTF-8 processing",
+    "src_url": "https://github.com/JuliaStrings/utf8proc/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://juliastrings.github.io/utf8proc/",
@@ -9406,6 +9562,7 @@
       "vimtutor.1",
       "xxd.1"
     ],
+    "src_url": "https://github.com/vim/vim/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/vim/vim/"
@@ -9495,6 +9652,7 @@
     "man1": [
       "wget.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/wget/wget-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/wget/",
@@ -9532,6 +9690,7 @@
     ],
     "description": "successor to wget with HTTP/2 support",
     "installer": "gnu-app",
+    "src_url": "https://ftpmirror.gnu.org/wget/wget2-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://gitlab.com/gnuwget/wget2"
@@ -9556,6 +9715,7 @@
     "man1": [
       "gwhich.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/which/which-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/which/?C=M;O=D"
@@ -9576,6 +9736,7 @@
     "date": "2023-05-15",
     "default": false,
     "description": "encode and decode WOFF2 web font format",
+    "src_url": "https://github.com/nicolo-ribaudo/woff2/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/google/woff2/"
@@ -9594,6 +9755,7 @@
       "xorg-xtrans"
     ],
     "description": "Inter-Client Exchange library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libICE-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9609,6 +9771,7 @@
     "date": "2023-08-31",
     "default": false,
     "description": "pthread stubs used by X.org build system",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libpthread-stubs-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9629,6 +9792,7 @@
       "xorg-xtrans"
     ],
     "description": "X Session Management library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libSM-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9653,6 +9817,7 @@
       "xorg-xtrans"
     ],
     "description": "core X11 protocol client library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libX11-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9671,6 +9836,7 @@
       "xorg-xorgproto"
     ],
     "description": "X authority file management library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXau-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9694,6 +9860,7 @@
       "xorg-xorgproto"
     ],
     "description": "X protocol C-language binding library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libxcb-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9712,6 +9879,7 @@
       "xorg-xorgproto"
     ],
     "description": "X Display Manager Control Protocol library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXdmcp-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9735,6 +9903,7 @@
       "xorg-xorgproto"
     ],
     "description": "X11 miscellaneous extension library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXext-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9760,6 +9929,7 @@
       "xorg-xorgproto"
     ],
     "description": "X resize and rotate extension library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXrandr-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9783,6 +9953,7 @@
       "xorg-xorgproto"
     ],
     "description": "X render extension library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXrender-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9808,6 +9979,7 @@
       "xorg-xorgproto"
     ],
     "description": "X toolkit intrinsics library",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXt-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9827,6 +9999,7 @@
     "notes": [
       "This must match xorg-libxcb version."
     ],
+    "src_url": "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
@@ -9842,6 +10015,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "X.Org X11 protocol headers",
+    "src_url": "https://xorg.freedesktop.org/archive/individual/proto/xorgproto-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
@@ -9861,6 +10035,7 @@
     ],
     "description": "X transport library",
     "outdated": true,
+    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/xtrans-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -9912,6 +10087,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "extremely fast non-cryptographic hash algorithm library",
+    "src_url": "https://github.com/Cyan4973/xxHash/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/Cyan4973/xxHash/"
@@ -9976,6 +10152,7 @@
       "xzless.1",
       "xzmore.1"
     ],
+    "src_url": "https://github.com/tukaani-project/xz/releases/download/v{version}/xz-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://tukaani.org/xz/",
@@ -9991,6 +10168,7 @@
     "date": "2026-02-06",
     "default": false,
     "description": "YAML parser and emitter for C++",
+    "src_url": "https://github.com/jbeder/yaml-cpp/archive/refs/tags/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/jbeder/yaml-cpp/"
@@ -10121,6 +10299,7 @@
     "man1": [
       "zip.1"
     ],
+    "src_url": "https://sourceforge.net/projects/infozip/files/Zip%203.x%20%28latest%29/{version}/zip{version_nodot}.tar.gz/download",
     "type": "build_tool",
     "url": [
       "http://infozip.sourceforge.net/Zip.html"
@@ -10219,6 +10398,7 @@
       "zstdgrep.1",
       "zstdless.1"
     ],
+    "src_url": "https://github.com/facebook/zstd/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://facebook.github.io/zstd/",
