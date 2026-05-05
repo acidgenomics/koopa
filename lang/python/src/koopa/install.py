@@ -2133,17 +2133,32 @@ def _update_venv(prefix: str) -> None:
         from koopa.prefix import bootstrap_prefix
 
         bp = bootstrap_prefix()
-        bootstrap_python = os.path.join(bp, "bin", "python3")
-        if not os.path.isfile(bootstrap_python):
-            warn(
-                f"Bootstrap Python not found at '{bootstrap_python}'.\n"
-                f"  Run bootstrap to install Python {python_version}:\n"
-                f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
-            )
-            return
+        target_python = os.path.join(bp, "bin", "python3")
+        if not os.path.isfile(target_python):
+            _sys_python = "/usr/bin/python3"
+            _matched = False
+            if os.path.isfile(_sys_python):
+                _res = subprocess.run(
+                    [_sys_python, "--version"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                if _res.returncode == 0:
+                    _ver = _res.stdout.strip().split()[-1]
+                    if ".".join(_ver.split(".")[:2]) == python_version:
+                        target_python = _sys_python
+                        _matched = True
+            if not _matched:
+                warn(
+                    f"No Python {python_version} interpreter found.\n"
+                    f"  Run bootstrap to install Python {python_version}:\n"
+                    f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
+                )
+                return
         try:
             subprocess.run(
-                [bootstrap_python, "-m", "venv", "--symlinks", venv_dir],
+                [target_python, "-m", "venv", "--symlinks", "--with-pip", venv_dir],
                 check=True,
             )
         except Exception as exc:
@@ -2265,17 +2280,13 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
         else:
             return False
     alert("Updating bootstrap.")
-    try:
-        config = InstallConfig(
-            name="bootstrap",
-            mode="user",
-            reinstall=True,
-            verbose=verbose,
-        )
-        install_app(config)
-    except Exception as exc:
-        warn(f"Failed to update bootstrap: {exc}")
-        return False
+    config = InstallConfig(
+        name="bootstrap",
+        mode="user",
+        reinstall=True,
+        verbose=verbose,
+    )
+    install_app(config)
     return True
 
 
