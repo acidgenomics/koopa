@@ -60,11 +60,8 @@ if [ -z "$_python" ]; then
     printf '%s\n' \
         'Error: koopa bootstrap Python not found.' \
         '' \
-        'Run the following to set up koopa:' \
-        "  sh '${_koopa_prefix}/etc/koopa/install.sh'" \
-        '' \
-        'Or if already installed, run:' \
-        '  koopa update' \
+        'Run the following to bootstrap koopa:' \
+        "  sh '${_koopa_prefix}/bootstrap.sh'" \
         >&2
     exit 1
 fi
