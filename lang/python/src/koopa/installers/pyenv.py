@@ -3,7 +3,8 @@
 import os
 
 from koopa.archive import extract
-from koopa.download import download
+from koopa.download import download, download_with_mirror
+from koopa.installers._build_helper import _resolve_src_url
 
 
 def main(
@@ -14,8 +15,9 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install pyenv."""
-    url = f"https://github.com/pyenv/pyenv/archive/v{version}.tar.gz"
-    tarball = download(url)
+    url = _resolve_src_url(name, version)
+    filename = os.path.basename(url)
+    tarball = download_with_mirror(url, name, filename)
     extract(tarball, prefix)
     plugins_dir = os.path.join(prefix, "plugins")
     os.makedirs(plugins_dir, exist_ok=True)

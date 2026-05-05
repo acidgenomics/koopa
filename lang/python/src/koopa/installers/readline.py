@@ -4,10 +4,9 @@ import os
 import re
 import subprocess
 
-from koopa.archive import is_valid_archive
 from koopa.build import activate_app, locate
-from koopa.download import download
-from koopa.installers._build_helper import extract_cd
+from koopa.download import download_with_mirror
+from koopa.installers._build_helper import _resolve_src_url, extract_cd
 
 
 def main(
@@ -22,14 +21,9 @@ def main(
     env = activate_app("ncurses", env=env)
     make = locate("make")
     pkg_config = locate("pkg-config")
-    for url in [
-        f"https://mirrors.kernel.org/gnu/readline/readline-{version}.tar.gz",
-        f"https://ftpmirror.gnu.org/gnu/readline/readline-{version}.tar.gz",
-        f"https://ftp.gnu.org/gnu/readline/readline-{version}.tar.gz",
-    ]:
-        tarball = download(url)
-        if is_valid_archive(tarball):
-            break
+    url = _resolve_src_url(name, version)
+    filename = os.path.basename(url)
+    tarball = download_with_mirror(url, name, filename)
     extract_cd(tarball)
     with open("readline.pc.in") as fh:
         text = fh.read()

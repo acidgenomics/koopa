@@ -3,8 +3,9 @@
 import os
 
 from koopa.archive import extract
-from koopa.download import download
+from koopa.download import download_with_mirror
 from koopa.file_ops import ln
+from koopa.installers._build_helper import _resolve_src_url
 
 
 def main(
@@ -15,8 +16,9 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install asdf."""
-    url = f"https://github.com/asdf-vm/asdf/archive/v{version}.tar.gz"
-    tarball = download(url)
+    url = _resolve_src_url(name, version)
+    filename = os.path.basename(url)
+    tarball = download_with_mirror(url, name, filename)
     libexec = os.path.join(prefix, "libexec")
     extract(tarball, libexec)
     bin_dir = os.path.join(prefix, "bin")

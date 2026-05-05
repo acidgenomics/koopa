@@ -5,7 +5,8 @@ import subprocess
 
 from koopa.archive import extract
 from koopa.build import activate_app, app_prefix
-from koopa.download import download
+from koopa.download import download_with_mirror
+from koopa.installers._build_helper import _resolve_src_url
 from koopa.system import cpu_count
 
 
@@ -21,7 +22,6 @@ def main(
     gmp_prefix = app_prefix("gmp")
     mpc_prefix = app_prefix("mpc")
     mpfr_prefix = app_prefix("mpfr")
-    gnu_mirror = "https://gnu.mirror.constant.com"
     langs = "c,c++,fortran,objc,obj-c++"
     conf_args = [
         "-v",
@@ -33,8 +33,9 @@ def main(
         f"--with-mpc={mpc_prefix}",
         f"--with-mpfr={mpfr_prefix}",
     ]
-    url = f"{gnu_mirror}/gcc/gcc-{version}/gcc-{version}.tar.xz"
-    tarball = download(url)
+    url = _resolve_src_url(name, version)
+    filename = os.path.basename(url)
+    tarball = download_with_mirror(url, name, filename)
     extract(tarball, "src")
     os.makedirs("build", exist_ok=True)
     os.chdir("build")
