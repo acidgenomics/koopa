@@ -989,7 +989,7 @@
       "blastp"
     ],
     "conda_channel": "bioconda",
-    "date": "2026-05-02",
+    "date": "2026-05-05",
     "default": false,
     "dependencies": [
       "conda"
@@ -1007,7 +1007,7 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.17.0"
+    "version": "2.16.0"
   },
   "boost": {
     "date": "2026-05-02",
