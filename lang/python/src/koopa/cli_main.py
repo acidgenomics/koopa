@@ -472,6 +472,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             from koopa.install import _can_push_binary, push_missing_app_builds
 
             if _can_push_binary():
+                print("Checking S3 for missing app builds...", file=sys.stderr)
                 push_missing_app_builds()
             if args.all_system:
                 update_system_apps(verbose=args.verbose)
