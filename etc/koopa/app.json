@@ -52,7 +52,8 @@
       "https://bioconda.github.io/recipes/agat/README.html",
       "https://github.com/NBISweden/AGAT/"
     ],
-    "version": "1.7.0"
+    "version": "1.7.0",
+    "conda_channel": "bioconda"
   },
   "air": {
     "bin": [
@@ -372,7 +373,8 @@
       "https://autodock.scripps.edu/",
       "https://bioconda.github.io/recipes/autodock/README.html"
     ],
-    "version": "4.2.6"
+    "version": "4.2.6",
+    "conda_channel": "bioconda"
   },
   "autodock-adfr": {
     "date": "2023-10-16",
@@ -416,7 +418,8 @@
       "https://vina.scripps.edu/",
       "https://github.com/ccsb-scripps/AutoDock-Vina/"
     ],
-    "version": "1.2.6"
+    "version": "1.2.6",
+    "conda_channel": "conda-forge"
   },
   "autoflake": {
     "bin": [
@@ -497,7 +500,8 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.31"
+    "version": "2.34.31",
+    "conda_channel": "conda-forge"
   },
   "aws-mountpoint-s3": {
     "date": "2026-05-02",
@@ -587,7 +591,8 @@
       "https://bioconda.github.io/recipes/bamtools/README.html",
       "https://github.com/pezmaster31/bamtools"
     ],
-    "version": "2.5.3"
+    "version": "2.5.3",
+    "conda_channel": "bioconda"
   },
   "bandit": {
     "bin": [
@@ -678,7 +683,8 @@
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "5.6.0"
+    "version": "5.6.0",
+    "conda_channel": "conda-forge"
   },
   "bashcov": {
     "bin": [
@@ -713,7 +719,8 @@
     "url": [
       "https://github.com/sharkdp/bat"
     ],
-    "version": "0.26.1"
+    "version": "0.26.1",
+    "conda_channel": "conda-forge"
   },
   "bc": {
     "bin": [
@@ -805,7 +812,8 @@
     "url": [
       "https://github.com/lh3/bedtk"
     ],
-    "version": "1.2"
+    "version": "1.2",
+    "conda_channel": "conda-forge"
   },
   "bedtools": {
     "bin": [
@@ -846,7 +854,8 @@
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
     ],
-    "version": "2.31.1"
+    "version": "2.31.1",
+    "conda_channel": "bioconda"
   },
   "bfg": {
     "bin": [
@@ -905,7 +914,8 @@
       "https://bioconda.github.io/recipes/bioawk/README.html",
       "https://github.com/lh3/bioawk"
     ],
-    "version": "1.0"
+    "version": "1.0",
+    "conda_channel": "bioconda"
   },
   "bioconda-utils": {
     "date": "2026-05-02",
@@ -929,7 +939,8 @@
       "https://bioconda.github.io/recipes/bioconda-utils/README.html",
       "https://github.com/bioconda/bioconda-utils/"
     ],
-    "version": "4.4.0"
+    "version": "4.4.0",
+    "conda_channel": "bioconda"
   },
   "bison": {
     "build_dependencies": [
@@ -995,7 +1006,8 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.17.0"
+    "version": "2.17.0",
+    "conda_channel": "bioconda"
   },
   "boost": {
     "date": "2026-05-02",
@@ -1030,7 +1042,8 @@
     "url": [
       "https://github.com/ClementTsang/bottom/"
     ],
-    "version": "0.12.2"
+    "version": "0.12.2",
+    "conda_channel": "conda-forge"
   },
   "bowtie2": {
     "bin": [
@@ -1054,7 +1067,8 @@
       "https://bioconda.github.io/recipes/bowtie2/README.html",
       "https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"
     ],
-    "version": "2.5.5"
+    "version": "2.5.5",
+    "conda_channel": "bioconda"
   },
   "bpytop": {
     "bin": [
@@ -1090,7 +1104,8 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.56.2"
+    "version": "1.56.2",
+    "conda_channel": "conda-forge"
   },
   "brotli": {
     "bin": [
@@ -1124,7 +1139,8 @@
     "url": [
       "https://github.com/aristocratos/btop"
     ],
-    "version": "1.4.7"
+    "version": "1.4.7",
+    "conda_channel": "conda-forge"
   },
   "bumpver": {
     "bin": [
@@ -1167,7 +1183,8 @@
       "https://github.com/BUStools/bustools/",
       "https://bioconda.github.io/recipes/bustools/README.html"
     ],
-    "version": "0.45.1"
+    "version": "0.45.1",
+    "conda_channel": "bioconda"
   },
   "byobu": {
     "bin": [
@@ -1430,7 +1447,8 @@
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
     ],
-    "version": "2.70.2"
+    "version": "2.70.2",
+    "conda_channel": "conda-forge"
   },
   "claude-code": {
     "bin": [
@@ -1881,7 +1899,8 @@
     "url": [
       "https://github.com/shenwei356/csvtk/"
     ],
-    "version": "0.37.0"
+    "version": "0.37.0",
+    "conda_channel": "conda-forge"
   },
   "curl": {
     "bin": [
@@ -1979,7 +1998,8 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.6"
+    "version": "3.5.6",
+    "conda_channel": "bioconda"
   },
   "delta": {
     "bin": [
@@ -1999,7 +2019,8 @@
     "url": [
       "https://github.com/dandavison/delta/"
     ],
-    "version": "0.19.2"
+    "version": "0.19.2",
+    "conda_channel": "conda-forge"
   },
   "diff-so-fancy": {
     "bin": [
@@ -2035,7 +2056,8 @@
     "url": [
       "https://github.com/Wilfred/difftastic/"
     ],
-    "version": "0.69.0"
+    "version": "0.69.0",
+    "conda_channel": "conda-forge"
   },
   "direnv": {
     "bin": [
@@ -2052,7 +2074,8 @@
     "url": [
       "https://github.com/direnv/direnv"
     ],
-    "version": "2.37.1"
+    "version": "2.37.1",
+    "conda_channel": "conda-forge"
   },
   "docker-credential-helpers": {
     "build_dependencies": [
@@ -2116,7 +2139,8 @@
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "1.2.4"
+    "version": "1.2.4",
+    "conda_channel": "conda-forge"
   },
   "duckdb": {
     "bin": [
@@ -2302,7 +2326,8 @@
       "https://www.ncbi.nlm.nih.gov/home/tools/",
       "https://bioconda.github.io/recipes/entrez-direct/README.html"
     ],
-    "version": "25.3"
+    "version": "25.3",
+    "conda_channel": "bioconda"
   },
   "exa": {
     "bin": [
@@ -2384,7 +2409,8 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.23.4"
+    "version": "0.23.4",
+    "conda_channel": "conda-forge"
   },
   "fastqc": {
     "bin": [
@@ -2408,7 +2434,8 @@
       "https://bioconda.github.io/recipes/fastqc/README.html",
       "https://github.com/s-andrews/FastQC/"
     ],
-    "version": "0.12.1"
+    "version": "0.12.1",
+    "conda_channel": "bioconda"
   },
   "fd-find": {
     "bin": [
@@ -2425,7 +2452,8 @@
     "url": [
       "https://github.com/sharkdp/fd/"
     ],
-    "version": "10.4.2"
+    "version": "10.4.2",
+    "conda_channel": "conda-forge"
   },
   "ffmpeg": {
     "bin": [
@@ -2448,7 +2476,8 @@
       "https://ffmpeg.org/",
       "https://github.com/FFmpeg/FFmpeg/"
     ],
-    "version": "8.1.1"
+    "version": "8.1.1",
+    "conda_channel": "conda-forge"
   },
   "ffq": {
     "bin": [
@@ -2472,7 +2501,8 @@
       "https://github.com/pachterlab/ffq/",
       "https://bioconda.github.io/recipes/ffq/README.html"
     ],
-    "version": "0.3.1"
+    "version": "0.3.1",
+    "conda_channel": "bioconda"
   },
   "fgbio": {
     "date": "2026-04-15",
@@ -2486,7 +2516,8 @@
     "url": [
       "https://bioconda.github.io/recipes/fgbio/README.html"
     ],
-    "version": "4.0.0"
+    "version": "4.0.0",
+    "conda_channel": "bioconda"
   },
   "findutils": {
     "bin": [
@@ -2538,7 +2569,8 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.6.0"
+    "version": "4.6.0",
+    "conda_channel": "conda-forge"
   },
   "flac": {
     "bin": [
@@ -2680,7 +2712,8 @@
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
     ],
-    "version": "0.12.0"
+    "version": "0.12.0",
+    "conda_channel": "bioconda"
   },
   "fqtk": {
     "bin": [
@@ -2704,7 +2737,8 @@
       "https://github.com/fulcrumgenomics/fqtk/",
       "https://bioconda.github.io/recipes/fqtk/README.html"
     ],
-    "version": "0.3.1"
+    "version": "0.3.1",
+    "conda_channel": "bioconda"
   },
   "freetype": {
     "build_dependencies": [
@@ -2752,7 +2786,8 @@
     "url": [
       "https://github.com/junegunn/fzf/"
     ],
-    "version": "0.72.0"
+    "version": "0.72.0",
+    "conda_channel": "conda-forge"
   },
   "gatk": {
     "bin": [
@@ -2780,7 +2815,8 @@
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
     ],
-    "version": "4.6.2.0"
+    "version": "4.6.2.0",
+    "conda_channel": "bioconda"
   },
   "gawk": {
     "bin": [
@@ -2917,7 +2953,8 @@
       "https://github.com/NCI-GDC/gdc-client",
       "https://bioconda.github.io/recipes/gdc-client/README.html"
     ],
-    "version": "2.3"
+    "version": "2.3",
+    "conda_channel": "bioconda"
   },
   "gemini-cli": {
     "bin": [
@@ -2956,7 +2993,8 @@
       "https://github.com/vanheeringen-lab/genomepy/",
       "https://bioconda.github.io/recipes/genomepy/README.html"
     ],
-    "version": "0.16.3"
+    "version": "0.16.3",
+    "conda_channel": "bioconda"
   },
   "gentropy": {
     "bin": [
@@ -3054,7 +3092,8 @@
       "https://github.com/daler/gffutils/",
       "https://bioconda.github.io/recipes/gffutils/README.html"
     ],
-    "version": "0.14"
+    "version": "0.14",
+    "conda_channel": "bioconda"
   },
   "gget": {
     "bin": [
@@ -3079,7 +3118,8 @@
       "https://bioconda.github.io/recipes/gget/README.html",
       "https://github.com/pachterlab/gget"
     ],
-    "version": "0.29.0"
+    "version": "0.29.0",
+    "conda_channel": "bioconda"
   },
   "gh": {
     "bin": [
@@ -3096,7 +3136,8 @@
     "url": [
       "https://github.com/cli/cli/"
     ],
-    "version": "2.92.0"
+    "version": "2.92.0",
+    "conda_channel": "conda-forge"
   },
   "ghostscript": {
     "bin": [
@@ -3207,7 +3248,8 @@
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.28.1"
+    "version": "0.28.1",
+    "conda_channel": "conda-forge"
   },
   "glances": {
     "bin": [
@@ -3354,7 +3396,8 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "566.0.0"
+    "version": "566.0.0",
+    "conda_channel": "conda-forge"
   },
   "googletest": {
     "build_dependencies": [
@@ -3449,7 +3492,8 @@
     "url": [
       "https://github.com/pemistahl/grex/"
     ],
-    "version": "1.4.6"
+    "version": "1.4.6",
+    "conda_channel": "conda-forge"
   },
   "groff": {
     "bin": [
@@ -3774,7 +3818,8 @@
       "https://daehwankimlab.github.io/hisat2/",
       "https://bioconda.github.io/recipes/hisat2/README.html"
     ],
-    "version": "2.2.2"
+    "version": "2.2.2",
+    "conda_channel": "bioconda"
   },
   "htop": {
     "bin": [
@@ -3824,7 +3869,8 @@
       "https://github.com/htseq/htseq/",
       "https://bioconda.github.io/recipes/htseq/README.html"
     ],
-    "version": "2.1.2"
+    "version": "2.1.2",
+    "conda_channel": "bioconda"
   },
   "htslib": {
     "bin": [
@@ -3957,7 +4003,8 @@
     "url": [
       "https://github.com/sharkdp/hyperfine/"
     ],
-    "version": "1.20.0"
+    "version": "1.20.0",
+    "conda_channel": "conda-forge"
   },
   "icu4c": {
     "bin": [
@@ -4228,7 +4275,8 @@
     "url": [
       "https://github.com/stedolan/jq/"
     ],
-    "version": "1.8.1"
+    "version": "1.8.1",
+    "conda_channel": "conda-forge"
   },
   "julia": {
     "bin": [
@@ -4279,7 +4327,8 @@
       "https://k9scli.io/",
       "https://github.com/derailed/k9s"
     ],
-    "version": "0.50.18"
+    "version": "0.50.18",
+    "conda_channel": "conda-forge"
   },
   "kallisto": {
     "bin": [
@@ -4299,7 +4348,8 @@
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.52.0"
+    "version": "0.52.0",
+    "conda_channel": "bioconda"
   },
   "krb5": {
     "build_dependencies": [
@@ -5274,7 +5324,8 @@
     "url": [
       "https://github.com/lsd-rs/lsd/"
     ],
-    "version": "1.1.5"
+    "version": "1.1.5",
+    "conda_channel": "conda-forge"
   },
   "lua": {
     "bin": [
@@ -5351,7 +5402,8 @@
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.8.0"
+    "version": "3.8.0",
+    "conda_channel": "conda-forge"
   },
   "lz4": {
     "bin": [
@@ -5476,7 +5528,8 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.6.0"
+    "version": "2.6.0",
+    "conda_channel": "conda-forge"
   },
   "man-db": {
     "bin": [
@@ -5562,7 +5615,8 @@
     "url": [
       "https://github.com/cantino/mcfly/"
     ],
-    "version": "0.9.4"
+    "version": "0.9.4",
+    "conda_channel": "conda-forge"
   },
   "mdcat": {
     "bin": [
@@ -5580,7 +5634,8 @@
     "url": [
       "https://github.com/lunaryorn/mdcat/"
     ],
-    "version": "2.7.1"
+    "version": "2.7.1",
+    "conda_channel": "conda-forge"
   },
   "meson": {
     "bin": [
@@ -5648,7 +5703,8 @@
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.30"
+    "version": "2.30",
+    "conda_channel": "bioconda"
   },
   "misopy": {
     "bin": [
@@ -5673,7 +5729,8 @@
       "https://github.com/yarden/MISO/",
       "https://bioconda.github.io/recipes/misopy/README.html"
     ],
-    "version": "0.5.4"
+    "version": "0.5.4",
+    "conda_channel": "bioconda"
   },
   "mold": {
     "build_dependencies": [
@@ -5888,7 +5945,8 @@
     "url": [
       "https://bioconda.github.io/recipes/nanopolish/README.html"
     ],
-    "version": "0.14.0"
+    "version": "0.14.0",
+    "conda_channel": "bioconda"
   },
   "ncbi-sra-tools": {
     "bin": [
@@ -5918,7 +5976,8 @@
       "https://bioconda.github.io/recipes/sra-tools/README.html",
       "https://github.com/ncbi/sra-tools/"
     ],
-    "version": "3.4.1"
+    "version": "3.4.1",
+    "conda_channel": "bioconda"
   },
   "ncbi-vdb": {
     "date": "2024-05-31",
@@ -6004,7 +6063,8 @@
     "url": [
       "https://github.com/neovim/neovim/"
     ],
-    "version": "0.12.2"
+    "version": "0.12.2",
+    "conda_channel": "conda-forge"
   },
   "nettle": {
     "build_dependencies": [
@@ -6044,7 +6104,8 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "26.04.0"
+    "version": "26.04.0",
+    "conda_channel": "bioconda"
   },
   "nghttp2": {
     "build_dependencies": [
@@ -6169,7 +6230,8 @@
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "25.8.2"
+    "version": "25.8.2",
+    "conda_channel": "conda-forge"
   },
   "npth": {
     "build_dependencies": [
@@ -6200,7 +6262,8 @@
     "url": [
       "https://github.com/nushell/nushell/"
     ],
-    "version": "0.112.2"
+    "version": "0.112.2",
+    "conda_channel": "conda-forge"
   },
   "oniguruma": {
     "build_dependencies": [
@@ -6487,7 +6550,8 @@
       "https://pandoc.org/",
       "https://github.com/jgm/pandoc/"
     ],
-    "version": "3.9.0.2"
+    "version": "3.9.0.2",
+    "conda_channel": "conda-forge"
   },
   "parallel": {
     "bin": [
@@ -6677,7 +6741,8 @@
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.4.0"
+    "version": "3.4.0",
+    "conda_channel": "bioconda"
   },
   "pigz": {
     "bin": [
@@ -6906,7 +6971,8 @@
     "url": [
       "https://github.com/dalance/procs/"
     ],
-    "version": "0.14.11"
+    "version": "0.14.11",
+    "conda_channel": "conda-forge"
   },
   "proj": {
     "bin": [
@@ -7108,7 +7174,8 @@
     "url": [
       "https://pymol.org/conda/"
     ],
-    "version": "3.1.0"
+    "version": "3.1.0",
+    "conda_channel": "conda-forge"
   },
   "pyrefly": {
     "bin": [
@@ -7723,7 +7790,8 @@
       "https://github.com/randy3k/radian/",
       "https://pypi.org/project/radian/"
     ],
-    "version": "0.6.15"
+    "version": "0.6.15",
+    "conda_channel": "conda-forge"
   },
   "ranger-fm": {
     "bin": [
@@ -7741,7 +7809,8 @@
       "https://pypi.org/project/ranger-fm/",
       "https://github.com/ranger/ranger/"
     ],
-    "version": "1.9.3"
+    "version": "1.9.3",
+    "conda_channel": "conda-forge"
   },
   "rbenv": {
     "bin": [
@@ -7775,7 +7844,8 @@
     "url": [
       "https://rclone.org/"
     ],
-    "version": "1.74.0"
+    "version": "1.74.0",
+    "conda_channel": "conda-forge"
   },
   "readline": {
     "build_dependencies": [
@@ -7857,7 +7927,8 @@
     "url": [
       "https://github.com/BurntSushi/ripgrep/"
     ],
-    "version": "15.1.0"
+    "version": "15.1.0",
+    "conda_channel": "conda-forge"
   },
   "ripgrep-all": {
     "bin": [
@@ -7874,7 +7945,8 @@
     "url": [
       "https://github.com/phiresky/ripgrep-all/"
     ],
-    "version": "0.10.10"
+    "version": "0.10.10",
+    "conda_channel": "conda-forge"
   },
   "rmate": {
     "bin": [
@@ -7915,7 +7987,8 @@
       "https://rnaseq-mats.sourceforge.io/",
       "https://bioconda.github.io/recipes/rmats/README.html"
     ],
-    "version": "4.3.0"
+    "version": "4.3.0",
+    "conda_channel": "bioconda"
   },
   "ronn": {
     "bin": [
@@ -7971,7 +8044,8 @@
       "https://github.com/deweylab/RSEM/",
       "https://bioconda.github.io/recipes/rsem/README.html"
     ],
-    "version": "1.3.3"
+    "version": "1.3.3",
+    "conda_channel": "bioconda"
   },
   "rstudio-server": {
     "date": "2026-05-02",
@@ -8137,7 +8211,8 @@
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "1.11.4"
+    "version": "1.11.4",
+    "conda_channel": "bioconda"
   },
   "sambamba": {
     "bin": [
@@ -8162,7 +8237,8 @@
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
     ],
-    "version": "1.0.1"
+    "version": "1.0.1",
+    "conda_channel": "bioconda"
   },
   "samtools": {
     "bin": [
@@ -8200,7 +8276,8 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.23.1"
+    "version": "1.23.1",
+    "conda_channel": "bioconda"
   },
   "scalene": {
     "bin": [
@@ -8294,7 +8371,8 @@
     "url": [
       "https://github.com/chmln/sd/"
     ],
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "conda_channel": "conda-forge"
   },
   "sed": {
     "bin": [
@@ -8343,7 +8421,8 @@
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.13.0"
+    "version": "2.13.0",
+    "conda_channel": "bioconda"
   },
   "serf": {
     "build_dependencies": [
@@ -8382,7 +8461,8 @@
     "url": [
       "https://github.com/koalaman/shellcheck/"
     ],
-    "version": "0.11.0"
+    "version": "0.11.0",
+    "conda_channel": "conda-forge"
   },
   "shiny-server": {
     "date": "2025-05-08",
@@ -8482,7 +8562,8 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.20.0"
+    "version": "9.20.0",
+    "conda_channel": "bioconda"
   },
   "sox": {
     "bin": [
@@ -8503,7 +8584,8 @@
       "http://sox.sourceforge.net/sox.html",
       "https://sourceforge.net/projects/sox/files/sox/"
     ],
-    "version": "14.4.2"
+    "version": "14.4.2",
+    "conda_channel": "conda-forge"
   },
   "spacemacs": {
     "date": "2026-05-02",
@@ -8659,7 +8741,8 @@
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
     ],
-    "version": "2.7.11b"
+    "version": "2.7.11b",
+    "conda_channel": "bioconda"
   },
   "star-fusion": {
     "bin": [
@@ -8684,7 +8767,8 @@
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
     ],
-    "version": "1.15.1"
+    "version": "1.15.1",
+    "conda_channel": "bioconda"
   },
   "starship": {
     "bin": [
@@ -8702,7 +8786,8 @@
       "https://starship.rs/",
       "https://github.com/starship/starship/"
     ],
-    "version": "1.25.1"
+    "version": "1.25.1",
+    "conda_channel": "conda-forge"
   },
   "stow": {
     "bin": [
@@ -8765,7 +8850,8 @@
       "https://subread.sourceforge.net/",
       "https://bioconda.github.io/recipes/subread/README.html"
     ],
-    "version": "2.1.1"
+    "version": "2.1.1",
+    "conda_channel": "bioconda"
   },
   "subversion": {
     "bin": [
@@ -8909,7 +8995,8 @@
     "url": [
       "https://github.com/dbrgn/tealdeer/"
     ],
-    "version": "1.8.1"
+    "version": "1.8.1",
+    "conda_channel": "conda-forge"
   },
   "temurin": {
     "bin": [
@@ -9033,7 +9120,8 @@
     "url": [
       "https://github.com/XAMPPRocky/tokei/"
     ],
-    "version": "14.0.0"
+    "version": "14.0.0",
+    "conda_channel": "conda-forge"
   },
   "tqdm": {
     "bin": [
@@ -9118,7 +9206,8 @@
     "url": [
       "https://github.com/riquito/tuc/"
     ],
-    "version": "1.3.0"
+    "version": "1.3.0",
+    "conda_channel": "conda-forge"
   },
   "ty": {
     "bin": [
@@ -9182,7 +9271,8 @@
       "https://github.com/vals/umis/",
       "https://bioconda.github.io/recipes/umis/README.html"
     ],
-    "version": "1.0.9"
+    "version": "1.0.9",
+    "conda_channel": "bioconda"
   },
   "unibilium": {
     "build_dependencies": [
@@ -9810,7 +9900,8 @@
     "url": [
       "https://github.com/BurntSushi/xsv/"
     ],
-    "version": "0.13.0"
+    "version": "0.13.0",
+    "conda_channel": "conda-forge"
   },
   "xxhash": {
     "build_dependencies": [
@@ -9990,7 +10081,8 @@
     "url": [
       "https://github.com/zellij-org/zellij/"
     ],
-    "version": "0.44.1"
+    "version": "0.44.1",
+    "conda_channel": "conda-forge"
   },
   "zenith": {
     "bin": [
@@ -10008,7 +10100,8 @@
     "url": [
       "https://github.com/bvaisvil/zenith/"
     ],
-    "version": "0.14.3"
+    "version": "0.14.3",
+    "conda_channel": "conda-forge"
   },
   "zip": {
     "bin": [
@@ -10073,7 +10166,8 @@
     "url": [
       "https://github.com/ajeetdsouza/zoxide/"
     ],
-    "version": "0.9.9"
+    "version": "0.9.9",
+    "conda_channel": "conda-forge"
   },
   "zsh": {
     "bin": [
@@ -10093,7 +10187,8 @@
     "url": [
       "http://zsh.sourceforge.net/Arc/source.html"
     ],
-    "version": "5.9"
+    "version": "5.9",
+    "conda_channel": "conda-forge"
   },
   "zstd": {
     "bin": [

@@ -259,13 +259,13 @@ def _conda_exe() -> str | None:
     return os.environ.get("CONDA_EXE") or shutil.which("conda")
 
 
-def _check_conda(package: str) -> str:
+def _check_conda(package: str, channel: str = "conda-forge") -> str:
     exe = _conda_exe()
     if exe:
         with _conda_semaphore:
             try:
                 result = subprocess.run(
-                    [exe, "search", package, "--json"],
+                    [exe, "search", package, f"--channel={channel}", "--override-channels", "--json"],
                     capture_output=True,
                     text=True,
                     timeout=60,
@@ -1285,10 +1285,10 @@ def _check_boost() -> str:
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
-    "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("google-cloud-sdk",)),
+    "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("google-cloud-sdk", "conda-forge")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
-    "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli",)),
+    "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli", "conda-forge")),
     "vim": _AppCheckSpec("github", _check_github, ("vim", "vim"), batch_size=100),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
@@ -1555,7 +1555,8 @@ def _classify_generic(  # noqa: PLR0911
 ) -> _AppCheckSpec | None:
     if source == "conda":
         pkg = _get_str(args, "name") or name
-        return _AppCheckSpec("conda", _check_conda, (pkg,))
+        channel = _infer_conda_channel(name, urls)
+        return _AppCheckSpec("conda", _check_conda, (pkg, channel))
     if source == "pypi":
         pkg = _resolve_pypi_name(name, args, urls)
         return _AppCheckSpec("pypi", _check_pypi, (pkg,))
@@ -1591,7 +1592,13 @@ def _get_str(d: dict, key: str) -> str:
     return val
 
 
-def _infer_conda_channel(urls: list[str]) -> str:
+def _infer_conda_channel(name: str, urls: list[str]) -> str:
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        ch = entry.get("conda_channel")
+        if ch:
+            return ch
     for url in urls:
         if "bioconda" in url:
             return "bioconda"
