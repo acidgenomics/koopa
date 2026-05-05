@@ -2130,10 +2130,22 @@ def _update_venv(prefix: str) -> None:
                 shutil.rmtree(venv_dir)
     if not os.path.isdir(venv_dir):
         alert("Creating Python virtual environment.")
-        try:
-            import venv
+        from koopa.prefix import bootstrap_prefix
 
-            venv.create(venv_dir, with_pip=True, symlinks=True)
+        bp = bootstrap_prefix()
+        bootstrap_python = os.path.join(bp, "bin", "python3")
+        if not os.path.isfile(bootstrap_python):
+            warn(
+                f"Bootstrap Python not found at '{bootstrap_python}'.\n"
+                f"  Run bootstrap to install Python {python_version}:\n"
+                f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
+            )
+            return
+        try:
+            subprocess.run(
+                [bootstrap_python, "-m", "venv", "--symlinks", venv_dir],
+                check=True,
+            )
         except Exception as exc:
             warn(
                 f"Failed to create virtual environment: {exc}\n"
@@ -2152,6 +2164,15 @@ def _update_venv(prefix: str) -> None:
         )
         if os.path.isdir(venv_dir):
             shutil.rmtree(venv_dir)
+        return
+    real_python = os.path.realpath(venv_python)
+    app_dir = os.path.join(prefix, "app")
+    if real_python.startswith(app_dir + os.sep):
+        warn(
+            f"Virtual environment resolves to app-managed Python"
+            f" ({real_python}). Removing stale venv."
+        )
+        shutil.rmtree(venv_dir)
         return
     stamp_file = os.path.join(venv_dir, ".stamp")
     dep_files = [
@@ -2200,7 +2221,19 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
 
     bp = bootstrap_prefix()
     bootstrap_absent = not os.path.isdir(bp)
-    system_python_adequate = sys.version_info >= (3, 12)
+    # Only /usr/bin/python3 at exactly 3.12 qualifies as adequate system Python.
+    _sys_python = "/usr/bin/python3"
+    system_python_adequate = False
+    if os.path.isfile(_sys_python):
+        _res = subprocess.run(
+            [_sys_python, "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if _res.returncode == 0:
+            _ver = _res.stdout.strip().split()[-1]
+            system_python_adequate = ".".join(_ver.split(".")[:2]) == "3.12"
 
     # If bootstrap is absent and system Python is adequate, nothing to do.
     if bootstrap_absent and system_python_adequate:
