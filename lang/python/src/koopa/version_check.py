@@ -1972,11 +1972,13 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     return count
 
 
-_BOOTSTRAP_APP_MAP: dict[str, str] = {
-    "openssl": "openssl3",
-    "python": "python3.12",
-    "zlib": "zlib",
-}
+def _bootstrap_app_map() -> dict[str, str]:
+    py_ver = (Path(koopa_prefix()) / ".python-version").read_text().strip()
+    return {
+        "openssl": "openssl3",
+        "python": f"python{py_ver}",
+        "zlib": "zlib",
+    }
 
 
 def update_bootstrap(app_data: dict[str, Any]) -> int:
@@ -1987,7 +1989,7 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
         return 0
     text = bootstrap_path.read_text()
     count = 0
-    for func_name, app_key in _BOOTSTRAP_APP_MAP.items():
+    for func_name, app_key in _bootstrap_app_map().items():
         entry = app_data.get(app_key, {})
         if not isinstance(entry, dict):
             continue

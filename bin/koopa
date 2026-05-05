@@ -15,7 +15,8 @@ __koopa_realpath() {
     if [ -z "$_rp_out" ]; then
         _rp_out="$( \
             python3 -c \
-                "import os; print(os.path.realpath('$1'))" \
+                "import os, sys; print(os.path.realpath(sys.argv[1]))" \
+                "$1" \
             2>/dev/null \
             || true \
         )"
@@ -47,9 +48,11 @@ if __koopa_check_python "$_bootstrap_python"; then
 fi
 if [ -z "$_python" ]; then
     _sys_python="/usr/bin/python3"
-    if [ -x "$_sys_python" ] && \
+    _required_ver="$(cat "${_koopa_prefix}/.python-version" 2>/dev/null)"
+    if [ -n "$_required_ver" ] && [ -x "$_sys_python" ] && \
         "$_sys_python" -c \
-            'import sys; sys.exit(0 if sys.version_info[:2] == (3, 12) else 1)' \
+            "import sys; sys.exit(0 if sys.argv[1] == '{}.{}'.format(*sys.version_info[:2]) else 1)" \
+            "$_required_ver" \
             2>/dev/null && \
         __koopa_check_python "$_sys_python"
     then

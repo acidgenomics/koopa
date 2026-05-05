@@ -1666,7 +1666,6 @@ def install_conda_package(
         "--yes",
         f"--prefix={libexec}",
         f"--channel={channel_url}",
-        "--override-channels",
         pkg_spec,
     ]
     tmp_pkg_cache = tempfile.mkdtemp()
@@ -2234,9 +2233,13 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
     from koopa.check import check_bootstrap_version
     from koopa.prefix import bootstrap_prefix
 
+    from koopa.prefix import koopa_prefix
+
     bp = bootstrap_prefix()
     bootstrap_absent = not os.path.isdir(bp)
-    # Only /usr/bin/python3 at exactly 3.12 qualifies as adequate system Python.
+    required_ver = (
+        open(os.path.join(koopa_prefix(), ".python-version")).read().strip()
+    )
     _sys_python = "/usr/bin/python3"
     system_python_adequate = False
     if os.path.isfile(_sys_python):
@@ -2248,15 +2251,15 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
         )
         if _res.returncode == 0:
             _ver = _res.stdout.strip().split()[-1]
-            system_python_adequate = ".".join(_ver.split(".")[:2]) == "3.12"
+            system_python_adequate = (
+                ".".join(_ver.split(".")[:2]) == required_ver
+            )
 
     # If bootstrap is absent and system Python is adequate, nothing to do.
     if bootstrap_absent and system_python_adequate:
         return False
     # If bootstrap is present and up to date, also verify Python version matches.
     if not bootstrap_absent and check_bootstrap_version():
-        from koopa.prefix import koopa_prefix
-
         python_version_file = os.path.join(koopa_prefix(), ".python-version")
         if os.path.isfile(python_version_file):
             with open(python_version_file) as _f:
