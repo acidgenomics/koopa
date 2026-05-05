@@ -226,6 +226,7 @@ install_bzip2() {
         || return 1
     unset -v __kvar_filename
     make \
+        CFLAGS='-fPIC -Wall -Winline -O2 -g -D_FILE_OFFSET_BITS=64' \
         VERBOSE=1 \
         --jobs="${CPU_COUNT:?}" \
         PREFIX="${DESTDIR}${PREFIX}" \
