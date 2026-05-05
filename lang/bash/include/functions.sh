@@ -1523,24 +1523,6 @@ _koopa_arch() {
     return 0
 }
 
-_koopa_basename() {
-    local arg
-    if [[ "$#" -eq 0 ]]
-    then
-        local -a pos
-        readarray -t pos <<< "$(</dev/stdin)"
-        set -- "${pos[@]}"
-    fi
-    for arg in "$@"
-    do
-        [[ -n "$arg" ]] || return 1
-        arg="${arg%%+(/)}"
-        arg="${arg##*/}"
-        _koopa_print "$arg"
-    done
-    return 0
-}
-
 _koopa_bash_prompt_string() {
     local -A dict
     dict['newline']='\n'
@@ -2096,59 +2078,6 @@ _koopa_msg() {
     do
         _koopa_print "${dict['c1']}${dict['prefix']}${dict['nc']} \
 ${dict['c2']}${string}${dict['nc']}"
-    done
-    return 0
-}
-
-_koopa_parent_dir() {
-    local -A app dict
-    local -a pos
-    local file
-    app['sed']="$(_koopa_locate_sed --allow-system)"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['cd_tail']=''
-    dict['n']=1
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--num='*)
-                dict['n']="${1#*=}"
-                shift 1
-                ;;
-            '--num' | \
-            '-n')
-                dict['n']="${2:?}"
-                shift 2
-                ;;
-            '-'*)
-                _koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_args "$#"
-    [[ "${dict['n']}" -ge 1 ]] || dict['n']=1
-    if [[ "${dict['n']}" -ge 2 ]]
-    then
-        dict['n']="$((dict[n]-1))"
-        dict['cd_tail']="$( \
-            printf "%${dict['n']}s" \
-            | "${app['sed']}" 's| |/..|g' \
-        )"
-    fi
-    for file in "$@"
-    do
-        local parent
-        [[ -e "$file" ]] || return 1
-        parent="$(_koopa_dirname "$file")"
-        parent="${parent}${dict['cd_tail']}"
-        parent="$(_koopa_cd "$parent" && pwd -P)"
-        _koopa_print "$parent"
     done
     return 0
 }
