@@ -3,8 +3,7 @@
 import os
 import shutil
 
-from koopa.archive import extract
-from koopa.download import download
+from koopa.installers._build_helper import download_extract_cd
 
 
 def main(
@@ -15,10 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install shunit2."""
-    url = f"https://github.com/kward/shunit2/archive/v{version}.tar.gz"
-    tarball = download(url)
-    extract(tarball, "src")
-    os.chdir("src")
+    download_extract_cd()
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
     shutil.copy2("shunit2", os.path.join(bin_dir, "shunit2"))

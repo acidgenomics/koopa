@@ -3,9 +3,8 @@
 import os
 import shutil
 
-from koopa.archive import extract
-from koopa.download import download
 from koopa.file_ops import ln
+from koopa.installers._build_helper import download_extract_cd
 
 
 def main(
@@ -16,10 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install diff-so-fancy."""
-    url = f"https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v{version}.tar.gz"
-    tarball = download(url)
-    extract(tarball, "src")
-    os.chdir("src")
+    download_extract_cd()
     bin_dir = os.path.join(prefix, "bin")
     libexec_dir = os.path.join(prefix, "libexec")
     os.makedirs(bin_dir, exist_ok=True)

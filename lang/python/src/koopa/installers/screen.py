@@ -1,11 +1,11 @@
 """Install screen."""
 
+import os
 import subprocess
 
-from koopa.archive import is_valid_archive
 from koopa.build import activate_app, make_build
-from koopa.download import download
-from koopa.installers._build_helper import extract_cd
+from koopa.download import download_with_mirror
+from koopa.installers._build_helper import _resolve_src_url, extract_cd
 
 
 def main(
@@ -18,14 +18,9 @@ def main(
     """Install screen."""
     env = activate_app("autoconf", "automake", build_only=True)
     env = activate_app("libxcrypt", "ncurses", env=env)
-    for url in [
-        f"https://mirrors.kernel.org/gnu/screen/screen-{version}.tar.gz",
-        f"https://ftpmirror.gnu.org/gnu/screen/screen-{version}.tar.gz",
-        f"https://ftp.gnu.org/gnu/screen/screen-{version}.tar.gz",
-    ]:
-        tarball = download(url)
-        if is_valid_archive(tarball):
-            break
+    url = _resolve_src_url(name, version)
+    filename = os.path.basename(url)
+    tarball = download_with_mirror(url, name, filename)
     extract_cd(tarball)
     subprocess.run(
         ["./autogen.sh"],
