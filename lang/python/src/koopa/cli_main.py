@@ -456,6 +456,7 @@ def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     from koopa.install import (
         _acquire_install_lock,
+        _cleanup_legacy_config,
         _release_install_lock,
         _update_venv,
         install_missing_default_apps,
