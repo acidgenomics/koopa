@@ -7,7 +7,15 @@
 
 set -o errexit
 set -o nounset
-set -o xtrace
+KOOPA_VERBOSE="${KOOPA_VERBOSE:-0}"
+if [ "$KOOPA_VERBOSE" -eq 1 ] 2>/dev/null; then
+    set -o xtrace
+    _make_verbose='VERBOSE=1'
+    _curl_verbose='--show-error --verbose'
+else
+    _make_verbose=''
+    _curl_verbose='--silent'
+fi
 
 is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
@@ -91,8 +99,7 @@ download_with_fallback() {
             --fail \
             --location \
             --max-time 300 \
-            --show-error \
-            --verbose \
+            $_curl_verbose \
             "$__dwf_url" \
             -o "${__dwf_src_dir}/src.archive" \
             && tar -tf "${__dwf_src_dir}/src.archive" > /dev/null 2>&1
@@ -139,8 +146,8 @@ install_openssl() {
         'no-tests' \
         'no-zlib' \
         'shared'
-    make VERBOSE=1 --jobs=1 depend
-    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
+    make $_make_verbose --jobs=1 depend
+    make $_make_verbose --jobs="${CPU_COUNT:?}"
     make install_sw DESTDIR="$DESTDIR"
     [ -x "${DESTDIR}${PREFIX}/bin/openssl" ] || return 1
     unset -v __kvar_version
@@ -180,7 +187,7 @@ install_python() {
         --disable-test-modules \
         --prefix="$PREFIX" \
         --with-openssl="${DESTDIR}${PREFIX}"
-    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
+    make $_make_verbose --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
     unset -v LDLIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
@@ -227,7 +234,7 @@ install_bzip2() {
     unset -v __kvar_filename
     make \
         CFLAGS='-fPIC -Wall -Winline -O2 -g -D_FILE_OFFSET_BITS=64' \
-        VERBOSE=1 \
+        $_make_verbose \
         --jobs="${CPU_COUNT:?}" \
         PREFIX="${DESTDIR}${PREFIX}" \
         install
@@ -250,7 +257,7 @@ install_zlib() {
         || return 1
     unset -v __kvar_filename
     ./configure --prefix="$PREFIX"
-    make VERBOSE=1 --jobs="${CPU_COUNT:?}"
+    make $_make_verbose --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
     [ -f "${DESTDIR}${PREFIX}/lib/libz.a" ] || return 1
     unset -v __kvar_version
