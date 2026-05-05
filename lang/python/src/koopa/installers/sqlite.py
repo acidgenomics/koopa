@@ -1,11 +1,10 @@
 """Install sqlite."""
 
-
 import datetime
 
 from koopa.build import activate_app, make_build
 from koopa.download import download_with_mirror
-from koopa.installers._build_helper import extract_cd
+from koopa.installers._build_helper import download_extract_cd, extract_cd
 
 
 def _file_version(version: str) -> str:
@@ -24,6 +23,7 @@ def main(
     version: str,
     prefix: str,
     passthrough_args: list[str] | None = None,
+    use_mirror: bool = False,
 ) -> None:
     """Install sqlite."""
     env = activate_app("pkg-config", build_only=True)
@@ -31,8 +31,11 @@ def main(
     file_version = _file_version(version)
     url = _primary_url(file_version)
     filename = f"sqlite-autoconf-{file_version}.tar.gz"
-    tarball = download_with_mirror(url, "sqlite", filename)
-    extract_cd(tarball)
+    if use_mirror:
+        tarball = download_with_mirror(url, "sqlite", filename)
+        extract_cd(tarball)
+    else:
+        download_extract_cd(url)
     make_build(
         conf_args=[
             "--disable-static",

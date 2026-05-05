@@ -1572,7 +1572,7 @@
     "date": "2026-05-02",
     "default": true,
     "description": "converts filenames between character encodings",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.j3e.de/linux/convmv/convmv-{version}.tar.gz",
     "type": "cli",
     "url": "https://www.j3e.de/linux/convmv/?C=M;O=D",
@@ -4114,7 +4114,7 @@
       "gmp"
     ],
     "description": "integer set library for polyhedral compilation",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://downloads.sourceforge.net/project/libisl/isl-{version}.tar.xz",
     "type": "library",
     "url": [
@@ -4947,7 +4947,7 @@
       "zlib"
     ],
     "description": "C library implementing the SSH2 protocol",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.libssh2.org/download/libssh2-{version}.tar.gz",
     "type": "library",
     "url": [
@@ -5740,7 +5740,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "C library for correct decimal floating point",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-{version}.tar.gz",
     "type": "library",
     "url": [
@@ -5864,7 +5864,7 @@
       "ncurses"
     ],
     "description": "simple, user-friendly terminal text editor",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.nano-editor.org/dist/v{major}/nano-{version}.tar.xz",
     "type": "cli",
     "url": [
@@ -6407,7 +6407,7 @@
       "ca-certificates"
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v1)",
-    "mirror": true,
+    "use_mirror": true,
     "revision": 1,
     "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
     "type": "build_tool",
@@ -6429,7 +6429,7 @@
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v3)",
     "installer": "openssl",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
     "type": "library",
     "url": [
@@ -7254,7 +7254,7 @@
     "man1": [
       "python3.10.1"
     ],
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7311,7 +7311,7 @@
     "man1": [
       "python3.11.1"
     ],
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7368,7 +7368,7 @@
     "man1": [
       "python3.12.1"
     ],
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7425,7 +7425,7 @@
     "man1": [
       "python3.13.1"
     ],
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7494,7 +7494,7 @@
       "python3.1",
       "python3.14.1"
     ],
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -8023,7 +8023,7 @@
     "man1": [
       "rsync.1"
     ],
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://download.samba.org/pub/rsync/src/rsync-{version}.tar.gz",
     "type": "cli",
     "url": [
@@ -8626,6 +8626,7 @@
     "url": [
       "https://www.sqlite.org/download.html"
     ],
+    "use_mirror": true,
     "version": "3.53.0"
   },
   "staden-io-lib": {
@@ -10054,7 +10055,7 @@
     "date": "2026-04-24",
     "default": false,
     "description": "lossless data compression library",
-    "mirror": true,
+    "use_mirror": true,
     "src_url": "https://www.zlib.net/zlib-{version}.tar.gz",
     "type": "library",
     "url": [

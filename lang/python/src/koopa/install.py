@@ -6,7 +6,6 @@ Converted from Bash functions:
 - install-app-from-binary-package.sh: Install from pre-built binary package.
 """
 
-
 import contextlib
 import json
 import os
@@ -54,6 +53,7 @@ class InstallConfig:
     reinstall: bool = False
     reinstall_reason: str = ""
     update_ldconfig: bool = False
+    use_mirror: bool = False
     verbose: bool = False
     # Passthrough configuration args (CMake -D style).
     passthrough_args: list[str] = field(default_factory=list)
@@ -231,6 +231,15 @@ def _app_json_revision(name: str) -> int:
     if isinstance(entry, dict):
         return int(entry.get("revision", 0))
     return 0
+
+
+def _app_json_use_mirror(name: str) -> bool:
+    """Get use_mirror flag from app.json (default False)."""
+    data = _import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        return bool(entry.get("use_mirror", False))
+    return False
 
 
 def can_build_binary() -> bool:
@@ -816,11 +825,14 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app_from_binary_package(config.prefix)
             elif has_python_installer(config.name, config.platform, config.mode):
                 installer_fn = get_python_installer(config.name, config.platform, config.mode)
+                if not config.use_mirror:
+                    config.use_mirror = _app_json_use_mirror(config.name)
                 installer_fn(
                     name=config.name,
                     version=config.version,
                     prefix=config.prefix,
                     passthrough_args=config.passthrough_args,
+                    use_mirror=config.use_mirror,
                 )
             else:
                 installer_key = _app_json_installer(config.name)
@@ -828,11 +840,14 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     installer_key, config.platform, config.mode
                 ):
                     installer_fn = get_python_installer(installer_key, config.platform, config.mode)
+                    if not config.use_mirror:
+                        config.use_mirror = _app_json_use_mirror(config.name)
                     installer_fn(
                         name=config.name,
                         version=config.version,
                         prefix=config.prefix,
                         passthrough_args=config.passthrough_args,
+                        use_mirror=config.use_mirror,
                     )
                 else:
                     msg = (

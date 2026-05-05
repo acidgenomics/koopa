@@ -1,13 +1,13 @@
 """Install openssl."""
 
-
 import os
 import subprocess
 import sys
 
 from koopa.build import activate_app, app_prefix, locate
+from koopa.download import download_with_mirror
 from koopa.file_ops import ln
-from koopa.installers._build_helper import download_extract_cd, remove_static_libs
+from koopa.installers._build_helper import download_extract_cd, extract_cd, remove_static_libs
 
 
 def main(
@@ -16,6 +16,7 @@ def main(
     version: str,
     prefix: str,
     passthrough_args: list[str] | None = None,
+    use_mirror: bool = False,
 ) -> None:
     """Install openssl."""
     env = activate_app("make", "pkg-config", "perl", build_only=True)
@@ -23,11 +24,13 @@ def main(
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = os.path.join(ca_prefix, "share", "ca-certificates", "cacert.pem")
     make = locate("make")
-    url = (
-        f"https://github.com/openssl/openssl/releases/download/"
-        f"openssl-{version}/openssl-{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    filename = f"openssl-{version}.tar.gz"
+    url = f"https://github.com/openssl/openssl/releases/download/openssl-{version}/{filename}"
+    if use_mirror:
+        tarball = download_with_mirror(url, "openssl", filename)
+        extract_cd(tarball)
+    else:
+        download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     conf_args = [
         "--libdir=lib",

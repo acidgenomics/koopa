@@ -581,9 +581,9 @@ def _handle_mirror_src(args: list[str]) -> None:
                 print(f"Error: '{name}' has no 'src_url' in app.json.", file=sys.stderr)
                 sys.exit(1)
     else:
-        targets = sorted(k for k, v in data.items() if v.get("mirror"))
+        targets = sorted(k for k, v in data.items() if v.get("src_url"))
         if not targets:
-            print("Error: No apps with 'mirror: true' found in app.json.", file=sys.stderr)
+            print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
     print(f"Mirroring {len(targets)} app(s) to S3.", file=sys.stderr)
     bucket = "koopa.acidgenomics.com"
@@ -673,9 +673,9 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
                 print(f"Error: '{name}' not found in app.json.", file=sys.stderr)
                 sys.exit(1)
     else:
-        targets = sorted(k for k, v in data.items() if v.get("mirror"))
+        targets = sorted(k for k, v in data.items() if v.get("src_url"))
         if not targets:
-            print("Error: No apps with 'mirror: true' found in app.json.", file=sys.stderr)
+            print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
     bucket = "koopa.acidgenomics.com"
     missing: list[str] = []
