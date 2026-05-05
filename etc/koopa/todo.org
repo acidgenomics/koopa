@@ -7,3 +7,4 @@
 * Medium priority
 ** TODO We need to review all open issues and pull requests.
 ** TODO Do we need to configure custom SSL_CERT_FILE support in our bootstrap environment? Review again that our current implementation is correct. Mark done when all tasks on builder machine finish successfully.
+** TODO Enhance `koopa update` defaults to only run certain extra features like dotfiles config when `--extra` flag is set.

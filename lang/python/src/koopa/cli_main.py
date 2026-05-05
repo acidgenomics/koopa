@@ -183,6 +183,7 @@ def _build_parser() -> argparse.ArgumentParser:
     update_p.add_argument("--system", action="store_true", default=False)
     update_p.add_argument("--user", action="store_true", default=False)
     update_p.add_argument("--all-system", action="store_true", default=False)
+    update_p.add_argument("--extra", action="store_true", default=False)
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
@@ -425,7 +426,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         _acquire_install_lock,
         _release_install_lock,
         _update_venv,
-        fetch_user_repos,
         install_missing_default_apps,
         remove_unsupported_apps,
         update_bootstrap,
@@ -469,18 +469,22 @@ def _handle_update(args: argparse.Namespace) -> None:
             update_stale_apps(verbose=args.verbose)
             install_missing_default_apps(verbose=args.verbose)
             update_user_apps(verbose=args.verbose)
-            fetch_user_repos()
-            _configure_user_dotfiles(verbose=args.verbose)
+            if args.extra:
+                from koopa.install import fetch_user_repos
+
+                fetch_user_repos()
+                _configure_user_dotfiles(verbose=args.verbose)
             prune_broken_symlinks()
             try:
                 prune_apps()
             except (ValueError, OSError) as exc:
                 warn(f"Prune failed: {exc}")
-            from koopa.install import _can_push_binary, push_missing_app_builds
+            if args.extra:
+                from koopa.install import _can_push_binary, push_missing_app_builds
 
-            if _can_push_binary():
-                print("Checking S3 for missing app builds...", file=sys.stderr)
-                push_missing_app_builds()
+                if _can_push_binary():
+                    print("Checking S3 for missing app builds...", file=sys.stderr)
+                    push_missing_app_builds()
             if args.all_system:
                 update_system_apps(verbose=args.verbose)
             from koopa.alert import alert_success
