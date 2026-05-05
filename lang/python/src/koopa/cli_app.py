@@ -1598,11 +1598,24 @@ def _handle_ftp_mirror(args: list[str]) -> None:
 # -- jekyll handlers ---------------------------------------------------------
 
 
+def _require_koopa_bundle() -> str:
+    """Resolve bundle from koopa's opt ruby. Fails if not installed."""
+    from koopa.prefix import opt_prefix
+
+    ruby_opt = os.path.join(opt_prefix(), "ruby")
+    if not os.path.isdir(ruby_opt):
+        msg = "koopa ruby is not installed. Run: koopa install ruby"
+        raise FileNotFoundError(msg)
+    ruby_bin = os.path.join(os.path.realpath(ruby_opt), "bin")
+    bundle = os.path.join(ruby_bin, "bundle")
+    if not os.path.isfile(bundle) or not os.access(bundle, os.X_OK):
+        msg = f"bundle not found in koopa ruby at '{ruby_bin}'."
+        raise FileNotFoundError(msg)
+    return bundle
+
+
 def _handle_jekyll_serve(args: list[str]) -> None:
-    bundle = shutil.which("bundle")
-    if bundle is None:
-        msg = "bundle is not installed."
-        raise RuntimeError(msg)
+    bundle = _require_koopa_bundle()
     from koopa.xdg import xdg_data_home
 
     bundle_prefix = os.path.join(xdg_data_home(), "gem")
@@ -1639,11 +1652,8 @@ def _handle_jekyll_deploy_to_aws(args: list[str]) -> None:
     parser.add_argument("--profile", default=os.environ.get("AWS_PROFILE", "default"))
     parser.add_argument("--local-prefix", default=os.getcwd())
     parsed = parser.parse_args(args)
-    bundle = shutil.which("bundle")
+    bundle = _require_koopa_bundle()
     aws = shutil.which("aws")
-    if bundle is None:
-        msg = "bundle is not installed."
-        raise RuntimeError(msg)
     if aws is None:
         msg = "aws is not installed."
         raise RuntimeError(msg)
