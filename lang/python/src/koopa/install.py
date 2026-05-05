@@ -767,7 +767,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     f" (reason: {config.reinstall_reason})" if config.reinstall_reason else ""
                 )
                 alert_note(
-                    f"{config.name}{reason_suffix}: installing with dependencies: {', '.join(all_deps)}"
+                    f"{config.name}{reason_suffix}: installing with"
+                    f" dependencies: {', '.join(all_deps)}"
                 )
             for dep in all_deps:
                 resolved_dep = _resolve_alias(dep)
@@ -967,6 +968,7 @@ def install_gnu_app(
 
     tarball_path = f"{parent_name}/{package_name}-{version}.tar.{compress_ext}"
     url = f"{mirror}/{tarball_path}"
+    tarball: str = ""
     try:
         tarball = download(url)
         if not is_valid_archive(tarball):
@@ -2161,6 +2163,7 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
                     [bootstrap_python, "--version"],
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
                 if _res.returncode == 0:
                     actual = _res.stdout.strip().split()[-1]
@@ -2231,7 +2234,7 @@ def _topo_sort_apps(apps_with_reasons: list[tuple[str, str]]) -> list[tuple[str,
     original_order = [a for a, _ in apps_with_reasons]
     queue = sorted(
         [a for a in stale_set if in_degree[a] == 0],
-        key=lambda x: original_order.index(x),
+        key=original_order.index,
     )
     result: list[str] = []
     while queue:
@@ -2241,7 +2244,7 @@ def _topo_sort_apps(apps_with_reasons: list[tuple[str, str]]) -> list[tuple[str,
             in_degree[dependent] -= 1
             if in_degree[dependent] == 0:
                 queue.append(dependent)
-                queue.sort(key=lambda x: original_order.index(x))
+                queue.sort(key=original_order.index)
 
     # If there's a cycle (shouldn't happen), fall back to original order.
     if len(result) != len(stale_set):

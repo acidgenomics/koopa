@@ -39,4 +39,4 @@ def main(
         existing = os.environ.get("PYTHONPATH", "")
         if src not in existing.split(os.pathsep):
             os.environ["PYTHONPATH"] = f"{src}{os.pathsep}{existing}".rstrip(os.pathsep)
-        os.execv(new_python, [new_python] + sys.argv)
+        os.execv(new_python, [new_python, *sys.argv])

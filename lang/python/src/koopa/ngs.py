@@ -335,12 +335,13 @@ def bowtie2_align(
         "-o",
         output_sam,
     ]
-    if output_fmt == "cram":
+    if output_fmt == "cram" and reference_fasta is not None:
         samtools_args.extend(["--reference", reference_fasta])
     samtools_args.append("-")
     bowtie2_proc = subprocess.Popen(bowtie2_args, stdout=subprocess.PIPE)
     samtools_proc = subprocess.Popen(samtools_args, stdin=bowtie2_proc.stdout)
-    bowtie2_proc.stdout.close()
+    if bowtie2_proc.stdout is not None:
+        bowtie2_proc.stdout.close()
     samtools_proc.wait()
     bowtie2_proc.wait()
     if bowtie2_proc.returncode != 0:
