@@ -1,6 +1,5 @@
 """Uninstall R framework on macOS."""
 
-from __future__ import annotations
 
 import os
 

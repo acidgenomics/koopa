@@ -1,6 +1,5 @@
 """Uninstall GNU Fortran for R on macOS."""
 
-from __future__ import annotations
 
 import os
 

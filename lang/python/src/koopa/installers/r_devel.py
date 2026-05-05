@@ -1,6 +1,5 @@
 """Install r-devel."""
 
-from __future__ import annotations
 
 from koopa.installers.r_app import main as r_main
 

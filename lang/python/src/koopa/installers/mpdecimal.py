@@ -1,6 +1,5 @@
 """Install mpdecimal."""
 
-from __future__ import annotations
 
 from koopa.build import make_build
 from koopa.download import download_with_mirror

@@ -5,7 +5,6 @@ performs the installation. Apps not in the registry fall through to the
 existing Bash subshell installer path.
 """
 
-from __future__ import annotations
 
 import importlib
 from collections.abc import Callable

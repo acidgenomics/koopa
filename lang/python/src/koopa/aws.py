@@ -6,7 +6,6 @@ aws-ecr-login-public, aws-ec2-list-running-instances,
 aws-batch-list-jobs, etc.
 """
 
-from __future__ import annotations
 
 import json
 import re

@@ -5,7 +5,6 @@ disk-gb-used, disk-pct-free, disk-pct-used, df2, find-large-files,
 find-large-dirs, etc.
 """
 
-from __future__ import annotations
 
 import contextlib
 import os

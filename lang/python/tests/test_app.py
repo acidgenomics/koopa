@@ -26,8 +26,8 @@ def test_app_deps_no_self_dependency_cmake() -> None:
     assert "cmake" not in deps
 
 
-def test_app_deps_curl_includes_cmake() -> None:
-    """Test that cmake is a transitive dependency of curl (via zstd)."""
+def test_app_deps_libarchive_includes_cmake() -> None:
+    """Test that cmake is a transitive dependency of libarchive (via zstd)."""
     with patch("koopa.app.os_id", return_value="macos-arm64"):
-        deps = app_deps("curl")
+        deps = app_deps("libarchive")
     assert "cmake" in deps

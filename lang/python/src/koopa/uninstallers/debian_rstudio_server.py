@@ -1,6 +1,5 @@
 """Uninstall RStudio Server on Debian."""
 
-from __future__ import annotations
 
 import subprocess
 

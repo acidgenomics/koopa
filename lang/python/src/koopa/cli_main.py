@@ -5,8 +5,6 @@ Reads app metadata from ``app.json`` to resolve installer, platform, and
 passthrough arguments -- eliminating the need for per-app Bash wrappers.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import os
@@ -103,7 +101,7 @@ def _build_install_config(
     deps: bool = True,
     private: bool = False,
     extra_passthrough: list[str] | None = None,
-) -> InstallConfig:
+) -> "InstallConfig":
     """Build an InstallConfig from app.json metadata."""
     from koopa.install import InstallConfig, _can_install_binary, _can_push_binary
 

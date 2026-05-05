@@ -3,7 +3,6 @@
 Converted from Bash functions in ``lang/bash/functions/core/conda-*.sh``.
 """
 
-from __future__ import annotations
 
 import os
 import subprocess

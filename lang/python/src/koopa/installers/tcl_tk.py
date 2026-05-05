@@ -1,6 +1,5 @@
 """Install tcl-tk."""
 
-from __future__ import annotations
 
 import os
 import subprocess

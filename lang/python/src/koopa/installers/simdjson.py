@@ -1,6 +1,5 @@
 """Install simdjson."""
 
-from __future__ import annotations
 
 from koopa.build import cmake_build
 from koopa.installers._build_helper import download_extract_cd

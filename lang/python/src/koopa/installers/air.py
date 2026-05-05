@@ -1,6 +1,5 @@
 """Install air."""
 
-from __future__ import annotations
 
 from koopa.install import install_rust_package
 

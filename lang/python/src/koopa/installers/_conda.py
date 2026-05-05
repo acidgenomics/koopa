@@ -1,6 +1,5 @@
 """Generic conda package installer."""
 
-from __future__ import annotations
 
 from koopa.install import install_conda_package
 from koopa.installers._args import get_str, parse_passthrough

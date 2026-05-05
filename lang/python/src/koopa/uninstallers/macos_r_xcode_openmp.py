@@ -1,6 +1,5 @@
 """Uninstall OpenMP for Xcode on macOS."""
 
-from __future__ import annotations
 
 import os
 

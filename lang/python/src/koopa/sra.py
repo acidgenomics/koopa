@@ -3,7 +3,6 @@
 Converted from Bash functions in ``lang/bash/functions/core/sra-*.sh``.
 """
 
-from __future__ import annotations
 
 import gzip
 import os

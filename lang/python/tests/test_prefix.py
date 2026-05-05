@@ -59,7 +59,7 @@ def test_bootstrap_prefix_env_set(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_bootstrap_prefix_default(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test bootstrap_prefix returns default when unset."""
     monkeypatch.delenv("KOOPA_BOOTSTRAP_PREFIX", raising=False)
-    assert bootstrap_prefix().endswith("/bootstrap")
+    assert bootstrap_prefix().endswith("-bootstrap")
 
 
 def test_conda_prefix_env_set(monkeypatch: pytest.MonkeyPatch) -> None:

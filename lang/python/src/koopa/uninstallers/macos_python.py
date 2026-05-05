@@ -1,6 +1,5 @@
 """Uninstall Python framework on macOS."""
 
-from __future__ import annotations
 
 import glob
 import os

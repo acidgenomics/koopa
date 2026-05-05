@@ -3,8 +3,6 @@
 Replaces the 34-line ``_koopa_cli_develop`` Bash function.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess
@@ -486,12 +484,29 @@ def _handle_pytest(args: list[str]) -> None:
     """Handle ``koopa develop pytest``."""
     from koopa.prefix import python_prefix
 
-    tests_dir = os.path.join(python_prefix(), "tests")
+    py_prefix = python_prefix()
+    tests_dir = os.path.join(py_prefix, "tests")
+    src_dir = os.path.join(py_prefix, "src")
     pytest_cmd = shutil.which("pytest")
     if pytest_cmd is None:
         msg = "pytest is not installed."
         raise RuntimeError(msg)
-    sys.exit(subprocess.run([pytest_cmd, tests_dir, *args], check=False).returncode)
+    env = os.environ.copy()
+    existing = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{src_dir}:{existing}" if existing else src_dir
+    sys.exit(subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode)
+
+
+def _handle_pyright(args: list[str]) -> None:
+    """Handle ``koopa develop pyright``."""
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    pyright_cmd = shutil.which("pyright")
+    if pyright_cmd is None:
+        msg = "pyright is not installed."
+        raise RuntimeError(msg)
+    sys.exit(subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode)
 
 
 def _handle_generate_completion() -> None:
@@ -902,6 +917,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "generate-completion": lambda _: _handle_generate_completion(),
     "generate-man": _handle_generate_man,
     "pytest": _handle_pytest,
+    "pyright": _handle_pyright,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),

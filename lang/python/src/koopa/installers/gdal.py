@@ -1,6 +1,5 @@
 """Install gdal."""
 
-from __future__ import annotations
 
 from koopa.build import (
     activate_app,

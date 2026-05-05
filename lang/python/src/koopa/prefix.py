@@ -3,7 +3,6 @@
 Converted from POSIX shell and Bash prefix functions.
 """
 
-from __future__ import annotations
 
 import os
 from pathlib import Path

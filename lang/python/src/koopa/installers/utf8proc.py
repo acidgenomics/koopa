@@ -1,6 +1,5 @@
 """Install utf8proc."""
 
-from __future__ import annotations
 
 import subprocess
 

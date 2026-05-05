@@ -1,6 +1,5 @@
 """Install dotfiles."""
 
-from __future__ import annotations
 
 from koopa.git import git_clone
 

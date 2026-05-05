@@ -4,8 +4,6 @@ Each bin/ script delegates to this module via:
     python3 -m koopa.cli_bin <script-name> [args...]
 """
 
-from __future__ import annotations
-
 import csv
 import os
 import re
@@ -18,10 +16,6 @@ from collections import Counter
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    import argparse
 
 
 def _which(name: str) -> str:

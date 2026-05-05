@@ -1,6 +1,5 @@
 """Install walk."""
 
-from __future__ import annotations
 
 from koopa.install import install_go_package
 

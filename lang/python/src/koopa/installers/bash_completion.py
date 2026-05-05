@@ -1,6 +1,5 @@
 """Install bash-completion."""
 
-from __future__ import annotations
 
 from koopa.build import make_build
 from koopa.installers._build_helper import download_extract_cd

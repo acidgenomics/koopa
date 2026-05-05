@@ -1,6 +1,5 @@
 """Install libpipeline."""
 
-from __future__ import annotations
 
 from koopa.install import install_gnu_app
 

@@ -11,7 +11,6 @@ Usage::
     koopa develop generate-man --write  # overwrite koopa.1
 """
 
-from __future__ import annotations
 
 import os
 from datetime import date

@@ -1,6 +1,5 @@
 """Install elvish."""
 
-from __future__ import annotations
 
 from koopa.install import build_go_package
 

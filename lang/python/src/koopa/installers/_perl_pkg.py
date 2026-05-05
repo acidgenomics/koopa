@@ -1,6 +1,5 @@
 """Generic Perl package installer."""
 
-from __future__ import annotations
 
 from koopa.install import install_perl_package
 from koopa.installers._args import get_list, get_str, parse_passthrough

@@ -1,6 +1,5 @@
 """Install r-gfortran."""
 
-from __future__ import annotations
 
 import subprocess
 

@@ -1,6 +1,5 @@
 """Uninstall Oracle Instant Client on Fedora."""
 
-from __future__ import annotations
 
 import os
 import subprocess
