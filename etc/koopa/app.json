@@ -4784,7 +4784,6 @@
   },
   "libgpg-error": {
     "build_dependencies": [
-      "bzip2",
       "make",
       "pkg-config"
     ],
@@ -5438,8 +5437,7 @@
       "lzip"
     ],
     "build_dependencies": [
-      "make",
-      "tar"
+      "make"
     ],
     "date": "2026-05-02",
     "default": false,

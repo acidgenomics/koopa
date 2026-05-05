@@ -554,7 +554,7 @@ def _handle_mirror_src(args: list[str]) -> None:
 
     Downloads source tarballs from upstream and uploads to the
     s3://koopa.acidgenomics.com/src/ mirror. With no args, mirrors all
-    apps with ``"mirror": true`` in app.json.
+    apps with a ``"src_url"`` defined in app.json.
     """
     import time
 
