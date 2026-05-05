@@ -45,8 +45,9 @@ def export_app_json(data: dict, pretty: bool = False) -> None:
         from subprocess import run
 
         prettier = which("prettier")
-        if prettier is not None:
-            run([prettier, "--write", file], check=False)
+        if prettier is None:
+            raise SystemExit("prettier is not installed.")
+        run([prettier, "--write", file], check=True)
 
 
 def import_app_json() -> dict:

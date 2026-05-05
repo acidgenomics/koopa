@@ -76,6 +76,7 @@ def _get_main_command_flags() -> dict[str, list[str]]:
         if flags:
             result[name] = sorted(set(flags))
     # Manual flag parsing not detectable via argparse introspection.
+    result["develop/format-app-json"] = ["--help", "--prettier"]
     result["develop/remove-app"] = ["--help", "--revdeps"]
     return result
 

@@ -97,75 +97,103 @@ def alert_coffee_time() -> None:
     msg("This is going to take a while. Time for a coffee break! ☕", prefix="", color="33")
 
 
-def alert_install_start(name: str, prefix: str = "") -> None:
+def _styled_name(name: str) -> str:
+    return f"{_bold()}{name}{_reset()}"
+
+
+def _styled_prefix(prefix: str) -> str:
+    return f"'{_cyan()}{prefix}{_reset()}'"
+
+
+def _styled_reason(reason: str) -> str:
+    return f"({_magenta()}reason:{_reset()} {reason})"
+
+
+def alert_install_start(name: str, prefix: str = "", reason: str = "") -> None:
     """Alert that installation is starting."""
-    s = f"Installing {name}"
+    s = f"Installing {_styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {_styled_prefix(prefix)}"
+    if reason:
+        s += f" {_styled_reason(reason)}"
     s += "."
-    msg(s, prefix="", color="33")
+    msg(s)
 
 
 def alert_install_success(name: str, prefix: str = "") -> None:
     """Alert that installation succeeded."""
-    s = f"Successfully installed {name}"
+    s = f"Successfully installed {_styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {_styled_prefix(prefix)}"
     s += "."
     msg(s, prefix="✓", color="32")
 
 
-def alert_uninstall_start(name: str, prefix: str = "") -> None:
+def alert_uninstall_start(name: str, prefix: str = "", reason: str = "") -> None:
     """Alert that uninstallation is starting."""
-    s = f"Uninstalling {name}"
+    s = f"Uninstalling {_styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {_styled_prefix(prefix)}"
+    if reason:
+        s += f" {_styled_reason(reason)}"
     s += "."
-    msg(s, prefix="", color="33")
+    msg(s)
 
 
 def alert_uninstall_success(name: str, prefix: str = "") -> None:
     """Alert that uninstallation succeeded."""
-    s = f"Successfully uninstalled {name}"
+    s = f"Successfully uninstalled {_styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {_styled_prefix(prefix)}"
     s += "."
     msg(s, prefix="✓", color="32")
 
 
-def alert_configure_start(name: str) -> None:
+def alert_configure_start(name: str, reason: str = "") -> None:
     """Alert configuration starting."""
-    msg(f"Configuring {name}.", prefix="", color="33")
+    s = f"Configuring {_styled_name(name)}"
+    if reason:
+        s += f" {_styled_reason(reason)}"
+    s += "."
+    msg(s)
 
 
 def alert_configure_success(name: str) -> None:
     """Alert configuration succeeded."""
-    msg(f"Successfully configured {name}.", prefix="✓", color="32")
+    msg(f"Successfully configured {_styled_name(name)}.", prefix="✓", color="32")
 
 
-def alert_update_start(name: str) -> None:
+def alert_update_start(name: str, reason: str = "") -> None:
     """Alert update starting."""
-    msg(f"Updating {name}.", prefix="", color="33")
+    s = f"Updating {_styled_name(name)}"
+    if reason:
+        s += f" {_styled_reason(reason)}"
+    s += "."
+    msg(s)
 
 
 def alert_update_success(name: str) -> None:
     """Alert update succeeded."""
-    msg(f"Successfully updated {name}.", prefix="✓", color="32")
+    msg(f"Successfully updated {_styled_name(name)}.", prefix="✓", color="32")
 
 
-def alert_process_start(name: str) -> None:
+def alert_process_start(name: str, reason: str = "") -> None:
     """Alert process starting."""
-    msg(f"Processing {name}.", prefix="", color="33")
+    s = f"Processing {_styled_name(name)}"
+    if reason:
+        s += f" {_styled_reason(reason)}"
+    s += "."
+    msg(s)
 
 
 def alert_process_success(name: str) -> None:
     """Alert process succeeded."""
-    msg(f"Successfully processed {name}.", prefix="✓", color="32")
+    msg(f"Successfully processed {_styled_name(name)}.", prefix="✓", color="32")
 
 
 def alert_is_not_installed(name: str) -> None:
     """Alert that something is not installed."""
-    msg(f"{name} is not installed.", prefix="", color="33")
+    msg(f"{_styled_name(name)} is not installed.")
 
 
 def alert_restart() -> None:
