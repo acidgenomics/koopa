@@ -1689,15 +1689,6 @@ def check_app_versions(
                 raise RuntimeError(msg)
             if spec.batch_size is not None:
                 latest = _apply_batch_version(latest, current, spec.batch_size)
-            if not _SHA_RE.match(latest):
-                current_parts = tuple(
-                    int(x) for x in re.split(r"[.\-]", sanitize_version(current)) if x.isdigit()
-                )
-                latest_parts = tuple(
-                    int(x) for x in re.split(r"[.\-]", sanitize_version(latest)) if x.isdigit()
-                )
-                if latest_parts < current_parts:
-                    latest = current
             if cache is not None:
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
