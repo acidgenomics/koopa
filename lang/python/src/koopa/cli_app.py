@@ -56,6 +56,7 @@ _APP_TREE: dict[str, Any] = {
         "version": "brew-version",
     },
     "conda": {
+        "clean-cache": "conda-clean-cache",
         "create-env": "conda-create-env",
         "remove-env": "conda-remove-env",
     },
@@ -1033,6 +1034,13 @@ def _handle_brew_version(args: list[str]) -> None:
 # -- conda handlers ----------------------------------------------------------
 
 
+def _handle_conda_clean_cache(args: list[str]) -> None:
+    from koopa.build import locate
+
+    conda = locate("conda")
+    subprocess.run([conda, "clean", "--all", "--yes"], check=True)
+
+
 def _handle_conda_create_env(args: list[str]) -> None:
     import argparse
 
@@ -1881,6 +1889,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "brew-upgrade-brews": _handle_brew_upgrade_brews,
     "brew-version": _handle_brew_version,
     # conda
+    "conda-clean-cache": _handle_conda_clean_cache,
     "conda-create-env": _handle_conda_create_env,
     "conda-remove-env": _handle_conda_remove_env,
     # current
