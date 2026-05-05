@@ -13,10 +13,14 @@ from koopa.prefix import koopa_prefix
 
 
 def koopa_version() -> str:
-    """Return koopa version from VERSION file."""
-    version_file = Path(koopa_prefix()) / "VERSION"
-    if version_file.is_file():
-        return version_file.read_text().strip()
+    """Return koopa version from pyproject.toml."""
+    import tomllib
+
+    pyproject = Path(koopa_prefix()) / "pyproject.toml"
+    if pyproject.is_file():
+        with open(pyproject, "rb") as fh:
+            data = tomllib.load(fh)
+        return data.get("project", {}).get("version", "unknown")
     return "unknown"
 
 
