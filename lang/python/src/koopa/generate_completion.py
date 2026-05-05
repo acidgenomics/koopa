@@ -131,7 +131,7 @@ _MAIN_COMMAND_FLAGS: dict[str, list[str]] = {
     ],
     "reinstall": ["--help", "--all-revdeps", "--no-revdeps", "--only-revdeps", "--verbose"],
     "uninstall": ["--help", "--no-revdeps", "--system", "--user", "--verbose"],
-    "update": ["--help", "--all-system", "--system", "--user", "--verbose"],
+    "update": ["--help", "--all-system", "--extra", "--system", "--user", "--verbose"],
     "develop/remove-app": ["--help", "--revdeps"],
 }
 

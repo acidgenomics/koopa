@@ -871,6 +871,21 @@ def _handle_circular_dependencies() -> None:
     sys.exit(1)
 
 
+def _handle_generate_man(args: list[str]) -> None:
+    """Handle ``koopa develop generate-man``."""
+    import argparse
+
+    from koopa.generate_man import generate_man, write_man
+
+    parser = argparse.ArgumentParser(prog="koopa develop generate-man")
+    parser.add_argument("--write", action="store_true", help="write koopa.1 to disk")
+    parsed = parser.parse_args(args)
+    if parsed.write:
+        write_man()
+    else:
+        print(generate_man(), end="")
+
+
 def _handle_update_docs(_: list[str]) -> None:
     """Handle ``koopa develop update-docs``."""
     from koopa.alert import alert_success
@@ -885,6 +900,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "format-app-json": _handle_format_app_json,
     "update-docs": _handle_update_docs,
     "generate-completion": lambda _: _handle_generate_completion(),
+    "generate-man": _handle_generate_man,
     "pytest": _handle_pytest,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
