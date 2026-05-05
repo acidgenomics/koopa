@@ -67,9 +67,6 @@ configuration, and updates of command-line applications and libraries.
 
 ## INSTALL OPTIONS
 
-* `--bootstrap`:
-  Bootstrap mode (minimal dependency resolution).
-
 * `--no-dependencies`:
   Skip dependency installation.
 
@@ -190,6 +187,14 @@ configuration, and updates of command-line applications and libraries.
 * `system zsh-compaudit-set-permissions`:
   Fix Zsh compaudit permissions.
 
+### Linux-specific additional system subcommands
+
+* `system delete-cache`:
+  Delete cache, log, and temporary files (Docker images only).
+
+* `system test`:
+  Run the koopa test suite.
+
 ## DEVELOP SUBCOMMANDS
 
 * `develop log`:
@@ -204,8 +209,23 @@ configuration, and updates of command-line applications and libraries.
 * `develop format-app-json`:
   Sort and format `app.json`.
 
-* `develop push-app-build`:
+* `develop check-app-versions`:
+  Check upstream versions for all apps in `app.json`.
+
+* `develop update-docs`:
+  Update generated documentation files.
+
+* `develop generate-completion`:
+  Regenerate shell tab-completion scripts.
+
+* `develop roff`:
+  Regenerate man pages from `.ronn` source files.
+
+* `develop push-app-build` <name>...:
   Push a single application build to the binary cache.
+
+* `develop push-app-builds`:
+  Push all stale application builds to the binary cache.
 
 * `develop push-all-app-builds`:
   Push all application builds to the binary cache.
@@ -213,8 +233,29 @@ configuration, and updates of command-line applications and libraries.
 * `develop prune-app-binaries`:
   Remove stale application binaries from the cache.
 
-* `develop roff`:
-  Regenerate man pages from ronn source files.
+* `develop mirror-src` <name>...:
+  Mirror source tarballs to S3.
+
+* `develop audit-src-mirror`:
+  Audit S3 source mirror for missing or stale tarballs.
+
+* `develop remove-app` <name>:
+  Tombstone an app entry in `app.json`.
+
+* `develop bump-revision` <name>...:
+  Bump the revision of one or more apps in `app.json`.
+
+* `develop bump-venv-revision`:
+  Bump the Python venv revision.
+
+* `develop shellcheck`:
+  Run shellcheck on all shell scripts.
+
+* `develop circular-dependencies`:
+  Detect circular dependency chains in `app.json`.
+
+* `develop pytest`:
+  Run the Python test suite.
 
 ## COPYRIGHT
 
