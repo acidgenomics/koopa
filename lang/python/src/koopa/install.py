@@ -776,9 +776,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     if config.reinstall_reason
                     else ""
                 )
+                dep_word = "dependency" if len(all_deps) == 1 else "dependencies"
                 alert_note(
                     f"{styled_name(config.name)}{reason_suffix}: installing with"
-                    f" dependencies: {', '.join(all_deps)}"
+                    f" {dep_word}: {', '.join(styled_name(d) for d in all_deps)}"
                 )
             for dep in all_deps:
                 resolved_dep = _resolve_alias(dep)
