@@ -1,6 +1,5 @@
 """Uninstall Docker on macOS."""
 
-from __future__ import annotations
 
 import os
 

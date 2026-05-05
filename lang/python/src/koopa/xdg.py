@@ -4,7 +4,6 @@ Converted from POSIX shell functions: xdg-cache-home, xdg-config-dirs,
 xdg-config-home, xdg-data-dirs, xdg-data-home, xdg-local-home, xdg-state-home.
 """
 
-from __future__ import annotations
 
 import os
 

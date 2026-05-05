@@ -6,7 +6,6 @@ hisat2-build, kallisto-index, kallisto-quant, bam-filter, bam-to-fastq,
 fastqc, multiqc, etc.
 """
 
-from __future__ import annotations
 
 import os
 import shutil

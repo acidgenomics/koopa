@@ -1,6 +1,5 @@
 """Install hdf5."""
 
-from __future__ import annotations
 
 from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
 from koopa.installers._build_helper import download_extract_cd

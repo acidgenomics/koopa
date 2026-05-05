@@ -1,6 +1,5 @@
 """Install gseapy."""
 
-from __future__ import annotations
 
 from koopa.build import activate_app
 from koopa.install import install_python_package

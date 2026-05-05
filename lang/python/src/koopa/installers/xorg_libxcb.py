@@ -1,6 +1,5 @@
 """Install xorg-libxcb."""
 
-from __future__ import annotations
 
 from koopa.build import activate_app, locate, make_build
 from koopa.installers._build_helper import download_extract_cd

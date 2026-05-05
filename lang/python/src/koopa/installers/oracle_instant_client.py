@@ -1,6 +1,5 @@
 """Install oracle-instant-client."""
 
-from __future__ import annotations
 
 import subprocess
 

@@ -1,6 +1,5 @@
 """Install aws-mountpoint-s3."""
 
-from __future__ import annotations
 
 import os
 import subprocess

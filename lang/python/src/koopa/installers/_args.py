@@ -1,6 +1,5 @@
 """Parse passthrough CLI args into keyword arguments."""
 
-from __future__ import annotations
 
 
 def parse_passthrough(

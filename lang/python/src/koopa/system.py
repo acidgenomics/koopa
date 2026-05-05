@@ -4,7 +4,6 @@ Converted from POSIX shell and Bash functions for system identification,
 architecture detection, and OS-level queries.
 """
 
-from __future__ import annotations
 
 import grp
 import os

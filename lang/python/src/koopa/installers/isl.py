@@ -1,6 +1,5 @@
 """Install isl."""
 
-from __future__ import annotations
 
 from koopa.build import activate_app, app_prefix, make_build
 from koopa.download import download_with_mirror
