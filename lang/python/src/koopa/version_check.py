@@ -408,8 +408,13 @@ def _check_python_org(minor: str) -> str:
     if not patches:
         msg = f"No versions found for Python {minor}"
         raise RuntimeError(msg)
-    best_patch = max(int(p) for p in patches)
-    return f"{minor}.{best_patch}"
+    for patch in sorted(set(int(p) for p in patches), reverse=True):
+        version = f"{minor}.{patch}"
+        dir_html = _http_get_text(f"{url}{version}/")
+        if f"Python-{version}.tar.xz" in dir_html or f"Python-{version}.tgz" in dir_html:
+            return version
+    msg = f"No stable release found for Python {minor}"
+    raise RuntimeError(msg)
 
 
 def _check_gitlab(domain: str, project_path: str) -> str:
