@@ -926,15 +926,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if progress.saved_log_path:
             shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
     if not config.quiet:
-        from koopa.alert import alert_success
+        from koopa.alert import alert_install_success
 
-        duration = progress.elapsed_formatted
-        if config.prefix:
-            alert_success(
-                f"Successfully installed '{config.name}' at '{config.prefix}' in {duration}."
-            )
-        else:
-            alert_success(f"Successfully installed '{config.name}' in {duration}.")
+        alert_install_success(
+            config.name, config.prefix or "", progress.elapsed_formatted
+        )
 
 
 # -- Isolated subshell runner -------------------------------------------------

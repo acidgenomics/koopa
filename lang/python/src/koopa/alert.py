@@ -120,11 +120,13 @@ def alert_install_start(name: str, prefix: str = "", reason: str = "") -> None:
     msg(s)
 
 
-def alert_install_success(name: str, prefix: str = "") -> None:
+def alert_install_success(name: str, prefix: str = "", duration: str = "") -> None:
     """Alert that installation succeeded."""
     s = f"Successfully installed {_styled_name(name)}"
     if prefix:
         s += f" at {_styled_prefix(prefix)}"
+    if duration:
+        s += f" in {duration}"
     s += "."
     msg(s, prefix="✓", color="32")
 
