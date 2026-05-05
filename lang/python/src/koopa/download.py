@@ -61,8 +61,9 @@ def download_with_mirror(primary_url: str, name: str, filename: str) -> str:
         tarball = download(primary_url, retry=False)
         if not archive.is_valid_archive(tarball):
             raise ValueError("invalid archive")
+        return tarball
     except Exception:
-        tarball = download(mirror_url, retry=False)
+        tarball = download(mirror_url, retry=True)
     return tarball
 
 
