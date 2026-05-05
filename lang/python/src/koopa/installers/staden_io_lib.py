@@ -1,6 +1,5 @@
 """Install staden-io-lib."""
 
-from __future__ import annotations
 
 import sys
 

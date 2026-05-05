@@ -1,6 +1,5 @@
 """Install star-conda."""
 
-from __future__ import annotations
 
 
 def main(

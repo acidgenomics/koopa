@@ -1,6 +1,5 @@
 """Install libluv."""
 
-from __future__ import annotations
 
 import os
 

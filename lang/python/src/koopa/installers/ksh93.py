@@ -1,6 +1,5 @@
 """Install ksh93."""
 
-from __future__ import annotations
 
 import subprocess
 

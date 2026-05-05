@@ -6,7 +6,6 @@ Converted from Bash functions:
 - install-app-from-binary-package.sh: Install from pre-built binary package.
 """
 
-from __future__ import annotations
 
 import contextlib
 import json

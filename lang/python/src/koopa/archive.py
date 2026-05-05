@@ -4,7 +4,6 @@ Converted from Bash/POSIX shell functions: extract, decompress,
 tar-multiple-dirs, compress, etc.
 """
 
-from __future__ import annotations
 
 import bz2
 import gzip

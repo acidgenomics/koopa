@@ -1,6 +1,5 @@
 """Install ont-vbz-compression."""
 
-from __future__ import annotations
 
 from koopa.archive import extract
 from koopa.build import activate_app, app_prefix, cmake_build, shared_ext

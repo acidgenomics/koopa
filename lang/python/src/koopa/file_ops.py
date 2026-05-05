@@ -5,7 +5,6 @@ touch, write-string, append-string, delete-broken-symlinks, delete-empty-dirs,
 find-broken-symlinks, find-empty-dirs, file-count, line-count, etc.
 """
 
-from __future__ import annotations
 
 import contextlib
 import os

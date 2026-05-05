@@ -5,7 +5,6 @@ Each subcommand calls directly into the koopa package, eliminating the
 Python-to-Bash-to-Python roundtrip.
 """
 
-from __future__ import annotations
 
 import sys
 

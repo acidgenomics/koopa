@@ -5,7 +5,6 @@ Python equivalents of the Bash functions ``_koopa_activate_app``,
 ``_koopa_cmake_build``, and ``_koopa_make_build``.
 """
 
-from __future__ import annotations
 
 import json
 import os

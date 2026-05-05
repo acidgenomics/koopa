@@ -1,6 +1,5 @@
 """Upstream version checking for apps in app.json."""
 
-from __future__ import annotations
 
 import importlib
 import inspect

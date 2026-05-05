@@ -5,7 +5,6 @@ Provides ``uninstall_app`` — the Python equivalent of the Bash function
 and its symlinks from bin/, opt/, and man1/.
 """
 
-from __future__ import annotations
 
 import json
 import os

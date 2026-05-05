@@ -1,7 +1,5 @@
 """Build progress tracking with historical timing."""
 
-from __future__ import annotations
-
 import json
 import os
 import sys
@@ -9,16 +7,17 @@ import tempfile
 import threading
 import time
 from pathlib import Path
+from typing import Self
 
 _HISTORY_FILENAME = "build-times.json"
 
-_active_progress: BuildProgress | None = None
+_active_progress: "BuildProgress | None" = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
 _LOG_TAIL_LINES = 100
 
 
-def get_active_progress() -> BuildProgress | None:
+def get_active_progress() -> "BuildProgress | None":
     """Return the currently active build progress context, if any."""
     return _active_progress
 
@@ -115,7 +114,7 @@ class BuildProgress:
             return self._log_file.name
         return None
 
-    def __enter__(self) -> BuildProgress:
+    def __enter__(self) -> Self:
         """Enter the build progress context."""
         global _active_progress  # noqa: PLW0603
         _active_progress = self
