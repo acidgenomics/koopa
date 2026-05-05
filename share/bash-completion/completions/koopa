@@ -65,6 +65,7 @@ _koopa_complete() {
         ['configure']='--help --system --user --verbose'
         ['develop']='--help'
         ['develop/check-app-versions']='--help --json --source --update --s3-upload --reset-cache'
+        ['develop/format-app-json']='--help --prettier'
         ['develop/remove-app']='--help --revdeps'
         ['header']='--help'
         ['install']='--help --no-dependencies --private --reinstall --system --user --verbose'
