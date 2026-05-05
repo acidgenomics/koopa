@@ -6,7 +6,7 @@ import os
 import subprocess
 
 from koopa.file_ops import ln
-from koopa.prefix import opt_prefix
+from koopa.prefix import koopa_prefix, opt_prefix
 
 
 def main(
