@@ -489,7 +489,14 @@ def _handle_update(args: argparse.Namespace) -> None:
 
             _cleanup_legacy_config()
             update_koopa(verbose=args.verbose)
-            bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
+            try:
+                bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
+            except Exception as exc:
+                print(
+                    f"Error: Failed to update bootstrap: {exc}",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
             if bootstrap_rebuilt:
                 # Bootstrap Python version changed. The running interpreter's
                 # stdlib paths are now stale. Exec-restart using the new
