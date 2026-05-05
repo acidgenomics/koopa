@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install xz."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/tukaani-project/xz/releases/download/v{version}/xz-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-debug",

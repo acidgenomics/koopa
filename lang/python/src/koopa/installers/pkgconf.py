@@ -14,8 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install pkgconf."""
-    url = f"https://distfiles.ariadne.space/pkgconf/pkgconf-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     if sys.platform == "darwin":
         sys_lib_dir = "/usr/lib"
         pc_path = "/usr/lib/pkgconfig"

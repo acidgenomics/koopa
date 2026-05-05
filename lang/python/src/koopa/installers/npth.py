@@ -13,9 +13,7 @@ def main(
 ) -> None:
     """Install npth."""
     env = activate_app("pkg-config", build_only=True)
-    gcrypt_url = "https://gnupg.org/ftp/gcrypt"
-    url = f"{gcrypt_url}/npth/npth-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

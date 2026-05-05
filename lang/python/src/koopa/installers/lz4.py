@@ -16,8 +16,7 @@ def main(
     """Install lz4."""
     env = activate_app("make", "pkg-config", build_only=True)
     make = locate("make")
-    url = f"https://github.com/lz4/lz4/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         [make, "install", f"PREFIX={prefix}"],
         env=env.to_env_dict(),

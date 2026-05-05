@@ -13,7 +13,6 @@ def main(
 ) -> None:
     """Install zlib."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://www.zlib.net/zlib-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(conf_args=[f"--prefix={prefix}"], env=env)
     remove_static_libs(prefix)

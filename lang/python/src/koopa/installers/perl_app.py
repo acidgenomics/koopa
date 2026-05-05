@@ -28,8 +28,7 @@ def main(
     os.makedirs(man1dir, exist_ok=True)
     os.makedirs(man3dir, exist_ok=True)
     src_maj_min_ver = f"{major_version(version)}.0"
-    url = f"https://www.cpan.org/src/{src_maj_min_ver}/perl-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     conf_args = [
         "-d",

@@ -14,8 +14,7 @@ def main(
     """Install lesspipe."""
     env = activate_app("bash", build_only=True)
     bash = locate("bash")
-    url = f"https://github.com/wofr06/lesspipe/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             f"--bash-completion-dir={prefix}/etc/bash_completion.d",

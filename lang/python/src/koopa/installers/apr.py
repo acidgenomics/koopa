@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install apr."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://archive.apache.org/dist/apr/apr-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-static",

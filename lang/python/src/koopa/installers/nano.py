@@ -4,10 +4,6 @@ from koopa.build import activate_app, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
-def _major_version(version: str) -> str:
-    return version.split(".", maxsplit=1)[0]
-
-
 def main(
     *,
     name: str,
@@ -18,9 +14,7 @@ def main(
     """Install nano."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("gettext", "ncurses", env=env)
-    maj = _major_version(version)
-    url = f"https://www.nano-editor.org/dist/v{maj}/nano-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-debug",

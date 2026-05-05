@@ -18,8 +18,7 @@ def main(
     env = activate_app("zlib", env=env)
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
-    url = f"https://github.com/nicolo-ribaudo/taglib/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         ["git", "submodule", "update", "--init"],
         check=True,

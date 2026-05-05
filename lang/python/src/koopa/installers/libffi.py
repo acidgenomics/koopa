@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install libffi."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=["--disable-static", f"--prefix={prefix}"],
         env=env,

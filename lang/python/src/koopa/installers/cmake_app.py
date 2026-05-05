@@ -56,8 +56,7 @@ def main(
     env = activate_app("make", "pkg-config", build_only=True)
     env = activate_app("openssl3", env=env)
     make = locate("make")
-    url = f"https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
     if sys.platform != "darwin":

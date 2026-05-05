@@ -22,8 +22,7 @@ def main(
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = os.path.join(ca_prefix, "share", "ca-certificates", "cacert.pem")
     make = locate("make")
-    url = f"https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     conf_args = [
         "--libdir=lib",

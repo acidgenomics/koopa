@@ -14,7 +14,7 @@ def main(
     """Install gmp."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("m4", env=env)
-    download_extract_cd(f"https://gmplib.org/download/gmp/gmp-{version}.tar.xz")
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-static",

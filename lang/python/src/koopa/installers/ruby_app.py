@@ -4,7 +4,6 @@ import sys
 
 from koopa.build import activate_app, app_prefix, make_build
 from koopa.installers._build_helper import download_extract_cd
-from koopa.version import major_minor_version
 
 
 def main(
@@ -22,9 +21,7 @@ def main(
     openssl_prefix = app_prefix("openssl3")
     readline_prefix = app_prefix("readline")
     zlib_prefix = app_prefix("zlib")
-    maj_min_ver = major_minor_version(version)
-    url = f"https://cache.ruby-lang.org/pub/ruby/{maj_min_ver}/ruby-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--disable-install-doc",
         "--disable-silent-rules",

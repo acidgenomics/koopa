@@ -27,10 +27,7 @@ def main(
         env=env,
     )
     python = locate("python3")
-    url = (
-        f"https://github.com/nghttp2/nghttp2/releases/download/v{version}/nghttp2-{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-examples",

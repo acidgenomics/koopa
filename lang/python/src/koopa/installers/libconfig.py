@@ -12,11 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libconfig."""
-    url = (
-        f"https://github.com/hyperrealm/libconfig/releases/download/"
-        f"v{version}/libconfig-{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

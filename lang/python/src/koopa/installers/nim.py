@@ -13,8 +13,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install nim."""
-    url = f"https://nim-lang.org/download/nim-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(["sh", "build.sh"], check=True)
     subprocess.run(
         ["bin/nim", "c", "-d:release", "koch"],

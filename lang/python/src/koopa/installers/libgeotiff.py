@@ -27,8 +27,7 @@ def main(
     )
     proj_prefix = app_prefix("proj")
     libtiff_prefix = app_prefix("libtiff")
-    url = f"https://download.osgeo.org/geotiff/libgeotiff/libgeotiff-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         f"--prefix={prefix}",
         "--disable-static",

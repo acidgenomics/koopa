@@ -22,8 +22,7 @@ def main(
         "pkg-config",
         build_only=True,
     )
-    url = f"https://github.com/kkos/oniguruma/releases/download/v{version}/onig-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess.run(
         ["autoreconf", "--force", "--install", "--verbose"],

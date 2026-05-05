@@ -19,11 +19,7 @@ def main(
     if sys.platform != "darwin":
         deps.append("bzip2")
     env = activate_app(*deps, env=env)
-    url = (
-        f"https://github.com/PhilipHazel/pcre2/releases/"
-        f"download/pcre2-{version}/pcre2-{version}.tar.bz2"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

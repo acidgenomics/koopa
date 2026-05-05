@@ -18,8 +18,7 @@ def main(
     openssl_prefix = app_prefix("openssl")
     libssh2_prefix = app_prefix("libssh2")
     ext = shared_ext()
-    url = f"https://github.com/libgit2/libgit2/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

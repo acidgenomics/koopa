@@ -23,8 +23,7 @@ def main(
         "icu4c",
         env=env,
     )
-    url = f"https://github.com/harfbuzz/harfbuzz/archive/{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     meson_build(
         prefix=prefix,
         args=[

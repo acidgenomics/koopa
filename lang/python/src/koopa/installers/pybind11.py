@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install pybind11."""
     env = activate_app("python", build_only=True)
-    url = f"https://github.com/pybind/pybind11/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DPYBIND11_NOPYTHON=ON", "-DPYBIND11_TEST=OFF"],

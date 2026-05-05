@@ -6,11 +6,6 @@ from koopa.build import activate_app, locate
 from koopa.installers._build_helper import download_extract_cd
 
 
-def _major_minor_version(version: str) -> str:
-    parts = version.split(".")
-    return f"{parts[0]}.{parts[1]}"
-
-
 def main(
     *,
     name: str,
@@ -21,9 +16,7 @@ def main(
     """Install libvterm."""
     env = activate_app("libtool", "make", "pkg-config", build_only=True)
     make = locate("make")
-    mm = _major_minor_version(version)
-    url = f"https://launchpad.net/libvterm/trunk/v{mm}/+download/libvterm-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         [make, "install", f"PREFIX={prefix}"],
         env=env.to_env_dict(),

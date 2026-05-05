@@ -29,8 +29,7 @@ def main(
     apr_util_prefix = app_prefix("apr-util")
     serf_prefix = app_prefix("serf")
     sqlite_prefix = app_prefix("sqlite")
-    url = f"https://archive.apache.org/dist/subversion/subversion-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--disable-debug",
         "--disable-mod-activation",

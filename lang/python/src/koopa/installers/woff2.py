@@ -18,8 +18,7 @@ def main(
     """Install woff2."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("brotli", env=env)
-    url = f"https://github.com/nicolo-ribaudo/woff2/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DCANONICAL_PREFIXES=ON"],

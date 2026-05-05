@@ -17,8 +17,7 @@ def main(
     env = activate_app("zlib", env=None)
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
-    url = f"https://github.com/openSUSE/libsolv/archive/refs/tags/{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install libpcap."""
     env = activate_app("bison", "flex", "pkg-config", build_only=True)
-    url = f"https://www.tcpdump.org/release/libpcap-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--enable-ipv6",

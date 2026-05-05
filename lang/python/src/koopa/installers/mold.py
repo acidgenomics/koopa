@@ -15,8 +15,7 @@ def main(
 ) -> None:
     """Install mold."""
     env = activate_app("mimalloc", "tbb", "zlib", "zstd", env=None)
-    url = f"https://github.com/rui314/mold/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     jobs = 1 if sys.platform != "darwin" else None
     cmake_build(
         prefix=prefix,

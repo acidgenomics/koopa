@@ -31,8 +31,7 @@ def main(
         if p[0].isdigit():
             lua_ver = major_minor_version(p)
             break
-    url = f"https://luarocks.org/releases/luarocks-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         f"--prefix={prefix}",
         f"--lua-version={lua_ver}",
