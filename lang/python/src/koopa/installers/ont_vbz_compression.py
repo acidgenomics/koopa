@@ -1,6 +1,5 @@
 """Install ont-vbz-compression."""
 
-
 from koopa.archive import extract
 from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
 from koopa.download import download

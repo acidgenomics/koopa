@@ -1,6 +1,5 @@
 """Install quarto."""
 
-
 import sys
 
 from koopa.archive import extract

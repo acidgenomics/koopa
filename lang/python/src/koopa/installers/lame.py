@@ -1,6 +1,5 @@
 """Install lame."""
 
-
 import re
 
 from koopa.build import make_build

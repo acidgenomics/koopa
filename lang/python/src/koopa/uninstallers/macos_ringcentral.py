@@ -1,6 +1,5 @@
 """Uninstall RingCentral on macOS."""
 
-
 import os
 
 from koopa.file_ops import rm

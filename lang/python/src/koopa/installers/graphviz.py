@@ -1,6 +1,5 @@
 """Install graphviz."""
 
-
 import os
 
 from koopa.build import activate_app, make_build

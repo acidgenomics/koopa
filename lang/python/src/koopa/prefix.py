@@ -3,7 +3,6 @@
 Converted from POSIX shell and Bash prefix functions.
 """
 
-
 import os
 from pathlib import Path
 

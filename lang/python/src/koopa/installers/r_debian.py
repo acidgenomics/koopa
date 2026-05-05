@@ -1,6 +1,5 @@
 """Install R on Debian/Ubuntu from CRAN."""
 
-
 import re
 import subprocess
 

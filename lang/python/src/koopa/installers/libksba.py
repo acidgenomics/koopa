@@ -1,6 +1,5 @@
 """Install libksba."""
 
-
 from koopa.build import activate_app, app_prefix, make_build
 from koopa.installers._build_helper import download_extract_cd
 

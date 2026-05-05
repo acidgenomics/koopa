@@ -1,6 +1,5 @@
 """Install haskell-cabal."""
 
-
 import os
 import subprocess
 

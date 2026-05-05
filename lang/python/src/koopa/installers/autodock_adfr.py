@@ -1,6 +1,5 @@
 """Install autodock-adfr."""
 
-
 import os
 import subprocess
 import sys

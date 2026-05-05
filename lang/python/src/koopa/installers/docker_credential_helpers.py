@@ -1,6 +1,5 @@
 """Install docker-credential-helpers."""
 
-
 import os
 import shutil
 import subprocess

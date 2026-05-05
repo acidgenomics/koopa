@@ -1,6 +1,5 @@
 """Install luarocks."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate, make_build

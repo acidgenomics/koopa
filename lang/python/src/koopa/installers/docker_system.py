@@ -1,6 +1,5 @@
 """Install docker."""
 
-
 import os
 import subprocess
 

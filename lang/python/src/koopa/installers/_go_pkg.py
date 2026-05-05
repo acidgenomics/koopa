@@ -1,6 +1,5 @@
 """Generic Go package installer."""
 
-
 from koopa.install import install_go_package
 from koopa.installers._args import get_str, parse_passthrough
 

@@ -1,6 +1,5 @@
 """Install hugo."""
 
-
 from koopa.install import build_go_package
 
 

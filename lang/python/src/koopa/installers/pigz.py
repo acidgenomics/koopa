@@ -1,6 +1,5 @@
 """Install pigz."""
 
-
 import os
 import shutil
 import subprocess

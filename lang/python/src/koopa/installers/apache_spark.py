@@ -1,6 +1,5 @@
 """Install apache-spark."""
 
-
 import os
 import stat
 

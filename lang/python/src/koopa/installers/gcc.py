@@ -1,6 +1,5 @@
 """Install GCC."""
 
-
 import os
 import subprocess
 

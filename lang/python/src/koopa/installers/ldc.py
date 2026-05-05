@@ -1,6 +1,5 @@
 """Install ldc."""
 
-
 import os
 import stat
 import subprocess

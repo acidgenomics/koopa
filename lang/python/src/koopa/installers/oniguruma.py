@@ -1,6 +1,5 @@
 """Install oniguruma."""
 
-
 import subprocess
 
 from koopa.build import activate_app, make_build

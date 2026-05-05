@@ -1,6 +1,5 @@
 """Generic Python package installer."""
 
-
 from koopa.install import install_python_package
 from koopa.installers._args import get_list, get_str, parse_passthrough
 

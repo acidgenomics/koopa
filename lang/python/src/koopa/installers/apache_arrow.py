@@ -1,6 +1,5 @@
 """Install apache-arrow."""
 
-
 import os
 import platform
 

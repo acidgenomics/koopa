@@ -1,6 +1,5 @@
 """Generic GNU app installer."""
 
-
 import json
 import os
 from pathlib import Path

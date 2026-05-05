@@ -1,6 +1,5 @@
 """Uninstall Python framework on macOS."""
 
-
 import glob
 import os
 

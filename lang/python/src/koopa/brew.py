@@ -6,7 +6,6 @@ brew-reset-permissions, brew-uninstall-all-brews, brew-install-brewfile,
 brew-list-formulae, brew-list-casks, brew-info, etc.
 """
 
-
 import os
 import subprocess
 

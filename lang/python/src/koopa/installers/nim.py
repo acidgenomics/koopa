@@ -1,6 +1,5 @@
 """Install nim."""
 
-
 import subprocess
 
 from koopa.installers._build_helper import download_extract_cd

@@ -1,6 +1,5 @@
 """Install go."""
 
-
 import os
 import subprocess
 import sys

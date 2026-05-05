@@ -1,6 +1,5 @@
 """System check functions."""
 
-
 import os
 import shutil
 import subprocess

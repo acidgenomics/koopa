@@ -1,6 +1,5 @@
 """Install perl."""
 
-
 import os
 import subprocess
 import sys

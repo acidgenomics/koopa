@@ -1,6 +1,5 @@
 """Install ca-certificates."""
 
-
 import os
 import shutil
 

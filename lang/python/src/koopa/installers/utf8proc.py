@@ -1,6 +1,5 @@
 """Install utf8proc."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate

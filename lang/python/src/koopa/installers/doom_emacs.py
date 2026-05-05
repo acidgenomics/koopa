@@ -1,6 +1,5 @@
 """Install Doom Emacs."""
 
-
 import os
 import subprocess
 import sys

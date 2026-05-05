@@ -1,6 +1,5 @@
 """Install xcode-clt."""
 
-
 import os
 import subprocess
 import sys

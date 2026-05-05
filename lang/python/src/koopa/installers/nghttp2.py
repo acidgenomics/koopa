@@ -1,6 +1,5 @@
 """Install nghttp2."""
 
-
 import sys
 
 from koopa.build import activate_app, locate, make_build

@@ -1,7 +1,6 @@
 """Install star-conda."""
 
 
-
 def main(
     *,
     name: str,

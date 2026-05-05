@@ -1,6 +1,5 @@
 """Install diff-so-fancy."""
 
-
 import os
 import shutil
 

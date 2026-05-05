@@ -1,6 +1,5 @@
 """Install walk."""
 
-
 from koopa.install import install_go_package
 
 
