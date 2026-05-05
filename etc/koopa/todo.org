@@ -1,5 +1,11 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High complexity
+** TODO Figure out a src_url approach when there are secondary downloads. Multi-download (main tarball is standardizable, secondary downloads stay):
+    git_app.py — already uses download_extract_cd(url) for main; also downloads htmldocs + manpages
+    libluv.py — already uses download_extract_cd(url) for main; also downloads lua-compat
+    ont_vbz_compression.py — already uses download_extract_cd(url) for main; also downloads streamvbyte
+    rbenv.py — main tarball + ruby-build plugin
+    tcl_tk.py — downloads two separate packages (tcl + tk)
 * Medium complexity
 * Low complexity
