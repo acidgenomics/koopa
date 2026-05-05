@@ -1668,7 +1668,13 @@ def install_conda_package(
         "--override-channels",
         pkg_spec,
     ]
-    subprocess.run(create_args, check=True)
+    tmp_pkg_cache = tempfile.mkdtemp()
+    env = os.environ.copy()
+    env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
+    try:
+        subprocess.run(create_args, check=True, env=env)
+    finally:
+        shutil.rmtree(tmp_pkg_cache, ignore_errors=True)
     _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
 
 

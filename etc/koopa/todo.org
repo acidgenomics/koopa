@@ -1,7 +1,6 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
-** TODO We need to look for situation where current user has ~/.config/koopa/activate symlinked to KOOPA_PREFIX/activate. We need to update this to resolve to KOOPA_PREFIX/activate.sh during our `koopa update` call. Otherwise current user shell configuration will get messed up. Dotfiles will then get correctly refreshed at end of `koopa update` call. This is an edge case where we don't want to break koopa activation for previous users during our new update here.
 ** TODO Did our recent conda channel handling updates totally mess up conda cache handling? I don't want conda installs to cache anything, they blow up disk space. Or maybe it makes sense to let the installers cache and then blow the conda cache out in a single call in `koopa update` instead.
 * Medium priority
 ** TODO Do we need to configure custom SSL_CERT_FILE support in our bootstrap environment? Review again that our current implementation is correct. Mark done when all tasks on builder machine finish successfully.
