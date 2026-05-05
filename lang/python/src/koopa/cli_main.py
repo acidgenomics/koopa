@@ -175,6 +175,7 @@ def _build_parser() -> argparse.ArgumentParser:
     uninstall_p.add_argument("--system", action="store_true", default=False)
     uninstall_p.add_argument("--user", action="store_true", default=False)
     uninstall_p.add_argument("--no-revdeps", action="store_true", default=False)
+    uninstall_p.add_argument("--yes", "-y", action="store_true", default=False)
     _add_common_flags(uninstall_p)
 
     # -- update ---------------------------------------------------------------
@@ -355,6 +356,21 @@ def _reinstall_with_revdeps(
         install_app(config)
 
 
+def _confirm_destructive(prompt: str, yes: bool) -> bool:
+    """Prompt the user to confirm a destructive action.
+
+    Returns True if the action should proceed, False if aborted.
+    When ``yes`` is True or stdin is not a TTY the prompt is skipped and
+    the function returns True unconditionally (scripted / CI use).
+    The default answer is **no** — the user must type ``y`` or ``yes``
+    explicitly to continue.
+    """
+    if yes or not sys.stdin.isatty():
+        return True
+    answer = input(f"{prompt} [y/N] ").strip().lower()
+    return answer in ("y", "yes")
+
+
 def _handle_uninstall(args: argparse.Namespace) -> None:
     """Handle ``koopa uninstall`` subcommand."""
     from koopa.app import app_revdeps, installed_apps
@@ -365,6 +381,12 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     if not apps:
         apps = ["koopa"]
     if apps == ["koopa"]:
+        if not _confirm_destructive(
+            "Uninstall koopa itself? This is irreversible.",
+            getattr(args, "yes", False),
+        ):
+            print("Aborted.", file=sys.stderr)
+            return
         uninstall_koopa()
         return
     # Block uninstall of apps that have installed reverse dependencies.
@@ -385,6 +407,13 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
             )
             print("\n".join(lines), file=sys.stderr)
             sys.exit(1)
+    app_list = ", ".join(apps)
+    if not _confirm_destructive(
+        f"Uninstall {app_list}?",
+        getattr(args, "yes", False),
+    ):
+        print("Aborted.", file=sys.stderr)
+        return
     acquired = _acquire_install_lock()
     try:
         for app in apps:
