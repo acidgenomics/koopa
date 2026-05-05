@@ -7,63 +7,63 @@
 \fBkoopa\fR \- shell bootloader for data science
 .
 .SH "SYNOPSIS"
-\fBkoopa\fR \fIcommand\fR [options] [args\.\.\.]
+\fBkoopa\fR \fIcommand\fR [options] [args...]
 .
 .SH "DESCRIPTION"
-koopa is a shell bootloader for data science that manages installation, configuration, and updates of command\-line applications and libraries.
+koopa is a shell bootloader for data science that manages installation, configuration, and updates of command-line applications and libraries.
 .
 .SH "GLOBAL OPTIONS"
 .TP
-\fB\-\-help\fR, \fB\-h\fR
-Show help\. Place after a command to view command\-specific help.
+\fB--help\fR, \fB-h\fR
+Show help. Place after a command to view command-specific help.
 .TP
-\fB\-\-version\fR, \fB\-V\fR
+\fB--version\fR
 Print version information.
 .TP
-\fB\-\-verbose\fR
+\fB--verbose\fR
 Enable verbose output.
 .
 .SH "COMMANDS"
 .SS "Package management"
 .TP
-\fBinstall\fR \fI<app>...\fR
+\fBinstall\fR \fIapp...\fR
 Install one or more applications.
 .TP
-\fBreinstall\fR \fI<app>...\fR
+\fBreinstall\fR \fIapp...\fR
 Reinstall applications, with optional reverse dependency rebuilds.
 .TP
-\fBuninstall\fR \fI[<app>...]\fR
+\fBuninstall\fR \fI[app...]\fR
 Remove installed applications. Defaults to uninstalling koopa itself.
 .TP
-\fBupdate\fR \fI[<app>...]\fR
+\fBupdate\fR \fI[app...]\fR
 Update applications to latest versions. Defaults to updating koopa.
 .TP
-\fBconfigure\fR \fI<app>...\fR
+\fBconfigure\fR \fIapp...\fR
 Run post-install configuration for applications.
 .SS "Utility commands"
 .TP
-\fBapp\fR \fI<subcommand>\fR
-Application\-specific utilities (e.g. \fBkoopa app salmon quant\fR).
+\fBapp\fR \fIsubcommand\fR
+Application-specific utilities (e.g. koopa app salmon quant).
 .TP
-\fBsystem\fR \fI<subcommand>\fR
+\fBsystem\fR \fIsubcommand\fR
 System information, prefix lookups, and administration commands.
 .TP
-\fBdevelop\fR \fI<subcommand>\fR
+\fBdevelop\fR \fIsubcommand\fR
 Developer and maintenance utilities.
 .TP
-\fBinternal\fR \fI<subcommand>\fR
-Internal low\-level utilities (not intended for direct use).
+\fBinternal\fR \fIsubcommand\fR
+Internal low-level utilities (not intended for direct use).
 .TP
 \fBversion\fR
 Print koopa version.
 .TP
 \fBheader\fR
-Print path to the shell script header file, for use with \fBsource\fR.
+Print path to the shell script header file, for use with source.
 .TP
-\fBinstall-all-apps\fR
+\fBinstall\-all\-apps\fR
 Install all registered applications.
 .TP
-\fBinstall-default-apps\fR
+\fBinstall\-default\-apps\fR
 Install the default set of applications.
 .
 .SH "INSTALL OPTIONS"
@@ -83,7 +83,7 @@ Install in system mode.
 \fB\-\-user\fR
 Install in user mode.
 .TP
-\fB\-D \fIarg\fR\fR
+\fB\-D arg\fR
 Pass additional arguments through to the installer. Can be repeated.
 .
 .SH "REINSTALL OPTIONS"
@@ -107,32 +107,29 @@ Operate in user mode.
 \fBsystem check\fR
 Run system checks, including dependency versions, broken app installs, bootstrap version, and disk usage.
 .TP
-\fBsystem info\fR
-Show system information.
+\fBsystem disable\-passwordless\-sudo\fR
+Disable passwordless sudo for the current user.
 .TP
-\fBsystem prefix [\fIname\fR]\fR
-Print the installation prefix for koopa or a named application.
-.TP
-\fBsystem version \fIname\fR\fR
-Print the installed version of an application.
-.TP
-\fBsystem which \fIname\fR\fR
-Print the real path of an application.
-.TP
-\fBsystem list \fIsubcommand\fR\fR
-List system information. Subcommands: \fBapp\-versions\fR, \fBlaunch\-agents\fR, \fBpath\-priority\fR.
-.TP
-\fBsystem prune-apps\fR
-Remove stale application versions.
-.TP
-\fBsystem update\-tex\-packages\fR
-Update TeX Live packages via \fBtlmgr\fR.
+\fBsystem enable\-passwordless\-sudo\fR
+Enable passwordless sudo for the current user.
 .TP
 \fBsystem hostname\fR
 Print the system hostname.
 .TP
+\fBsystem info\fR
+Show system information.
+.TP
+\fBsystem list\fR \fIsubcommand\fR
+List system information (subcommands: app-versions, launch-agents, path-priority).
+.TP
 \fBsystem os\-string\fR
 Print the operating system identifier string.
+.TP
+\fBsystem prefix\fR \fI[name]\fR
+Print the installation prefix for koopa or a named application.
+.TP
+\fBsystem prune\-apps\fR
+Remove stale application versions.
 .TP
 \fBsystem switch\-to\-develop\fR
 Switch koopa installation to the development branch.
@@ -140,18 +137,21 @@ Switch koopa installation to the development branch.
 \fBsystem test\fR
 Run the koopa test suite.
 .TP
-\fBsystem delete\-cache\fR
-Delete cache, log, and temporary files (Docker images only).
+\fBsystem update\-tex\-packages\fR
+Update TeX Live packages via tlmgr.
 .TP
-\fBsystem enable\-passwordless\-sudo\fR
-Enable passwordless sudo for the current user.
+\fBsystem version\fR \fIname\fR
+Print the installed version of an application.
 .TP
-\fBsystem disable\-passwordless\-sudo\fR
-Disable passwordless sudo for the current user.
+\fBsystem which\fR \fIname...\fR
+Print the real path of an application.
 .TP
 \fBsystem zsh\-compaudit\-set\-permissions\fR
 Fix Zsh compaudit permissions.
 .SS "Linux\-specific system subcommands"
+.TP
+\fBsystem delete\-cache\fR
+Delete cache, log, and temporary files (Docker images only).
 .TP
 \fBsystem fix\-sudo\-setrlimit\-error\fR
 Fix the sudo setrlimit error on Linux.
@@ -163,11 +163,11 @@ Clean the macOS Launch Services database.
 \fBsystem create\-dmg\fR
 Create a DMG disk image.
 .TP
-\fBsystem enable\-touch\-id\-sudo\fR
-Enable Touch ID for sudo authentication.
-.TP
 \fBsystem disable\-touch\-id\-sudo\fR
 Disable Touch ID for sudo authentication.
+.TP
+\fBsystem enable\-touch\-id\-sudo\fR
+Enable Touch ID for sudo authentication.
 .TP
 \fBsystem flush\-dns\fR
 Flush the DNS cache.
@@ -181,74 +181,74 @@ Show active network interfaces.
 \fBsystem reload\-autofs\fR
 Reload the autofs automount daemon.
 .TP
-\fBsystem spotlight \fIquery\fR\fR
+\fBsystem spotlight\fR \fIquery\fR
 Search using Spotlight.
 .
 .SH "DEVELOP SUBCOMMANDS"
 .TP
-\fBdevelop log\fR
-View the latest temporary log file.
+\fBdevelop audit\-src\-mirror\fR
+Audit S3 source mirror for missing or stale tarballs.
+.TP
+\fBdevelop bump\-revision\fR \fIname...\fR
+Bump the revision of one or more apps in app.json.
+.TP
+\fBdevelop bump\-venv\-revision\fR
+Bump the Python venv revision.
 .TP
 \fBdevelop cache\-functions\fR
 Regenerate the cached Bash function library.
 .TP
+\fBdevelop check\-app\-versions\fR
+Check upstream versions for all apps in app.json.
+.TP
+\fBdevelop circular\-dependencies\fR
+Detect circular dependency chains in app.json.
+.TP
 \fBdevelop edit\-app\-json\fR
-Open \fBapp.json\fR in the default editor.
+Open app.json in the default editor.
 .TP
 \fBdevelop format\-app\-json\fR
-Sort and format \fBapp.json\fR.
-.TP
-\fBdevelop check\-app\-versions\fR
-Check upstream versions for all apps in \fBapp.json\fR.
-.TP
-\fBdevelop update\-docs\fR
-Update generated documentation files.
+Sort and format app.json.
 .TP
 \fBdevelop generate\-completion\fR
 Regenerate shell tab-completion scripts.
 .TP
 \fBdevelop generate\-man\fR
-Regenerate the \fBkoopa\fR(1) man page.
+Regenerate the koopa(1) man page.
 .TP
-\fBdevelop roff\fR
-Regenerate man pages from \fB.ronn\fR source files (requires \fBronn\fR).
+\fBdevelop log\fR
+View the latest temporary log file.
 .TP
-\fBdevelop push\-app\-build \fIname\fR...\fR
+\fBdevelop mirror\-src\fR \fIname...\fR
+Mirror source tarballs to S3.
+.TP
+\fBdevelop prune\-app\-binaries\fR
+Remove stale application binaries from the cache.
+.TP
+\fBdevelop push\-all\-app\-builds\fR
+Push all application builds to the binary cache.
+.TP
+\fBdevelop push\-app\-build\fR \fIname...\fR
 Push a specific application build to the binary cache.
 .TP
 \fBdevelop push\-app\-builds\fR
 Push all stale application builds to the binary cache.
 .TP
-\fBdevelop push\-all\-app\-builds\fR
-Push all application builds to the binary cache.
+\fBdevelop pytest\fR
+Run the Python test suite.
 .TP
-\fBdevelop prune\-app\-binaries\fR
-Remove stale application binaries from the cache.
+\fBdevelop remove\-app\fR \fIname\fR
+Tombstone an app entry in app.json.
 .TP
-\fBdevelop mirror\-src \fIname\fR...\fR
-Mirror source tarballs to S3.
-.TP
-\fBdevelop audit\-src\-mirror\fR
-Audit S3 source mirror for missing or stale tarballs.
-.TP
-\fBdevelop remove\-app \fIname\fR\fR
-Tombstone an app entry in \fBapp.json\fR.
-.TP
-\fBdevelop bump\-revision \fIname\fR...\fR
-Bump the revision of one or more apps in \fBapp.json\fR.
-.TP
-\fBdevelop bump\-venv\-revision\fR
-Bump the Python venv revision.
+\fBdevelop roff\fR
+Regenerate man pages from .ronn source files (requires ronn).
 .TP
 \fBdevelop shellcheck\fR
 Run shellcheck on all shell scripts.
 .TP
-\fBdevelop circular\-dependencies\fR
-Detect circular dependency chains in \fBapp.json\fR.
-.TP
-\fBdevelop pytest\fR
-Run the Python test suite.
+\fBdevelop update\-docs\fR
+Update generated documentation files.
 .
 .SH "COPYRIGHT"
-This software is provided under the GNU General Public License v3\.0\.
-See \fBLICENSE\fR file for details\.
+This software is provided under the GNU General Public License v3.0.
+See \fBLICENSE\fR file for details.
