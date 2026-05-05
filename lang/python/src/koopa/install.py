@@ -1658,10 +1658,14 @@ def install_conda_package(
         conda,
         "create",
         "--yes",
+        "--override-channels",
         f"--prefix={libexec}",
         f"--channel={channel_url}",
         pkg_spec,
     ]
+    if channel_name == "bioconda":
+        forge_url = _resolve_conda_channel_url("conda-forge")
+        create_args.insert(-1, f"--channel={forge_url}")
     if channel_url.startswith("http"):
         create_args.insert(4, "--solver=classic")
     tmp_pkg_cache = tempfile.mkdtemp()
