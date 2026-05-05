@@ -3,5 +3,8 @@
 * High complexity
 ** TODO `koopa develop check-app-versions --reset-cache` is returning: Unsupported: 32. Can we work on supporting these remaining 32 apps that we're not version checking? Otherwise these are potential candidates to remove from koopa app support.
 ** TODO `koopa develop check-app-versions`: If there are unsupported apps, can we improve the CLI messaging to tell us which apps aren't supported?
+** Can we wire in support for checking app versions on unsupported platforms (for conda): These 32 apps are correctly classified as "unsupported" — they genuinely don't have conda packages available for macos-arm64. The version checker is working as designed here; it skips platform-incompatible apps before even attempting a version check. This isn't a version-checking bug — it's a platform support issue. These are bioinformatics tools that typically only have conda builds for linux-amd64 (and sometimes macos-amd64 via Rosetta).
+** TODO Need to better support `koopa update` path for v0.15.0 installs. Hitting this: Error: name '_cleanup_legacy_config' is not defined.
+** TODO Do we need to harden against koopa system allowing usage of koopa python3.12? Can this happen during v0.15.0 upgrade to v0.16.0?
 * Medium complexity
 * Low complexity

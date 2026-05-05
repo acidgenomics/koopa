@@ -259,6 +259,15 @@ def _conda_exe() -> str | None:
     return os.environ.get("CONDA_EXE") or shutil.which("conda")
 
 
+def _check_conda_api(package: str, channel: str = "conda-forge") -> str:
+    data = _http_get_json(f"https://api.anaconda.org/package/{channel}/{package}")
+    version = data.get("latest_version", "")
+    if not version:
+        msg = f"No version found via Anaconda API for {channel}/{package}"
+        raise RuntimeError(msg)
+    return version
+
+
 def _check_conda(package: str, channel: str = "conda-forge") -> str:
     exe = _conda_exe()
     if exe:
@@ -284,8 +293,7 @@ def _check_conda(package: str, channel: str = "conda-forge") -> str:
                     )
             except (json.JSONDecodeError, ValueError):
                 pass
-    msg = f"Cannot determine conda version for {package}: conda CLI unavailable"
-    raise RuntimeError(msg)
+    return _check_conda_api(package, channel)
 
 
 class _NetworkUnavailableError(RuntimeError):
@@ -1657,18 +1665,6 @@ def check_app_versions(  # noqa: C901, PLR0915
         version = info.get("version", "")
         if not version:
             unsupported.append(VersionCheckResult(app_name, "", None, "none", "no version"))
-            continue
-        supported_map = info.get("supported", {})
-        if (
-            supported_map
-            and not supported_map.get(platform, False)
-            and info.get("installer") == "conda-package"
-        ):
-            unsupported.append(
-                VersionCheckResult(
-                    app_name, version, None, "unsupported", f"not supported on {platform}"
-                )
-            )
             continue
         spec = classify_app(app_name, info)
         if spec is None:
