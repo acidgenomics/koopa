@@ -111,7 +111,6 @@ _TOP_COMMANDS: list[tuple[str, str, str]] = [
     ("develop", "subcommand", "Developer and maintenance utilities."),
     ("internal", "subcommand", "Internal low-level utilities (not intended for direct use)."),
     ("version", "", "Print koopa version."),
-    ("header", "", "Print path to the shell script header file, for use with source."),
     ("install-all-apps", "", "Install all registered applications."),
     ("install-default-apps", "", "Install the default set of applications."),
 ]
