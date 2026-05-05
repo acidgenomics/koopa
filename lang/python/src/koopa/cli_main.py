@@ -381,7 +381,7 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
                 lines.append(f"  {app}: required by {', '.join(revdeps)}")
             lines.append(
                 "Uninstall the dependent apps first, or use"
-                " 'koopa uninstall --no-revdep-check' to override."
+                " 'koopa uninstall --no-revdeps' to override."
             )
             print("\n".join(lines), file=sys.stderr)
             sys.exit(1)

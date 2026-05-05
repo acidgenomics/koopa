@@ -38,6 +38,21 @@ def main(
             "-bool",
             "false",
         ),
+        # Sequoia window tiling/snapping.
+        ("com.apple.WindowManager", "EnableTilingByEdgeDragging", "-bool", "false"),
+        (
+            "com.apple.WindowManager",
+            "EnableTopTilingByEdgeDragging",
+            "-bool",
+            "false",
+        ),
+        (
+            "com.apple.WindowManager",
+            "EnableTilingOptionAcceleratorKey",
+            "-bool",
+            "true",
+        ),
+        ("com.apple.WindowManager", "TiledWindowsHaveMargins", "-bool", "true"),
         ("com.apple.universalaccess", "reduceMotion", "-bool", "true"),
         ("com.apple.universalaccess", "reduceTransparency", "-bool", "true"),
         (
@@ -539,6 +554,8 @@ def main(
         ),
         # Finder view: list view.
         ("com.apple.finder", "FXPreferredViewStyle", "-string", "Nlsv"),
+        # Disable Finder sidebar by default.
+        ("com.apple.finder", "ShowSidebar", "-bool", "false"),
         # Disable warning before emptying Trash.
         ("com.apple.finder", "WarnOnEmptyTrash", "-bool", "false"),
         # Enable AirDrop over Ethernet.
@@ -884,6 +901,13 @@ def main(
         ),
         # Photos: prevent auto-opening.
         ("com.apple.ImageCapture", "disableHotPlug", "-bool", "true"),
+        # Disable automatic screen brightness adjustment.
+        (
+            "com.apple.iokit.AmbientLightSensor",
+            "Automatic Display Enabled",
+            "-bool",
+            "false",
+        ),
     ]
     for domain, key, type_flag, value in current_host_writes:
         subprocess.run(
@@ -899,6 +923,18 @@ def main(
             [defaults, "-currentHost", "write", "-g", key, type_flag, value],
             check=True,
         )
+    # Disable Apple Intelligence.
+    subprocess.run(
+        [
+            defaults,
+            "write",
+            "com.apple.CloudSubscriptionFeatures.optIn",
+            "545129924",
+            "-bool",
+            "false",
+        ],
+        check=True,
+    )
     # Terminal.app StringEncodings (array type, handled separately).
     subprocess.run(
         [defaults, "write", "com.apple.terminal", "StringEncodings", "-array", "4"],
