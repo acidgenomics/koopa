@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High complexity
-** TODO Improve our code coverage with additional unit tests.
+** TODO `koopa develop check-app-versions --reset-cache` is returning: Unsupported: 32. Can we work on supporting these remaining 32 apps that we're not version checking? Otherwise these are potential candidates to remove from koopa app support.
+** TODO `koopa develop check-app-versions`: If there are unsupported apps, can we improve the CLI messaging to tell us which apps aren't supported?
 * Medium complexity
 * Low complexity
