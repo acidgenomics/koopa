@@ -40,8 +40,47 @@ class VersionCheckResult:
 
     @property
     def is_outdated(self) -> bool:
-        """Return whether the current version differs from the latest."""
-        return self.latest_version is not None and self.current_version != self.latest_version
+        """Return whether the latest upstream version is newer than the current pinned version."""
+        if self.latest_version is None or self.current_version == self.latest_version:
+            return False
+        if re.match(r"^[0-9a-f]{40}$", self.latest_version):
+            return self.latest_version != self.current_version
+        try:
+            cur = tuple(
+                int(x)
+                for x in re.split(r"[.\-]", sanitize_version(self.current_version))
+                if x.isdigit()
+            )
+            lat = tuple(
+                int(x)
+                for x in re.split(r"[.\-]", sanitize_version(self.latest_version))
+                if x.isdigit()
+            )
+            return lat > cur
+        except (ValueError, AttributeError):
+            return self.current_version != self.latest_version
+
+    @property
+    def is_pinned_too_high(self) -> bool:
+        """Return whether the pinned version is higher than the latest stable upstream."""
+        if self.latest_version is None or self.current_version == self.latest_version:
+            return False
+        if re.match(r"^[0-9a-f]{40}$", self.latest_version):
+            return False
+        try:
+            cur = tuple(
+                int(x)
+                for x in re.split(r"[.\-]", sanitize_version(self.current_version))
+                if x.isdigit()
+            )
+            lat = tuple(
+                int(x)
+                for x in re.split(r"[.\-]", sanitize_version(self.latest_version))
+                if x.isdigit()
+            )
+            return cur > lat
+        except (ValueError, AttributeError):
+            return False
 
 
 class _VersionCache:
@@ -283,6 +322,7 @@ def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) 
             continue
     if html is None:
         _raise_network_unavailable(last_exc)
+        raise AssertionError("unreachable")  # for type checker
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions: list[str] = pattern.findall(html)
     if not versions:
@@ -385,14 +425,16 @@ def _check_xorg(subdir: str, tarball_prefix: str) -> str:
     try:
         return _check_directory_listing(url, tarball_prefix)
     except (urllib.error.URLError, TimeoutError) as exc:
-        _raise_network_unavailable(exc)
+        msg = f"Network unavailable: {exc}"
+        raise _NetworkUnavailableError(msg) from exc
 
 
 def _check_pkg_config() -> str:
     try:
         return _check_directory_listing("https://pkgconfig.freedesktop.org/releases/", "pkg-config")
     except (urllib.error.URLError, TimeoutError) as exc:
-        _raise_network_unavailable(exc)
+        msg = f"Network unavailable: {exc}"
+        raise _NetworkUnavailableError(msg) from exc
 
 
 def _check_gnupg(package: str) -> str:
@@ -1511,7 +1553,6 @@ def _classify_generic(  # noqa: PLR0911
 ) -> _AppCheckSpec | None:
     if source == "conda":
         pkg = _get_str(args, "name") or name
-        channel = _infer_conda_channel(urls)
         return _AppCheckSpec("conda", _check_conda, (pkg,))
     if source == "pypi":
         pkg = _resolve_pypi_name(name, args, urls)
@@ -1639,17 +1680,8 @@ def check_app_versions(
                     results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
                     continue
                 if _VERSION_RE.match(cached):
-                    current_parts = tuple(
-                        int(x) for x in re.split(r"[.\-]", sanitize_version(version)) if x.isdigit()
-                    )
-                    cached_parts = tuple(
-                        int(x) for x in re.split(r"[.\-]", sanitize_version(cached)) if x.isdigit()
-                    )
-                    if cached_parts >= current_parts:
-                        results.append(
-                            VersionCheckResult(app_name, version, cached, spec.source, None)
-                        )
-                        continue
+                    results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
+                    continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
     total = len(to_check)
@@ -1693,7 +1725,18 @@ def check_app_versions(
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
             latest_san = sanitize_version(latest)
-            msg = f"{app_name}: {current} -> {latest}" if current_san != latest_san else None
+            if current_san == latest_san:
+                msg = None
+            else:
+                try:
+                    cur_p = tuple(int(x) for x in re.split(r"[.\-]", current_san) if x.isdigit())
+                    lat_p = tuple(int(x) for x in re.split(r"[.\-]", latest_san) if x.isdigit())
+                    if lat_p < cur_p:
+                        msg = f"{app_name}: {current} pinned too high (latest stable: {latest})"
+                    else:
+                        msg = f"{app_name}: {current} -> {latest}"
+                except (ValueError, AttributeError):
+                    msg = f"{app_name}: {current} -> {latest}"
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except _NetworkUnavailableError:
             return VersionCheckResult(app_name, current, current, spec.source, None), None
@@ -1738,7 +1781,12 @@ def check_app_versions(
 def print_report(results: list[VersionCheckResult]) -> None:
     """Print a human-readable version check report."""
     outdated = [r for r in results if r.is_outdated]
-    current = [r for r in results if r.latest_version is not None and not r.is_outdated]
+    pinned_too_high = [r for r in results if r.is_pinned_too_high]
+    current = [
+        r
+        for r in results
+        if r.latest_version is not None and not r.is_outdated and not r.is_pinned_too_high
+    ]
     failed = [r for r in results if r.error is not None and r.source != "unsupported"]
     unsupported = [r for r in results if r.source in ("unsupported", "none")]
     print()
@@ -1752,6 +1800,16 @@ def print_report(results: list[VersionCheckResult]) -> None:
                 f"  ->  {r.latest_version}  ({r.source})"
             )
         print()
+    if pinned_too_high:
+        print(f"Pinned too high ({len(pinned_too_high)}):")
+        name_w = max(len(r.name) for r in pinned_too_high)
+        cur_w = max(len(r.current_version) for r in pinned_too_high)
+        for r in sorted(pinned_too_high, key=lambda x: x.name):
+            print(
+                f"  {r.name:<{name_w}}  {r.current_version:>{cur_w}}"
+                f"  (latest stable: {r.latest_version})  ({r.source})"
+            )
+        print()
     if failed:
         print(f"Failed ({len(failed)}):")
         for r in sorted(failed, key=lambda x: x.name):
@@ -1762,7 +1820,9 @@ def print_report(results: list[VersionCheckResult]) -> None:
         for r in sorted(unsupported, key=lambda x: x.name):
             print(f"  {r.name}: {r.current_version}")
         print()
-    print(f"Up to date + Outdated: {len(current) + len(outdated)}")
+    print(f"Up to date: {len(current)}")
+    print(f"Outdated: {len(outdated)}")
+    print(f"Pinned too high: {len(pinned_too_high)}")
     print(f"Failed: {len(failed)}")
     print(f"Unsupported: {len(unsupported)}")
 
@@ -1770,13 +1830,19 @@ def print_report(results: list[VersionCheckResult]) -> None:
 def print_json_report(results: list[VersionCheckResult]) -> None:
     """Print a JSON-formatted version check report."""
     outdated = [asdict(r) for r in results if r.is_outdated]
-    current = [asdict(r) for r in results if r.latest_version is not None and not r.is_outdated]
+    pinned_too_high = [asdict(r) for r in results if r.is_pinned_too_high]
+    current = [
+        asdict(r)
+        for r in results
+        if r.latest_version is not None and not r.is_outdated and not r.is_pinned_too_high
+    ]
     failed = [asdict(r) for r in results if r.error is not None and r.source != "unsupported"]
     unsupported = [asdict(r) for r in results if r.source in ("unsupported", "none")]
     print(
         json.dumps(
             {
                 "outdated": outdated,
+                "pinned_too_high": pinned_too_high,
                 "up_to_date": current,
                 "failed": failed,
                 "unsupported": unsupported,
@@ -1852,6 +1918,7 @@ def _mirror_src_to_s3(
             ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],
             capture_output=True,
             text=True,
+            check=False,
         )
         if result.returncode == 0:
             print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
@@ -1864,7 +1931,7 @@ def _mirror_src_to_s3(
 
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes."""
-    outdated = [r for r in results if r.is_outdated]
+    outdated = [r for r in results if r.is_outdated or r.is_pinned_too_high]
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
         return 0
