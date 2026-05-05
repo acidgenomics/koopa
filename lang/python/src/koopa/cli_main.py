@@ -54,6 +54,12 @@ def _exec_restart_with_bootstrap() -> None:
         return  # nothing to restart with; let the caller continue best-effort
     koopa_prefix = _koopa_prefix()
     main_module = os.path.join(koopa_prefix, "lang", "python", "src", "koopa", "cli_main.py")
+    # Ensure the koopa source tree is on PYTHONPATH so the restarted
+    # process can import koopa (the .venv is stale after bootstrap rebuild).
+    src = os.path.join(koopa_prefix, "lang", "python", "src")
+    existing = os.environ.get("PYTHONPATH", "")
+    if src not in existing.split(os.pathsep):
+        os.environ["PYTHONPATH"] = f"{src}{os.pathsep}{existing}".rstrip(os.pathsep)
     # Ensure bootstrap lib dir is on LD_LIBRARY_PATH so the new Python can
     # find its openssl/zlib on Linux (macOS uses rpath baked at build time).
     bp_lib = os.path.join(bp, "lib")
