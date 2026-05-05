@@ -871,6 +871,30 @@ def _handle_update_docs(_: list[str]) -> None:
     alert_success("Documentation updated.")
 
 
+def _handle_find_ignored_bin_files(_: list[str]) -> None:
+    """Handle ``koopa develop find-ignored-bin-files``."""
+    from koopa.prefix import koopa_prefix
+
+    prefix = koopa_prefix()
+    bin_dir = os.path.join(prefix, "bin")
+    candidates = [
+        os.path.join(bin_dir, name)
+        for name in sorted(os.listdir(bin_dir))
+        if not os.path.islink(os.path.join(bin_dir, name))
+    ]
+    if not candidates:
+        return
+    result = subprocess.run(
+        ["git", "check-ignore", "--stdin"],
+        input="\n".join(candidates),
+        capture_output=True,
+        text=True,
+        cwd=prefix,
+    )
+    for path in result.stdout.splitlines():
+        print(path)
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
@@ -892,6 +916,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "remove-app": _handle_remove_app,
     "bump-revision": _handle_bump_revision,
     "bump-venv-revision": _handle_bump_venv_revision,
+    "find-ignored-bin-files": lambda _: _handle_find_ignored_bin_files(_),
 }
 
 

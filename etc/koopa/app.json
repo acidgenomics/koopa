@@ -784,6 +784,29 @@
     ],
     "version": "2.20"
   },
+  "bedtk": {
+    "bin": [
+      "bedtk"
+    ],
+    "date": "2026-05-05",
+    "default": false,
+    "dependencies": [
+      "conda"
+    ],
+    "description": "fast BED file toolkit focused on performance",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/lh3/bedtk"
+    ],
+    "version": "1.2"
+  },
   "bedtools": {
     "bin": [
       "bedtools"

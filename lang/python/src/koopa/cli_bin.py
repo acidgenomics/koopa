@@ -815,6 +815,30 @@ def _handle_convert_utf8_nfd_to_nfc(args: list[str]) -> None:
     )
 
 
+def _handle_convert_svg_to_png(args: list[str]) -> None:
+    import argparse
+
+    if sys.platform != "darwin":
+        msg = "convert-svg-to-png requires macOS."
+        raise SystemExit(msg)
+    parser = argparse.ArgumentParser(
+        prog="convert-svg-to-png",
+        description="Convert SVG files to PNG using macOS sips.",
+    )
+    parser.add_argument("files", nargs="+", help="SVG files to convert")
+    parsed = parser.parse_args(args)
+    sips = "/usr/bin/sips"
+    for svg in parsed.files:
+        base = svg
+        if base.lower().endswith(".svg"):
+            base = base[:-4]
+        output = base + ".png"
+        subprocess.run(
+            [sips, "-s", "format", "png", "-o", output, svg],
+            check=True,
+        )
+
+
 def _handle_dot_clean(args: list[str]) -> None:
     import argparse
 
@@ -913,6 +937,7 @@ def _handle_jekyll_serve(args: list[str]) -> None:
 _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "autopad-zeros": _handle_autopad_zeros,
     "clone": _handle_clone,
+    "convert-svg-to-png": _handle_convert_svg_to_png,
     "convert-utf8-nfd-to-nfc": _handle_convert_utf8_nfd_to_nfc,
     "delete-broken-symlinks": _handle_delete_broken_symlinks,
     "delete-empty-dirs": _handle_delete_empty_dirs,
