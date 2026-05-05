@@ -849,6 +849,29 @@ def _handle_bump_venv_revision(_: list[str]) -> None:
     print(f"  venv-revision: {current} -> {new}")
 
 
+def _handle_bump_bootstrap(_: list[str]) -> None:
+    """Handle ``koopa develop bump-bootstrap``.
+
+    Stamps a new bootstrap version in etc/koopa/bootstrap-version.txt.
+    This marks existing bootstraps as stale so ``koopa update`` will rebuild.
+    """
+    import time
+
+    from koopa.os import koopa_prefix
+
+    version_file = os.path.join(
+        koopa_prefix(), "etc", "koopa", "bootstrap-version.txt"
+    )
+    current = ""
+    if os.path.isfile(version_file):
+        with open(version_file) as f:
+            current = f.read().strip()
+    new = time.strftime("%Y.%m.%d.%H%M")
+    with open(version_file, "w") as f:
+        f.write(f"{new}\n")
+    print(f"  bootstrap-version: {current} -> {new}")
+
+
 def _handle_circular_dependencies() -> None:
     """Handle ``koopa develop circular-dependencies``."""
     from koopa.check import check_circular_deps
@@ -898,6 +921,7 @@ def _handle_find_ignored_bin_files(_: list[str]) -> None:
         capture_output=True,
         text=True,
         cwd=prefix,
+        check=False,
     )
     for path in result.stdout.splitlines():
         print(path)
@@ -923,9 +947,10 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "mirror-src": _handle_mirror_src,
     "audit-src-mirror": _handle_audit_src_mirror,
     "remove-app": _handle_remove_app,
+    "bump-bootstrap": _handle_bump_bootstrap,
     "bump-revision": _handle_bump_revision,
     "bump-venv-revision": _handle_bump_venv_revision,
-    "find-ignored-bin-files": lambda _: _handle_find_ignored_bin_files(_),
+    "find-ignored-bin-files": _handle_find_ignored_bin_files,
 }
 
 
