@@ -2003,7 +2003,7 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
             )
     if count > 0:
         bootstrap_path.write_text(text)
-        today = time.strftime("%Y.%m.%d")
+        today = time.strftime("%Y.%m.%d.%H%M")
         version_path.write_text(today + "\n")
         print(f"  bootstrap version: {today}", file=sys.stderr)
     return count
