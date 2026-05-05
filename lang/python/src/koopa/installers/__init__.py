@@ -484,10 +484,12 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "prelude-emacs": f"{_M}.prelude_emacs",
     "spacemacs": f"{_M}.spacemacs",
     "spacevim": f"{_M}.spacevim",
+    # -- system-install mode (koopa install system install <name>) ----------------
+    "homebrew-bundle": f"{_M}.homebrew_bundle",
+    "rosetta": f"{_M}.rosetta",
+    "tex-packages": f"{_M}.tex_packages",
     # -- system-mode installers -------------------------------------------------
     "homebrew": f"{_M}.homebrew",
-    "homebrew-bundle": f"{_M}.homebrew_bundle",
-    "tex-packages": f"{_M}.tex_packages",
 }
 
 PYTHON_PLATFORM_INSTALLERS: dict[tuple[str, str, str], str] = {
@@ -495,6 +497,37 @@ PYTHON_PLATFORM_INSTALLERS: dict[tuple[str, str, str], str] = {
     ("r", "debian", "system"): f"{_M}.r_debian",
     ("r", "macos", "system"): f"{_M}.r_macos",
 }
+
+PYTHON_INSTALLER_MODES: list[tuple[str, str, str]] = [
+    # (name, platform, mode)
+    # system-install (koopa install system install <name>)
+    ("homebrew-bundle", "common", "system-install"),
+    ("rosetta", "macos", "system-install"),
+    ("tex-packages", "common", "system-install"),
+    # system (koopa install system <name>)
+    ("aws-mountpoint-s3", "debian", "system"),
+    ("docker", "debian", "system"),
+    ("glibc", "linux", "system"),
+    ("homebrew", "common", "system"),
+    ("oracle-instant-client", "fedora", "system"),
+    ("pihole", "linux", "system"),
+    ("pivpn", "linux", "system"),
+    ("r-gfortran", "macos", "system"),
+    ("r-xcode-openmp", "macos", "system"),
+    ("rstudio-server", "debian_or_fedora", "system"),
+    ("shiny-server", "debian_or_fedora", "system"),
+    ("wine", "linux", "system"),
+    ("xcode-clt", "macos", "system"),
+    # user (koopa install user <name>)
+    ("bootstrap", "common", "user"),
+    ("doom-emacs", "common", "user"),
+    ("prelude-emacs", "common", "user"),
+    ("spacemacs", "common", "user"),
+    ("spacevim", "common", "user"),
+    # update-system (koopa update system <name>)
+    ("homebrew", "common", "update-system"),
+    ("tex-packages", "common", "update-system"),
+]
 
 
 def has_python_installer(

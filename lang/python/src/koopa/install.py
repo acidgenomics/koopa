@@ -1214,7 +1214,7 @@ def install_python_package(
     # Create venv.
     subprocess.run([python, "-m", "venv", libexec], check=True)
     venv_pip = os.path.join(libexec, "bin", "pip")
-    pip_args = [venv_pip, "install"]
+    pip_args = [venv_pip, "install", "--no-cache-dir"]
     if no_binary:
         pip_args.extend(["--no-binary", ":all:"])
     pip_args.append(f"{pip_name}=={version}")
@@ -1439,6 +1439,7 @@ def install_ruby_package(
             "install",
             f"--gemfile={gemfile}",
             f"--jobs={jobs}",
+            "--no-cache",
             "--retry=3",
             "--standalone",
         ],
