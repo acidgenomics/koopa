@@ -53,7 +53,6 @@ class InstallConfig:
     reinstall: bool = False
     reinstall_reason: str = ""
     update_ldconfig: bool = False
-    use_mirror: bool = False
     verbose: bool = False
     # Passthrough configuration args (CMake -D style).
     passthrough_args: list[str] = field(default_factory=list)
@@ -233,13 +232,6 @@ def _app_json_revision(name: str) -> int:
     return 0
 
 
-def _app_json_use_mirror(name: str) -> bool:
-    """Get use_mirror flag from app.json (default False)."""
-    data = _import_app_json()
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        return bool(entry.get("use_mirror", False))
-    return False
 
 
 def can_build_binary() -> bool:
@@ -825,14 +817,14 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app_from_binary_package(config.prefix)
             elif has_python_installer(config.name, config.platform, config.mode):
                 installer_fn = get_python_installer(config.name, config.platform, config.mode)
-                if not config.use_mirror:
-                    config.use_mirror = _app_json_use_mirror(config.name)
+                from koopa.installers._context import set_app_name
+
+                set_app_name(config.name)
                 installer_fn(
                     name=config.name,
                     version=config.version,
                     prefix=config.prefix,
                     passthrough_args=config.passthrough_args,
-                    use_mirror=config.use_mirror,
                 )
             else:
                 installer_key = _app_json_installer(config.name)
@@ -840,14 +832,14 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     installer_key, config.platform, config.mode
                 ):
                     installer_fn = get_python_installer(installer_key, config.platform, config.mode)
-                    if not config.use_mirror:
-                        config.use_mirror = _app_json_use_mirror(config.name)
+                    from koopa.installers._context import set_app_name
+
+                    set_app_name(config.name)
                     installer_fn(
                         name=config.name,
                         version=config.version,
                         prefix=config.prefix,
                         passthrough_args=config.passthrough_args,
-                        use_mirror=config.use_mirror,
                     )
                 else:
                     msg = (
@@ -998,8 +990,6 @@ def install_gnu_app(
             ],
         }
         fallback_bases = _mirror_fallbacks.get(mirror, [])
-        if not fallback_bases:
-            raise
         downloaded = False
         for fallback_base in fallback_bases:
             fallback = f"{fallback_base}/{tarball_path}"
@@ -1015,7 +1005,20 @@ def install_gnu_app(
             except (subprocess.CalledProcessError, OSError):
                 continue
         if not downloaded:
-            raise
+            koopa_filename = f"{package_name}-{version}.tar.{compress_ext}"
+            koopa_url = f"https://koopa.acidgenomics.com/src/{name}/{koopa_filename}"
+            print(
+                f"All mirrors failed, trying koopa mirror: '{koopa_url}'.",
+                file=sys.stderr,
+            )
+            try:
+                tarball = download(koopa_url, retry=False)
+                if is_valid_archive(tarball):
+                    downloaded = True
+            except (subprocess.CalledProcessError, OSError):
+                pass
+            if not downloaded:
+                raise
     os.makedirs("src", exist_ok=True)
     _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")

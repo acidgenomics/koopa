@@ -167,28 +167,14 @@ install_python() {
         __kvar_remove_lib_symlink=1
     fi
     __kvar_filename="Python-${__kvar_version}.tar.xz"
-    __kvar_canonical_url="https://www.python.org/ftp/python/${__kvar_version}/${__kvar_filename}"
-    __kvar_koopa_url="https://koopa.acidgenomics.com/src/python/${__kvar_filename}"
-    if [ -n "${PYTHON_BUILD_MIRROR_URL:-}" ]
-    then
-        download_with_fallback \
-            'python' \
-            "$__kvar_filename" \
-            "Python-${__kvar_version}" \
-            "${PYTHON_BUILD_MIRROR_URL}/${__kvar_version}/${__kvar_filename}" \
-            "$__kvar_koopa_url" \
-            "$__kvar_canonical_url" \
-            || return 1
-    else
-        download_with_fallback \
-            'python' \
-            "$__kvar_filename" \
-            "Python-${__kvar_version}" \
-            "$__kvar_canonical_url" \
-            "$__kvar_koopa_url" \
-            || return 1
-    fi
-    unset -v __kvar_canonical_url __kvar_filename __kvar_koopa_url
+    download_with_fallback \
+        'python' \
+        "$__kvar_filename" \
+        "Python-${__kvar_version}" \
+        "https://www.python.org/ftp/python/${__kvar_version}/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/python/${__kvar_filename}" \
+        || return 1
+    unset -v __kvar_filename
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --disable-test-modules \

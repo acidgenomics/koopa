@@ -3,14 +3,22 @@
 
 import os
 from glob import glob
+from urllib.parse import urlparse
 
 from koopa.archive import extract
-from koopa.download import download
+from koopa.download import download, download_with_mirror
 
 
 def download_extract_cd(url: str) -> None:
     """Download a tarball, extract into ``src/``, and chdir into it."""
-    tarball = download(url)
+    from koopa.installers._context import get_app_name
+
+    name = get_app_name()
+    if name:
+        filename = os.path.basename(urlparse(url).path)
+        tarball = download_with_mirror(url, name, filename)
+    else:
+        tarball = download(url)
     extract_cd(tarball)
 
 
