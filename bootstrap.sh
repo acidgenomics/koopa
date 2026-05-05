@@ -74,38 +74,61 @@ cpu_count() {
     return 0
 }
 
-download_and_extract() {
-    __kvar_name="${1:?}"
-    __kvar_url="${2:?}"
-    __kvar_dirname="${3:?}"
-    rm -fr "${DESTDIR}${PREFIX}/src/${__kvar_name}"
-    mkdir -p "${DESTDIR}${PREFIX}/src/${__kvar_name}"
-    cd "${DESTDIR}${PREFIX}/src/${__kvar_name}" || return 1
-    curl \
-        --fail \
-        --location \
-        --retry 5 \
-        --show-error \
-        --verbose \
-        "$__kvar_url" \
-        -o 'src.tar.gz'
-    tar -xzf 'src.tar.gz'
-    cd "$__kvar_dirname" || return 1
-    unset -v \
-        __kvar_dirname \
-        __kvar_name \
-        __kvar_url
+download_with_fallback() {
+    # usage: download_with_fallback <name> <filename> <dirname> <url> [url...]
+    # Tries each URL in order. Validates each with 'tar -tf' before extracting.
+    __dwf_name="${1:?}"; shift
+    __dwf_filename="${1:?}"; shift
+    __dwf_dirname="${1:?}"; shift
+    __dwf_src_dir="${DESTDIR}${PREFIX}/src/${__dwf_name}"
+    rm -fr "$__dwf_src_dir"
+    mkdir -p "$__dwf_src_dir"
+    __dwf_ok=0
+    for __dwf_url in "$@"
+    do
+        printf 'Trying %s.\n' "$__dwf_url"
+        if curl \
+            --fail \
+            --location \
+            --max-time 300 \
+            --show-error \
+            --verbose \
+            "$__dwf_url" \
+            -o "${__dwf_src_dir}/src.archive" \
+            && tar -tf "${__dwf_src_dir}/src.archive" > /dev/null 2>&1
+        then
+            __dwf_ok=1
+            break
+        else
+            printf 'Download failed or archive is incomplete, trying next source.\n'
+            rm -f "${__dwf_src_dir}/src.archive"
+        fi
+    done
+    if [ "$__dwf_ok" -eq 0 ]
+    then
+        printf 'All download sources failed for %s.\n' "$__dwf_name" >&2
+        unset -v __dwf_dirname __dwf_filename __dwf_name __dwf_ok __dwf_src_dir __dwf_url
+        return 1
+    fi
+    cd "$__dwf_src_dir" || return 1
+    tar -xf 'src.archive'
+    cd "$__dwf_dirname" || return 1
+    unset -v __dwf_dirname __dwf_filename __dwf_name __dwf_ok __dwf_src_dir __dwf_url
     return 0
 }
 
 install_openssl() {
     __kvar_version='3.6.2'
     printf 'Installing openssl.\n'
-    download_and_extract \
+    __kvar_filename="openssl-${__kvar_version}.tar.gz"
+    download_with_fallback \
         'openssl' \
-        "https://github.com/openssl/openssl/releases/download/openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
+        "$__kvar_filename" \
         "openssl-${__kvar_version}" \
+        "https://github.com/openssl/openssl/releases/download/openssl-${__kvar_version}/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/openssl/${__kvar_filename}" \
         || return 1
+    unset -v __kvar_filename
     ./config \
         --libdir='lib' \
         --openssldir="$PREFIX" \
@@ -143,11 +166,29 @@ install_python() {
         fi
         __kvar_remove_lib_symlink=1
     fi
-    download_and_extract \
-        'python' \
-        "https://www.python.org/ftp/python/${__kvar_version}/Python-${__kvar_version}.tgz" \
-        "Python-${__kvar_version}" \
-        || return 1
+    __kvar_filename="Python-${__kvar_version}.tar.xz"
+    __kvar_canonical_url="https://www.python.org/ftp/python/${__kvar_version}/${__kvar_filename}"
+    __kvar_koopa_url="https://koopa.acidgenomics.com/src/python/${__kvar_filename}"
+    if [ -n "${PYTHON_BUILD_MIRROR_URL:-}" ]
+    then
+        download_with_fallback \
+            'python' \
+            "$__kvar_filename" \
+            "Python-${__kvar_version}" \
+            "${PYTHON_BUILD_MIRROR_URL}/${__kvar_version}/${__kvar_filename}" \
+            "$__kvar_koopa_url" \
+            "$__kvar_canonical_url" \
+            || return 1
+    else
+        download_with_fallback \
+            'python' \
+            "$__kvar_filename" \
+            "Python-${__kvar_version}" \
+            "$__kvar_canonical_url" \
+            "$__kvar_koopa_url" \
+            || return 1
+    fi
+    unset -v __kvar_canonical_url __kvar_filename __kvar_koopa_url
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --disable-test-modules \
@@ -186,11 +227,15 @@ install_python() {
 install_zlib() {
     __kvar_version='1.3.2'
     printf 'Installing zlib.\n'
-    download_and_extract \
+    __kvar_filename="zlib-${__kvar_version}.tar.gz"
+    download_with_fallback \
         'zlib' \
-        "https://www.zlib.net/zlib-${__kvar_version}.tar.gz" \
+        "$__kvar_filename" \
         "zlib-${__kvar_version}" \
+        "https://koopa.acidgenomics.com/src/zlib/${__kvar_filename}" \
+        "https://www.zlib.net/${__kvar_filename}" \
         || return 1
+    unset -v __kvar_filename
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
