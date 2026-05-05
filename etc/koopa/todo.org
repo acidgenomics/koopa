@@ -10,3 +10,6 @@
 ** TODO Enhance `koopa update` defaults to only run certain extra features like dotfiles config when `--extra` flag is set.
 ** TODO Need to fix jekyll deploy code in koopa-acidgenomics-com repo.
 ** TODO Remove legacy support for `koopa header` returning bash, python, r code.
+** TODO Let's review supported flags for `koopa update`. We shouldn't use `--extra` that's too vague. Let's switch this to `--dotfiles`. Also, our S3 cleanup step should be manual, it's kind of slow.
+** TODO Consider not putting any other koopa command line apps in `bin` except koopa. Things like `rename-snake-case`.
+** TODO Review our options for supporting multiple koopa installs on a single machine. Current problem is that user config goes to ~/.config/koopa and really only supports one active koopa instance.
