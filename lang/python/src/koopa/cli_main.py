@@ -66,7 +66,7 @@ def _exec_restart_with_bootstrap() -> None:
     ld_path = os.environ.get("LD_LIBRARY_PATH", "")
     if bp_lib not in ld_path.split(":"):
         os.environ["LD_LIBRARY_PATH"] = f"{bp_lib}:{ld_path}".rstrip(":")
-    os.execv(new_python, [new_python, main_module] + sys.argv[1:])
+    os.execv(new_python, [new_python, main_module, *sys.argv[1:]])
 
 
 def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
@@ -379,7 +379,8 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
             for app, revdeps in sorted(blocked.items()):
                 lines.append(f"  {app}: required by {', '.join(revdeps)}")
             lines.append(
-                "Uninstall the dependent apps first, or use 'koopa uninstall --no-revdep-check' to override."
+                "Uninstall the dependent apps first, or use"
+                " 'koopa uninstall --no-revdep-check' to override."
             )
             print("\n".join(lines), file=sys.stderr)
             sys.exit(1)
@@ -447,7 +448,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
     try:
-        apps, mode = _resolve_apps_and_mode(args)
+        apps, _ = _resolve_apps_and_mode(args)
         if not apps:
             from koopa.alert import warn
             from koopa.app import prune_apps

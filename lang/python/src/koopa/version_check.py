@@ -290,7 +290,10 @@ def _check_conda(package: str) -> str:
 
 
 class _NetworkUnavailableError(RuntimeError):
-    """Raised when all network sources for a check are unreachable (e.g. SSL/timeout in corporate env)."""
+    """Raised when all network sources for a check are unreachable.
+
+    E.g., SSL/timeout in corporate env.
+    """
 
 
 def _raise_network_unavailable(exc: Exception | None) -> None:
@@ -1613,7 +1616,7 @@ def _resolve_pypi_name(name: str, args: dict, urls: list[str]) -> str:
 # ── Orchestrator ──────────────────────────────────────────────────────
 
 
-def check_app_versions(
+def check_app_versions(  # noqa: C901, PLR0915
     *,
     source_filter: str | None = None,
     name_filter: list[str] | None = None,

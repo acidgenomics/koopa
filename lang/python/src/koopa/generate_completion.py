@@ -661,7 +661,7 @@ def _generate_zsh_completion(
         for sub, sub_val in sorted(val.items()):
             if not isinstance(sub_val, dict):
                 continue
-            sub_fn = sub.replace("-", "_")
+            sub_fn = str(sub).replace("-", "_")
             leaves = sorted(sub_val.keys())
             lines += [
                 f"_koopa_app_{fn}_{sub_fn}() {{",
@@ -716,6 +716,7 @@ def _generate_powershell_completion(
     app_ns = sorted(app_tree.keys())
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
     top_cmds = sorted(_TOP_CMDS)
+    _system_cmds_ps = _ps_array(sorted(e[0] for e in _SYSTEM_COMMANDS if e[1] is None))
 
     lines += [
         "# Koopa PowerShell completions.",
@@ -727,7 +728,7 @@ def _generate_powershell_completion(
         "",
         "    # Collect completed tokens (skip 'koopa' and the word being typed).",
         "    $all = @($commandAst.CommandElements | ForEach-Object { $_.ToString() })",
-        "    $tokens = if ($wordToComplete -and $all.Count -gt 1 -and $all[-1] -eq $wordToComplete) {",
+        "    $tokens = if ($wordToComplete -and $all.Count -gt 1 -and $all[-1] -eq $wordToComplete) {",  # noqa: E501
         "        $all[1..($all.Count - 2)]",
         "    } else {",
         "        $all | Select-Object -Skip 1",
@@ -747,7 +748,7 @@ def _generate_powershell_completion(
         f"                'install'   {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'reinstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'uninstall' {{ $completions = @({_ps_array(all_apps)}) }}",
-        f"                'system'    {{ $completions = @({_ps_array(sorted(e[0] for e in _SYSTEM_COMMANDS if e[1] is None))}) }}",
+        f"                'system'    {{ $completions = @({_system_cmds_ps}) }}",
         "                'update'    { $completions = @('koopa', 'system') }",
         "            }",
         "        }",
