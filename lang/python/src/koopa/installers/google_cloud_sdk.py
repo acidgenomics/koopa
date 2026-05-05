@@ -40,11 +40,7 @@ def _setup_completions(prefix: str) -> None:
        lazy-loads it on first TAB after ``gcloud``.
     """
     prefix = os.path.abspath(prefix)
-    matches = sorted(
-        glob.glob(
-            os.path.join(prefix, "libexec", "share", "google-cloud-sdk-*")
-        )
-    )
+    matches = sorted(glob.glob(os.path.join(prefix, "libexec", "share", "google-cloud-sdk-*")))
     if not matches:
         return
     sdk_dir = matches[-1]  # most recent if multiple
