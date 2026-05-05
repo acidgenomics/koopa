@@ -474,13 +474,33 @@ def _check_python_org(minor: str) -> str:
     raise RuntimeError(msg)
 
 
+def _gitlab_get_json(url: str, *, retries: int = 2, delay: float = 2.0) -> Any:  # noqa: ANN401
+    last_exc: urllib.error.HTTPError | None = None
+    for attempt in range(1 + retries):
+        if attempt > 0:
+            time.sleep(delay)
+        try:
+            return _http_get_json(url)
+        except urllib.error.HTTPError as exc:
+            if exc.code >= 500:
+                last_exc = exc
+                continue
+            raise
+    raise last_exc  # type: ignore[misc]
+
+
 def _check_gitlab(domain: str, project_path: str) -> str:
     encoded = project_path.replace("/", "%2F")
-    data = _http_get_json(f"https://{domain}/api/v4/projects/{encoded}/releases?per_page=1")
+    base = f"https://{domain}/api/v4/projects/{encoded}"
+    try:
+        data = _gitlab_get_json(f"{base}/releases?per_page=1")
+    except urllib.error.HTTPError:
+        data = None
     if not data:
-        data = _http_get_json(
-            f"https://{domain}/api/v4/projects/{encoded}/repository/tags?per_page=1"
-        )
+        try:
+            data = _gitlab_get_json(f"{base}/repository/tags?per_page=1")
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+            _raise_network_unavailable(exc)
         if not data:
             msg = f"No releases/tags for {project_path} on {domain}"
             raise RuntimeError(msg)
