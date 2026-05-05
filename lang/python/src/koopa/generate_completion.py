@@ -444,6 +444,7 @@ def _generate_fish_completion(
     common_apps: list[str],
     linux_apps: list[str],
     macos_apps: list[str],
+    flag_map: dict[str, list[str]],
     today: str,
 ) -> str:
     """Generate fish shell completion for koopa."""
@@ -531,6 +532,20 @@ def _generate_fish_completion(
                 f"complete -c koopa -n '__fish_seen_subcommand_from {install_cmd}' -a '{app}'"
             )
 
+    lines += ["", "# Per-command flag completions."]
+    for path_key in sorted(flag_map):
+        parts = path_key.split("/")
+        flags = flag_map[path_key]
+        conditions = " and ".join(
+            f"__fish_seen_subcommand_from {p}" for p in parts
+        )
+        condition = f"'{conditions}'"
+        for flag in sorted(flags):
+            long_name = flag.lstrip("-")
+            lines.append(
+                f"complete -c koopa -n {condition} -l {long_name}"
+            )
+
     lines.append("")
     return "\n".join(lines)
 
@@ -546,6 +561,7 @@ def _generate_zsh_completion(
     common_apps: list[str],
     linux_apps: list[str],
     macos_apps: list[str],
+    flag_map: dict[str, list[str]],
     today: str,
 ) -> str:
     """Generate native zsh completion for koopa using _arguments/_describe."""
@@ -695,17 +711,81 @@ def _generate_zsh_completion(
             ]
 
     # -- develop --------------------------------------------------------------
-    lines += ["_koopa_develop() {", "    local -a cmds", "    cmds=("]
-    for cmd in develop_cmds:
-        lines.append(f"        '{cmd}'")
-    lines += ["    )", "    _describe -t commands 'develop command' cmds", "}", ""]
+    dev_flags = {
+        k.split("/", 1)[1]: v
+        for k, v in flag_map.items()
+        if k.startswith("develop/")
+    }
+    if dev_flags:
+        lines += [
+            "_koopa_develop() {",
+            "    local context state line",
+            "    typeset -A opt_args",
+            "    _arguments -C \\",
+            "        '1: :_koopa_develop_cmds' \\",
+            "        '*:: :->subcmd'",
+            "    [[ $state == subcmd ]] || return 0",
+            "    case $words[1] in",
+        ]
+        for cmd in sorted(dev_flags):
+            flags_str = " ".join(
+                f"'*{f}[{f}]'" for f in sorted(dev_flags[cmd])
+            )
+            lines.append(f"        {cmd}) _arguments {flags_str} ;;")
+        lines += ["    esac", "}", ""]
+        lines += ["_koopa_develop_cmds() {", "    local -a cmds", "    cmds=("]
+        for cmd in develop_cmds:
+            lines.append(f"        '{cmd}'")
+        lines += [
+            "    )",
+            "    _describe -t commands 'develop command' cmds",
+            "}",
+            "",
+        ]
+    else:
+        lines += ["_koopa_develop() {", "    local -a cmds", "    cmds=("]
+        for cmd in develop_cmds:
+            lines.append(f"        '{cmd}'")
+        lines += ["    )", "    _describe -t commands 'develop command' cmds", "}", ""]
 
     # -- run ------------------------------------------------------------------
     run_cmds = _load_run_commands()
-    lines += ["_koopa_run() {", "    local -a cmds", "    cmds=("]
-    for cmd in run_cmds:
-        lines.append(f"        '{cmd}'")
-    lines += ["    )", "    _describe -t commands 'run command' cmds", "}", ""]
+    run_flags = {
+        k.split("/", 1)[1]: v
+        for k, v in flag_map.items()
+        if k.startswith("run/")
+    }
+    if run_flags:
+        lines += [
+            "_koopa_run() {",
+            "    local context state line",
+            "    typeset -A opt_args",
+            "    _arguments -C \\",
+            "        '1: :_koopa_run_cmds' \\",
+            "        '*:: :->subcmd'",
+            "    [[ $state == subcmd ]] || return 0",
+            "    case $words[1] in",
+        ]
+        for cmd in sorted(run_flags):
+            flags_str = " ".join(
+                f"'*{f}[{f}]'" for f in sorted(run_flags[cmd])
+            )
+            lines.append(f"        {cmd}) _arguments {flags_str} ;;")
+        lines += ["    esac", "}", ""]
+        lines += ["_koopa_run_cmds() {", "    local -a cmds", "    cmds=("]
+        for cmd in run_cmds:
+            lines.append(f"        '{cmd}'")
+        lines += [
+            "    )",
+            "    _describe -t commands 'run command' cmds",
+            "}",
+            "",
+        ]
+    else:
+        lines += ["_koopa_run() {", "    local -a cmds", "    cmds=("]
+        for cmd in run_cmds:
+            lines.append(f"        '{cmd}'")
+        lines += ["    )", "    _describe -t commands 'run command' cmds", "}", ""]
 
     # -- install/reinstall/uninstall ------------------------------------------
     lines += ["_koopa_install() {", "    local -a apps", "    apps=("]
@@ -733,6 +813,7 @@ def _generate_powershell_completion(
     common_apps: list[str],
     linux_apps: list[str],
     macos_apps: list[str],
+    flag_map: dict[str, list[str]],
     today: str,
 ) -> str:
     """Generate PowerShell tab completion for koopa via Register-ArgumentCompleter."""
@@ -820,6 +901,21 @@ def _generate_powershell_completion(
     lines += [
         "                }",
         "            }",
+        "        }",
+        "    }",
+        "",
+        "    # Flag completion: when the current word starts with '--'.",
+        "    if ($wordToComplete -like '--*') {",
+        "        $path = ($tokens -join '/')",
+        "        $flagMap = @{",
+    ]
+    for path_key in sorted(flag_map):
+        flags_str = _ps_array(sorted(flag_map[path_key]))
+        lines.append(f"            '{path_key}' = @({flags_str})")
+    lines += [
+        "        }",
+        "        if ($flagMap.ContainsKey($path)) {",
+        "            $completions = $flagMap[$path]",
         "        }",
         "    }",
         "",
@@ -1236,7 +1332,7 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write fish completion.
     fish_content = _generate_fish_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, today
+        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
     )
     fish_path = os.path.join(koopa_prefix(), "share", "fish", "vendor_completions.d", "koopa.fish")
     os.makedirs(os.path.dirname(fish_path), exist_ok=True)
@@ -1245,7 +1341,7 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write zsh native completion.
     zsh_content = _generate_zsh_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, today
+        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
     )
     zsh_path = os.path.join(koopa_prefix(), "share", "zsh", "site-functions", "_koopa")
     os.makedirs(os.path.dirname(zsh_path), exist_ok=True)
@@ -1254,7 +1350,7 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write PowerShell completion.
     ps_content = _generate_powershell_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, today
+        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
     )
     ps_path = os.path.join(koopa_prefix(), "share", "powershell", "completions", "koopa.ps1")
     os.makedirs(os.path.dirname(ps_path), exist_ok=True)

@@ -1665,3 +1665,249 @@ complete -c koopa -n '__fish_seen_subcommand_from uninstall' -a 'zopfli'
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -a 'zoxide'
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -a 'zsh'
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -a 'zstd'
+
+# Per-command flag completions.
+complete -c koopa -n '__fish_seen_subcommand_from app' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l job-definition
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l job-name
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l memory
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l queue
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l vcpus
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from list-jobs' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from list-jobs' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from list-jobs' -l queue
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from list-jobs' -l status
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ec2 and __fish_seen_subcommand_from list-running-instances' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ec2 and __fish_seen_subcommand_from list-running-instances' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ec2 and __fish_seen_subcommand_from map-instance-ids-to-names' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ec2 and __fish_seen_subcommand_from map-instance-ids-to-names' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ec2 and __fish_seen_subcommand_from stop' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ec2 and __fish_seen_subcommand_from stop' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ecr and __fish_seen_subcommand_from login-private' -l account-id
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ecr and __fish_seen_subcommand_from login-private' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ecr and __fish_seen_subcommand_from login-private' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ecr and __fish_seen_subcommand_from login-private' -l region
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ecr and __fish_seen_subcommand_from login-public' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from ecr and __fish_seen_subcommand_from login-public' -l region
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-glacier-objects' -l bucket
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-glacier-objects' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-glacier-objects' -l prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-glacier-objects' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-objects' -l bucket
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-objects' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-objects' -l prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from delete-versioned-objects' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from dot-clean' -l dryrun
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from dot-clean' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from dot-clean' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from find' -l bucket
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from find' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from find' -l pattern
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from find' -l prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from find' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from list-large-files' -l bucket
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from list-large-files' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from list-large-files' -l min-size-mb
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from list-large-files' -l prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from list-large-files' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from ls' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from ls' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from ls' -l recursive
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from mv-to-parent' -l dryrun
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from mv-to-parent' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from mv-to-parent' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync' -l delete
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync' -l dryrun
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync' -l exclude
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync' -l include
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync-git-repo' -l delete
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync-git-repo' -l dryrun
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync-git-repo' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from s3 and __fish_seen_subcommand_from sync-git-repo' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l output-format
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l reference-fasta
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from index' -l genome-fasta-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from bowtie2 and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from conda and __fish_seen_subcommand_from create-env' -l file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from conda and __fish_seen_subcommand_from create-env' -l force
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from conda and __fish_seen_subcommand_from create-env' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from conda and __fish_seen_subcommand_from create-env' -l latest
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from conda and __fish_seen_subcommand_from create-env' -l prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build' -l local
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build' -l memory
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build' -l no-push
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build' -l remote
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build-all-tags' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build-all-tags' -l local
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from build-all-tags' -l remote
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from run' -l arm
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from run' -l bash
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from run' -l bind
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from run' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from docker and __fish_seen_subcommand_from run' -l x86
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from file and __fish_seen_subcommand_from compress' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from file and __fish_seen_subcommand_from compress' -l output
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from ftp and __fish_seen_subcommand_from mirror' -l dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from ftp and __fish_seen_subcommand_from mirror' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from ftp and __fish_seen_subcommand_from mirror' -l host
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from ftp and __fish_seen_subcommand_from mirror' -l user
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from index' -l genome-fasta-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from index' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from hisat2 and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from jekyll and __fish_seen_subcommand_from deploy-to-aws' -l bucket
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from jekyll and __fish_seen_subcommand_from deploy-to-aws' -l distribution-id
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from jekyll and __fish_seen_subcommand_from deploy-to-aws' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from jekyll and __fish_seen_subcommand_from deploy-to-aws' -l local-prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from jekyll and __fish_seen_subcommand_from deploy-to-aws' -l profile
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from index' -l transcriptome-fasta-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from kallisto and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from miso and __fish_seen_subcommand_from index' -l gff-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from miso and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from miso and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from r and __fish_seen_subcommand_from shiny-run-app' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from r and __fish_seen_subcommand_from shiny-run-app' -l port
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rnaeditingindexer' -l bam-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rnaeditingindexer' -l example
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rnaeditingindexer' -l genome
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rnaeditingindexer' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rnaeditingindexer' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from index' -l genome-fasta-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from index' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from index' -l num-threads
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l bam-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from rsem and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from detect-fastq-library-type' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from detect-fastq-library-type' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from detect-fastq-library-type' -l r1
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from detect-fastq-library-type' -l r2
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from detect-fastq-library-type' -l threads
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from index' -l transcriptome-fasta-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from bam' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from paired-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from salmon and __fish_seen_subcommand_from quant and __fish_seen_subcommand_from single-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from download-accession-list' -l file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from download-accession-list' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from download-accession-list' -l srp-id
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from download-run-info-table' -l file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from download-run-info-table' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from download-run-info-table' -l srp-id
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from fastq-dump' -l fastq-directory
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from fastq-dump' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from fastq-dump' -l no-compress
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from fastq-dump' -l prefetch-directory
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from prefetch' -l accession-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from prefetch' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from sra and __fish_seen_subcommand_from prefetch' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from ssh and __fish_seen_subcommand_from generate-key' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from ssh and __fish_seen_subcommand_from generate-key' -l prefix
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from paired-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l fastq-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l index-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from align and __fish_seen_subcommand_from single-end' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from index' -l genome-fasta-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from index' -l gtf-file
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from index' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from star and __fish_seen_subcommand_from index' -l output-dir
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from wget and __fish_seen_subcommand_from recursive' -l help
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from wget and __fish_seen_subcommand_from recursive' -l password
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from wget and __fish_seen_subcommand_from recursive' -l url
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from wget and __fish_seen_subcommand_from recursive' -l user
+complete -c koopa -n '__fish_seen_subcommand_from configure' -l help
+complete -c koopa -n '__fish_seen_subcommand_from configure' -l system
+complete -c koopa -n '__fish_seen_subcommand_from configure' -l user
+complete -c koopa -n '__fish_seen_subcommand_from configure' -l verbose
+complete -c koopa -n '__fish_seen_subcommand_from develop' -l help
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l help
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l json
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l reset-cache
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l s3-upload
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l source
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l update
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from format-app-json' -l help
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from format-app-json' -l prettier
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from remove-app' -l help
+complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from remove-app' -l revdeps
+complete -c koopa -n '__fish_seen_subcommand_from header' -l help
+complete -c koopa -n '__fish_seen_subcommand_from install' -l help
+complete -c koopa -n '__fish_seen_subcommand_from install' -l no-dependencies
+complete -c koopa -n '__fish_seen_subcommand_from install' -l private
+complete -c koopa -n '__fish_seen_subcommand_from install' -l reinstall
+complete -c koopa -n '__fish_seen_subcommand_from install' -l system
+complete -c koopa -n '__fish_seen_subcommand_from install' -l user
+complete -c koopa -n '__fish_seen_subcommand_from install' -l verbose
+complete -c koopa -n '__fish_seen_subcommand_from install-all-apps' -l help
+complete -c koopa -n '__fish_seen_subcommand_from install-default-apps' -l help
+complete -c koopa -n '__fish_seen_subcommand_from internal' -l help
+complete -c koopa -n '__fish_seen_subcommand_from list-all-apps' -l help
+complete -c koopa -n '__fish_seen_subcommand_from list-default-apps' -l help
+complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l all-revdeps
+complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l help
+complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l no-revdeps
+complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l only-revdeps
+complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l verbose
+complete -c koopa -n '__fish_seen_subcommand_from run' -l help
+complete -c koopa -n '__fish_seen_subcommand_from system' -l help
+complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l help
+complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l no-revdeps
+complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l system
+complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l user
+complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l verbose
+complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l yes
+complete -c koopa -n '__fish_seen_subcommand_from update' -l all-system
+complete -c koopa -n '__fish_seen_subcommand_from update' -l all-user-repos
+complete -c koopa -n '__fish_seen_subcommand_from update' -l help
+complete -c koopa -n '__fish_seen_subcommand_from update' -l system
+complete -c koopa -n '__fish_seen_subcommand_from update' -l user
+complete -c koopa -n '__fish_seen_subcommand_from update' -l verbose
+complete -c koopa -n '__fish_seen_subcommand_from version' -l help

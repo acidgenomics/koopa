@@ -1042,11 +1042,6 @@ _koopa_activate_zoxide() {
     return 0
 }
 
-_koopa_alert_info() {
-    _koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
-    return 0
-}
-
 _koopa_alias_colorls() {
     local color_flag
     case "$(_koopa_color_mode)" in
@@ -1707,16 +1702,6 @@ _koopa_dirname() {
     return 0
 }
 
-_koopa_dl() {
-    _koopa_assert_has_args_ge "$#" 2
-    while [[ "$#" -ge 2 ]]
-    do
-        _koopa_msg 'default' 'default' "${1:?}:" "${2:-}"
-        shift 2
-    done
-    return 0
-}
-
 _koopa_doom_emacs() {
     local doom_emacs_prefix
     doom_emacs_prefix="$(_koopa_doom_emacs_prefix)"
@@ -2001,19 +1986,6 @@ _koopa_has_passwordless_sudo() {
     _koopa_is_root && return 0
     "${app['sudo']}" -n true 2>/dev/null && return 0
     return 1
-}
-
-_koopa_help_2() {
-    local -A dict
-    dict['script_file']="$(_koopa_realpath "$0")"
-    dict['script_name']="$(_koopa_basename "${dict['script_file']}")"
-    dict['man_prefix']="$( \
-        _koopa_parent_dir --num=2 "${dict['script_file']}" \
-    )"
-    dict['man_file']="${dict['man_prefix']}/share/man/\
-man1/${dict['script_name']}.1"
-    _koopa_assert_is_file "${dict['man_file']}"
-    _koopa_help "${dict['man_file']}"
 }
 
 _koopa_help() {
@@ -2884,12 +2856,6 @@ _koopa_locate_head() {
         "$@"
 }
 
-_koopa_locate_locale() {
-    _koopa_locate_app \
-        '/usr/bin/locale' \
-        "$@"
-}
-
 _koopa_locate_man() {
     _koopa_locate_app \
         --app-name='man-db' \
@@ -3066,11 +3032,6 @@ _koopa_pyenv_prefix() {
 
 _koopa_rbenv_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/rbenv"
-    return 0
-}
-
-_koopa_scripts_private_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/scripts-private"
     return 0
 }
 
