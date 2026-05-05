@@ -3,7 +3,6 @@
 Replaces the 117-line ``_koopa_cli_system`` Bash function.
 """
 
-
 import contextlib
 import os
 import re

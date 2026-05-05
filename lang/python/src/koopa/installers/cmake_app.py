@@ -1,6 +1,5 @@
 """Install cmake."""
 
-
 import os
 import re
 import subprocess

@@ -1,6 +1,5 @@
 """Uninstall Wine on Fedora."""
 
-
 import os
 import subprocess
 

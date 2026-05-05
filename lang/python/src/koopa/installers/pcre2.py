@@ -1,6 +1,5 @@
 """Install pcre2."""
 
-
 import sys
 
 from koopa.build import activate_app, make_build

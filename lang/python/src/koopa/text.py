@@ -5,7 +5,6 @@ find-and-replace, detab, entab, eol-lf, sort-lines, head, tail, grep, nchar,
 nlines, autopad-zeros, find-files-without-line-ending, etc.
 """
 
-
 import os
 import re
 from pathlib import Path

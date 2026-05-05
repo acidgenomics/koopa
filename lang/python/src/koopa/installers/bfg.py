@@ -1,6 +1,5 @@
 """Install bfg."""
 
-
 import os
 import stat
 

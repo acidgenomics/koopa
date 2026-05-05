@@ -1,6 +1,5 @@
 """Install pkg-config."""
 
-
 import os
 import sys
 

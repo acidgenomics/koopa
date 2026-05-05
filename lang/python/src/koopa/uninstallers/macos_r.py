@@ -1,6 +1,5 @@
 """Uninstall R framework on macOS."""
 
-
 import os
 
 from koopa.file_ops import rm

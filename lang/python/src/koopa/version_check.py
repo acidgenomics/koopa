@@ -1,6 +1,5 @@
 """Upstream version checking for apps in app.json."""
 
-
 import importlib
 import inspect
 import json
@@ -274,7 +273,14 @@ def _check_conda(package: str, channel: str = "conda-forge") -> str:
         with _conda_semaphore:
             try:
                 result = subprocess.run(
-                    [exe, "search", package, f"--channel={channel}", "--override-channels", "--json"],
+                    [
+                        exe,
+                        "search",
+                        package,
+                        f"--channel={channel}",
+                        "--override-channels",
+                        "--json",
+                    ],
                     capture_output=True,
                     text=True,
                     timeout=60,

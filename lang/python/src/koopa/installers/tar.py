@@ -1,6 +1,5 @@
 """Install tar."""
 
-
 import os
 import sys
 

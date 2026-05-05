@@ -1,6 +1,5 @@
 """Install mold."""
 
-
 import sys
 
 from koopa.build import activate_app, cmake_build

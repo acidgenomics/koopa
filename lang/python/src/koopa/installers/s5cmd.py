@@ -1,6 +1,5 @@
 """Install s5cmd."""
 
-
 from koopa.install import build_go_package
 
 

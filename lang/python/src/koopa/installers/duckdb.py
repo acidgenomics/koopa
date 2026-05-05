@@ -1,6 +1,5 @@
 """Install duckdb."""
 
-
 import os
 import subprocess
 

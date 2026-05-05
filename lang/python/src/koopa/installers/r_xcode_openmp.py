@@ -1,6 +1,5 @@
 """Install r-xcode-openmp."""
 
-
 import subprocess
 
 from koopa.download import download

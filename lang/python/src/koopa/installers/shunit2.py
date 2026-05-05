@@ -1,6 +1,5 @@
 """Install shunit2."""
 
-
 import os
 import shutil
 

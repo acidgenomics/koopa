@@ -4,7 +4,6 @@ Converted from POSIX shell and Bash functions for system identification,
 architecture detection, and OS-level queries.
 """
 
-
 import grp
 import os
 import platform

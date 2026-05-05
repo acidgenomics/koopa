@@ -1,6 +1,5 @@
 """Install openssh."""
 
-
 import os
 import sys
 

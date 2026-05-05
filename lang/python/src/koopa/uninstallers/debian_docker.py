@@ -1,6 +1,5 @@
 """Uninstall Docker on Debian."""
 
-
 import os
 import subprocess
 

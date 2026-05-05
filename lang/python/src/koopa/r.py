@@ -3,7 +3,6 @@
 Converted from Bash functions in ``lang/bash/functions/r/``.
 """
 
-
 import os
 import shutil
 import subprocess

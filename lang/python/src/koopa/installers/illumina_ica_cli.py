@@ -1,6 +1,5 @@
 """Install illumina-ica-cli."""
 
-
 import os
 import sys
 

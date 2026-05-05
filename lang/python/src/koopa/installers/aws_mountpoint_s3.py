@@ -1,6 +1,5 @@
 """Install aws-mountpoint-s3."""
 
-
 import os
 import subprocess
 

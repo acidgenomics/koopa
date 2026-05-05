@@ -4,7 +4,6 @@ Converted from Bash/POSIX shell functions: download, download-cran-latest,
 download-github-latest, etc.
 """
 
-
 import json
 import os
 import re

@@ -1,6 +1,5 @@
 """Install zip."""
 
-
 import os
 import subprocess
 

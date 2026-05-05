@@ -1,6 +1,5 @@
 """Install postgresql."""
 
-
 from koopa.build import activate_app, make_build
 from koopa.installers._build_helper import download_extract_cd
 

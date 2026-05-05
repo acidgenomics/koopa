@@ -1,6 +1,5 @@
 """Install Homebrew Bundle."""
 
-
 import os
 import shutil
 import subprocess

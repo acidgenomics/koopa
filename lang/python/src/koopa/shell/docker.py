@@ -3,7 +3,6 @@
 Converted from Bash functions in ``lang/bash/functions/docker/``.
 """
 
-
 import os
 import re
 import subprocess

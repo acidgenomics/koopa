@@ -1,6 +1,5 @@
 """Install elvish."""
 
-
 from koopa.install import build_go_package
 
 

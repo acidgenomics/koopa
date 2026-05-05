@@ -1,6 +1,5 @@
 """Install oracle-instant-client."""
 
-
 import subprocess
 
 from koopa.download import download

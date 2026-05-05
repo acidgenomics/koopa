@@ -1,6 +1,5 @@
 """Install woff2."""
 
-
 import glob
 import os
 import shutil

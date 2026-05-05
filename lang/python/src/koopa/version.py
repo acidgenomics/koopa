@@ -4,7 +4,6 @@ Converted from POSIX shell functions: koopa-version, extract-version,
 sanitize-version, major-version, etc.
 """
 
-
 import re
 from pathlib import Path
 

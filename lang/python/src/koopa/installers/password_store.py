@@ -1,6 +1,5 @@
 """Install password-store."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate

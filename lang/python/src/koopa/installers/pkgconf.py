@@ -1,6 +1,5 @@
 """Install pkgconf."""
 
-
 import sys
 
 from koopa.build import make_build
