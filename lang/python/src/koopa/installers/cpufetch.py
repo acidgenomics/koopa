@@ -1,6 +1,5 @@
 """Install cpufetch."""
 
-
 import os
 import shutil
 import subprocess

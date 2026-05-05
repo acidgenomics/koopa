@@ -1,6 +1,5 @@
 """Install google-cloud-sdk."""
 
-
 import glob
 import os
 

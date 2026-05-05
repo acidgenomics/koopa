@@ -1,6 +1,5 @@
 """Install databricks-cli."""
 
-
 from koopa.install import build_go_package
 
 

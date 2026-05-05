@@ -1,6 +1,5 @@
 """Install libconfig."""
 
-
 from koopa.build import make_build
 from koopa.installers._build_helper import download_extract_cd
 

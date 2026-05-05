@@ -1,6 +1,5 @@
 """Uninstall Shiny Server on Linux."""
 
-
 import os
 import subprocess
 

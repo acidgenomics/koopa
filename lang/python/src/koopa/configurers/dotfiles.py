@@ -1,6 +1,5 @@
 """Configure dotfiles."""
 
-
 import os
 import subprocess
 

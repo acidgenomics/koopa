@@ -1,6 +1,5 @@
 """Uninstall Lmod configuration."""
 
-
 import os
 
 from koopa.file_ops import rm

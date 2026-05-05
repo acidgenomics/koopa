@@ -1,6 +1,5 @@
 """Install haskell-stack."""
 
-
 import os
 import shutil
 import subprocess

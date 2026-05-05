@@ -1,6 +1,5 @@
 """Install Lmod."""
 
-
 import os
 import re
 import subprocess

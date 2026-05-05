@@ -1,6 +1,5 @@
 """Install freetype."""
 
-
 from koopa.install import install_gnu_app
 
 

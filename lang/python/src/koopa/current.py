@@ -4,7 +4,6 @@ Converted from Bash functions in ``lang/bash/functions/current/``.
 Each function fetches a URL and parses the latest version string.
 """
 
-
 import json
 import re
 import shutil

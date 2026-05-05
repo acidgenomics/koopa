@@ -1,6 +1,5 @@
 """Install rstudio-server (system)."""
 
-
 import os
 import subprocess
 import sys

@@ -1,6 +1,5 @@
 """Install libtermkey."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate

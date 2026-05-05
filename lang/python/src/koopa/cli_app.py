@@ -1,6 +1,5 @@
 """Dispatch table for ``koopa app`` subcommands."""
 
-
 import os
 import shutil
 import subprocess

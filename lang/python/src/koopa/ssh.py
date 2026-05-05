@@ -3,7 +3,6 @@
 Converted from Bash functions in ``lang/bash/functions/core/ssh-*.sh``.
 """
 
-
 import os
 import platform
 import shutil

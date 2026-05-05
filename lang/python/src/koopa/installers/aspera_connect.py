@@ -1,6 +1,5 @@
 """Install Aspera Connect."""
 
-
 import os
 import platform
 import subprocess

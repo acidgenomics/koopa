@@ -1,6 +1,5 @@
 """Configure macOS user preferences."""
 
-
 import os
 import subprocess
 import sys

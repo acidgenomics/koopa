@@ -1,6 +1,5 @@
 """Install r-devel."""
 
-
 from koopa.installers.r_app import main as r_main
 
 

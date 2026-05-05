@@ -1,6 +1,5 @@
 """Install pyenv."""
 
-
 import os
 
 from koopa.archive import extract

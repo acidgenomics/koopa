@@ -1,6 +1,5 @@
 """Uninstall Oracle Java on macOS."""
 
-
 import glob
 import os
 

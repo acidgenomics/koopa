@@ -1,6 +1,5 @@
 """Install libvterm."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate

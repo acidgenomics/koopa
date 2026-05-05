@@ -1,6 +1,5 @@
 """Install ont-guppy."""
 
-
 import os
 import subprocess
 import sys

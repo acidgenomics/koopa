@@ -1,7 +1,6 @@
 """Parse passthrough CLI args into keyword arguments."""
 
 
-
 def parse_passthrough(
     args: list[str] | None,
 ) -> dict[str, str | list[str]]:

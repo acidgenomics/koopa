@@ -1,6 +1,5 @@
 """Install serf."""
 
-
 import os
 import subprocess
 

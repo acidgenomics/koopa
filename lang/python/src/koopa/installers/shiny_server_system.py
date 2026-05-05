@@ -1,6 +1,5 @@
 """Install shiny-server (system)."""
 
-
 import os
 import shutil
 import subprocess

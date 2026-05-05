@@ -6,7 +6,6 @@ hisat2-build, kallisto-index, kallisto-quant, bam-filter, bam-to-fastq,
 fastqc, multiqc, etc.
 """
 
-
 import os
 import shutil
 import subprocess

@@ -1,6 +1,5 @@
 """Install screen."""
 
-
 import subprocess
 
 from koopa.archive import is_valid_archive

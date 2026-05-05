@@ -1,6 +1,5 @@
 """Install Apptainer."""
 
-
 import os
 import subprocess
 

@@ -1,6 +1,5 @@
 """Install yq."""
 
-
 from koopa.install import build_go_package
 
 

@@ -1,6 +1,5 @@
 """Install R framework on macOS."""
 
-
 import os
 import shutil
 import subprocess

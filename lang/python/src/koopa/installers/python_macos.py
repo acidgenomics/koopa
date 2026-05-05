@@ -1,6 +1,5 @@
 """Install Python framework on macOS."""
 
-
 import os
 import subprocess
 import sys

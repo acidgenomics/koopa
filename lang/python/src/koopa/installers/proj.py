@@ -1,6 +1,5 @@
 """Install proj."""
 
-
 from koopa.build import (
     activate_app,
     app_prefix,

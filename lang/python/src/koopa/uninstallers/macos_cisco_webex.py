@@ -1,6 +1,5 @@
 """Uninstall Cisco WebEx on macOS."""
 
-
 import glob
 import os
 

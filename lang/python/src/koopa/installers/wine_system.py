@@ -1,6 +1,5 @@
 """Install wine."""
 
-
 import subprocess
 
 from koopa.system import is_debian_like, is_fedora_like

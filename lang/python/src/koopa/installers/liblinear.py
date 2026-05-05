@@ -1,6 +1,5 @@
 """Install liblinear."""
 
-
 import os
 import subprocess
 import sys

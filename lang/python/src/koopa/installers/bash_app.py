@@ -1,6 +1,5 @@
 """Install bash."""
 
-
 import os
 import platform
 import sys

@@ -240,8 +240,6 @@ def _binary_tarball_basename(name: str, version: str) -> str:
     return f"{version}.tar.gz"
 
 
-
-
 def can_build_binary() -> bool:
     """Check if running on a designated builder machine (KOOPA_BUILDER=1)."""
     return os.environ.get("KOOPA_BUILDER", "0") == "1"
@@ -2237,9 +2235,7 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
 
     bp = bootstrap_prefix()
     bootstrap_absent = not os.path.isdir(bp)
-    required_ver = (
-        open(os.path.join(koopa_prefix(), ".python-version")).read().strip()
-    )
+    required_ver = open(os.path.join(koopa_prefix(), ".python-version")).read().strip()
     _sys_python = "/usr/bin/python3"
     system_python_adequate = False
     if os.path.isfile(_sys_python):
@@ -2251,9 +2247,7 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
         )
         if _res.returncode == 0:
             _ver = _res.stdout.strip().split()[-1]
-            system_python_adequate = (
-                ".".join(_ver.split(".")[:2]) == required_ver
-            )
+            system_python_adequate = ".".join(_ver.split(".")[:2]) == required_ver
 
     # If bootstrap is absent and system Python is adequate, nothing to do.
     if bootstrap_absent and system_python_adequate:

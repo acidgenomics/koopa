@@ -1,6 +1,5 @@
 """Install p7zip."""
 
-
 import os
 import shutil
 import subprocess

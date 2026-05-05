@@ -1,6 +1,5 @@
 """Configure rstudio-server."""
 
-
 import os
 import shutil
 import subprocess

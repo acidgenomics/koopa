@@ -1,6 +1,5 @@
 """Uninstall Shiny Server on Fedora."""
 
-
 import subprocess
 
 

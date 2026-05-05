@@ -1,6 +1,5 @@
 """Install bcl2fastq."""
 
-
 import os
 import platform
 import subprocess

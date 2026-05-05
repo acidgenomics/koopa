@@ -1,6 +1,5 @@
 """Install dotfiles."""
 
-
 from koopa.git import git_clone
 
 

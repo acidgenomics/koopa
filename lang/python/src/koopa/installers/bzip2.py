@@ -1,6 +1,5 @@
 """Install bzip2."""
 
-
 import os
 import subprocess
 import sys

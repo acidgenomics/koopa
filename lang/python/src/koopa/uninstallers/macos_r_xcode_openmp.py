@@ -1,6 +1,5 @@
 """Uninstall OpenMP for Xcode on macOS."""
 
-
 import os
 
 from koopa.file_ops import rm

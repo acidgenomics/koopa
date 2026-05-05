@@ -1,6 +1,5 @@
 """Install libassuan."""
 
-
 import os
 
 from koopa.build import activate_app, app_prefix, make_build

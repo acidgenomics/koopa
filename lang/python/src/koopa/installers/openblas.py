@@ -1,6 +1,5 @@
 """Install openblas."""
 
-
 import os
 import subprocess
 import sys

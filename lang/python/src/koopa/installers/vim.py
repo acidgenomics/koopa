@@ -1,6 +1,5 @@
 """Install vim."""
 
-
 import subprocess
 import sys
 

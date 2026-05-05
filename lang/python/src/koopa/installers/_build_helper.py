@@ -1,6 +1,5 @@
 """Shared helpers for build-from-source installers."""
 
-
 import os
 from glob import glob
 from urllib.parse import urlparse

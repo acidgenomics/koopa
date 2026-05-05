@@ -1,6 +1,5 @@
 """Configure lmod."""
 
-
 import os
 
 from koopa.file_ops import ln, mkdir

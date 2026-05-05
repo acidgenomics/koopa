@@ -1,6 +1,5 @@
 """Uninstall R on Debian."""
 
-
 import os
 import subprocess
 

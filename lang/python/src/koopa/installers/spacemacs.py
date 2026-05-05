@@ -1,6 +1,5 @@
 """Install Spacemacs."""
 
-
 from koopa.git import git_clone
 
 

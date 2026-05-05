@@ -1,6 +1,5 @@
 """Install libarchive."""
 
-
 import sys
 
 from koopa.build import activate_app, make_build

@@ -1,6 +1,5 @@
 """Install boost."""
 
-
 import os
 import subprocess
 import sys

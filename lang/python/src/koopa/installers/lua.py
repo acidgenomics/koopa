@@ -1,6 +1,5 @@
 """Install lua."""
 
-
 import os
 import subprocess
 import sys

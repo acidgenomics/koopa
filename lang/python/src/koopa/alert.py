@@ -4,7 +4,6 @@ Converted from Bash functions: alert, alert-info, alert-note, alert-success,
 alert-install-start, h1-h7, dl, stop, warn, invalid-arg, etc.
 """
 
-
 import os
 import sys
 from typing import TextIO

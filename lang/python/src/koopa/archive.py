@@ -4,7 +4,6 @@ Converted from Bash/POSIX shell functions: extract, decompress,
 tar-multiple-dirs, compress, etc.
 """
 
-
 import bz2
 import gzip
 import os

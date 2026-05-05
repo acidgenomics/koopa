@@ -1,6 +1,5 @@
 """Uninstall Adobe Creative Cloud on macOS."""
 
-
 import glob
 import os
 

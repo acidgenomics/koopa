@@ -1,6 +1,5 @@
 """Install aws-cli."""
 
-
 import os
 
 from koopa.install import install_conda_package

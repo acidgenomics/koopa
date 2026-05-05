@@ -5,7 +5,6 @@ function that performs the configuration. Entries not in the registry fall
 through to the existing Bash subshell configurer path.
 """
 
-
 import importlib
 from collections.abc import Callable
 

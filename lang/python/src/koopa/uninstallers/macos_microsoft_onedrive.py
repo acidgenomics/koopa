@@ -1,6 +1,5 @@
 """Uninstall Microsoft OneDrive on macOS."""
 
-
 import os
 
 from koopa.file_ops import rm

@@ -1,6 +1,5 @@
 """Generic Rust package installer."""
 
-
 from koopa.install import install_rust_package
 from koopa.installers._args import get_str, parse_passthrough
 

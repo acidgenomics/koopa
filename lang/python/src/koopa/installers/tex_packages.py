@@ -1,6 +1,5 @@
 """Install TeX packages."""
 
-
 import shutil
 import subprocess
 import sys

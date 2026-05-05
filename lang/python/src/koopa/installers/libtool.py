@@ -1,6 +1,5 @@
 """Install libtool."""
 
-
 import os
 
 from koopa.build import activate_app

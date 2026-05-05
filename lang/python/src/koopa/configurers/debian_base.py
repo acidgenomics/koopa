@@ -1,6 +1,5 @@
 """Configure Debian/Ubuntu base system."""
 
-
 import os
 import shutil
 import subprocess

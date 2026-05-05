@@ -1,6 +1,5 @@
 """Install gum."""
 
-
 import os
 import subprocess
 

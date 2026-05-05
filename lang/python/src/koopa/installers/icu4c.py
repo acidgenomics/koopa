@@ -1,6 +1,5 @@
 """Install icu4c."""
 
-
 import os
 from pathlib import Path
 

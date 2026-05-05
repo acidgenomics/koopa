@@ -1,6 +1,5 @@
 """Install prelude-emacs."""
 
-
 import subprocess
 
 from koopa.git import git_clone

@@ -1,6 +1,5 @@
 """Install lz4."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate

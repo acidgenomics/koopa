@@ -1,6 +1,5 @@
 """Install unzip."""
 
-
 import os
 import subprocess
 import sys

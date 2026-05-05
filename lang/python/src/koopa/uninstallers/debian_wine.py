@@ -1,6 +1,5 @@
 """Uninstall Wine on Debian."""
 
-
 import os
 import subprocess
 

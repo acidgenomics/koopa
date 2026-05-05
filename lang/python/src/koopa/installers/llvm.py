@@ -1,6 +1,5 @@
 """Install llvm."""
 
-
 import os
 import subprocess
 import sys

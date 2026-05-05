@@ -1,6 +1,5 @@
 """Configure R."""
 
-
 import grp
 import os
 import pwd

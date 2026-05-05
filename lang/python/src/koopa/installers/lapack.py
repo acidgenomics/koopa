@@ -1,6 +1,5 @@
 """Install lapack."""
 
-
 import shutil
 
 from koopa.build import activate_app, cmake_build

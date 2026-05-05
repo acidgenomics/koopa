@@ -6,7 +6,6 @@ aws-ecr-login-public, aws-ec2-list-running-instances,
 aws-batch-list-jobs, etc.
 """
 
-
 import json
 import re
 import subprocess

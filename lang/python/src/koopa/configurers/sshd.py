@@ -1,6 +1,5 @@
 """Configure sshd."""
 
-
 import os
 
 from koopa.file_ops import append_string, chmod, mkdir, write_string

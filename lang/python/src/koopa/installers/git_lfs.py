@@ -1,6 +1,5 @@
 """Install git-lfs."""
 
-
 import os
 import subprocess
 

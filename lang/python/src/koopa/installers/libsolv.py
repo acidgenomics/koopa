@@ -1,6 +1,5 @@
 """Install libsolv."""
 
-
 import os
 
 from koopa.build import activate_app, app_prefix, cmake_build, shared_ext

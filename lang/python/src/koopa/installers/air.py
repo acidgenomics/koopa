@@ -1,6 +1,5 @@
 """Install air."""
 
-
 from koopa.install import install_rust_package
 
 

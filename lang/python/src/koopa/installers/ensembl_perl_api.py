@@ -1,6 +1,5 @@
 """Install ensembl-perl-api."""
 
-
 import os
 import subprocess
 

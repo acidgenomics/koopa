@@ -1,6 +1,5 @@
 """Install haskell-ghcup."""
 
-
 import os
 import shutil
 import stat

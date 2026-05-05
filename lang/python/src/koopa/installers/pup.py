@@ -1,6 +1,5 @@
 """Install pup."""
 
-
 from koopa.install import install_go_package
 
 

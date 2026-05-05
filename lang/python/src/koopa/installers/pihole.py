@@ -1,6 +1,5 @@
 """Install pihole."""
 
-
 import subprocess
 
 from koopa.download import download

@@ -1,6 +1,5 @@
 """Install rust."""
 
-
 import os
 import shutil
 import stat

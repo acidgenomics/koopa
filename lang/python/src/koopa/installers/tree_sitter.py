@@ -1,6 +1,5 @@
 """Install tree-sitter."""
 
-
 import subprocess
 
 from koopa.build import activate_app, locate

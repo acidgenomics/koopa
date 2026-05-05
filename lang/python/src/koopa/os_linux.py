@@ -5,7 +5,6 @@ user/group management, systemctl, apt/dnf/apk/pacman/zypper package managers,
 configure-system-sshd, configure-lmod, etc.
 """
 
-
 import os
 import subprocess
 from pathlib import Path

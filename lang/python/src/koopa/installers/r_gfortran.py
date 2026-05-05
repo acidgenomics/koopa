@@ -1,6 +1,5 @@
 """Install r-gfortran."""
 
-
 import subprocess
 
 from koopa.download import download

@@ -1,6 +1,5 @@
 """Install cairo."""
 
-
 import sys
 
 from koopa.build import activate_app, meson_build

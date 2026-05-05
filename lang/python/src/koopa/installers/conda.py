@@ -1,6 +1,5 @@
 """Install conda."""
 
-
 import os
 import shutil
 import subprocess

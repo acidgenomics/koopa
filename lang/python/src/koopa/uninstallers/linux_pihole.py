@@ -1,6 +1,5 @@
 """Uninstall Pi-hole."""
 
-
 import shutil
 import subprocess
 import sys

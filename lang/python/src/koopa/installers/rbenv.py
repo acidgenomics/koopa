@@ -1,6 +1,5 @@
 """Install rbenv."""
 
-
 import os
 
 from koopa.archive import extract

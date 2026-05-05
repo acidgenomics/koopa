@@ -1,6 +1,5 @@
 """Install harfbuzz."""
 
-
 from koopa.build import activate_app, meson_build
 from koopa.installers._build_helper import download_extract_cd
 

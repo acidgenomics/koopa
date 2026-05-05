@@ -1,6 +1,5 @@
 """Generic Ruby package installer."""
 
-
 from koopa.install import install_ruby_package
 from koopa.installers._args import get_str, parse_passthrough
 

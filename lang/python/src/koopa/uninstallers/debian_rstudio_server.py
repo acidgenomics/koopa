@@ -1,6 +1,5 @@
 """Uninstall RStudio Server on Debian."""
 
-
 import subprocess
 
 

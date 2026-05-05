@@ -1,6 +1,5 @@
 """Install SpaceVim."""
 
-
 import os
 import subprocess
 import sys

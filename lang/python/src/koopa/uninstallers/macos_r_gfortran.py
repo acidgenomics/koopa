@@ -1,6 +1,5 @@
 """Uninstall GNU Fortran for R on macOS."""
 
-
 import os
 
 from koopa.file_ops import rm

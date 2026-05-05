@@ -1,6 +1,5 @@
 """Install temurin."""
 
-
 import os
 import sys
 

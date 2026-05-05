@@ -1,6 +1,5 @@
 """Install ont-dorado."""
 
-
 import sys
 
 from koopa.archive import extract

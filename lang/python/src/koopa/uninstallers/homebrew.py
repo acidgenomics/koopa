@@ -1,6 +1,5 @@
 """Uninstall Homebrew."""
 
-
 import os
 import subprocess
 import tempfile

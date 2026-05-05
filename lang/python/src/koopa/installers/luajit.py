@@ -1,6 +1,5 @@
 """Install luajit."""
 
-
 import os
 import subprocess
 import sys

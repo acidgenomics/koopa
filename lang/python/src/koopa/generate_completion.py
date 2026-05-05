@@ -9,7 +9,6 @@ Usage::
     koopa develop generate-completion --write  # overwrite koopa.sh
 """
 
-
 import ast
 import os
 from datetime import date
@@ -56,6 +55,7 @@ _SYSTEM_LIST: list[tuple[str, str | None]] = [
     ("launch-agents", "macos"),
 ]
 
+
 def _get_main_command_flags() -> dict[str, list[str]]:
     """Derive flags for top-level subcommands from argparse parser."""
     import argparse
@@ -64,8 +64,7 @@ def _get_main_command_flags() -> dict[str, list[str]]:
 
     parser = _build_parser()
     subparsers_action = next(
-        a for a in parser._actions
-        if isinstance(a, argparse._SubParsersAction)
+        a for a in parser._actions if isinstance(a, argparse._SubParsersAction)
     )
     result: dict[str, list[str]] = {}
     for name, subparser in subparsers_action.choices.items():
@@ -94,7 +93,7 @@ def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
     for name, platform, mode in PYTHON_INSTALLER_MODES:
         plat: str | None = None if platform == "common" else platform
         result[mode].append((name, plat))
-    for (name, platform, mode) in PYTHON_PLATFORM_INSTALLERS:
+    for name, platform, mode in PYTHON_PLATFORM_INSTALLERS:
         if mode == "system":
             plat: str | None = None if platform == "common" else platform
             result["system"].append((name, plat))

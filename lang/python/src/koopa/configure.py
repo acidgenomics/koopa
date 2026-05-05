@@ -4,7 +4,6 @@ Provides ``configure_app`` -- the Python equivalent of the Bash function
 ``_koopa_configure_app``.
 """
 
-
 import os
 from dataclasses import dataclass
 

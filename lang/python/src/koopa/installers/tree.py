@@ -1,6 +1,5 @@
 """Install tree."""
 
-
 import os
 import subprocess
 

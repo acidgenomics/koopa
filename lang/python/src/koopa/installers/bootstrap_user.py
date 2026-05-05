@@ -1,6 +1,5 @@
 """Install koopa bootstrap."""
 
-
 import os
 import subprocess
 

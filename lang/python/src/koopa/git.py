@@ -6,7 +6,6 @@ git-push-submodules, git-submodule-init, git-reset, git-rm-untracked,
 git-rename-master-to-main, git-set-remote-url, git-rm-submodule, etc.
 """
 
-
 import os
 import shutil
 import subprocess

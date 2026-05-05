@@ -1,6 +1,5 @@
 """Install uv."""
 
-
 import os
 import stat
 import subprocess

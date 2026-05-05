@@ -1,6 +1,5 @@
 """Install git."""
 
-
 import os
 import shutil
 import subprocess

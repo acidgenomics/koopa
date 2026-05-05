@@ -1,6 +1,5 @@
 """Install elfutils."""
 
-
 import sys
 
 from koopa.build import activate_app, app_prefix, make_build

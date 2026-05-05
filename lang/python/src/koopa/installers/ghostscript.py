@@ -1,6 +1,5 @@
 """Install ghostscript."""
 
-
 import os
 import subprocess
 
