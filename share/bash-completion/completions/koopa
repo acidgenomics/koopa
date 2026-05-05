@@ -11,6 +11,7 @@ _koopa_complete() {
     COMPREPLY=()
     local -A _flags
     _flags=(
+        ['app']='--help'
         ['app/aws/batch/fetch-and-run']='--help --queue --job-definition --job-name --vcpus --memory --profile'
         ['app/aws/batch/list-jobs']='--help --queue --status --profile'
         ['app/aws/ec2/list-running-instances']='--help --profile'
@@ -61,13 +62,22 @@ _koopa_complete() {
         ['app/star/index']='--help --genome-fasta-file --output-dir --gtf-file'
         ['app/wget/recursive']='--help --url --user --password'
         ['configure']='--help --system --user --verbose'
+        ['develop']='--help'
         ['develop/check-app-versions']='--help --json --source --update --s3-upload --reset-cache'
         ['develop/generate-man']='--help --write'
         ['develop/remove-app']='--help --revdeps'
+        ['header']='--help'
         ['install']='--help --no-dependencies --private --reinstall --system --user --verbose'
-        ['reinstall']='--help --all-revdeps --no-revdeps --only-revdeps --verbose'
-        ['uninstall']='--help --no-revdeps --system --user --verbose'
-        ['update']='--help --all-system --extra --system --user --verbose'
+        ['install-all-apps']='--help'
+        ['install-default-apps']='--help'
+        ['internal']='--help'
+        ['list-all-apps']='--help'
+        ['list-default-apps']='--help'
+        ['reinstall']='--all-revdeps --help --no-revdeps --only-revdeps --verbose'
+        ['system']='--help'
+        ['uninstall']='--help --no-revdeps --system --user --verbose --yes'
+        ['update']='--all-system --help --system --user --user-repos --verbose'
+        ['version']='--help'
     )
     case "${COMP_CWORD:-}" in
         '1')
@@ -716,10 +726,7 @@ _koopa_complete() {
                             fi
                             ;;
                         'user')
-                            args+=(
-                                'chemacs'
-                                'dotfiles'
-                            )
+                            args+=('dotfiles')
                             if _koopa_is_macos
                             then
                                 args+=('preferences')
@@ -761,6 +768,7 @@ _koopa_complete() {
                             if _koopa_is_linux
                             then
                                 args+=(
+                                    'glibc'
                                     'pihole'
                                     'pivpn'
                                     'wine'

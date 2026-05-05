@@ -56,83 +56,83 @@ _SYSTEM_LIST: list[tuple[str, str | None]] = [
     ("launch-agents", "macos"),
 ]
 
-_INSTALL_SYSTEM_INSTALL: list[tuple[str, str | None]] = [
-    ("homebrew-bundle", None),
-    ("tex-packages", None),
-    ("rosetta", "macos"),
-]
+def _get_main_command_flags() -> dict[str, list[str]]:
+    """Derive flags for top-level subcommands from argparse parser."""
+    import argparse
 
-_INSTALL_SYSTEM_SYSTEM: list[tuple[str, str | None]] = [
-    ("homebrew", None),
-    ("pihole", "linux"),
-    ("pivpn", "linux"),
-    ("wine", "linux"),
-    ("rstudio-server", "debian_or_fedora"),
-    ("shiny-server", "debian_or_fedora"),
-    ("aws-mountpoint-s3", "debian"),
-    ("docker", "debian"),
-    ("r", "debian"),
-    ("oracle-instant-client", "fedora"),
-    ("python", "macos"),
-    ("r", "macos"),
-    ("r-gfortran", "macos"),
-    ("r-xcode-openmp", "macos"),
-    ("xcode-clt", "macos"),
-]
+    from koopa.cli_main import _build_parser
 
-_INSTALL_PRIVATE: list[tuple[str, str | None]] = [
-    ("ont-guppy", None),
-    ("bcl2fastq", "linux"),
-    ("cellranger", "linux"),
-]
+    parser = _build_parser()
+    subparsers_action = next(
+        a for a in parser._actions
+        if isinstance(a, argparse._SubParsersAction)
+    )
+    result: dict[str, list[str]] = {}
+    for name, subparser in subparsers_action.choices.items():
+        flags = ["--help"]
+        for action in subparser._actions:
+            for opt in action.option_strings:
+                if opt.startswith("--"):
+                    flags.append(opt)
+        if flags:
+            result[name] = sorted(set(flags))
+    # Manual flag parsing not detectable via argparse introspection.
+    result["develop/remove-app"] = ["--help", "--revdeps"]
+    return result
 
-_INSTALL_USER: list[tuple[str, str | None]] = [
-    ("bootstrap", None),
-    ("doom-emacs", None),
-    ("prelude-emacs", None),
-    ("spacemacs", None),
-    ("spacevim", None),
-]
 
-_CONFIGURE_SYSTEM: list[tuple[str, str | None]] = [
-    ("r", None),
-    ("lmod", "linux"),
-    ("rstudio-server", "linux"),
-    ("sshd", "linux"),
-    ("base", "debian"),
-    ("preferences", "macos"),
-]
+def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
+    """Derive install/update subcommands from installer modes registry."""
+    from koopa.installers import PYTHON_INSTALLER_MODES, PYTHON_PLATFORM_INSTALLERS
 
-_CONFIGURE_USER: list[tuple[str, str | None]] = [
-    ("chemacs", None),
-    ("dotfiles", None),
-    ("preferences", "macos"),
-]
+    result: dict[str, list[tuple[str, str | None]]] = {
+        "system-install": [],
+        "system": [],
+        "user": [],
+        "update-system": [],
+    }
+    for name, platform, mode in PYTHON_INSTALLER_MODES:
+        plat: str | None = None if platform == "common" else platform
+        result[mode].append((name, plat))
+    for (name, platform, mode) in PYTHON_PLATFORM_INSTALLERS:
+        if mode == "system":
+            plat: str | None = None if platform == "common" else platform
+            result["system"].append((name, plat))
+    return result
 
-_UPDATE_SYSTEM: list[tuple[str, str | None]] = [
-    ("homebrew", None),
-    ("tex-packages", None),
-]
 
-# Flags for top-level subcommands defined in _build_parser() — these cannot
-# be discovered via AST (they live outside handler functions) so they are
-# maintained as a static mapping.
-_MAIN_COMMAND_FLAGS: dict[str, list[str]] = {
-    "configure": ["--help", "--system", "--user", "--verbose"],
-    "install": [
-        "--help",
-        "--no-dependencies",
-        "--private",
-        "--reinstall",
-        "--system",
-        "--user",
-        "--verbose",
-    ],
-    "reinstall": ["--help", "--all-revdeps", "--no-revdeps", "--only-revdeps", "--verbose"],
-    "uninstall": ["--help", "--no-revdeps", "--system", "--user", "--verbose"],
-    "update": ["--help", "--all-system", "--extra", "--system", "--user", "--verbose"],
-    "develop/remove-app": ["--help", "--revdeps"],
-}
+def _get_private_apps() -> list[tuple[str, str | None]]:
+    """Derive private app list from app.json."""
+    from koopa.io import import_app_json
+
+    data = import_app_json()
+    result: list[tuple[str, str | None]] = []
+    for name, meta in sorted(data.items()):
+        if meta.get("private"):
+            plat = meta.get("installer_platform")
+            result.append((name, plat))
+    return result
+
+
+def _get_configure_apps() -> tuple[list[tuple[str, str | None]], list[tuple[str, str | None]]]:
+    """Derive configure subcommands from PYTHON_CONFIGURERS registry."""
+    from koopa.configurers import PYTHON_CONFIGURERS
+
+    system_apps: list[tuple[str, str | None]] = []
+    user_apps: list[tuple[str, str | None]] = []
+    seen_system: set[str] = set()
+    seen_user: set[str] = set()
+    for name, platform, mode in PYTHON_CONFIGURERS:
+        plat: str | None = None if platform == "common" else platform
+        if mode in ("system", "shared"):
+            if name not in seen_system:
+                seen_system.add(name)
+                system_apps.append((name, plat))
+        elif mode == "user":
+            if name not in seen_user:
+                seen_user.add(name)
+                user_apps.append((name, plat))
+    return system_apps, user_apps
 
 
 # ---------------------------------------------------------------------------
@@ -834,7 +834,11 @@ def generate_completion() -> None:  # noqa: PLR0915
         flags = dev_handler_flags.get(dev_func, [])
         if flags:
             flag_map[f"develop/{dev_key}"] = ["--help", *flags]
-    flag_map.update(_MAIN_COMMAND_FLAGS)
+    flag_map.update(_get_main_command_flags())
+
+    installer_modes = _get_installer_mode_apps()
+    private_apps = _get_private_apps()
+    configure_system, configure_user = _get_configure_apps()
 
     today = date.today().strftime("%Y-%m-%d")
     i2 = _I * 2
@@ -1002,14 +1006,14 @@ def generate_completion() -> None:  # noqa: PLR0915
     lines.extend(
         _emit_case_entry(
             "'system')",
-            _emit_platform_block(_CONFIGURE_SYSTEM, i6 + _I),
+            _emit_platform_block(configure_system, i6 + _I),
             i6,
         )
     )
     lines.extend(
         _emit_case_entry(
             "'user')",
-            _emit_platform_block(_CONFIGURE_USER, i6 + _I),
+            _emit_platform_block(configure_user, i6 + _I),
             i6,
         )
     )
@@ -1025,7 +1029,7 @@ def generate_completion() -> None:  # noqa: PLR0915
     lines.extend(
         _emit_case_entry(
             "'system')",
-            _emit_platform_block(_INSTALL_SYSTEM_INSTALL, i6 + _I * 3 + _I),
+            _emit_platform_block(installer_modes["system-install"], i6 + _I * 3 + _I),
             i6 + _I * 3,
         )
     )
@@ -1037,21 +1041,21 @@ def generate_completion() -> None:  # noqa: PLR0915
     lines.extend(
         _emit_case_entry(
             "'private')",
-            _emit_platform_block(_INSTALL_PRIVATE, i6 + _I),
+            _emit_platform_block(private_apps, i6 + _I),
             i6,
         )
     )
     lines.extend(
         _emit_case_entry(
             "'system')",
-            _emit_platform_block(_INSTALL_SYSTEM_SYSTEM, i6 + _I),
+            _emit_platform_block(installer_modes["system"], i6 + _I),
             i6,
         )
     )
     lines.extend(
         _emit_case_entry(
             "'user')",
-            _emit_platform_block(_INSTALL_USER, i6 + _I),
+            _emit_platform_block(installer_modes["user"], i6 + _I),
             i6,
         )
     )
@@ -1064,7 +1068,7 @@ def generate_completion() -> None:  # noqa: PLR0915
     lines.extend(
         _emit_case_entry(
             "'system')",
-            _emit_platform_block(_UPDATE_SYSTEM, i6 + _I),
+            _emit_platform_block(installer_modes["update-system"], i6 + _I),
             i6,
         )
     )
