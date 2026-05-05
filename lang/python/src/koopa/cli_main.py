@@ -483,6 +483,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             from koopa.app import prune_apps
             from koopa.check import prune_broken_symlinks
 
+            _cleanup_legacy_config()
             update_koopa(verbose=args.verbose)
             bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
             if bootstrap_rebuilt:

@@ -6407,7 +6407,9 @@
       "ca-certificates"
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v1)",
+    "mirror": true,
     "revision": 1,
+    "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.openssl.org/source/"
@@ -6427,6 +6429,8 @@
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v3)",
     "installer": "openssl",
+    "mirror": true,
+    "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.openssl.org/source/"
@@ -7250,6 +7254,8 @@
     "man1": [
       "python3.10.1"
     ],
+    "mirror": true,
+    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
@@ -7305,6 +7311,8 @@
     "man1": [
       "python3.11.1"
     ],
+    "mirror": true,
+    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
@@ -7360,6 +7368,8 @@
     "man1": [
       "python3.12.1"
     ],
+    "mirror": true,
+    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
@@ -7415,6 +7425,8 @@
     "man1": [
       "python3.13.1"
     ],
+    "mirror": true,
+    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
@@ -7482,6 +7494,8 @@
       "python3.1",
       "python3.14.1"
     ],
+    "mirror": true,
+    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
