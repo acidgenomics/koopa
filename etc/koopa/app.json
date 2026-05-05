@@ -4068,7 +4068,8 @@
     },
     "type": "cli",
     "url": [
-      "https://help.ica.illumina.com/command-line-interface/"
+      "https://help.ica.illumina.com/command-line-interface/",
+      "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
     "version": "2.45.0"
   },
