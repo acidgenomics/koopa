@@ -859,9 +859,7 @@ def _handle_bump_bootstrap(_: list[str]) -> None:
 
     from koopa.os import koopa_prefix
 
-    version_file = os.path.join(
-        koopa_prefix(), "etc", "koopa", "bootstrap-version.txt"
-    )
+    version_file = os.path.join(koopa_prefix(), "etc", "koopa", "bootstrap-version.txt")
     current = ""
     if os.path.isfile(version_file):
         with open(version_file) as f:
