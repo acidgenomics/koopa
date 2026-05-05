@@ -248,30 +248,6 @@ def _handle_push_app_builds() -> None:
     push_missing_app_builds()
 
 
-def _handle_roff() -> None:
-    """Handle ``koopa develop roff``.
-
-    Finds .ronn files in the man prefix and converts them to roff man pages.
-    """
-    from koopa.prefix import man_prefix
-
-    ronn = shutil.which("ronn")
-    if ronn is None:
-        msg = "ronn is not installed."
-        raise RuntimeError(msg)
-    prefix = man_prefix()
-    ronn_files: list[str] = []
-    for root, _dirs, files in os.walk(prefix):
-        for f in files:
-            if f.endswith(".ronn"):
-                ronn_files.append(os.path.join(root, f))
-    ronn_files.sort()
-    if not ronn_files:
-        print("Error: No .ronn files found.", file=sys.stderr)
-        sys.exit(1)
-    subprocess.run([ronn, "--roff", *ronn_files], check=True)
-
-
 def _collect_shell_files() -> dict[str, list[str]]:
     """Collect shell files grouped by shell type (posix, bash, zsh).
 
@@ -908,7 +884,6 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "push-all-app-builds": lambda _: _handle_push_all_app_builds(),
     "push-app-build": _handle_push_app_build,
     "push-app-builds": lambda _: _handle_push_app_builds(),
-    "roff": lambda _: _handle_roff(),
     "shellcheck": lambda _: _handle_shellcheck(),
     "check-app-versions": _handle_check_app_versions,
     "circular-dependencies": lambda _: _handle_circular_dependencies(),
