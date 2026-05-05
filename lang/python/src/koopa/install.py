@@ -754,10 +754,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             config.reinstall_reason = config.reinstall_reason or "empty .install directory"
         if config.reinstall:
             if not config.quiet:
-                reason = f" (reason: {config.reinstall_reason})" if config.reinstall_reason else ""
-                print(
-                    f"Uninstalling '{config.name}' at '{config.prefix}'{reason}.",
-                    file=sys.stderr,
+                from koopa.alert import alert_uninstall_start
+
+                alert_uninstall_start(
+                    config.name, config.prefix or "", config.reinstall_reason or ""
                 )
             shutil.rmtree(config.prefix, ignore_errors=True)
         if os.path.isdir(config.prefix):
@@ -769,13 +769,15 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         all_deps = list(dict.fromkeys(build_deps + deps))
         if all_deps:
             if not config.quiet:
-                from koopa.alert import alert_note
+                from koopa.alert import alert_note, styled_name, styled_reason
 
                 reason_suffix = (
-                    f" (reason: {config.reinstall_reason})" if config.reinstall_reason else ""
+                    f" {styled_reason(config.reinstall_reason)}"
+                    if config.reinstall_reason
+                    else ""
                 )
                 alert_note(
-                    f"{config.name}{reason_suffix}: installing with"
+                    f"{styled_name(config.name)}{reason_suffix}: installing with"
                     f" dependencies: {', '.join(all_deps)}"
                 )
             for dep in all_deps:
