@@ -7,10 +7,12 @@ import shutil
 import subprocess
 import sys
 
+from koopa.archive import is_valid_archive
 from koopa.build import activate_app, app_prefix, locate
+from koopa.download import download
 from koopa.file_ops import ln
 from koopa.install import can_build_binary
-from koopa.installers._build_helper import download_extract_cd
+from koopa.installers._build_helper import extract_cd
 from koopa.system import has_firewall
 from koopa.version import major_minor_version
 
@@ -52,9 +54,30 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     maj_min_ver = major_minor_version(version)
     os.makedirs(os.path.join(prefix, "bin"), exist_ok=True)
     os.makedirs(os.path.join(prefix, "lib"), exist_ok=True)
-    base_url = os.environ.get("PYTHON_BUILD_MIRROR_URL", "https://www.python.org/ftp/python")
-    url = f"{base_url}/{version}/Python-{version}.tar.xz"
-    download_extract_cd(url)
+    filename = f"Python-{version}.tar.xz"
+    canonical_url = f"https://www.python.org/ftp/python/{version}/{filename}"
+    koopa_url = f"https://koopa.acidgenomics.com/src/python/{filename}"
+    mirror_base = os.environ.get("PYTHON_BUILD_MIRROR_URL")
+    if mirror_base:
+        urls_to_try = [f"{mirror_base}/{version}/{filename}", koopa_url, canonical_url]
+    else:
+        urls_to_try = [canonical_url, koopa_url]
+    tarball = None
+    for url in urls_to_try:
+        try:
+            t = download(url, retry=False)
+            if not is_valid_archive(t):
+                raise ValueError("incomplete archive")
+            tarball = t
+            break
+        except Exception:
+            print(
+                f"Download from {url} failed or archive is incomplete, trying next source.",
+                file=sys.stderr,
+            )
+    if tarball is None:
+        raise RuntimeError(f"All download sources failed for Python {version}")
+    extract_cd(tarball)
     subprocess_env = env.to_env_dict()
     subprocess_env["PATH"] = os.path.join(prefix, "bin") + ":" + subprocess_env.get("PATH", "")
     ldflags = subprocess_env.get("LDFLAGS", "")
