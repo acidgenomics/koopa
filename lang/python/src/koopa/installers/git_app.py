@@ -43,7 +43,6 @@ def main(
     pcre2_prefix = app_prefix("pcre2")
     zlib_prefix = app_prefix("zlib")
     url_base = "https://mirrors.edge.kernel.org/pub/software/scm/git"
-    url = f"{url_base}/git-{version}.tar.xz"
     htmldocs_url = f"{url_base}/git-htmldocs-{version}.tar.xz"
     manpages_url = f"{url_base}/git-manpages-{version}.tar.xz"
     htmldocs_tarball = download(htmldocs_url)
@@ -56,7 +55,7 @@ def main(
         manpages_tarball,
         os.path.join(prefix, "share", "man"),
     )
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
     conf_args = [

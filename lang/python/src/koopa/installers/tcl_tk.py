@@ -6,8 +6,9 @@ import sys
 
 from koopa.archive import extract
 from koopa.build import activate_app, locate
-from koopa.download import download
+from koopa.download import download_with_mirror
 from koopa.file_ops import ln
+from koopa.installers._build_helper import _resolve_src_url
 from koopa.version import major_minor_version
 
 
@@ -37,14 +38,14 @@ def main(
     maj_min_ver = major_minor_version(version)
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
-    tcl_url = (
-        f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download"
+    tcl_url = _resolve_src_url(name, version)
+    tcl_tarball = download_with_mirror(
+        tcl_url, name, f"tcl{version}-src.tar.gz"
     )
-    tk_url = (
-        f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
+    tk_url = f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
+    tk_tarball = download_with_mirror(
+        tk_url, name, f"tk{version}-src.tar.gz"
     )
-    tcl_tarball = download(tcl_url)
-    tk_tarball = download(tk_url)
     extract(tcl_tarball, "tcl-src")
     extract(tk_tarball, "tk-src")
     tcl_unix = os.path.join("tcl-src", "unix")

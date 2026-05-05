@@ -655,6 +655,7 @@
     "man1": [
       "bash.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/bash/bash-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/bash/",
@@ -7959,6 +7960,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "Ruby version manager",
+    "src_url": "https://github.com/rbenv/rbenv/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/rbenv/rbenv/"
@@ -9088,6 +9090,7 @@
     "man1": [
       "gtar.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/tar/tar-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/tar/",
@@ -9128,6 +9131,7 @@
       "xorg-xorgproto"
     ],
     "description": "Tcl/Tk scripting language and GUI toolkit",
+    "src_url": "https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download",
     "type": "library",
     "url": [
       "https://www.tcl-lang.org/"
