@@ -1662,11 +1662,12 @@ def install_conda_package(
         conda,
         "create",
         "--yes",
-        "--solver=classic",
         f"--prefix={libexec}",
         f"--channel={channel_url}",
         pkg_spec,
     ]
+    if channel_url.startswith("http"):
+        create_args.insert(4, "--solver=classic")
     tmp_pkg_cache = tempfile.mkdtemp()
     env = os.environ.copy()
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
@@ -2156,7 +2157,7 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
                 return
         try:
             subprocess.run(
-                [target_python, "-m", "venv", "--symlinks", "--with-pip", venv_dir],
+                [target_python, "-m", "venv", "--symlinks", venv_dir],
                 check=True,
             )
         except Exception as exc:
