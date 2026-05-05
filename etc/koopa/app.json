@@ -259,7 +259,8 @@
     "url": [
       "https://github.com/asdf-vm/asdf/"
     ],
-    "version": "0.19.0"
+    "version": "0.19.0",
+    "src_url": "https://github.com/asdf-vm/asdf/archive/v{version}.tar.gz"
   },
   "aspell": {
     "bin": [
@@ -2061,7 +2062,8 @@
     "url": [
       "https://github.com/so-fancy/diff-so-fancy/"
     ],
-    "version": "1.4.10"
+    "version": "1.4.10",
+    "src_url": "https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v{version}.tar.gz"
   },
   "difftastic": {
     "bin": [
@@ -2914,7 +2916,8 @@
     "url": [
       "https://gcc.gnu.org/"
     ],
-    "version": "16.1.0"
+    "version": "16.1.0",
+    "src_url": "https://ftpmirror.gnu.org/gcc/gcc-{version}/gcc-{version}.tar.xz"
   },
   "gdal": {
     "bin": [
@@ -5403,7 +5406,8 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.2"
+    "version": "9.2",
+    "src_url": "https://github.com/TACC/Lmod/archive/{version}.tar.gz"
   },
   "lsd": {
     "bin": [
@@ -7225,7 +7229,8 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.6.28"
+    "version": "2.6.28",
+    "src_url": "https://github.com/pyenv/pyenv/archive/v{version}.tar.gz"
   },
   "pyflakes": {
     "bin": [
@@ -7997,7 +8002,8 @@
     "url": [
       "https://tiswww.cwru.edu/php/chet/readline/rltop.html"
     ],
-    "version": "8.3"
+    "version": "8.3",
+    "src_url": "https://ftpmirror.gnu.org/readline/readline-{version}.tar.gz"
   },
   "rename": {
     "bin": [
@@ -8491,7 +8497,8 @@
       "https://www.gnu.org/software/screen",
       "https://mirrors.kernel.org/gnu/screen/?C=M;O=D"
     ],
-    "version": "5.0.1"
+    "version": "5.0.1",
+    "src_url": "https://ftpmirror.gnu.org/screen/screen-{version}.tar.gz"
   },
   "sd": {
     "bin": [
@@ -8632,7 +8639,8 @@
     "url": [
       "https://github.com/kward/shunit2/"
     ],
-    "version": "2.1.8"
+    "version": "2.1.8",
+    "src_url": "https://github.com/kward/shunit2/archive/v{version}.tar.gz"
   },
   "shyaml": {
     "bin": [
