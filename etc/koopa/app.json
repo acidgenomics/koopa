@@ -76,6 +76,7 @@
     "date": "2026-02-22",
     "default": false,
     "description": "full Anaconda Python distribution",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://repo.anaconda.com/archive/"
@@ -1568,6 +1569,7 @@
     "date": "2026-05-02",
     "default": true,
     "description": "cross-platform package and environment manager",
+    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
