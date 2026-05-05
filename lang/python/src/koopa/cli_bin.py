@@ -4,6 +4,7 @@ Each bin/ script delegates to this module via:
     python3 -m koopa.cli_bin <script-name> [args...]
 """
 
+import argparse
 import csv
 import os
 import re
@@ -884,47 +885,6 @@ def _handle_find_and_move_in_sequence(args: list[str]) -> None:
     raise NotImplementedError(msg)
 
 
-def _handle_jekyll_serve(args: list[str]) -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        prog="jekyll-serve",
-        description="Serve a Jekyll website locally.",
-    )
-    parser.add_argument("directory", nargs="?", default=os.getcwd(), help="site directory")
-    parsed = parser.parse_args(args)
-    prefix = os.path.realpath(parsed.directory)
-    if not os.path.isdir(prefix):
-        msg = f"Directory does not exist: {prefix}"
-        raise SystemExit(msg)
-    bundle = _which("bundle")
-    gemfile = os.path.join(prefix, "Gemfile")
-    if not os.path.isfile(gemfile):
-        msg = f"Gemfile not found in '{prefix}'."
-        raise FileNotFoundError(msg)
-    xdg_data = os.environ.get(
-        "XDG_DATA_HOME",
-        os.path.join(os.path.expanduser("~"), ".local", "share"),
-    )
-    gem_prefix = os.path.join(xdg_data, "gem")
-    print(f"Serving Jekyll website in '{prefix}'.", file=sys.stderr)
-    lockfile = os.path.join(prefix, "Gemfile.lock")
-    if os.path.isfile(lockfile):
-        os.remove(lockfile)
-    subprocess.run(
-        [bundle, "config", "set", "--local", "path", gem_prefix],
-        cwd=prefix,
-        check=True,
-    )
-    subprocess.run([bundle, "install"], cwd=prefix, check=True)
-    try:
-        subprocess.run([bundle, "exec", "jekyll", "serve"], cwd=prefix, check=True)
-    finally:
-        lockfile = os.path.join(prefix, "Gemfile.lock")
-        if os.path.isfile(lockfile):
-            os.remove(lockfile)
-
-
 # -- Dispatch table ------------------------------------------------------------
 
 
@@ -956,7 +916,6 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "find-large-files": _handle_find_large_files,
     "ip-address": _handle_ip_address,
     "ip-info": _handle_ip_info,
-    "jekyll-serve": _handle_jekyll_serve,
     "line-count": _handle_line_count,
     "merge-pdf": _handle_merge_pdf,
     "move-files-in-batch": _handle_move_files_in_batch,

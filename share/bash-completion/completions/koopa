@@ -39,6 +39,7 @@ _koopa_complete() {
         ['app/hisat2/align/paired-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
         ['app/hisat2/align/single-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
         ['app/hisat2/index']='--help --genome-fasta-file --output-dir --gtf-file'
+        ['app/jekyll/deploy-to-aws']='--help --bucket --distribution-id --profile --local-prefix'
         ['app/kallisto/index']='--help --transcriptome-fasta-file --output-dir'
         ['app/kallisto/quant/paired-end']='--help --index-dir --fastq-dir --output-dir'
         ['app/kallisto/quant/single-end']='--help --index-dir --fastq-dir --output-dir'
@@ -73,6 +74,7 @@ _koopa_complete() {
         ['list-all-apps']='--help'
         ['list-default-apps']='--help'
         ['reinstall']='--all-revdeps --help --no-revdeps --only-revdeps --verbose'
+        ['run']='--help'
         ['system']='--help'
         ['uninstall']='--help --no-revdeps --system --user --verbose --yes'
         ['update']='--all-system --help --system --user --user-repos --verbose'
@@ -93,6 +95,7 @@ _koopa_complete() {
                 'list-all-apps'
                 'list-default-apps'
                 'reinstall'
+                'run'
                 'system'
                 'uninstall'
                 'update'
@@ -158,6 +161,53 @@ _koopa_complete() {
                         'remove-app'
                         'shellcheck'
                         'update-docs'
+                    )
+                    ;;
+                'run')
+                    args+=(
+                        'autopad-zeros'
+                        'clone'
+                        'convert-svg-to-png'
+                        'convert-utf8-nfd-to-nfc'
+                        'delete-broken-symlinks'
+                        'delete-empty-dirs'
+                        'delete-named-subdirs'
+                        'detab'
+                        'df2'
+                        'dot-clean'
+                        'download'
+                        'download-cran-latest'
+                        'download-github-latest'
+                        'entab'
+                        'eol-lf'
+                        'extract'
+                        'extract-all'
+                        'file-count'
+                        'find-and-move-in-sequence'
+                        'find-and-replace'
+                        'find-broken-symlinks'
+                        'find-empty-dirs'
+                        'find-files-without-line-ending'
+                        'find-large-dirs'
+                        'find-large-files'
+                        'ip-address'
+                        'ip-info'
+                        'line-count'
+                        'merge-pdf'
+                        'move-files-in-batch'
+                        'move-files-up-1-level'
+                        'move-into-dated-dirs-by-filename'
+                        'move-into-dated-dirs-by-timestamp'
+                        'nfiletypes'
+                        'rename-camel-case'
+                        'rename-from-csv'
+                        'rename-kebab-case'
+                        'rename-lowercase'
+                        'rename-snake-case'
+                        'rg-sort'
+                        'rg-unique'
+                        'sort-lines'
+                        'tar-multiple-dirs'
                     )
                     ;;
                 'install' | \
@@ -938,7 +988,10 @@ _koopa_complete() {
                             )
                             ;;
                         'jekyll')
-                            args+=('serve')
+                            args+=(
+                                'deploy-to-aws'
+                                'serve'
+                            )
                             ;;
                         'kallisto')
                             args+=(
