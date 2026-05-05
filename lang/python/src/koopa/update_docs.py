@@ -231,5 +231,8 @@ def update_website_index(apps: list[str]) -> None:
 
 def update_docs() -> None:
     """Update koopa documentation files."""
+    from koopa.generate_man import write_man
+
     apps = default_app_names()
     update_website_index(apps)
+    write_man()
