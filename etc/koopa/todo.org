@@ -11,3 +11,4 @@
 ** TODO `koopa develop mirror-src` needs to do a better job of status tracking.
 ** TODO `koopa update` revdep handling is suboptimal currently: 24 reverse dependencies may need rebuilding: aws-cli, btop, chezmoi, delta, difftastic, direnv, du-dust, eza, fd-find, fzf, gh, gitui, jq, mcfly, mdcat, neovim, radian, rclone, ripgrep, shellcheck, starship, tealdeer, zoxide, zsh
 * Low complexity
+** TODO We need to gate against `koopa update` support on Intel Macs. Conda not supported.
