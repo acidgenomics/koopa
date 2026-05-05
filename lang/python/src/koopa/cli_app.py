@@ -116,6 +116,7 @@ _APP_TREE: dict[str, Any] = {
         "index": "hisat2-index",
     },
     "jekyll": {
+        "deploy-to-aws": "jekyll-deploy-to-aws",
         "serve": "jekyll-serve",
     },
     "kallisto": {
@@ -1629,6 +1630,72 @@ def _handle_jekyll_serve(args: list[str]) -> None:
         os.remove(lock)
 
 
+def _handle_jekyll_deploy_to_aws(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app jekyll deploy-to-aws")
+    parser.add_argument("--bucket", required=True)
+    parser.add_argument("--distribution-id", required=True)
+    parser.add_argument("--profile", default=os.environ.get("AWS_PROFILE", "default"))
+    parser.add_argument("--local-prefix", default=os.getcwd())
+    parsed = parser.parse_args(args)
+    bundle = shutil.which("bundle")
+    aws = shutil.which("aws")
+    if bundle is None:
+        msg = "bundle is not installed."
+        raise RuntimeError(msg)
+    if aws is None:
+        msg = "aws is not installed."
+        raise RuntimeError(msg)
+    from koopa.alert import alert
+    from koopa.aws import aws_s3_sync
+    from koopa.xdg import xdg_data_home
+
+    prefix = os.path.realpath(parsed.local_prefix)
+    bucket = parsed.bucket.rstrip("/")
+    gemfile = os.path.join(prefix, "Gemfile")
+    if not os.path.isfile(gemfile):
+        msg = f"Gemfile not found in '{prefix}'."
+        raise FileNotFoundError(msg)
+    bundle_prefix = os.path.join(xdg_data_home(), "gem")
+    alert(f"Deploying '{prefix}' to '{bucket}'.")
+    subprocess.run(
+        [bundle, "config", "set", "--local", "path", bundle_prefix],
+        cwd=prefix,
+        check=True,
+    )
+    lock = os.path.join(prefix, "Gemfile.lock")
+    if os.path.isfile(lock):
+        os.remove(lock)
+    subprocess.run([bundle, "install"], cwd=prefix, check=True)
+    subprocess.run([bundle, "exec", "jekyll", "build"], cwd=prefix, check=True)
+    if os.path.isfile(lock):
+        os.remove(lock)
+    aws_s3_sync(
+        os.path.join(prefix, "_site") + "/",
+        bucket + "/",
+        profile=parsed.profile,
+    )
+    alert(f"Invalidating CloudFront cache at '{parsed.distribution_id}'.")
+    subprocess.run(
+        [
+            aws,
+            "cloudfront",
+            "create-invalidation",
+            "--distribution-id",
+            parsed.distribution_id,
+            "--no-cli-pager",
+            "--output",
+            "text",
+            "--paths",
+            "/*",
+            "--profile",
+            parsed.profile,
+        ],
+        check=True,
+    )
+
+
 # -- md5sum handlers ---------------------------------------------------------
 
 
@@ -1811,6 +1878,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "file-convert-line-endings": _handle_file_convert_line_endings,
     "file-rename-to-lowercase-ext": _handle_file_rename_to_lowercase_ext,
     "ftp-mirror": _handle_ftp_mirror,
+    "jekyll-deploy-to-aws": _handle_jekyll_deploy_to_aws,
     "jekyll-serve": _handle_jekyll_serve,
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
     "photos-rename-with-exiftool": _handle_photos_rename_with_exiftool,
