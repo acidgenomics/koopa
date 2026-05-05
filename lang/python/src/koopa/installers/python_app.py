@@ -1,6 +1,5 @@
 """Install python."""
 
-
 import os
 import shutil
 import subprocess
@@ -22,15 +21,16 @@ def main(
     version: str,
     prefix: str,
     passthrough_args: list[str] | None = None,
+    use_mirror: bool = False,
 ) -> None:
     """Install python."""
     if has_firewall() or can_build_binary():
-        _install_from_source(version=version, prefix=prefix)
+        _install_from_source(version=version, prefix=prefix, use_mirror=use_mirror)
     else:
         _install_from_uv(version=version, prefix=prefix)
 
 
-def _install_from_source(*, version: str, prefix: str) -> None:
+def _install_from_source(*, version: str, prefix: str, use_mirror: bool = False) -> None:
     env = activate_app("make", "pkg-config", build_only=True)
     deps = []
     if sys.platform != "darwin":
@@ -58,9 +58,13 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     koopa_url = f"https://koopa.acidgenomics.com/src/python/{filename}"
     mirror_base = os.environ.get("PYTHON_BUILD_MIRROR_URL")
     if mirror_base:
-        urls_to_try = [f"{mirror_base}/{version}/{filename}", koopa_url, canonical_url]
+        urls_to_try = [f"{mirror_base}/{version}/{filename}", canonical_url]
+        if use_mirror:
+            urls_to_try.insert(1, koopa_url)
     else:
-        urls_to_try = [canonical_url, koopa_url]
+        urls_to_try = [canonical_url]
+        if use_mirror:
+            urls_to_try.append(koopa_url)
     tarball = None
     for url in urls_to_try:
         try:
