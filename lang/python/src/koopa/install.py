@@ -2000,6 +2000,49 @@ def _zsh_compaudit_set_permissions() -> None:
             _run("chmod", "-R", "go-w", prefix, sudo=(st.st_uid != uid))
 
 
+def _cleanup_legacy_config() -> None:
+    """Remove legacy ~/.config/koopa/activate symlink and warn about shell profile references."""
+    xdg_config_home = os.environ.get(
+        "XDG_CONFIG_HOME",
+        os.path.join(os.path.expanduser("~"), ".config"),
+    )
+    legacy_activate = os.path.join(xdg_config_home, "koopa", "activate")
+    if os.path.islink(legacy_activate):
+        os.unlink(legacy_activate)
+        print(
+            f"Removed legacy symlink: {legacy_activate}",
+            file=sys.stderr,
+        )
+    shell_profiles = [
+        os.path.join(os.path.expanduser("~"), name)
+        for name in (".profile", ".bashrc", ".bash_profile", ".zshrc", ".zprofile")
+    ]
+    flagged: list[tuple[str, int, str]] = []
+    for profile in shell_profiles:
+        if not os.path.isfile(profile):
+            continue
+        try:
+            with open(profile) as fh:
+                for lineno, line in enumerate(fh, 1):
+                    # Match the old extensionless path but not the correct .sh form
+                    if "/.config/koopa/activate" in line and ".sh" not in line:
+                        flagged.append((profile, lineno, line.rstrip()))
+        except OSError:
+            continue
+    if flagged:
+        print(
+            "WARNING: The following shell profile(s) reference the legacy "
+            "'~/.config/koopa/activate' path (without .sh extension).",
+            file=sys.stderr,
+        )
+        print(
+            "Update them to source '$KOOPA_PREFIX/activate.sh' instead:",
+            file=sys.stderr,
+        )
+        for path, lineno, line in flagged:
+            print(f"  {path}:{lineno}: {line}", file=sys.stderr)
+
+
 def update_koopa(*, verbose: bool = False) -> None:
     """Update koopa installation via git pull."""
     from koopa.alert import alert_note
