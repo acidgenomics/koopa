@@ -14,8 +14,7 @@ def main(
     """Install flex."""
     env = activate_app("bison", build_only=True)
     env = activate_app("gettext", "m4", env=env)
-    url = f"https://github.com/westes/flex/releases/download/v{version}/flex-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

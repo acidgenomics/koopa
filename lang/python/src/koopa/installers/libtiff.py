@@ -14,8 +14,7 @@ def main(
     """Install libtiff."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("libjpeg-turbo", "zstd", env=env)
-    url = f"https://download.osgeo.org/libtiff/tiff-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

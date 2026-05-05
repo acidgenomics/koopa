@@ -16,8 +16,7 @@ def main(
     """Install utf8proc."""
     env = activate_app("make", "pkg-config", build_only=True)
     make = locate("make")
-    url = f"https://github.com/JuliaStrings/utf8proc/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         [make, "install", f"prefix={prefix}"],
         env=env.to_env_dict(),

@@ -22,12 +22,7 @@ def main(
     libdeflate_prefix = app_prefix("libdeflate")
     zlib_prefix = app_prefix("zlib")
     zstd_prefix = app_prefix("zstd")
-    version_kebab = version.replace(".", "-")
-    url = (
-        f"https://github.com/jkbonfield/io_lib/releases/download/"
-        f"io_lib-{version_kebab}/io_lib-{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

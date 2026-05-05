@@ -16,8 +16,7 @@ def main(
     """Install xxhash."""
     env = activate_app("make", "pkg-config", build_only=True)
     make = locate("make")
-    url = f"https://github.com/Cyan4973/xxHash/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         [make, "install", f"PREFIX={prefix}"],
         env=env.to_env_dict(),

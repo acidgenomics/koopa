@@ -12,6 +12,5 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install termcolor."""
-    url = f"https://github.com/ikalnytskyi/termcolor/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(prefix=prefix)

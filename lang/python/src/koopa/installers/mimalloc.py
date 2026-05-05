@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install mimalloc."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://github.com/microsoft/mimalloc/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DMI_INSTALL_TOPLEVEL=ON"],

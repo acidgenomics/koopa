@@ -13,8 +13,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install ksh93."""
-    url = f"https://github.com/ksh93/ksh/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess.run(
         ["bin/package", "make", "VERBOSE=1"],
         check=True,

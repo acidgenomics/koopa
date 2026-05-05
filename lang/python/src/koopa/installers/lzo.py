@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install lzo."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://www.oberhumer.com/opensource/lzo/download/lzo-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-dependency-tracking",

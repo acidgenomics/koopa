@@ -23,8 +23,7 @@ def main(
     ext = shared_ext()
     maj_min_ver = major_minor_version(version)
     os.makedirs(os.path.join(prefix, "lib"), exist_ok=True)
-    url = f"https://sourceware.org/pub/bzip2/bzip2-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     makefile_shared = f"Makefile-libbz2_{ext}"
     if not os.path.exists(makefile_shared) and sys.platform == "darwin":

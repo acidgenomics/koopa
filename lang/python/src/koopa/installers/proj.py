@@ -33,8 +33,7 @@ def main(
     curl_prefix = app_prefix("curl")
     libtiff_prefix = app_prefix("libtiff")
     ext = shared_ext()
-    url = f"https://download.osgeo.org/proj/proj-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

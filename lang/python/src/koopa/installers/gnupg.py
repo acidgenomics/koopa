@@ -40,9 +40,7 @@ def main(
     libksba_prefix = app_prefix("libksba")
     npth_prefix = app_prefix("npth")
     pinentry_prefix = app_prefix("pinentry")
-    gcrypt_url = "https://gnupg.org/ftp/gcrypt"
-    url = f"{gcrypt_url}/gnupg/gnupg-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     conf_args = [
         "--enable-gnutls",
         f"--prefix={prefix}",

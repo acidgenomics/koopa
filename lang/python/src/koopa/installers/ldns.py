@@ -14,8 +14,7 @@ def main(
     """Install ldns."""
     env = activate_app("openssl", env=None)
     openssl_prefix = app_prefix("openssl")
-    url = f"https://nlnetlabs.nl/downloads/ldns/ldns-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             f"--prefix={prefix}",

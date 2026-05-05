@@ -6,11 +6,6 @@ from koopa.build import activate_app, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
-def _major_minor_version(version: str) -> str:
-    parts = version.split(".")
-    return f"{parts[0]}.{parts[1]}"
-
-
 def main(
     *,
     name: str,
@@ -20,9 +15,7 @@ def main(
 ) -> None:
     """Install krb5."""
     env = activate_app("libedit", "openssl", env=None)
-    mm = _major_minor_version(version)
-    url = f"https://kerberos.org/dist/krb5/{mm}/krb5-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     os.chdir(os.path.join("krb5", "src"))
     make_build(
         conf_args=[

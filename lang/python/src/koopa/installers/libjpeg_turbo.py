@@ -13,11 +13,7 @@ def main(
 ) -> None:
     """Install libjpeg-turbo."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/"
-        f"{version}/libjpeg-turbo-{version}.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=["-DENABLE_STATIC=OFF", "-DWITH_JPEG8=ON"],

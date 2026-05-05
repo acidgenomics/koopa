@@ -18,8 +18,7 @@ def main(
     env = activate_app("fmt", env=env)
     fmt_prefix = app_prefix("fmt")
     fmt_cmake = os.path.join(fmt_prefix, "lib", "cmake", "fmt")
-    url = f"https://github.com/gabime/spdlog/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     cmake_build(
         prefix=prefix,
         args=[

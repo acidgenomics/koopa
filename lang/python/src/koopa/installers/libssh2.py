@@ -16,8 +16,7 @@ def main(
     env = activate_app("zlib", "openssl", env=env)
     openssl_prefix = app_prefix("openssl")
     zlib_prefix = app_prefix("zlib")
-    url = f"https://www.libssh2.org/download/libssh2-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-examples-build",

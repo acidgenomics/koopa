@@ -13,8 +13,7 @@ def main(
 ) -> None:
     """Install flac."""
     env = activate_app("pkg-config", build_only=True)
-    url = f"https://downloads.xiph.org/releases/flac/flac-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=["--disable-thorough-tests", f"--prefix={prefix}"],
         env=env,

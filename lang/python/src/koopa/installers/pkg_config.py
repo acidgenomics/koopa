@@ -16,8 +16,7 @@ def main(
 ) -> None:
     """Install pkg-config."""
     env = activate_app("make", build_only=True)
-    url = f"https://pkgconfig.freedesktop.org/releases/pkg-config-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     if sys.platform == "darwin":
         sys_inc_dir = "/usr/include"
         pc_path = "/usr/lib/pkgconfig"

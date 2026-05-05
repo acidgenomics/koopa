@@ -22,8 +22,7 @@ def main(
     make = locate("make")
     ext = shared_ext()
     maj_min_ver = major_minor_version(version)
-    url = f"https://github.com/LuaJIT/LuaJIT/archive/refs/tags/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     if sys.platform == "darwin":
         subprocess_env["MACOSX_DEPLOYMENT_TARGET"] = "11.0"

@@ -14,8 +14,7 @@ def main(
     """Install xorg-xcb-proto."""
     env = activate_app("pkg-config", "python", build_only=True)
     python = locate("python3")
-    url = f"https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-{version}.tar.xz"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-silent-rules",

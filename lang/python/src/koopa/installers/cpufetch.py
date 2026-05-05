@@ -18,8 +18,7 @@ def main(
     """Install cpufetch."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = f"https://github.com/Dr-Noob/cpufetch/archive/v{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     jobs = os.cpu_count() or 1
     subprocess.run(
         [make, f"--jobs={jobs}"],

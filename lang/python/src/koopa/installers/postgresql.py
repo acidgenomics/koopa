@@ -23,8 +23,7 @@ def main(
         "readline",
         env=env,
     )
-    url = f"https://ftp.postgresql.org/pub/source/v{version}/postgresql-{version}.tar.bz2"
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             f"--prefix={prefix}",

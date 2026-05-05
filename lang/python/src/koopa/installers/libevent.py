@@ -14,11 +14,7 @@ def main(
     """Install libevent."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("openssl", env=env)
-    url = (
-        f"https://github.com/libevent/libevent/releases/download/"
-        f"release-{version}-stable/libevent-{version}-stable.tar.gz"
-    )
-    download_extract_cd(url)
+    download_extract_cd()
     make_build(
         conf_args=[
             "--disable-debug-mode",

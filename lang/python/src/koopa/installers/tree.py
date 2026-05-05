@@ -17,8 +17,7 @@ def main(
     """Install tree."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = f"https://github.com/Old-Man-Programmer/tree/archive/refs/tags/{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess.run(
         [make, "CFLAGS=-O2"],

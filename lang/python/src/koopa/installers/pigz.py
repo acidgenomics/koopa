@@ -21,8 +21,7 @@ def main(
     env = activate_app("zlib", env=env)
     make = locate("make")
     zlib_prefix = app_prefix("zlib")
-    url = f"https://zlib.net/pigz/pigz-{version}.tar.gz"
-    download_extract_cd(url)
+    download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess_env["CC"] = "gcc"
     subprocess_env["CFLAGS"] = f"-I{zlib_prefix}/include " + subprocess_env.get("CFLAGS", "")
