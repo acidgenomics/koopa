@@ -1662,6 +1662,7 @@ def install_conda_package(
         conda,
         "create",
         "--yes",
+        "--solver=classic",
         f"--prefix={libexec}",
         f"--channel={channel_url}",
         pkg_spec,
