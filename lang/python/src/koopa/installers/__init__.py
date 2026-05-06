@@ -523,8 +523,10 @@ PYTHON_INSTALLER_MODES: list[tuple[str, str, str]] = [
     ("prelude-emacs", "common", "user"),
     ("spacemacs", "common", "user"),
     ("spacevim", "common", "user"),
-    # update-system (koopa update system <name>)
+    # update-system (koopa update system)
     ("homebrew", "common", "update-system"),
+    ("r", "macos", "update-system"),
+    ("python", "macos", "update-system"),
     ("tex-packages", "common", "update-system"),
 ]
 

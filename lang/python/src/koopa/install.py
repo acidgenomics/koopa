@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -1201,9 +1202,7 @@ def install_python_package(
     python_cmd = f"python{python_version}" if python_version else "python3"
     python: str | None = None
     if python_version:
-        opt_python = os.path.join(
-            _opt_prefix(), f"python{python_version}", "bin", python_cmd
-        )
+        opt_python = os.path.join(_opt_prefix(), f"python{python_version}", "bin", python_cmd)
         if os.path.isfile(opt_python):
             python = opt_python
     if python is None:
@@ -2465,20 +2464,21 @@ def remove_unsupported_apps(*, verbose: bool = False) -> None:
         uninstall_app(config)
 
 
-def update_user_apps(*, verbose: bool = False) -> None:
-    """Update outdated user-mode apps (git-based)."""
+def update_user_apps(*, verbose: bool = False) -> list[str]:
+    """Update outdated user-mode apps (git-based). Returns names of updated apps."""
     from koopa.alert import alert, warn
     from koopa.check import _user_app_prefixes, outdated_user_apps
     from koopa.git import git_checkout, git_fetch
 
     apps = outdated_user_apps()
     if not apps:
-        return
+        return []
     json_data = _import_app_json()
     prefixes = _user_app_prefixes()
     n_user = len(apps)
     label_user = "app" if n_user == 1 else "apps"
     alert(f"Updating {n_user} user {label_user}: {', '.join(apps)}.")
+    updated: list[str] = []
     for app in apps:
         prefix = prefixes.get(app, "")
         if not prefix or not os.path.isdir(prefix):
@@ -2489,14 +2489,66 @@ def update_user_apps(*, verbose: bool = False) -> None:
         try:
             git_fetch(prefix)
             git_checkout(prefix, ref=version)
+            updated.append(app)
         except Exception as exc:
             warn(f"Failed to update user app '{app}': {exc}")
+    return updated
+
+
+def run_user_app_post_hooks(updated_apps: list[str], *, verbose: bool = False) -> None:
+    """Run post-update hooks for user apps that were updated."""
+    import subprocess
+
+    from koopa.alert import alert_note, warn
+    from koopa.check import _user_app_prefixes
+    from koopa.system import is_linux, is_macos
+
+    if not updated_apps:
+        return
+    prefixes = _user_app_prefixes()
+    for app in updated_apps:
+        prefix = prefixes.get(app, "")
+        if not prefix or not os.path.isdir(prefix):
+            continue
+        try:
+            if app == "doom-emacs":
+                doom = os.path.join(prefix, "bin", "doom")
+                if os.path.isfile(doom):
+                    alert_note("Running 'doom sync'.")
+                    if is_linux():
+                        from koopa.build import activate_app
+
+                        activate_app("emacs", build_only=True)
+                    elif is_macos():
+                        brew_prefix = (
+                            "/opt/homebrew" if os.path.isdir("/opt/homebrew") else "/usr/local"
+                        )
+                        os.environ["PATH"] = (
+                            os.path.join(brew_prefix, "bin") + ":" + os.environ.get("PATH", "")
+                        )
+                    subprocess.run([doom, "sync"], check=True)
+            elif app == "prelude-emacs":
+                init_el = os.path.join(prefix, "init.el")
+                if os.path.isfile(init_el):
+                    alert_note("Running prelude-emacs init.")
+                    subprocess.run(
+                        ["emacs", "--no-window-system", "--batch", "--load", init_el],
+                        check=True,
+                    )
+            elif app == "spacevim":
+                vimproc_dir = os.path.join(prefix, "bundle", "vimproc.vim")
+                if os.path.isdir(vimproc_dir):
+                    alert_note("Rebuilding vimproc for SpaceVim.")
+                    subprocess.run(["make"], cwd=vimproc_dir, check=True)
+        except Exception as exc:
+            warn(f"Post-update hook failed for '{app}': {exc}")
 
 
 def fetch_user_repos() -> None:
     """Pull latest changes for user git repos if they exist."""
     from koopa.alert import alert_note, warn
     from koopa.git import git_pull, is_git_repo
+    from koopa.prefix import scripts_private_prefix
 
     _auth_failure_patterns = (
         "repository not found",
@@ -2511,7 +2563,7 @@ def fetch_user_repos() -> None:
     repos = [
         os.path.join(home, ".config", "koopa", "dotfiles-work"),
         os.path.join(home, ".config", "koopa", "dotfiles-private"),
-        os.path.join(home, "scripts-private"),
+        scripts_private_prefix(),
     ]
     for repo in repos:
         if not os.path.isdir(repo) or not is_git_repo(repo):
@@ -2538,18 +2590,69 @@ def fetch_user_repos() -> None:
 
 
 def update_system_apps(*, verbose: bool = False) -> None:
-    """Update system-level apps (Homebrew, R, Python) when admin."""
+    """Update system-level apps from the update-system registry."""
     from koopa.alert import alert_note
+    from koopa.installers import PYTHON_INSTALLER_MODES
 
     if not is_admin():
         alert_note(
             "Skipping system updates (admin/sudo access required).",
         )
         return
-    if is_macos():
+    entries = [
+        (name, plat) for name, plat, mode in PYTHON_INSTALLER_MODES if mode == "update-system"
+    ]
+    for name, plat in entries:
+        if not _platform_matches(plat):
+            continue
+        _run_system_update(name, platform=plat, verbose=verbose)
+
+
+def _platform_matches(plat: str) -> bool:
+    """Check if a platform string from PYTHON_INSTALLER_MODES applies here."""
+    from koopa.system import is_debian_like, is_fedora_like
+
+    checks: dict[str, Callable[[], bool]] = {
+        "common": lambda: True,
+        "macos": is_macos,
+        "linux": is_linux,
+        "debian": is_debian_like,
+        "fedora": is_fedora_like,
+        "debian_or_fedora": lambda: is_debian_like() or is_fedora_like(),
+    }
+    check = checks.get(plat)
+    return check() if check is not None else False
+
+
+def _run_system_update(name: str, *, platform: str, verbose: bool) -> None:
+    """Dispatch a single system update by name."""
+    if name == "homebrew":
         _update_system_homebrew(verbose=verbose)
+    elif name == "r":
         _update_system_r(verbose=verbose)
+    elif name == "python":
         _update_system_python(verbose=verbose)
+    elif name == "tex-packages":
+        _update_system_tex_packages(verbose=verbose)
+
+
+def _update_system_tex_packages(*, verbose: bool = False) -> None:
+    """Update TeX packages if tlmgr is installed."""
+    from koopa.alert import alert, warn
+
+    if shutil.which("tlmgr") is None:
+        return
+    alert("Updating TeX packages.")
+    try:
+        config = InstallConfig(
+            name="tex-packages",
+            mode="system",
+            reinstall=True,
+            verbose=verbose,
+        )
+        install_app(config)
+    except Exception as exc:
+        warn(f"Failed to update TeX packages: {exc}")
 
 
 def _update_system_homebrew(*, verbose: bool = False) -> None:
