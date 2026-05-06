@@ -592,7 +592,7 @@ _koopa_develop() {
         '*:: :->subcmd'
     [[ $state == subcmd ]] || return 0
     case $words[1] in
-        check-app-versions) _arguments '*--help[--help]' '*--json[--json]' '*--reset-cache[--reset-cache]' '*--s3-upload[--s3-upload]' '*--source[--source]' '*--update[--update]' ;;
+        check-app-versions) _arguments '*--help[--help]' '*--json[--json]' '*--no-update[--no-update]' '*--reset-cache[--reset-cache]' '*--s3-upload[--s3-upload]' '*--source[--source]' ;;
         format-app-json) _arguments '*--help[--help]' '*--prettier[--prettier]' ;;
         remove-app) _arguments '*--help[--help]' '*--revdeps[--revdeps]' ;;
     esac
@@ -604,7 +604,7 @@ _koopa_develop_cmds() {
         'audit-src-mirror'
         'bump-bootstrap'
         'bump-revision'
-        'bump-venv-revision'
+        'bump-venv-version'
         'cache-functions'
         'check-app-versions'
         'circular-dependencies'
