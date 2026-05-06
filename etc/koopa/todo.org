@@ -8,6 +8,7 @@
     rbenv.py — main tarball + ruby-build plugin
     tcl_tk.py — downloads two separate packages (tcl + tk)
 * Medium complexity
+** TODO Check that `koopa develop mirror-src` is smart and skips if source file is already present.
 ** TODO `koopa develop mirror-src` needs to do a better job of status tracking.
 ** TODO `koopa update` revdep handling is suboptimal currently: 24 reverse dependencies may need rebuilding: aws-cli, btop, chezmoi, delta, difftastic, direnv, du-dust, eza, fd-find, fzf, gh, gitui, jq, mcfly, mdcat, neovim, radian, rclone, ripgrep, shellcheck, starship, tealdeer, zoxide, zsh
 * Low complexity
