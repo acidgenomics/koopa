@@ -39,14 +39,10 @@ def main(
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
     tcl_url = _resolve_src_url(name, version)
-    tcl_tarball = download_with_mirror(
-        tcl_url, name, f"tcl{version}-src.tar.gz"
-    )
+    tcl_tarball = download_with_mirror(tcl_url, name, f"tcl{version}-src.tar.gz")
     extra_urls = _resolve_extra_src_urls(name, version)
     tk_url = extra_urls[0]
-    tk_tarball = download_with_mirror(
-        tk_url, name, f"tk{version}-src.tar.gz"
-    )
+    tk_tarball = download_with_mirror(tk_url, name, f"tk{version}-src.tar.gz")
     extract(tcl_tarball, "tcl-src")
     extract(tk_tarball, "tk-src")
     tcl_unix = os.path.join("tcl-src", "unix")

@@ -536,15 +536,11 @@ def _generate_fish_completion(
     for path_key in sorted(flag_map):
         parts = path_key.split("/")
         flags = flag_map[path_key]
-        conditions = " and ".join(
-            f"__fish_seen_subcommand_from {p}" for p in parts
-        )
+        conditions = " and ".join(f"__fish_seen_subcommand_from {p}" for p in parts)
         condition = f"'{conditions}'"
         for flag in sorted(flags):
             long_name = flag.lstrip("-")
-            lines.append(
-                f"complete -c koopa -n {condition} -l {long_name}"
-            )
+            lines.append(f"complete -c koopa -n {condition} -l {long_name}")
 
     lines.append("")
     return "\n".join(lines)
@@ -711,11 +707,7 @@ def _generate_zsh_completion(
             ]
 
     # -- develop --------------------------------------------------------------
-    dev_flags = {
-        k.split("/", 1)[1]: v
-        for k, v in flag_map.items()
-        if k.startswith("develop/")
-    }
+    dev_flags = {k.split("/", 1)[1]: v for k, v in flag_map.items() if k.startswith("develop/")}
     if dev_flags:
         lines += [
             "_koopa_develop() {",
@@ -728,9 +720,7 @@ def _generate_zsh_completion(
             "    case $words[1] in",
         ]
         for cmd in sorted(dev_flags):
-            flags_str = " ".join(
-                f"'*{f}[{f}]'" for f in sorted(dev_flags[cmd])
-            )
+            flags_str = " ".join(f"'*{f}[{f}]'" for f in sorted(dev_flags[cmd]))
             lines.append(f"        {cmd}) _arguments {flags_str} ;;")
         lines += ["    esac", "}", ""]
         lines += ["_koopa_develop_cmds() {", "    local -a cmds", "    cmds=("]
@@ -750,11 +740,7 @@ def _generate_zsh_completion(
 
     # -- run ------------------------------------------------------------------
     run_cmds = _load_run_commands()
-    run_flags = {
-        k.split("/", 1)[1]: v
-        for k, v in flag_map.items()
-        if k.startswith("run/")
-    }
+    run_flags = {k.split("/", 1)[1]: v for k, v in flag_map.items() if k.startswith("run/")}
     if run_flags:
         lines += [
             "_koopa_run() {",
@@ -767,9 +753,7 @@ def _generate_zsh_completion(
             "    case $words[1] in",
         ]
         for cmd in sorted(run_flags):
-            flags_str = " ".join(
-                f"'*{f}[{f}]'" for f in sorted(run_flags[cmd])
-            )
+            flags_str = " ".join(f"'*{f}[{f}]'" for f in sorted(run_flags[cmd]))
             lines.append(f"        {cmd}) _arguments {flags_str} ;;")
         lines += ["    esac", "}", ""]
         lines += ["_koopa_run_cmds() {", "    local -a cmds", "    cmds=("]
