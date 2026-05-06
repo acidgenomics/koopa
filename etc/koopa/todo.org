@@ -2,3 +2,4 @@
 * Medium complexity
 * Low complexity
 ** TODO Review consistency of is_x86_64 and is_amd64, arch, arch2.
+** TODO Can we eliminate function redundancy in activate.sh with lang/sh, lang/zsh, lang/bash.
