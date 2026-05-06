@@ -569,28 +569,35 @@ def check_system() -> bool:
     from koopa.alert import alert_note, alert_success, warn
     from koopa.system import is_macos
 
-    ok = True
+    needs_update = False
+    needs_system_update = False
+    needs_disk_space = False
     check_build_system()
     if not check_bootstrap_version():
-        ok = False
+        needs_update = True
     if is_macos():
         if not check_macos_system_r():
-            ok = False
+            needs_system_update = True
         if not check_macos_system_python():
-            ok = False
+            needs_system_update = True
     if not check_installed_apps():
-        ok = False
+        needs_update = True
     if not check_broken_app_installs():
-        ok = False
+        needs_update = True
     if not check_user_apps():
-        ok = False
+        needs_update = True
     if not check_broken_symlinks():
-        ok = False
+        needs_update = True
     if not check_disk("/"):
-        ok = False
-    if not ok:
+        needs_disk_space = True
+    if needs_update or needs_system_update or needs_disk_space:
         warn("System checks completed with warnings.")
-        alert_note("Run 'koopa update' to resolve these issues.")
+        if needs_system_update:
+            alert_note("Run 'koopa update --all-system' to resolve these issues.")
+        elif needs_update:
+            alert_note("Run 'koopa update' to resolve these issues.")
+        if needs_disk_space:
+            alert_note("Free up disk space on '/'.")
         return False
     alert_success("System passed all checks.")
     return True

@@ -7788,7 +7788,8 @@
     "type": "cli",
     "url": [
       "https://www.r-project.org/",
-      "https://cloud.r-project.org/src/base/R-4/"
+      "https://cloud.r-project.org/src/base/R-4/",
+      "https://cran.r-project.org/bin/macosx/"
     ],
     "version": "4.6.0"
   },
