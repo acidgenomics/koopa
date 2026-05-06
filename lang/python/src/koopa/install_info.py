@@ -30,6 +30,16 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
 
                 d = _resolve_dep_dict(d, sys_dict)
             deps = list(d)
+    dep_revisions: dict[str, int] = {}
+    for d in deps:
+        resolved_d = d
+        d_entry = json_data.get(d, {})
+        if isinstance(d_entry, dict) and d_entry.get("alias_of"):
+            resolved_d = d_entry["alias_of"]
+        resolved_entry = json_data.get(resolved_d, {})
+        rev = int(resolved_entry.get("revision", 0)) if isinstance(resolved_entry, dict) else 0
+        if rev > 0:
+            dep_revisions[resolved_d] = rev
     info = {
         "name": name,
         "version": version,
@@ -37,6 +47,7 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
         "os_id": sys_dict["os_id"],
         "build_dependencies": build_deps,
         "dependencies": deps,
+        "dep_revisions": dep_revisions,
         "environ": dict(sorted(os.environ.items())),
     }
     with open(output_file, "w") as fh:

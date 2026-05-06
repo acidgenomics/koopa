@@ -1188,11 +1188,26 @@ def install_python_package(
         egg_name = name.replace("-", "_")
     if not pip_name:
         pip_name = egg_name
-    # Resolve python executable.
-    python_cmd = "python3"
+    # Resolve python executable from app dependencies when not explicit.
+    if not python_version and name:
+        deps = _app_dependencies(name)
+        for dep in deps:
+            if dep == "python" or dep.startswith("python3."):
+                resolved = _resolve_alias(dep)
+                ver = resolved.removeprefix("python")
+                if ver:
+                    python_version = ver
+                break
+    python_cmd = f"python{python_version}" if python_version else "python3"
+    python: str | None = None
     if python_version:
-        python_cmd = f"python{python_version}"
-    python = shutil.which(python_cmd)
+        opt_python = os.path.join(
+            _opt_prefix(), f"python{python_version}", "bin", python_cmd
+        )
+        if os.path.isfile(opt_python):
+            python = opt_python
+    if python is None:
+        python = shutil.which(python_cmd)
     if python is None:
         msg = f"{python_cmd} not found."
         raise FileNotFoundError(msg)
