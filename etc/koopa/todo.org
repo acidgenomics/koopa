@@ -1,16 +1,6 @@
 * High complexity
-** TODO Figure out a src_url approach when there are secondary downloads. Multi-download (main tarball is standardizable, secondary downloads stay):
-    git_app.py — already uses download_extract_cd(url) for main; also downloads htmldocs + manpages
-    libluv.py — already uses download_extract_cd(url) for main; also downloads lua-compat
-    ont_vbz_compression.py — already uses download_extract_cd(url) for main; also downloads streamvbyte
-    rbenv.py — main tarball + ruby-build plugin
-    tcl_tk.py — downloads two separate packages (tcl + tk)
 * Medium complexity
-** DONE Check that `koopa develop mirror-src` is smart and skips if source file is already present.
-** DONE `koopa develop mirror-src` needs to do a better job of status tracking. At the beginning of the function call, it looks like the session is hanging.
-** DONE `koopa update` revdep handling is suboptimal currently: 24 reverse dependencies may need rebuilding: aws-cli, btop, chezmoi, delta, difftastic, direnv, du-dust, eza, fd-find, fzf, gh, gitui, jq, mcfly, mdcat, neovim, radian, rclone, ripgrep, shellcheck, starship, tealdeer, zoxide, zsh
 * Low complexity
-** DONE Make sure we standardize macOS Tahoe transparency (disable reduce transparency) and Liquid Glass defaults (prefer "Tinted" over "Clear").
 ** TODO We need to gate against `koopa update` support on Intel Macs. Conda not supported. Many apps aren't supported for Intel Macs. We need to guard against this better in koopa update.
 ** TODO Failing to install chezmoi correctly on Intel Mac. Still expecting conda.
 ** TODO Review https://github.com/nix-darwin/nix-darwin for useful macOS config.
