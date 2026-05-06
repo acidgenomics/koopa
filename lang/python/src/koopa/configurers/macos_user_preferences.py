@@ -52,7 +52,7 @@ def main(
         ),
         ("com.apple.WindowManager", "TiledWindowsHaveMargins", "-bool", "true"),
         ("com.apple.universalaccess", "reduceMotion", "-bool", "true"),
-        ("com.apple.universalaccess", "reduceTransparency", "-bool", "true"),
+        ("com.apple.universalaccess", "reduceTransparency", "-bool", "false"),
         (
             "com.apple.universalaccess",
             "differentiateWithoutColor",
@@ -121,8 +121,6 @@ def main(
             "-bool",
             "true",
         ),
-        # Set Help Viewer windows to non-floating mode.
-        ("com.apple.helpviewer", "DevMode", "-bool", "true"),
         # Disable automatic capitalization.
         (
             "NSGlobalDomain",
@@ -160,7 +158,7 @@ def main(
         ),
         # Increase window resize speed for Cocoa applications.
         ("NSGlobalDomain", "NSWindowResizeTime", "-float", ".001"),
-        # Dock, Dashboard, and hot corners.
+        # Dock and hot corners.
         # Enable highlight hover effect for grid view of a stack.
         ("com.apple.dock", "mouse-over-hilite-stack", "-bool", "true"),
         # Set Dock icon size to 36 pixels.
@@ -184,10 +182,6 @@ def main(
         ("com.apple.dock", "expose-animation-duration", "-float", "0.1"),
         # Don't group windows by application in Mission Control.
         ("com.apple.dock", "expose-group-by-app", "-bool", "false"),
-        # Disable Dashboard.
-        ("com.apple.dashboard", "mcx-disabled", "-bool", "true"),
-        # Don't show Dashboard as a Space.
-        ("com.apple.dock", "dashboard-in-overlay", "-bool", "true"),
         # Don't automatically rearrange Spaces based on most recent use.
         ("com.apple.dock", "mru-spaces", "-bool", "false"),
         # Remove the auto-hiding Dock delay.
@@ -483,11 +477,6 @@ def main(
         ("NSGlobalDomain", "AppleLocale", "-string", "en_US@currency=USD"),
         ("NSGlobalDomain", "AppleMeasurementUnits", "-string", "Centimeters"),
         ("NSGlobalDomain", "AppleMetricUnits", "-bool", "true"),
-        # Screen: password after screensaver.
-        ("com.apple.screensaver", "askForPassword", "-int", "1"),
-        ("com.apple.screensaver", "askForPasswordDelay", "-int", "0"),
-        # Font smoothing.
-        ("NSGlobalDomain", "AppleFontSmoothing", "-int", "0"),
         # Screenshots.
         ("com.apple.screencapture", "name", "-string", "Screenshot"),
         ("com.apple.screencapture", "include-date", "-bool", "true"),
@@ -604,168 +593,8 @@ def main(
             "-bool",
             "true",
         ),
-        # Safari.
-        ("com.apple.Safari", "UniversalSearchEnabled", "-bool", "false"),
-        ("com.apple.Safari", "SuppressSearchSuggestions", "-bool", "true"),
-        (
-            "com.apple.Safari",
-            "WebKitTabToLinksPreferenceKey",
-            "-bool",
-            "true",
-        ),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks",
-            "-bool",
-            "true",
-        ),
-        (
-            "com.apple.Safari",
-            "ShowFullURLInSmartSearchField",
-            "-bool",
-            "true",
-        ),
-        ("com.apple.Safari", "HomePage", "-string", "about:blank"),
-        ("com.apple.Safari", "AutoOpenSafeDownloads", "-bool", "false"),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled",
-            "-bool",
-            "true",
-        ),
-        ("com.apple.Safari", "ShowFavoritesBar", "-bool", "false"),
-        ("com.apple.Safari", "ShowSidebarInTopSites", "-bool", "false"),
-        ("com.apple.Safari", "DebugSnapshotsUpdatePolicy", "-int", "2"),
-        ("com.apple.Safari", "IncludeInternalDebugMenu", "-bool", "true"),
-        (
-            "com.apple.Safari",
-            "FindOnPageMatchesWordStartsOnly",
-            "-bool",
-            "false",
-        ),
-        ("com.apple.Safari", "IncludeDevelopMenu", "-bool", "true"),
-        (
-            "com.apple.Safari",
-            "WebKitDeveloperExtrasEnabledPreferenceKey",
-            "-bool",
-            "true",
-        ),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled",
-            "-bool",
-            "true",
-        ),
-        ("NSGlobalDomain", "WebKitDeveloperExtras", "-bool", "true"),
-        (
-            "com.apple.Safari",
-            "WebContinuousSpellCheckingEnabled",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.Safari",
-            "WebAutomaticSpellingCorrectionEnabled",
-            "-bool",
-            "false",
-        ),
-        ("com.apple.Safari", "AutoFillFromAddressBook", "-bool", "false"),
-        ("com.apple.Safari", "AutoFillPasswords", "-bool", "false"),
-        ("com.apple.Safari", "AutoFillCreditCardData", "-bool", "false"),
-        ("com.apple.Safari", "AutoFillMiscellaneousForms", "-bool", "false"),
-        (
-            "com.apple.Safari",
-            "WarnAboutFraudulentWebsites",
-            "-bool",
-            "true",
-        ),
-        ("com.apple.Safari", "WebKitPluginsEnabled", "-bool", "false"),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled",
-            "-bool",
-            "false",
-        ),
-        ("com.apple.Safari", "WebKitJavaEnabled", "-bool", "false"),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.Safari",
-            "WebKitJavaScriptCanOpenWindowsAutomatically",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier"
-            ".WebKit2JavaScriptCanOpenWindowsAutomatically",
-            "-bool",
-            "false",
-        ),
-        ("com.apple.Safari", "SendDoNotTrackHTTPHeader", "-bool", "true"),
-        (
-            "com.apple.Safari",
-            "InstallExtensionUpdatesAutomatically",
-            "-bool",
-            "true",
-        ),
-        (
-            "com.apple.Safari",
-            "WebKitMediaPlaybackAllowsInline",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.SafariTechnologyPreview",
-            "WebKitMediaPlaybackAllowsInline",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.Safari",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.SafariTechnologyPreview",
-            "com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback",
-            "-bool",
-            "false",
-        ),
-        # Mail.
-        ("com.apple.mail", "DisableReplyAnimations", "-bool", "true"),
-        ("com.apple.mail", "DisableSendAnimations", "-bool", "true"),
-        (
-            "com.apple.mail",
-            "AddressesIncludeNameOnPasteboard",
-            "-bool",
-            "false",
-        ),
-        (
-            "com.apple.mail",
-            "DisableInlineAttachmentViewing",
-            "-bool",
-            "true",
-        ),
-        (
-            "com.apple.mail",
-            "SpellCheckingBehavior",
-            "-string",
-            "NoSpellCheckingEnabled",
-        ),
         # Terminal.
-        ("com.apple.terminal", "SecureKeyboardEntry", "-bool", "true"),
+        ("com.apple.Terminal", "SecureKeyboardEntry", "-bool", "true"),
         ("com.apple.Terminal", "ShowLineMarks", "-int", "0"),
         # Preview.
         (
@@ -849,6 +678,8 @@ def main(
     # Global domain writes using -globalDomain: (key, type_flag, value)
     global_domain_writes: list[tuple[str, str, str]] = [
         ("AppleInterfaceStyle", "-string", "Dark"),
+        # Liquid Glass: prefer "Tinted" over "Clear" (macOS Tahoe).
+        ("NSGlassDiffusionSetting", "-int", "1"),
     ]
     for key, type_flag, value in global_domain_writes:
         subprocess.run(
@@ -936,59 +767,6 @@ def main(
     # Terminal.app StringEncodings (array type, handled separately).
     subprocess.run(
         [defaults, "write", "com.apple.terminal", "StringEncodings", "-array", "4"],
-        check=True,
-    )
-    # Mail: NSUserKeyEquivalents dict-add.
-    subprocess.run(
-        [
-            defaults,
-            "write",
-            "com.apple.mail",
-            "NSUserKeyEquivalents",
-            "-dict-add",
-            "Send",
-            r"@\U21a9",
-        ],
-        check=True,
-    )
-    # Mail: DraftsViewerAttributes dict-add entries.
-    subprocess.run(
-        [
-            defaults,
-            "write",
-            "com.apple.mail",
-            "DraftsViewerAttributes",
-            "-dict-add",
-            "DisplayInThreadedMode",
-            "-string",
-            "yes",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            defaults,
-            "write",
-            "com.apple.mail",
-            "DraftsViewerAttributes",
-            "-dict-add",
-            "SortedDescending",
-            "-string",
-            "no",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            defaults,
-            "write",
-            "com.apple.mail",
-            "DraftsViewerAttributes",
-            "-dict-add",
-            "SortOrder",
-            "-string",
-            "received-date",
-        ],
         check=True,
     )
     # Messages: SOInputLineSettings dict-add entries.
