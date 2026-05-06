@@ -747,16 +747,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             config.reinstall = True
             config.reinstall_reason = config.reinstall_reason or "empty .install directory"
         if config.reinstall:
-            if not config.quiet:
-                from koopa.alert import alert_uninstall_start
-
-                alert_uninstall_start(
-                    config.name, config.prefix or "", config.reinstall_reason or ""
-                )
             shutil.rmtree(config.prefix, ignore_errors=True)
         if os.path.isdir(config.prefix):
             return
     # -- Install dependencies -------------------------------------------------
+    _announced = False
     if config.deps:
         build_deps = _app_build_dependencies(config.name)
         deps = _app_dependencies(config.name)
@@ -765,14 +760,23 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if not config.quiet:
                 from koopa.alert import alert_note, styled_name, styled_reason
 
-                reason_suffix = (
-                    f" {styled_reason(config.reinstall_reason)}" if config.reinstall_reason else ""
-                )
+                version_suffix = f" {config.version}" if config.version else ""
+                if config.reinstall_reason:
+                    reason_str = config.reinstall_reason
+                    prefix_to_strip = f"{config.name} "
+                    if reason_str.startswith(prefix_to_strip):
+                        reason_str = reason_str[len(prefix_to_strip) :]
+                    reason_suffix = f" {styled_reason(reason_str)}"
+                else:
+                    reason_suffix = ""
+                verb = "reinstalling" if config.reinstall else "installing"
                 dep_word = "dependency" if len(all_deps) == 1 else "dependencies"
                 alert_note(
-                    f"{styled_name(config.name)}{reason_suffix}: installing with"
-                    f" {dep_word}: {', '.join(styled_name(d) for d in all_deps)}"
+                    f"{styled_name(config.name)}{version_suffix}{reason_suffix}:"
+                    f" {verb} with {dep_word}:"
+                    f" {', '.join(styled_name(d) for d in all_deps)}"
                 )
+                _announced = True
             for dep in all_deps:
                 resolved_dep = _resolve_alias(dep)
                 dep_opt = os.path.join(_opt_prefix(), resolved_dep)
@@ -787,10 +791,21 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     dep_config.verbose = True
                 install_app(dep_config)
     # -- Start install --------------------------------------------------------
-    if not config.quiet:
-        from koopa.alert import alert_install_start
+    if not config.quiet and not _announced:
+        from koopa.alert import alert_note, styled_name, styled_reason
 
-        alert_install_start(config.name, config.prefix or "")
+        version_suffix = f" {config.version}" if config.version else ""
+        if config.reinstall and config.reinstall_reason:
+            reason_str = config.reinstall_reason
+            prefix_to_strip = f"{config.name} "
+            if reason_str.startswith(prefix_to_strip):
+                reason_str = reason_str[len(prefix_to_strip) :]
+            alert_note(
+                f"Reinstalling {styled_name(config.name)}{version_suffix}"
+                f" {styled_reason(reason_str)}."
+            )
+        elif not config.reinstall:
+            alert_note(f"Installing {styled_name(config.name)}{version_suffix}.")
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
         os.makedirs(config.prefix, exist_ok=True)
@@ -922,10 +937,13 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         )
         if progress.saved_log_path:
             shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
-    if not config.quiet:
+    if not config.quiet and config.verbose:
         from koopa.alert import alert_install_success
 
-        alert_install_success(config.name, config.prefix or "", progress.elapsed_formatted)
+        name_with_version = (
+            f"{config.name} {config.version}" if config.version else config.name
+        )
+        alert_install_success(name_with_version, "", progress.elapsed_formatted)
 
 
 # -- Isolated subshell runner -------------------------------------------------
