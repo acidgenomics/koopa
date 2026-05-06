@@ -91,7 +91,14 @@ def monorepo_prefix() -> str:
 
 def scripts_private_prefix() -> str:
     """Return private scripts prefix."""
-    return os.environ.get("KOOPA_SCRIPTS_PRIVATE_PREFIX", os.path.expanduser("~/scripts-private"))
+    return os.environ.get(
+        "KOOPA_SCRIPTS_PRIVATE_PREFIX",
+        os.path.join(
+            os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
+            "koopa",
+            "scripts-private",
+        ),
+    )
 
 
 def website_prefix() -> str:

@@ -194,11 +194,12 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # -- update ---------------------------------------------------------------
     update_p = subparsers.add_parser("update")
-    update_p.add_argument("apps", nargs="*")
-    update_p.add_argument("--system", action="store_true", default=False)
-    update_p.add_argument("--user", action="store_true", default=False)
-    update_p.add_argument("--all-system", action="store_true", default=False)
-    update_p.add_argument("--all-user-repos", action="store_true", default=False)
+    update_p.add_argument(
+        "mode",
+        nargs="?",
+        choices=["system", "user", "koopa"],
+        default=None,
+    )
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
@@ -487,12 +488,12 @@ def _handle_update(args: argparse.Namespace) -> None:
         update_user_apps,
     )
 
-    if args.all_system or args.system:
+    mode = args.mode
+    if mode == "system":
         from koopa.system import is_admin
 
         if not is_admin():
-            flag = "--all-system" if args.all_system else "--system"
-            msg = f"{flag} requires admin/sudo access."
+            msg = "'koopa update system' requires admin/sudo access."
             raise PermissionError(msg)
     try:
         acquired = _acquire_install_lock()
@@ -500,62 +501,50 @@ def _handle_update(args: argparse.Namespace) -> None:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
     try:
-        apps, _ = _resolve_apps_and_mode(args)
-        if not apps:
-            from koopa.alert import warn
-            from koopa.app import prune_apps
-            from koopa.check import prune_broken_symlinks
-
-            _cleanup_legacy_config()
-            update_koopa(verbose=args.verbose)
-            try:
-                bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
-            except Exception as exc:
-                print(
-                    f"Error: Failed to update bootstrap: {exc}",
-                    file=sys.stderr,
-                )
-                sys.exit(1)
-            if bootstrap_rebuilt:
-                # Bootstrap Python version changed. The running interpreter's
-                # stdlib paths are now stale. Exec-restart using the new
-                # bootstrap Python so the rest of update runs cleanly.
-                _release_install_lock()
-                acquired = False
-                _exec_restart_with_bootstrap()
-                # Only reaches here if bootstrap binary not found — best-effort.
-            _update_venv(_koopa_prefix())
-            remove_unsupported_apps(verbose=args.verbose)
-            update_stale_apps(verbose=args.verbose)
-            install_missing_default_apps(verbose=args.verbose)
-            update_user_apps(verbose=args.verbose)
-            if args.all_user_repos:
-                from koopa.install import fetch_user_repos
-
-                fetch_user_repos()
-                _configure_user_dotfiles(verbose=args.verbose)
-            prune_broken_symlinks()
-            try:
-                prune_apps()
-            except (ValueError, OSError) as exc:
-                warn(f"Prune failed: {exc}")
-            if args.all_system:
-                update_system_apps(verbose=args.verbose)
-            from koopa.alert import alert_success
-
-            alert_success("koopa update was successful.")
-            return
-        if apps == ["koopa"]:
+        if mode == "koopa":
             update_koopa(verbose=args.verbose)
             _update_venv(_koopa_prefix())
             return
-        if apps:
+        if mode == "system":
+            update_system_apps(verbose=args.verbose)
+            return
+        if mode == "user":
+            from koopa.install import fetch_user_repos, run_user_app_post_hooks
+
+            updated_user_apps = update_user_apps(verbose=args.verbose)
+            fetch_user_repos()
+            _configure_user_dotfiles(verbose=args.verbose)
+            run_user_app_post_hooks(updated_user_apps, verbose=args.verbose)
+            return
+        from koopa.alert import alert_success, warn
+        from koopa.app import prune_apps
+        from koopa.check import prune_broken_symlinks
+
+        _cleanup_legacy_config()
+        update_koopa(verbose=args.verbose)
+        try:
+            bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
+        except Exception as exc:
             print(
-                f"Error: 'koopa update' does not accept app names.\n"
-                f"  To reinstall an app, use: koopa reinstall {' '.join(apps)}",
+                f"Error: Failed to update bootstrap: {exc}",
                 file=sys.stderr,
             )
             sys.exit(1)
+        if bootstrap_rebuilt:
+            _release_install_lock()
+            acquired = False
+            _exec_restart_with_bootstrap()
+        _update_venv(_koopa_prefix())
+        remove_unsupported_apps(verbose=args.verbose)
+        update_stale_apps(verbose=args.verbose)
+        install_missing_default_apps(verbose=args.verbose)
+        update_user_apps(verbose=args.verbose)
+        prune_broken_symlinks()
+        try:
+            prune_apps()
+        except (ValueError, OSError) as exc:
+            warn(f"Prune failed: {exc}")
+        alert_success("koopa update was successful.")
     finally:
         if acquired:
             _release_install_lock()

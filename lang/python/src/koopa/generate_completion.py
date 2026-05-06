@@ -537,6 +537,10 @@ def _generate_fish_completion(
                 f"complete -c koopa -n '__fish_seen_subcommand_from {install_cmd}' -a '{app}'"
             )
 
+    lines += ["", "# update: mode completions."]
+    for mode in ("koopa", "system", "user"):
+        lines.append(f"complete -c koopa -n '__fish_seen_subcommand_from update' -a '{mode}'")
+
     lines += ["", "# Per-command flag completions."]
     for path_key in sorted(flag_map):
         parts = path_key.split("/")
@@ -775,7 +779,7 @@ def _generate_zsh_completion(
     lines += ["_koopa_update() {", "    _arguments \\"]
     for flag in update_flags_zsh:
         lines.append(f"        '{flag}[{flag}]' \\")
-    lines += ["        '*:app:(koopa system)'", "}", ""]
+    lines += ["        '1:mode:(koopa system user)'", "}", ""]
 
     lines.append('_koopa "$@"')
     return "\n".join(lines) + "\n"
@@ -839,7 +843,8 @@ def _generate_powershell_completion(
         f"                'reinstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'uninstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'system'    {{ $completions = @({_system_cmds_ps}) }}",
-        f"                'update'    {{ $completions = @({_ps_array(sorted(flag_map.get('update', [])) + ['koopa', 'system'])}) }}",
+        f"                'update'    {{ $completions = @("
+        f"{_ps_array(['koopa', 'system', 'user'])}) }}",
         "            }",
         "        }",
         "        2 {",
@@ -1089,8 +1094,7 @@ def generate_completion() -> None:  # noqa: PLR0915
     )
 
     # update
-    update_flags = sorted(flag_map.get("update", []))
-    update_items = update_flags + ["koopa", "system"]
+    update_items = ["koopa", "system", "user"]
     update_items_str = " ".join(f"'{x}'" for x in update_items)
     lines.extend(
         _emit_case_entry(
