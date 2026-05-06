@@ -16,6 +16,13 @@ def main(
 
     Data-driven approach: all `defaults write` calls are stored as tuples
     and iterated over for clean, maintainable code.
+
+    See Also
+    --------
+    - https://github.com/nix-darwin/nix-darwin
+    - https://github.com/kevinSuttle/macOS-Defaults
+    - https://macos-defaults.com/
+    - https://github.com/brokosz/macos-defaults
     """
     if sys.platform != "darwin":
         msg = "macOS only."
@@ -63,6 +70,12 @@ def main(
         ("NSGlobalDomain", "NSTableViewDefaultSizeMode", "-int", "2"),
         # Scrollbar appearance.
         ("NSGlobalDomain", "AppleShowScrollBars", "-string", "Automatic"),
+        # Scroll bar click: jump to next page.
+        ("NSGlobalDomain", "AppleScrollerPagingBehavior", "-bool", "false"),
+        # Icon & widget style: automatic (follows system appearance).
+        ("NSGlobalDomain", "AppleIconAppearanceTheme", "-string", "RegularAutomatic"),
+        # Tint window background with wallpaper color: enabled.
+        ("NSGlobalDomain", "AppleReduceDesktopTinting", "-bool", "false"),
         # Disable animated focus ring.
         ("NSGlobalDomain", "NSUseAnimatedFocusRing", "-bool", "false"),
         # Expand save panel by default.
@@ -677,7 +690,8 @@ def main(
         )
     # Global domain writes using -globalDomain: (key, type_flag, value)
     global_domain_writes: list[tuple[str, str, str]] = [
-        ("AppleInterfaceStyle", "-string", "Dark"),
+        # Appearance: automatic (light/dark follows sunrise/sunset).
+        ("AppleInterfaceStyleSwitchesAutomatically", "-bool", "true"),
         # Liquid Glass: prefer "Tinted" over "Clear" (macOS Tahoe).
         ("NSGlassDiffusionSetting", "-int", "1"),
     ]
@@ -685,6 +699,17 @@ def main(
         subprocess.run(
             [defaults, "write", "-globalDomain", key, type_flag, value],
             check=True,
+        )
+    # Delete keys where "automatic"/"multicolor" is represented by absence.
+    for domain, key in [
+        ("-globalDomain", "AppleInterfaceStyle"),
+        ("NSGlobalDomain", "AppleAccentColor"),
+        ("NSGlobalDomain", "AppleHighlightColor"),
+        ("NSGlobalDomain", "AppleIconAppearanceTintColor"),
+    ]:
+        subprocess.run(
+            [defaults, "delete", domain, key],
+            check=False,
         )
     # Writes using -g (global): (key, type_flag, value)
     g_writes: list[tuple[str, str, str]] = [
