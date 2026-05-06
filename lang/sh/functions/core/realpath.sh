@@ -30,14 +30,15 @@ _koopa_realpath() {
         then
             _kvar_rp_string="$( \
                 python3 -c \
-                    "import os; print(os.path.realpath('${_kvar_rp_arg}'))" \
+                    "import os,sys; print(os.path.realpath(sys.argv[1]))" \
+                    "$_kvar_rp_arg" \
                 2>/dev/null \
                 || true \
             )"
         fi
         if [ -z "$_kvar_rp_string" ]
         then
-            unset -v _kvar_rp_arg _kvar_string
+            unset -v _kvar_rp_arg _kvar_rp_string
             return 1
         fi
         __koopa_print "$_kvar_rp_string"
