@@ -2198,7 +2198,29 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             installed_version = f.read().strip()
         if installed_version == expected_version:
             return
-    alert("Installing koopa Python package.")
+    pkg_version = ""
+    pyproject_file = os.path.join(prefix, "pyproject.toml")
+    if os.path.isfile(pyproject_file):
+        with open(pyproject_file) as f:
+            for line in f:
+                if line.startswith("version"):
+                    pkg_version = line.split("=", 1)[1].strip().strip('"')
+                    break
+    venv_rev = ""
+    if os.path.isfile(revision_file):
+        with open(revision_file) as f:
+            venv_rev = f.read().strip()
+    version_parts: list[str] = []
+    if pkg_version:
+        version_parts.append(f"v{pkg_version}")
+    if venv_rev:
+        version_parts.append(f"snapshot {venv_rev}")
+    version_suffix = f" ({'; '.join(version_parts)})" if version_parts else ""
+    if os.path.isfile(version_file):
+        verb = "Updating"
+    else:
+        verb = "Installing"
+    alert(f"{verb} virtual environment at '{venv_dir}'{version_suffix}.")
     if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
         alert("Installing pip into virtual environment.")
         subprocess.run(
@@ -2378,7 +2400,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in apps_with_reasons]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    alert(f"Updating {n} {label}: {', '.join(apps)}")
+    alert(f"Updating {n} {label}: {', '.join(apps)}.")
     for app, reason in apps_with_reasons:
         cli_install(app, reinstall=True, reinstall_reason=reason, verbose=verbose)
     _update_stale_revdeps(apps, failed=[], verbose=verbose)
@@ -2448,7 +2470,7 @@ def update_user_apps(*, verbose: bool = False) -> None:
     prefixes = _user_app_prefixes()
     n_user = len(apps)
     label_user = "app" if n_user == 1 else "apps"
-    alert(f"Updating {n_user} user {label_user}: {', '.join(apps)}")
+    alert(f"Updating {n_user} user {label_user}: {', '.join(apps)}.")
     for app in apps:
         prefix = prefixes.get(app, "")
         if not prefix or not os.path.isdir(prefix):
