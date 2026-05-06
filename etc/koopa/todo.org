@@ -1,5 +1,3 @@
-#+TITLE: koopa
-#+STARTUP: content
 * High complexity
 ** TODO Figure out a src_url approach when there are secondary downloads. Multi-download (main tarball is standardizable, secondary downloads stay):
     git_app.py — already uses download_extract_cd(url) for main; also downloads htmldocs + manpages
@@ -9,3 +7,4 @@
     tcl_tk.py — downloads two separate packages (tcl + tk)
 * Medium complexity
 * Low complexity
+** TODO Make sure we standardize macOS Tahoe transparency (disable reduce transparency) and Liquid Glass defaults (prefer "Tinted" over "Clear").
