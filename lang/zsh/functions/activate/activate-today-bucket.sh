@@ -6,7 +6,7 @@ _koopa_activate_today_bucket() {
     local today_link
     if [[ -n "$bucket_dir" ]]
     then
-        [[ -d "$KOOPA_BUCKET" ]] || return 1
+        [[ -d "$KOOPA_BUCKET" ]] || return 0
         today_link="${HOME:?}/today"
     elif [[ -d "${HOME:?}/bucket" ]]
     then
