@@ -2066,11 +2066,48 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                 f"  bootstrap {func_name}: {match.group(2)} -> {new_version}",
                 file=sys.stderr,
             )
+    py_app_key = _bootstrap_app_map().get("python", "")
+    py_entry = app_data.get(py_app_key, {})
+    if isinstance(py_entry, dict):
+        py_version = py_entry.get("version", "")
+        if py_version:
+            uv_pattern = re.compile(
+                r"(install_python_uv\(\) \{\n"
+                r"    __kvar_uv_version='[^']+'\n"
+                r"    __kvar_python_version=')([^']+)(')"
+            )
+            uv_match = uv_pattern.search(text)
+            if uv_match and uv_match.group(2) != py_version:
+                text = uv_pattern.sub(rf"\g<1>{py_version}\g<3>", text)
+                count += 1
+                print(
+                    f"  bootstrap python_uv: {uv_match.group(2)} -> {py_version}",
+                    file=sys.stderr,
+                )
+    uv_entry = app_data.get("uv", {})
+    uv_updated = False
+    if isinstance(uv_entry, dict):
+        uv_version = uv_entry.get("version", "")
+        if uv_version:
+            uv_ver_pattern = re.compile(
+                r"(install_python_uv\(\) \{\n"
+                r"    __kvar_uv_version=')([^']+)(')"
+            )
+            uv_ver_match = uv_ver_pattern.search(text)
+            if uv_ver_match and uv_ver_match.group(2) != uv_version:
+                text = uv_ver_pattern.sub(rf"\g<1>{uv_version}\g<3>", text)
+                uv_updated = True
+                print(
+                    f"  bootstrap uv: {uv_ver_match.group(2)} -> {uv_version}",
+                    file=sys.stderr,
+                )
     if count > 0:
         bootstrap_path.write_text(text)
         today = time.strftime("%Y.%m.%d.%H%M")
         version_path.write_text(today + "\n")
         print(f"  bootstrap version: {today}", file=sys.stderr)
+    elif uv_updated:
+        bootstrap_path.write_text(text)
     return count
 
 

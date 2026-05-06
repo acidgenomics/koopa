@@ -1,3 +1,4 @@
 * High complexity
 * Medium complexity
+** TODO Rework bootstrap.sh to use uv and bundled astral Python when not in a corporate environment.
 * Low complexity

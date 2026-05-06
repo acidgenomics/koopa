@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-05-05.
+# @note Updated 2026-05-06.
 # """
 
 set -o errexit
@@ -11,7 +11,7 @@ KOOPA_VERBOSE="${KOOPA_VERBOSE:-0}"
 if [ "$KOOPA_VERBOSE" -eq 1 ] 2>/dev/null; then
     set -o xtrace
     _make_verbose='VERBOSE=1'
-    _curl_verbose='--show-error --verbose'
+    _curl_verbose='--verbose'
 else
     _make_verbose=''
     _curl_verbose='--silent'
@@ -30,6 +30,21 @@ is_arm64() {
         'aarch64' | 'arm64') return 0 ;;
         *) return 1 ;;
     esac
+}
+
+has_firewall() {
+    __kvar_ssl_cert="${SSL_CERT_FILE:-}"
+    if [ -z "$__kvar_ssl_cert" ]; then
+        unset -v __kvar_ssl_cert
+        return 1
+    fi
+    case "$__kvar_ssl_cert" in
+        "${KOOPA_PREFIX}/"*)
+            unset -v __kvar_ssl_cert
+            return 1 ;;
+    esac
+    unset -v __kvar_ssl_cert
+    return 0
 }
 
 cpu_count() {
@@ -109,7 +124,7 @@ download_with_fallback() {
             --fail \
             --location \
             --max-time 300 \
-            $_curl_verbose \
+            ${_curl_verbose:+"$_curl_verbose"} \
             "$__dwf_url" \
             -o "${__dwf_src_dir}/src.archive" \
             && tar -tf "${__dwf_src_dir}/src.archive" > /dev/null 2>&1
@@ -155,8 +170,8 @@ install_openssl() {
         'no-tests' \
         'no-zlib' \
         'shared'
-    make $_make_verbose --jobs=1 depend
-    make $_make_verbose --jobs="${CPU_COUNT:?}"
+    make ${_make_verbose:+"$_make_verbose"} --jobs=1 depend
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
     make install_sw DESTDIR="$DESTDIR"
     [ -x "${DESTDIR}${PREFIX}/bin/openssl" ] || return 1
     unset -v __kvar_version
@@ -195,7 +210,7 @@ install_python() {
         --disable-test-modules \
         --prefix="$PREFIX" \
         --with-openssl="${DESTDIR}${PREFIX}"
-    make $_make_verbose --jobs="${CPU_COUNT:?}"
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
     unset -v LDLIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
@@ -238,7 +253,7 @@ install_bzip2() {
     unset -v __kvar_filename
     make \
         CFLAGS='-fPIC -Wall -Winline -O2 -g -D_FILE_OFFSET_BITS=64' \
-        $_make_verbose \
+        ${_make_verbose:+"$_make_verbose"} \
         --jobs="${CPU_COUNT:?}" \
         PREFIX="${DESTDIR}${PREFIX}" \
         install
@@ -260,10 +275,92 @@ install_zlib() {
         || return 1
     unset -v __kvar_filename
     ./configure --prefix="$PREFIX"
-    make $_make_verbose --jobs="${CPU_COUNT:?}"
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
     [ -f "${DESTDIR}${PREFIX}/lib/libz.a" ] || return 1
     unset -v __kvar_version
+    return 0
+}
+
+install_python_uv() {
+    __kvar_uv_version='0.11.11'
+    __kvar_python_version='3.12.13'
+    printf 'Installing python via uv.\n'
+    __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
+    if is_macos && is_arm64; then
+        __kvar_platform='aarch64-apple-darwin'
+    elif is_arm64; then
+        __kvar_platform='aarch64-unknown-linux-gnu'
+    elif is_amd64; then
+        __kvar_platform='x86_64-unknown-linux-gnu'
+    else
+        printf 'Unsupported platform for uv.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv_version
+        return 1
+    fi
+    __kvar_uv_url="https://github.com/astral-sh/uv/releases/download/${__kvar_uv_version}/uv-${__kvar_platform}.tar.gz"
+    printf 'Downloading uv %s.\n' "$__kvar_uv_version"
+    if ! curl \
+        --fail \
+        --location \
+        --max-time 60 \
+        ${_curl_verbose:+"$_curl_verbose"} \
+        "$__kvar_uv_url" \
+        -o "${__kvar_tmpdir}/uv.tar.gz"
+    then
+        printf 'Failed to download uv.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv_url __kvar_uv_version
+        return 1
+    fi
+    tar -xf "${__kvar_tmpdir}/uv.tar.gz" -C "$__kvar_tmpdir"
+    __kvar_uv="${__kvar_tmpdir}/uv-${__kvar_platform}/uv"
+    if [ ! -x "$__kvar_uv" ]; then
+        printf 'uv binary not found after extraction.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
+        return 1
+    fi
+    __kvar_cpython_dir="${__kvar_tmpdir}/cpython"
+    printf 'Installing cpython %s via uv.\n' "$__kvar_python_version"
+    if ! "$__kvar_uv" python install \
+        --install-dir "$__kvar_cpython_dir" \
+        --no-bin \
+        --no-cache \
+        --no-config \
+        "$__kvar_python_version"
+    then
+        printf 'uv python install failed.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_cpython_dir __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
+        return 1
+    fi
+    __kvar_cpython_subdir="$(find "$__kvar_cpython_dir" -mindepth 1 -maxdepth 1 -type d | head -1)"
+    if [ -z "$__kvar_cpython_subdir" ]; then
+        printf 'No cpython directory found after install.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
+        return 1
+    fi
+    __kvar_target="${DESTDIR}${PREFIX}"
+    mkdir -p "$__kvar_target"
+    cp -R "$__kvar_cpython_subdir"/. "$__kvar_target"/
+    if [ ! -x "${__kvar_target}/bin/python3" ]; then
+        printf 'python3 binary not found after copy.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_target __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
+        return 1
+    fi
+    printf 'Checking python module integrity.\n'
+    if ! "${__kvar_target}/bin/python3" -c 'import bz2, hashlib, ssl, zlib'; then
+        printf 'Python module integrity check failed.\n' >&2
+        rm -fr "$__kvar_tmpdir"
+        unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_target __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
+        return 1
+    fi
+    rm -fr "$__kvar_tmpdir"
+    unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_target __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
     return 0
 }
 
@@ -288,7 +385,6 @@ main() {
         return 1
     fi
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
-    printf 'This will install openssl3, zlib, bzip2, and python.\n'
     __kvar_prefix_parent="$(dirname "$PREFIX")"
     if [ -w "$__kvar_prefix_parent" ]
     then
@@ -300,29 +396,48 @@ main() {
     fi
     unset -v __kvar_prefix_parent
     rm -fr "$__kvar_destdir"
-    if ! (
-        DESTDIR="$__kvar_destdir"
-        export DESTDIR
-        __kvar_staged="${DESTDIR}${PREFIX}"
-        mkdir -p "$__kvar_staged"
-        export CPPFLAGS="-I${__kvar_staged:?}/include"
-        export LDFLAGS="-L${__kvar_staged:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
-        if ! is_macos; then
-            export LD_LIBRARY_PATH="${__kvar_staged:?}/lib"
+    __kvar_build_ok=0
+    if ! has_firewall; then
+        if (
+            DESTDIR="$__kvar_destdir"
+            export DESTDIR
+            install_python_uv
+        )
+        then
+            __kvar_build_ok=1
+        else
+            printf 'uv fast path failed, falling back to source build.\n' >&2
+            rm -fr "$__kvar_destdir"
+            mkdir -p "$__kvar_destdir"
         fi
-        export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
-        export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
-        install_openssl
-        install_zlib
-        install_bzip2
-        install_python
-    )
-    then
-        printf 'Bootstrap build failed.\n' >&2
-        rm -fr "$__kvar_destdir"
-        unset -v __kvar_destdir __kvar_use_sudo
-        return 1
     fi
+    if [ "$__kvar_build_ok" -eq 0 ]; then
+        printf 'Building from source: openssl3, zlib, bzip2, python.\n'
+        if ! (
+            DESTDIR="$__kvar_destdir"
+            export DESTDIR
+            __kvar_staged="${DESTDIR}${PREFIX}"
+            mkdir -p "$__kvar_staged"
+            export CPPFLAGS="-I${__kvar_staged:?}/include"
+            export LDFLAGS="-L${__kvar_staged:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
+            if ! is_macos; then
+                export LD_LIBRARY_PATH="${__kvar_staged:?}/lib"
+            fi
+            export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
+            export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
+            install_openssl
+            install_zlib
+            install_bzip2
+            install_python
+        )
+        then
+            printf 'Bootstrap build failed.\n' >&2
+            rm -fr "$__kvar_destdir"
+            unset -v __kvar_build_ok __kvar_destdir __kvar_use_sudo
+            return 1
+        fi
+    fi
+    unset -v __kvar_build_ok
     __kvar_staged="${__kvar_destdir}${PREFIX}"
     rm -fr "${__kvar_staged}/src"
     if [ -d "$PREFIX" ]
