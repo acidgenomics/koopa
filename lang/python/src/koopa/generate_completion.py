@@ -1,12 +1,17 @@
-"""Generate bash/zsh TAB completion file for koopa.
+"""Generate shell TAB completion files for koopa.
 
-Auto-generates ``etc/completion/koopa.sh`` from the Python dispatch tables,
+Auto-generates per-shell completion files from the Python dispatch tables,
 ``app.json``, and AST-extracted argparse flags.
+
+Output files:
+    share/bash-completion/completions/koopa
+    share/fish/vendor_completions.d/koopa.fish
+    share/zsh/site-functions/_koopa
+    share/powershell/completions/koopa.ps1
 
 Usage::
 
-    koopa develop generate-completion          # print to stdout
-    koopa develop generate-completion --write  # overwrite koopa.sh
+    koopa develop generate-completion
 """
 
 import ast
@@ -710,6 +715,8 @@ def _generate_zsh_completion(
             lines.append(f"        {cmd}) _koopa_run ;;")
         elif cmd in ("install", "reinstall", "uninstall"):
             lines.append(f"        {cmd}) _koopa_install ;;")
+        elif cmd == "update":
+            lines.append(f"        {cmd}) _koopa_update ;;")
         else:
             lines.append(f"        {cmd}) return 0 ;;")
     lines += ["    esac", "}", ""]
@@ -762,6 +769,13 @@ def _generate_zsh_completion(
     for app in all_apps:
         lines.append(f"        '{app}'")
     lines += ["    )", "    _describe -t apps 'app name' apps", "}", ""]
+
+    # -- update ---------------------------------------------------------------
+    update_flags_zsh = sorted(flag_map.get("update", []))
+    lines += ["_koopa_update() {", "    _arguments \\"]
+    for flag in update_flags_zsh:
+        lines.append(f"        '{flag}[{flag}]' \\")
+    lines += ["        '*:app:(koopa system)'", "}", ""]
 
     lines.append('_koopa "$@"')
     return "\n".join(lines) + "\n"
@@ -825,7 +839,7 @@ def _generate_powershell_completion(
         f"                'reinstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'uninstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'system'    {{ $completions = @({_system_cmds_ps}) }}",
-        "                'update'    { $completions = @('koopa', 'system') }",
+        f"                'update'    {{ $completions = @({_ps_array(sorted(flag_map.get('update', [])) + ['koopa', 'system'])}) }}",
         "            }",
         "        }",
         "        2 {",
@@ -1075,10 +1089,13 @@ def generate_completion() -> None:  # noqa: PLR0915
     )
 
     # update
+    update_flags = sorted(flag_map.get("update", []))
+    update_items = update_flags + ["koopa", "system"]
+    update_items_str = " ".join(f"'{x}'" for x in update_items)
     lines.extend(
         _emit_case_entry(
             "'update')",
-            [f"{i5}args+=('koopa' 'system')"],
+            [f"{i5}args+=({update_items_str})"],
             i4,
         )
     )

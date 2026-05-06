@@ -2004,6 +2004,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         if r.name in data and r.latest_version:
             data[r.name]["version"] = r.latest_version
             data[r.name]["date"] = today
+            data[r.name].pop("revision", None)
             count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)

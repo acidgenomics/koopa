@@ -743,7 +743,7 @@ _koopa_complete() {
                     fi
                     ;;
                 'update')
-                    args+=('koopa' 'system')
+                    args+=('--all-system' '--all-user-repos' '--help' '--system' '--user' '--verbose' 'koopa' 'system')
                     ;;
                 *)
                     ;;
