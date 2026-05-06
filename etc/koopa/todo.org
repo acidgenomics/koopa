@@ -13,3 +13,4 @@
 ** DONE Make sure we standardize macOS Tahoe transparency (disable reduce transparency) and Liquid Glass defaults (prefer "Tinted" over "Clear").
 ** TODO We need to gate against `koopa update` support on Intel Macs. Conda not supported. Many apps aren't supported for Intel Macs. We need to guard against this better in koopa update.
 ** TODO Failing to install chezmoi correctly on Intel Mac. Still expecting conda.
+** TODO Review https://github.com/nix-darwin/nix-darwin for useful macOS config.
