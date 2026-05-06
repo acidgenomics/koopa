@@ -1594,6 +1594,7 @@
     "date": "2026-05-02",
     "default": true,
     "description": "cross-platform package and environment manager",
+    "revdep_safe": true,
     "revision": 1,
     "supported": {
       "linux-amd64": true,
@@ -2726,7 +2727,7 @@
       "libxml2"
     ],
     "description": "font configuration and customization library",
-    "src_url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-{version}.tar.xz",
+    "src_url": "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/{version}/fontconfig-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.freedesktop.org/wiki/Software/fontconfig/"
@@ -3208,7 +3209,7 @@
     "url": [
       "https://www.ghostscript.com/"
     ],
-    "version": "10.7.0"
+    "version": "10.07.0"
   },
   "git": {
     "bin": [
@@ -4683,7 +4684,7 @@
     "date": "2026-01-02",
     "default": false,
     "description": "C and C++ library for processing configuration files",
-    "src_url": "https://github.com/hyperrealm/libconfig/releases/download/v{version}/libconfig-{version}.tar.gz",
+    "src_url": "https://github.com/hyperrealm/libconfig/archive/refs/tags/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://hyperrealm.github.io/libconfig/",
@@ -4896,7 +4897,7 @@
       "zlib"
     ],
     "description": "HEIF and HEVC image format library",
-    "src_url": "https://github.com/nicolo-ribaudo/libheif/archive/v{version}.tar.gz",
+    "src_url": "https://github.com/strukturag/libheif/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.libde265.org/",
@@ -4979,7 +4980,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "library for large linear classification",
-    "src_url": "https://github.com/cjlin1/liblinear/archive/refs/tags/v{version}.tar.gz",
+    "src_url": "https://github.com/cjlin1/liblinear/archive/refs/tags/v{version_nodot}.tar.gz",
     "type": "library",
     "url": [
       "https://www.csie.ntu.edu.tw/~cjlin/liblinear/"
@@ -4997,7 +4998,7 @@
       "luajit"
     ],
     "description": "async I/O bindings for Lua used by Neovim",
-    "src_url": "https://github.com/luvit/luv/archive/{version}.tar.gz",
+    "src_url": "https://github.com/luvit/luv/archive/refs/tags/{version}-0.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/luvit/luv/"
@@ -5463,7 +5464,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "just-in-time compiler for Lua",
-    "src_url": "https://github.com/LuaJIT/LuaJIT/archive/refs/tags/v{version}.tar.gz",
+    "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://luajit.org/",
@@ -5894,7 +5895,7 @@
     ],
     "description": "C library for arbitrary-precision complex arithmetic",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/mpc/mpc-{version}.tar.gz",
+    "src_url": "https://ftp.gnu.org/gnu/mpc/mpc-{version}.tar.xz",
     "type": "library",
     "url": [
       "http://www.multiprecision.org/mpc/"
@@ -6478,7 +6479,7 @@
       "zstd"
     ],
     "description": "VBZ compression plugin for Oxford Nanopore data",
-    "src_url": "https://github.com/nanoporetech/vbz_compression/archive/v{version}.tar.gz",
+    "src_url": "https://github.com/nanoporetech/vbz_compression/archive/refs/tags/{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/nanoporetech/vbz_compression/"
@@ -6523,7 +6524,7 @@
       "zstd"
     ],
     "description": "open-source JPEG 2000 codec",
-    "src_url": "https://github.com/uclouvl/openjpeg/archive/v{version}.tar.gz",
+    "src_url": "https://github.com/uclouvain/openjpeg/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.openjpeg.org/"
@@ -9071,7 +9072,7 @@
       "zlib"
     ],
     "description": "library for reading and editing audio file metadata",
-    "src_url": "https://github.com/nicolo-ribaudo/taglib/archive/v{version}.tar.gz",
+    "src_url": "https://github.com/taglib/taglib/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/taglib/taglib/"
@@ -9749,7 +9750,7 @@
     "date": "2023-05-15",
     "default": false,
     "description": "encode and decode WOFF2 web font format",
-    "src_url": "https://github.com/nicolo-ribaudo/woff2/archive/v{version}.tar.gz",
+    "src_url": "https://github.com/google/woff2/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/google/woff2/"
@@ -10181,7 +10182,7 @@
     "date": "2026-02-06",
     "default": false,
     "description": "YAML parser and emitter for C++",
-    "src_url": "https://github.com/jbeder/yaml-cpp/archive/refs/tags/{version}.tar.gz",
+    "src_url": "https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://github.com/jbeder/yaml-cpp/"

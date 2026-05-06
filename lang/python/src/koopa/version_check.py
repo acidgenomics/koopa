@@ -829,7 +829,7 @@ def _check_ghostscript() -> str:
         return f"{major}.{minor}"
     if len(digits) == 5:
         major = digits[:2].lstrip("0") or "0"
-        minor = digits[2:4].lstrip("0") or "0"
+        minor = digits[2:4]
         patch = digits[4:].lstrip("0") or "0"
         return f"{major}.{minor}.{patch}"
     return sanitize_version(digits)

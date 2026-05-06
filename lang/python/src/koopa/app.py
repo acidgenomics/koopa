@@ -178,10 +178,18 @@ def stale_revdeps(names: list) -> list:
     Given a list of app names being installed, returns any currently installed
     apps that have one or more of those names as a runtime dependency. Only
     considers 'dependencies', not 'build_dependencies'.
+
+    Apps marked ``"revdep_safe": true`` in app.json are excluded from the
+    trigger set (e.g. conda — updating it doesn't invalidate installed envs).
     """
     json_data = import_app_json()
     keys = list(json_data.keys())
-    targets = set(names)
+    targets = {
+        n for n in names
+        if not json_data.get(n, {}).get("revdep_safe", False)
+    }
+    if not targets:
+        return []
     installed = set(installed_apps())
     sys_dict = {"os_id": os_id()}
     lst = []
