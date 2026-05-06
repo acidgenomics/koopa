@@ -95,7 +95,7 @@ __koopa_activate_koopa() {
     _koopa_activate_dircolors || return 1
     _koopa_activate_direnv || return 1
     _koopa_activate_docker || return 1
-    _koopa_activate_fzf || return 0
+    _koopa_activate_fzf || true
     _koopa_activate_gcc_colors || return 1
     _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1

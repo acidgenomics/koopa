@@ -10,11 +10,13 @@ _koopa_activate_zsh_plugins() {
             -maxdepth 1 \
             -type 'd' \
         | sort \
-        | xargs basename \
+        | xargs -n1 basename \
     )}")
     for plugin in "${plugins[@]}"
     do
-        source "${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
+        local plugin_file="${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
+        [[ -f "$plugin_file" ]] || continue
+        source "$plugin_file"
     done
     return 0
 }
