@@ -561,6 +561,7 @@ def _handle_mirror_src(args: list[str]) -> None:
     from koopa.io import import_app_json
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
 
+    print("Checking AWS credentials...", file=sys.stderr)
     if not _has_acidgenomics_aws():
         print(
             "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
@@ -571,6 +572,7 @@ def _handle_mirror_src(args: list[str]) -> None:
     if aws is None:
         print("Error: aws CLI is not installed.", file=sys.stderr)
         sys.exit(1)
+    print("Loading app.json...", file=sys.stderr)
     data = import_app_json()
     if args:
         targets = args
@@ -591,21 +593,24 @@ def _handle_mirror_src(args: list[str]) -> None:
     cache = _load_mirror_src_cache()
     now = time.time()
     _cache_ttl = 86400  # 24 hours
+    total = len(targets)
     failures: dict[str, str] = {}
-    for name in targets:
+    for i, name in enumerate(targets, 1):
+        prefix = f"[{i}/{total}]"
         entry = data[name]
         version = entry.get("version", "")
         src_url = entry.get("src_url", "")
         if not version or not src_url:
-            print(f"  Skipping '{name}': missing version or src_url.", file=sys.stderr)
+            print(f"  {prefix} Skipping '{name}': missing version or src_url.", file=sys.stderr)
             continue
         url = _expand_src_url(src_url, version)
         filename = url.rsplit("/", 1)[-1]
         cache_key = f"{name}/{filename}"
         if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
-            print(f"  Already present (cached): {cache_key}", file=sys.stderr)
+            print(f"  {prefix} Already present (cached): {cache_key}", file=sys.stderr)
             continue
         key = f"src/{cache_key}"
+        print(f"  {prefix} Checking: {cache_key}", file=sys.stderr)
         head = subprocess.run(
             [
                 aws,
@@ -624,15 +629,16 @@ def _handle_mirror_src(args: list[str]) -> None:
         if head.returncode == 0:
             cache[cache_key] = now
             _save_mirror_src_cache(cache)
-            print(f"  Already present: {cache_key}", file=sys.stderr)
+            print(f"  {prefix} Already present: {cache_key}", file=sys.stderr)
             continue
         try:
+            print(f"  {prefix} Uploading: {cache_key}", file=sys.stderr)
             _mirror_src_to_s3(name, version, src_url, strict=True)
             cache[cache_key] = now
             _save_mirror_src_cache(cache)
         except Exception as exc:
             failures[name] = str(exc)
-            print(f"  FAILED: {name}: {exc}", file=sys.stderr)
+            print(f"  {prefix} FAILED: {name}: {exc}", file=sys.stderr)
 
     if failures:
         print(
