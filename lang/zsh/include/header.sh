@@ -41,7 +41,8 @@ __koopa_realpath() {
         then
             string="$( \
                 python3 -c \
-                    "import os; print(os.path.realpath('${arg}'))" \
+                    "import os,sys; print(os.path.realpath(sys.argv[1]))" \
+                    "$arg" \
                 2>/dev/null \
                 || true \
             )"
