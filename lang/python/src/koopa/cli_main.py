@@ -38,6 +38,18 @@ def _os_id() -> str:
     return f"linux-{arch}"
 
 
+def _require_supported_platform() -> None:
+    """Abort if running on an unsupported platform (Intel Mac)."""
+    if _os_id() == "macos-amd64":
+        print(
+            "Error: Intel Mac (x86_64) is no longer supported.\n"
+            "koopa requires macOS on Apple Silicon (arm64).\n"
+            "Linux x86_64 remains fully supported.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
 def _exec_restart_with_bootstrap() -> None:
     """Replace the current process with a fresh koopa invocation.
 
@@ -251,6 +263,7 @@ def _resolve_apps_and_mode(
 
 def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
+    _require_supported_platform()
     from koopa.install import (
         _acquire_install_lock,
         _release_install_lock,
@@ -292,6 +305,7 @@ def _handle_install(args: argparse.Namespace) -> None:
 
 def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
+    _require_supported_platform()
     from koopa.app import stale_revdeps
     from koopa.install import _acquire_install_lock, _release_install_lock, install_app
 
@@ -454,6 +468,7 @@ def _configure_user_dotfiles(verbose: bool = False) -> None:
 
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
+    _require_supported_platform()
     from koopa.install import (
         _acquire_install_lock,
         _cleanup_legacy_config,
@@ -544,6 +559,7 @@ def _handle_update(args: argparse.Namespace) -> None:
 
 def _handle_configure(args: argparse.Namespace) -> None:
     """Handle ``koopa configure`` subcommand."""
+    _require_supported_platform()
     from koopa.configure import ConfigureConfig, configure_app
 
     apps = list(args.apps) if args.apps else []
@@ -626,6 +642,7 @@ def _handle_header(_args: argparse.Namespace) -> None:
 
 def _handle_install_all_apps(_args: argparse.Namespace) -> None:
     """Handle ``koopa install-all-apps`` subcommand."""
+    _require_supported_platform()
     from koopa.install import install_all_apps
 
     install_all_apps()
@@ -633,6 +650,7 @@ def _handle_install_all_apps(_args: argparse.Namespace) -> None:
 
 def _handle_install_default_apps(_args: argparse.Namespace) -> None:
     """Handle ``koopa install-default-apps`` subcommand."""
+    _require_supported_platform()
     from koopa.install import install_default_apps
 
     install_default_apps()
