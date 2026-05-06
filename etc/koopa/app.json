@@ -1594,7 +1594,6 @@
     "date": "2026-05-02",
     "default": true,
     "description": "cross-platform package and environment manager",
-    "revdep_safe": true,
     "revision": 1,
     "supported": {
       "linux-amd64": true,

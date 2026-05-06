@@ -179,15 +179,13 @@ def stale_revdeps(names: list) -> list:
     apps that have one or more of those names as a runtime dependency. Only
     considers 'dependencies', not 'build_dependencies'.
 
-    Apps marked ``"revdep_safe": true`` in app.json are excluded from the
-    trigger set (e.g. conda — updating it doesn't invalidate installed envs).
+    A dependency is skipped when its name is a prefix of the dependent app's
+    installer (e.g. "conda" for "conda-package") — those apps are isolated
+    environments that don't need rebuilding when the installer tool updates.
     """
     json_data = import_app_json()
     keys = list(json_data.keys())
-    targets = {
-        n for n in names
-        if not json_data.get(n, {}).get("revdep_safe", False)
-    }
+    targets = set(names)
     if not targets:
         return []
     installed = set(installed_apps())
@@ -203,7 +201,12 @@ def stale_revdeps(names: list) -> list:
             deps = json_data[key]["dependencies"]
             if isinstance(deps, dict):
                 deps = _resolve_dep_dict(deps, sys_dict)
-        if targets.intersection(deps):
+        installer = json_data[key].get("installer", "")
+        triggering = {
+            d for d in deps
+            if d in targets and not installer.startswith(d)
+        }
+        if triggering:
             lst.append(key)
     return lst
 
