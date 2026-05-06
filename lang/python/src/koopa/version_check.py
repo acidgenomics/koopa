@@ -1998,6 +1998,8 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
                 if not src_url:
                     continue
                 _mirror_src_to_s3(r.name, r.latest_version, src_url)
+                for extra_tmpl in data[r.name].get("extra_src_urls", []):
+                    _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
     return count
 
 

@@ -8,7 +8,7 @@
 * Medium complexity
 ** DONE Check that `koopa develop mirror-src` is smart and skips if source file is already present.
 ** DONE `koopa develop mirror-src` needs to do a better job of status tracking. At the beginning of the function call, it looks like the session is hanging.
-** TODO `koopa update` revdep handling is suboptimal currently: 24 reverse dependencies may need rebuilding: aws-cli, btop, chezmoi, delta, difftastic, direnv, du-dust, eza, fd-find, fzf, gh, gitui, jq, mcfly, mdcat, neovim, radian, rclone, ripgrep, shellcheck, starship, tealdeer, zoxide, zsh
+** DONE `koopa update` revdep handling is suboptimal currently: 24 reverse dependencies may need rebuilding: aws-cli, btop, chezmoi, delta, difftastic, direnv, du-dust, eza, fd-find, fzf, gh, gitui, jq, mcfly, mdcat, neovim, radian, rclone, ripgrep, shellcheck, starship, tealdeer, zoxide, zsh
 * Low complexity
 ** DONE Make sure we standardize macOS Tahoe transparency (disable reduce transparency) and Liquid Glass defaults (prefer "Tinted" over "Clear").
 ** TODO We need to gate against `koopa update` support on Intel Macs. Conda not supported. Many apps aren't supported for Intel Macs. We need to guard against this better in koopa update.

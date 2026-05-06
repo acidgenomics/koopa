@@ -639,6 +639,20 @@ def _handle_mirror_src(args: list[str]) -> None:
         except Exception as exc:
             failures[name] = str(exc)
             print(f"  {prefix} FAILED: {name}: {exc}", file=sys.stderr)
+            continue
+        for extra_tmpl in entry.get("extra_src_urls", []):
+            extra_url = _expand_src_url(extra_tmpl, version)
+            extra_filename = extra_url.rsplit("/", 1)[-1]
+            extra_cache_key = f"{name}/{extra_filename}"
+            if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
+                continue
+            try:
+                _mirror_src_to_s3(name, version, extra_tmpl, strict=True)
+                cache[extra_cache_key] = now
+                _save_mirror_src_cache(cache)
+            except Exception as exc:
+                failures[name] = str(exc)
+                print(f"  {prefix} FAILED (extra): {name}/{extra_filename}: {exc}", file=sys.stderr)
 
     if failures:
         print(
@@ -716,6 +730,31 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
         else:
             print(f"  MISS  {name}/{filename}")
             missing.append(name)
+        for extra_tmpl in entry.get("extra_src_urls", []):
+            extra_url = _expand_src_url(extra_tmpl, version)
+            extra_filename = extra_url.rsplit("/", 1)[-1]
+            extra_key = f"src/{name}/{extra_filename}"
+            extra_result = subprocess.run(
+                [
+                    aws,
+                    "s3api",
+                    "head-object",
+                    "--bucket",
+                    bucket,
+                    "--key",
+                    extra_key,
+                    "--profile",
+                    "acidgenomics",
+                ],
+                capture_output=True,
+                check=False,
+            )
+            if extra_result.returncode == 0:
+                print(f"  ok    {name}/{extra_filename}")
+            else:
+                print(f"  MISS  {name}/{extra_filename}")
+                if name not in missing:
+                    missing.append(name)
     if missing:
         print(
             f"\n{len(missing)} app(s) missing from mirror: {', '.join(missing)}",
