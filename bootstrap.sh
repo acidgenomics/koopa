@@ -21,8 +21,15 @@ is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-is_x86_64() {
+is_amd64() {
     [ "$(uname -m)" = 'x86_64' ]
+}
+
+is_arm64() {
+    case "$(uname -m)" in
+        'aarch64' | 'arm64') return 0 ;;
+        *) return 1 ;;
+    esac
 }
 
 cpu_count() {
@@ -275,7 +282,7 @@ DESTDIR=''
 export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
-    if is_macos && is_x86_64; then
+    if is_macos && is_amd64; then
         printf 'Error: Intel Mac (x86_64) is no longer supported.\n' >&2
         printf 'koopa requires macOS on Apple Silicon (arm64).\n' >&2
         return 1

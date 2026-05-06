@@ -29,7 +29,11 @@ def _import_app_json() -> dict[str, Any]:
 
 
 def _os_id() -> str:
-    """Return platform-architecture ID (e.g. 'macos-arm64')."""
+    """Return platform-architecture ID (e.g. 'macos-arm64').
+
+    Mirrors koopa.system.arch2() mapping but avoids importing koopa.*
+    at module level since cli_main.py must work before the venv is ready.
+    """
     machine = platform.machine()
     arch_map = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
     arch = arch_map.get(machine, machine)
