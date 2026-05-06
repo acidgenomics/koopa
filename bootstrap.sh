@@ -21,6 +21,10 @@ is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
+is_x86_64() {
+    [ "$(uname -m)" = 'x86_64' ]
+}
+
 cpu_count() {
     __kvar_num="${KOOPA_CPU_COUNT:-}"
     if [ -n "$__kvar_num" ]
@@ -271,6 +275,11 @@ DESTDIR=''
 export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
+    if is_macos && is_x86_64; then
+        printf 'Error: Intel Mac (x86_64) is no longer supported.\n' >&2
+        printf 'koopa requires macOS on Apple Silicon (arm64).\n' >&2
+        return 1
+    fi
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
     printf 'This will install openssl3, zlib, bzip2, and python.\n'
     __kvar_prefix_parent="$(dirname "$PREFIX")"
