@@ -26,7 +26,7 @@ _koopa() {
         run) _koopa_run ;;
         system) return 0 ;;
         uninstall) _koopa_install ;;
-        update) return 0 ;;
+        update) _koopa_update ;;
         version) return 0 ;;
     esac
 }
@@ -1148,6 +1148,17 @@ _koopa_install() {
         'zstd'
     )
     _describe -t apps 'app name' apps
+}
+
+_koopa_update() {
+    _arguments \
+        '--all-system[--all-system]' \
+        '--all-user-repos[--all-user-repos]' \
+        '--help[--help]' \
+        '--system[--system]' \
+        '--user[--user]' \
+        '--verbose[--verbose]' \
+        '*:app:(koopa system)'
 }
 
 _koopa "$@"
