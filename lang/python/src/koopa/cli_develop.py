@@ -421,9 +421,10 @@ def _handle_check_app_versions(args: list[str]) -> None:
         help="filter by source type (e.g. github, pypi, conda)",
     )
     parser.add_argument(
-        "--update",
+        "--no-update",
         action="store_true",
-        help="update app.json with latest versions",
+        dest="no_update",
+        help="skip updating app.json with latest versions",
     )
     parser.add_argument(
         "--s3-upload",
@@ -449,7 +450,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
         print_json_report(results)
     else:
         print_report(results)
-    if parsed.update:
+    if not parsed.no_update:
         import os
         from pathlib import Path
 

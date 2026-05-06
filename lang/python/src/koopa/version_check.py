@@ -179,6 +179,7 @@ def _http_get_json(
     *,
     github: bool = False,
     timeout: int = 15,
+    _retries: int = 2,
 ) -> Any:  # noqa: ANN401
     limiter = _rate_github if github else _rate_default
     limiter.wait()
@@ -188,16 +189,40 @@ def _http_get_json(
         req.add_header("Accept", "application/vnd.github+json")
         if _github_token:
             req.add_header("Authorization", f"Bearer {_github_token}")
-    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
-        return json.loads(resp.read().decode())
+    last_exc: Exception | None = None
+    for attempt in range(_retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
+                return json.loads(resp.read().decode())
+        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
+            if isinstance(exc, urllib.error.URLError) and not isinstance(
+                exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError)
+            ):
+                raise
+            last_exc = exc
+            if attempt < _retries:
+                time.sleep(1 * (attempt + 1))
+    raise last_exc  # type: ignore[misc]
 
 
-def _http_get_text(url: str, *, timeout: int = 15) -> str:
+def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
-        return resp.read().decode()
+    last_exc: Exception | None = None
+    for attempt in range(_retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
+                return resp.read().decode()
+        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
+            if isinstance(exc, urllib.error.URLError) and not isinstance(
+                exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError)
+            ):
+                raise
+            last_exc = exc
+            if attempt < _retries:
+                time.sleep(1 * (attempt + 1))
+    raise last_exc  # type: ignore[misc]
 
 
 # ── Individual checkers ───────────────────────────────────────────────
@@ -590,15 +615,15 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR091
             if result is not None:
                 return result
             break
+    gh_repo = _extract_github_repo_from_urls(urls)
+    if gh_repo:
+        owner, repo = gh_repo.split("/", 1)
+        return _AppCheckSpec("github", _check_github, (owner, repo))
     if module_path:
         gh_repo = _extract_github_repo_from_installer(module_path)
         if gh_repo:
             owner, repo = gh_repo.split("/", 1)
             return _AppCheckSpec("github", _check_github, (owner, repo))
-    gh_repo = _extract_github_repo_from_urls(urls)
-    if gh_repo:
-        owner, repo = gh_repo.split("/", 1)
-        return _AppCheckSpec("github", _check_github, (owner, repo))
     spec = _classify_by_known_pattern(name, info, module_path, urls)
     if spec:
         return spec
