@@ -219,6 +219,7 @@ install_python() {
     export LDLIBS='-lbz2 -lcrypto -llzma -lssl -lz'
     ./configure \
         --disable-test-modules \
+        --without-ensurepip \
         --prefix="$PREFIX" \
         --with-openssl="${DESTDIR}${PREFIX}"
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
