@@ -82,6 +82,48 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                     (name, f"{name} (revision {installed_rev} != {expected_rev})", True),
                 )
                 continue
+        # Check if any dependency has been revised since this app was installed.
+        info_file = join(path, ".install", "info.json")
+        if isfile(info_file):
+            import json as _json_mod
+
+            try:
+                with open(info_file) as _f:
+                    _info = _json_mod.load(_f)
+            except (ValueError, OSError):
+                _info = {}
+            recorded_dep_revs = _info.get("dep_revisions", {})
+            app_deps = entry.get("dependencies", [])
+            if isinstance(app_deps, dict):
+                from koopa.app import _resolve_dep_dict
+
+                app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
+            stale_dep = False
+            for dep in app_deps:
+                resolved_dep = dep
+                dep_entry = json_data.get(dep, {})
+                if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
+                    resolved_dep = dep_entry["alias_of"]
+                resolved_entry = json_data.get(resolved_dep, {})
+                current_rev = (
+                    int(resolved_entry.get("revision", 0))
+                    if isinstance(resolved_entry, dict)
+                    else 0
+                )
+                recorded_rev = recorded_dep_revs.get(resolved_dep, 0)
+                if current_rev > recorded_rev:
+                    issues.append(
+                        (
+                            name,
+                            f"{name} (dependency {resolved_dep} revised:"
+                            f" {recorded_rev} -> {current_rev})",
+                            True,
+                        ),
+                    )
+                    stale_dep = True
+                    break
+            if stale_dep:
+                continue
         expected_bins = entry.get("bin", [])
         broken_bin = False
         for b in expected_bins:

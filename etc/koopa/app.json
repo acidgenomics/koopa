@@ -7694,6 +7694,7 @@
       "python3.1",
       "python3.14.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
