@@ -202,10 +202,7 @@ def stale_revdeps(names: list) -> list:
             if isinstance(deps, dict):
                 deps = _resolve_dep_dict(deps, sys_dict)
         installer = json_data[key].get("installer", "")
-        triggering = {
-            d for d in deps
-            if d in targets and not installer.startswith(d)
-        }
+        triggering = {d for d in deps if d in targets and not installer.startswith(d)}
         if triggering:
             lst.append(key)
     return lst
