@@ -109,7 +109,7 @@ def styled_prefix(prefix: str) -> str:
 
 def styled_reason(reason: str) -> str:
     """Return magenta-styled reason string."""
-    return f"({_magenta()}reason:{_reset()} {reason})"
+    return f"({_magenta()}{reason}{_reset()})"
 
 
 def alert_install_start(name: str, prefix: str = "", reason: str = "") -> None:
