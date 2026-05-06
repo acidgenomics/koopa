@@ -8,7 +8,8 @@
 set -o errexit
 set -o nounset
 KOOPA_VERBOSE="${KOOPA_VERBOSE:-0}"
-if [ "$KOOPA_VERBOSE" -eq 1 ] 2>/dev/null; then
+if [ "$KOOPA_VERBOSE" -eq 1 ] 2>/dev/null
+then
     set -o xtrace
     _make_verbose='VERBOSE=1'
     _curl_verbose='--verbose'
@@ -27,21 +28,27 @@ is_amd64() {
 
 is_arm64() {
     case "$(uname -m)" in
-        'aarch64' | 'arm64') return 0 ;;
-        *) return 1 ;;
+        'aarch64' | 'arm64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
     esac
 }
 
 has_firewall() {
     __kvar_ssl_cert="${SSL_CERT_FILE:-}"
-    if [ -z "$__kvar_ssl_cert" ]; then
+    if [ -z "$__kvar_ssl_cert" ]
+    then
         unset -v __kvar_ssl_cert
         return 1
     fi
     case "$__kvar_ssl_cert" in
         "${KOOPA_PREFIX}/"*)
             unset -v __kvar_ssl_cert
-            return 1 ;;
+            return 1
+            ;;
     esac
     unset -v __kvar_ssl_cert
     return 0
@@ -111,8 +118,10 @@ cpu_count() {
 download_with_fallback() {
     # usage: download_with_fallback <name> <dirname> <url> [url...]
     # Tries each URL in order. Validates each with 'tar -tf' before extracting.
-    __dwf_name="${1:?}"; shift
-    __dwf_dirname="${1:?}"; shift
+    __dwf_name="${1:?}"
+    shift 1
+    __dwf_dirname="${1:?}"
+    shift 1
     __dwf_src_dir="${DESTDIR}${PREFIX}/src/${__dwf_name}"
     rm -fr "$__dwf_src_dir"
     mkdir -p "$__dwf_src_dir"
@@ -217,7 +226,8 @@ install_python() {
     unset -v LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
-    if is_macos; then
+    if is_macos
+    then
         DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
             "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2, hashlib, lzma, ssl, zlib'
@@ -266,7 +276,7 @@ install_bzip2() {
 }
 
 install_xz() {
-    __kvar_version='5.8.1'
+    __kvar_version='5.8.3'
     printf 'Installing xz.\n'
     __kvar_filename="xz-${__kvar_version}.tar.gz"
     download_with_fallback \
@@ -312,11 +322,14 @@ install_python_uv() {
     __kvar_python_version='3.12.13'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
-    if is_macos && is_arm64; then
+    if is_macos && is_arm64
+    then
         __kvar_platform='aarch64-apple-darwin'
-    elif is_arm64; then
+    elif is_arm64
+    then
         __kvar_platform='aarch64-unknown-linux-gnu'
-    elif is_amd64; then
+    elif is_amd64
+    then
         __kvar_platform='x86_64-unknown-linux-gnu'
     else
         printf 'Unsupported platform for uv.\n' >&2
@@ -341,7 +354,8 @@ install_python_uv() {
     fi
     tar -xf "${__kvar_tmpdir}/uv.tar.gz" -C "$__kvar_tmpdir"
     __kvar_uv="${__kvar_tmpdir}/uv-${__kvar_platform}/uv"
-    if [ ! -x "$__kvar_uv" ]; then
+    if [ ! -x "$__kvar_uv" ]
+    then
         printf 'uv binary not found after extraction.\n' >&2
         rm -fr "$__kvar_tmpdir"
         unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
@@ -362,7 +376,8 @@ install_python_uv() {
         return 1
     fi
     __kvar_cpython_subdir="$(find "$__kvar_cpython_dir" -mindepth 1 -maxdepth 1 -type d | head -1)"
-    if [ -z "$__kvar_cpython_subdir" ]; then
+    if [ -z "$__kvar_cpython_subdir" ]
+    then
         printf 'No cpython directory found after install.\n' >&2
         rm -fr "$__kvar_tmpdir"
         unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
@@ -371,14 +386,16 @@ install_python_uv() {
     __kvar_target="${DESTDIR}${PREFIX}"
     mkdir -p "$__kvar_target"
     cp -R "$__kvar_cpython_subdir"/. "$__kvar_target"/
-    if [ ! -x "${__kvar_target}/bin/python3" ]; then
+    if [ ! -x "${__kvar_target}/bin/python3" ]
+    then
         printf 'python3 binary not found after copy.\n' >&2
         rm -fr "$__kvar_tmpdir"
         unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_target __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
         return 1
     fi
     printf 'Checking python module integrity.\n'
-    if ! "${__kvar_target}/bin/python3" -c 'import bz2, hashlib, lzma, ssl, zlib'; then
+    if ! "${__kvar_target}/bin/python3" -c 'import bz2, hashlib, lzma, ssl, zlib'
+    then
         printf 'Python module integrity check failed.\n' >&2
         rm -fr "$__kvar_tmpdir"
         unset -v __kvar_cpython_dir __kvar_cpython_subdir __kvar_platform __kvar_python_version __kvar_target __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
@@ -404,7 +421,8 @@ DESTDIR=''
 export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
-    if is_macos && is_amd64; then
+    if is_macos && is_amd64
+    then
         printf 'Error: Intel Mac (x86_64) is no longer supported.\n' >&2
         printf 'koopa requires macOS on Apple Silicon (arm64).\n' >&2
         return 1
@@ -422,7 +440,8 @@ main() {
     unset -v __kvar_prefix_parent
     rm -fr "$__kvar_destdir"
     __kvar_build_ok=0
-    if ! has_firewall; then
+    if ! has_firewall
+    then
         if (
             DESTDIR="$__kvar_destdir"
             export DESTDIR
@@ -436,7 +455,8 @@ main() {
             mkdir -p "$__kvar_destdir"
         fi
     fi
-    if [ "$__kvar_build_ok" -eq 0 ]; then
+    if [ "$__kvar_build_ok" -eq 0 ]
+    then
         printf 'Building from source: openssl3, zlib, bzip2, xz, python.\n'
         if ! (
             DESTDIR="$__kvar_destdir"
@@ -445,7 +465,8 @@ main() {
             mkdir -p "$__kvar_staged"
             export CPPFLAGS="-I${__kvar_staged:?}/include"
             export LDFLAGS="-L${__kvar_staged:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
-            if ! is_macos; then
+            if ! is_macos
+            then
                 export LD_LIBRARY_PATH="${__kvar_staged:?}/lib"
             fi
             export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
