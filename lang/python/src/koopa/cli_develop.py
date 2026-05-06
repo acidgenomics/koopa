@@ -875,23 +875,25 @@ def _handle_bump_revision(args: list[str]) -> None:
     export_app_json(data)
 
 
-def _handle_bump_venv_revision(_: list[str]) -> None:
-    """Handle ``koopa develop bump-venv-revision``.
+def _handle_bump_venv_version(_: list[str]) -> None:
+    """Handle ``koopa develop bump-venv-version``.
 
-    Increments the venv revision counter in etc/koopa/venv-revision.txt.
+    Stamps a new venv version in etc/koopa/venv-version.txt.
     This marks the .venv as stale so ``koopa update`` will reinstall it.
     """
+    import time
+
     from koopa.os import koopa_prefix
 
-    revision_file = os.path.join(koopa_prefix(), "etc", "koopa", "venv-revision.txt")
-    current = 0
-    if os.path.isfile(revision_file):
-        with open(revision_file) as f:
-            current = int(f.read().strip() or "0")
-    new = current + 1
-    with open(revision_file, "w") as f:
+    version_file = os.path.join(koopa_prefix(), "etc", "koopa", "venv-version.txt")
+    current = ""
+    if os.path.isfile(version_file):
+        with open(version_file) as f:
+            current = f.read().strip()
+    new = time.strftime("%Y.%m.%d.%H%M")
+    with open(version_file, "w") as f:
         f.write(f"{new}\n")
-    print(f"  venv-revision: {current} -> {new}")
+    print(f"  venv-version: {current} -> {new}")
 
 
 def _handle_bump_bootstrap(_: list[str]) -> None:
@@ -992,7 +994,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "remove-app": _handle_remove_app,
     "bump-bootstrap": _handle_bump_bootstrap,
     "bump-revision": _handle_bump_revision,
-    "bump-venv-revision": _handle_bump_venv_revision,
+    "bump-venv-version": _handle_bump_venv_version,
     "find-ignored-bin-files": _handle_find_ignored_bin_files,
 }
 

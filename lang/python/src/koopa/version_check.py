@@ -1986,6 +1986,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             f"Updated {bootstrap_count} versions in bootstrap.sh.",
             file=sys.stderr,
         )
+    update_venv_version(outdated)
     if s3_upload:
         if not _has_acidgenomics_aws():
             print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
@@ -2046,3 +2047,14 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
         version_path.write_text(today + "\n")
         print(f"  bootstrap version: {today}", file=sys.stderr)
     return count
+
+
+def update_venv_version(outdated: list[VersionCheckResult]) -> None:
+    """Bump venv-version.txt if any PyPI package versions changed."""
+    pypi_changes = [r for r in outdated if r.source == "pypi"]
+    if not pypi_changes:
+        return
+    version_path = Path(koopa_prefix()) / "etc" / "koopa" / "venv-version.txt"
+    today = time.strftime("%Y.%m.%d.%H%M")
+    version_path.write_text(today + "\n")
+    print(f"  venv-version: {today}", file=sys.stderr)
