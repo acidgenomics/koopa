@@ -83,7 +83,10 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                 )
                 continue
         # Check if any dependency has been revised since this app was installed.
+        # Skip isolated environments (e.g. conda-package apps) where the
+        # installer tool updating doesn't break the installed app.
         info_file = join(path, ".install", "info.json")
+        installer = entry.get("installer", "")
         if isfile(info_file):
             import json as _json_mod
 
@@ -100,6 +103,8 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                 app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
             stale_dep = False
             for dep in app_deps:
+                if installer.startswith(dep):
+                    continue
                 resolved_dep = dep
                 dep_entry = json_data.get(dep, {})
                 if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
