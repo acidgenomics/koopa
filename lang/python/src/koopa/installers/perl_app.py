@@ -6,7 +6,6 @@ import sys
 
 from koopa.build import activate_app, locate
 from koopa.installers._build_helper import download_extract_cd
-from koopa.version import major_version
 
 
 def main(
@@ -27,7 +26,6 @@ def main(
     sysman = os.path.join(prefix, "share", "man", "man1")
     os.makedirs(man1dir, exist_ok=True)
     os.makedirs(man3dir, exist_ok=True)
-    src_maj_min_ver = f"{major_version(version)}.0"
     download_extract_cd()
     subprocess_env = env.to_env_dict()
     conf_args = [

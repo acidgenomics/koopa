@@ -551,6 +551,121 @@ def _generate_fish_completion(
 # ---------------------------------------------------------------------------
 
 
+def _zsh_app_namespace_completions(
+    app_tree: dict[str, Any],
+    lines: list[str],
+) -> None:
+    """Generate per-namespace sub-dispatchers for zsh completion."""
+    for ns, val in sorted(app_tree.items()):
+        if not isinstance(val, dict):
+            continue
+        fn = ns.replace("-", "_")
+        sub_cmds = sorted(val.keys())
+        has_deep = any(isinstance(val[s], dict) for s in sub_cmds)
+
+        if has_deep:
+            lines += [
+                f"_koopa_app_{fn}() {{",
+                "    local context state line",
+                "    typeset -A opt_args",
+                "    _arguments -C \\",
+                f"        '1: :_koopa_app_{fn}_cmds' \\",
+                "        '*:: :->subcmd'",
+                "    [[ $state == subcmd ]] || return 0",
+                "    case $words[1] in",
+            ]
+            for sub in sub_cmds:
+                sub_fn = sub.replace("-", "_")
+                if isinstance(val[sub], dict):
+                    lines.append(f"        {sub}) _koopa_app_{fn}_{sub_fn} ;;")
+                else:
+                    lines.append(f"        {sub}) return 0 ;;")
+            lines += ["    esac", "}", ""]
+        else:
+            lines += [
+                f"_koopa_app_{fn}() {{",
+                "    local -a cmds",
+                "    cmds=(",
+            ]
+            for sub in sub_cmds:
+                lines.append(f"        '{sub}'")
+            lines += [
+                "    )",
+                f"    _describe -t commands '{ns} command' cmds",
+                "}",
+                "",
+            ]
+
+        if has_deep:
+            lines += [f"_koopa_app_{fn}_cmds() {{", "    local -a cmds", "    cmds=("]
+            for sub in sub_cmds:
+                lines.append(f"        '{sub}'")
+            lines += [
+                "    )",
+                f"    _describe -t commands '{ns} command' cmds",
+                "}",
+                "",
+            ]
+
+        for sub, sub_val in sorted(val.items()):
+            if not isinstance(sub_val, dict):
+                continue
+            sub_fn = str(sub).replace("-", "_")
+            leaves = sorted(sub_val.keys())
+            lines += [
+                f"_koopa_app_{fn}_{sub_fn}() {{",
+                "    local -a cmds",
+                "    cmds=(",
+            ]
+            for leaf in leaves:
+                lines.append(f"        '{leaf}'")
+            lines += [
+                "    )",
+                f"    _describe -t commands '{ns} {sub} command' cmds",
+                "}",
+                "",
+            ]
+
+
+def _zsh_subcmd_completion(
+    subcmd: str,
+    cmds: list[str],
+    flag_map: dict[str, list[str]],
+    lines: list[str],
+) -> None:
+    """Generate zsh completion for a subcommand group (develop/run)."""
+    flags = {k.split("/", 1)[1]: v for k, v in flag_map.items() if k.startswith(f"{subcmd}/")}
+    if flags:
+        lines += [
+            f"_koopa_{subcmd}() {{",
+            "    local context state line",
+            "    typeset -A opt_args",
+            "    _arguments -C \\",
+            f"        '1: :_koopa_{subcmd}_cmds' \\",
+            "        '*:: :->subcmd'",
+            "    [[ $state == subcmd ]] || return 0",
+            "    case $words[1] in",
+        ]
+        for cmd in sorted(flags):
+            flags_str = " ".join(f"'*{f}[{f}]'" for f in sorted(flags[cmd]))
+            lines.append(f"        {cmd}) _arguments {flags_str} ;;")
+        lines += ["    esac", "}", ""]
+        lines += [f"_koopa_{subcmd}_cmds() {{", "    local -a cmds", "    cmds=("]
+        for cmd in cmds:
+            lines.append(f"        '{cmd}'")
+        lines += [
+            "    )",
+            f"    _describe -t commands '{subcmd} command' cmds",
+            "}",
+            "",
+        ]
+    else:
+        lines += [f"_koopa_{subcmd}() {{", "    local -a cmds", "    cmds=("]
+        for cmd in cmds:
+            lines.append(f"        '{cmd}'")
+        lines += ["    )", f"    _describe -t commands '{subcmd} command' cmds", "}", ""]
+
+
 def _generate_zsh_completion(
     app_tree: dict[str, Any],
     develop_cmds: list[str],
@@ -633,143 +748,14 @@ def _generate_zsh_completion(
     lines += ["    )", "    _describe -t commands 'app command' cmds", "}", ""]
 
     # -- per-namespace sub-dispatchers ----------------------------------------
-    for ns, val in sorted(app_tree.items()):
-        if not isinstance(val, dict):
-            continue
-        fn = ns.replace("-", "_")
-        sub_cmds = sorted(val.keys())
-        # check if any sub has its own dict children
-        has_deep = any(isinstance(val[s], dict) for s in sub_cmds)
-
-        if has_deep:
-            lines += [
-                f"_koopa_app_{fn}() {{",
-                "    local context state line",
-                "    typeset -A opt_args",
-                "    _arguments -C \\",
-                f"        '1: :_koopa_app_{fn}_cmds' \\",
-                "        '*:: :->subcmd'",
-                "    [[ $state == subcmd ]] || return 0",
-                "    case $words[1] in",
-            ]
-            for sub in sub_cmds:
-                sub_fn = sub.replace("-", "_")
-                if isinstance(val[sub], dict):
-                    lines.append(f"        {sub}) _koopa_app_{fn}_{sub_fn} ;;")
-                else:
-                    lines.append(f"        {sub}) return 0 ;;")
-            lines += ["    esac", "}", ""]
-        else:
-            lines += [
-                f"_koopa_app_{fn}() {{",
-                "    local -a cmds",
-                "    cmds=(",
-            ]
-            for sub in sub_cmds:
-                lines.append(f"        '{sub}'")
-            lines += [
-                "    )",
-                f"    _describe -t commands '{ns} command' cmds",
-                "}",
-                "",
-            ]
-
-        # sub-namespace list function (only needed when has_deep)
-        if has_deep:
-            lines += [f"_koopa_app_{fn}_cmds() {{", "    local -a cmds", "    cmds=("]
-            for sub in sub_cmds:
-                lines.append(f"        '{sub}'")
-            lines += [
-                "    )",
-                f"    _describe -t commands '{ns} command' cmds",
-                "}",
-                "",
-            ]
-
-        # leaf functions for deep sub-namespaces
-        for sub, sub_val in sorted(val.items()):
-            if not isinstance(sub_val, dict):
-                continue
-            sub_fn = str(sub).replace("-", "_")
-            leaves = sorted(sub_val.keys())
-            lines += [
-                f"_koopa_app_{fn}_{sub_fn}() {{",
-                "    local -a cmds",
-                "    cmds=(",
-            ]
-            for leaf in leaves:
-                lines.append(f"        '{leaf}'")
-            lines += [
-                "    )",
-                f"    _describe -t commands '{ns} {sub} command' cmds",
-                "}",
-                "",
-            ]
+    _zsh_app_namespace_completions(app_tree, lines)
 
     # -- develop --------------------------------------------------------------
-    dev_flags = {k.split("/", 1)[1]: v for k, v in flag_map.items() if k.startswith("develop/")}
-    if dev_flags:
-        lines += [
-            "_koopa_develop() {",
-            "    local context state line",
-            "    typeset -A opt_args",
-            "    _arguments -C \\",
-            "        '1: :_koopa_develop_cmds' \\",
-            "        '*:: :->subcmd'",
-            "    [[ $state == subcmd ]] || return 0",
-            "    case $words[1] in",
-        ]
-        for cmd in sorted(dev_flags):
-            flags_str = " ".join(f"'*{f}[{f}]'" for f in sorted(dev_flags[cmd]))
-            lines.append(f"        {cmd}) _arguments {flags_str} ;;")
-        lines += ["    esac", "}", ""]
-        lines += ["_koopa_develop_cmds() {", "    local -a cmds", "    cmds=("]
-        for cmd in develop_cmds:
-            lines.append(f"        '{cmd}'")
-        lines += [
-            "    )",
-            "    _describe -t commands 'develop command' cmds",
-            "}",
-            "",
-        ]
-    else:
-        lines += ["_koopa_develop() {", "    local -a cmds", "    cmds=("]
-        for cmd in develop_cmds:
-            lines.append(f"        '{cmd}'")
-        lines += ["    )", "    _describe -t commands 'develop command' cmds", "}", ""]
+    _zsh_subcmd_completion("develop", develop_cmds, flag_map, lines)
 
     # -- run ------------------------------------------------------------------
     run_cmds = _load_run_commands()
-    run_flags = {k.split("/", 1)[1]: v for k, v in flag_map.items() if k.startswith("run/")}
-    if run_flags:
-        lines += [
-            "_koopa_run() {",
-            "    local context state line",
-            "    typeset -A opt_args",
-            "    _arguments -C \\",
-            "        '1: :_koopa_run_cmds' \\",
-            "        '*:: :->subcmd'",
-            "    [[ $state == subcmd ]] || return 0",
-            "    case $words[1] in",
-        ]
-        for cmd in sorted(run_flags):
-            flags_str = " ".join(f"'*{f}[{f}]'" for f in sorted(run_flags[cmd]))
-            lines.append(f"        {cmd}) _arguments {flags_str} ;;")
-        lines += ["    esac", "}", ""]
-        lines += ["_koopa_run_cmds() {", "    local -a cmds", "    cmds=("]
-        for cmd in run_cmds:
-            lines.append(f"        '{cmd}'")
-        lines += [
-            "    )",
-            "    _describe -t commands 'run command' cmds",
-            "}",
-            "",
-        ]
-    else:
-        lines += ["_koopa_run() {", "    local -a cmds", "    cmds=("]
-        for cmd in run_cmds:
-            lines.append(f"        '{cmd}'")
-        lines += ["    )", "    _describe -t commands 'run command' cmds", "}", ""]
+    _zsh_subcmd_completion("run", run_cmds, flag_map, lines)
 
     # -- install/reinstall/uninstall ------------------------------------------
     lines += ["_koopa_install() {", "    local -a apps", "    apps=("]
