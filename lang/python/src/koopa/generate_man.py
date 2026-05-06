@@ -63,7 +63,7 @@ _SYSTEM_SYNOPSIS: dict[str, str] = {
 _DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "audit-src-mirror": "Audit S3 source mirror for missing or stale tarballs.",
     "bump-revision": "Bump the revision of one or more apps in app.json.",
-    "bump-venv-revision": "Bump the Python venv revision.",
+    "bump-venv-version": "Bump the Python venv version.",
     "cache-functions": "Regenerate the cached Bash function library.",
     "check-app-versions": "Check upstream versions for all apps in app.json.",
     "circular-dependencies": "Detect circular dependency chains in app.json.",
