@@ -288,8 +288,8 @@ install_xz() {
     unset -v __kvar_filename
     ./configure \
         --disable-dependency-tracking \
-        --disable-docs \
         --disable-nls \
+        --disable-shared \
         --prefix="$PREFIX"
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
@@ -427,7 +427,6 @@ main() {
         printf 'koopa requires macOS on Apple Silicon (arm64).\n' >&2
         return 1
     fi
-    printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
     __kvar_prefix_parent="$(dirname "$PREFIX")"
     if [ -w "$__kvar_prefix_parent" ]
     then
