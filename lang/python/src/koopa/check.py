@@ -328,7 +328,6 @@ def check_bootstrap_version() -> bool:
     with open(installed_version_file) as fh:
         installed_version = fh.read().strip()
     if installed_version != expected_version:
-        print(f"Bootstrap is out of date ({installed_version} != {expected_version})")
         return False
     return True
 
