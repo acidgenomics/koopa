@@ -1027,69 +1027,6 @@ _koopa_alias_kbs() {
     return 0
 }
 
-_koopa_alias_kdev() {
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
-    __kvar_bash="${__kvar_bin_prefix}/bash"
-    __kvar_env="${__kvar_bin_prefix}/genv"
-    if [ ! -x "$__kvar_bash" ]
-    then
-        if _koopa_is_linux
-        then
-            __kvar_bash='/bin/bash'
-        elif _koopa_is_macos
-        then
-            __kvar_bash="$(_koopa_bootstrap_prefix)/bin/bash"
-        fi
-    fi
-    if [ ! -x "$__kvar_bash" ]
-    then
-        __koopa_print 'Failed to locate bash.'
-        return 1
-    fi
-    if [ ! -x "$__kvar_env" ]
-    then
-        __kvar_env='/usr/bin/env'
-    fi
-    if [ ! -x "$__kvar_env" ]
-    then
-        __koopa_print 'Failed to locate env.'
-        return 1
-    fi
-    __kvar_rcfile="${__kvar_koopa_prefix}/lang/bash/include/header.sh"
-    [ -f "$__kvar_rcfile" ] || return 1
-    "$__kvar_env" -i \
-        AWS_CLOUDFRONT_DISTRIBUTION_ID="${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" \
-        HOME="${HOME:?}" \
-        HTTP_PROXY="${HTTP_PROXY:-}" \
-        HTTPS_PROXY="${HTTPS_PROXY:-}" \
-        KOOPA_ACTIVATE=0 \
-        KOOPA_BUILDER="${KOOPA_BUILDER:-0}" \
-        KOOPA_CAN_INSTALL_BINARY="${KOOPA_CAN_INSTALL_BINARY:-}" \
-        LANG='C' \
-        LC_ALL='C' \
-        PATH="${PATH:?}" \
-        SUDO_PS1="${SUDO_PS1:-}" \
-        SUDO_USER="${SUDO_USER:-}" \
-        TMPDIR="${TMPDIR:-/tmp}" \
-        http_proxy="${http_proxy:-}" \
-        https_proxy="${https_proxy:-}" \
-        "$__kvar_bash" \
-            --noprofile \
-            --rcfile "$__kvar_rcfile" \
-            -o errexit \
-            -o errtrace \
-            -o nounset \
-            -o pipefail
-    unset -v \
-        __kvar_bash \
-        __kvar_bin_prefix \
-        __kvar_env \
-        __kvar_koopa_prefix \
-        __kvar_rcfile
-    return 0
-}
-
 _koopa_alias_l() {
     if [ -x "$(_koopa_bin_prefix)/eza" ]
     then
@@ -1556,40 +1493,40 @@ _koopa_print() {
 }
 
 _koopa_realpath() {
-    for __kvar_arg in "$@"
+    for _kvar_rp_arg in "$@"
     do
-        __kvar_string="$( \
-            readlink -f "$__kvar_arg" \
+        _kvar_rp_string="$( \
+            readlink -f "$_kvar_rp_arg" \
             2>/dev/null \
             || true \
         )"
-        if [ -z "$__kvar_string" ]
+        if [ -z "$_kvar_rp_string" ]
         then
-            __kvar_string="$( \
+            _kvar_rp_string="$( \
                 perl -MCwd -le \
                     'print Cwd::abs_path shift' \
-                    "$__kvar_arg" \
+                    "$_kvar_rp_arg" \
                 2>/dev/null \
                 || true \
             )"
         fi
-        if [ -z "$__kvar_string" ]
+        if [ -z "$_kvar_rp_string" ]
         then
-            __kvar_string="$( \
+            _kvar_rp_string="$( \
                 python3 -c \
-                    "import os; print(os.path.realpath('${__kvar_arg}'))" \
+                    "import os; print(os.path.realpath('${_kvar_rp_arg}'))" \
                 2>/dev/null \
                 || true \
             )"
         fi
-        if [ -z "$__kvar_string" ]
+        if [ -z "$_kvar_rp_string" ]
         then
-            unset -v __kvar_arg _kvar_string
+            unset -v _kvar_rp_arg _kvar_string
             return 1
         fi
-        __koopa_print "$__kvar_string"
+        __koopa_print "$_kvar_rp_string"
     done
-    unset -v __kvar_arg __kvar_string
+    unset -v _kvar_rp_arg _kvar_rp_string
     return 0
 }
 
@@ -1772,6 +1709,17 @@ _koopa_export_pager() {
 
 _koopa_is_alacritty() {
     [ -n "${ALACRITTY_SOCKET:-}" ]
+}
+
+_koopa_is_amd64() {
+    [ "$(uname -m)" = 'x86_64' ]
+}
+
+_koopa_is_arm64() {
+    case "$(uname -m)" in
+        'aarch64' | 'arm64') return 0 ;;
+        *) return 1 ;;
+    esac
 }
 
 _koopa_is_aws_ec2() {
