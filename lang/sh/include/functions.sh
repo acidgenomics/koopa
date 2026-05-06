@@ -1073,16 +1073,16 @@ _koopa_alias_today() {
 _koopa_alias_venv() {
     if [ -f '.venv/bin/activate' ]
     then
-        source '.venv/bin/activate'
+        . '.venv/bin/activate'
     elif [ -f "venv/bin/activate" ]
     then
-        source "venv/bin/activate"
+        . "venv/bin/activate"
     elif [ -f "${HOME}/.venv/bin/activate" ]
     then
-        source "${HOME}/.venv/bin/activate"
+        . "${HOME}/.venv/bin/activate"
     elif [ -f "${HOME}/venv/bin/activate" ]
     then
-        source "${HOME}/venv/bin/activate"
+        . "${HOME}/venv/bin/activate"
     else
         _koopa_print 'Failed to locate Python virtual environment.'
         return 1
@@ -1514,14 +1514,15 @@ _koopa_realpath() {
         then
             _kvar_rp_string="$( \
                 python3 -c \
-                    "import os; print(os.path.realpath('${_kvar_rp_arg}'))" \
+                    "import os,sys; print(os.path.realpath(sys.argv[1]))" \
+                    "$_kvar_rp_arg" \
                 2>/dev/null \
                 || true \
             )"
         fi
         if [ -z "$_kvar_rp_string" ]
         then
-            unset -v _kvar_rp_arg _kvar_string
+            unset -v _kvar_rp_arg _kvar_rp_string
             return 1
         fi
         __koopa_print "$_kvar_rp_string"
@@ -1535,10 +1536,18 @@ _koopa_remove_from_path_string() {
     __kvar_dir="${2:?}"
     __kvar_str2="$( \
         _koopa_print "$__kvar_str1" \
-            | sed \
-                -e "s|^${__kvar_dir}:||g" \
-                -e "s|:${__kvar_dir}:|:|g" \
-                -e "s|:${__kvar_dir}\$||g" \
+            | awk -v d="$__kvar_dir" \
+                'BEGIN { FS=":"; OFS=":" }
+                {
+                    n=0
+                    for (i=1; i<=NF; i++) {
+                        if ($i != d) {
+                            if (n++) printf "%s", OFS
+                            printf "%s", $i
+                        }
+                    }
+                    printf "\n"
+                }' \
         )"
     [ -n "$__kvar_str2" ] || return 1
     _koopa_print "$__kvar_str2"
