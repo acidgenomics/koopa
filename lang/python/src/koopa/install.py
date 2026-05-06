@@ -2097,9 +2097,7 @@ def update_koopa(*, verbose: bool = False) -> None:
         warn(f"Failed to update koopa source code: {e}")
         return
     stdout = (result.stdout or "").strip() if result else ""
-    if "Already up to date" in stdout:
-        alert_note("koopa source code is already up to date.")
-    elif stdout:
+    if stdout and "Already up to date" not in stdout:
         print(stdout, file=sys.stderr)
     _zsh_compaudit_set_permissions()
 
@@ -2263,7 +2261,7 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
 
     Returns True if bootstrap was rebuilt, False if already current.
     """
-    from koopa.alert import alert
+    from koopa.alert import alert, styled_name, styled_prefix
     from koopa.check import check_bootstrap_version
     from koopa.prefix import bootstrap_prefix, koopa_prefix
 
@@ -2311,12 +2309,15 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
                 return False
         else:
             return False
-    alert("Updating bootstrap.")
+    with open(os.path.join(koopa_prefix(), "etc", "koopa", "bootstrap-version.txt")) as _vf:
+        expected_ver = _vf.read().strip()
+    alert(f"Updating {styled_name('bootstrap')} in {styled_prefix(bp)} ({expected_ver}).")
     config = InstallConfig(
         name="bootstrap",
         mode="user",
         reinstall=True,
         verbose=verbose,
+        quiet=True,
     )
     install_app(config)
     return True
