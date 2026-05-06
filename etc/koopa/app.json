@@ -3243,6 +3243,10 @@
     ],
     "description": "distributed version control system",
     "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
+    "extra_src_urls": [
+      "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
+      "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
+    ],
     "type": "build_tool",
     "url": [
       "https://git-scm.com/"
@@ -9133,6 +9137,9 @@
     ],
     "description": "Tcl/Tk scripting language and GUI toolkit",
     "src_url": "https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download",
+    "extra_src_urls": [
+      "https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
+    ],
     "type": "library",
     "url": [
       "https://www.tcl-lang.org/"

@@ -8,7 +8,7 @@ from koopa.archive import extract
 from koopa.build import activate_app, locate
 from koopa.download import download_with_mirror
 from koopa.file_ops import ln
-from koopa.installers._build_helper import _resolve_src_url
+from koopa.installers._build_helper import _resolve_extra_src_urls, _resolve_src_url
 from koopa.version import major_minor_version
 
 
@@ -42,7 +42,8 @@ def main(
     tcl_tarball = download_with_mirror(
         tcl_url, name, f"tcl{version}-src.tar.gz"
     )
-    tk_url = f"https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
+    extra_urls = _resolve_extra_src_urls(name, version)
+    tk_url = extra_urls[0]
     tk_tarball = download_with_mirror(
         tk_url, name, f"tk{version}-src.tar.gz"
     )
