@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="sdkName" value="system" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 virtualenv at ~/.local/share/koopa/.venv" project-jdk-type="Python SDK" />
   <component name="RSettings">
     <option name="interpreterPath" value="/Library/Frameworks/R.framework/Versions/Current/Resources/bin/R" />
   </component>
