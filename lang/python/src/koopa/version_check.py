@@ -189,7 +189,7 @@ def _http_get_json(
         req.add_header("Accept", "application/vnd.github+json")
         if _github_token:
             req.add_header("Authorization", f"Bearer {_github_token}")
-    last_exc: Exception | None = None
+    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | None = None
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
@@ -202,14 +202,15 @@ def _http_get_json(
             last_exc = exc
             if attempt < _retries:
                 time.sleep(1 * (attempt + 1))
-    raise last_exc  # type: ignore[misc]
+    assert last_exc is not None
+    raise last_exc
 
 
 def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    last_exc: Exception | None = None
+    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | None = None
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
@@ -222,7 +223,8 @@ def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
             last_exc = exc
             if attempt < _retries:
                 time.sleep(1 * (attempt + 1))
-    raise last_exc  # type: ignore[misc]
+    assert last_exc is not None
+    raise last_exc
 
 
 # ── Individual checkers ───────────────────────────────────────────────

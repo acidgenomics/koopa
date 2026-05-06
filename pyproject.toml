@@ -65,8 +65,13 @@ checks = [
 override_SS05 = ['^Access ', '^Assess ', '^Process ']
 
 [tool.pyright]
+pythonVersion = "3.12"
 verboseOutput = true
-extraPaths = ["app/pytest/9.0.3/libexec/lib/python3.12/site-packages"]
+extraPaths = [
+  "lang/python/src",
+  "opt/pytest/libexec/lib/python3.12/site-packages",
+]
+reportMissingImports = "warning"
 
 [tool.ruff]
 indent-width = 4
@@ -147,8 +152,8 @@ max-statements = 100
 [tool.setuptools.packages.find]
 where = ["lang/python/src"]
 
+[tool.ty.environment]
+extra-paths = ["opt/pytest/libexec/lib/python3.12/site-packages"]
+
 [tool.ty.terminal]
 error-on-warning = true
-
-[tool.ty.environment]
-extra-paths = ["app/pytest/9.0.3/libexec/lib/python3.12/site-packages"]

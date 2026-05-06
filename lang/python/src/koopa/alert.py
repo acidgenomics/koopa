@@ -98,14 +98,17 @@ def alert_coffee_time() -> None:
 
 
 def styled_name(name: str) -> str:
+    """Return bold-styled name string."""
     return f"{_bold()}{name}{_reset()}"
 
 
 def styled_prefix(prefix: str) -> str:
+    """Return cyan-styled prefix string."""
     return f"'{_cyan()}{prefix}{_reset()}'"
 
 
 def styled_reason(reason: str) -> str:
+    """Return magenta-styled reason string."""
     return f"({_magenta()}reason:{_reset()} {reason})"
 
 

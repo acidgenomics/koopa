@@ -126,10 +126,7 @@ def _extract_to(path: str, target: str) -> None:
             ".txz",
             ".tar",
         )
-    ):
-        with tarfile.open(path) as tf:
-            tf.extractall(path=target)
-    elif tarfile.is_tarfile(path):
+    ) or tarfile.is_tarfile(path):
         with tarfile.open(path) as tf:
             tf.extractall(path=target)
     elif zipfile.is_zipfile(path):

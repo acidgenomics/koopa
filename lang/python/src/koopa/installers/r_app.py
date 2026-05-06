@@ -7,7 +7,6 @@ import sys
 
 from koopa.build import activate_app, app_prefix, locate
 from koopa.installers._build_helper import download_extract_cd
-from koopa.version import major_version
 
 
 def main(
