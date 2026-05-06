@@ -111,7 +111,7 @@ def _extract_to(path: str, target: str) -> None:
             msg = f"Not a valid archive (corrupt or not an archive): {path}"
             raise ValueError(msg)
     name = os.path.basename(path).lower()
-    if name.endswith((".tar.zst", ".tar.zstd", ".tar.lz")):
+    if name.endswith((".tar.xz", ".txz", ".tar.zst", ".tar.zstd", ".tar.lz")):
         subprocess.run(
             ["tar", "-xf", path, "-C", target],
             check=True,
@@ -122,8 +122,6 @@ def _extract_to(path: str, target: str) -> None:
             ".tgz",
             ".tar.bz2",
             ".tbz2",
-            ".tar.xz",
-            ".txz",
             ".tar",
         )
     ) or tarfile.is_tarfile(path):
