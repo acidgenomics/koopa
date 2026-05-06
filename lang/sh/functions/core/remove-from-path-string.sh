@@ -20,10 +20,18 @@ _koopa_remove_from_path_string() {
     __kvar_dir="${2:?}"
     __kvar_str2="$( \
         _koopa_print "$__kvar_str1" \
-            | sed \
-                -e "s|^${__kvar_dir}:||g" \
-                -e "s|:${__kvar_dir}:|:|g" \
-                -e "s|:${__kvar_dir}\$||g" \
+            | awk -v d="$__kvar_dir" \
+                'BEGIN { FS=":"; OFS=":" }
+                {
+                    n=0
+                    for (i=1; i<=NF; i++) {
+                        if ($i != d) {
+                            if (n++) printf "%s", OFS
+                            printf "%s", $i
+                        }
+                    }
+                    printf "\n"
+                }' \
         )"
     [ -n "$__kvar_str2" ] || return 1
     _koopa_print "$__kvar_str2"
