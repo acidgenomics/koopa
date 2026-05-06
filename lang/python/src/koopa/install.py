@@ -2186,14 +2186,17 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         )
         shutil.rmtree(venv_dir)
         return
-    stamp_file = os.path.join(venv_dir, ".stamp")
-    dep_files = [
-        os.path.join(prefix, "etc", "koopa", "venv-revision.txt"),
-        os.path.join(prefix, "pyproject.toml"),
-    ]
-    if os.path.isfile(stamp_file):
-        stamp_mtime = os.path.getmtime(stamp_file)
-        if all(os.path.getmtime(f) <= stamp_mtime for f in dep_files if os.path.isfile(f)):
+    revision_file = os.path.join(prefix, "etc", "koopa", "venv-version.txt")
+    version_file = os.path.join(venv_dir, "VERSION")
+    legacy_stamp = os.path.join(venv_dir, ".stamp")
+    if os.path.isfile(legacy_stamp):
+        os.unlink(legacy_stamp)
+    if os.path.isfile(version_file) and os.path.isfile(revision_file):
+        with open(revision_file) as f:
+            expected_version = f.read().strip()
+        with open(version_file) as f:
+            installed_version = f.read().strip()
+        if installed_version == expected_version:
             return
     alert("Installing koopa Python package.")
     if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
@@ -2215,8 +2218,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         ],
         check=True,
     )
-    with open(stamp_file, "w") as f:
-        f.write("")
+    with open(version_file, "w") as f:
+        if os.path.isfile(revision_file):
+            with open(revision_file) as rf:
+                f.write(rf.read().strip() + "\n")
+        else:
+            f.write("\n")
 
 
 # -- Update pipeline ----------------------------------------------------------

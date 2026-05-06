@@ -286,6 +286,37 @@ def check_bootstrap_version() -> bool:
     return True
 
 
+def check_venv_version() -> bool:
+    """Check if venv installation is current.
+
+    Compares the installed venv VERSION file against the expected
+    version defined in 'etc/koopa/venv-version.txt'.
+
+    Returns
+    -------
+    bool
+        True if versions match or venv is not installed, False otherwise.
+    """
+    kp = koopa_prefix()
+    expected_version_file = join(kp, "etc", "koopa", "venv-version.txt")
+    venv_dir = join(kp, ".venv")
+    installed_version_file = join(venv_dir, "VERSION")
+    if not isfile(expected_version_file):
+        return True
+    if not isdir(venv_dir):
+        return True
+    if not isfile(installed_version_file):
+        return False
+    with open(expected_version_file) as fh:
+        expected_version = fh.read().strip()
+    with open(installed_version_file) as fh:
+        installed_version = fh.read().strip()
+    if installed_version != expected_version:
+        print(f"Venv is out of date ({installed_version} != {expected_version})")
+        return False
+    return True
+
+
 def _version_tuple(version: str) -> tuple[int, ...]:
     """Parse a version string into a tuple of integers for comparison."""
     parts = []
