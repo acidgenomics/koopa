@@ -27,6 +27,5 @@ _koopa_activate_conda() {
     local conda_setup
     conda_setup="$("$conda" "shell.${shell}" 'hook')"
     eval "$conda_setup"
-    _koopa_is_function 'conda' || return 1
     return 0
 }
