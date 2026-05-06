@@ -26,7 +26,7 @@ __koopa_realpath() {
 }
 
 __koopa_check_python() {
-    [ -x "$1" ] && "$1" -c "import _bz2, _lzma, ssl, subprocess, zlib" \
+    [ -x "$1" ] && "$1" -c "import _bz2, _lzma, _ssl, _zlib" \
         2>/dev/null
 }
 
