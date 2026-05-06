@@ -148,21 +148,27 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
 
 def _check_python_install(python: str) -> None:
     print("Checking module integrity.", file=sys.stderr)
-    modules = (
+    modules = [
         "_bz2",
         "_ctypes",
         "_decimal",
         "_lzma",
+        "_ssl",
+        "_zlib",
+        "bz2",
         "hashlib",
+        "lzma",
         "pyexpat",
         "readline",
         "sqlite3",
         "ssl",
         "zlib",
-    )
-    for mod in modules:
-        subprocess.run([python, "-c", f"import {mod}"], check=True)
-        print(f"  {mod}: ok", file=sys.stderr)
+    ]
+    if sys.platform != "darwin":
+        modules.append("_curses")
+    import_line = ", ".join(modules)
+    subprocess.run([python, "-c", f"import {import_line}"], check=True)
+    print("  All modules OK.", file=sys.stderr)
     print("Checking sysconfig.", file=sys.stderr)
     subprocess.run([python, "-m", "sysconfig"], check=True)
     print("Checking pip.", file=sys.stderr)

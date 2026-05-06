@@ -205,6 +205,8 @@ install_python() {
         "https://koopa.acidgenomics.com/src/python/${__kvar_filename}" \
         || return 1
     unset -v __kvar_filename
+    export LIBLZMA_CFLAGS="-I${DESTDIR}${PREFIX}/include"
+    export LIBLZMA_LIBS="-L${DESTDIR}${PREFIX}/lib -llzma"
     export LDLIBS='-lbz2 -lcrypto -llzma -lssl -lz'
     ./configure \
         --disable-test-modules \
@@ -212,7 +214,7 @@ install_python() {
         --with-openssl="${DESTDIR}${PREFIX}"
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
-    unset -v LDLIBS
+    unset -v LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
     if is_macos; then
