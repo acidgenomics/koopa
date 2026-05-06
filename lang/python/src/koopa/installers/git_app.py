@@ -7,7 +7,7 @@ import subprocess
 from koopa.archive import extract
 from koopa.build import activate_app, app_prefix, locate
 from koopa.download import download
-from koopa.installers._build_helper import download_extract_cd
+from koopa.installers._build_helper import _resolve_extra_src_urls, download_extract_cd
 
 
 def main(
@@ -42,9 +42,9 @@ def main(
     openssl_prefix = app_prefix("openssl")
     pcre2_prefix = app_prefix("pcre2")
     zlib_prefix = app_prefix("zlib")
-    url_base = "https://mirrors.edge.kernel.org/pub/software/scm/git"
-    htmldocs_url = f"{url_base}/git-htmldocs-{version}.tar.xz"
-    manpages_url = f"{url_base}/git-manpages-{version}.tar.xz"
+    extra_urls = _resolve_extra_src_urls(name, version)
+    htmldocs_url = extra_urls[0]
+    manpages_url = extra_urls[1]
     htmldocs_tarball = download(htmldocs_url)
     manpages_tarball = download(manpages_url)
     extract(
