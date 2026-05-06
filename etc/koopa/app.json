@@ -255,12 +255,12 @@
     "date": "2026-04-29",
     "default": false,
     "description": "multi-language runtime version manager",
+    "src_url": "https://github.com/asdf-vm/asdf/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/asdf-vm/asdf/"
     ],
-    "version": "0.19.0",
-    "src_url": "https://github.com/asdf-vm/asdf/archive/v{version}.tar.gz"
+    "version": "0.19.0"
   },
   "aspell": {
     "bin": [
@@ -935,7 +935,7 @@
   },
   "bioconda-utils": {
     "conda_channel": "bioconda",
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "conda"
@@ -956,7 +956,7 @@
       "https://bioconda.github.io/recipes/bioconda-utils/README.html",
       "https://github.com/bioconda/bioconda-utils/"
     ],
-    "version": "4.4.0"
+    "version": "4.4.1"
   },
   "bison": {
     "build_dependencies": [
@@ -1478,7 +1478,7 @@
     "bin": [
       "claude"
     ],
-    "date": "2026-05-04",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "node"
@@ -1492,7 +1492,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.128"
+    "version": "2.1.131"
   },
   "cli11": {
     "build_dependencies": [
@@ -1572,7 +1572,7 @@
       "cz",
       "git-cz"
     ],
-    "date": "2026-05-04",
+    "date": "2026-05-06",
     "default": true,
     "dependencies": [
       "python"
@@ -1585,7 +1585,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.15.0"
+    "version": "4.15.1"
   },
   "conda": {
     "bin": [
@@ -2059,12 +2059,12 @@
     "date": "2026-04-15",
     "default": true,
     "description": "human-readable diff output for git",
+    "src_url": "https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/so-fancy/diff-so-fancy/"
     ],
-    "version": "1.4.10",
-    "src_url": "https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v{version}.tar.gz"
+    "version": "1.4.10"
   },
   "difftastic": {
     "bin": [
@@ -2125,7 +2125,7 @@
     "version": "0.9.6"
   },
   "doom-emacs": {
-    "date": "2026-05-05",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2136,7 +2136,7 @@
       "https://github.com/doomemacs/doomemacs/"
     ],
     "user": true,
-    "version": "712db1e7a76194a773dfb0e8330c179a533d039b"
+    "version": "a174a69259e082bcc743d472377a9a2035c79537"
   },
   "dotfiles": {
     "date": "2026-05-05",
@@ -2593,7 +2593,7 @@
       "fish"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-04-15",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "conda"
@@ -2608,7 +2608,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.6.0"
+    "version": "4.7.0"
   },
   "flac": {
     "bin": [
@@ -2907,6 +2907,7 @@
     ],
     "description": "GNU Compiler Collection (C, C++, Fortran, and more)",
     "installer_platform": "linux",
+    "src_url": "https://ftpmirror.gnu.org/gcc/gcc-{version}/gcc-{version}.tar.xz",
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -2917,8 +2918,7 @@
     "url": [
       "https://gcc.gnu.org/"
     ],
-    "version": "16.1.0",
-    "src_url": "https://ftpmirror.gnu.org/gcc/gcc-{version}/gcc-{version}.tar.xz"
+    "version": "16.1.0"
   },
   "gdal": {
     "bin": [
@@ -3008,7 +3008,7 @@
     "bin": [
       "gemini"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "node"
@@ -3023,7 +3023,7 @@
       "https://geminicli.com/",
       "https://www.npmjs.com/package/@google/gemini-cli"
     ],
-    "version": "0.40.1"
+    "version": "0.41.2"
   },
   "genomepy": {
     "bin": [
@@ -3242,11 +3242,11 @@
       "zlib"
     ],
     "description": "distributed version control system",
-    "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "extra_src_urls": [
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
     ],
+    "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://git-scm.com/"
@@ -3445,7 +3445,7 @@
       "gsutil"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-04-29",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "conda"
@@ -3457,7 +3457,7 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "566.0.0"
+    "version": "567.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -4021,7 +4021,7 @@
     "bin": [
       "hf"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "python"
@@ -4037,7 +4037,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "1.13.0"
+    "version": "1.14.0"
   },
   "hugo": {
     "bin": [
@@ -4994,7 +4994,7 @@
     "build_dependencies": [
       "cmake"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "libuv",
@@ -5361,7 +5361,7 @@
       "pkg-config",
       "swig"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "binutils",
@@ -5382,7 +5382,7 @@
     "url": [
       "https://llvm.org/"
     ],
-    "version": "22.1.4"
+    "version": "22.1.5"
   },
   "lmod": {
     "build_dependencies": [
@@ -5400,6 +5400,7 @@
     "description": "Lua-based environment modules system",
     "installer_platform": "linux",
     "outdated": true,
+    "src_url": "https://github.com/TACC/Lmod/archive/{version}.tar.gz",
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -5411,8 +5412,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.2",
-    "src_url": "https://github.com/TACC/Lmod/archive/{version}.tar.gz"
+    "version": "9.2"
   },
   "lsd": {
     "bin": [
@@ -6007,7 +6007,7 @@
       "mypy",
       "mypyc"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "python"
@@ -6020,7 +6020,7 @@
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "1.20.2"
+    "version": "2.0.0"
   },
   "nano": {
     "bin": [
@@ -6931,7 +6931,7 @@
     "bin": [
       "pipx"
     ],
-    "date": "2026-04-15",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "python"
@@ -6944,7 +6944,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.11.1"
+    "version": "1.12.0"
   },
   "pixman": {
     "build_dependencies": [
@@ -7230,12 +7230,12 @@
     "man1": [
       "pyenv.1"
     ],
+    "src_url": "https://github.com/pyenv/pyenv/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.6.28",
-    "src_url": "https://github.com/pyenv/pyenv/archive/v{version}.tar.gz"
+    "version": "2.6.28"
   },
   "pyflakes": {
     "bin": [
@@ -7324,7 +7324,7 @@
     "bin": [
       "pyrefly"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "python"
@@ -7337,7 +7337,7 @@
       "https://github.com/facebook/pyrefly/",
       "https://pypi.org/project/pyrefly/"
     ],
-    "version": "0.63.1"
+    "version": "0.64.0"
   },
   "pyright": {
     "bin": [
@@ -8005,12 +8005,12 @@
       "ncurses"
     ],
     "description": "library for editing command-line input",
+    "src_url": "https://ftpmirror.gnu.org/readline/readline-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://tiswww.cwru.edu/php/chet/readline/rltop.html"
     ],
-    "version": "8.3",
-    "src_url": "https://ftpmirror.gnu.org/readline/readline-{version}.tar.gz"
+    "version": "8.3"
   },
   "rename": {
     "bin": [
@@ -8499,13 +8499,13 @@
     "man1": [
       "screen.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/screen/screen-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
       "https://mirrors.kernel.org/gnu/screen/?C=M;O=D"
     ],
-    "version": "5.0.1",
-    "src_url": "https://ftpmirror.gnu.org/screen/screen-{version}.tar.gz"
+    "version": "5.0.1"
   },
   "sd": {
     "bin": [
@@ -8642,12 +8642,12 @@
     "date": "2022-08-30",
     "default": false,
     "description": "xUnit-based unit test framework for shell scripts",
+    "src_url": "https://github.com/kward/shunit2/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/kward/shunit2/"
     ],
-    "version": "2.1.8",
-    "src_url": "https://github.com/kward/shunit2/archive/v{version}.tar.gz"
+    "version": "2.1.8"
   },
   "shyaml": {
     "bin": [
@@ -8857,7 +8857,7 @@
     "build_dependencies": [
       "make"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-06",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -8873,7 +8873,7 @@
     "url": [
       "https://github.com/jkbonfield/io_lib"
     ],
-    "version": "1.15.1"
+    "version": "1.16.0"
   },
   "star": {
     "bin": [
@@ -9136,10 +9136,10 @@
       "xorg-xorgproto"
     ],
     "description": "Tcl/Tk scripting language and GUI toolkit",
-    "src_url": "https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download",
     "extra_src_urls": [
       "https://sourceforge.net/projects/tcl/files/Tcl/{version}/tk{version}-src.tar.gz/download"
     ],
+    "src_url": "https://sourceforge.net/projects/tcl/files/Tcl/{version}/tcl{version}-src.tar.gz/download",
     "type": "library",
     "url": [
       "https://www.tcl-lang.org/"
@@ -9541,14 +9541,14 @@
       "uv",
       "uvx"
     ],
-    "date": "2026-05-05",
+    "date": "2026-05-06",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.9"
+    "version": "0.11.11"
   },
   "vim": {
     "bin": [
