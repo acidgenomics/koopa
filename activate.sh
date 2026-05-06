@@ -167,8 +167,15 @@ __koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-__koopa_is_x86_64() {
+__koopa_is_amd64() {
     [ "$(uname -m)" = 'x86_64' ]
+}
+
+__koopa_is_arm64() {
+    case "$(uname -m)" in
+        'aarch64' | 'arm64') return 0 ;;
+        *) return 1 ;;
+    esac
 }
 
 __koopa_posix_source() {
@@ -351,7 +358,7 @@ __koopa_activate() {
             ;;
     esac
     __koopa_preflight || return 0
-    if __koopa_is_macos && __koopa_is_x86_64; then
+    if __koopa_is_macos && __koopa_is_amd64; then
         __koopa_warn 'koopa: Intel Mac (x86_64) is no longer supported. Run "koopa uninstall" to remove.'
     fi
     __koopa_export_koopa_subshell || return 1

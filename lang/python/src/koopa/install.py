@@ -20,7 +20,7 @@ from typing import Any
 
 from koopa.archive import extract, is_valid_archive
 from koopa.download import download
-from koopa.system import is_admin, is_linux, is_macos, is_owner, is_windows
+from koopa.system import arch2, is_admin, is_linux, is_macos, is_owner, is_windows
 
 # -- Data classes -------------------------------------------------------------
 
@@ -326,13 +326,6 @@ def _os_string() -> str:
     return "linux"
 
 
-def _arch2() -> str:
-    """Get architecture string (e.g. 'amd64', 'arm64')."""
-    machine = platform.machine().lower()
-    mapping = {"x86_64": "amd64", "amd64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
-    return mapping.get(machine, machine)
-
-
 # -- Link helpers -------------------------------------------------------------
 
 
@@ -481,7 +474,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     if not prefixes:
         msg = "At least one prefix is required."
         raise ValueError(msg)
-    arch = _arch2()
+    arch = arch2()
     aws_profile = "acidgenomics"
     binary_prefix = "/opt/koopa"
     koopa_prefix = _koopa_prefix()
@@ -530,7 +523,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 
 def push_app_build(name: str) -> None:
     """Push completed build to AWS S3 bucket."""
-    arch = _arch2()
+    arch = arch2()
     os_str = _os_string()
     s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
     app_dir = os.path.join(_app_prefix(), name)
@@ -577,7 +570,7 @@ def push_missing_app_builds() -> None:
 
     from koopa.alert import alert, alert_note, alert_success
 
-    arch = _arch2()
+    arch = arch2()
     os_str = _os_string()
     s3_bucket_bare = "private.koopa.acidgenomics.com"
     opt = _opt_prefix()
@@ -1864,7 +1857,7 @@ def install_shared_apps(mode: str = "default") -> None:
     if not is_owner():
         msg = "Only the koopa owner can install shared apps."
         raise PermissionError(msg)
-    if is_macos() and _arch2() == "amd64":
+    if is_macos() and arch2() == "amd64":
         msg = "No longer supported for Intel Macs."
         raise RuntimeError(msg)
     try:
