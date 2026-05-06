@@ -876,6 +876,27 @@ def _handle_bump_revision(args: list[str]) -> None:
     export_app_json(data)
 
 
+def _handle_reset_revisions() -> None:
+    """Handle ``koopa develop reset-revisions``.
+
+    Removes the ``revision`` key from all apps in app.json.
+    """
+    from koopa.io import export_app_json, import_app_json
+
+    data = import_app_json()
+    reset = []
+    for app in sorted(data):
+        if "revision" in data[app]:
+            del data[app]["revision"]
+            reset.append(app)
+    if not reset:
+        print("No revisions to remove.")
+        return
+    for app in reset:
+        print(f"  {app}: revision removed")
+    export_app_json(data)
+
+
 def _handle_bump_venv_version(_: list[str]) -> None:
     """Handle ``koopa develop bump-venv-version``.
 
@@ -995,6 +1016,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "remove-app": _handle_remove_app,
     "bump-bootstrap": _handle_bump_bootstrap,
     "bump-revision": _handle_bump_revision,
+    "reset-revisions": lambda _: _handle_reset_revisions(),
     "bump-venv-version": _handle_bump_venv_version,
     "find-ignored-bin-files": _handle_find_ignored_bin_files,
 }
