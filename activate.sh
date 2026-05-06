@@ -163,6 +163,14 @@ __koopa_is_interactive() {
     __koopa_str_detect "$-" 'i'
 }
 
+__koopa_is_macos() {
+    [ "$(uname -s)" = 'Darwin' ]
+}
+
+__koopa_is_x86_64() {
+    [ "$(uname -m)" = 'x86_64' ]
+}
+
 __koopa_posix_source() {
     # """
     # POSIX source file location.
@@ -343,6 +351,9 @@ __koopa_activate() {
             ;;
     esac
     __koopa_preflight || return 0
+    if __koopa_is_macos && __koopa_is_x86_64; then
+        __koopa_warn 'koopa: Intel Mac (x86_64) is no longer supported. Run "koopa uninstall" to remove.'
+    fi
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
     __koopa_ensure_xdg_data_symlink

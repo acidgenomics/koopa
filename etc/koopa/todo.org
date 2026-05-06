@@ -1,6 +1,4 @@
 * High complexity
 * Medium complexity
 * Low complexity
-** TODO We need to gate against `koopa update` support on Intel Macs. Conda not supported. Many apps aren't supported for Intel Macs. We need to guard against this better in koopa update.
-** TODO Failing to install chezmoi correctly on Intel Mac. Still expecting conda.
-** TODO Review https://github.com/nix-darwin/nix-darwin for useful macOS config.
+** TODO Review consistency of is_x86_64 and is_amd64, arch, arch2.
