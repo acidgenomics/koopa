@@ -765,9 +765,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 from koopa.alert import alert_note, styled_name, styled_reason
 
                 reason_suffix = (
-                    f" {styled_reason(config.reinstall_reason)}"
-                    if config.reinstall_reason
-                    else ""
+                    f" {styled_reason(config.reinstall_reason)}" if config.reinstall_reason else ""
                 )
                 dep_word = "dependency" if len(all_deps) == 1 else "dependencies"
                 alert_note(
@@ -926,9 +924,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if not config.quiet:
         from koopa.alert import alert_install_success
 
-        alert_install_success(
-            config.name, config.prefix or "", progress.elapsed_formatted
-        )
+        alert_install_success(config.name, config.prefix or "", progress.elapsed_formatted)
 
 
 # -- Isolated subshell runner -------------------------------------------------
