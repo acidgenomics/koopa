@@ -2212,10 +2212,7 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     if venv_rev:
         version_parts.append(f"snapshot {venv_rev}")
     version_suffix = f" ({'; '.join(version_parts)})" if version_parts else ""
-    if os.path.isfile(version_file):
-        verb = "Updating"
-    else:
-        verb = "Installing"
+    verb = "Updating" if os.path.isfile(version_file) else "Installing"
     alert(f"{verb} virtual environment at '{venv_dir}'{version_suffix}.")
     if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
         alert("Installing pip into virtual environment.")
