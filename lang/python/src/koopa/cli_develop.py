@@ -1043,6 +1043,60 @@ def _handle_orphan_apps(args: list[str]) -> None:
         print(f"  {name} ({app_type})")
 
 
+def _handle_conda_candidates(args: list[str]) -> None:
+    """Handle ``koopa develop conda-candidates``.
+
+    Finds apps that build from source but are available on conda-forge or bioconda.
+    Use --verify to query conda channels and show available versions.
+    """
+    import json as json_mod
+    import urllib.request
+
+    from koopa.io import import_app_json
+
+    verify = "--verify" in args
+    data = import_app_json()
+    candidates = []
+    for name, entry in sorted(data.items()):
+        if entry.get("removed", False):
+            continue
+        if entry.get("installer") == "conda-package":
+            continue
+        if not entry.get("src_url"):
+            continue
+        if entry.get("type") != "cli":
+            continue
+        candidates.append(name)
+    if not verify:
+        print(f"Source-built apps that could potentially use conda ({len(candidates)} total):")
+        for name in candidates:
+            entry = data[name]
+            print(f"  {name} ({entry.get('version', '?')})")
+        print("\nUse --verify to check actual conda availability.")
+        return
+    channels = ["conda-forge", "bioconda"]
+    found = []
+    for name in candidates:
+        entry = data[name]
+        current_ver = entry.get("version", "")
+        for channel in channels:
+            url = f"https://api.anaconda.org/package/{channel}/{name}"
+            try:
+                with urllib.request.urlopen(url, timeout=10) as resp:  # noqa: S310
+                    pkg_data = json_mod.loads(resp.read())
+                    conda_ver = pkg_data.get("latest_version", "?")
+                    found.append((name, channel, current_ver, conda_ver))
+                    break
+            except Exception:  # noqa: BLE001
+                continue
+    if not found:
+        print("No conda candidates found.")
+        return
+    print(f"Found {len(found)} source-built app(s) available on conda:")
+    for name, channel, current, conda in found:
+        print(f"  {name}: {current} -> {conda} ({channel})")
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
@@ -1069,6 +1123,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "bump-venv-version": _handle_bump_venv_version,
     "find-ignored-bin-files": _handle_find_ignored_bin_files,
     "orphan-apps": _handle_orphan_apps,
+    "conda-candidates": _handle_conda_candidates,
 }
 
 
