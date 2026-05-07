@@ -1,7 +1,5 @@
 """Install nghttp2."""
 
-import sys
-
 from koopa.build import activate_app, locate, make_build
 from koopa.installers._build_helper import download_extract_cd
 
@@ -14,10 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install nghttp2."""
-    build_deps = ["pkg-config", "python"]
-    if sys.platform != "darwin":
-        build_deps.append("gcc")
-    env = activate_app(*build_deps, build_only=True)
+    env = activate_app("pkg-config", "python", build_only=True)
     env = activate_app(
         "c-ares",
         "icu4c",
