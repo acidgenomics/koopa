@@ -353,7 +353,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "udunits": f"{_M}.udunits",
     "unibilium": f"{_M}.unibilium",
     "utf8proc": f"{_M}.utf8proc",
-    "vim": f"{_M}.vim",
+    "vim": f"{_M}._conda",
     "xorg-libice": f"{_M}.xorg_libice",
     "xorg-libpthread-stubs": f"{_M}.xorg_libpthread_stubs",
     "xorg-libsm": f"{_M}.xorg_libsm",
