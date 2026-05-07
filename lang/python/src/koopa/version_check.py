@@ -1426,7 +1426,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "ruby": _AppCheckSpec("github", _check_github, ("ruby", "ruby")),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
-    "screen": _AppCheckSpec("conda", _check_conda, ("screen", "conda-forge")),
+    "screen": _AppCheckSpec("gnu", lambda: _check_gnu("screen"), ()),
     "swig": _AppCheckSpec("github", _check_github, ("swig", "swig")),
     "tcl-tk": _AppCheckSpec(
         "dirlist",
