@@ -239,6 +239,23 @@ def check_installed_apps() -> bool:
     issues = _iter_installed_app_issues()
     for _name, reason, _actionable in issues:
         print(reason)
+    actionable = [(name, reason) for name, reason, a in issues if a]
+    if actionable:
+        from koopa.app import stale_revdeps
+
+        seen_names = {name for name, _ in actionable}
+        revdep_names: list[str] = []
+        changed = True
+        while changed:
+            changed = False
+            for rd in stale_revdeps(list(seen_names)):
+                if rd not in seen_names:
+                    revdep_names.append(rd)
+                    seen_names.add(rd)
+                    changed = True
+        if revdep_names:
+            print(f"Will also rebuild {len(revdep_names)} reverse"
+                  f" dependencies: {', '.join(sorted(revdep_names))}")
     return not issues
 
 
