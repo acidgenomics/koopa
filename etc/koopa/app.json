@@ -222,6 +222,7 @@
     ],
     "description": "lightweight multi-protocol download utility",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/aria2/aria2/"
@@ -262,6 +263,7 @@
     "man1": [
       "aspell.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "http://aspell.net/"
@@ -536,6 +538,7 @@
       "axel.1"
     ],
     "outdated": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
@@ -660,6 +663,7 @@
     ],
     "description": "programmable completion functions for bash",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/scop/bash-completion"
@@ -737,6 +741,7 @@
     "man1": [
       "bc.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/bc/?C=M;O=D"
@@ -2081,6 +2086,7 @@
     ],
     "description": "credential helpers for Docker",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
@@ -2149,7 +2155,10 @@
     ],
     "description": "in-process analytical SQL database",
     "installer": "conda-package",
-    "revision": 1,
+    "installer_args": {
+      "name": "duckdb-cli"
+    },
+    "revision": 2,
     "type": "cli",
     "url": [
       "https://duckdb.org/",
@@ -3088,6 +3097,7 @@
     "man1": [
       "gs.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.ghostscript.com/"
@@ -3166,6 +3176,7 @@
     ],
     "description": "Git extension for versioning large files",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://git-lfs.github.com/"
@@ -3402,6 +3413,7 @@
     "man1": [
       "ggrep.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
@@ -3744,6 +3756,7 @@
     "man1": [
       "htop.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://hisham.hm/htop/",
@@ -4240,6 +4253,7 @@
     "man1": [
       "lame.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://lame.sourceforge.io/"
@@ -4953,6 +4967,7 @@
     ],
     "description": "LLVM compiler infrastructure",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://llvm.org/"
@@ -5346,6 +5361,7 @@
     ],
     "description": "like awk/sed/cut/join for name-indexed data formats",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://miller.readthedocs.io/",
@@ -5569,6 +5585,7 @@
     ],
     "description": "simple, user-friendly terminal text editor",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.nano-editor.org/"
@@ -5796,6 +5813,7 @@
     ],
     "description": "statically typed compiled systems programming language",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://nim-lang.org/"
@@ -6049,6 +6067,7 @@
     "description": "OpenBSD SSH connectivity tools",
     "installer": "conda-package",
     "mirror": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.openssh.com/portable.html",
@@ -6144,6 +6163,7 @@
       "7za.1.gz",
       "7zr.1.gz"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/p7zip-project/p7zip/"
@@ -6187,6 +6207,7 @@
     "man1": [
       "parallel.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/parallel/",
@@ -6385,6 +6406,7 @@
       "pigz.1",
       "unpigz.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://zlib.net/pigz/"
@@ -6485,6 +6507,7 @@
       "pkgconf.1"
     ],
     "mirror": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/pkgconf/pkgconf"
@@ -6529,6 +6552,7 @@
     ],
     "description": "powerful open-source relational database",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
@@ -7687,6 +7711,7 @@
     "man1": [
       "rsync.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://download.samba.org/pub/rsync/src/?C=M;O=D"
@@ -7951,6 +7976,7 @@
     "man1": [
       "screen.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
@@ -8372,6 +8398,7 @@
     ],
     "description": "symlink farm manager for managing dotfiles",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/stow/"
@@ -8708,6 +8735,7 @@
     "man1": [
       "tree.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/Old-Man-Programmer/tree"
@@ -9080,6 +9108,7 @@
     "man1": [
       "gwhich.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/which/?C=M;O=D"
@@ -9100,6 +9129,7 @@
     ],
     "description": "encode and decode WOFF2 web font format",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/google/woff2/"
