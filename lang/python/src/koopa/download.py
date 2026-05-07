@@ -70,11 +70,20 @@ def _gnu_mirrors(primary_url: str, name: str, filename: str) -> list[str]:
     ]
 
 
-def download_with_mirror(primary_url: str, name: str, filename: str) -> str:
+def download_with_mirror(
+    primary_url: str,
+    name: str,
+    filename: str,
+    *,
+    connect_timeout: int = 10,
+) -> str:
     """Download from primary URL, falling back to mirrors.
 
     Tries the primary URL first, then GNU mirrors (if applicable), then
     the koopa mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
+
+    Uses a short connect_timeout on mirror attempts so broken TLS endpoints
+    fail fast instead of blocking for minutes on retries.
     """
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     urls = [primary_url]
@@ -83,8 +92,12 @@ def download_with_mirror(primary_url: str, name: str, filename: str) -> str:
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:
-            retry = url == koopa_mirror
-            tarball = download(url, retry=retry)
+            is_last = url == koopa_mirror
+            tarball = download(
+                url,
+                retry=is_last,
+                connect_timeout=connect_timeout if not is_last else None,
+            )
             if not archive.is_valid_archive(tarball):
                 raise ValueError("invalid archive")
             return tarball
