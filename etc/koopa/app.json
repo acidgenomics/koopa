@@ -3462,6 +3462,7 @@
     "description": "GNU document formatting system",
     "installer": "gnu-app",
     "installer_args": {
+      "jobs": "1",
       "without-doc": ""
     },
     "man1": [
@@ -5579,17 +5580,21 @@
     "bin": [
       "nano"
     ],
-    "conda_channel": "conda-forge",
+    "build_dependencies": [
+      "make",
+      "pkg-config"
+    ],
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
       "gettext",
-      "ncurses",
-      "conda"
+      "ncurses"
     ],
     "description": "simple, user-friendly terminal text editor",
-    "installer": "conda-package",
-    "revision": 1,
+    "man1": [
+      "nano.1"
+    ],
+    "src_url": "https://www.nano-editor.org/dist/v{major}/nano-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.nano-editor.org/"
