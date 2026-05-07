@@ -24,9 +24,11 @@ def _use_color() -> bool:
 
 def _styled_time(elapsed: str, *, seconds: float | None = None) -> str:
     if _use_color():
-        if seconds is not None and seconds >= 300:
+        if seconds is not None and seconds >= 1200:
             return f"\033[31m[{elapsed}]\033[0m"
-        return f"\033[33m[{elapsed}]\033[0m"
+        if seconds is not None and seconds >= 60:
+            return f"\033[33m[{elapsed}]\033[0m"
+        return f"\033[32m[{elapsed}]\033[0m"
     return f"[{elapsed}]"
 
 

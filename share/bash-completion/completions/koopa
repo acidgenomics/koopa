@@ -145,6 +145,7 @@ _koopa_complete() {
                         'generate-man'
                         'log'
                         'mirror-src'
+                        'orphan-apps'
                         'prune-app-binaries'
                         'push-all-app-builds'
                         'push-app-build'

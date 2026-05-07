@@ -607,6 +607,7 @@ _koopa_develop_cmds() {
         'generate-man'
         'log'
         'mirror-src'
+        'orphan-apps'
         'prune-app-binaries'
         'push-all-app-builds'
         'push-app-build'

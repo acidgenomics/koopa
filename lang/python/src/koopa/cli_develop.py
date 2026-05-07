@@ -993,6 +993,51 @@ def _handle_find_ignored_bin_files(_: list[str]) -> None:
         print(path)
 
 
+def _handle_orphan_apps(args: list[str]) -> None:
+    """Handle ``koopa develop orphan-apps``.
+
+    Finds apps in app.json that no other app depends on.
+    By default only shows non-default library/build-tool orphans.
+    Use --all to show all orphans including leaf user tools.
+    """
+    from koopa.io import import_app_json
+
+    show_all = "--all" in args
+    data = import_app_json()
+    all_apps = set(data.keys())
+    depended_on: set[str] = set()
+    for app_data in data.values():
+        deps = app_data.get("dependencies", [])
+        if isinstance(deps, list):
+            depended_on.update(deps)
+        elif isinstance(deps, dict):
+            for variant_deps in deps.values():
+                if isinstance(variant_deps, list):
+                    depended_on.update(variant_deps)
+        build_deps = app_data.get("build_dependencies", [])
+        if isinstance(build_deps, list):
+            depended_on.update(build_deps)
+        elif isinstance(build_deps, dict):
+            for variant_deps in build_deps.values():
+                if isinstance(variant_deps, list):
+                    depended_on.update(variant_deps)
+    orphans = sorted(all_apps - depended_on)
+    if not show_all:
+        orphans = [
+            name
+            for name in orphans
+            if not data[name].get("default", False)
+            and data[name].get("type") in ("library", "build_tool")
+        ]
+    if not orphans:
+        print("No orphan apps detected.")
+        return
+    print(f"Found {len(orphans)} orphan app(s):")
+    for name in orphans:
+        app_type = data[name].get("type", "unknown")
+        print(f"  {name} ({app_type})")
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
@@ -1018,6 +1063,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "reset-revisions": lambda _: _handle_reset_revisions(),
     "bump-venv-version": _handle_bump_venv_version,
     "find-ignored-bin-files": _handle_find_ignored_bin_files,
+    "orphan-apps": _handle_orphan_apps,
 }
 
 
