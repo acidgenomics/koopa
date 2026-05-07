@@ -1874,11 +1874,31 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     missing = [a for a in app_names if not os.path.exists(os.path.join(opt, a))]
     if not missing:
         return
-    n = len(missing)
+    apps_with_reasons = [(a, "missing") for a in missing]
+    plan, _ = _compute_install_plan(apps_with_reasons)
+    apps = [a for a, _ in plan]
+    n = len(apps)
     label = "app" if n == 1 else "apps"
-    alert(f"Installing {n} missing default {label}: {', '.join(missing)}")
-    for app in missing:
-        cli_install(app, verbose=verbose)
+    if n > 100:
+        display = ", ".join(apps[:100]) + ", ..."
+    else:
+        display = ", ".join(apps)
+    alert(f"Installing {n} missing default {label}: {display}.")
+    acquired = _acquire_install_lock()
+    try:
+        for app, _ in plan:
+            config = InstallConfig(
+                name=app,
+                deps=False,
+                verbose=verbose,
+                binary=_can_install_binary(),
+                push=_can_push_binary(),
+                passthrough_args=_build_passthrough_args(app),
+            )
+            install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
     alert_success("All missing default apps installed.")
 
 
@@ -1907,10 +1927,12 @@ def install_shared_apps(mode: str = "default") -> None:
             raise RuntimeError(msg)
     except ImportError:
         pass
+    from koopa.alert import alert, alert_success
     from koopa.app import shared_apps
 
     app_names = shared_apps(mode=mode)
     app_dir = _app_prefix()
+    missing = []
     for app_name in app_names:
         app_prefix = os.path.join(app_dir, app_name)
         if os.path.isdir(app_prefix):
@@ -1919,7 +1941,35 @@ def install_shared_apps(mode: str = "default") -> None:
             ]
             if any(os.path.isdir(os.path.join(app_prefix, v, ".install")) for v in versions):
                 continue
-        cli_install(app_name)
+        missing.append(app_name)
+    if not missing:
+        alert_success("All shared apps are already installed.")
+        return
+    apps_with_reasons = [(a, "") for a in missing]
+    plan, _ = _compute_install_plan(apps_with_reasons)
+    apps = [a for a, _ in plan]
+    n = len(apps)
+    label = "app" if n == 1 else "apps"
+    if n > 100:
+        display = ", ".join(apps[:100]) + ", ..."
+    else:
+        display = ", ".join(apps)
+    alert(f"Installing {n} {label}: {display}.")
+    acquired = _acquire_install_lock()
+    try:
+        for app, _ in plan:
+            config = InstallConfig(
+                name=app,
+                deps=False,
+                binary=_can_install_binary(),
+                push=_can_push_binary(),
+                passthrough_args=_build_passthrough_args(app),
+            )
+            install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
+    alert_success(f"All {mode} apps installed successfully.")
 
 
 # -- Thin-wrapper install functions -------------------------------------------
@@ -2551,37 +2601,6 @@ def update_stale_apps(*, verbose: bool = False) -> None:
         if acquired:
             _release_install_lock()
     alert_success("All stale apps updated successfully.")
-
-
-def _update_stale_revdeps(
-    updated_apps: list[str],
-    *,
-    failed: list[str],
-    verbose: bool = False,
-) -> None:
-    """Log reverse dependencies of updated apps (informational only).
-
-    Reverse dependencies are not automatically rebuilt because shared library
-    updates typically remain ABI-compatible and the opt/ symlinks ensure apps
-    resolve to the new version. Use ``koopa reinstall --with-revdeps`` to
-    explicitly rebuild if needed.
-    """
-    from koopa.alert import alert_note
-    from koopa.app import stale_revdeps
-
-    succeeded = [a for a in updated_apps if a not in failed]
-    if not succeeded:
-        return
-    revdeps = stale_revdeps(succeeded)
-    revdeps = [r for r in revdeps if r not in updated_apps and r not in failed]
-    if not revdeps:
-        return
-    n_revdeps = len(revdeps)
-    label_revdeps = "reverse dependency" if n_revdeps == 1 else "reverse dependencies"
-    alert_note(
-        f"{n_revdeps} {label_revdeps} may need rebuilding: {', '.join(revdeps)}\n"
-        "  Run 'koopa reinstall --with-revdeps <app>' to rebuild if needed.",
-    )
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
