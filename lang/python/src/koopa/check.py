@@ -154,11 +154,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                             else ""
                         )
                         recorded_ver = recorded_dep_vers.get(resolved_dep, "")
-                        if (
-                            recorded_ver
-                            and current_ver
-                            and recorded_ver != current_ver
-                        ):
+                        if recorded_ver and current_ver and recorded_ver != current_ver:
                             issues.append(
                                 (
                                     name,
