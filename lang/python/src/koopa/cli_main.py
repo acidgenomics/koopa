@@ -181,7 +181,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # -- reinstall ------------------------------------------------------------
     reinstall_p = subparsers.add_parser("reinstall")
-    reinstall_p.add_argument("apps", nargs="+")
+    reinstall_p.add_argument("apps", nargs="*")
+    reinstall_p.add_argument("--all", action="store_true", default=False)
     reinstall_p.add_argument("--all-revdeps", action="store_true", default=False)
     reinstall_p.add_argument("--no-revdeps", action="store_true", default=False)
     reinstall_p.add_argument("--only-revdeps", action="store_true", default=False)
@@ -318,6 +319,12 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
     from koopa.install import _acquire_install_lock, _release_install_lock, install_app
 
     apps = list(args.apps) if args.apps else []
+    if args.all:
+        if apps:
+            print("Error: --all cannot be combined with app names.", file=sys.stderr)
+            sys.exit(1)
+        _reinstall_all(verbose=args.verbose)
+        return
     if not apps:
         print("Error: no apps specified.", file=sys.stderr)
         sys.exit(1)
@@ -351,6 +358,75 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
     finally:
         if acquired:
             _release_install_lock()
+
+
+def _reinstall_all(*, verbose: bool = False) -> None:
+    """Reinstall all installed apps in dependency order."""
+    from koopa.alert import alert, alert_success
+    from koopa.app import installed_apps
+    from koopa.install import (
+        InstallConfig,
+        _acquire_install_lock,
+        _can_install_binary,
+        _can_push_binary,
+        _compute_install_plan,
+        _is_supported_app,
+        _release_install_lock,
+        _remove_from_pending_plan,
+        _save_pending_plan,
+        install_app,
+    )
+    from koopa.install import _build_passthrough_args as _build_passthrough_args_by_name
+
+    installed = installed_apps()
+    apps_with_reasons = [
+        (app, "rebuild all") for app in installed if _is_supported_app(app)
+    ]
+    if not apps_with_reasons:
+        alert_success("No installed apps to rebuild.")
+        return
+    plan, dep_map = _compute_install_plan(apps_with_reasons)
+    apps = [a for a, _ in plan]
+    n = len(apps)
+    label = "app" if n == 1 else "apps"
+    if n > 100:
+        display = ", ".join(apps[:100]) + ", ..."
+    else:
+        display = ", ".join(apps)
+    alert(f"Reinstalling {n} {label}: {display}.")
+    _save_pending_plan(plan)
+    acquired = _acquire_install_lock()
+    failed: set[str] = set()
+    try:
+        for app, reason in plan:
+            app_deps_in_plan = dep_map.get(app, set())
+            if app_deps_in_plan & failed:
+                failed.add(app)
+                continue
+            try:
+                config = InstallConfig(
+                    name=app,
+                    reinstall=True,
+                    reinstall_reason=reason,
+                    deps=False,
+                    verbose=verbose,
+                    binary=_can_install_binary(),
+                    push=_can_push_binary(),
+                    passthrough_args=_build_passthrough_args_by_name(app),
+                )
+                install_app(config)
+                _remove_from_pending_plan(app)
+            except Exception as exc:
+                alert(f"Failed to install {app}: {exc}")
+                failed.add(app)
+    finally:
+        if acquired:
+            _release_install_lock()
+    if failed:
+        alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
+    else:
+        _save_pending_plan([])
+        alert_success("All apps reinstalled successfully.")
 
 
 def _reinstall_with_revdeps(
