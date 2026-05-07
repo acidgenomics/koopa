@@ -37,6 +37,17 @@ Major changes:
   `.install/revision` marker file.
 - Added `--all-system` flag to `koopa update` for opt-in system-level updates
   requiring admin access. System updates are no longer run by default.
+- Added `koopa run` subcommand. All 46 standalone utility scripts previously
+  in `bin/` (e.g., `find-and-replace`, `download`, `extract`, `ip-address`)
+  are now dispatched via `koopa run <command>`.
+- Deprecated `koopa header bash`. Scripts using
+  `source "$(koopa header bash)"` must be updated — the command now errors
+  with a deprecation message.
+- Added Nushell and Fish shell activation support (`lang/nushell/`,
+  `lang/fish/`) with direnv, fzf, starship, and zoxide integration.
+- Version source of truth moved from `VERSION` file to `pyproject.toml`.
+  The `VERSION` file has been removed.
+- `openssl` is now an alias of `openssl4` (version 4.0.0).
 
 New apps:
 
@@ -59,8 +70,13 @@ Minor changes:
 - Added `check_broken_app_installs()` to `koopa system check`, which detects
   app directories with missing opt symlinks or empty prefixes from failed
   installs.
+- Added `--all` flag to `koopa reinstall` for rebuilding all installed apps.
+- Added `--non-default` flag to `koopa uninstall` for removing all
+  non-default apps at once.
 - Added `--no-revdeps` flag to `koopa reinstall` to skip automatic stale
   reverse dependency rebuilds.
+- Extended process locking to `koopa uninstall`, preventing concurrent
+  install/uninstall operations.
 - Hardened `_update_venv()` against missing venv python, added ownership
   checks, and cleanup on failure.
 - Shell bootstrap now validates that the Python interpreter actually works
@@ -92,6 +108,16 @@ Minor changes:
 - Improved header consistency across shell includes.
 - Optimized OS handling in completion logic.
 - Added `koopa develop shellcheck` support for linting shell scripts.
+- Added `koopa develop conda-candidates`, `reset-revisions`, `orphan-apps`,
+  and `push-all-app-builds` developer subcommands.
+- Auto-generated `koopa.1` man page from the Python CLI tree, replacing the
+  hand-maintained ronn file.
+- Added `src_url` field to `app.json` for all source-built apps, enabling
+  standardized source mirroring.
+- `ty` is now a default app (installed automatically).
+- Switched `vim` and `duckdb` from source builds to conda-forge packages.
+- App pruning messages are now summarized by default; use `--verbose` to see
+  individual paths.
 - Added automated app version checking system for tracking upstream releases.
 - Added broken symlink detection and cleanup to system checks.
 - Reworked cache handling for improved reliability.
@@ -113,7 +139,10 @@ Minor changes:
   systems.
 - Hardened `koopa install` against attempted use on Windows platforms.
 - Improved NGS library batch alignment handling.
-- Removed dead apps: `libev`, `nghttp2`, `pbzip2`.
+- Removed 57 apps that are no longer needed (build-only dependencies replaced
+  by conda packages, deprecated tools, or unused libraries). Notable removals
+  include `armadillo`, `gdal`, `graphviz`, `harfbuzz`, `imagemagick`,
+  `libgit2`, `libheif`, `mold`, `tree-sitter`, and `udunits`.
 - Fixed `man1` binary linkage in `app.json`.
 
 App version updates:
@@ -122,7 +151,6 @@ App version updates:
 - `air` 0.9.0.
 - `apache-spark` 4.2.0.
 - `apr` 1.7.6.
-- `armadillo` 15.2.6.
 - `aspell` 0.60.8.2.
 - `aspera-connect` 4.2.19.956.
 - `autoconf` 2.73.
@@ -141,7 +169,6 @@ App version updates:
 - `bustools` 0.45.1.
 - `c-ares` 1.34.6.
 - `claude-code` 2.1.126.
-- `cli11` 2.6.2.
 - `commitizen` 4.13.10.
 - `conda` 26.3.2-2.
 - `convmv` 2.06.
@@ -159,7 +186,6 @@ App version updates:
 - `expat` 2.8.0.
 - `ffmpeg` 8.0.1.
 - `flac` 1.5.0.
-- `fltk` 1.4.5.
 - `fontconfig` 2.16.0.
 - `freetype` 2.14.3.
 - `gatk` 4.6.2.0.
@@ -179,7 +205,6 @@ App version updates:
 - `gnupg` 2.5.19.
 - `gnutls` 3.8.13.
 - `go` 1.26.2.
-- `graphviz` 14.1.5.
 - `grep` 3.12.
 - `groff` 1.24.1.
 - `gzip` 1.14.
@@ -188,7 +213,6 @@ App version updates:
 - `hugo` 0.161.1.
 - `icu4c` 78.3.
 - `illumina-ica-cli` 2.45.0.
-- `imagemagick` 7.1.2-21.
 - `ipython` 9.13.0.
 - `jfrog-cli` 2.103.0.
 - `jupyterlab` 4.5.7.
@@ -201,21 +225,16 @@ App version updates:
 - `libedit` 20251016-3.1.
 - `libfido2` 1.17.0.
 - `libgcrypt` 1.12.2.
-- `libgeotiff` 1.7.4.
 - `libgpg-error` 1.60.
-- `libheif` 1.21.2.
 - `libiconv` 1.19.
 - `libidn` 2.3.8.
 - `libksba` 1.6.8.
 - `liblinear` 2.50.
-- `libluv` 1.52.1.
 - `libpcap` 1.10.6.
 - `libpng` 1.6.58.
-- `libsolv` 0.7.37.
 - `libtasn1` 4.21.0.
 - `libtiff` 4.7.1.
 - `libunistring` 1.4.2.
-- `libvterm` 0.3.3.
 - `libxml2` 2.15.3.
 - `libxslt` 1.1.45.
 - `llvm` 22.1.4.
@@ -226,11 +245,9 @@ App version updates:
 - `man-db` 2.13.1.
 - `marimo` 0.23.4.
 - `mdcat` 2.7.1.
-- `mimalloc` 3.3.2.
 - `mpc` 1.4.1.
 - `mpdecimal` 4.0.1.
 - `mpfr` 4.2.2.
-- `msgpack` 7.0.0.
 - `mypy` 1.20.2.
 - `nano` 9.0.
 - `ncbi-sra-tools` 3.4.1.
@@ -241,8 +258,6 @@ App version updates:
 - `ninja` 1.13.2.
 - `nmap` 7.99.
 - `node` 25.8.2.
-- `ont-vbz-compression` 1.0.13.
-- `openjpeg` 2.5.4.
 - `openssh` 10.3p1.
 - `oracle-instant-client` 21.21.0.0.0-1.
 - `parallel` 20260422.
@@ -272,7 +287,6 @@ App version updates:
 - `sd` 1.0.0.
 - `sed` 4.10.
 - `shellcheck` 0.11.0.
-- `simdjson` 4.6.3.
 - `snakefmt` 1.1.0.
 - `snakemake` 9.20.0.
 - `sqlfluff` 4.1.0.
@@ -281,7 +295,6 @@ App version updates:
 - `starship` 1.25.1.
 - `subread` 2.1.1.
 - `swig` 4.4.1.
-- `tbb` 2023.0.0.
 - `tcl-tk` 9.0.4.
 - `tealdeer` 1.8.1.
 - `temurin` 25.0.3+9.
@@ -295,7 +308,6 @@ App version updates:
 - `xorg-libsm` 1.2.6.
 - `xorg-libx11` 1.8.13.
 - `xorg-libxext` 1.3.7.
-- `xorg-libxrandr` 1.5.5.
 - `xorg-xorgproto` 2025.1.
 - `xorg-xtrans` 1.6.0.
 - `xsra` 0.2.28.
