@@ -478,7 +478,6 @@ _koopa_activate_conda() {
     local conda_setup
     conda_setup="$("$conda" "shell.${shell}" 'hook')"
     eval "$conda_setup"
-    _koopa_is_function 'conda' || return 1
     return 0
 }
 
@@ -950,7 +949,7 @@ _koopa_activate_today_bucket() {
     local today_link
     if [[ -n "$bucket_dir" ]]
     then
-        [[ -d "$KOOPA_BUCKET" ]] || return 1
+        [[ -d "$KOOPA_BUCKET" ]] || return 0
         today_link="${HOME:?}/today"
     elif [[ -d "${HOME:?}/bucket" ]]
     then

@@ -383,7 +383,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bfg": f"{_M}.bfg",
     "boost": f"{_M}.boost",
     "bzip2": f"{_M}.bzip2",
-    "cmake": f"{_M}.cmake_app",
+    "cmake": f"{_M}._conda",
     "conda": f"{_M}.conda",
     "cpufetch": f"{_M}.cpufetch",
     "dotfiles": f"{_M}.dotfiles",

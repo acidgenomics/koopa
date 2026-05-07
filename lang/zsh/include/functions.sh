@@ -398,7 +398,6 @@ _koopa_activate_conda() {
     local conda_setup
     conda_setup="$("$conda" "shell.${shell}" 'hook')"
     eval "$conda_setup"
-    _koopa_is_function 'conda' || return 1
     return 0
 }
 
@@ -839,7 +838,7 @@ _koopa_activate_today_bucket() {
     local today_link
     if [[ -n "$bucket_dir" ]]
     then
-        [[ -d "$KOOPA_BUCKET" ]] || return 1
+        [[ -d "$KOOPA_BUCKET" ]] || return 0
         today_link="${HOME:?}/today"
     elif [[ -d "${HOME:?}/bucket" ]]
     then
@@ -1017,11 +1016,13 @@ _koopa_activate_zsh_plugins() {
             -maxdepth 1 \
             -type 'd' \
         | sort \
-        | xargs basename \
+        | xargs -n1 basename \
     )}")
     for plugin in "${plugins[@]}"
     do
-        source "${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
+        local plugin_file="${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
+        [[ -f "$plugin_file" ]] || continue
+        source "$plugin_file"
     done
     return 0
 }
