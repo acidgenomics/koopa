@@ -226,7 +226,7 @@ class BuildProgress:
         elapsed = _fmt_duration(self.elapsed)
         marker = "x" if failed else "ok"
         tty = self._tty_fd
-        os.write(tty, f"\r\033[K  {self._name} {marker} [{elapsed}]\n".encode())
+        os.write(tty, f"\r\033[K   {self._name} {marker} [{elapsed}]\n".encode())
         if failed and self._log_file is not None:
             self._log_file.flush()
             self._dump_log_tail(tty)
@@ -254,7 +254,7 @@ class BuildProgress:
         while not self._spinner_stop.wait(0.2):
             frame = _SPINNER_FRAMES[idx % len(_SPINNER_FRAMES)]
             elapsed = _fmt_duration(self.elapsed)
-            line = f"\r\033[K  {self._name} {frame} [{elapsed}]"
+            line = f"\r\033[K   {self._name} {frame} [{elapsed}]"
             try:
                 os.write(tty, line.encode())
             except OSError:

@@ -41,3 +41,15 @@ def get_list(kwargs: dict[str, str | list[str]], key: str) -> list[str]:
     if isinstance(value, str):
         return [value]
     return value
+
+
+def get_dict(kwargs: dict[str, str | list[str]], key: str) -> dict[str, str]:
+    """Get a dict value from parsed passthrough args (JSON-encoded)."""
+    import json
+
+    value = kwargs.get(key, "")
+    if not value:
+        return {}
+    if isinstance(value, list):
+        value = value[0]
+    return json.loads(value)
