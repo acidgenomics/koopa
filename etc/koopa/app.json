@@ -661,7 +661,12 @@
       "https://www.gnu.org/software/bash/",
       "https://mirrors.kernel.org/gnu/bash/?C=M;O=D"
     ],
-    "version": "5.3"
+    "version": "5.3",
+    "revision": 1,
+    "dependencies": [
+      "ncurses",
+      "readline"
+    ]
   },
   "bash-completion": {
     "build_dependencies": [
@@ -996,7 +1001,7 @@
       },
       "pip_name": "black[d]"
     },
-    "revision": 1,
+    "revision": 2,
     "type": "cli",
     "url": [
       "https://pypi.org/project/black/",
@@ -1545,7 +1550,7 @@
       "openssl3"
     ],
     "description": "cross-platform build system generator",
-    "revision": 2,
+    "revision": 3,
     "src_url": "https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}.tar.gz",
     "type": "build_tool",
     "url": [
@@ -1949,6 +1954,7 @@
     "dependencies": [
       "ca-certificates",
       "libssh2",
+      "nghttp2",
       "openssl",
       "zlib"
     ],
@@ -1957,7 +1963,7 @@
       "curl.1",
       "curl-config.1"
     ],
-    "revision": 2,
+    "revision": 3,
     "src_url": "https://github.com/curl/curl/releases/download/curl-{version_underscore}/curl-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -6024,7 +6030,7 @@
         "MYPY_USE_MYPYC": "1"
       }
     },
-    "revision": 1,
+    "revision": 2,
     "type": "cli",
     "url": [
       "https://www.mypy-lang.org/",
@@ -7662,7 +7668,8 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.13.13"
+    "version": "3.13.13",
+    "revision": 1
   },
   "python3.14": {
     "bin": [
@@ -7730,7 +7737,7 @@
       "python3.1",
       "python3.14.1"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -8888,7 +8895,8 @@
     "url": [
       "https://www.sqlite.org/download.html"
     ],
-    "version": "3.53.1"
+    "version": "3.53.1",
+    "revision": 1
   },
   "staden-io-lib": {
     "build_dependencies": [
