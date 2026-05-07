@@ -8955,17 +8955,14 @@
       "vimtutor",
       "xxd"
     ],
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
-    "date": "2026-05-02",
+    "conda_channel": "conda-forge",
+    "date": "2026-05-07",
     "default": true,
     "dependencies": [
-      "ncurses",
-      "python"
+      "conda"
     ],
     "description": "highly configurable text editor",
+    "installer": "conda-package",
     "man1": [
       "ex.1",
       "rview.1",
@@ -8976,13 +8973,11 @@
       "vimtutor.1",
       "xxd.1"
     ],
-    "revision": 1,
-    "src_url": "https://github.com/vim/vim/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.0433"
+    "version": "9.2.0397"
   },
   "visidata": {
     "bin": [
