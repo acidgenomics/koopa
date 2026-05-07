@@ -100,6 +100,7 @@ _koopa_complete() {
                 'run'
                 'system'
                 'uninstall'
+                'uninstall-non-default-apps'
                 'update'
                 'version'
             )
