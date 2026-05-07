@@ -40,6 +40,16 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
             issues.append((name, f"{name} is an unsupported app", False))
             continue
         entry = json_data[name]
+        if entry.get("alias_of"):
+            target = entry["alias_of"]
+            if target in json_data:
+                entry = json_data[target]
+                name = target
+            else:
+                issues.append(
+                    (name, f"{name} alias target '{target}' not found", False),
+                )
+                continue
         supported = entry.get("supported", {})
         if current_os in supported and not supported[current_os]:
             issues.append((name, f"{name} is not supported on {current_os}", False))
