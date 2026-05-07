@@ -5249,7 +5249,7 @@
     "man1": [
       "gman.1"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://download.savannah.nongnu.org/releases/man-db/man-db-{version}.tar.xz",
     "type": "cli",
     "url": [
