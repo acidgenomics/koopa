@@ -7441,16 +7441,21 @@
         "openssl3",
         "readline",
         "sqlite",
-        "unzip",
         "xz",
         "zlib"
       ],
       "firewall_macos": [
+        "bzip2",
         "expat",
+        "libedit",
+        "libffi",
         "mpdecimal",
+        "ncurses",
         "openssl3",
+        "readline",
         "sqlite",
-        "xz"
+        "xz",
+        "zlib"
       ]
     },
     "description": "Python 3.10 interpreter",
@@ -7497,16 +7502,21 @@
         "openssl3",
         "readline",
         "sqlite",
-        "unzip",
         "xz",
         "zlib"
       ],
       "firewall_macos": [
+        "bzip2",
         "expat",
+        "libedit",
+        "libffi",
         "mpdecimal",
+        "ncurses",
         "openssl3",
+        "readline",
         "sqlite",
-        "xz"
+        "xz",
+        "zlib"
       ]
     },
     "description": "Python 3.11 interpreter",
@@ -7553,16 +7563,21 @@
         "openssl3",
         "readline",
         "sqlite",
-        "unzip",
         "xz",
         "zlib"
       ],
       "firewall_macos": [
+        "bzip2",
         "expat",
+        "libedit",
+        "libffi",
         "mpdecimal",
+        "ncurses",
         "openssl3",
+        "readline",
         "sqlite",
-        "xz"
+        "xz",
+        "zlib"
       ]
     },
     "description": "Python 3.12 interpreter",
@@ -7609,16 +7624,21 @@
         "openssl3",
         "readline",
         "sqlite",
-        "unzip",
         "xz",
         "zlib"
       ],
       "firewall_macos": [
+        "bzip2",
         "expat",
+        "libedit",
+        "libffi",
         "mpdecimal",
+        "ncurses",
         "openssl3",
+        "readline",
         "sqlite",
-        "xz"
+        "xz",
+        "zlib"
       ]
     },
     "description": "Python 3.13 interpreter",
@@ -7675,16 +7695,21 @@
         "openssl3",
         "readline",
         "sqlite",
-        "unzip",
         "xz",
         "zlib"
       ],
       "firewall_macos": [
+        "bzip2",
         "expat",
+        "libedit",
+        "libffi",
         "mpdecimal",
+        "ncurses",
         "openssl3",
+        "readline",
         "sqlite",
-        "xz"
+        "xz",
+        "zlib"
       ]
     },
     "description": "Python 3.14 interpreter",
