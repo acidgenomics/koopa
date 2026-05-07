@@ -6602,29 +6602,6 @@
     ],
     "version": "10.3p1"
   },
-  "openssl": {
-    "bin": [
-      "openssl"
-    ],
-    "build_dependencies": [
-      "make",
-      "perl",
-      "pkg-config"
-    ],
-    "date": "2026-04-15",
-    "default": true,
-    "dependencies": [
-      "ca-certificates"
-    ],
-    "description": "toolkit for TLS and general-purpose cryptography (v1)",
-    "revision": 2,
-    "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
-    "type": "build_tool",
-    "url": [
-      "https://www.openssl.org/source/"
-    ],
-    "version": "4.0.0"
-  },
   "openssl3": {
     "build_dependencies": [
       "make",
@@ -7430,7 +7407,6 @@
   "python": {
     "alias_of": "python3.14",
     "description": "generic Python shim (resolved at runtime)",
-    "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "library"
   },
   "python3.10": {
@@ -10481,5 +10457,34 @@
     ],
     "version": "1.5.7",
     "revision": 1
+  },
+  "openssl4": {
+    "bin": [
+      "openssl"
+    ],
+    "build_dependencies": [
+      "make",
+      "perl",
+      "pkg-config"
+    ],
+    "date": "2026-04-15",
+    "default": true,
+    "dependencies": [
+      "ca-certificates"
+    ],
+    "description": "toolkit for TLS and general-purpose cryptography (v4)",
+    "revision": 2,
+    "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
+    "type": "build_tool",
+    "url": [
+      "https://www.openssl.org/source/"
+    ],
+    "version": "4.0.0",
+    "installer": "openssl"
+  },
+  "openssl": {
+    "alias_of": "openssl4",
+    "description": "generic OpenSSL shim (resolved at runtime)",
+    "type": "build_tool"
   }
 }
