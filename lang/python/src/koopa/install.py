@@ -2505,6 +2505,41 @@ def remove_unsupported_apps(*, verbose: bool = False) -> None:
         uninstall_app(config)
 
 
+def remove_alias_app_dirs(*, verbose: bool = False) -> None:
+    """Remove app directories installed under alias names.
+
+    When an alias (e.g., 'openssl') was previously installed, the directory
+    lives under the alias name. Since installs now use the resolved name
+    (e.g., 'openssl4'), remove the stale alias directories.
+    """
+    from koopa.alert import alert
+
+    if not is_owner():
+        return
+    json_data = _import_app_json()
+    app_dir = _app_prefix()
+    if not os.path.isdir(app_dir):
+        return
+    to_remove: list[str] = []
+    for name in sorted(os.listdir(app_dir)):
+        if not os.path.isdir(os.path.join(app_dir, name)):
+            continue
+        entry = json_data.get(name, {})
+        if isinstance(entry, dict) and entry.get("alias_of"):
+            to_remove.append(name)
+    if not to_remove:
+        return
+    n = len(to_remove)
+    label = "alias" if n == 1 else "aliases"
+    alert(f"Removing {n} app {label} installed under old names: {', '.join(to_remove)}.")
+    for name in to_remove:
+        path = os.path.join(app_dir, name)
+        shutil.rmtree(path, ignore_errors=True)
+        opt_link = os.path.join(_opt_prefix(), name)
+        if os.path.islink(opt_link):
+            os.unlink(opt_link)
+
+
 def update_user_apps(*, verbose: bool = False) -> list[str]:
     """Update outdated user-mode apps (git-based). Returns names of updated apps."""
     from koopa.alert import alert, warn
