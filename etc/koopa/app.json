@@ -7703,7 +7703,9 @@
     "bin": [
       "rsync"
     ],
-    "conda_channel": "conda-forge",
+    "build_dependencies": [
+      "make"
+    ],
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -7711,15 +7713,13 @@
       "openssl",
       "xxhash",
       "zlib",
-      "zstd",
-      "conda"
+      "zstd"
     ],
     "description": "fast, versatile remote and local file-copying tool",
-    "installer": "conda-package",
     "man1": [
       "rsync.1"
     ],
-    "revision": 1,
+    "src_url": "https://download.samba.org/pub/rsync/src/rsync-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://download.samba.org/pub/rsync/src/?C=M;O=D"
