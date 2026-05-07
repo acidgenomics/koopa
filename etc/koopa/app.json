@@ -230,23 +230,9 @@
     "version": "1.37.0"
   },
   "armadillo": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "hdf5",
-      "zlib"
-    ],
     "description": "C++ linear algebra library",
-    "src_url": "https://sourceforge.net/projects/arma/files/armadillo-{version}.tar.xz/download",
-    "type": "library",
-    "url": [
-      "http://arma.sourceforge.net/download.html"
-    ],
-    "version": "15.2.6"
+    "removed": true
   },
   "asdf": {
     "bin": [
@@ -1420,19 +1406,9 @@
     "version": "10.0.0"
   },
   "cereal": {
-    "build_dependencies": [
-      "cmake",
-      "make"
-    ],
-    "default": false,
+    "date": "",
     "description": "C++11 header-only serialization library",
-    "src_url": "https://github.com/USCiLab/cereal/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://uscilab.github.io/cereal/",
-      "https://github.com/USCiLab/cereal"
-    ],
-    "version": "1.3.2"
+    "removed": true
   },
   "cheat": {
     "bin": [
@@ -1505,19 +1481,9 @@
     "version": "2.1.131"
   },
   "cli11": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
     "description": "command-line argument parser library for C++11",
-    "src_url": "https://github.com/CLIUtils/CLI11/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/CLIUtils/CLI11/"
-    ],
-    "version": "2.6.2"
+    "removed": true
   },
   "cloudbiolinux": {
     "date": "2023-12-22",
@@ -2185,13 +2151,14 @@
     "bin": [
       "duckdb"
     ],
-    "build_dependencies": [
-      "cmake",
-      "python"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "in-process analytical SQL database",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://duckdb.org/",
@@ -2677,48 +2644,14 @@
     "version": "2.6.4"
   },
   "fltk": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "freetype",
-      "libjpeg-turbo",
-      "libpng",
-      "xorg-libpthread-stubs",
-      "xorg-libx11",
-      "xorg-libxau",
-      "xorg-libxcb",
-      "xorg-libxdmcp",
-      "xorg-xorgproto",
-      "xorg-xtrans",
-      "zlib"
-    ],
     "description": "cross-platform C++ GUI toolkit",
-    "src_url": "https://github.com/fltk/fltk/releases/download/release-{version}/fltk-{version}-source.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.fltk.org/"
-    ],
-    "version": "1.4.5"
+    "removed": true
   },
   "fmt": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2025-10-31",
-    "default": false,
     "description": "modern C++ formatting library",
-    "src_url": "https://github.com/fmtlib/fmt/archive/refs/tags/{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://fmt.dev/",
-      "https://github.com/fmtlib/fmt/"
-    ],
-    "version": "12.1.0"
+    "removed": true
   },
   "fontconfig": {
     "build_dependencies": [
@@ -2805,19 +2738,9 @@
     "version": "2.14.3"
   },
   "fribidi": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2024-09-27",
-    "default": false,
     "description": "implementation of the Unicode Bidirectional Algorithm",
-    "src_url": "https://github.com/fribidi/fribidi/releases/download/v{version}/fribidi-{version}.tar.xz",
-    "type": "library",
-    "url": [
-      "https://github.com/fribidi/fribidi/"
-    ],
-    "version": "1.0.16"
+    "removed": true
   },
   "fzf": {
     "bin": [
@@ -2932,50 +2855,9 @@
     "version": "16.1.0"
   },
   "gdal": {
-    "bin": [
-      "gdal-config"
-    ],
-    "build_dependencies": [
-      "cmake",
-      "libtool",
-      "pkg-config"
-    ],
     "date": "2026-04-29",
-    "default": false,
-    "dependencies": [
-      "bison",
-      "curl",
-      "expat",
-      "geos",
-      "hdf5",
-      "icu4c",
-      "libdeflate",
-      "libiconv",
-      "libjpeg-turbo",
-      "libpng",
-      "libtiff",
-      "libxml2",
-      "lz4",
-      "openjpeg",
-      "openssl",
-      "pcre2",
-      "proj",
-      "sqlite",
-      "temurin",
-      "xz",
-      "zlib",
-      "zstd"
-    ],
     "description": "geospatial data abstraction library",
-    "man1": [
-      "gdal-config.1"
-    ],
-    "src_url": "https://github.com/OSGeo/gdal/releases/download/v{version}/gdal-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://gdal.org/"
-    ],
-    "version": "3.12.4"
+    "removed": true
   },
   "gdbm": {
     "build_dependencies": [
@@ -3502,23 +3384,9 @@
     "version": "3.3"
   },
   "graphviz": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "expat"
-    ],
     "description": "graph visualization software",
-    "src_url": "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/{version}/graphviz-{version}.tar.xz",
-    "type": "library",
-    "url": [
-      "https://www.graphviz.org/download/source/",
-      "https://gitlab.com/graphviz/graphviz/-/releases"
-    ],
-    "version": "14.1.5"
+    "removed": true
   },
   "grep": {
     "bin": [
@@ -3622,21 +3490,9 @@
     "version": "1.2.1"
   },
   "gsl": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2024-12-30",
-    "default": false,
     "description": "GNU Scientific Library for numerical computation",
-    "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/gsl/gsl-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.gnu.org/software/gsl/",
-      "https://mirror.ibcp.fr/pub/gnu/gsl/?C=M;O=D"
-    ],
-    "version": "2.8"
+    "removed": true
   },
   "gtop": {
     "bin": [
@@ -3749,30 +3605,9 @@
     "version": "2.14.0"
   },
   "harfbuzz": {
-    "build_dependencies": [
-      "cmake",
-      "meson",
-      "ninja",
-      "pkg-config"
-    ],
     "date": "2026-04-22",
-    "default": false,
-    "dependencies": [
-      "freetype",
-      "gettext",
-      "glib",
-      "icu4c",
-      "libffi",
-      "pcre2",
-      "zlib"
-    ],
     "description": "text shaping engine",
-    "src_url": "https://github.com/harfbuzz/harfbuzz/archive/{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/harfbuzz/harfbuzz/"
-    ],
-    "version": "14.2.0"
+    "removed": true
   },
   "haskell-cabal": {
     "bin": [
@@ -4160,63 +3995,9 @@
     "version": "2.45.0"
   },
   "imagemagick": {
-    "bin": [
-      "Magick++-config",
-      "MagickCore-config",
-      "MagickWand-config",
-      "magick",
-      "magick-script"
-    ],
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "bzip2",
-      "fontconfig",
-      "freetype",
-      "icu4c",
-      "jpeg",
-      "libheif",
-      "libpng",
-      "libtiff",
-      "libtool",
-      "libxml2",
-      "libzip",
-      "xorg-libice",
-      "xorg-libpthread-stubs",
-      "xorg-libsm",
-      "xorg-libx11",
-      "xorg-libxau",
-      "xorg-libxcb",
-      "xorg-libxdmcp",
-      "xorg-libxext",
-      "xorg-libxrender",
-      "xorg-libxt",
-      "xorg-xcb-proto",
-      "xorg-xorgproto",
-      "xz",
-      "zlib",
-      "zstd"
-    ],
     "description": "create, edit, compose, and convert images",
-    "man1": [
-      "ImageMagick.1",
-      "Magick++-config.1",
-      "MagickCore-config.1",
-      "MagickWand-config.1",
-      "magick.1",
-      "magick-script.1"
-    ],
-    "mirror": true,
-    "src_url": "https://imagemagick.org/archive/releases/ImageMagick-{version}.tar.xz",
-    "type": "library",
-    "url": [
-      "https://imagemagick.org/"
-    ],
-    "version": "7.1.2-21"
+    "removed": true
   },
   "ipython": {
     "bin": [
@@ -4273,20 +4054,9 @@
     "version": "8.0.1"
   },
   "jemalloc": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-04-15",
-    "default": false,
     "description": "general-purpose malloc implementation with profiling support",
-    "src_url": "https://github.com/jemalloc/jemalloc/releases/download/{version}/jemalloc-{version}.tar.bz2",
-    "type": "library",
-    "url": [
-      "http://jemalloc.net/",
-      "https://github.com/jemalloc/jemalloc/"
-    ],
-    "version": "5.3.1"
+    "removed": true
   },
   "jfrog-cli": {
     "bin": [
@@ -4330,20 +4100,9 @@
     "version": "0.9.0"
   },
   "jpeg": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2024-12-30",
-    "default": false,
     "description": "IJG JPEG image compression library",
-    "mirror": true,
-    "src_url": "https://www.ijg.org/files/jpegsrc.v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.ijg.org/"
-    ],
-    "version": "9f"
+    "removed": true
   },
   "jq": {
     "bin": [
@@ -4501,22 +4260,9 @@
     "version": "3.100"
   },
   "lapack": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2025-01-08",
-    "default": false,
     "description": "linear algebra package for numerical computation",
-    "notes": [
-      "LAPACK is written in Fortran, which is why we require system gfortran."
-    ],
-    "src_url": "https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.netlib.org/lapack/"
-    ],
-    "version": "3.12.1"
+    "removed": true
   },
   "latch": {
     "bin": [
@@ -4695,33 +4441,14 @@
     "version": "0.13.0"
   },
   "libconfig": {
-    "build_dependencies": [
-      "make"
-    ],
     "date": "2026-01-02",
-    "default": false,
     "description": "C and C++ library for processing configuration files",
-    "src_url": "https://github.com/hyperrealm/libconfig/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://hyperrealm.github.io/libconfig/",
-      "https://github.com/hyperrealm/libconfig/"
-    ],
-    "version": "1.8.2"
+    "removed": true
   },
   "libde265": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2026-03-19",
-    "default": false,
     "description": "open H.265/HEVC video codec implementation",
-    "src_url": "https://github.com/strukturag/libde265/releases/download/v{version}/libde265-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/strukturag/libde265/"
-    ],
-    "version": "1.0.18"
+    "removed": true
   },
   "libdeflate": {
     "build_dependencies": [
@@ -4837,53 +4564,14 @@
     "version": "1.12.2"
   },
   "libgeotiff": {
-    "build_dependencies": [
-      "libtool",
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "curl",
-      "libjpeg-turbo",
-      "libssh2",
-      "libtiff",
-      "openssl",
-      "proj",
-      "sqlite",
-      "zlib",
-      "zstd"
-    ],
     "description": "library for georeferenced TIFF files",
-    "mirror": true,
-    "src_url": "https://download.osgeo.org/geotiff/libgeotiff/libgeotiff-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/OSGeo/libgeotiff/"
-    ],
-    "version": "1.7.4"
+    "removed": true
   },
   "libgit2": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-05-04",
-    "default": false,
-    "dependencies": [
-      "libssh2",
-      "openssl",
-      "pcre",
-      "zlib"
-    ],
     "description": "portable C library implementing Git core",
-    "src_url": "https://github.com/libgit2/libgit2/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/libgit2/libgit2/"
-    ],
-    "version": "1.9.3"
+    "removed": true
   },
   "libgpg-error": {
     "build_dependencies": [
@@ -4901,26 +4589,9 @@
     "version": "1.60"
   },
   "libheif": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "libde265",
-      "libjpeg-turbo",
-      "libpng",
-      "zlib"
-    ],
     "description": "HEIF and HEVC image format library",
-    "src_url": "https://github.com/strukturag/libheif/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.libde265.org/",
-      "https://github.com/strukturag/libheif"
-    ],
-    "version": "1.21.2"
+    "removed": true
   },
   "libiconv": {
     "build_dependencies": [
@@ -5005,22 +4676,9 @@
     "version": "2.50"
   },
   "libluv": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2026-05-06",
-    "default": false,
-    "dependencies": [
-      "libuv",
-      "luajit"
-    ],
     "description": "async I/O bindings for Lua used by Neovim",
-    "src_url": "https://github.com/luvit/luv/archive/refs/tags/{version}-0.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/luvit/luv/"
-    ],
-    "version": "1.52.1"
+    "removed": true
   },
   "libpcap": {
     "build_dependencies": [
@@ -5078,22 +4736,9 @@
     "version": "1.6.58"
   },
   "libsolv": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "zlib"
-    ],
     "description": "dependency solver library",
-    "src_url": "https://github.com/openSUSE/libsolv/archive/refs/tags/{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/openSUSE/libsolv/"
-    ],
-    "version": "0.7.37"
+    "removed": true
   },
   "libssh2": {
     "build_dependencies": [
@@ -5132,25 +4777,9 @@
     "version": "4.21.0"
   },
   "libtermkey": {
-    "build_dependencies": [
-      "libtool",
-      "make",
-      "pkg-config"
-    ],
     "date": "2022-09-09",
-    "default": false,
-    "dependencies": [
-      "ncurses",
-      "unibilium"
-    ],
     "description": "library for processing keyboard input in terminals",
-    "mirror": true,
-    "src_url": "https://www.leonerd.org.uk/code/libtermkey/libtermkey-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.leonerd.org.uk/code/libtermkey/"
-    ],
-    "version": "0.22"
+    "removed": true
   },
   "libtiff": {
     "build_dependencies": [
@@ -5215,44 +4844,14 @@
     "version": "1.4.2"
   },
   "libuv": {
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "libtool",
-      "m4",
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-03-19",
-    "default": false,
     "description": "multi-platform async I/O library used by Node.js",
-    "src_url": "https://github.com/libuv/libuv/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/libuv/libuv/"
-    ],
-    "version": "1.52.1"
+    "removed": true
   },
   "libvterm": {
-    "build_dependencies": [
-      "libtool",
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
     "description": "VT220/xterm/256-color terminal emulator library",
-    "mirror": true,
-    "notes": [
-      "0.2.0 is incompatible with neovim."
-    ],
-    "outdated": true,
-    "src_url": "https://www.leonerd.org.uk/code/libvterm/libvterm-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.leonerd.org.uk/code/libvterm/"
-    ],
-    "version": "0.3.3"
+    "removed": true
   },
   "libxcrypt": {
     "build_dependencies": [
@@ -5331,28 +4930,9 @@
     "version": "0.2.5"
   },
   "libzip": {
-    "build_dependencies": [
-      "cmake",
-      "make",
-      "pkg-config"
-    ],
     "date": "2025-05-30",
-    "default": false,
-    "dependencies": [
-      "bzip2",
-      "nettle",
-      "openssl",
-      "perl",
-      "zlib",
-      "zstd"
-    ],
     "description": "library for reading, creating, and modifying ZIP files",
-    "src_url": "https://github.com/nih-at/libzip/releases/download/v{version}/libzip-{version}.tar.xz",
-    "type": "library",
-    "url": [
-      "https://libzip.org/"
-    ],
-    "version": "1.11.4"
+    "removed": true
   },
   "llama": {
     "bin": [
@@ -5583,20 +5163,9 @@
     "version": "1.26"
   },
   "lzo": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2022-08-29",
-    "default": false,
     "description": "fast lossless data compression library",
-    "mirror": true,
-    "src_url": "https://www.oberhumer.com/opensource/lzo/download/lzo-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.oberhumer.com/opensource/lzo/"
-    ],
-    "version": "2.10"
+    "removed": true
   },
   "m4": {
     "bin": [
@@ -5803,19 +5372,9 @@
     "version": "6.18.1"
   },
   "mimalloc": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
     "description": "compact general-purpose memory allocator by Microsoft",
-    "src_url": "https://github.com/microsoft/mimalloc/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/microsoft/mimalloc"
-    ],
-    "version": "3.3.2"
+    "removed": true
   },
   "minimap2": {
     "bin": [
@@ -5863,25 +5422,9 @@
     "version": "0.5.4"
   },
   "mold": {
-    "build_dependencies": [
-      "cmake",
-      "make"
-    ],
     "date": "2026-04-15",
-    "default": false,
-    "dependencies": [
-      "mimalloc",
-      "tbb",
-      "zlib",
-      "zstd"
-    ],
     "description": "high-speed linker for ELF binaries",
-    "src_url": "https://github.com/rui314/mold/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/rui314/mold/"
-    ],
-    "version": "2.41.0"
+    "removed": true
   },
   "mosaicml-cli": {
     "bin": [
@@ -5953,22 +5496,9 @@
     "version": "4.2.2"
   },
   "msgpack": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "boost"
-    ],
     "description": "efficient binary serialization format library",
-    "src_url": "https://github.com/msgpack/msgpack-c/releases/download/cpp-{version}/msgpack-cxx-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://msgpack.org/",
-      "https://github.com/msgpack/msgpack-c/"
-    ],
-    "version": "7.0.0"
+    "removed": true
   },
   "multiqc": {
     "bin": [
@@ -6307,19 +5837,9 @@
     "version": "1.13.2"
   },
   "nlohmann-json": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2025-04-11",
-    "default": false,
     "description": "modern JSON library for C++",
-    "src_url": "https://github.com/nlohmann/json/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/nlohmann/json/"
-    ],
-    "version": "3.12.0"
+    "removed": true
   },
   "nmap": {
     "bin": [
@@ -6413,23 +5933,9 @@
     "version": "0.112.2"
   },
   "oniguruma": {
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "libtool",
-      "m4",
-      "make",
-      "pkg-config"
-    ],
     "date": "2025-01-02",
-    "default": false,
     "description": "regular expressions library",
-    "src_url": "https://github.com/kkos/oniguruma/releases/download/v{version}/onig-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/kkos/oniguruma/"
-    ],
-    "version": "6.9.10"
+    "removed": true
   },
   "ont-bonito": {
     "bin": [
@@ -6491,23 +5997,9 @@
     "version": "6.5.7"
   },
   "ont-vbz-compression": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "hdf5",
-      "zlib",
-      "zstd"
-    ],
     "description": "VBZ compression plugin for Oxford Nanopore data",
-    "src_url": "https://github.com/nanoporetech/vbz_compression/archive/refs/tags/{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/nanoporetech/vbz_compression/"
-    ],
-    "version": "1.0.13"
+    "removed": true
   },
   "openbb": {
     "date": "2024-05-16",
@@ -6532,27 +6024,9 @@
     "version": "0.3.33"
   },
   "openjpeg": {
-    "build_dependencies": [
-      "cmake",
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "libjpeg-turbo",
-      "libpng",
-      "libtiff",
-      "zlib",
-      "zstd"
-    ],
     "description": "open-source JPEG 2000 codec",
-    "src_url": "https://github.com/uclouvain/openjpeg/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.openjpeg.org/"
-    ],
-    "version": "2.5.4"
+    "removed": true
   },
   "openldap": {
     "build_dependencies": [
@@ -7214,19 +6688,9 @@
     "version": "0.4.2"
   },
   "pybind11": {
-    "build_dependencies": [
-      "cmake",
-      "python"
-    ],
     "date": "2026-04-22",
-    "default": false,
     "description": "C++11 header-only bindings between C++ and Python",
-    "src_url": "https://github.com/pybind/pybind11/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://pybind11.readthedocs.io/"
-    ],
-    "version": "3.0.4"
+    "removed": true
   },
   "pycodestyle": {
     "bin": [
@@ -8068,19 +7532,9 @@
     "version": "2.02"
   },
   "reproc": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-04-15",
-    "default": false,
     "description": "cross-platform child process library",
-    "src_url": "https://github.com/DaanDeMeyer/reproc/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/DaanDeMeyer/reproc/"
-    ],
-    "version": "14.2.7"
+    "removed": true
   },
   "ripgrep": {
     "bin": [
@@ -8689,18 +8143,9 @@
     "version": "0.6.2"
   },
   "simdjson": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2026-05-02",
-    "default": false,
     "description": "JSON parser using SIMD instructions for high throughput",
-    "src_url": "https://github.com/simdjson/simdjson/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://simdjson.org"
-    ],
-    "version": "4.6.3"
+    "removed": true
   },
   "snakefmt": {
     "bin": [
@@ -8790,22 +8235,9 @@
     "version": "eed9d8f14951d9802665aa3429e449b71bb15a3a"
   },
   "spdlog": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-01-09",
-    "default": false,
-    "dependencies": [
-      "fmt"
-    ],
     "description": "fast C++ logging library",
-    "src_url": "https://github.com/gabime/spdlog/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/gabime/spdlog/"
-    ],
-    "version": "1.17.0"
+    "removed": true
   },
   "sphinx": {
     "bin": [
@@ -8876,26 +8308,9 @@
     "version": "3.53.1"
   },
   "staden-io-lib": {
-    "build_dependencies": [
-      "make"
-    ],
     "date": "2026-05-06",
-    "default": false,
-    "dependencies": [
-      "bzip2",
-      "curl",
-      "libdeflate",
-      "xz",
-      "zlib",
-      "zstd"
-    ],
     "description": "library for reading and writing sequencing data formats",
-    "src_url": "https://github.com/jkbonfield/io_lib/releases/download/io_lib-{version_kebab}/io_lib-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/jkbonfield/io_lib"
-    ],
-    "version": "1.16.0"
+    "removed": true
   },
   "star": {
     "bin": [
@@ -9126,20 +8541,9 @@
     "version": "1.35"
   },
   "tbb": {
-    "build_dependencies": [
-      "cmake",
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
     "description": "Intel oneAPI Threading Building Blocks for parallel C++",
-    "src_url": "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/oneapi-src/oneTBB"
-    ],
-    "version": "2023.0.0"
+    "removed": true
   },
   "tcl-tk": {
     "build_dependencies": [
@@ -9206,19 +8610,9 @@
     "version": "25.0.3+9"
   },
   "termcolor": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2022-11-05",
-    "default": false,
     "description": "Python library for ANSI color output",
-    "src_url": "https://github.com/ikalnytskyi/termcolor/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://termcolor.readthedocs.io/",
-      "https://github.com/ikalnytskyi/termcolor/"
-    ],
-    "version": "2.1.0"
+    "removed": true
   },
   "texinfo": {
     "bin": [
@@ -9258,18 +8652,9 @@
     "version": "7.3"
   },
   "tl-expected": {
-    "build_dependencies": [
-      "cmake"
-    ],
     "date": "2025-10-08",
-    "default": false,
     "description": "C++ implementation of std::expected",
-    "src_url": "https://github.com/TartanLlama/expected/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/TartanLlama/expected/"
-    ],
-    "version": "1.3.1"
+    "removed": true
   },
   "tmux": {
     "bin": [
@@ -9355,20 +8740,9 @@
     "version": "2.3.2"
   },
   "tree-sitter": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-04-15",
-    "default": false,
     "description": "incremental parsing library for syntax trees",
-    "src_url": "https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://tree-sitter.github.io/tree-sitter/",
-      "https://github.com/tree-sitter/tree-sitter/"
-    ],
-    "version": "0.26.8"
+    "removed": true
   },
   "tryceratops": {
     "bin": [
@@ -9424,26 +8798,9 @@
     "version": "0.0.34"
   },
   "udunits": {
-    "bin": [
-      "udunits2"
-    ],
-    "build_dependencies": [
-      "make"
-    ],
     "date": "2022-08-30",
-    "default": false,
-    "dependencies": [
-      "expat"
-    ],
     "description": "library and utilities for units of physical quantities",
-    "mirror": true,
-    "src_url": "https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://www.unidata.ucar.edu/software/udunits/",
-      "https://downloads.unidata.ucar.edu/udunits/"
-    ],
-    "version": "2.2.28"
+    "removed": true
   },
   "umis": {
     "bin": [
@@ -9471,20 +8828,9 @@
     "version": "1.0.9"
   },
   "unibilium": {
-    "build_dependencies": [
-      "cmake",
-      "make",
-      "pkg-config"
-    ],
     "date": "2024-12-30",
-    "default": false,
     "description": "terminfo parser and utility library",
-    "src_url": "https://github.com/neovim/unibilium/archive/v{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/neovim/unibilium/"
-    ],
-    "version": "2.1.2"
+    "removed": true
   },
   "units": {
     "bin": [
@@ -9956,30 +9302,9 @@
     "version": "1.3.7"
   },
   "xorg-libxrandr": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
     "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "xorg-libpthread-stubs",
-      "xorg-libx11",
-      "xorg-libxau",
-      "xorg-libxcb",
-      "xorg-libxdmcp",
-      "xorg-libxext",
-      "xorg-libxrender",
-      "xorg-xorgproto"
-    ],
     "description": "X resize and rotate extension library",
-    "src_url": "https://xorg.freedesktop.org/archive/individual/lib/libXrandr-{version}.tar.xz",
-    "type": "library",
-    "url": [
-      "https://www.x.org/archive/individual/lib/?C=M;O=D",
-      "https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/tags"
-    ],
-    "version": "1.5.5"
+    "removed": true
   },
   "xorg-libxrender": {
     "build_dependencies": [
@@ -10205,19 +9530,9 @@
     "version": "5.8.3"
   },
   "yaml-cpp": {
-    "build_dependencies": [
-      "cmake",
-      "pkg-config"
-    ],
     "date": "2026-02-06",
-    "default": false,
     "description": "YAML parser and emitter for C++",
-    "src_url": "https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-{version}.tar.gz",
-    "type": "library",
-    "url": [
-      "https://github.com/jbeder/yaml-cpp/"
-    ],
-    "version": "0.9.0"
+    "removed": true
   },
   "yamllint": {
     "bin": [
