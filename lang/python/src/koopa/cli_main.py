@@ -409,7 +409,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
 
 
 def _reinstall_all(*, verbose: bool = False) -> None:
-    """Reinstall all installed apps in dependency order."""
+    """Reinstall all installed apps and install any missing defaults."""
     from koopa.alert import alert, alert_success
     from koopa.app import installed_apps
     from koopa.install import (
@@ -423,6 +423,7 @@ def _reinstall_all(*, verbose: bool = False) -> None:
         _remove_from_pending_plan,
         _save_pending_plan,
         install_app,
+        install_missing_default_apps,
     )
     from koopa.install import _build_passthrough_args as _build_passthrough_args_by_name
 
@@ -430,46 +431,47 @@ def _reinstall_all(*, verbose: bool = False) -> None:
     apps_with_reasons = [(app, "rebuild all") for app in installed if _is_supported_app(app)]
     if not apps_with_reasons:
         alert_success("No installed apps to rebuild.")
-        return
-    plan, dep_map = _compute_install_plan(apps_with_reasons)
-    apps = [a for a, _ in plan]
-    n = len(apps)
-    label = "app" if n == 1 else "apps"
-    display = ", ".join(apps[:100]) + ", ..." if n > 100 else ", ".join(apps)
-    alert(f"Reinstalling {n} {label}: {display}.")
-    _save_pending_plan(plan)
-    acquired = _acquire_install_lock()
-    failed: set[str] = set()
-    try:
-        for app, reason in plan:
-            app_deps_in_plan = dep_map.get(app, set())
-            if app_deps_in_plan & failed:
-                failed.add(app)
-                continue
-            try:
-                config = InstallConfig(
-                    name=app,
-                    reinstall=True,
-                    reinstall_reason=reason,
-                    deps=False,
-                    verbose=verbose,
-                    binary=_can_install_binary(),
-                    push=_can_push_binary(),
-                    passthrough_args=_build_passthrough_args_by_name(app),
-                )
-                install_app(config)
-                _remove_from_pending_plan(app)
-            except Exception as exc:
-                alert(f"Failed to install {app}: {exc}")
-                failed.add(app)
-    finally:
-        if acquired:
-            _release_install_lock()
-    if failed:
-        alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
     else:
-        _save_pending_plan([])
-        alert_success("All apps reinstalled successfully.")
+        plan, dep_map = _compute_install_plan(apps_with_reasons)
+        apps = [a for a, _ in plan]
+        n = len(apps)
+        label = "app" if n == 1 else "apps"
+        display = ", ".join(apps[:100]) + ", ..." if n > 100 else ", ".join(apps)
+        alert(f"Reinstalling {n} {label}: {display}.")
+        _save_pending_plan(plan)
+        acquired = _acquire_install_lock()
+        failed: set[str] = set()
+        try:
+            for app, reason in plan:
+                app_deps_in_plan = dep_map.get(app, set())
+                if app_deps_in_plan & failed:
+                    failed.add(app)
+                    continue
+                try:
+                    config = InstallConfig(
+                        name=app,
+                        reinstall=True,
+                        reinstall_reason=reason,
+                        deps=False,
+                        verbose=verbose,
+                        binary=_can_install_binary(),
+                        push=_can_push_binary(),
+                        passthrough_args=_build_passthrough_args_by_name(app),
+                    )
+                    install_app(config)
+                    _remove_from_pending_plan(app)
+                except Exception as exc:
+                    alert(f"Failed to install {app}: {exc}")
+                    failed.add(app)
+        finally:
+            if acquired:
+                _release_install_lock()
+        if failed:
+            alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
+        else:
+            _save_pending_plan([])
+            alert_success("All apps reinstalled successfully.")
+    install_missing_default_apps(verbose=verbose)
 
 
 def _reinstall_with_revdeps(
