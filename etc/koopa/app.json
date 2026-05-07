@@ -3119,23 +3119,23 @@
     ],
     "build_dependencies": [
       "autoconf",
+      "bash",
+      "less",
       "make",
+      "perl",
+      "python",
+      "vim",
       "xz"
     ],
     "date": "2026-04-24",
     "default": true,
     "dependencies": [
-      "bash",
       "curl",
       "expat",
       "gettext",
-      "less",
       "libiconv",
       "openssl",
       "pcre2",
-      "perl",
-      "python",
-      "vim",
       "zlib"
     ],
     "description": "distributed version control system",
@@ -3548,9 +3548,6 @@
     ],
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "less"
-    ],
     "description": "GNU file compression and decompression utility",
     "installer": "gnu-app",
     "man1": [
@@ -4321,21 +4318,27 @@
     "bin": [
       "less"
     ],
-    "conda_channel": "conda-forge",
-    "date": "2026-05-07",
+    "build_dependencies": [
+      "autoconf",
+      "groff",
+      "make"
+    ],
+    "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "conda"
+      "ncurses",
+      "pcre2"
     ],
     "description": "terminal pager with backward navigation",
-    "installer": "conda-package",
     "man1": [
       "less.1"
     ],
+    "src_url": "https://github.com/gwsw/less/archive/refs/tags/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
-      "https://github.com/gwsw/less/"
+      "https://github.com/gwsw/less/",
+      "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
     ],
     "version": "700"
   },
@@ -5817,11 +5820,11 @@
     "bin": [
       "ninja"
     ],
-    "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
       "python"
     ],
+    "date": "2026-05-02",
+    "default": false,
     "description": "small, fast build system",
     "src_url": "https://github.com/ninja-build/ninja/archive/v{version}.tar.gz",
     "type": "build_tool",
@@ -6619,7 +6622,8 @@
     "build_dependencies": [
       "cmake",
       "make",
-      "pkg-config"
+      "pkg-config",
+      "python"
     ],
     "date": "2026-04-15",
     "default": false,
@@ -6627,7 +6631,6 @@
       "curl",
       "libjpeg-turbo",
       "libtiff",
-      "python",
       "sqlite",
       "zlib",
       "zstd"
@@ -8446,7 +8449,10 @@
     ],
     "build_dependencies": [
       "make",
-      "pkg-config"
+      "perl",
+      "pkg-config",
+      "python",
+      "ruby"
     ],
     "date": "2024-12-30",
     "default": false,
@@ -8454,9 +8460,6 @@
       "apr",
       "apr-util",
       "openssl",
-      "perl",
-      "python",
-      "ruby",
       "serf",
       "sqlite",
       "zlib"
