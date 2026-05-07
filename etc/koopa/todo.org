@@ -1,40 +1,73 @@
 * High complexity
 * Medium complexity
-** TODO Can we reduce the number of dependencies when building r and r-devel from source. For example, we don't want to include gdal here. We previously used to bundle more dependencies for complicated R analysis, but we don't need to support this anymore. Can we identify apps that are only used here in relation to R, like proj, geos, and consider removing them from koopa install support?
 ** TODO Does `koopa install --all` attempt to install private apps like `cellranger`, even if a user doesn't have access to our private S3 bucket?
 ** TODO Review potential orphan apps that we can remove from support in koopa:
     - Geospatial chain: gdal, geos, proj, udunits, libgeotiff
     - Libraries: imagemagick, libgit2, fribidi, harfbuzz
     - Orphaned dependents: armadillo, ont-vbz-compression
-    - Utilities (no other dependents): coreutils, gawk, sed, xorg-libxrandr
-** TODO Review why we're seeing these errors during claude review:
-    ERROR: bedtools depends on unknown app: macos-arm64
-    ERROR: bedtools depends on unknown app: noarch
-    ERROR: chezmoi depends on unknown app: macos-amd64
-    ERROR: chezmoi depends on unknown app: noarch
-    ERROR: coreutils depends on unknown app: macos-amd64
-    ERROR: coreutils depends on unknown app: macos-arm64
-    ERROR: coreutils depends on unknown app: noarch
-    ERROR: patch depends on unknown app: macos-amd64
-    ERROR: patch depends on unknown app: macos-arm64
-    ERROR: patch depends on unknown app: noarch
-    ERROR: python3.10 depends on unknown app: default
-    ERROR: python3.10 depends on unknown app: firewall_linux
-    ERROR: python3.10 depends on unknown app: firewall_macos
-    ERROR: python3.11 depends on unknown app: default
-    ERROR: python3.11 depends on unknown app: firewall_linux
-    ERROR: python3.11 depends on unknown app: firewall_macos
-    ERROR: python3.12 depends on unknown app: default
-    ERROR: python3.12 depends on unknown app: firewall_linux
-    ERROR: python3.12 depends on unknown app: firewall_macos
-    ERROR: python3.13 depends on unknown app: default
-    ERROR: python3.13 depends on unknown app: firewall_linux
-    ERROR: python3.13 depends on unknown app: firewall_macos
-    ERROR: python3.14 depends on unknown app: default
-    ERROR: python3.14 depends on unknown app: firewall_linux
-    ERROR: python3.14 depends on unknown app: firewall_macos
-    ERROR: samtools depends on unknown app: macos-arm64
-    ERROR: samtools depends on unknown app: noarch
+    - Utilities (no other dependents): xorg-libxrandr
+** TODO Orphan app review:
+    Found 60 orphan app(s):
+  apache-arrow (library)
+  armadillo (library)
+  asdf (build_tool)
+  cereal (library)
+  chemacs (library)
+  cli11 (library)
+  fgbio (library)
+  fish (build_tool)
+  fltk (library)
+  fribidi (library)
+  gcc (build_tool)
+  gdal (build_tool)
+  graphviz (library)
+  gsl (library)
+  harfbuzz (library)
+  imagemagick (build_tool)
+  jemalloc (library)
+  lapack (library)
+  libconfig (library)
+  libev (library)
+  libgeotiff (library)
+  libgit2 (library)
+  libluv (library)
+  libsolv (library)
+  libtermkey (library)
+  libvterm (library)
+  lmod (library)
+  lzo (library)
+  mamba (build_tool)
+  mold (library)
+  msgpack (library)
+  ncbi-vdb (library)
+  nlohmann-json (library)
+  oniguruma (library)
+  ont-vbz-compression (library)
+  openbb (library)
+  openssh (library)
+  pbzip2 (library)
+  pipx (build_tool)
+  pkgconf (build_tool)
+  pybind11 (library)
+  pyenv (build_tool)
+  python3.11 (build_tool)
+  python3.12 (build_tool)
+  rbenv (build_tool)
+  reproc (library)
+  rstudio-server (library)
+  shiny-server (library)
+  simdjson (library)
+  spdlog (library)
+  staden-io-lib (library)
+  termcolor (library)
+  tl-expected (library)
+  tree-sitter (library)
+  udunits (build_tool)
+  wget2 (build_tool)
+  xorg-libxrandr (library)
+  yaml-cpp (library)
+  zopfli (library)
+  zsh (build_tool)
 * Low complexity
 ** TODO Remove `koopa system test`
     $ koopa system test
