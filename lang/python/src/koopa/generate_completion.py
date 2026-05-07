@@ -420,6 +420,7 @@ _TOP_CMDS = [
     "run",
     "system",
     "uninstall",
+    "uninstall-non-default-apps",
     "update",
     "version",
 ]
@@ -438,6 +439,7 @@ _TOP_CMD_DESCS = {
     "run": "Run a utility command",
     "system": "System operations",
     "uninstall": "Uninstall an app",
+    "uninstall-non-default-apps": "Uninstall non-default apps",
     "update": "Update installed apps",
     "version": "Show koopa version",
 }
@@ -1004,6 +1006,7 @@ def generate_completion() -> None:  # noqa: PLR0915
                 "run",
                 "system",
                 "uninstall",
+                "uninstall-non-default-apps",
                 "update",
                 "version",
             ],

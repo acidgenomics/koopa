@@ -1,4 +1,10 @@
 * High complexity
 * Medium complexity
+** TODO Rework 'koopa install-default-apps' as 'koopa install'.
+** TODO We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
 ** TODO Rework bootstrap.sh to use uv and bundled astral Python when not in a corporate environment.
 * Low complexity
+** TODO Remove `koopa internal`
+** TODO Remove 'koopa version' in favor of 'koopa --version'.
+** TODO Can we add support for 'koopa -v' resolving to 'koopa --version'.
+** TODO Consider reorganization 'koopa uninstall-non-default-apps'.
