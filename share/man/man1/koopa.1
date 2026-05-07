@@ -26,8 +26,8 @@ Enable verbose output.
 .SH "COMMANDS"
 .SS "Package management"
 .TP
-\fBinstall\fR \fIapp...\fR
-Install one or more applications.
+\fBinstall\fR \fI[app...]\fR
+Install applications. No args installs defaults; --all installs all.
 .TP
 \fBreinstall\fR \fIapp...\fR
 Reinstall applications, with optional reverse dependency rebuilds.
@@ -54,19 +54,16 @@ System information, prefix lookups, and administration commands.
 \fBdevelop\fR \fIsubcommand\fR
 Developer and maintenance utilities.
 .TP
-\fBinternal\fR \fIsubcommand\fR
-Internal low-level utilities (not intended for direct use).
+\fBlist\-all\-apps\fR
+List all registered applications.
 .TP
-\fBversion\fR
-Print koopa version.
-.TP
-\fBinstall\-all\-apps\fR
-Install all registered applications.
-.TP
-\fBinstall\-default\-apps\fR
-Install the default set of applications.
+\fBlist\-default\-apps\fR
+List the default set of applications.
 .
 .SH "INSTALL OPTIONS"
+.TP
+\fB\-\-all\fR
+Install all registered applications.
 .TP
 \fB\-\-no\-dependencies\fR
 Skip dependency installation.

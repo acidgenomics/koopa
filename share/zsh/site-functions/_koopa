@@ -17,8 +17,6 @@ _koopa() {
         configure) return 0 ;;
         develop) _koopa_develop ;;
         install) _koopa_install ;;
-        install-all-apps) return 0 ;;
-        install-default-apps) return 0 ;;
         list-all-apps) return 0 ;;
         list-default-apps) return 0 ;;
         reinstall) _koopa_install ;;
@@ -36,9 +34,7 @@ _koopa_cmds() {
         'app:Application management'
         'configure:Configure system'
         'develop:Development utilities'
-        'install:Install an app'
-        'install-all-apps:Install all apps'
-        'install-default-apps:Install default apps'
+        'install:Install apps'
         'list-all-apps:List all available apps'
         'list-default-apps:List default apps'
         'reinstall:Reinstall an app'

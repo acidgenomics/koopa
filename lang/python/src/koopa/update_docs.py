@@ -184,7 +184,7 @@ def _render_default_apps_section(apps: list[str]) -> str:
     lines = [
         "### Default application stack",
         "",
-        "The following applications are installed by `koopa install-default-apps`:",
+        "The following applications are installed by `koopa install`:",
     ]
     for cat, cat_apps in bucketed.items():
         if not cat_apps:
