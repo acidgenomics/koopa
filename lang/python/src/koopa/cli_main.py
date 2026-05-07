@@ -192,6 +192,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- uninstall ------------------------------------------------------------
     uninstall_p = subparsers.add_parser("uninstall")
     uninstall_p.add_argument("apps", nargs="*")
+    uninstall_p.add_argument("--non-default", action="store_true", default=False)
     uninstall_p.add_argument("--system", action="store_true", default=False)
     uninstall_p.add_argument("--user", action="store_true", default=False)
     uninstall_p.add_argument("--no-revdeps", action="store_true", default=False)
@@ -237,9 +238,6 @@ def _build_parser() -> argparse.ArgumentParser:
     header_p.add_argument("remainder", nargs=argparse.REMAINDER)
     subparsers.add_parser("list-all-apps")
     subparsers.add_parser("list-default-apps")
-    uninstall_ndp = subparsers.add_parser("uninstall-non-default-apps")
-    uninstall_ndp.add_argument("--yes", "-y", action="store_true", default=False)
-    _add_common_flags(uninstall_ndp)
 
     return parser
 
@@ -496,6 +494,20 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     from koopa.uninstall import UninstallConfig, uninstall_app, uninstall_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
+    if args.non_default:
+        if apps:
+            print(
+                "Error: --non-default cannot be combined with app names.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        from koopa.uninstall import uninstall_non_default_apps
+
+        uninstall_non_default_apps(
+            yes=getattr(args, "yes", False),
+            verbose=getattr(args, "verbose", False),
+        )
+        return
     if not apps:
         apps = ["koopa"]
     if apps == ["koopa"]:
@@ -722,16 +734,6 @@ def _handle_header(_args: argparse.Namespace) -> None:
 
 
 
-def _handle_uninstall_non_default_apps(args: argparse.Namespace) -> None:
-    """Handle ``koopa uninstall-non-default-apps`` subcommand."""
-    _require_supported_platform()
-    from koopa.uninstall import uninstall_non_default_apps
-
-    uninstall_non_default_apps(
-        yes=getattr(args, "yes", False),
-        verbose=getattr(args, "verbose", False),
-    )
-
 
 def _handle_list_all_apps(_args: argparse.Namespace) -> None:
     """Handle ``koopa list-all-apps`` subcommand."""
@@ -799,7 +801,6 @@ def main() -> None:
         "header": _handle_header,
         "list-all-apps": _handle_list_all_apps,
         "list-default-apps": _handle_list_default_apps,
-        "uninstall-non-default-apps": _handle_uninstall_non_default_apps,
     }
     handler = handlers.get(args.command)
     if handler is None:
