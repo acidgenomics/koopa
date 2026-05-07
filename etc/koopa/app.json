@@ -1485,6 +1485,9 @@
     "removed": true
   },
   "cloudbiolinux": {
+    "build_dependencies": [
+      "git"
+    ],
     "date": "2023-12-22",
     "default": false,
     "description": "automated bioinformatics environment setup",
@@ -2097,6 +2100,9 @@
     "version": "0.9.6"
   },
   "doom-emacs": {
+    "build_dependencies": [
+      "git"
+    ],
     "date": "2026-05-06",
     "default": false,
     "dependencies": [
@@ -2111,6 +2117,9 @@
     "version": "a174a69259e082bcc743d472377a9a2035c79537"
   },
   "dotfiles": {
+    "build_dependencies": [
+      "git"
+    ],
     "date": "2026-05-05",
     "default": true,
     "dependencies": [
@@ -6576,6 +6585,9 @@
     "version": "7.6.1"
   },
   "prelude-emacs": {
+    "build_dependencies": [
+      "git"
+    ],
     "date": "2026-05-02",
     "default": false,
     "description": "community-maintained Emacs configuration",
@@ -8213,6 +8225,9 @@
     "version": "14.4.2"
   },
   "spacemacs": {
+    "build_dependencies": [
+      "git"
+    ],
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -8227,6 +8242,9 @@
     "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
   },
   "spacevim": {
+    "build_dependencies": [
+      "git"
+    ],
     "date": "2026-05-02",
     "default": false,
     "description": "modular Vim and Neovim configuration",
