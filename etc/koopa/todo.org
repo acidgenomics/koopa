@@ -30,8 +30,20 @@
     options:
     -h, --help  show this help message and exit
 ** TODO `koopa app --help` is also not informative.
+** TODO Not clear what we mean in `koopa system` currently. We need to reorganize commands that require admin/sudo here:
+    ~/.local/share/koopa develop a6678ee [!] 📦 0.16.0 <python 3.12.13: .venv>
+    $ koopa system
+    check                          force-eject                    reload-autofs
+    clean-launch-services          hostname                       spotlight
+    create-dmg                     ifactive                       switch-to-develop
+    disable-passwordless-sudo      info                           test
+    disable-touch-id-sudo          list                           update-tex-packages
+    enable-passwordless-sudo       os-string                      version
+    enable-touch-id-sudo           prefix                         which
+    flush-dns                      prune-apps                     zsh-compaudit-set-permissions
+    We're mixing things that help manage koopa install, and other things manage the system machine and require sudo permissions. That's not clear currently.
 * Low complexity
-** TODO Remove `koopa internal`
+** DONE Remove `koopa internal`
 ** TODO Remove 'koopa version' in favor of 'koopa --version'.
 ** TODO Can we add support for 'koopa -v' resolving to 'koopa --version'.
 ** TODO Consider reorganization 'koopa uninstall-non-default-apps'.
