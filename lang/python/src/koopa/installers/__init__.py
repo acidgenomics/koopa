@@ -34,7 +34,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "pkgconf": f"{_M}._conda",
     "postgresql": f"{_M}._conda",
     "rsync": f"{_M}.rsync",
-    "screen": f"{_M}._conda",
+    "screen": f"{_M}.screen",
     "stow": f"{_M}._conda",
     "tree": f"{_M}._conda",
     "which": f"{_M}._conda",
