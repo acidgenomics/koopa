@@ -73,7 +73,7 @@ _koopa_complete() {
         ['install-default-apps']='--help'
         ['list-all-apps']='--help'
         ['list-default-apps']='--help'
-        ['reinstall']='--all-revdeps --help --no-revdeps --only-revdeps --verbose'
+        ['reinstall']='--all --all-revdeps --help --no-revdeps --only-revdeps --verbose'
         ['run']='--help'
         ['system']='--help'
         ['uninstall']='--help --no-revdeps --system --user --verbose --yes'

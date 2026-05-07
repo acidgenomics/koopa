@@ -1902,6 +1902,7 @@ complete -c koopa -n '__fish_seen_subcommand_from install-all-apps' -l help
 complete -c koopa -n '__fish_seen_subcommand_from install-default-apps' -l help
 complete -c koopa -n '__fish_seen_subcommand_from list-all-apps' -l help
 complete -c koopa -n '__fish_seen_subcommand_from list-default-apps' -l help
+complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l all
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l all-revdeps
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l help
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l no-revdeps
