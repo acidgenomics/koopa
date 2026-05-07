@@ -1542,17 +1542,13 @@
       "cpack",
       "ctest"
     ],
-    "build_dependencies": [
-      "make"
-    ],
     "date": "2026-04-24",
     "default": false,
     "dependencies": [
-      "openssl3"
+      "conda"
     ],
     "description": "cross-platform build system generator",
-    "revision": 3,
-    "src_url": "https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}.tar.gz",
+    "installer": "conda-package",
     "type": "build_tool",
     "url": [
       "https://cmake.org/download/"

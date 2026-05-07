@@ -209,7 +209,19 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_common_flags(configure_p)
 
     # -- app ------------------------------------------------------------------
-    app_p = subparsers.add_parser("app")
+    app_p = subparsers.add_parser(
+        "app",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Application-specific utilities.",
+        epilog=(
+            "usage: koopa app <name> <subcommand> [args...]\n"
+            "\n"
+            "available apps:\n"
+            "  aws, bioconda, bowtie2, brew, conda, current, docker, file,\n"
+            "  ftp, git, gpg, hisat2, jekyll, kallisto, md5sum, miso, photos,\n"
+            "  r, rnaeditingindexer, rsem, salmon, sra, ssh, star, sys, wget"
+        ),
+    )
     app_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
     # -- list -----------------------------------------------------------------
@@ -217,11 +229,49 @@ def _build_parser() -> argparse.ArgumentParser:
     list_p.add_argument("--all", action="store_true", default=False)
 
     # -- system ---------------------------------------------------------------
-    system_p = subparsers.add_parser("system")
+    system_p = subparsers.add_parser(
+        "system",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="System information and koopa management.",
+        epilog=(
+            "subcommands:\n"
+            "  check              Run system checks\n"
+            "  hostname           Print system hostname\n"
+            "  ifactive           Show active network interfaces (macOS)\n"
+            "  info               Show system information\n"
+            "  list               List system info (app-versions, launch-agents, path-priority)\n"
+            "  os-string          Print OS identifier string\n"
+            "  prefix             Print installation prefix\n"
+            "  prune-apps         Remove stale app versions\n"
+            "  spotlight          Search using Spotlight (macOS)\n"
+            "  switch-to-develop  Switch to development branch\n"
+            "  test               Run koopa test suite\n"
+            "  version            Print app version\n"
+            "  which              Print real path of app"
+        ),
+    )
     system_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
     # -- admin ----------------------------------------------------------------
-    admin_p = subparsers.add_parser("admin")
+    admin_p = subparsers.add_parser(
+        "admin",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="System administration commands (require sudo).",
+        epilog=(
+            "subcommands:\n"
+            "  clean-launch-services        Clean Launch Services database (macOS)\n"
+            "  delete-cache                  Delete cache/log/tmp files (Linux)\n"
+            "  disable-passwordless-sudo     Disable passwordless sudo\n"
+            "  disable-touch-id-sudo         Disable Touch ID for sudo (macOS)\n"
+            "  enable-passwordless-sudo      Enable passwordless sudo\n"
+            "  enable-touch-id-sudo          Enable Touch ID for sudo (macOS)\n"
+            "  fix-sudo-setrlimit-error      Fix sudo setrlimit error (Linux)\n"
+            "  flush-dns                     Flush DNS cache (macOS)\n"
+            "  force-eject                   Force eject a volume (macOS)\n"
+            "  reload-autofs                 Reload autofs daemon (macOS)\n"
+            "  zsh-compaudit-set-permissions Fix Zsh compaudit permissions"
+        ),
+    )
     admin_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
     # -- develop --------------------------------------------------------------

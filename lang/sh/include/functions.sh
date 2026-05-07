@@ -426,7 +426,6 @@ _koopa_activate_conda() {
     unalias conda 2>/dev/null || true
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
-    _koopa_is_function 'conda' || return 1
     unset -v \
         __kvar_conda \
         __kvar_conda_setup \
@@ -872,7 +871,7 @@ _koopa_activate_today_bucket() {
     __kvar_bucket_dir="${KOOPA_BUCKET:-}"
     if [ -n "$__kvar_bucket_dir" ]
     then
-        [ -d "$KOOPA_BUCKET" ] || return 1
+        [ -d "$KOOPA_BUCKET" ] || return 0
         __kvar_today_link="${HOME:?}/today"
     elif [ -d "${HOME:?}/bucket" ]
     then
