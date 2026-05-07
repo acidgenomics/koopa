@@ -275,7 +275,6 @@ def _check_pypi(package: str) -> str:
     return data["info"]["version"]
 
 
-
 _CONDA_FEEDSTOCK_MAP: dict[str, str] = {
     "llvm": "llvmdev",
     "nvim": "nvim",
@@ -346,9 +345,7 @@ def _check_nongnu(package: str) -> str:
     except (urllib.error.URLError, OSError, TimeoutError) as exc:
         _raise_network_unavailable(exc)
         raise AssertionError("unreachable")
-    pattern = re.compile(
-        rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)"
-    )
+    pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions = pattern.findall(html)
     if not versions:
         msg = f"No versions found for {package}"
