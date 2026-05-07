@@ -873,17 +873,8 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     if subcmd == "prune-apps":
         _handle_prune_apps()
         return
-    if subcmd == "disable-passwordless-sudo":
-        _handle_disable_passwordless_sudo()
-        return
-    if subcmd == "enable-passwordless-sudo":
-        _handle_enable_passwordless_sudo()
-        return
     if subcmd == "switch-to-develop":
         _handle_switch_to_develop(rest)
-        return
-    if subcmd == "update-tex-packages":
-        _handle_update_tex_packages()
         return
     if subcmd == "hostname":
         _handle_hostname()
@@ -891,26 +882,46 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     if subcmd == "os-string":
         _handle_os_string()
         return
-    if subcmd == "zsh-compaudit-set-permissions":
-        _handle_zsh_compaudit_set_permissions()
+    if subcmd == "spotlight":
+        _handle_macos_spotlight_find(rest)
+        return
+    if subcmd == "ifactive":
+        _handle_macos_ifactive()
+        return
+    if subcmd == "test":
+        _handle_test()
+        return
+    print(f"Error: unknown system command '{subcmd}'.", file=sys.stderr)
+    sys.exit(1)
+
+
+def handle_admin(remainder: list[str]) -> None:  # noqa: PLR0911
+    """Dispatch ``koopa admin ...`` commands (require sudo/admin)."""
+    if not remainder:
+        print("Error: no admin command specified.", file=sys.stderr)
+        sys.exit(1)
+    subcmd = remainder[0]
+    rest = remainder[1:]
+    if subcmd == "clean-launch-services":
+        _handle_macos_clean_launch_services()
         return
     if subcmd == "delete-cache":
         _handle_linux_delete_cache()
         return
-    if subcmd == "fix-sudo-setrlimit-error":
-        _handle_linux_fix_sudo_setrlimit_error()
-        return
-    if subcmd == "spotlight":
-        _handle_macos_spotlight_find(rest)
-        return
-    if subcmd == "clean-launch-services":
-        _handle_macos_clean_launch_services()
+    if subcmd == "disable-passwordless-sudo":
+        _handle_disable_passwordless_sudo()
         return
     if subcmd == "disable-touch-id-sudo":
         _handle_macos_disable_touch_id_sudo()
         return
+    if subcmd == "enable-passwordless-sudo":
+        _handle_enable_passwordless_sudo()
+        return
     if subcmd == "enable-touch-id-sudo":
         _handle_macos_enable_touch_id_sudo()
+        return
+    if subcmd == "fix-sudo-setrlimit-error":
+        _handle_linux_fix_sudo_setrlimit_error()
         return
     if subcmd == "flush-dns":
         _handle_macos_flush_dns()
@@ -918,14 +929,11 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     if subcmd == "force-eject":
         _handle_macos_force_eject(rest)
         return
-    if subcmd == "ifactive":
-        _handle_macos_ifactive()
-        return
     if subcmd == "reload-autofs":
         _handle_macos_reload_autofs()
         return
-    if subcmd == "test":
-        _handle_test()
+    if subcmd == "zsh-compaudit-set-permissions":
+        _handle_zsh_compaudit_set_permissions()
         return
-    print(f"Error: unknown system command '{subcmd}'.", file=sys.stderr)
+    print(f"Error: unknown admin command '{subcmd}'.", file=sys.stderr)
     sys.exit(1)

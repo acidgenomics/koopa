@@ -1884,8 +1884,8 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 100:
-        display = ", ".join(apps[:100]) + ", ..."
+    if n > 10:
+        display = ", ".join(apps[:10]) + f", ... and {n - 10} more"
     else:
         display = ", ".join(apps)
     alert(f"Installing {n} missing default {label}: {display}.")
@@ -1955,8 +1955,8 @@ def install_shared_apps(mode: str = "default") -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 100:
-        display = ", ".join(apps[:100]) + ", ..."
+    if n > 10:
+        display = ", ".join(apps[:10]) + f", ... and {n - 10} more"
     else:
         display = ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
@@ -2403,7 +2403,6 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
         mode="user",
         reinstall=True,
         verbose=verbose,
-        quiet=True,
     )
     install_app(config)
     return True
@@ -2665,8 +2664,8 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 100:
-        display = ", ".join(apps[:100]) + ", ..."
+    if n > 10:
+        display = ", ".join(apps[:10]) + f", ... and {n - 10} more"
     else:
         display = ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")

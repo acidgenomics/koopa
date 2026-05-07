@@ -119,7 +119,6 @@ def _build_install_config(
     reinstall: bool = False,
     verbose: bool = False,
     deps: bool = True,
-    private: bool = False,
     extra_passthrough: list[str] | None = None,
 ) -> "InstallConfig":
     """Build an InstallConfig from app.json metadata."""
@@ -130,7 +129,7 @@ def _build_install_config(
     _check_platform_support(name, app_meta)
     installer = app_meta.get("installer", "")
     installer_platform = app_meta.get("installer_platform", "common")
-    is_private = app_meta.get("private", False) or private
+    is_private = app_meta.get("private", False)
     passthrough = _build_passthrough_args(app_meta)
     if extra_passthrough:
         passthrough.extend(extra_passthrough)
@@ -173,10 +172,7 @@ def _build_parser() -> argparse.ArgumentParser:
     install_p.add_argument("apps", nargs="*")
     install_p.add_argument("--all", action="store_true", default=False)
     install_p.add_argument("--no-dependencies", action="store_true", default=False)
-    install_p.add_argument("--private", action="store_true", default=False)
     install_p.add_argument("--reinstall", action="store_true", default=False)
-    install_p.add_argument("--system", action="store_true", default=False)
-    install_p.add_argument("--user", action="store_true", default=False)
     install_p.add_argument("-D", dest="passthrough", action="append", default=[])
     _add_common_flags(install_p)
 
@@ -193,8 +189,6 @@ def _build_parser() -> argparse.ArgumentParser:
     uninstall_p = subparsers.add_parser("uninstall")
     uninstall_p.add_argument("apps", nargs="*")
     uninstall_p.add_argument("--non-default", action="store_true", default=False)
-    uninstall_p.add_argument("--system", action="store_true", default=False)
-    uninstall_p.add_argument("--user", action="store_true", default=False)
     uninstall_p.add_argument("--no-revdeps", action="store_true", default=False)
     uninstall_p.add_argument("--yes", "-y", action="store_true", default=False)
     _add_common_flags(uninstall_p)
@@ -212,22 +206,27 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- configure ------------------------------------------------------------
     configure_p = subparsers.add_parser("configure")
     configure_p.add_argument("apps", nargs="*")
-    configure_p.add_argument("--system", action="store_true", default=False)
-    configure_p.add_argument("--user", action="store_true", default=False)
     _add_common_flags(configure_p)
 
     # -- app ------------------------------------------------------------------
     app_p = subparsers.add_parser("app")
     app_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
+    # -- list -----------------------------------------------------------------
+    list_p = subparsers.add_parser("list")
+    list_p.add_argument("--all", action="store_true", default=False)
+
     # -- system ---------------------------------------------------------------
     system_p = subparsers.add_parser("system")
     system_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
+    # -- admin ----------------------------------------------------------------
+    admin_p = subparsers.add_parser("admin")
+    admin_p.add_argument("remainder", nargs=argparse.REMAINDER)
+
     # -- develop --------------------------------------------------------------
     develop_p = subparsers.add_parser("develop")
     develop_p.add_argument("remainder", nargs=argparse.REMAINDER)
-
 
     # -- run ------------------------------------------------------------------
     run_p = subparsers.add_parser("run")
@@ -236,30 +235,18 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- simple commands ------------------------------------------------------
     header_p = subparsers.add_parser("header")
     header_p.add_argument("remainder", nargs=argparse.REMAINDER)
-    subparsers.add_parser("list-all-apps")
-    subparsers.add_parser("list-default-apps")
 
     return parser
-
-
-def _resolve_mode(args: argparse.Namespace) -> str:
-    """Resolve installation mode from CLI flags."""
-    if getattr(args, "system", False):
-        return "system"
-    if getattr(args, "user", False):
-        return "user"
-    return "shared"
 
 
 def _resolve_apps_and_mode(
     args: argparse.Namespace,
 ) -> tuple[list[str], str]:
-    """Handle the Bash convention of mode as first positional arg."""
+    """Resolve apps and mode from positional args."""
     apps = list(args.apps) if args.apps else []
-    mode = _resolve_mode(args)
-    if apps and apps[0] in ("system", "user", "private"):
-        if mode == "shared":
-            mode = apps[0]
+    mode = "shared"
+    if apps and apps[0] in ("system", "user"):
+        mode = apps[0]
         apps = apps[1:]
     return apps, mode
 
@@ -316,7 +303,6 @@ def _handle_install(args: argparse.Namespace) -> None:
                 app,
                 mode=mode,
                 deps=not args.no_dependencies,
-                private=getattr(args, "private", False),
                 reinstall=args.reinstall,
                 verbose=args.verbose,
                 extra_passthrough=extra,
@@ -666,10 +652,9 @@ def _handle_configure(args: argparse.Namespace) -> None:
     from koopa.configure import ConfigureConfig, configure_app
 
     apps = list(args.apps) if args.apps else []
-    mode = _resolve_mode(args)
+    mode = "shared"
     if apps and apps[0] in ("system", "user"):
-        if mode == "shared":
-            mode = apps[0]
+        mode = apps[0]
         apps = apps[1:]
     if not apps:
         print("Error: no apps specified.", file=sys.stderr)
@@ -692,11 +677,28 @@ def _handle_app(args: argparse.Namespace) -> None:
 
 
 
+def _handle_list(args: argparse.Namespace) -> None:
+    """Handle ``koopa list`` subcommand."""
+    from koopa.cli import print_shared_apps
+
+    if args.all:
+        print_shared_apps(mode="all")
+    else:
+        print_shared_apps(mode="default")
+
+
 def _handle_system(args: argparse.Namespace) -> None:
     """Handle ``koopa system`` subcommand."""
     from koopa.cli_system import handle_system
 
     handle_system(args.remainder)
+
+
+def _handle_admin(args: argparse.Namespace) -> None:
+    """Handle ``koopa admin`` subcommand."""
+    from koopa.cli_system import handle_admin
+
+    handle_admin(args.remainder)
 
 
 def _handle_develop(args: argparse.Namespace) -> None:
@@ -724,29 +726,11 @@ def _handle_run(args: argparse.Namespace) -> None:
     handler(remainder[1:])
 
 
-
-
 def _handle_header(_args: argparse.Namespace) -> None:
     """Handle ``koopa header`` subcommand."""
     from koopa.prefix import bash_prefix
 
     print(os.path.join(bash_prefix(), "include", "deprecated-header.sh"))
-
-
-
-
-def _handle_list_all_apps(_args: argparse.Namespace) -> None:
-    """Handle ``koopa list-all-apps`` subcommand."""
-    from koopa.cli import print_shared_apps
-
-    print_shared_apps(mode="all")
-
-
-def _handle_list_default_apps(_args: argparse.Namespace) -> None:
-    """Handle ``koopa list-default-apps`` subcommand."""
-    from koopa.cli import print_shared_apps
-
-    print_shared_apps(mode="default")
 
 
 # -- Entry point --------------------------------------------------------------
@@ -794,13 +778,13 @@ def main() -> None:
         "uninstall": _handle_uninstall,
         "update": _handle_update,
         "configure": _handle_configure,
+        "list": _handle_list,
         "app": _handle_app,
         "run": _handle_run,
         "system": _handle_system,
+        "admin": _handle_admin,
         "develop": _handle_develop,
         "header": _handle_header,
-        "list-all-apps": _handle_list_all_apps,
-        "list-default-apps": _handle_list_default_apps,
     }
     handler = handlers.get(args.command)
     if handler is None:
