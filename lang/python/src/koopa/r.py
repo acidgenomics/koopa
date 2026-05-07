@@ -285,56 +285,14 @@ def r_configure_ldpaths(r_cmd: str) -> None:
         )
     ld_lib: list[str] = ["${R_HOME}/lib"]
     if use_apps:
-        app_keys = [
-            "cairo",
-            "curl",
-            "fontconfig",
-            "freetype",
-            "fribidi",
-            "gdal",
-            "geos",
-            "glib",
-            "harfbuzz",
-            "hdf5",
-            "icu4c",
-            "imagemagick",
-            "libffi",
-            "libgit2",
-            "libiconv",
-            "libjpeg-turbo",
-            "libpng",
-            "libssh2",
-            "libtiff",
-            "libxml2",
-            "openssl",
-            "pcre",
-            "pcre2",
-            "pixman",
-            "proj",
-            "readline",
-            "sqlite",
-            "xorg-libice",
-            "xorg-libpthread-stubs",
-            "xorg-libsm",
-            "xorg-libx11",
-            "xorg-libxau",
-            "xorg-libxcb",
-            "xorg-libxdmcp",
-            "xorg-libxext",
-            "xorg-libxrandr",
-            "xorg-libxrender",
-            "xorg-libxt",
-            "xz",
-            "zlib",
-            "zstd",
-        ]
-        if not is_macos():
-            app_keys.insert(0, "bzip2")
-        if is_macos() or not is_system:
-            app_keys.append("gettext")
+        from koopa.io import import_app_json
+
+        app_json = import_app_json()
+        app_keys = sorted(app_json.get("r", {}).get("dependencies", []))
         for key in app_keys:
             lib_dir = os.path.join(pfx.app_prefix(key), "lib")
-            ld_lib.append(lib_dir)
+            if os.path.isdir(lib_dir):
+                ld_lib.append(lib_dir)
     if is_linux():
         sys_libdir = f"/usr/lib/{cpu_arch}-linux-gnu"
         ld_lib.extend([sys_libdir, "/usr/lib", "/lib"])
