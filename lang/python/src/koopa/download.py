@@ -49,21 +49,46 @@ def download(
     return output
 
 
-def download_with_mirror(primary_url: str, name: str, filename: str) -> str:
-    """Download from primary URL, falling back to koopa.acidgenomics.com mirror.
+def _gnu_mirrors(primary_url: str, name: str, filename: str) -> list[str]:
+    """Return alternative GNU mirror URLs if primary is a GNU source."""
+    if "ftpmirror.gnu.org" not in primary_url and "ftp.gnu.org" not in primary_url:
+        return []
+    return [
+        f"https://ftp.gnu.org/gnu/{name}/{filename}",
+        f"https://mirrors.kernel.org/gnu/{name}/{filename}",
+        f"https://mirror.rit.edu/gnu/{name}/{filename}",
+    ]
 
-    Tries the primary URL once with no retries. On any failure or invalid
-    archive, falls back to https://koopa.acidgenomics.com/src/{name}/{filename}.
+
+def download_with_mirror(primary_url: str, name: str, filename: str) -> str:
+    """Download from primary URL, falling back to mirrors.
+
+    Tries the primary URL first, then GNU mirrors (if applicable), then
+    the koopa mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
     """
-    mirror_url = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
-    try:
-        tarball = download(primary_url, retry=False)
-        if not archive.is_valid_archive(tarball):
-            raise ValueError("invalid archive")
-        return tarball
-    except Exception:
-        tarball = download(mirror_url, retry=True)
-    return tarball
+    koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
+    urls = [primary_url]
+    urls.extend(_gnu_mirrors(primary_url, name, filename))
+    urls.append(koopa_mirror)
+    last_exc: Exception | None = None
+    for i, url in enumerate(urls):
+        try:
+            retry = url == koopa_mirror
+            tarball = download(url, retry=retry)
+            if not archive.is_valid_archive(tarball):
+                raise ValueError("invalid archive")
+            return tarball
+        except Exception as exc:
+            last_exc = exc
+            if i < len(urls) - 1:
+                next_url = urls[i + 1]
+                print(
+                    f"All mirrors failed, trying koopa mirror: '{next_url}'."
+                    if next_url == koopa_mirror
+                    else f"Mirror failed, trying: '{next_url}'.",
+                    file=sys.stderr,
+                )
+    raise last_exc  # type: ignore[misc]
 
 
 def _derive_filename(url: str) -> str:
