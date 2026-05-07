@@ -435,10 +435,7 @@ def _reinstall_all(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 100:
-        display = ", ".join(apps[:100]) + ", ..."
-    else:
-        display = ", ".join(apps)
+    display = ", ".join(apps[:100]) + ", ..." if n > 100 else ", ".join(apps)
     alert(f"Reinstalling {n} {label}: {display}.")
     _save_pending_plan(plan)
     acquired = _acquire_install_lock()
@@ -682,7 +679,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         update_user_apps(verbose=args.verbose)
         prune_broken_symlinks()
         try:
-            prune_apps()
+            prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")
         alert_success("koopa update was successful.")

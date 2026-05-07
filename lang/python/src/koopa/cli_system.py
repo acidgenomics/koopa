@@ -231,11 +231,12 @@ def _handle_list_path_priority(args: list[str]) -> None:
         print(d)
 
 
-def _handle_prune_apps() -> None:
+def _handle_prune_apps(args: list[str] | None = None) -> None:
     """Handle ``koopa system prune-apps``."""
     from koopa.app import prune_apps
 
-    prune_apps()
+    verbose = args is not None and "--verbose" in args
+    prune_apps(verbose=verbose)
 
 
 def _handle_update_tex_packages() -> None:
@@ -811,7 +812,7 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         _handle_list(rest)
         return
     if subcmd == "prune-apps":
-        _handle_prune_apps()
+        _handle_prune_apps(rest)
         return
     if subcmd == "switch-to-develop":
         _handle_switch_to_develop(rest)

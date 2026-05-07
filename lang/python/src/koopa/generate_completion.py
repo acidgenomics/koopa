@@ -854,7 +854,7 @@ def _generate_powershell_completion(
         "",
         "    switch ($depth) {",
         "        0 {",
-        f"            $completions = @({_ps_array(['--help', '--version'] + top_cmds)})",
+        f"            $completions = @({_ps_array(['--help', '--version', *top_cmds])})",
         "        }",
         "        1 {",
         "            switch ($tokens[0]) {",
