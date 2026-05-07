@@ -44,8 +44,8 @@
     We're mixing things that help manage koopa install, and other things manage the system machine and require sudo permissions. That's not clear currently.
 * Low complexity
 ** DONE Remove `koopa internal`
-** TODO Remove 'koopa version' in favor of 'koopa --version'.
-** TODO Can we add support for 'koopa -v' resolving to 'koopa --version'.
+** DONE Remove 'koopa version' in favor of 'koopa --version'.
+** DONE Can we add support for 'koopa -v' resolving to 'koopa --version'.
 ** TODO Consider reorganization 'koopa uninstall-non-default-apps'.
-** TODO Consider reverting black and mypy build from source optimizations. Maybe not worth tradeoff of dealing with corporate environment URL issues.
+** DONE Consider reverting black and mypy build from source optimizations. Maybe not worth tradeoff of dealing with corporate environment URL issues.
 ** TODO Reduce the number of dependencies when building r and r-devel from source. For example, we don't want to include gdal here.

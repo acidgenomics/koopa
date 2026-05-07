@@ -94,13 +94,17 @@ def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
 
 def _build_passthrough_args(app_meta: dict[str, Any]) -> list[str]:
     """Build passthrough -D args from app.json installer_args."""
+    import json as json_mod
+
     installer_args = app_meta.get("installer_args", {})
     if not installer_args:
         return []
     result: list[str] = []
     for key, value in installer_args.items():
         flag = key.replace("_", "-")
-        if isinstance(value, list):
+        if isinstance(value, dict):
+            result.append(f"--{flag}={json_mod.dumps(value)}")
+        elif isinstance(value, list):
             for item in value:
                 result.append(f"--{flag}={item}")
         else:
