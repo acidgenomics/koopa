@@ -65,13 +65,11 @@ checks = [
 override_SS05 = ['^Access ', '^Assess ', '^Process ']
 
 [tool.pyright]
+# > extraPaths = ["opt/pytest/libexec/lib/python3.14/site-packages"]
+include = ["lang/python/src"]
 pythonVersion = "3.12"
-verboseOutput = true
-extraPaths = [
-  "lang/python/src",
-  "opt/pytest/libexec/lib/python3.14/site-packages",
-]
 reportMissingImports = "warning"
+verboseOutput = true
 
 [tool.ruff]
 indent-width = 4
