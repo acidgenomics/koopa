@@ -835,7 +835,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     )
     saved_env = {k: os.environ.get(k) for k in _build_env_keys}
     try:
-        with BuildProgress(config.name, version=config.version, quiet=config.quiet, verbose=config.verbose) as progress:
+        with BuildProgress(
+            config.name, version=config.version, quiet=config.quiet, verbose=config.verbose
+        ) as progress:
             if config.binary:
                 if config.mode != "shared" or not config.prefix:
                     msg = "Binary install requires shared mode and a prefix."
@@ -1242,8 +1244,10 @@ def install_python_package(
     subprocess.run([python, "-m", "venv", libexec], check=True)
     venv_pip = os.path.join(libexec, "bin", "pip")
     pip_args = [venv_pip, "install", "--no-cache-dir"]
-    if no_binary or build_env:
+    if no_binary:
         pip_args.extend(["--no-binary", ":all:"])
+    elif build_env:
+        pip_args.extend(["--no-binary", pip_name])
     pip_args.append(f"{pip_name}=={version}")
     if extra_packages:
         pip_args.extend(extra_packages)
