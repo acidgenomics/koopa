@@ -252,12 +252,13 @@ class BuildProgress:
         os.close(self._saved_stderr_fd)
         self._saved_stdout_fd = -1
         self._saved_stderr_fd = -1
-        elapsed = _fmt_duration(self.elapsed)
-        marker = "x" if failed else "OK"
         tty = self._tty_fd
-        label = self._styled_label()
-        time_str = _styled_time(elapsed)
-        os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
+        if failed or not self._steps_finished:
+            elapsed = _fmt_duration(self.elapsed)
+            marker = "x" if failed else "OK"
+            label = self._styled_label()
+            time_str = _styled_time(elapsed)
+            os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
         if failed and self._log_file is not None:
             self._log_file.flush()
             self._dump_log_tail(tty)
