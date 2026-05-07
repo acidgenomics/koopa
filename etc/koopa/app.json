@@ -8813,6 +8813,7 @@
     ],
     "description": "extremely fast Python type checker",
     "installer": "python-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/ty/",
