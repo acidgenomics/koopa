@@ -885,6 +885,27 @@ def _handle_find_and_move_in_sequence(args: list[str]) -> None:
     raise NotImplementedError(msg)
 
 
+def _handle_create_dmg(args: list[str]) -> None:
+    """Create a DMG disk image from a source folder."""
+    if len(args) != 1:
+        print("Error: exactly one argument (source folder) is required.", file=sys.stderr)
+        sys.exit(1)
+    hdiutil = "/usr/bin/hdiutil"
+    if not os.path.isfile(hdiutil):
+        print("Error: 'hdiutil' is not installed.", file=sys.stderr)
+        sys.exit(1)
+    srcfolder = os.path.realpath(args[0])
+    if not os.path.isdir(srcfolder):
+        print(f"Error: not a directory: '{srcfolder}'.", file=sys.stderr)
+        sys.exit(1)
+    volname = os.path.basename(srcfolder)
+    ov = f"{volname}.dmg"
+    subprocess.run(
+        [hdiutil, "create", "-ov", ov, "-srcfolder", srcfolder, "-volname", volname],
+        check=True,
+    )
+
+
 # -- Dispatch table ------------------------------------------------------------
 
 
@@ -892,6 +913,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "autopad-zeros": _handle_autopad_zeros,
     "clone": _handle_clone,
     "convert-svg-to-png": _handle_convert_svg_to_png,
+    "create-dmg": _handle_create_dmg,
     "convert-utf8-nfd-to-nfc": _handle_convert_utf8_nfd_to_nfc,
     "delete-broken-symlinks": _handle_delete_broken_symlinks,
     "delete-empty-dirs": _handle_delete_empty_dirs,

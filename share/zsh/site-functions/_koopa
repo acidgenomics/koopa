@@ -628,6 +628,7 @@ _koopa_run() {
         'clone'
         'convert-svg-to-png'
         'convert-utf8-nfd-to-nfc'
+        'create-dmg'
         'delete-broken-symlinks'
         'delete-empty-dirs'
         'delete-named-subdirs'

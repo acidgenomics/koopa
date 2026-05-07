@@ -25,7 +25,6 @@ _SYSTEM_DESCRIPTIONS: dict[str, str] = {
         " bootstrap version, and disk usage."
     ),
     "clean-launch-services": "Clean the macOS Launch Services database.",
-    "create-dmg": "Create a DMG disk image.",
     "delete-cache": "Delete cache, log, and temporary files (Docker images only).",
     "disable-passwordless-sudo": "Disable passwordless sudo for the current user.",
     "disable-touch-id-sudo": "Disable Touch ID for sudo authentication.",
