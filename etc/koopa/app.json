@@ -2550,7 +2550,8 @@
       "gxargs"
     ],
     "build_dependencies": [
-      "make"
+      "make",
+      "xz"
     ],
     "date": "2024-12-24",
     "default": true,
@@ -5237,7 +5238,8 @@
     "build_dependencies": [
       "groff",
       "make",
-      "pkg-config"
+      "pkg-config",
+      "xz"
     ],
     "date": "2026-05-02",
     "default": true,
