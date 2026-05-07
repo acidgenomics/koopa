@@ -275,14 +275,6 @@ def _check_pypi(package: str) -> str:
     return data["info"]["version"]
 
 
-_conda_semaphore = threading.Semaphore(2)
-
-
-def _conda_exe() -> str | None:
-    import shutil
-
-    return os.environ.get("CONDA_EXE") or shutil.which("conda")
-
 
 def _check_conda_api(package: str, channel: str = "conda-forge") -> str:
     data = _http_get_json(f"https://api.anaconda.org/package/{channel}/{package}")
