@@ -31,19 +31,22 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     env = activate_app("make", "pkg-config", build_only=True)
     deps = []
     if sys.platform != "darwin":
-        deps.extend(
-            [
-                "bzip2",
-                "libedit",
-                "libffi",
-                "libxcrypt",
-                "ncurses",
-                "readline",
-                "unzip",
-                "zlib",
-            ]
-        )
-    deps.extend(["expat", "mpdecimal", "openssl3", "sqlite", "xz"])
+        deps.append("libxcrypt")
+    deps.extend(
+        [
+            "bzip2",
+            "expat",
+            "libedit",
+            "libffi",
+            "mpdecimal",
+            "ncurses",
+            "openssl3",
+            "readline",
+            "sqlite",
+            "xz",
+            "zlib",
+        ]
+    )
     env = activate_app(*deps, env=env)
     make = locate("make")
     openssl_prefix = app_prefix("openssl3")
