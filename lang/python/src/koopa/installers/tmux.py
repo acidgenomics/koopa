@@ -17,6 +17,7 @@ def main(
     download_extract_cd()
     make_build(
         conf_args=[
+            "--enable-sixel",
             "--enable-utf8proc",
             f"--prefix={prefix}",
         ],
