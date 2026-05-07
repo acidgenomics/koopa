@@ -237,6 +237,9 @@ def _build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("install-default-apps")
     subparsers.add_parser("list-all-apps")
     subparsers.add_parser("list-default-apps")
+    uninstall_ndp = subparsers.add_parser("uninstall-non-default-apps")
+    uninstall_ndp.add_argument("--yes", "-y", action="store_true", default=False)
+    _add_common_flags(uninstall_ndp)
 
     return parser
 
@@ -651,6 +654,17 @@ def _handle_install_default_apps(_args: argparse.Namespace) -> None:
     install_default_apps()
 
 
+def _handle_uninstall_non_default_apps(args: argparse.Namespace) -> None:
+    """Handle ``koopa uninstall-non-default-apps`` subcommand."""
+    _require_supported_platform()
+    from koopa.uninstall import uninstall_non_default_apps
+
+    uninstall_non_default_apps(
+        yes=getattr(args, "yes", False),
+        verbose=getattr(args, "verbose", False),
+    )
+
+
 def _handle_list_all_apps(_args: argparse.Namespace) -> None:
     """Handle ``koopa list-all-apps`` subcommand."""
     from koopa.cli import print_shared_apps
@@ -721,6 +735,7 @@ def main() -> None:
         "install-default-apps": _handle_install_default_apps,
         "list-all-apps": _handle_list_all_apps,
         "list-default-apps": _handle_list_default_apps,
+        "uninstall-non-default-apps": _handle_uninstall_non_default_apps,
     }
     handler = handlers.get(args.command)
     if handler is None:
