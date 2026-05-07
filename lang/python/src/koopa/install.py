@@ -1191,6 +1191,7 @@ def install_python_package(
     python_version: str = "",
     extra_packages: list[str] | None = None,
     no_binary: bool = False,
+    build_env: dict[str, str] | None = None,
 ) -> None:
     """Install a Python package as a virtual environment application.
 
@@ -1235,12 +1236,15 @@ def install_python_package(
     subprocess.run([python, "-m", "venv", libexec], check=True)
     venv_pip = os.path.join(libexec, "bin", "pip")
     pip_args = [venv_pip, "install", "--no-cache-dir"]
-    if no_binary:
+    if no_binary or build_env:
         pip_args.extend(["--no-binary", ":all:"])
     pip_args.append(f"{pip_name}=={version}")
     if extra_packages:
         pip_args.extend(extra_packages)
-    subprocess.run(pip_args, check=True)
+    pip_env: dict[str, str] | None = None
+    if build_env:
+        pip_env = {**os.environ, **build_env}
+    subprocess.run(pip_args, check=True, env=pip_env)
     _link_pip_binaries(
         egg_name=egg_name,
         version=version,
@@ -2756,7 +2760,11 @@ def _build_passthrough_args(name: str) -> list[str]:
     result: list[str] = []
     for key, value in installer_args.items():
         flag = key.replace("_", "-")
-        if isinstance(value, list):
+        if isinstance(value, dict):
+            import json as json_mod
+
+            result.append(f"--{flag}={json_mod.dumps(value)}")
+        elif isinstance(value, list):
             for item in value:
                 result.append(f"--{flag}={item}")
         else:
