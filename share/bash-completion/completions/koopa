@@ -78,7 +78,8 @@ _koopa_complete() {
         ['run']='--help'
         ['system']='--help'
         ['uninstall']='--help --no-revdeps --system --user --verbose --yes'
-        ['update']='--all-system --all-user-repos --help --system --user --verbose'
+        ['uninstall-non-default-apps']='--help --verbose --yes'
+        ['update']='--help --verbose'
         ['version']='--help'
     )
     case "${COMP_CWORD:-}" in
@@ -161,6 +162,7 @@ _koopa_complete() {
                         'pyright'
                         'pytest'
                         'remove-app'
+                        'reset-revisions'
                         'shellcheck'
                         'update-docs'
                     )
@@ -505,6 +507,7 @@ _koopa_complete() {
                         'openssh'
                         'openssl'
                         'openssl3'
+                        'openssl4'
                         'oracle-instant-client'
                         'p7zip'
                         'pandoc'
@@ -743,7 +746,7 @@ _koopa_complete() {
                     fi
                     ;;
                 'update')
-                    args+=('--all-system' '--all-user-repos' '--help' '--system' '--user' '--verbose' 'koopa' 'system')
+                    args+=('koopa' 'system' 'user')
                     ;;
                 *)
                     ;;
@@ -870,6 +873,13 @@ _koopa_complete() {
                                 'homebrew'
                                 'tex-packages'
                             )
+                            if _koopa_is_macos
+                            then
+                                args+=(
+                                    'python'
+                                    'r'
+                                )
+                            fi
                             ;;
                         esac
                         ;;

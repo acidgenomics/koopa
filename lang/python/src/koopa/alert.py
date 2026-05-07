@@ -112,6 +112,11 @@ def styled_reason(reason: str) -> str:
     return f"({_magenta()}{reason}{_reset()})"
 
 
+def styled_version(version: str) -> str:
+    """Return blue-styled version string."""
+    return f"{_blue()}{version}{_reset()}"
+
+
 def alert_install_start(name: str, prefix: str = "", reason: str = "") -> None:
     """Alert that installation is starting."""
     s = f"Installing {styled_name(name)}"
