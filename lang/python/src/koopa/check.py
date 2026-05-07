@@ -239,23 +239,6 @@ def check_installed_apps() -> bool:
     issues = _iter_installed_app_issues()
     for _name, reason, _actionable in issues:
         print(reason)
-    actionable = [(name, reason) for name, reason, a in issues if a]
-    if actionable:
-        from koopa.app import stale_revdeps
-
-        seen_names = {name for name, _ in actionable}
-        revdep_names: list[str] = []
-        changed = True
-        while changed:
-            changed = False
-            for rd in stale_revdeps(list(seen_names)):
-                if rd not in seen_names:
-                    revdep_names.append(rd)
-                    seen_names.add(rd)
-                    changed = True
-        if revdep_names:
-            print(f"Will also rebuild {len(revdep_names)} reverse"
-                  f" dependencies: {', '.join(sorted(revdep_names))}")
     return not issues
 
 
@@ -678,15 +661,19 @@ def check_broken_symlinks() -> bool:
     from koopa.file_ops import find_broken_symlinks
     from koopa.prefix import bin_prefix, man1_prefix, opt_prefix
 
-    ok = True
+    counts: dict[str, int] = {}
     for prefix in (bin_prefix(), opt_prefix(), man1_prefix()):
         if not isdir(prefix):
             continue
         broken = find_broken_symlinks(prefix)
-        for link in broken:
-            ok = False
-            print(f"broken symlink: {link}")
-    return ok
+        if broken:
+            label = basename(prefix)
+            counts[label] = counts.get(label, 0) + len(broken)
+    if not counts:
+        return True
+    parts = [f"{n} in {d}/" for d, n in counts.items()]
+    print(f"broken symlinks: {', '.join(parts)}")
+    return False
 
 
 def prune_broken_symlinks() -> None:
@@ -698,6 +685,41 @@ def prune_broken_symlinks() -> None:
         if not isdir(prefix):
             continue
         delete_broken_symlinks(prefix)
+
+
+def _print_update_plan() -> None:
+    """Print the full list of apps that 'koopa update' will install."""
+    from koopa.app import stale_revdeps
+
+    outdated = outdated_apps_with_reasons()
+    broken = broken_app_installs()
+    seen: dict[str, str] = {}
+    for app, reason in outdated:
+        if app not in seen:
+            seen[app] = reason
+    for app in broken:
+        if app not in seen:
+            seen[app] = "broken install"
+    if not seen:
+        return
+    direct = set(seen)
+    changed = True
+    while changed:
+        changed = False
+        for rd in stale_revdeps(list(seen)):
+            if rd not in seen:
+                seen[rd] = "dependency rebuilt"
+                changed = True
+    revdeps = sorted(set(seen) - direct)
+    apps = sorted(seen)
+    if revdeps:
+        print(
+            f"Update will install {len(apps)} apps"
+            f" ({len(direct)} outdated + {len(revdeps)} reverse deps):"
+            f" {', '.join(apps)}."
+        )
+    else:
+        print(f"Update will install {len(apps)} apps: {', '.join(apps)}.")
 
 
 def check_system() -> bool:
@@ -726,6 +748,8 @@ def check_system() -> bool:
         needs_update = True
     if not check_disk("/"):
         needs_disk_space = True
+    if needs_update:
+        _print_update_plan()
     if needs_update or needs_system_update or needs_disk_space:
         warn("System checks completed with warnings.")
         if needs_system_update:
