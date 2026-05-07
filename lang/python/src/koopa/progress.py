@@ -6,7 +6,6 @@ import sys
 import tempfile
 import threading
 import time
-from pathlib import Path
 from typing import Self
 
 _HISTORY_FILENAME = "build-times.json"
@@ -35,12 +34,10 @@ def get_active_progress() -> "BuildProgress | None":
 
 
 def _history_path() -> str:
-    """Return path to the build-times JSON file under koopa config."""
-    koopa_prefix = os.environ.get(
-        "KOOPA_PREFIX",
-        str(Path(__file__).resolve().parents[4]),
-    )
-    return os.path.join(koopa_prefix, "etc", "koopa", _HISTORY_FILENAME)
+    """Return path to the build-times JSON file under user cache."""
+    from koopa.xdg import xdg_cache_home
+
+    return os.path.join(xdg_cache_home(), "koopa", _HISTORY_FILENAME)
 
 
 def _load_history() -> dict[str, float]:
