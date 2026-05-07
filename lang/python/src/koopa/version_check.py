@@ -276,8 +276,39 @@ def _check_pypi(package: str) -> str:
 
 
 
+_CONDA_FEEDSTOCK_MAP: dict[str, str] = {
+    "llvm": "llvmdev",
+    "nvim": "nvim",
+}
+
+
+def _check_conda_feedstock(package: str, channel: str = "conda-forge") -> str | None:
+    """Check version from conda-forge feedstock recipe on GitHub."""
+    if channel != "conda-forge":
+        return None
+    feedstock = _CONDA_FEEDSTOCK_MAP.get(package, package)
+    base = f"https://raw.githubusercontent.com/conda-forge/{feedstock}-feedstock/refs/heads/main/recipe"
+    for recipe in ("recipe.yaml", "meta.yaml"):
+        try:
+            text = _http_get_text(f"{base}/{recipe}", timeout=5, _retries=0)
+        except (urllib.error.URLError, OSError):
+            continue
+        for pattern in (
+            r'\{%\s*set\s+version\s*=\s*["\'](\d[\d.]*)["\']\s*%\}',
+            r'^\s*version:\s*["\'](\d[\d.]*)["\']',
+        ):
+            match = re.search(pattern, text, re.MULTILINE)
+            if match:
+                return match.group(1)
+    return None
+
+
 def _check_conda_api(package: str, channel: str = "conda-forge") -> str:
-    data = _http_get_json(f"https://api.anaconda.org/package/{channel}/{package}")
+    data = _http_get_json(
+        f"https://api.anaconda.org/package/{channel}/{package}",
+        timeout=5,
+        _retries=0,
+    )
     version = data.get("latest_version", "")
     if not version:
         msg = f"No version found via Anaconda API for {channel}/{package}"
@@ -286,7 +317,13 @@ def _check_conda_api(package: str, channel: str = "conda-forge") -> str:
 
 
 def _check_conda(package: str, channel: str = "conda-forge") -> str:
-    return _check_conda_api(package, channel)
+    version = _check_conda_feedstock(package, channel)
+    if version:
+        return version
+    try:
+        return _check_conda_api(package, channel)
+    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
 
 
 class _NetworkUnavailableError(RuntimeError):
@@ -299,6 +336,24 @@ class _NetworkUnavailableError(RuntimeError):
 def _raise_network_unavailable(exc: Exception | None) -> None:
     msg = f"Network unavailable: {exc}"
     raise _NetworkUnavailableError(msg) from exc
+
+
+def _check_nongnu(package: str) -> str:
+    """Check version from savannah non-GNU mirror with aggressive timeout."""
+    url = f"https://download.savannah.nongnu.org/releases/{package}/"
+    try:
+        html = _http_get_text(url, timeout=5, _retries=0)
+    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        _raise_network_unavailable(exc)
+        raise AssertionError("unreachable")
+    pattern = re.compile(
+        rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)"
+    )
+    versions = pattern.findall(html)
+    if not versions:
+        msg = f"No versions found for {package}"
+        raise RuntimeError(msg)
+    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
 def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) -> str:
@@ -1309,6 +1364,11 @@ def _check_boost() -> str:
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
+    "attr": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_nongnu("attr"),
+        (),
+    ),
     "curl": _AppCheckSpec("github", _check_github, ("curl", "curl")),
     "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("google-cloud-sdk", "conda-forge")),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
@@ -1316,6 +1376,12 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),
+    "lzip": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_nongnu("lzip"),
+        (),
+    ),
+    "man-db": _AppCheckSpec("gitlab", _check_gitlab, ("gitlab.com", "man-db/man-db")),
     "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli", "conda-forge")),
@@ -1703,16 +1769,17 @@ def check_app_versions(  # noqa: C901, PLR0915
         results.sort(key=lambda r: r.name)
         return results
 
+    uncached_names = [name for name, _, _ in to_check]
     try:
         from tqdm import tqdm
 
-        desc = "Checking app versions"
+        desc = f"Checking {', '.join(uncached_names)}"
         if cached_count:
             desc += f" ({cached_count} cached)"
         pbar = tqdm(total=total, desc=desc, unit="app")
     except ModuleNotFoundError:
         pbar = None
-        msg = f"Checking {total} app versions..."
+        msg = f"Checking {', '.join(uncached_names)}..."
         if cached_count:
             msg += f" ({cached_count} cached)"
         print(msg, file=sys.stderr)
