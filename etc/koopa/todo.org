@@ -5,14 +5,14 @@
 ** DONE We need a way to retrigger reinstall of all default apps and any other optional apps currently installed by the user on the system. Basically a total app rebuild trigger that automatically resolves depdency logic and rebuilds everything in order.
 ** DONE We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
 ** DONE Rework 'koopa install-default-apps' as 'koopa install'.
-** TODO Consider reorganizing 'koopa uninstall-non-default-apps' to `koopa uninstall --all-non-default-apps`.
+** DONE Consider reorganizing 'koopa uninstall-non-default-apps' to `koopa uninstall --all-non-default-apps`.
 ** TODO We need to rework and declutter some koopa CLI commands:
     - install, install-all-apps, install-default-apps
     - list-all-apps, list-default-apps
     - uninstall, uninstall-non-default-apps
     - koopa system update-tex-packages to koopa update system tex-packages
     - Consider moving `koopa list-all-apps` and `koopa-list-default-apps` to `koopa system list-all-apps`, `koopa system list-default-apps`
-** TODO Move `koopa system create-dmg` to `koopa run create-dmg`?
+** TODO Move `koopa system create-dmg` to `koopa run create-dmg`? Does this require admin permissions?
 ** TODO Move `koopa system force-eject` to `koopa system admin force-eject`?
 ** TODO `koopa system --help` doesn't list supported subcommands:
     $ koopa system --help
