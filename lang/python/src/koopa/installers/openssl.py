@@ -1,6 +1,7 @@
 """Install openssl."""
 
 import os
+import platform
 import subprocess
 import sys
 
@@ -24,19 +25,30 @@ def main(
     make = locate("make")
     download_extract_cd()
     subprocess_env = env.to_env_dict()
+    machine = platform.machine()
+    if sys.platform == "darwin":
+        arch_args = [f"darwin64-{machine}-cc", "enable-ec_nistp_64_gcc_128"]
+    elif machine in ("x86_64", "amd64"):
+        arch_args = ["linux-x86_64", "enable-ec_nistp_64_gcc_128"]
+    elif machine in ("aarch64", "arm64"):
+        arch_args = ["linux-aarch64"]
+    else:
+        arch_args = []
     conf_args = [
         "--libdir=lib",
         f"--openssldir={prefix}",
         f"--prefix={prefix}",
         f"-Wl,-rpath,{prefix}/lib",
         "-fPIC",
+        "no-ssl3",
+        "no-ssl3-method",
         "no-zlib",
         "shared",
     ]
     if sys.platform != "darwin":
         conf_args.append("-Wl,--enable-new-dtags")
     subprocess.run(
-        ["./config", *conf_args],
+        ["./Configure", *arch_args, *conf_args],
         env=subprocess_env,
         check=True,
     )

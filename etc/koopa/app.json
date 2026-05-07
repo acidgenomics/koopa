@@ -2912,8 +2912,11 @@
     "default": false,
     "dependencies": [
       "gmp",
+      "isl",
       "mpc",
-      "mpfr"
+      "mpfr",
+      "zlib",
+      "zstd"
     ],
     "description": "GNU Compiler Collection (C, C++, Fortran, and more)",
     "installer_platform": "linux",
@@ -2928,7 +2931,8 @@
     "url": [
       "https://gcc.gnu.org/"
     ],
-    "version": "16.1.0"
+    "version": "16.1.0",
+    "revision": 1
   },
   "gdal": {
     "bin": [
@@ -6613,7 +6617,7 @@
       "ca-certificates"
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v1)",
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
     "type": "build_tool",
     "url": [
@@ -6639,7 +6643,8 @@
     "url": [
       "https://www.openssl.org/source/"
     ],
-    "version": "3.6.2"
+    "version": "3.6.2",
+    "revision": 1
   },
   "oracle-instant-client": {
     "date": "2026-05-02",
@@ -6834,6 +6839,7 @@
     "default": false,
     "dependencies": [
       "bzip2",
+      "libedit",
       "zlib"
     ],
     "description": "Perl-compatible regular expressions library (v2)",
@@ -6848,7 +6854,8 @@
       "https://github.com/PCRE2Project/pcre2/",
       "https://www.pcre.org/"
     ],
-    "version": "10.47"
+    "version": "10.47",
+    "revision": 1
   },
   "perl": {
     "bin": [
@@ -9319,7 +9326,8 @@
     "url": [
       "https://github.com/tmux/tmux/"
     ],
-    "version": "3.6a"
+    "version": "3.6a",
+    "revision": 1
   },
   "tokei": {
     "bin": [
@@ -9632,7 +9640,8 @@
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.0433"
+    "version": "9.2.0433",
+    "revision": 1
   },
   "visidata": {
     "bin": [
@@ -10453,6 +10462,7 @@
     "default": true,
     "dependencies": [
       "lz4",
+      "xz",
       "zlib"
     ],
     "description": "fast lossless compression algorithm by Facebook",
@@ -10469,6 +10479,7 @@
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
     ],
-    "version": "1.5.7"
+    "version": "1.5.7",
+    "revision": 1
   }
 }

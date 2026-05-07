@@ -15,8 +15,9 @@ def main(
 ) -> None:
     """Install zstd."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app("lz4", "zlib", env=env)
+    env = activate_app("lz4", "xz", "zlib", env=env)
     lz4_prefix = app_prefix("lz4")
+    xz_prefix = app_prefix("xz")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
     download_extract_cd()
@@ -29,11 +30,13 @@ def main(
             "-DZSTD_BUILD_STATIC=OFF",
             "-DZSTD_LEGACY_SUPPORT=ON",
             "-DZSTD_LZ4_SUPPORT=ON",
-            "-DZSTD_LZMA_SUPPORT=OFF",
+            "-DZSTD_LZMA_SUPPORT=ON",
             "-DZSTD_PROGRAMS_LINK_SHARED=ON",
             "-DZSTD_ZLIB_SUPPORT=ON",
             f"-DLIBLZ4_INCLUDE_DIR={lz4_prefix}/include",
             f"-DLIBLZ4_LIBRARY={lz4_prefix}/lib/liblz4.{ext}",
+            f"-DLIBLZMA_INCLUDE_DIR={xz_prefix}/include",
+            f"-DLIBLZMA_LIBRARY={xz_prefix}/lib/liblzma.{ext}",
             f"-DZLIB_INCLUDE_DIR={zlib_prefix}/include",
             f"-DZLIB_LIBRARY={zlib_prefix}/lib/libz.{ext}",
         ],

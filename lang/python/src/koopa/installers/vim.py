@@ -30,6 +30,7 @@ def main(
     env.ldflags.insert(0, f"-Wl,-rpath,{prefix}/lib")
     download_extract_cd()
     conf_args = [
+        "--enable-cscope",
         "--enable-huge",
         "--enable-multibyte",
         "--enable-python3interp",
