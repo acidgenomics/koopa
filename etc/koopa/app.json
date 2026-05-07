@@ -207,9 +207,7 @@
     "bin": [
       "aria2c"
     ],
-    "build_dependencies": [
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2023-11-15",
     "default": false,
     "dependencies": [
@@ -219,10 +217,11 @@
       "libxml2",
       "openssl",
       "sqlite",
-      "zlib"
+      "zlib",
+      "conda"
     ],
     "description": "lightweight multi-protocol download utility",
-    "src_url": "https://github.com/aria2/aria2/releases/download/release-{version}/aria2-{version}.tar.xz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://github.com/aria2/aria2/"
@@ -252,17 +251,17 @@
     "bin": [
       "aspell"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "spell checker",
-    "installer": "gnu-app",
+    "installer": "conda-package",
     "man1": [
       "aspell.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/aspell/aspell-{version}.tar.gz",
     "type": "cli",
     "url": [
       "http://aspell.net/"
@@ -523,23 +522,20 @@
     "bin": [
       "axel"
     ],
-    "build_dependencies": [
-      "gawk",
-      "pkg-config",
-      "xz"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2024-04-08",
     "default": false,
     "dependencies": [
       "gettext",
-      "openssl"
+      "openssl",
+      "conda"
     ],
     "description": "lightweight command-line download accelerator",
+    "installer": "conda-package",
     "man1": [
       "axel.1"
     ],
     "outdated": true,
-    "src_url": "https://github.com/axel-download-accelerator/axel/releases/download/v{version}/axel-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
@@ -655,17 +651,15 @@
     "version": "5.3"
   },
   "bash-completion": {
-    "build_dependencies": [
-      "make",
-      "xz"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2025-10-31",
     "default": true,
     "dependencies": [
-      "bash"
+      "bash",
+      "conda"
     ],
     "description": "programmable completion functions for bash",
-    "src_url": "https://github.com/scop/bash-completion/releases/download/{version}/bash-completion-{version}.tar.xz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://github.com/scop/bash-completion"
@@ -731,21 +725,18 @@
     "bin": [
       "bc"
     ],
-    "build_dependencies": [
-      "make",
-      "texinfo"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "ed"
+      "ed",
+      "conda"
     ],
     "description": "arbitrary-precision numeric processing language",
-    "installer": "gnu-app",
+    "installer": "conda-package",
     "man1": [
       "bc.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/bc/bc-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/bc/?C=M;O=D"
@@ -2082,15 +2073,14 @@
     "version": "2.37.1"
   },
   "docker-credential-helpers": {
-    "build_dependencies": [
-      "go",
-      "make",
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-04-22",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "credential helpers for Docker",
-    "src_url": "https://github.com/docker/docker-credential-helpers/archive/v{version}.tar.gz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
@@ -3087,17 +3077,17 @@
     "bin": [
       "gs"
     ],
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "PostScript and PDF interpreter",
+    "installer": "conda-package",
     "man1": [
       "gs.1"
     ],
-    "src_url": "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs{version_nodot}/ghostscript-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.ghostscript.com/"
@@ -3168,14 +3158,14 @@
     "bin": [
       "git-lfs"
     ],
-    "build_dependencies": [
-      "go",
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "Git extension for versioning large files",
-    "src_url": "https://github.com/git-lfs/git-lfs/releases/download/v{version}/git-lfs-v{version}.tar.gz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://git-lfs.github.com/"
@@ -3395,16 +3385,15 @@
       "gfgrep",
       "ggrep"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "pcre2"
+      "pcre2",
+      "conda"
     ],
     "description": "GNU pattern-matching text search utility",
-    "installer": "gnu-app",
+    "installer": "conda-package",
     "installer_args": {
       "disable_dependency_tracking": "",
       "disable_nls": "",
@@ -3413,7 +3402,6 @@
     "man1": [
       "ggrep.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/grep/grep-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
@@ -3744,21 +3732,18 @@
     "bin": [
       "htop"
     ],
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
     "dependencies": [
-      "ncurses"
+      "ncurses",
+      "conda"
     ],
     "description": "interactive process viewer",
+    "installer": "conda-package",
     "man1": [
       "htop.1"
     ],
-    "src_url": "https://github.com/htop-dev/htop/archive/{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://hisham.hm/htop/",
@@ -4244,16 +4229,17 @@
     "bin": [
       "lame"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2022-08-30",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "LAME MP3 encoder",
+    "installer": "conda-package",
     "man1": [
       "lame.1"
     ],
-    "src_url": "https://sourceforge.net/projects/lame/files/lame/{version}/lame-{version}.tar.gz/download",
     "type": "cli",
     "url": [
       "https://lame.sourceforge.io/"
@@ -4948,14 +4934,7 @@
     "type": "cli"
   },
   "llvm": {
-    "build_dependencies": [
-      "cmake",
-      "git",
-      "ninja",
-      "perl",
-      "pkg-config",
-      "swig"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-06",
     "default": false,
     "dependencies": [
@@ -4969,10 +4948,11 @@
       "python",
       "xz",
       "zlib",
-      "zstd"
+      "zstd",
+      "conda"
     ],
     "description": "LLVM compiler infrastructure",
-    "src_url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}/llvm-project-{version}.src.tar.xz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://llvm.org/"
@@ -5358,13 +5338,14 @@
     "bin": [
       "mlr"
     ],
-    "build_dependencies": [
-      "go"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-04-22",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "like awk/sed/cut/join for name-indexed data formats",
-    "src_url": "https://github.com/johnkerl/miller/archive/refs/tags/v{version}.tar.gz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://miller.readthedocs.io/",
@@ -5578,18 +5559,16 @@
     "bin": [
       "nano"
     ],
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
       "gettext",
-      "ncurses"
+      "ncurses",
+      "conda"
     ],
     "description": "simple, user-friendly terminal text editor",
-    "src_url": "https://www.nano-editor.org/dist/v{major}/nano-{version}.tar.xz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://www.nano-editor.org/"
@@ -5809,10 +5788,14 @@
     "bin": [
       "nim"
     ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "statically typed compiled systems programming language",
-    "src_url": "https://nim-lang.org/download/nim-{version}.tar.xz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://nim-lang.org/"
@@ -6050,10 +6033,7 @@
     "version": "2.6.13"
   },
   "openssh": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -6063,11 +6043,12 @@
       "libfido2",
       "libxcrypt",
       "openssl",
-      "zlib"
+      "zlib",
+      "conda"
     ],
     "description": "OpenBSD SSH connectivity tools",
+    "installer": "conda-package",
     "mirror": true,
-    "src_url": "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.openssh.com/portable.html",
@@ -6150,18 +6131,19 @@
       "7za",
       "7zr"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2023-05-31",
     "default": true,
+    "dependencies": [
+      "conda"
+    ],
     "description": "port of 7-zip for POSIX systems",
+    "installer": "conda-package",
     "man1": [
       "7z.1.gz",
       "7za.1.gz",
       "7zr.1.gz"
     ],
-    "src_url": "https://github.com/p7zip-project/p7zip/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/p7zip-project/p7zip/"
@@ -6191,20 +6173,20 @@
     "bin": [
       "parallel"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
+    "dependencies": [
+      "conda"
+    ],
     "description": "GNU shell tool for executing jobs in parallel",
-    "installer": "gnu-app",
+    "installer": "conda-package",
     "installer_args": {
       "compress_ext": "bz2"
     },
     "man1": [
       "parallel.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/parallel/parallel-{version}.tar.bz2",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/parallel/",
@@ -6390,20 +6372,19 @@
       "pigz",
       "unpigz"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2023-08-31",
     "default": true,
     "dependencies": [
-      "zlib"
+      "zlib",
+      "conda"
     ],
     "description": "parallel gzip for fast multi-threaded compression",
+    "installer": "conda-package",
     "man1": [
       "pigz.1",
       "unpigz.1"
     ],
-    "src_url": "https://zlib.net/pigz/pigz-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://zlib.net/pigz/"
@@ -6492,18 +6473,18 @@
     "bin": [
       "pkgconf"
     ],
-    "build_dependencies": [
-      "make",
-      "xz"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2025-11-05",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "drop-in replacement for pkg-config",
+    "installer": "conda-package",
     "man1": [
       "pkgconf.1"
     ],
     "mirror": true,
-    "src_url": "https://distfiles.ariadne.space/pkgconf/pkgconf-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://github.com/pkgconf/pkgconf"
@@ -6533,12 +6514,7 @@
       "pg_ctl",
       "psql"
     ],
-    "build_dependencies": [
-      "bison",
-      "flex",
-      "make",
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -6548,10 +6524,11 @@
       "lz4",
       "openssl",
       "perl",
-      "readline"
+      "readline",
+      "conda"
     ],
     "description": "powerful open-source relational database",
-    "src_url": "https://ftp.postgresql.org/pub/source/v{version}/postgresql-{version}.tar.bz2",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
@@ -7694,9 +7671,7 @@
     "bin": [
       "rsync"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -7704,13 +7679,14 @@
       "openssl",
       "xxhash",
       "zlib",
-      "zstd"
+      "zstd",
+      "conda"
     ],
     "description": "fast, versatile remote and local file-copying tool",
+    "installer": "conda-package",
     "man1": [
       "rsync.1"
     ],
-    "src_url": "https://download.samba.org/pub/rsync/src/rsync-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://download.samba.org/pub/rsync/src/?C=M;O=D"
@@ -7962,20 +7938,19 @@
     "bin": [
       "screen"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "libxcrypt",
-      "ncurses"
+      "ncurses",
+      "conda"
     ],
     "description": "terminal multiplexer with detachable sessions",
+    "installer": "conda-package",
     "man1": [
       "screen.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/screen/screen-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
@@ -8388,17 +8363,15 @@
     "bin": [
       "stow"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
-      "perl"
+      "perl",
+      "conda"
     ],
     "description": "symlink farm manager for managing dotfiles",
-    "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/stow/stow-{version}.tar.gz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/stow/"
@@ -8724,16 +8697,17 @@
     "bin": [
       "tree"
     ],
-    "build_dependencies": [
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
+    "dependencies": [
+      "conda"
+    ],
     "description": "display directory contents in a tree structure",
+    "installer": "conda-package",
     "man1": [
       "tree.1"
     ],
-    "src_url": "https://github.com/Old-Man-Programmer/tree/archive/refs/tags/{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/Old-Man-Programmer/tree"
@@ -9092,21 +9066,20 @@
     "bin": [
       "gwhich"
     ],
-    "build_dependencies": [
-      "make",
-      "pkg-config"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
+    "dependencies": [
+      "conda"
+    ],
     "description": "shows the full path of shell commands",
-    "installer": "gnu-app",
+    "installer": "conda-package",
     "installer_args": {
       "program_prefix": "g"
     },
     "man1": [
       "gwhich.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/which/which-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/which/?C=M;O=D"
@@ -9119,15 +9092,14 @@
       "woff2_decompress",
       "woff2_info"
     ],
-    "build_dependencies": [
-      "brotli",
-      "cmake",
-      "make"
-    ],
+    "conda_channel": "conda-forge",
     "date": "2023-05-15",
     "default": false,
+    "dependencies": [
+      "conda"
+    ],
     "description": "encode and decode WOFF2 web font format",
-    "src_url": "https://github.com/google/woff2/archive/v{version}.tar.gz",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
       "https://github.com/google/woff2/"
