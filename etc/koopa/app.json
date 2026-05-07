@@ -2116,12 +2116,12 @@
     "dependencies": [
       "chezmoi"
     ],
-    "description": "acidgenomics personal dotfiles managed with chezmoi",
+    "description": "acidgenomics dotfiles managed with chezmoi",
     "type": "cli",
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "20953f2c13ca699c66746875310186932b1140c6"
+    "version": "a65d7ca076a80f39e075f06c3fb04483f560333e"
   },
   "du-dust": {
     "bin": [
