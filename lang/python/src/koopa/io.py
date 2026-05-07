@@ -48,6 +48,15 @@ def export_app_json(data: dict, pretty: bool = False) -> None:
         if prettier is None:
             raise SystemExit("prettier is not installed.")
         run([prettier, "--write", file], check=True)
+        with open(file, encoding="utf-8") as con:
+            normalized = load(con)
+        sorted_normalized = dict(sorted(normalized.items()))
+        for key, value in sorted_normalized.items():
+            if isinstance(value, dict):
+                sorted_normalized[key] = dict(sorted(value.items()))
+        with open(file, "w", encoding="utf-8") as con:
+            dump(sorted_normalized, con, indent=2, ensure_ascii=False)
+            con.write("\n")
 
 
 def import_app_json() -> dict:

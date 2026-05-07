@@ -17,6 +17,18 @@ _SPINNER_FRAMES = ("|", "/", "-", "\\")
 _LOG_TAIL_LINES = 100
 
 
+def _use_color() -> bool:
+    from koopa.alert import _supports_color
+
+    return _supports_color()
+
+
+def _styled_time(elapsed: str) -> str:
+    if _use_color():
+        return f"\033[33m[{elapsed}]\033[0m"
+    return f"[{elapsed}]"
+
+
 def get_active_progress() -> "BuildProgress | None":
     """Return the currently active build progress context, if any."""
     return _active_progress
@@ -79,10 +91,12 @@ class BuildProgress:
         self,
         name: str,
         *,
+        version: str = "",
         quiet: bool = False,
         verbose: bool = False,
     ) -> None:
         self._name = name
+        self._version = version
         self._quiet = quiet
         self._verbose = verbose
         self._start: float = 0.0
@@ -96,6 +110,7 @@ class BuildProgress:
         self._spinner_stop = threading.Event()
         self._spinner_thread: threading.Thread | None = None
         self._tty_fd: int = -1
+        self._steps_finished: bool = False
 
     @property
     def saved_log_path(self) -> str | None:
@@ -145,6 +160,17 @@ class BuildProgress:
         """Return elapsed time as a human-readable string."""
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
+    def _styled_label(self) -> str:
+        if _use_color():
+            label = f"\033[1m{self._name}\033[0m"
+            if self._version:
+                label += f" \033[34m{self._version}\033[0m"
+        else:
+            label = self._name
+            if self._version:
+                label += f" {self._version}"
+        return label
+
     def switch_to_step_mode(self, total: int) -> bool:
         """Switch from elapsed-time mode to step-counting mode.
 
@@ -169,6 +195,8 @@ class BuildProgress:
         self._total_steps = total
         if self._quiet:
             return
+        if self._steps_finished:
+            return
         elapsed_secs = self.elapsed
         elapsed = _fmt_duration(elapsed_secs)
         if current > 0 and total > 0 and current < total:
@@ -176,12 +204,15 @@ class BuildProgress:
             eta = f" ~{_fmt_duration(remaining_secs)} remaining"
         else:
             eta = ""
-        line = f"\r\033[K  {self._name} [{current}/{total}] {elapsed}{eta}"
+        label = self._styled_label()
+        time_str = _styled_time(elapsed)
+        line = f"\r\033[K  {label} [{current}/{total}] {time_str}{eta}"
         if self.capturing and self._tty_fd >= 0:
             try:
                 os.write(self._tty_fd, line.encode())
                 if current >= total:
                     os.write(self._tty_fd, b"\n")
+                    self._steps_finished = True
             except OSError:
                 pass
         elif self._verbose:
@@ -189,6 +220,7 @@ class BuildProgress:
             sys.stderr.flush()
             if current >= total:
                 sys.stderr.write("\n")
+                self._steps_finished = True
 
     # -- Output capture and spinner -------------------------------------------
 
@@ -226,7 +258,9 @@ class BuildProgress:
         elapsed = _fmt_duration(self.elapsed)
         marker = "x" if failed else "ok"
         tty = self._tty_fd
-        os.write(tty, f"\r\033[K   {self._name} {marker} [{elapsed}]\n".encode())
+        label = self._styled_label()
+        time_str = _styled_time(elapsed)
+        os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
         if failed and self._log_file is not None:
             self._log_file.flush()
             self._dump_log_tail(tty)
@@ -254,7 +288,9 @@ class BuildProgress:
         while not self._spinner_stop.wait(0.2):
             frame = _SPINNER_FRAMES[idx % len(_SPINNER_FRAMES)]
             elapsed = _fmt_duration(self.elapsed)
-            line = f"\r\033[K   {self._name} {frame} [{elapsed}]"
+            label = self._styled_label()
+            time_str = _styled_time(elapsed)
+            line = f"\r\033[K   {label} {frame} {time_str}"
             try:
                 os.write(tty, line.encode())
             except OSError:
