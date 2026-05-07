@@ -289,7 +289,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "krb5": f"{_M}.krb5",
     "lapack": f"{_M}.lapack",
     "ldns": f"{_M}.ldns",
-    "less": f"{_M}._conda",
+    "less": f"{_M}.less",
     "lesspipe": f"{_M}.lesspipe",
     "libaec": f"{_M}.libaec",
     "libarchive": f"{_M}.libarchive",
