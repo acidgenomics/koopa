@@ -7,6 +7,13 @@ from koopa.build import activate_app, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
+def _readline_prefix() -> str:
+    """Resolve the installed readline prefix."""
+    from koopa.build import _opt_prefix
+
+    return os.path.realpath(os.path.join(_opt_prefix(), "readline"))
+
+
 def main(
     *,
     name: str,
@@ -46,12 +53,15 @@ def main(
     )
     existing = os.environ.get("CPPFLAGS", "")
     os.environ["CPPFLAGS"] = f"{cppflags} {existing}".strip()
+    rl_prefix = _readline_prefix()
     make_build(
         conf_args=[
             "--disable-editline",
             "--disable-static",
             "--enable-readline",
             "--enable-session",
+            f"--with-readline-cflags=-I{rl_prefix}/include",
+            f"--with-readline-ldflags=-L{rl_prefix}/lib -lreadline",
             f"--prefix={prefix}",
         ],
         env=env,
