@@ -2175,7 +2175,7 @@ def update_koopa(*, verbose: bool = False) -> None:
         alert_note(f"Pinned release detected at '{prefix}'.")
         return
     try:
-        result = git_pull(prefix, capture=True)
+        result = git_pull(prefix, rebase=True, autostash=True, capture=True)
     except Exception as e:
         from koopa.alert import warn
 
@@ -2871,7 +2871,7 @@ def fetch_user_repos() -> None:
         name = os.path.basename(repo)
         alert_note(f"Pulling user repo '{name}'.")
         try:
-            git_pull(repo, capture=True)
+            git_pull(repo, rebase=True, autostash=True, capture=True)
         except subprocess.CalledProcessError as exc:
             stderr = (exc.stderr or "").lower()
             if any(pat in stderr for pat in _auth_failure_patterns):

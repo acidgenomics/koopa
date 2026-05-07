@@ -74,12 +74,15 @@ def git_pull(
     path: str = ".",
     *,
     rebase: bool = False,
+    autostash: bool = False,
     capture: bool = False,
 ) -> subprocess.CompletedProcess | None:
     """Pull latest changes."""
     args = ["pull"]
     if rebase:
         args.append("--rebase")
+    if autostash:
+        args.append("--autostash")
     result = _git(*args, cwd=path, capture=capture)
     if capture:
         return result
