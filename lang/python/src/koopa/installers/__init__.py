@@ -387,7 +387,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "conda": f"{_M}.conda",
     "cpufetch": f"{_M}.cpufetch",
     "dotfiles": f"{_M}.dotfiles",
-    "duckdb": f"{_M}.duckdb",
     "elvish": f"{_M}.elvish",
     "ensembl-perl-api": f"{_M}.ensembl_perl_api",
     "fltk": f"{_M}.fltk",
