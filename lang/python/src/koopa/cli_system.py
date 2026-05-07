@@ -264,7 +264,11 @@ def _handle_check(args: list[str]) -> None:
             os.kill(pid, 0)
             from koopa.alert import alert_note
 
-            alert_note(f"Skipping system check: install in progress (PID {pid}).")
+            alert_note(
+                f"Skipping system check: install in progress (PID {pid}).\n"
+                f"If this is a stale lock, remove it with:\n"
+                f"  rm '{lock_path}'"
+            )
             return
         except (ValueError, ProcessLookupError, OSError):
             pass
