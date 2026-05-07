@@ -2999,13 +2999,13 @@
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "xz",
+      "disable-csharp": "",
       "disable-java": "",
       "disable-native-java": "",
-      "disable-csharp": "",
-      "without-emacs": "",
-      "without-git": "",
+      "disable-openmp": "",
       "without-cvs": "",
-      "disable-openmp": ""
+      "without-emacs": "",
+      "without-git": ""
     },
     "revision": 1,
     "src_url": "https://ftpmirror.gnu.org/gettext/gettext-{version}.tar.xz",
@@ -3448,23 +3448,17 @@
     "bin": [
       "groff"
     ],
-    "build_dependencies": [
-      "bison",
-      "make",
-      "pkg-config",
-      "texinfo"
-    ],
-    "date": "2026-05-02",
+    "conda_channel": "conda-forge",
+    "date": "2026-05-07",
     "default": true,
     "dependencies": [
-      "m4",
-      "perl"
+      "conda"
     ],
     "description": "GNU document formatting system",
+    "installer": "conda-package",
     "man1": [
       "groff.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/groff/groff-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
@@ -4327,27 +4321,21 @@
     "bin": [
       "less"
     ],
-    "build_dependencies": [
-      "autoconf",
-      "groff",
-      "make"
-    ],
-    "date": "2026-05-02",
+    "conda_channel": "conda-forge",
+    "date": "2026-05-07",
     "default": true,
     "dependencies": [
-      "ncurses",
-      "pcre2"
+      "conda"
     ],
     "description": "terminal pager with backward navigation",
+    "installer": "conda-package",
     "man1": [
       "less.1"
     ],
-    "src_url": "https://github.com/gwsw/less/archive/refs/tags/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
-      "https://github.com/gwsw/less/",
-      "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
+      "https://github.com/gwsw/less/"
     ],
     "version": "700"
   },
