@@ -109,7 +109,6 @@ def website_prefix() -> str:
     )
 
 
-
 def patch_prefix() -> str:
     """Return patch prefix."""
     return os.path.join(etc_prefix(), "koopa", "patch")

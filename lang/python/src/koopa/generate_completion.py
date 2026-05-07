@@ -459,8 +459,7 @@ def _generate_fish_completion(
         "complete -c koopa -f",
         "",
         "# Level 1: top-level flags.",
-        "complete -c koopa -n 'not __fish_seen_subcommand_from"
-        f" {top_seen}' -l help -d 'Show help'",
+        f"complete -c koopa -n 'not __fish_seen_subcommand_from {top_seen}' -l help -d 'Show help'",
         "complete -c koopa -n 'not __fish_seen_subcommand_from"
         f" {top_seen}' -l version -d 'Show version'",
         "",

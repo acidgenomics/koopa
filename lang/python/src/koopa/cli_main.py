@@ -427,9 +427,7 @@ def _reinstall_all(*, verbose: bool = False) -> None:
     from koopa.install import _build_passthrough_args as _build_passthrough_args_by_name
 
     installed = installed_apps()
-    apps_with_reasons = [
-        (app, "rebuild all") for app in installed if _is_supported_app(app)
-    ]
+    apps_with_reasons = [(app, "rebuild all") for app in installed if _is_supported_app(app)]
     if not apps_with_reasons:
         alert_success("No installed apps to rebuild.")
         return
@@ -720,8 +718,6 @@ def _handle_app(args: argparse.Namespace) -> None:
     from koopa.cli_app import handle_app
 
     handle_app(args.remainder)
-
-
 
 
 def _handle_list(args: argparse.Namespace) -> None:

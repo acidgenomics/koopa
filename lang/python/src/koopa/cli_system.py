@@ -591,7 +591,6 @@ def _handle_linux_fix_sudo_setrlimit_error() -> None:
     )
 
 
-
 def _handle_macos_clean_launch_services() -> None:
     """Handle ``koopa system clean-launch-services``."""
     from koopa.alert import alert, alert_success
@@ -639,7 +638,6 @@ def _handle_macos_clean_launch_services() -> None:
     subprocess.run(["sudo", killall, "Finder"], check=True)
     subprocess.run(["sudo", killall, "Dock"], check=True)
     alert_success("Clean up was successful.")
-
 
 
 def _handle_macos_disable_touch_id_sudo() -> None:
@@ -762,8 +760,6 @@ def _handle_macos_force_eject(args: list[str]) -> None:
     )
 
 
-
-
 def _handle_macos_reload_autofs() -> None:
     """Handle ``koopa system reload-autofs``."""
     from koopa.system import is_admin
@@ -776,7 +772,6 @@ def _handle_macos_reload_autofs() -> None:
         print("Error: 'automount' is not installed.", file=sys.stderr)
         sys.exit(1)
     subprocess.run(["sudo", automount, "-vc"], check=True)
-
 
 
 _DEFUNCT_COMMANDS: dict[str, str] = {

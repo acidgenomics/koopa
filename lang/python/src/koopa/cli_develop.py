@@ -1022,17 +1022,12 @@ def _handle_orphan_apps(args: list[str]) -> None:
                 if isinstance(variant_deps, list):
                     depended_on.update(variant_deps)
     orphans = sorted(all_apps - depended_on)
-    orphans = [
-        name
-        for name in orphans
-        if not data[name].get("removed", False)
-    ]
+    orphans = [name for name in orphans if not data[name].get("removed", False)]
     if not show_all:
         orphans = [
             name
             for name in orphans
-            if not data[name].get("default", False)
-            and data[name].get("type") == "library"
+            if not data[name].get("default", False) and data[name].get("type") == "library"
         ]
     if not orphans:
         print("No orphan apps detected.")
