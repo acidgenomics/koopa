@@ -658,26 +658,6 @@ def _handle_macos_clean_launch_services() -> None:
     alert_success("Clean up was successful.")
 
 
-def _handle_macos_create_dmg(args: list[str]) -> None:
-    """Handle ``koopa system create-dmg <source-folder>``."""
-    if len(args) != 1:
-        print("Error: exactly one argument (source folder) is required.", file=sys.stderr)
-        sys.exit(1)
-    hdiutil = "/usr/bin/hdiutil"
-    if not os.path.isfile(hdiutil):
-        print("Error: 'hdiutil' is not installed.", file=sys.stderr)
-        sys.exit(1)
-    srcfolder = os.path.realpath(args[0])
-    if not os.path.isdir(srcfolder):
-        print(f"Error: not a directory: '{srcfolder}'.", file=sys.stderr)
-        sys.exit(1)
-    volname = os.path.basename(srcfolder)
-    ov = f"{volname}.dmg"
-    subprocess.run(
-        [hdiutil, "create", "-ov", ov, "-srcfolder", srcfolder, "-volname", volname],
-        check=True,
-    )
-
 
 def _handle_macos_disable_touch_id_sudo() -> None:
     """Handle ``koopa system disable-touch-id-sudo``."""
@@ -925,9 +905,6 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         return
     if subcmd == "clean-launch-services":
         _handle_macos_clean_launch_services()
-        return
-    if subcmd == "create-dmg":
-        _handle_macos_create_dmg(rest)
         return
     if subcmd == "disable-touch-id-sudo":
         _handle_macos_disable_touch_id_sudo()

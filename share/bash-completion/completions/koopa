@@ -164,6 +164,7 @@ _koopa_complete() {
                         'clone'
                         'convert-svg-to-png'
                         'convert-utf8-nfd-to-nfc'
+                        'create-dmg'
                         'delete-broken-symlinks'
                         'delete-empty-dirs'
                         'delete-named-subdirs'
@@ -725,7 +726,6 @@ _koopa_complete() {
                     then
                         args+=(
                             'clean-launch-services'
-                            'create-dmg'
                             'disable-touch-id-sudo'
                             'enable-touch-id-sudo'
                             'flush-dns'

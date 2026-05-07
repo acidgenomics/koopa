@@ -44,7 +44,6 @@ _SYSTEM_COMMANDS: list[tuple[str, str | None]] = [
     ("delete-cache", "linux"),
     ("fix-sudo-setrlimit-error", "linux"),
     ("clean-launch-services", "macos"),
-    ("create-dmg", "macos"),
     ("disable-touch-id-sudo", "macos"),
     ("enable-touch-id-sudo", "macos"),
     ("flush-dns", "macos"),
