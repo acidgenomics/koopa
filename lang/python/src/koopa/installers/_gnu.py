@@ -50,7 +50,7 @@ def main(
     if env is not None:
         env.apply()
     kwargs = parse_passthrough(passthrough_args)
-    known_keys = {"compress_ext", "package_name", "parent_name", "non_gnu_mirror"}
+    known_keys = {"compress_ext", "jobs", "package_name", "parent_name", "non_gnu_mirror"}
     conf_args: list[str] = []
     for key, value in kwargs.items():
         if key in known_keys:
@@ -63,6 +63,7 @@ def main(
             conf_args.append(f"{flag}={value}")
         else:
             conf_args.append(flag)
+    jobs_str = get_str(kwargs, "jobs")
     install_gnu_app(
         name=name,
         version=version,
@@ -72,4 +73,5 @@ def main(
         parent_name=get_str(kwargs, "parent_name"),
         non_gnu_mirror=get_str(kwargs, "non_gnu_mirror") == "true",
         conf_args=conf_args or None,
+        jobs=int(jobs_str) if jobs_str else None,
     )

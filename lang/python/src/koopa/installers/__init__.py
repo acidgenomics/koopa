@@ -25,7 +25,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "lame": f"{_M}._conda",
     "llvm": f"{_M}._conda",
     "miller": f"{_M}._conda",
-    "nano": f"{_M}._conda",
+    "nano": f"{_M}.nano",
     "nim": f"{_M}._conda",
     "openssh": f"{_M}._conda",
     "p7zip": f"{_M}._conda",
