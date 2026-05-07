@@ -413,7 +413,6 @@ _TOP_CMDS = [
     "install",
     "install-all-apps",
     "install-default-apps",
-    "internal",
     "list-all-apps",
     "list-default-apps",
     "reinstall",
@@ -422,7 +421,6 @@ _TOP_CMDS = [
     "uninstall",
     "uninstall-non-default-apps",
     "update",
-    "version",
 ]
 
 _TOP_CMD_DESCS = {
@@ -432,7 +430,6 @@ _TOP_CMD_DESCS = {
     "install": "Install an app",
     "install-all-apps": "Install all apps",
     "install-default-apps": "Install default apps",
-    "internal": "Internal utilities",
     "list-all-apps": "List all available apps",
     "list-default-apps": "List default apps",
     "reinstall": "Reinstall an app",
@@ -441,7 +438,6 @@ _TOP_CMD_DESCS = {
     "uninstall": "Uninstall an app",
     "uninstall-non-default-apps": "Uninstall non-default apps",
     "update": "Update installed apps",
-    "version": "Show koopa version",
 }
 
 
@@ -468,11 +464,20 @@ def _generate_fish_completion(
         "",
         "complete -c koopa -f",
         "",
+        "# Level 1: top-level flags.",
+        "complete -c koopa -n 'not __fish_seen_subcommand_from"
+        f" {top_seen}' -l help -d 'Show help'",
+        "complete -c koopa -n 'not __fish_seen_subcommand_from"
+        f" {top_seen}' -l version -d 'Show version'",
+        "",
         "# Level 1: top-level subcommands.",
     ]
     for cmd in _TOP_CMDS:
+        desc = _TOP_CMD_DESCS.get(cmd, "")
+        desc_part = f" -d '{desc}'" if desc else ""
         lines.append(
-            f"complete -c koopa -n 'not __fish_seen_subcommand_from {top_seen}' -a '{cmd}'"
+            f"complete -c koopa -n 'not __fish_seen_subcommand_from"
+            f" {top_seen}' -a '{cmd}'{desc_part}"
         )
 
     lines += ["", "# Level 2: app subcommands."]
@@ -833,7 +838,7 @@ def _generate_powershell_completion(
         "",
         "    switch ($depth) {",
         "        0 {",
-        f"            $completions = @({_ps_array(top_cmds)})",
+        f"            $completions = @({_ps_array(['--help', '--version'] + top_cmds)})",
         "        }",
         "        1 {",
         "            switch ($tokens[0]) {",
@@ -999,7 +1004,6 @@ def generate_completion() -> None:  # noqa: PLR0915
                 "install",
                 "install-all-apps",
                 "install-default-apps",
-                "internal",
                 "list-all-apps",
                 "list-default-apps",
                 "reinstall",
@@ -1008,7 +1012,6 @@ def generate_completion() -> None:  # noqa: PLR0915
                 "uninstall",
                 "uninstall-non-default-apps",
                 "update",
-                "version",
             ],
             i3,
         )

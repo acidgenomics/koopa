@@ -227,7 +227,6 @@ def _build_parser() -> argparse.ArgumentParser:
     run_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
     # -- simple commands ------------------------------------------------------
-    subparsers.add_parser("version")
     header_p = subparsers.add_parser("header")
     header_p.add_argument("remainder", nargs=argparse.REMAINDER)
     subparsers.add_parser("install-all-apps")
@@ -616,11 +615,6 @@ def _handle_run(args: argparse.Namespace) -> None:
     handler(remainder[1:])
 
 
-def _handle_version(_args: argparse.Namespace) -> None:
-    """Handle ``koopa version`` subcommand."""
-    from koopa.version import koopa_version
-
-    print(koopa_version())
 
 
 def _handle_header(_args: argparse.Namespace) -> None:
@@ -700,7 +694,7 @@ def main() -> None:
     """Primary CLI entry point."""
     _prepend_koopa_bin_to_path()
     argv = sys.argv[1:]
-    if argv and argv[0] in ("--version", "-V"):
+    if argv and argv[0] in ("--version", "-V", "-v"):
         from koopa.version import koopa_version
 
         print(koopa_version())
@@ -720,7 +714,6 @@ def main() -> None:
         "run": _handle_run,
         "system": _handle_system,
         "develop": _handle_develop,
-        "version": _handle_version,
         "header": _handle_header,
         "install-all-apps": _handle_install_all_apps,
         "install-default-apps": _handle_install_default_apps,
