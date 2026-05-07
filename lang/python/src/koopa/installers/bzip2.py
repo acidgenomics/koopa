@@ -46,7 +46,7 @@ OBJS= blocksort.o  \\
       bzlib.o
 
 all: $(OBJS)
-\t$(CC) -shared -Wl,-install_name -Wl,libbz2.dylib -o libbz2.${{PKG_VERSION}}.dylib $(OBJS)
+\t$(CC) -shared -Wl,-install_name -Wl,${{PREFIX}}/lib/libbz2.dylib -o libbz2.${{PKG_VERSION}}.dylib $(OBJS)
 \tcp libbz2.${{PKG_VERSION}}.dylib ${{PREFIX}}/lib/
 \tln -s libbz2.${{PKG_VERSION}}.dylib ${{PREFIX}}/lib/libbz2.dylib
 
