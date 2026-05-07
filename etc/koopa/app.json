@@ -7989,6 +7989,7 @@
     "man1": [
       "screen.1"
     ],
+    "revision": 1,
     "src_url": "https://mirrors.kernel.org/gnu/screen/screen-{version}.tar.gz",
     "type": "cli",
     "url": [
