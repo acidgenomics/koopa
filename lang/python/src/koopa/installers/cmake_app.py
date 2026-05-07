@@ -75,6 +75,7 @@ def main(
     cmake_args = [a for a in cmake_args if "-DCMAKE_VERBOSE_MAKEFILE" not in a]
     cmake_args += [
         f"-DOPENSSL_ROOT_DIR={openssl_root}",
+        "-DCMake_BUILD_LTO=ON",
         "-DCMAKE_USE_OPENSSL=ON",
     ]
     bootstrap_args = [

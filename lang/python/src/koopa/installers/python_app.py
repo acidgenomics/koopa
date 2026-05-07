@@ -66,6 +66,7 @@ def _install_from_source(*, version: str, prefix: str) -> None:
         f"--prefix={prefix}",
         "--with-computed-gotos",
         "--with-ensurepip=install",
+        "--with-lto",
         f"--with-openssl={openssl_prefix}",
         "PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1",
         "ac_cv_working_openssl_hashlib=yes",

@@ -15,7 +15,7 @@ def main(
 ) -> None:
     """Install curl."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app("ca-certificates", "zlib", "openssl", "libssh2", env=env)
+    env = activate_app("ca-certificates", "zlib", "openssl", "libssh2", "nghttp2", env=env)
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = f"{ca_prefix}/share/ca-certificates/cacert.pem"
     download_extract_cd()
@@ -35,7 +35,7 @@ def main(
         "--without-libidn2",
         "--without-libpsl",
         "--without-librtmp",
-        "--without-nghttp2",
+        "--with-nghttp2",
         f"--prefix={prefix}",
     ]
     if sys.platform == "darwin":
