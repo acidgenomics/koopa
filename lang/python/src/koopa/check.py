@@ -74,7 +74,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
             current_ver = current_ver[:7]
         if linked_ver != current_ver:
             issues.append(
-                (name, f"{name} ({linked_ver} != {current_ver})", True),
+                (name, f"{name} {linked_ver} != {current_ver}", True),
             )
             continue
         expected_rev = entry.get("revision", 0)
@@ -89,7 +89,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                     pass
             if installed_rev != expected_rev:
                 issues.append(
-                    (name, f"{name} (revision {installed_rev} != {expected_rev})", True),
+                    (name, f"{name} revision {installed_rev} != {expected_rev}", True),
                 )
                 continue
         # Check if any dependency has been revised since this app was installed.
@@ -130,8 +130,8 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                     issues.append(
                         (
                             name,
-                            f"{name} (dependency {resolved_dep} revised:"
-                            f" {recorded_rev} -> {current_rev})",
+                            f"{name} dependency {resolved_dep} revised:"
+                            f" {recorded_rev} -> {current_rev}",
                             True,
                         ),
                     )
@@ -145,7 +145,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
             link = join(bin_dir, b)
             if islink(link) and not os.path.exists(link):
                 issues.append(
-                    (name, f"{name} (broken bin symlink: {b})", True),
+                    (name, f"{name} broken bin symlink: {b}", True),
                 )
                 broken_bin = True
                 break
