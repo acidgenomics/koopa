@@ -3461,11 +3461,6 @@
       "perl"
     ],
     "description": "GNU document formatting system",
-    "installer": "gnu-app",
-    "installer_args": {
-      "jobs": "1",
-      "without-doc": ""
-    },
     "man1": [
       "groff.1"
     ],
