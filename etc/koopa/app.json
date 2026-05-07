@@ -5242,7 +5242,9 @@
       "compress_ext": "xz",
       "disable-setuid": "",
       "non_gnu_mirror": "true",
-      "program_prefix": "g"
+      "program_prefix": "g",
+      "with-systemdtmpfilesdir": "no",
+      "with-systemdunitdir": "no"
     },
     "man1": [
       "gman.1"
