@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from koopa.archive import extract, is_valid_archive
+from koopa.archive import extract
 from koopa.download import download
 from koopa.system import arch2, is_admin, is_linux, is_macos, is_owner, is_windows
 
@@ -995,55 +995,11 @@ def install_gnu_app(
     all_conf_args = list(conf_args or [])
     all_conf_args.append(f"--prefix={prefix}")
     os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
-    from koopa.download import download
+    from koopa.download import download_with_mirror
 
-    tarball_path = f"{parent_name}/{package_name}-{version}.tar.{compress_ext}"
-    url = f"{mirror}/{tarball_path}"
-    tarball: str = ""
-    try:
-        tarball = download(url)
-        if not is_valid_archive(tarball):
-            raise OSError(f"Downloaded file is not a valid archive: '{tarball}'")
-    except (subprocess.CalledProcessError, OSError):
-        _mirror_fallbacks: dict[str, list[str]] = {
-            "https://mirrors.kernel.org/gnu": [
-                "https://ftpmirror.gnu.org/gnu",
-                "https://ftp.gnu.org/gnu",
-            ],
-            "https://download.savannah.nongnu.org/releases": [
-                "https://download-mirror.savannah.gnu.org/releases",
-            ],
-        }
-        fallback_bases = _mirror_fallbacks.get(mirror, [])
-        downloaded = False
-        for fallback_base in fallback_bases:
-            fallback = f"{fallback_base}/{tarball_path}"
-            print(
-                f"Mirror failed, retrying from '{fallback}'.",
-                file=sys.stderr,
-            )
-            try:
-                tarball = download(fallback)
-                if is_valid_archive(tarball):
-                    downloaded = True
-                    break
-            except (subprocess.CalledProcessError, OSError):
-                continue
-        if not downloaded:
-            koopa_filename = f"{package_name}-{version}.tar.{compress_ext}"
-            koopa_url = f"https://koopa.acidgenomics.com/src/{name}/{koopa_filename}"
-            print(
-                f"All mirrors failed, trying koopa mirror: '{koopa_url}'.",
-                file=sys.stderr,
-            )
-            try:
-                tarball = download(koopa_url, retry=False)
-                if is_valid_archive(tarball):
-                    downloaded = True
-            except (subprocess.CalledProcessError, OSError):
-                pass
-            if not downloaded:
-                raise
+    filename = f"{package_name}-{version}.tar.{compress_ext}"
+    url = f"{mirror}/{parent_name}/{filename}"
+    tarball = download_with_mirror(url, name, filename)
     os.makedirs("src", exist_ok=True)
     _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")
@@ -2556,7 +2512,7 @@ def _update_plan_cache_path() -> str:
     return os.path.join(xdg_cache_home(), "koopa", "update-plan.json")
 
 
-def _load_pending_plan() -> list[tuple[str, str]]:
+def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     path = _update_plan_cache_path()
     if not os.path.isfile(path):
         return []
@@ -2565,13 +2521,15 @@ def _load_pending_plan() -> list[tuple[str, str]]:
             data = json.load(f)
     except (json.JSONDecodeError, OSError):
         return []
+    if source and data.get("source", "") != source:
+        return []
     created = data.get("created", "")
     if created:
         from datetime import UTC, datetime
 
         try:
             ts = datetime.fromisoformat(created)
-            if (datetime.now(tz=UTC) - ts).days > 7:
+            if (datetime.now(tz=UTC) - ts).total_seconds() > 48 * 3600:
                 os.unlink(path)
                 return []
         except ValueError:
@@ -2579,7 +2537,7 @@ def _load_pending_plan() -> list[tuple[str, str]]:
     return [(e["app"], e["reason"]) for e in data.get("plan", [])]
 
 
-def _save_pending_plan(plan: list[tuple[str, str]]) -> None:
+def _save_pending_plan(plan: list[tuple[str, str]], source: str = "") -> None:
     path = _update_plan_cache_path()
     if not plan:
         with contextlib.suppress(FileNotFoundError):
@@ -2590,6 +2548,7 @@ def _save_pending_plan(plan: list[tuple[str, str]]) -> None:
 
     data = {
         "created": datetime.now(tz=UTC).isoformat(),
+        "source": source,
         "plan": [{"app": a, "reason": r} for a, r in plan],
     }
     with open(path, "w") as f:
@@ -2646,7 +2605,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     else:
         seen_names = set()
     # Merge cached plan from a previous aborted run.
-    cached_plan = _load_pending_plan()
+    cached_plan = _load_pending_plan(source="update")
     if cached_plan:
         from koopa.app import installed_apps
         from koopa.io import import_app_json
@@ -2672,7 +2631,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     label = "app" if n == 1 else "apps"
     display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
-    _save_pending_plan(plan)
+    _save_pending_plan(plan, source="update")
     acquired = _acquire_install_lock()
     failed: set[str] = set()
     try:
@@ -2704,7 +2663,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     if failed:
         msg = f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}."
         raise RuntimeError(msg)
-    _save_pending_plan([])
+    _save_pending_plan([], source="update")
     alert_success("All stale apps updated successfully.")
 
 
