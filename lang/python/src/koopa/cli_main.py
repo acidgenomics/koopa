@@ -171,6 +171,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- install --------------------------------------------------------------
     install_p = subparsers.add_parser("install")
     install_p.add_argument("apps", nargs="*")
+    install_p.add_argument("--all", action="store_true", default=False)
     install_p.add_argument("--no-dependencies", action="store_true", default=False)
     install_p.add_argument("--private", action="store_true", default=False)
     install_p.add_argument("--reinstall", action="store_true", default=False)
@@ -234,8 +235,6 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- simple commands ------------------------------------------------------
     header_p = subparsers.add_parser("header")
     header_p.add_argument("remainder", nargs=argparse.REMAINDER)
-    subparsers.add_parser("install-all-apps")
-    subparsers.add_parser("install-default-apps")
     subparsers.add_parser("list-all-apps")
     subparsers.add_parser("list-default-apps")
     uninstall_ndp = subparsers.add_parser("uninstall-non-default-apps")
@@ -273,6 +272,28 @@ def _resolve_apps_and_mode(
 def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
     _require_supported_platform()
+
+    apps, mode = _resolve_apps_and_mode(args)
+    if args.all:
+        if apps:
+            print("Error: --all cannot be combined with app names.", file=sys.stderr)
+            sys.exit(1)
+        if args.reinstall:
+            print(
+                "Error: --all cannot be combined with --reinstall."
+                " Use 'koopa reinstall --all' instead.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        from koopa.install import install_all_apps
+
+        install_all_apps()
+        return
+    if not apps:
+        from koopa.install import install_default_apps
+
+        install_default_apps()
+        return
     from koopa.install import (
         _acquire_install_lock,
         _release_install_lock,
@@ -280,10 +301,6 @@ def _handle_install(args: argparse.Namespace) -> None:
         install_koopa,
     )
 
-    apps, mode = _resolve_apps_and_mode(args)
-    if not apps:
-        print("Error: no apps specified.", file=sys.stderr)
-        sys.exit(1)
     if apps == ["koopa"]:
         install_koopa(verbose=args.verbose)
         return
@@ -704,21 +721,6 @@ def _handle_header(_args: argparse.Namespace) -> None:
     print(os.path.join(bash_prefix(), "include", "deprecated-header.sh"))
 
 
-def _handle_install_all_apps(_args: argparse.Namespace) -> None:
-    """Handle ``koopa install-all-apps`` subcommand."""
-    _require_supported_platform()
-    from koopa.install import install_all_apps
-
-    install_all_apps()
-
-
-def _handle_install_default_apps(_args: argparse.Namespace) -> None:
-    """Handle ``koopa install-default-apps`` subcommand."""
-    _require_supported_platform()
-    from koopa.install import install_default_apps
-
-    install_default_apps()
-
 
 def _handle_uninstall_non_default_apps(args: argparse.Namespace) -> None:
     """Handle ``koopa uninstall-non-default-apps`` subcommand."""
@@ -795,8 +797,6 @@ def main() -> None:
         "system": _handle_system,
         "develop": _handle_develop,
         "header": _handle_header,
-        "install-all-apps": _handle_install_all_apps,
-        "install-default-apps": _handle_install_default_apps,
         "list-all-apps": _handle_list_all_apps,
         "list-default-apps": _handle_list_default_apps,
         "uninstall-non-default-apps": _handle_uninstall_non_default_apps,

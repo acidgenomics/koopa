@@ -2,20 +2,18 @@
 * Medium complexity
 ** DONE Rework bootstrap.sh to use uv and bundled astral Python when not in a corporate environment.
 ** DONE Check gcc install support on macOS.
-** TODO We need a way to retrigger reinstall of all default apps and any other optional apps currently installed by the user on the system. Basically a total app rebuild trigger that automatically resolves depdency logic and rebuilds everything in order.
+** DONE We need a way to retrigger reinstall of all default apps and any other optional apps currently installed by the user on the system. Basically a total app rebuild trigger that automatically resolves depdency logic and rebuilds everything in order.
 ** TODO We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
 ** TODO Rework 'koopa install-default-apps' as 'koopa install'.
+** TODO Consider reorganizing 'koopa uninstall-non-default-apps' to `koopa uninstall --all-non-default-apps`.
 ** TODO We need to rework and declutter some koopa CLI commands:
     - install, install-all-apps, install-default-apps
     - list-all-apps, list-default-apps
     - uninstall, uninstall-non-default-apps
-    - koopa system: move some of these to koopa run:
-        - create-dmg
-        - force-eject
     - koopa system update-tex-packages to koopa update system tex-packages
-    - Remove `koopa system version`
-    - Consider moving `koopa list-all-apps` and `koopa-list-default-apps` to `koopa system list all-apps`, `koopa system list-default-apps`
-** TODO `koopa system spotlight` is very unclear.
+    - Consider moving `koopa list-all-apps` and `koopa-list-default-apps` to `koopa system list-all-apps`, `koopa system list-default-apps`
+** TODO Move `koopa system create-dmg` to `koopa run create-dmg`?
+** TODO Move `koopa system force-eject` to `koopa system admin force-eject`?
 ** TODO `koopa system --help` doesn't list supported subcommands:
     $ koopa system --help
     usage: koopa system [-h] ...
@@ -39,7 +37,7 @@
     flush-dns                      prune-apps                     zsh-compaudit-set-permissions
     We're mixing things that help manage koopa install, and other things manage the system machine and require sudo permissions. That's not clear currently.
 ** TODO Reduce the number of dependencies when building r and r-devel from source. For example, we don't want to include gdal here.
-** TODO Consider reorganization 'koopa uninstall-non-default-apps'. Let's consider putting this under `koopa system`.
+** TODO Our language regarding "system" in the koopa CLI is inconsistent. Some commands require system admin privileges, some don't. This applies to `koopa update --all-system` for example.
 * Low complexity
 ** DONE Remove `koopa internal`
 ** DONE Remove 'koopa version' in favor of 'koopa --version'.
@@ -48,3 +46,4 @@
 ** TODO Remove `koopa system test`
     $ koopa system test
     Error: tests prefix does not exist: '/Users/stmich14/.local/share/koopa/etc/koopa/tests'.
+** TODO `koopa system spotlight` is very unclear.

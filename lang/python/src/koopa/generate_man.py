@@ -96,7 +96,7 @@ _DEVELOP_SYNOPSIS: dict[str, str] = {
 # ---------------------------------------------------------------------------
 
 _TOP_COMMANDS: list[tuple[str, str, str]] = [
-    ("install", "app...", "Install one or more applications."),
+    ("install", "[app...]", "Install applications. No args installs defaults; --all installs all."),
     ("reinstall", "app...", "Reinstall applications, with optional reverse dependency rebuilds."),
     (
         "uninstall",
@@ -109,13 +109,12 @@ _TOP_COMMANDS: list[tuple[str, str, str]] = [
     ("run", "command", "Run a utility command (e.g. koopa run rename-snake-case)."),
     ("system", "subcommand", "System information, prefix lookups, and administration commands."),
     ("develop", "subcommand", "Developer and maintenance utilities."),
-    ("internal", "subcommand", "Internal low-level utilities (not intended for direct use)."),
-    ("version", "", "Print koopa version."),
-    ("install-all-apps", "", "Install all registered applications."),
-    ("install-default-apps", "", "Install the default set of applications."),
+    ("list-all-apps", "", "List all registered applications."),
+    ("list-default-apps", "", "List the default set of applications."),
 ]
 
 _INSTALL_FLAGS: list[tuple[str, str]] = [
+    ("--all", "Install all registered applications."),
     ("--no-dependencies", "Skip dependency installation."),
     ("--private", "Install from private sources."),
     ("--reinstall", "Force reinstall even if already installed."),
