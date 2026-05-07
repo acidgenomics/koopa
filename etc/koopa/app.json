@@ -7989,14 +7989,13 @@
     "man1": [
       "screen.1"
     ],
-    "revision": 1,
     "src_url": "https://mirrors.kernel.org/gnu/screen/screen-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
       "https://mirrors.kernel.org/gnu/screen/?C=M;O=D"
     ],
-    "version": "5.0.1"
+    "version": "4.8.0"
   },
   "sd": {
     "bin": [
