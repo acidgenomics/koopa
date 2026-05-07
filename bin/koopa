@@ -26,7 +26,7 @@ __koopa_realpath() {
 }
 
 __koopa_check_python() {
-    [ -x "$1" ] && "$1" -c "import _bz2, _lzma, _ssl, _zlib" \
+    [ -x "$1" ] && "$1" -c "import _bz2, _hashlib, _lzma, _ssl, zlib" \
         2>/dev/null
 }
 
@@ -48,7 +48,7 @@ if __koopa_check_python "$_bootstrap_python"; then
     _python="$_bootstrap_python"
 elif [ -x "$_bootstrap_python" ]; then
     printf '%s\n' \
-        'Error: koopa bootstrap Python is incomplete.' \
+        'Error: koopa bootstrap Python is invalid.' \
         '' \
         'Run the following to rebuild:' \
         "  sh '${_koopa_prefix}/bootstrap.sh'" \

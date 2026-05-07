@@ -231,11 +231,11 @@ install_python() {
     then
         DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
-            "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2, hashlib, lzma, ssl, zlib'
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
     else
         LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
-            "${DESTDIR}${PREFIX}/bin/python3" -c 'import bz2, hashlib, lzma, ssl, zlib'
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
     fi
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
@@ -272,6 +272,13 @@ install_bzip2() {
         install
     [ -f "${DESTDIR}${PREFIX}/lib/libbz2.a" ] || return 1
     [ -f "${DESTDIR}${PREFIX}/include/bzlib.h" ] || return 1
+    (
+        cd "${DESTDIR}${PREFIX}/bin"
+        ln -sf bzdiff bzcmp
+        ln -sf bzgrep bzegrep
+        ln -sf bzgrep bzfgrep
+        ln -sf bzmore bzless
+    )
     unset -v __kvar_version
     return 0
 }
@@ -395,7 +402,7 @@ install_python_uv() {
         return 1
     fi
     printf 'Checking python module integrity.\n'
-    if ! "${__kvar_target}/bin/python3" -c 'import bz2, hashlib, lzma, ssl, zlib'
+    if ! "${__kvar_target}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
     then
         printf 'Python module integrity check failed.\n' >&2
         rm -fr "$__kvar_tmpdir"
