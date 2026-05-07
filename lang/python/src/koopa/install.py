@@ -2182,7 +2182,7 @@ def update_koopa(*, verbose: bool = False) -> None:
         warn(f"Failed to update koopa source code: {e}")
         return
     stdout = (result.stdout or "").strip() if result else ""
-    if stdout and "Already up to date" not in stdout:
+    if verbose and stdout and "Already up to date" not in stdout:
         print(stdout, file=sys.stderr)
     _zsh_compaudit_set_permissions()
 
