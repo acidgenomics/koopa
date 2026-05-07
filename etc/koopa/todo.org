@@ -1,49 +1,5 @@
 * High complexity
 * Medium complexity
-** TODO Does `koopa install --all` attempt to install private apps like `cellranger`, even if a user doesn't have access to our private S3 bucket?
-** TODO Review potential orphan apps that we can remove from support in koopa:
-    - Geospatial chain: gdal, geos, proj, udunits, libgeotiff
-    - Libraries: imagemagick, libgit2, fribidi, harfbuzz
-    - Orphaned dependents: armadillo, ont-vbz-compression
-    - Utilities (no other dependents): xorg-libxrandr
-** TODO Orphan app review:
-Found 37 orphan app(s):
-  armadillo (library)
-  cereal (library)
-  cli11 (library)
-  fltk (library)
-  fribidi (library)
-  gdal (library)
-  graphviz (library)
-  gsl (library)
-  harfbuzz (library)
-  imagemagick (library)
-  jemalloc (library)
-  lapack (library)
-  libconfig (library)
-  libgeotiff (library)
-  libgit2 (library)
-  libluv (library)
-  libsolv (library)
-  libtermkey (library)
-  libvterm (library)
-  lzo (library)
-  mold (library)
-  msgpack (library)
-  nlohmann-json (library)
-  oniguruma (library)
-  ont-vbz-compression (library)
-  pybind11 (library)
-  reproc (library)
-  simdjson (library)
-  spdlog (library)
-  staden-io-lib (library)
-  termcolor (library)
-  tl-expected (library)
-  tree-sitter (library)
-  udunits (library)
-  xorg-libxrandr (library)
-  yaml-cpp (library)
 * Low complexity
 ** TODO Remove `koopa system test`
     $ koopa system test
