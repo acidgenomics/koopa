@@ -2364,42 +2364,113 @@ def _is_supported_app(name: str) -> bool:
     return not (current_os in supported and not supported[current_os])
 
 
-def _topo_sort_apps(apps_with_reasons: list[tuple[str, str]]) -> list[tuple[str, str]]:
-    """Sort stale apps in dependency order (dependencies first).
+def _compute_install_plan(
+    apps_with_reasons: list[tuple[str, str]],
+) -> tuple[list[tuple[str, str]], dict[str, set[str]]]:
+    """Compute ordered install plan with full transitive dep expansion.
 
-    Uses Kahn's algorithm over the subset of stale apps. Apps not in the stale
-    set are ignored — they will be activated at install time as usual.
+    Returns:
+        plan: ordered (app, reason) tuples in install order (deps first)
+        dep_map: for each app in plan, its transitive deps also in the plan
     """
     from koopa.app import extract_app_deps
-    from koopa.io import import_app_json
+    from koopa.os import os_id
 
+    json_data = _import_app_json()
+    opt_prefix = _opt_prefix()
+    current_os = os_id()
     stale_set = {a for a, _ in apps_with_reasons}
-    reason_map = {a: r for a, r in apps_with_reasons}
-    json_data = import_app_json()
+    reason_map: dict[str, str] = {a: r for a, r in apps_with_reasons}
 
-    # Build in-degree and adjacency among stale apps only.
-    in_degree: dict[str, int] = {a: 0 for a in stale_set}
-    dependents: dict[str, list[str]] = {a: [] for a in stale_set}
-    for app in stale_set:
+    def _resolve(name: str) -> str:
+        entry = json_data.get(name, {})
+        if isinstance(entry, dict) and entry.get("alias_of"):
+            return entry["alias_of"]
+        return name
+
+    def _is_includable(name: str) -> bool:
+        entry = json_data.get(name, {})
+        if not isinstance(entry, dict):
+            return False
+        supported = entry.get("supported", {})
+        if current_os in supported and not supported[current_os]:
+            return False
+        if entry.get("private") or entry.get("system") or entry.get("user"):
+            return False
+        return True
+
+    # DFS to expand transitive deps and collect missing ones.
+    full_set: set[str] = set(stale_set)
+    visited: set[str] = set()
+
+    def _expand(name: str) -> None:
+        resolved = _resolve(name)
+        if resolved in visited:
+            return
+        visited.add(resolved)
         try:
-            deps = extract_app_deps(app, json_data)
+            deps = extract_app_deps(resolved, json_data)
         except NameError:
-            continue
+            return
         for dep in deps:
-            resolved_dep = dep
-            dep_entry = json_data.get(dep, {})
-            if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
-                resolved_dep = dep_entry["alias_of"]
-            if resolved_dep in stale_set:
-                dependents[resolved_dep].append(app)
+            dep_resolved = _resolve(dep)
+            if not _is_includable(dep_resolved):
+                continue
+            if dep_resolved not in stale_set:
+                dep_opt = os.path.join(opt_prefix, dep_resolved)
+                if not os.path.exists(dep_opt):
+                    full_set.add(dep_resolved)
+                    reason_map.setdefault(dep_resolved, "missing dependency")
+            _expand(dep_resolved)
+
+    for app, _ in apps_with_reasons:
+        _expand(app)
+
+    # Build adjacency graph over full_set using transitive deps.
+    # For each app in full_set, DFS its entire dep tree to find all
+    # transitive deps that are also in full_set (even through non-plan nodes).
+    transitive_deps_in_plan: dict[str, set[str]] = {a: set() for a in full_set}
+
+    def _find_plan_deps(name: str, seen: set[str]) -> set[str]:
+        """DFS to find all transitive deps of name that are in full_set."""
+        result_deps: set[str] = set()
+        try:
+            deps = extract_app_deps(name, json_data)
+        except NameError:
+            return result_deps
+        for dep in deps:
+            dep_resolved = _resolve(dep)
+            if dep_resolved in seen:
+                continue
+            seen.add(dep_resolved)
+            if dep_resolved in full_set:
+                result_deps.add(dep_resolved)
+            result_deps.update(_find_plan_deps(dep_resolved, seen))
+        return result_deps
+
+    for app in full_set:
+        transitive_deps_in_plan[app] = _find_plan_deps(app, {app})
+
+    in_degree: dict[str, int] = {a: 0 for a in full_set}
+    dependents: dict[str, list[str]] = {a: [] for a in full_set}
+    for app in full_set:
+        for dep in transitive_deps_in_plan[app]:
+            if app not in dependents[dep]:
+                dependents[dep].append(app)
                 in_degree[app] += 1
 
-    # Kahn's algorithm — process zero-in-degree nodes first, preserving
-    # original order among ties to keep output deterministic.
+    # Kahn's algorithm — preserve original order among ties.
     original_order = [a for a, _ in apps_with_reasons]
+
+    def _sort_key(name: str) -> int:
+        try:
+            return original_order.index(name)
+        except ValueError:
+            return len(original_order)
+
     queue = sorted(
-        [a for a in stale_set if in_degree[a] == 0],
-        key=original_order.index,
+        [a for a in full_set if in_degree[a] == 0],
+        key=_sort_key,
     )
     result: list[str] = []
     while queue:
@@ -2409,13 +2480,15 @@ def _topo_sort_apps(apps_with_reasons: list[tuple[str, str]]) -> list[tuple[str,
             in_degree[dependent] -= 1
             if in_degree[dependent] == 0:
                 queue.append(dependent)
-                queue.sort(key=original_order.index)
+                queue.sort(key=_sort_key)
 
-    # If there's a cycle (shouldn't happen), fall back to original order.
-    if len(result) != len(stale_set):
-        return apps_with_reasons
+    # Cycle fallback — append anything missed.
+    for app in full_set:
+        if app not in result:
+            result.append(app)
 
-    return [(a, reason_map[a]) for a in result]
+    plan = [(a, reason_map.get(a, "")) for a in result]
+    return plan, transitive_deps_in_plan
 
 
 def update_stale_apps(*, verbose: bool = False) -> None:
@@ -2436,18 +2509,47 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     if not apps_with_reasons:
         alert_success("All installed apps are up to date.")
         return
-    apps_with_reasons = _topo_sort_apps(apps_with_reasons)
-    apps = [a for a, _ in apps_with_reasons]
+    # Iteratively expand reverse dependencies: if openssl3 is being rebuilt,
+    # python3.14 (which links against it) also needs rebuilding, etc.
+    from koopa.app import stale_revdeps
+
+    seen_names = {a for a, _ in apps_with_reasons}
+    changed = True
+    while changed:
+        changed = False
+        revdeps = stale_revdeps([a for a, _ in apps_with_reasons])
+        for rd in revdeps:
+            if rd not in seen_names and _is_supported_app(rd):
+                apps_with_reasons.append((rd, "dependency rebuilt"))
+                seen_names.add(rd)
+                changed = True
+    stale_set = seen_names
+    plan, dep_map = _compute_install_plan(apps_with_reasons)
+    apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
     if n > 100:
         display = ", ".join(apps[:100]) + ", ..."
     else:
         display = ", ".join(apps)
-    alert(f"Updating {n} {label}: {display}.")
-    for app, reason in apps_with_reasons:
-        cli_install(app, reinstall=True, reinstall_reason=reason, verbose=verbose)
-    _update_stale_revdeps(apps, failed=[], verbose=verbose)
+    alert(f"Installing {n} {label}: {display}.")
+    acquired = _acquire_install_lock()
+    try:
+        for app, reason in plan:
+            config = InstallConfig(
+                name=app,
+                reinstall=(app in stale_set),
+                reinstall_reason=reason if app in stale_set else "",
+                deps=False,
+                verbose=verbose,
+                binary=_can_install_binary(),
+                push=_can_push_binary(),
+                passthrough_args=_build_passthrough_args(app),
+            )
+            install_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
     alert_success("All stale apps updated successfully.")
 
 

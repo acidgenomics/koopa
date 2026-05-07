@@ -179,9 +179,7 @@ def stale_revdeps(names: list) -> list:
     apps that have one or more of those names as a runtime dependency. Only
     considers 'dependencies', not 'build_dependencies'.
 
-    A dependency is skipped when its name is a prefix of the dependent app's
-    installer (e.g. "conda" for "conda-package") — those apps are isolated
-    environments that don't need rebuilding when the installer tool updates.
+    Conda-package apps are skipped since they are fully isolated environments.
     """
     json_data = import_app_json()
     keys = list(json_data.keys())
@@ -202,7 +200,16 @@ def stale_revdeps(names: list) -> list:
             if isinstance(deps, dict):
                 deps = _resolve_dep_dict(deps, sys_dict)
         installer = json_data[key].get("installer", "")
-        triggering = {d for d in deps if d in targets and not installer.startswith(d)}
+        triggering = set()
+        for d in deps:
+            if installer == "conda-package" and d == "conda":
+                continue
+            resolved_d = d
+            d_entry = json_data.get(d, {})
+            if isinstance(d_entry, dict) and d_entry.get("alias_of"):
+                resolved_d = d_entry["alias_of"]
+            if d in targets or resolved_d in targets:
+                triggering.add(d)
         if triggering:
             lst.append(key)
     return lst
