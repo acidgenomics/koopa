@@ -17,6 +17,8 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install Doom Emacs."""
+    env = activate_app("git", build_only=True)
+    env.apply()
     git_clone(
         "https://github.com/hlissner/doom-emacs.git",
         prefix,
