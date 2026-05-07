@@ -43,7 +43,17 @@ def download(
     try:
         _download_curl(url, output, retry=retry, connect_timeout=connect_timeout, max_time=max_time)
     except (FileNotFoundError, subprocess.CalledProcessError):
-        _download_urllib(url, output)
+        try:
+            _download_curl(
+                url,
+                output,
+                retry=retry,
+                connect_timeout=connect_timeout,
+                max_time=max_time,
+                curl_cmd="/usr/bin/curl",
+            )
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
     return output
@@ -109,10 +119,11 @@ def _download_curl(
     retry: bool = True,
     connect_timeout: int | None = None,
     max_time: int | None = None,
+    curl_cmd: str = "curl",
 ) -> None:
     """Download using curl."""
     curl_args = [
-        "curl",
+        curl_cmd,
         "--create-dirs",
         "--fail",
         "--location",

@@ -2176,11 +2176,20 @@ def update_koopa(*, verbose: bool = False) -> None:
         return
     try:
         result = git_pull(prefix, rebase=True, autostash=True, capture=True)
-    except Exception as e:
-        from koopa.alert import warn
+    except Exception:
+        try:
+            result = subprocess.run(
+                ["/usr/bin/git", "pull", "--rebase", "--autostash"],
+                cwd=prefix,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+        except Exception as e:
+            from koopa.alert import warn
 
-        warn(f"Failed to update koopa source code: {e}")
-        return
+            warn(f"Failed to update koopa source code: {e}")
+            return
     stdout = (result.stdout or "").strip() if result else ""
     if verbose and stdout and "Already up to date" not in stdout:
         print(stdout, file=sys.stderr)
