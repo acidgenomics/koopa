@@ -654,16 +654,17 @@
     "version": "5.3"
   },
   "bash-completion": {
-    "conda_channel": "conda-forge",
+    "build_dependencies": [
+      "make",
+      "xz"
+    ],
     "date": "2025-10-31",
     "default": true,
     "dependencies": [
-      "bash",
-      "conda"
+      "bash"
     ],
     "description": "programmable completion functions for bash",
-    "installer": "conda-package",
-    "revision": 1,
+    "src_url": "https://github.com/scop/bash-completion/releases/download/{version}/bash-completion-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://github.com/scop/bash-completion"
@@ -729,19 +730,21 @@
     "bin": [
       "bc"
     ],
-    "conda_channel": "conda-forge",
+    "build_dependencies": [
+      "make",
+      "texinfo"
+    ],
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "ed",
-      "conda"
+      "ed"
     ],
     "description": "arbitrary-precision numeric processing language",
-    "installer": "conda-package",
+    "installer": "gnu-app",
     "man1": [
       "bc.1"
     ],
-    "revision": 1,
+    "src_url": "https://ftpmirror.gnu.org/bc/bc-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/bc/?C=M;O=D"
@@ -3396,15 +3399,16 @@
       "gfgrep",
       "ggrep"
     ],
-    "conda_channel": "conda-forge",
+    "build_dependencies": [
+      "make"
+    ],
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "pcre2",
-      "conda"
+      "pcre2"
     ],
     "description": "GNU pattern-matching text search utility",
-    "installer": "conda-package",
+    "installer": "gnu-app",
     "installer_args": {
       "disable_dependency_tracking": "",
       "disable_nls": "",
@@ -3413,7 +3417,7 @@
     "man1": [
       "ggrep.1"
     ],
-    "revision": 1,
+    "src_url": "https://ftpmirror.gnu.org/grep/grep-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
