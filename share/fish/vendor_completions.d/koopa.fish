@@ -6,24 +6,22 @@
 complete -c koopa -f
 
 # Level 1: top-level flags.
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -l help -d 'Show help'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -l version -d 'Show version'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -l help -d 'Show help'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -l version -d 'Show version'
 
 # Level 1: top-level subcommands.
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'app' -d 'Application management'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'configure' -d 'Configure system'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'develop' -d 'Development utilities'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'install' -d 'Install an app'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'install-all-apps' -d 'Install all apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'install-default-apps' -d 'Install default apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'list-all-apps' -d 'List all available apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'list-default-apps' -d 'List default apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'reinstall' -d 'Reinstall an app'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'run' -d 'Run a utility command'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'system' -d 'System operations'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'uninstall' -d 'Uninstall an app'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'uninstall-non-default-apps' -d 'Uninstall non-default apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install install-all-apps install-default-apps list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'update' -d 'Update installed apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'app' -d 'Application management'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'configure' -d 'Configure system'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'develop' -d 'Development utilities'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'install' -d 'Install apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'list-all-apps' -d 'List all available apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'list-default-apps' -d 'List default apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'reinstall' -d 'Reinstall an app'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'run' -d 'Run a utility command'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'system' -d 'System operations'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'uninstall' -d 'Uninstall an app'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'uninstall-non-default-apps' -d 'Uninstall non-default apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall uninstall-non-default-apps update' -a 'update' -d 'Update installed apps'
 
 # Level 2: app subcommands.
 complete -c koopa -n '__fish_seen_subcommand_from app; and not __fish_seen_subcommand_from aws bioconda bowtie2 brew conda current docker file ftp git gpg hisat2 jekyll kallisto md5sum miso photos r rnaeditingindexer rsem salmon sra ssh star sys wget' -a 'aws'
@@ -1891,6 +1889,7 @@ complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcom
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from remove-app' -l help
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from remove-app' -l revdeps
 complete -c koopa -n '__fish_seen_subcommand_from header' -l help
+complete -c koopa -n '__fish_seen_subcommand_from install' -l all
 complete -c koopa -n '__fish_seen_subcommand_from install' -l help
 complete -c koopa -n '__fish_seen_subcommand_from install' -l no-dependencies
 complete -c koopa -n '__fish_seen_subcommand_from install' -l private
@@ -1898,8 +1897,6 @@ complete -c koopa -n '__fish_seen_subcommand_from install' -l reinstall
 complete -c koopa -n '__fish_seen_subcommand_from install' -l system
 complete -c koopa -n '__fish_seen_subcommand_from install' -l user
 complete -c koopa -n '__fish_seen_subcommand_from install' -l verbose
-complete -c koopa -n '__fish_seen_subcommand_from install-all-apps' -l help
-complete -c koopa -n '__fish_seen_subcommand_from install-default-apps' -l help
 complete -c koopa -n '__fish_seen_subcommand_from list-all-apps' -l help
 complete -c koopa -n '__fish_seen_subcommand_from list-default-apps' -l help
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l all
