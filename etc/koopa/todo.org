@@ -1,10 +1,35 @@
 * High complexity
 * Medium complexity
-** TODO Check gcc install support on macOS.
+** DONE Check gcc install support on macOS.
 ** TODO Rework 'koopa install-default-apps' as 'koopa install'.
 ** TODO We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
 ** TODO Rework bootstrap.sh to use uv and bundled astral Python when not in a corporate environment.
 ** TODO We need a way to retrigger reinstall of all default apps and any other optional apps currently installed by the user on the system. Basically a total app rebuild trigger that automatically resolves depdency logic and rebuilds everything in order.
+** TODO We need to rework and declutter some koopa CLI commands:
+    - install, install-all-apps, install-default-apps
+    - list-all-apps, list-default-apps
+    - install, reinstall
+    - uninstall, uninstall-non-default-apps
+    - koopa system: move some of these to koopa run:
+        - create-dmg
+        - force-eject
+    - koopa system update-tex-packages to koopa update system tex-packages
+    - Remove `koopa system version`
+    - Consider moving `koopa list-all-apps` and `koopa-list-default-apps` to `koopa system list all-apps`, `koopa system list-default-apps`
+** TODO Remove `koopa system test`
+    $ koopa system test
+    Error: tests prefix does not exist: '/Users/stmich14/.local/share/koopa/etc/koopa/tests'.
+** TODO `koopa system spotlight` is very unclear.
+** TODO `koopa system --help` doesn't list supported subcommands:
+    $ koopa system --help
+    usage: koopa system [-h] ...
+
+    positional arguments:
+    remainder
+
+    options:
+    -h, --help  show this help message and exit
+** TODO `koopa app --help` is also not informative.
 * Low complexity
 ** TODO Remove `koopa internal`
 ** TODO Remove 'koopa version' in favor of 'koopa --version'.
