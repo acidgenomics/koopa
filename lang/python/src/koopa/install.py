@@ -771,10 +771,19 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     reason_suffix = ""
                 verb = "reinstalling" if config.reinstall else "installing"
                 dep_word = "dependency" if len(all_deps) == 1 else "dependencies"
+                deps_display = []
+                for d in all_deps:
+                    resolved = _resolve_alias(d)
+                    if resolved != d:
+                        deps_display.append(
+                            f"{styled_name(resolved)} [{d}]"
+                        )
+                    else:
+                        deps_display.append(styled_name(d))
                 alert_note(
                     f"{styled_name(config.name)}{version_suffix}{reason_suffix}:"
                     f" {verb} with {dep_word}:"
-                    f" {', '.join(styled_name(d) for d in all_deps)}"
+                    f" {', '.join(deps_display)}"
                 )
                 _announced = True
             for dep in all_deps:
@@ -2156,7 +2165,6 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
                 )
                 shutil.rmtree(venv_dir)
     if not os.path.isdir(venv_dir):
-        alert("Creating Python virtual environment.")
         from koopa.prefix import bootstrap_prefix
 
         bp = bootstrap_prefix()
@@ -2247,7 +2255,9 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         version_parts.append(f"snapshot {venv_rev}")
     version_suffix = f" ({'; '.join(version_parts)})" if version_parts else ""
     verb = "Updating" if os.path.isfile(version_file) else "Installing"
-    alert(f"{verb} virtual environment at '{venv_dir}'{version_suffix}.")
+    from koopa.alert import styled_prefix
+
+    alert(f"{verb} virtual environment at {styled_prefix(venv_dir)}{version_suffix}.")
     if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
         alert("Installing pip into virtual environment.")
         subprocess.run(
@@ -2380,8 +2390,12 @@ def _topo_sort_apps(apps_with_reasons: list[tuple[str, str]]) -> list[tuple[str,
         except NameError:
             continue
         for dep in deps:
-            if dep in stale_set:
-                dependents[dep].append(app)
+            resolved_dep = dep
+            dep_entry = json_data.get(dep, {})
+            if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
+                resolved_dep = dep_entry["alias_of"]
+            if resolved_dep in stale_set:
+                dependents[resolved_dep].append(app)
                 in_degree[app] += 1
 
     # Kahn's algorithm — process zero-in-degree nodes first, preserving
@@ -2430,7 +2444,11 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in apps_with_reasons]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    alert(f"Updating {n} {label}: {', '.join(apps)}.")
+    if n > 100:
+        display = ", ".join(apps[:100]) + ", ..."
+    else:
+        display = ", ".join(apps)
+    alert(f"Updating {n} {label}: {display}.")
     for app, reason in apps_with_reasons:
         cli_install(app, reinstall=True, reinstall_reason=reason, verbose=verbose)
     _update_stale_revdeps(apps, failed=[], verbose=verbose)
@@ -2500,7 +2518,11 @@ def update_user_apps(*, verbose: bool = False) -> list[str]:
     prefixes = _user_app_prefixes()
     n_user = len(apps)
     label_user = "app" if n_user == 1 else "apps"
-    alert(f"Updating {n_user} user {label_user}: {', '.join(apps)}.")
+    if n_user > 100:
+        display_user = ", ".join(apps[:100]) + ", ..."
+    else:
+        display_user = ", ".join(apps)
+    alert(f"Updating {n_user} user {label_user}: {display_user}.")
     updated: list[str] = []
     for app in apps:
         prefix = prefixes.get(app, "")

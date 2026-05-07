@@ -69,7 +69,7 @@ pythonVersion = "3.12"
 verboseOutput = true
 extraPaths = [
   "lang/python/src",
-  "opt/pytest/libexec/lib/python3.12/site-packages",
+  "opt/pytest/libexec/lib/python3.14/site-packages",
 ]
 reportMissingImports = "warning"
 
@@ -153,7 +153,7 @@ max-statements = 100
 where = ["lang/python/src"]
 
 [tool.ty.environment]
-extra-paths = ["opt/pytest/libexec/lib/python3.12/site-packages"]
+extra-paths = ["opt/pytest/libexec/lib/python3.14/site-packages"]
 
 [tool.ty.terminal]
 error-on-warning = true
