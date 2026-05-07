@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (94) ----------------------------------------------
+    # -- conda-package (95) ----------------------------------------------
     "agat": f"{_M}._conda",
     "autodock": f"{_M}._conda",
     "autodock-vina": f"{_M}._conda",
@@ -35,6 +35,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "difftastic": f"{_M}._conda",
     "direnv": f"{_M}._conda",
     "du-dust": f"{_M}._conda",
+    "duckdb": f"{_M}._conda",
     "entrez-direct": f"{_M}._conda",
     "eza": f"{_M}._conda",
     "fastqc": f"{_M}._conda",
