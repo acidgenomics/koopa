@@ -419,6 +419,7 @@ def _reinstall_all(*, verbose: bool = False) -> None:
         _can_push_binary,
         _compute_install_plan,
         _is_supported_app,
+        _load_pending_plan,
         _release_install_lock,
         _remove_from_pending_plan,
         _save_pending_plan,
@@ -427,8 +428,18 @@ def _reinstall_all(*, verbose: bool = False) -> None:
     )
     from koopa.install import _build_passthrough_args as _build_passthrough_args_by_name
 
-    installed = installed_apps()
-    apps_with_reasons = [(app, "rebuild all") for app in installed if _is_supported_app(app)]
+    cached_plan = _load_pending_plan(source="reinstall-all")
+    if cached_plan:
+        cached_apps = {a for a, _ in cached_plan}
+        still_installed = {app for app in installed_apps() if _is_supported_app(app)}
+        apps_with_reasons = [
+            (app, f"resumed: {reason}") for app, reason in cached_plan if app in still_installed
+        ]
+        if apps_with_reasons:
+            alert(f"Resuming previous reinstall ({len(cached_apps)} apps remaining).")
+    else:
+        installed = installed_apps()
+        apps_with_reasons = [(app, "rebuild all") for app in installed if _is_supported_app(app)]
     if not apps_with_reasons:
         alert_success("No installed apps to rebuild.")
     else:
@@ -438,7 +449,7 @@ def _reinstall_all(*, verbose: bool = False) -> None:
         label = "app" if n == 1 else "apps"
         display = ", ".join(apps[:100]) + ", ..." if n > 100 else ", ".join(apps)
         alert(f"Reinstalling {n} {label}: {display}.")
-        _save_pending_plan(plan)
+        _save_pending_plan(plan, source="reinstall-all")
         acquired = _acquire_install_lock()
         failed: set[str] = set()
         try:
@@ -469,7 +480,7 @@ def _reinstall_all(*, verbose: bool = False) -> None:
         if failed:
             alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
         else:
-            _save_pending_plan([])
+            _save_pending_plan([], source="reinstall-all")
             alert_success("All apps reinstalled successfully.")
     install_missing_default_apps(verbose=verbose)
 
