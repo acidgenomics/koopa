@@ -296,8 +296,11 @@ def check_broken_app_installs() -> bool:
     Scans app prefix for directories that have no corresponding opt symlink,
     indicating a failed or incomplete install. Reports empty version
     directories that should be cleaned up.
+
+    Skips apps already reported by check_installed_apps to avoid duplicates.
     """
-    issues = _iter_broken_app_installs()
+    already_reported = {name for name, _r, a in _iter_installed_app_issues() if a}
+    issues = [(n, r) for n, r in _iter_broken_app_installs() if n not in already_reported]
     for _name, reason in issues:
         print(reason)
     return not issues
