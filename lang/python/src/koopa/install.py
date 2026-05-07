@@ -757,7 +757,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         deps = _app_dependencies(config.name)
         all_deps = list(dict.fromkeys(build_deps + deps))
         if all_deps:
-            if not config.quiet:
+            if not config.quiet and (not config.reinstall or config.verbose):
                 from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
                 version_suffix = f" {styled_version(config.version)}" if config.version else ""
@@ -803,14 +803,15 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 
         version_suffix = f" {styled_version(config.version)}" if config.version else ""
         if config.reinstall and config.reinstall_reason:
-            reason_str = config.reinstall_reason
-            prefix_to_strip = f"{config.name} "
-            if reason_str.startswith(prefix_to_strip):
-                reason_str = reason_str[len(prefix_to_strip) :]
-            alert_note(
-                f"Reinstalling {styled_name(config.name)}{version_suffix}"
-                f" {styled_reason(reason_str)}."
-            )
+            if config.verbose:
+                reason_str = config.reinstall_reason
+                prefix_to_strip = f"{config.name} "
+                if reason_str.startswith(prefix_to_strip):
+                    reason_str = reason_str[len(prefix_to_strip) :]
+                alert_note(
+                    f"Reinstalling {styled_name(config.name)}{version_suffix}"
+                    f" {styled_reason(reason_str)}."
+                )
         elif not config.reinstall:
             alert_note(f"Installing {styled_name(config.name)}{version_suffix}.")
     # Create prefix directory.
@@ -834,7 +835,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     )
     saved_env = {k: os.environ.get(k) for k in _build_env_keys}
     try:
-        with BuildProgress(config.name, quiet=config.quiet, verbose=config.verbose) as progress:
+        with BuildProgress(config.name, version=config.version, quiet=config.quiet, verbose=config.verbose) as progress:
             if config.binary:
                 if config.mode != "shared" or not config.prefix:
                     msg = "Binary install requires shared mode and a prefix."
