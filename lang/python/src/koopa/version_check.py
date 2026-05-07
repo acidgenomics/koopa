@@ -1347,8 +1347,15 @@ def _check_boost() -> str:
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
+    "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
+    "curl": _AppCheckSpec("github", _check_github, ("curl", "curl")),
     "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("google-cloud-sdk", "conda-forge")),
+    "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
+    "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
+    "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
+    "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),
+    "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli", "conda-forge")),
     "vim": _AppCheckSpec("conda", _check_conda, ("vim", "conda-forge")),
@@ -1405,6 +1412,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "openssl3": _make_openssl_spec("3"),
+    "openssl4": _make_openssl_spec("4"),
     "perl": _AppCheckSpec("dirlist", _check_perl, ()),
     "postgresql": _AppCheckSpec("conda", _check_conda, ("postgresql", "conda-forge")),
     "r": _AppCheckSpec(
