@@ -21,7 +21,7 @@ def is_valid_archive(path: str) -> bool:
             header = f.read(6)
     except OSError:
         return False
-    if len(header) < 3:
+    if len(header) < 4:
         return False
     if header[:2] == b"\x1f\x8b":
         return True
@@ -29,7 +29,9 @@ def is_valid_archive(path: str) -> bool:
         return True
     if header[:6] == b"\xfd7zXZ\x00":
         return True
-    return header[:4] == b"\x28\xb5\x2f\xfd"
+    if header[:4] == b"\x28\xb5\x2f\xfd":
+        return True
+    return header[:4] == b"LZIP"
 
 
 def extract(path: str, output_dir: str | None = None) -> None:
