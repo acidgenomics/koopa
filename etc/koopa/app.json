@@ -152,7 +152,7 @@
       "make",
       "pkg-config"
     ],
-    "date": "2025-12-05",
+    "date": "2026-05-07",
     "default": false,
     "description": "container runtime for HPC environments",
     "installer_platform": "linux",
@@ -166,7 +166,7 @@
     "url": [
       "https://github.com/apptainer/apptainer/"
     ],
-    "version": "1.4.5"
+    "version": "1.5.0"
   },
   "apr": {
     "build_dependencies": [
@@ -253,7 +253,7 @@
       "aspell"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "conda"
@@ -263,12 +263,11 @@
     "man1": [
       "aspell.1"
     ],
-    "revision": 1,
     "type": "cli",
     "url": [
       "http://aspell.net/"
     ],
-    "version": "0.60.8.2"
+    "version": "0.60.8"
   },
   "aspera-connect": {
     "bin": [
@@ -525,7 +524,7 @@
       "axel"
     ],
     "conda_channel": "conda-forge",
-    "date": "2024-04-08",
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "gettext",
@@ -538,12 +537,11 @@
       "axel.1"
     ],
     "outdated": true,
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
     ],
-    "version": "2.17.14"
+    "version": "2.17.13"
   },
   "azure-cli": {
     "bin": [
@@ -1463,7 +1461,7 @@
     "bin": [
       "claude"
     ],
-    "date": "2026-05-06",
+    "date": "2026-05-07",
     "default": true,
     "dependencies": [
       "node"
@@ -1477,7 +1475,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.131"
+    "version": "2.1.132"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1970,14 +1968,14 @@
     "build_dependencies": [
       "go"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "0.299.0"
+    "version": "0.299.1"
   },
   "deeptools": {
     "bin": [
@@ -2103,7 +2101,7 @@
     "build_dependencies": [
       "git"
     ],
-    "date": "2026-05-06",
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2114,7 +2112,7 @@
       "https://github.com/doomemacs/doomemacs/"
     ],
     "user": true,
-    "version": "a174a69259e082bcc743d472377a9a2035c79537"
+    "version": "dfd506bbba268d1f6cc684c92e3e1f0f735309dd"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -3339,14 +3337,14 @@
     "bin": [
       "go"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": false,
     "description": "Go programming language toolchain",
     "type": "cli",
     "url": [
       "https://golang.org/dl/"
     ],
-    "version": "1.26.2"
+    "version": "1.26.3"
   },
   "google-cloud-sdk": {
     "bin": [
@@ -3473,7 +3471,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
     ],
-    "version": "1.24.1"
+    "version": "1.23.0"
   },
   "gseapy": {
     "bin": [
@@ -4587,7 +4585,7 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": false,
     "description": "common error codes library for GnuPG components",
     "src_url": "https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-{version}.tar.bz2",
@@ -4595,7 +4593,7 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "1.60"
+    "version": "1.61"
   },
   "libheif": {
     "date": "2026-05-02",
@@ -4656,7 +4654,7 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "libgpg-error"
@@ -4667,7 +4665,7 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "1.6.8"
+    "version": "1.7.0"
   },
   "liblinear": {
     "build_dependencies": [
@@ -5099,7 +5097,7 @@
       "luigi"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-03-19",
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "conda"
@@ -5111,7 +5109,7 @@
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.8.0"
+    "version": "3.8.1"
   },
   "lz4": {
     "bin": [
@@ -5821,19 +5819,18 @@
       "nim"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "conda"
     ],
     "description": "statically typed compiled systems programming language",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://nim-lang.org/"
     ],
-    "version": "2.2.10"
+    "version": "2.2.6"
   },
   "ninja": {
     "bin": [
@@ -7979,20 +7976,20 @@
     "bin": [
       "screen"
     ],
-    "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "build_dependencies": [
+      "make"
+    ],
+    "date": "2026-05-07",
     "default": false,
     "dependencies": [
       "libxcrypt",
-      "ncurses",
-      "conda"
+      "ncurses"
     ],
     "description": "terminal multiplexer with detachable sessions",
-    "installer": "conda-package",
     "man1": [
       "screen.1"
     ],
-    "revision": 1,
+    "src_url": "https://mirrors.kernel.org/gnu/screen/screen-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/screen",
