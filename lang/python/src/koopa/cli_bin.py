@@ -552,7 +552,7 @@ def _handle_download_github_latest(args: list[str]) -> None:
 
 def _syntactic_rename(parsed: argparse.Namespace, *, fun: str) -> None:
     try:
-        from syntactic import syntactic_rename
+        from syntactic import syntactic_rename  # pyright: ignore[reportMissingImports]
     except ImportError:
         msg = "Package 'syntactic' is not installed."
         raise SystemExit(msg) from None

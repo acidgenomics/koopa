@@ -2654,10 +2654,14 @@ def update_stale_apps(*, verbose: bool = False) -> None:
         json_data = import_app_json()
         installed = set(installed_apps())
         for app, reason in cached_plan:
-            if app not in seen_names and app in json_data and app in installed:
-                if _is_supported_app(app):
-                    apps_with_reasons.append((app, f"resumed: {reason}"))
-                    seen_names.add(app)
+            if (
+                app not in seen_names
+                and app in json_data
+                and app in installed
+                and _is_supported_app(app)
+            ):
+                apps_with_reasons.append((app, f"resumed: {reason}"))
+                seen_names.add(app)
     if not apps_with_reasons:
         alert_success("All installed apps are up to date.")
         return
