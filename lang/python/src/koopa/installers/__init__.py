@@ -28,7 +28,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "nano": f"{_M}.nano",
     "nim": f"{_M}._conda",
     "openssh": f"{_M}._conda",
-    "p7zip": f"{_M}._conda",
+    "p7zip": f"{_M}.p7zip",
     "parallel": f"{_M}._conda",
     "pigz": f"{_M}._conda",
     "pkgconf": f"{_M}._conda",

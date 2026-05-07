@@ -1925,7 +1925,7 @@
       "curl.1",
       "curl-config.1"
     ],
-    "revision": 3,
+    "revision": 4,
     "src_url": "https://github.com/curl/curl/releases/download/curl-{version_underscore}/curl-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -3143,6 +3143,7 @@
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
     ],
+    "revision": 1,
     "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -6159,20 +6160,18 @@
       "7za",
       "7zr"
     ],
-    "conda_channel": "conda-forge",
+    "build_dependencies": [
+      "make"
+    ],
     "date": "2023-05-31",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "port of 7-zip for POSIX systems",
-    "installer": "conda-package",
     "man1": [
       "7z.1.gz",
       "7za.1.gz",
       "7zr.1.gz"
     ],
-    "revision": 1,
+    "src_url": "https://github.com/p7zip-project/p7zip/archive/refs/tags/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/p7zip-project/p7zip/"

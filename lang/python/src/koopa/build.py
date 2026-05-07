@@ -207,6 +207,8 @@ def activate_app(
             if os.path.isdir(ld):
                 env.ldflags.append(f"-Wl,-rpath,{ld}")
                 env.library_path.append(ld)
+        if not _is_macos():
+            env.ldflags.append("-Wl,--disable-new-dtags")
         cmake_dir = os.path.join(prefix, "lib", "cmake")
         if os.path.isdir(cmake_dir):
             env.cmake_prefix_path.append(cmake_dir)
