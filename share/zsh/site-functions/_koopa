@@ -13,12 +13,12 @@ _koopa() {
         '*:: :->subcmd'
     [[ $state == subcmd ]] || return 0
     case $words[1] in
+        admin) return 0 ;;
         app) _koopa_app ;;
         configure) return 0 ;;
         develop) _koopa_develop ;;
         install) _koopa_install ;;
-        list-all-apps) return 0 ;;
-        list-default-apps) return 0 ;;
+        list) return 0 ;;
         reinstall) _koopa_install ;;
         run) _koopa_run ;;
         system) return 0 ;;
@@ -30,15 +30,15 @@ _koopa() {
 _koopa_cmds() {
     local -a cmds
     cmds=(
+        'admin:System administration (requires sudo)'
         'app:Application management'
         'configure:Configure system'
         'develop:Development utilities'
         'install:Install apps'
-        'list-all-apps:List all available apps'
-        'list-default-apps:List default apps'
+        'list:List available apps'
         'reinstall:Reinstall an app'
         'run:Run a utility command'
-        'system:System operations'
+        'system:System information and management'
         'uninstall:Uninstall an app'
         'update:Update installed apps'
     )

@@ -38,9 +38,12 @@ Remove installed applications. Defaults to uninstalling koopa itself.
 \fBupdate\fR \fI[app...]\fR
 Update applications to latest versions. Defaults to updating koopa.
 .TP
+\fBlist\fR \fI[--all]\fR
+List available apps. No args lists defaults; --all lists all.
+.SS "Utility commands"
+.TP
 \fBconfigure\fR \fIapp...\fR
 Run post-install configuration for applications.
-.SS "Utility commands"
 .TP
 \fBapp\fR \fIsubcommand\fR
 Application-specific utilities (e.g. koopa app salmon quant).
@@ -49,16 +52,13 @@ Application-specific utilities (e.g. koopa app salmon quant).
 Run a utility command (e.g. koopa run rename-snake-case).
 .TP
 \fBsystem\fR \fIsubcommand\fR
-System information, prefix lookups, and administration commands.
+System information and koopa management.
+.TP
+\fBadmin\fR \fIsubcommand\fR
+System administration commands (require sudo).
 .TP
 \fBdevelop\fR \fIsubcommand\fR
 Developer and maintenance utilities.
-.TP
-\fBlist\-all\-apps\fR
-List all registered applications.
-.TP
-\fBlist\-default\-apps\fR
-List the default set of applications.
 .
 .SH "INSTALL OPTIONS"
 .TP
@@ -68,17 +68,8 @@ Install all registered applications.
 \fB\-\-no\-dependencies\fR
 Skip dependency installation.
 .TP
-\fB\-\-private\fR
-Install from private sources.
-.TP
 \fB\-\-reinstall\fR
 Force reinstall even if already installed.
-.TP
-\fB\-\-system\fR
-Install in system mode.
-.TP
-\fB\-\-user\fR
-Install in user mode.
 .TP
 \fB\-D arg\fR
 Pass additional arguments through to the installer. Can be repeated.
@@ -91,24 +82,10 @@ Reinstall the specified apps and all of their reverse dependencies.
 \fB\-\-only\-revdeps\fR
 Reinstall only the reverse dependencies, not the specified apps.
 .
-.SH "UNINSTALL / UPDATE / CONFIGURE OPTIONS"
-.TP
-\fB\-\-system\fR
-Operate in system mode.
-.TP
-\fB\-\-user\fR
-Operate in user mode.
-.
 .SH "SYSTEM SUBCOMMANDS"
 .TP
 \fBsystem check\fR
 Run system checks, including dependency versions, broken app installs, bootstrap version, and disk usage.
-.TP
-\fBsystem disable\-passwordless\-sudo\fR
-Disable passwordless sudo for the current user.
-.TP
-\fBsystem enable\-passwordless\-sudo\fR
-Enable passwordless sudo for the current user.
 .TP
 \fBsystem hostname\fR
 Print the system hostname.
@@ -134,49 +111,55 @@ Switch koopa installation to the development branch.
 \fBsystem test\fR
 Run the koopa test suite.
 .TP
-\fBsystem update\-tex\-packages\fR
-Update TeX Live packages via tlmgr.
-.TP
 \fBsystem version\fR \fIname\fR
 Print the installed version of an application.
 .TP
 \fBsystem which\fR \fIname...\fR
 Print the real path of an application.
-.TP
-\fBsystem zsh\-compaudit\-set\-permissions\fR
-Fix Zsh compaudit permissions.
-.SS "Linux\-specific system subcommands"
-.TP
-\fBsystem delete\-cache\fR
-Delete cache, log, and temporary files (Docker images only).
-.TP
-\fBsystem fix\-sudo\-setrlimit\-error\fR
-Fix the sudo setrlimit error on Linux.
 .SS "macOS\-specific system subcommands"
-.TP
-\fBsystem clean\-launch\-services\fR
-Clean the macOS Launch Services database.
-.TP
-\fBsystem disable\-touch\-id\-sudo\fR
-Disable Touch ID for sudo authentication.
-.TP
-\fBsystem enable\-touch\-id\-sudo\fR
-Enable Touch ID for sudo authentication.
-.TP
-\fBsystem flush\-dns\fR
-Flush the DNS cache.
-.TP
-\fBsystem force\-eject\fR
-Force eject a mounted volume.
 .TP
 \fBsystem ifactive\fR
 Show active network interfaces.
 .TP
-\fBsystem reload\-autofs\fR
-Reload the autofs automount daemon.
-.TP
 \fBsystem spotlight\fR \fIquery\fR
 Search using Spotlight.
+.
+.SH "ADMIN SUBCOMMANDS"
+.TP
+\fBadmin disable\-passwordless\-sudo\fR
+Disable passwordless sudo for the current user.
+.TP
+\fBadmin enable\-passwordless\-sudo\fR
+Enable passwordless sudo for the current user.
+.TP
+\fBadmin zsh\-compaudit\-set\-permissions\fR
+Fix Zsh compaudit permissions.
+.SS "Linux\-specific admin subcommands"
+.TP
+\fBadmin delete\-cache\fR
+Delete cache, log, and temporary files (Docker images only).
+.TP
+\fBadmin fix\-sudo\-setrlimit\-error\fR
+Fix the sudo setrlimit error on Linux.
+.SS "macOS\-specific admin subcommands"
+.TP
+\fBadmin clean\-launch\-services\fR
+Clean the macOS Launch Services database.
+.TP
+\fBadmin disable\-touch\-id\-sudo\fR
+Disable Touch ID for sudo authentication.
+.TP
+\fBadmin enable\-touch\-id\-sudo\fR
+Enable Touch ID for sudo authentication.
+.TP
+\fBadmin flush\-dns\fR
+Flush the DNS cache.
+.TP
+\fBadmin force\-eject\fR
+Force eject a mounted volume.
+.TP
+\fBadmin reload\-autofs\fR
+Reload the autofs automount daemon.
 .
 .SH "DEVELOP SUBCOMMANDS"
 .TP

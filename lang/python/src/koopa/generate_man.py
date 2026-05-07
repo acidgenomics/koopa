@@ -24,6 +24,21 @@ _SYSTEM_DESCRIPTIONS: dict[str, str] = {
         "Run system checks, including dependency versions, broken app installs,"
         " bootstrap version, and disk usage."
     ),
+    "hostname": "Print the system hostname.",
+    "ifactive": "Show active network interfaces.",
+    "info": "Show system information.",
+    "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
+    "os-string": "Print the operating system identifier string.",
+    "prefix": "Print the installation prefix for koopa or a named application.",
+    "prune-apps": "Remove stale application versions.",
+    "spotlight": "Search using Spotlight.",
+    "switch-to-develop": "Switch koopa installation to the development branch.",
+    "test": "Run the koopa test suite.",
+    "version": "Print the installed version of an application.",
+    "which": "Print the real path of an application.",
+}
+
+_ADMIN_DESCRIPTIONS: dict[str, str] = {
     "clean-launch-services": "Clean the macOS Launch Services database.",
     "delete-cache": "Delete cache, log, and temporary files (Docker images only).",
     "disable-passwordless-sudo": "Disable passwordless sudo for the current user.",
@@ -33,20 +48,7 @@ _SYSTEM_DESCRIPTIONS: dict[str, str] = {
     "fix-sudo-setrlimit-error": "Fix the sudo setrlimit error on Linux.",
     "flush-dns": "Flush the DNS cache.",
     "force-eject": "Force eject a mounted volume.",
-    "hostname": "Print the system hostname.",
-    "ifactive": "Show active network interfaces.",
-    "info": "Show system information.",
-    "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
-    "os-string": "Print the operating system identifier string.",
-    "prefix": "Print the installation prefix for koopa or a named application.",
-    "prune-apps": "Remove stale application versions.",
     "reload-autofs": "Reload the autofs automount daemon.",
-    "spotlight": "Search using Spotlight.",
-    "switch-to-develop": "Switch koopa installation to the development branch.",
-    "test": "Run the koopa test suite.",
-    "update-tex-packages": "Update TeX Live packages via tlmgr.",
-    "version": "Print the installed version of an application.",
-    "which": "Print the real path of an application.",
     "zsh-compaudit-set-permissions": "Fix Zsh compaudit permissions.",
 }
 
@@ -103,33 +105,25 @@ _TOP_COMMANDS: list[tuple[str, str, str]] = [
         "Remove installed applications. Defaults to uninstalling koopa itself.",
     ),
     ("update", "[app...]", "Update applications to latest versions. Defaults to updating koopa."),
+    ("list", "[--all]", "List available apps. No args lists defaults; --all lists all."),
     ("configure", "app...", "Run post-install configuration for applications."),
     ("app", "subcommand", "Application-specific utilities (e.g. koopa app salmon quant)."),
     ("run", "command", "Run a utility command (e.g. koopa run rename-snake-case)."),
-    ("system", "subcommand", "System information, prefix lookups, and administration commands."),
+    ("system", "subcommand", "System information and koopa management."),
+    ("admin", "subcommand", "System administration commands (require sudo)."),
     ("develop", "subcommand", "Developer and maintenance utilities."),
-    ("list-all-apps", "", "List all registered applications."),
-    ("list-default-apps", "", "List the default set of applications."),
 ]
 
 _INSTALL_FLAGS: list[tuple[str, str]] = [
     ("--all", "Install all registered applications."),
     ("--no-dependencies", "Skip dependency installation."),
-    ("--private", "Install from private sources."),
     ("--reinstall", "Force reinstall even if already installed."),
-    ("--system", "Install in system mode."),
-    ("--user", "Install in user mode."),
     ("-D arg", "Pass additional arguments through to the installer. Can be repeated."),
 ]
 
 _REINSTALL_FLAGS: list[tuple[str, str]] = [
     ("--all-revdeps", "Reinstall the specified apps and all of their reverse dependencies."),
     ("--only-revdeps", "Reinstall only the reverse dependencies, not the specified apps."),
-]
-
-_MODE_FLAGS: list[tuple[str, str]] = [
-    ("--system", "Operate in system mode."),
-    ("--user", "Operate in user mode."),
 ]
 
 # ---------------------------------------------------------------------------
@@ -169,7 +163,11 @@ def _tp(term: str, desc: str) -> list[str]:
 
 def generate_man() -> str:
     """Generate the ``koopa.1`` man page in roff format."""
-    from koopa.generate_completion import _SYSTEM_COMMANDS, _load_develop_commands
+    from koopa.generate_completion import (
+        _ADMIN_COMMANDS,
+        _SYSTEM_COMMANDS,
+        _load_develop_commands,
+    )
 
     month_year = date.today().strftime("%B %Y")
     lines: list[str] = []
@@ -224,15 +222,10 @@ def generate_man() -> str:
     for flag, desc in _REINSTALL_FLAGS:
         lines += _tp(_bold(_roff_name(flag)), desc)
 
-    lines += _section("UNINSTALL / UPDATE / CONFIGURE OPTIONS")
-    for flag, desc in _MODE_FLAGS:
-        lines += _tp(_bold(_roff_name(flag)), desc)
-
     # SYSTEM SUBCOMMANDS — names/platforms from the canonical generate_completion table.
     lines += _section("SYSTEM SUBCOMMANDS")
     common = [(n, p) for n, p in _SYSTEM_COMMANDS if p is None]
-    linux_cmds = [(n, p) for n, p in _SYSTEM_COMMANDS if p == "linux"]
-    macos_cmds = [(n, p) for n, p in _SYSTEM_COMMANDS if p == "macos"]
+    macos_sys = [(n, p) for n, p in _SYSTEM_COMMANDS if p == "macos"]
 
     for name, _ in common:
         term = _bold(f"system {_roff_name(name)}")
@@ -241,19 +234,33 @@ def generate_man() -> str:
             term += f" {_italic(synopsis)}"
         lines += _tp(term, _SYSTEM_DESCRIPTIONS.get(name, ""))
 
-    if linux_cmds:
-        lines += _subsection(r"Linux\-specific system subcommands")
-        for name, _ in linux_cmds:
-            lines += _tp(_bold(f"system {_roff_name(name)}"), _SYSTEM_DESCRIPTIONS.get(name, ""))
-
-    if macos_cmds:
+    if macos_sys:
         lines += _subsection(r"macOS\-specific system subcommands")
-        for name, _ in macos_cmds:
+        for name, _ in macos_sys:
             term = _bold(f"system {_roff_name(name)}")
             synopsis = _SYSTEM_SYNOPSIS.get(name, "")
             if synopsis:
                 term += f" {_italic(synopsis)}"
             lines += _tp(term, _SYSTEM_DESCRIPTIONS.get(name, ""))
+
+    # ADMIN SUBCOMMANDS — require sudo/admin privileges.
+    lines += _section("ADMIN SUBCOMMANDS")
+    common_admin = [(n, p) for n, p in _ADMIN_COMMANDS if p is None]
+    linux_admin = [(n, p) for n, p in _ADMIN_COMMANDS if p == "linux"]
+    macos_admin = [(n, p) for n, p in _ADMIN_COMMANDS if p == "macos"]
+
+    for name, _ in common_admin:
+        lines += _tp(_bold(f"admin {_roff_name(name)}"), _ADMIN_DESCRIPTIONS.get(name, ""))
+
+    if linux_admin:
+        lines += _subsection(r"Linux\-specific admin subcommands")
+        for name, _ in linux_admin:
+            lines += _tp(_bold(f"admin {_roff_name(name)}"), _ADMIN_DESCRIPTIONS.get(name, ""))
+
+    if macos_admin:
+        lines += _subsection(r"macOS\-specific admin subcommands")
+        for name, _ in macos_admin:
+            lines += _tp(_bold(f"admin {_roff_name(name)}"), _ADMIN_DESCRIPTIONS.get(name, ""))
 
     # DEVELOP SUBCOMMANDS — names from _DEVELOP_HANDLERS via _load_develop_commands().
     lines += _section("DEVELOP SUBCOMMANDS")

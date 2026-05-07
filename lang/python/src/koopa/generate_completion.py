@@ -27,8 +27,6 @@ from typing import Any
 
 _SYSTEM_COMMANDS: list[tuple[str, str | None]] = [
     ("check", None),
-    ("disable-passwordless-sudo", None),
-    ("enable-passwordless-sudo", None),
     ("hostname", None),
     ("info", None),
     ("list", None),
@@ -37,9 +35,15 @@ _SYSTEM_COMMANDS: list[tuple[str, str | None]] = [
     ("prune-apps", None),
     ("switch-to-develop", None),
     ("test", None),
-    ("update-tex-packages", None),
     ("version", None),
     ("which", None),
+    ("ifactive", "macos"),
+    ("spotlight", "macos"),
+]
+
+_ADMIN_COMMANDS: list[tuple[str, str | None]] = [
+    ("disable-passwordless-sudo", None),
+    ("enable-passwordless-sudo", None),
     ("zsh-compaudit-set-permissions", None),
     ("delete-cache", "linux"),
     ("fix-sudo-setrlimit-error", "linux"),
@@ -48,9 +52,7 @@ _SYSTEM_COMMANDS: list[tuple[str, str | None]] = [
     ("enable-touch-id-sudo", "macos"),
     ("flush-dns", "macos"),
     ("force-eject", "macos"),
-    ("ifactive", "macos"),
     ("reload-autofs", "macos"),
-    ("spotlight", "macos"),
 ]
 
 _SYSTEM_LIST: list[tuple[str, str | None]] = [
@@ -72,6 +74,8 @@ def _get_main_command_flags() -> dict[str, list[str]]:
     )
     result: dict[str, list[str]] = {}
     for name, subparser in subparsers_action.choices.items():
+        if name not in _TOP_CMDS:
+            continue
         flags = ["--help"]
         for action in subparser._actions:
             for opt in action.option_strings:
@@ -406,12 +410,12 @@ def _collect_app_depth_4(
 # ---------------------------------------------------------------------------
 
 _TOP_CMDS = [
+    "admin",
     "app",
     "configure",
     "develop",
     "install",
-    "list-all-apps",
-    "list-default-apps",
+    "list",
     "reinstall",
     "run",
     "system",
@@ -420,15 +424,15 @@ _TOP_CMDS = [
 ]
 
 _TOP_CMD_DESCS = {
+    "admin": "System administration (requires sudo)",
     "app": "Application management",
     "configure": "Configure system",
     "develop": "Development utilities",
     "install": "Install apps",
-    "list-all-apps": "List all available apps",
-    "list-default-apps": "List default apps",
+    "list": "List available apps",
     "reinstall": "Reinstall an app",
     "run": "Run a utility command",
-    "system": "System operations",
+    "system": "System information and management",
     "uninstall": "Uninstall an app",
     "update": "Update installed apps",
 }
@@ -526,6 +530,28 @@ def _generate_fish_completion(
             f"complete -c koopa"
             f" -n '__fish_seen_subcommand_from run;"
             f" and not __fish_seen_subcommand_from {run_seen}'"
+            f" -a '{cmd}'"
+        )
+
+    system_cmds = sorted(e[0] for e in _SYSTEM_COMMANDS)
+    system_seen = " ".join(system_cmds)
+    lines += ["", "# system subcommands."]
+    for cmd in system_cmds:
+        lines.append(
+            f"complete -c koopa"
+            f" -n '__fish_seen_subcommand_from system;"
+            f" and not __fish_seen_subcommand_from {system_seen}'"
+            f" -a '{cmd}'"
+        )
+
+    admin_cmds = sorted(e[0] for e in _ADMIN_COMMANDS)
+    admin_seen = " ".join(admin_cmds)
+    lines += ["", "# admin subcommands."]
+    for cmd in admin_cmds:
+        lines.append(
+            f"complete -c koopa"
+            f" -n '__fish_seen_subcommand_from admin;"
+            f" and not __fish_seen_subcommand_from {admin_seen}'"
             f" -a '{cmd}'"
         )
 
@@ -810,6 +836,7 @@ def _generate_powershell_completion(
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
     top_cmds = sorted(_TOP_CMDS)
     _system_cmds_ps = _ps_array(sorted(e[0] for e in _SYSTEM_COMMANDS if e[1] is None))
+    _admin_cmds_ps = _ps_array(sorted(e[0] for e in _ADMIN_COMMANDS if e[1] is None))
 
     lines += [
         "# Koopa PowerShell completions.",
@@ -835,6 +862,7 @@ def _generate_powershell_completion(
         "        }",
         "        1 {",
         "            switch ($tokens[0]) {",
+        f"                'admin'     {{ $completions = @({_admin_cmds_ps}) }}",
         f"                'app'       {{ $completions = @({_ps_array(app_ns)}) }}",
         "                'configure' { $completions = @('system', 'user') }",
         f"                'develop'   {{ $completions = @({_ps_array(develop_cmds)}) }}",
@@ -991,12 +1019,12 @@ def generate_completion() -> None:  # noqa: PLR0915
             [
                 "--help",
                 "--version",
+                "admin",
                 "app",
                 "configure",
                 "develop",
                 "install",
-                "list-all-apps",
-                "list-default-apps",
+                "list",
                 "reinstall",
                 "run",
                 "system",
@@ -1066,7 +1094,7 @@ def generate_completion() -> None:  # noqa: PLR0915
     install_body.append(f'{i5}case "${{COMP_WORDS[COMP_CWORD-1]}}" in')
     install_body.append(f"{i6}'install' | \\")
     install_body.append(f"{i6}'uninstall')")
-    install_body.append(f"{i6}{_I}args+=('private' 'system' 'user')")
+    install_body.append(f"{i6}{_I}args+=('system' 'user')")
     install_body.append(f"{i6}{_I};;")
     install_body.append(f"{i6}'reinstall')")
     install_body.append(f"{i6}{_I}args+=('--all-revdeps' '--no-revdeps' '--only-revdeps')")
@@ -1076,6 +1104,15 @@ def generate_completion() -> None:  # noqa: PLR0915
         _emit_case_entry(
             "'install' | \\",
             [f"{i4}'reinstall' | \\", f"{i4}'uninstall')", *install_body],
+            i4,
+        )
+    )
+
+    # admin
+    lines.extend(
+        _emit_case_entry(
+            "'admin')",
+            _emit_platform_block(_ADMIN_COMMANDS, i5),
             i4,
         )
     )

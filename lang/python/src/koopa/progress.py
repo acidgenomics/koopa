@@ -203,7 +203,7 @@ class BuildProgress:
             eta = ""
         label = self._styled_label()
         time_str = _styled_time(elapsed)
-        line = f"\r\033[K  {label} [{current}/{total}] {time_str}{eta}"
+        line = f"\r\033[K   {label} [{current}/{total}] {time_str}{eta}"
         if self.capturing and self._tty_fd >= 0:
             try:
                 os.write(self._tty_fd, line.encode())
@@ -253,7 +253,7 @@ class BuildProgress:
         self._saved_stdout_fd = -1
         self._saved_stderr_fd = -1
         elapsed = _fmt_duration(self.elapsed)
-        marker = "x" if failed else "ok"
+        marker = "x" if failed else "OK"
         tty = self._tty_fd
         label = self._styled_label()
         time_str = _styled_time(elapsed)

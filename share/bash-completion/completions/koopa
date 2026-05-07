@@ -11,6 +11,7 @@ _koopa_complete() {
     COMPREPLY=()
     local -A _flags
     _flags=(
+        ['admin']='--help'
         ['app']='--help'
         ['app/aws/batch/fetch-and-run']='--help --queue --job-definition --job-name --vcpus --memory --profile'
         ['app/aws/batch/list-jobs']='--help --queue --status --profile'
@@ -62,19 +63,17 @@ _koopa_complete() {
         ['app/star/align/single-end']='--help --index-dir --fastq-dir --output-dir --gtf-file'
         ['app/star/index']='--help --genome-fasta-file --output-dir --gtf-file'
         ['app/wget/recursive']='--help --url --user --password'
-        ['configure']='--help --system --user --verbose'
+        ['configure']='--help --verbose'
         ['develop']='--help'
         ['develop/check-app-versions']='--help --json --source --no-update --s3-upload --reset-cache'
         ['develop/format-app-json']='--help --prettier'
         ['develop/remove-app']='--help --revdeps'
-        ['header']='--help'
-        ['install']='--all --help --no-dependencies --private --reinstall --system --user --verbose'
-        ['list-all-apps']='--help'
-        ['list-default-apps']='--help'
+        ['install']='--all --help --no-dependencies --reinstall --verbose'
+        ['list']='--all --help'
         ['reinstall']='--all --all-revdeps --help --no-revdeps --only-revdeps --verbose'
         ['run']='--help'
         ['system']='--help'
-        ['uninstall']='--help --no-revdeps --non-default --system --user --verbose --yes'
+        ['uninstall']='--help --no-revdeps --non-default --verbose --yes'
         ['update']='--help --verbose'
     )
     case "${COMP_CWORD:-}" in
@@ -82,12 +81,12 @@ _koopa_complete() {
             args+=(
                 '--help'
                 '--version'
+                'admin'
                 'app'
                 'configure'
                 'develop'
                 'install'
-                'list-all-apps'
-                'list-default-apps'
+                'list'
                 'reinstall'
                 'run'
                 'system'
@@ -690,29 +689,17 @@ _koopa_complete() {
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'install' | \
                         'uninstall')
-                            args+=('private' 'system' 'user')
+                            args+=('system' 'user')
                             ;;
                         'reinstall')
                             args+=('--all-revdeps' '--no-revdeps' '--only-revdeps')
                             ;;
                     esac
                     ;;
-                'system')
+                'admin')
                     args+=(
-                        'check'
                         'disable-passwordless-sudo'
                         'enable-passwordless-sudo'
-                        'hostname'
-                        'info'
-                        'list'
-                        'os-string'
-                        'prefix'
-                        'prune-apps'
-                        'switch-to-develop'
-                        'test'
-                        'update-tex-packages'
-                        'version'
-                        'which'
                         'zsh-compaudit-set-permissions'
                     )
                     if _koopa_is_linux
@@ -730,8 +717,28 @@ _koopa_complete() {
                             'enable-touch-id-sudo'
                             'flush-dns'
                             'force-eject'
-                            'ifactive'
                             'reload-autofs'
+                        )
+                    fi
+                    ;;
+                'system')
+                    args+=(
+                        'check'
+                        'hostname'
+                        'info'
+                        'list'
+                        'os-string'
+                        'prefix'
+                        'prune-apps'
+                        'switch-to-develop'
+                        'test'
+                        'version'
+                        'which'
+                    )
+                    if _koopa_is_macos
+                    then
+                        args+=(
+                            'ifactive'
                             'spotlight'
                         )
                     fi
