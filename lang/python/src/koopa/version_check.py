@@ -1351,7 +1351,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli", "conda-forge")),
-    "vim": _AppCheckSpec("github", _check_github, ("vim", "vim"), batch_size=100),
+    "vim": _AppCheckSpec("conda", _check_conda, ("vim", "conda-forge")),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",
@@ -1366,7 +1366,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "expat": _AppCheckSpec("github", _check_expat, ()),
     "gcc": _make_dirlist_spec("https://mirrors.kernel.org/gnu/gcc/", "gcc-"),
-    "ghostscript": _AppCheckSpec("github", _check_ghostscript, ()),
+    "ghostscript": _AppCheckSpec("conda", _check_conda, ("ghostscript", "conda-forge")),
     "git": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1406,7 +1406,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "openssl3": _make_openssl_spec("3"),
     "perl": _AppCheckSpec("dirlist", _check_perl, ()),
-    "postgresql": _make_dirlist_spec("https://ftp.postgresql.org/pub/source/", "v"),
+    "postgresql": _AppCheckSpec("conda", _check_conda, ("postgresql", "conda-forge")),
     "r": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1418,11 +1418,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "ruby": _AppCheckSpec("github", _check_github, ("ruby", "ruby")),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
-    "screen": _AppCheckSpec(
-        "gnu",
-        lambda: _check_gnu("screen"),
-        (),
-    ),
+    "screen": _AppCheckSpec("conda", _check_conda, ("screen", "conda-forge")),
     "swig": _AppCheckSpec("github", _check_github, ("swig", "swig")),
     "tcl-tk": _AppCheckSpec(
         "dirlist",
@@ -1432,11 +1428,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
     "libheif": _AppCheckSpec("github", _check_github, ("strukturag", "libheif")),
     "libsolv": _AppCheckSpec("github", _check_libsolv, ()),
-    "llvm": _AppCheckSpec("github", _check_llvm, ()),
+    "llvm": _AppCheckSpec("conda", _check_conda, ("llvm", "conda-forge")),
     "mpdecimal": _AppCheckSpec("dirlist", _check_mpdecimal, ()),
     "msgpack": _AppCheckSpec("github", _check_msgpack, ()),
     "openjpeg": _AppCheckSpec("github", _check_github, ("uclouvain", "openjpeg")),
-    "openssh": _AppCheckSpec("github", _check_openssh, ()),
+    "openssh": _AppCheckSpec("conda", _check_conda, ("openssh", "conda-forge")),
     "r-devel": _AppCheckSpec("svn", _check_r_devel, (), batch_size=100),
     "staden-io-lib": _AppCheckSpec("github", _check_staden_io_lib, ()),
     "taglib": _AppCheckSpec("github", _check_github, ("taglib", "taglib")),
@@ -1447,7 +1443,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_gnu("wget2", parent="wget"),
         (),
     ),
-    "woff2": _AppCheckSpec("github", _check_github, ("google", "woff2")),
+    "woff2": _AppCheckSpec("conda", _check_conda, ("woff2", "conda-forge")),
     "anaconda": _AppCheckSpec("dirlist", _check_anaconda, ()),
     "apache-arrow": _AppCheckSpec(
         "github",
@@ -1499,11 +1495,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "jpeg": _AppCheckSpec("dirlist", _check_jpeg, ()),
     "krb5": _AppCheckSpec("dirlist", _check_krb5, ()),
-    "lame": _AppCheckSpec(
-        "dirlist",
-        lambda: _check_sourceforge_versions("lame/files/lame/"),
-        (),
-    ),
+    "lame": _AppCheckSpec("conda", _check_conda, ("lame", "conda-forge")),
     "libev": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1525,7 +1517,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_github_head("LuaJIT", "LuaJIT"),
         (),
     ),
-    "nim": _AppCheckSpec("github", _check_github, ("nim-lang", "Nim")),
+    "nim": _AppCheckSpec("conda", _check_conda, ("nim", "conda-forge")),
     "openldap": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1578,17 +1570,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "illumina-ica-cli": _AppCheckSpec("dirlist", _check_illumina_ica_cli, ()),
-    "pkgconf": _AppCheckSpec(
-        "github",
-        lambda: _sanitize_github_tag(
-            _http_get_json(
-                "https://api.github.com/repos/pkgconf/pkgconf/tags?per_page=1",
-                github=True,
-            )[0]["name"],
-            "pkgconf",
-        ),
-        (),
-    ),
+    "pkgconf": _AppCheckSpec("conda", _check_conda, ("pkgconf", "conda-forge")),
     "ont-guppy": _AppCheckSpec("dirlist", _check_ont_guppy, ()),
     "cellranger": _AppCheckSpec("github", _check_github, ("10XGenomics", "cellranger")),
     "r-gfortran": _AppCheckSpec("dirlist", _check_r_gfortran, ()),
