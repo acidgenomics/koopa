@@ -50,6 +50,7 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     env = activate_app(*deps, env=env)
     make = locate("make")
     openssl_prefix = app_prefix("openssl3")
+    bzip2_prefix = app_prefix("bzip2")
     maj_min_ver = major_minor_version(version)
     os.makedirs(os.path.join(prefix, "bin"), exist_ok=True)
     os.makedirs(os.path.join(prefix, "lib"), exist_ok=True)
@@ -68,6 +69,8 @@ def _install_from_source(*, version: str, prefix: str) -> None:
         "--with-ensurepip=install",
         "--with-lto",
         f"--with-openssl={openssl_prefix}",
+        f"BZIP2_CFLAGS=-I{bzip2_prefix}/include",
+        f"BZIP2_LIBS=-L{bzip2_prefix}/lib -lbz2",
         "PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1",
         "ac_cv_working_openssl_hashlib=yes",
         "ac_cv_working_openssl_ssl=yes",
