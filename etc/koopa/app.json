@@ -121,7 +121,7 @@
     ],
     "description": "cross-language columnar in-memory data format",
     "src_url": "https://archive.apache.org/dist/arrow/arrow-{version}/apache-arrow-{version}.tar.gz",
-    "type": "library",
+    "type": "cli",
     "url": [
       "https://arrow.apache.org/"
     ],
@@ -256,7 +256,7 @@
     "default": false,
     "description": "multi-language runtime version manager",
     "src_url": "https://github.com/asdf-vm/asdf/archive/v{version}.tar.gz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://github.com/asdf-vm/asdf/"
     ],
@@ -2557,7 +2557,7 @@
     ],
     "description": "tools for working with genomic and sequencing data",
     "installer": "conda-package",
-    "type": "library",
+    "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/fgbio/README.html"
     ],
@@ -2610,7 +2610,7 @@
     "man1": [
       "fish.1"
     ],
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
@@ -2971,7 +2971,7 @@
       "gdal-config.1"
     ],
     "src_url": "https://github.com/OSGeo/gdal/releases/download/v{version}/gdal-{version}.tar.gz",
-    "type": "build_tool",
+    "type": "library",
     "url": [
       "https://gdal.org/"
     ],
@@ -3588,6 +3588,9 @@
     ],
     "description": "GNU document formatting system",
     "installer": "gnu-app",
+    "installer_args": {
+      "without-doc": ""
+    },
     "man1": [
       "groff.1"
     ],
@@ -4209,7 +4212,7 @@
     ],
     "mirror": true,
     "src_url": "https://imagemagick.org/archive/releases/ImageMagick-{version}.tar.xz",
-    "type": "build_tool",
+    "type": "library",
     "url": [
       "https://imagemagick.org/"
     ],
@@ -5418,7 +5421,7 @@
       "macos-amd64": false,
       "macos-arm64": false
     },
-    "type": "library",
+    "type": "cli",
     "url": [
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
@@ -5648,7 +5651,7 @@
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
     "outdated": true,
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -6510,7 +6513,7 @@
     "date": "2024-05-16",
     "description": "open-source investment research platform",
     "removed": true,
-    "type": "library"
+    "type": "cli"
   },
   "openblas": {
     "build_dependencies": [
@@ -6590,7 +6593,7 @@
     "description": "OpenBSD SSH connectivity tools",
     "mirror": true,
     "src_url": "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{version}.tar.gz",
-    "type": "library",
+    "type": "cli",
     "url": [
       "https://www.openssh.com/portable.html",
       "https://github.com/openssh/openssh-portable",
@@ -6965,7 +6968,7 @@
     "description": "install and run Python CLI apps in isolated environments",
     "installer": "python-package",
     "outdated": true,
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
@@ -7026,7 +7029,7 @@
     ],
     "mirror": true,
     "src_url": "https://distfiles.ariadne.space/pkgconf/pkgconf-{version}.tar.xz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://github.com/pkgconf/pkgconf"
     ],
@@ -7257,7 +7260,7 @@
       "pyenv.1"
     ],
     "src_url": "https://github.com/pyenv/pyenv/archive/v{version}.tar.gz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
@@ -7550,7 +7553,7 @@
       "python3.11.1"
     ],
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://www.python.org/"
     ],
@@ -7611,7 +7614,7 @@
       "python3.12.1"
     ],
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://www.python.org/"
     ],
@@ -7984,7 +7987,7 @@
     "default": false,
     "description": "Ruby version manager",
     "src_url": "https://github.com/rbenv/rbenv/archive/v{version}.tar.gz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://github.com/rbenv/rbenv/"
     ],
@@ -8226,7 +8229,7 @@
       "macos-arm64": false
     },
     "system": true,
-    "type": "library",
+    "type": "cli",
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
@@ -8647,7 +8650,7 @@
       "macos-arm64": false
     },
     "system": true,
-    "type": "library",
+    "type": "cli",
     "url": [
       "https://www.rstudio.com/products/shiny/download-server/"
     ],
@@ -9435,7 +9438,7 @@
     "description": "library and utilities for units of physical quantities",
     "mirror": true,
     "src_url": "https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz",
-    "type": "build_tool",
+    "type": "library",
     "url": [
       "https://www.unidata.ucar.edu/software/udunits/",
       "https://downloads.unidata.ucar.edu/udunits/"
@@ -9732,7 +9735,7 @@
     "description": "successor to wget with HTTP/2 support",
     "installer": "gnu-app",
     "src_url": "https://ftpmirror.gnu.org/wget/wget2-{version}.tar.gz",
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "https://gitlab.com/gnuwget/wget2"
     ],
@@ -10405,7 +10408,7 @@
     "man1": [
       "zsh.1"
     ],
-    "type": "build_tool",
+    "type": "cli",
     "url": [
       "http://zsh.sourceforge.net/Arc/source.html"
     ],
