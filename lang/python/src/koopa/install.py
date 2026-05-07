@@ -2143,6 +2143,9 @@ def _cleanup_legacy_config() -> None:
         )
         for path, lineno, line in flagged:
             print(f"  {path}:{lineno}: {line}", file=sys.stderr)
+    legacy_build_times = os.path.join(_koopa_prefix(), "etc", "koopa", "build-times.json")
+    if os.path.isfile(legacy_build_times):
+        os.unlink(legacy_build_times)
 
 
 def update_koopa(*, verbose: bool = False) -> None:
