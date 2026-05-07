@@ -474,14 +474,15 @@ def _reinstall_all(*, verbose: bool = False) -> None:
                 except Exception as exc:
                     alert(f"Failed to install {app}: {exc}")
                     failed.add(app)
+                    break
         finally:
             if acquired:
                 _release_install_lock()
         if failed:
-            alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
-        else:
-            _save_pending_plan([], source="reinstall-all")
-            alert_success("All apps reinstalled successfully.")
+            msg = f"Build failed: {', '.join(sorted(failed))}."
+            raise SystemExit(msg)
+        _save_pending_plan([], source="reinstall-all")
+        alert_success("All apps reinstalled successfully.")
     install_missing_default_apps(verbose=verbose)
 
 
