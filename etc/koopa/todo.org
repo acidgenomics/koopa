@@ -6,14 +6,14 @@
 ** DONE We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
 ** DONE Rework 'koopa install-default-apps' as 'koopa install'.
 ** DONE Consider reorganizing 'koopa uninstall-non-default-apps' to `koopa uninstall --all-non-default-apps`.
+** DONE Move `koopa system create-dmg` to `koopa run create-dmg`? Does this require admin permissions?
 ** TODO We need to rework and declutter some koopa CLI commands:
     - install, install-all-apps, install-default-apps
     - list-all-apps, list-default-apps
     - uninstall, uninstall-non-default-apps
     - koopa system update-tex-packages to koopa update system tex-packages
     - Consider moving `koopa list-all-apps` and `koopa-list-default-apps` to `koopa system list-all-apps`, `koopa system list-default-apps`
-** TODO Move `koopa system create-dmg` to `koopa run create-dmg`? Does this require admin permissions?
-** TODO Move `koopa system force-eject` to `koopa system admin force-eject`?
+** TODO Move `koopa system force-eject` to `koopa system admin force-eject`? Does this make more sense under 'koopa run'? I kind of want to keep 'koopa run' limited to commands that don't require sudo.
 ** TODO `koopa system --help` doesn't list supported subcommands:
     $ koopa system --help
     usage: koopa system [-h] ...
