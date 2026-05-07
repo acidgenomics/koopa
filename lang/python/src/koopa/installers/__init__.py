@@ -203,7 +203,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "gettext": f"{_M}._gnu",
     "gperf": f"{_M}._gnu",
     "grep": f"{_M}._gnu",
-    "groff": f"{_M}._gnu",
+    "groff": f"{_M}.groff",
     "gsl": f"{_M}._gnu",
     "gzip": f"{_M}._gnu",
     "libiconv": f"{_M}._gnu",
