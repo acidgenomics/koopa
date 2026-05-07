@@ -34,11 +34,8 @@ _SYSTEM_COMMANDS: list[tuple[str, str | None]] = [
     ("prefix", None),
     ("prune-apps", None),
     ("switch-to-develop", None),
-    ("test", None),
     ("version", None),
     ("which", None),
-    ("ifactive", "macos"),
-    ("spotlight", "macos"),
 ]
 
 _ADMIN_COMMANDS: list[tuple[str, str | None]] = [

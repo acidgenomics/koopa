@@ -108,21 +108,11 @@ Remove stale application versions.
 \fBsystem switch\-to\-develop\fR
 Switch koopa installation to the development branch.
 .TP
-\fBsystem test\fR
-Run the koopa test suite.
-.TP
 \fBsystem version\fR \fIname\fR
 Print the installed version of an application.
 .TP
 \fBsystem which\fR \fIname...\fR
 Print the real path of an application.
-.SS "macOS\-specific system subcommands"
-.TP
-\fBsystem ifactive\fR
-Show active network interfaces.
-.TP
-\fBsystem spotlight\fR \fIquery\fR
-Search using Spotlight.
 .
 .SH "ADMIN SUBCOMMANDS"
 .TP
@@ -183,6 +173,9 @@ Check upstream versions for all apps in app.json.
 .TP
 \fBdevelop circular\-dependencies\fR
 Detect circular dependency chains in app.json.
+.TP
+\fBdevelop conda\-candidates\fR
+
 .TP
 \fBdevelop edit\-app\-json\fR
 Open app.json in the default editor.
@@ -318,6 +311,9 @@ Update generated documentation files.
 \fBrun find\-large\-files\fR
 
 .TP
+\fBrun ifactive\fR
+
+.TP
 \fBrun ip\-address\fR
 
 .TP
@@ -367,6 +363,9 @@ Update generated documentation files.
 
 .TP
 \fBrun sort\-lines\fR
+
+.TP
+\fBrun spotlight\fR
 
 .TP
 \fBrun tar\-multiple\-dirs\fR

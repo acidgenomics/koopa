@@ -587,27 +587,6 @@ def _handle_linux_fix_sudo_setrlimit_error() -> None:
     )
 
 
-def _handle_macos_spotlight_find(args: list[str]) -> None:
-    """Handle ``koopa system spotlight <pattern> [dir]``."""
-    if not args:
-        print("Error: pattern argument is required.", file=sys.stderr)
-        sys.exit(1)
-    pattern = args[0]
-    search_dir = args[1] if len(args) > 1 else "."
-    if not os.path.isdir(search_dir):
-        print(f"Error: not a directory: '{search_dir}'.", file=sys.stderr)
-        sys.exit(1)
-    result = subprocess.run(
-        ["mdfind", "-name", pattern, "-onlyin", search_dir],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    output = result.stdout.strip()
-    if not output:
-        sys.exit(1)
-    print(output)
-
 
 def _handle_macos_clean_launch_services() -> None:
     """Handle ``koopa system clean-launch-services``."""
@@ -779,33 +758,6 @@ def _handle_macos_force_eject(args: list[str]) -> None:
     )
 
 
-def _handle_macos_ifactive() -> None:
-    """Handle ``koopa system ifactive``."""
-    ifconfig = "/sbin/ifconfig"
-    pcregrep = shutil.which("pcregrep")
-    if not os.path.isfile(ifconfig):
-        print("Error: 'ifconfig' is not installed.", file=sys.stderr)
-        sys.exit(1)
-    if pcregrep is None:
-        print("Error: 'pcregrep' is not installed.", file=sys.stderr)
-        sys.exit(1)
-    ifconfig_result = subprocess.run(
-        [ifconfig],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    pcregrep_result = subprocess.run(
-        [pcregrep, "-M", "-o", r"^[^\t:]+:([^\n]|\n\t)*status: active"],
-        input=ifconfig_result.stdout,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    output = pcregrep_result.stdout.strip()
-    if not output:
-        sys.exit(1)
-    print(output)
 
 
 def _handle_macos_reload_autofs() -> None:
@@ -821,17 +773,6 @@ def _handle_macos_reload_autofs() -> None:
         sys.exit(1)
     subprocess.run(["sudo", automount, "-vc"], check=True)
 
-
-def _handle_test() -> None:
-    """Handle ``koopa system test``."""
-    from koopa.prefix import tests_prefix
-
-    prefix = tests_prefix()
-    if not os.path.isdir(prefix):
-        print(f"Error: tests prefix does not exist: '{prefix}'.", file=sys.stderr)
-        sys.exit(1)
-    subprocess.run(["./linter"], cwd=prefix, check=True)
-    subprocess.run(["./shunit2"], cwd=prefix, check=True)
 
 
 _DEFUNCT_COMMANDS: dict[str, str] = {
@@ -881,15 +822,6 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         return
     if subcmd == "os-string":
         _handle_os_string()
-        return
-    if subcmd == "spotlight":
-        _handle_macos_spotlight_find(rest)
-        return
-    if subcmd == "ifactive":
-        _handle_macos_ifactive()
-        return
-    if subcmd == "test":
-        _handle_test()
         return
     print(f"Error: unknown system command '{subcmd}'.", file=sys.stderr)
     sys.exit(1)
