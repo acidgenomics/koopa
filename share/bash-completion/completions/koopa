@@ -138,6 +138,7 @@ _koopa_complete() {
                         'cache-functions'
                         'check-app-versions'
                         'circular-dependencies'
+                        'conda-candidates'
                         'edit-app-json'
                         'find-ignored-bin-files'
                         'format-app-json'
@@ -186,6 +187,7 @@ _koopa_complete() {
                         'find-files-without-line-ending'
                         'find-large-dirs'
                         'find-large-files'
+                        'ifactive'
                         'ip-address'
                         'ip-info'
                         'line-count'
@@ -203,6 +205,7 @@ _koopa_complete() {
                         'rg-sort'
                         'rg-unique'
                         'sort-lines'
+                        'spotlight'
                         'tar-multiple-dirs'
                     )
                     ;;
@@ -732,17 +735,9 @@ _koopa_complete() {
                         'prefix'
                         'prune-apps'
                         'switch-to-develop'
-                        'test'
                         'version'
                         'which'
                     )
-                    if _koopa_is_macos
-                    then
-                        args+=(
-                            'ifactive'
-                            'spotlight'
-                        )
-                    fi
                     ;;
                 'update')
                     args+=('koopa' 'system' 'user')

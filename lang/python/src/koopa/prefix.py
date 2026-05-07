@@ -109,10 +109,6 @@ def website_prefix() -> str:
     )
 
 
-def tests_prefix() -> str:
-    """Return koopa tests prefix."""
-    return os.path.join(config_prefix(), "tests")
-
 
 def patch_prefix() -> str:
     """Return patch prefix."""

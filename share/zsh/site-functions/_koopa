@@ -600,6 +600,7 @@ _koopa_develop_cmds() {
         'cache-functions'
         'check-app-versions'
         'circular-dependencies'
+        'conda-candidates'
         'edit-app-json'
         'find-ignored-bin-files'
         'format-app-json'
@@ -651,6 +652,7 @@ _koopa_run() {
         'find-files-without-line-ending'
         'find-large-dirs'
         'find-large-files'
+        'ifactive'
         'ip-address'
         'ip-info'
         'line-count'
@@ -668,6 +670,7 @@ _koopa_run() {
         'rg-sort'
         'rg-unique'
         'sort-lines'
+        'spotlight'
         'tar-multiple-dirs'
     )
     _describe -t commands 'run command' cmds

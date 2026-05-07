@@ -25,15 +25,12 @@ _SYSTEM_DESCRIPTIONS: dict[str, str] = {
         " bootstrap version, and disk usage."
     ),
     "hostname": "Print the system hostname.",
-    "ifactive": "Show active network interfaces.",
     "info": "Show system information.",
     "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
     "os-string": "Print the operating system identifier string.",
     "prefix": "Print the installation prefix for koopa or a named application.",
     "prune-apps": "Remove stale application versions.",
-    "spotlight": "Search using Spotlight.",
     "switch-to-develop": "Switch koopa installation to the development branch.",
-    "test": "Run the koopa test suite.",
     "version": "Print the installed version of an application.",
     "which": "Print the real path of an application.",
 }

@@ -906,6 +906,65 @@ def _handle_create_dmg(args: list[str]) -> None:
     )
 
 
+def _handle_ifactive(args: list[str]) -> None:
+    """Show active network interfaces (macOS only)."""
+    if sys.platform != "darwin":
+        print("Error: 'ifactive' is only supported on macOS.", file=sys.stderr)
+        sys.exit(1)
+    ifconfig = "/sbin/ifconfig"
+    pcregrep = shutil.which("pcregrep")
+    if not os.path.isfile(ifconfig):
+        print("Error: 'ifconfig' is not installed.", file=sys.stderr)
+        sys.exit(1)
+    if pcregrep is None:
+        print("Error: 'pcregrep' is not installed.", file=sys.stderr)
+        sys.exit(1)
+    ifconfig_result = subprocess.run(
+        [ifconfig],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    pcregrep_result = subprocess.run(
+        [pcregrep, "-M", "-o", r"^[^\t:]+:([^\n]|\n\t)*status: active"],
+        input=ifconfig_result.stdout,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    output = pcregrep_result.stdout.strip()
+    if not output:
+        print("No active interfaces found.", file=sys.stderr)
+        sys.exit(1)
+    print(output)
+
+
+def _handle_spotlight(args: list[str]) -> None:
+    """Search using macOS Spotlight (mdfind)."""
+    if sys.platform != "darwin":
+        print("Error: 'spotlight' is only supported on macOS.", file=sys.stderr)
+        sys.exit(1)
+    if not args:
+        print("Error: pattern argument is required.", file=sys.stderr)
+        sys.exit(1)
+    pattern = args[0]
+    search_dir = args[1] if len(args) > 1 else "."
+    if not os.path.isdir(search_dir):
+        print(f"Error: not a directory: '{search_dir}'.", file=sys.stderr)
+        sys.exit(1)
+    result = subprocess.run(
+        ["mdfind", "-name", pattern, "-onlyin", search_dir],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    output = result.stdout.strip()
+    if not output:
+        print("No results found.", file=sys.stderr)
+        sys.exit(1)
+    print(output)
+
+
 # -- Dispatch table ------------------------------------------------------------
 
 
@@ -931,6 +990,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "file-count": _handle_file_count,
     "find-and-move-in-sequence": _handle_find_and_move_in_sequence,
     "find-and-replace": _handle_find_and_replace,
+    "ifactive": _handle_ifactive,
     "find-broken-symlinks": _handle_find_broken_symlinks,
     "find-empty-dirs": _handle_find_empty_dirs,
     "find-files-without-line-ending": _handle_find_files_without_line_ending,
@@ -953,6 +1013,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "rg-sort": _handle_rg_sort,
     "rg-unique": _handle_rg_unique,
     "sort-lines": _handle_sort_lines,
+    "spotlight": _handle_spotlight,
     "tar-multiple-dirs": _handle_tar_multiple_dirs,
 }
 

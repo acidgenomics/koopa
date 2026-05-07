@@ -1066,6 +1066,8 @@ def _handle_conda_candidates(args: list[str]) -> None:
             continue
         if entry.get("type") != "cli":
             continue
+        if name.startswith(("python3.", "r-")) or name in ("python", "r"):
+            continue
         candidates.append(name)
     if not verify:
         print(f"Source-built apps that could potentially use conda ({len(candidates)} total):")
