@@ -344,7 +344,7 @@ def _check_nongnu(package: str) -> str:
         html = _http_get_text(url, timeout=5, _retries=0)
     except (urllib.error.URLError, OSError, TimeoutError) as exc:
         _raise_network_unavailable(exc)
-        raise AssertionError("unreachable")
+        raise AssertionError("unreachable") from exc
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions = pattern.findall(html)
     if not versions:
@@ -1768,7 +1768,7 @@ def check_app_versions(  # noqa: C901, PLR0915
 
     uncached_names = [name for name, _, _ in to_check]
     try:
-        from tqdm import tqdm
+        from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
         desc = f"Checking {', '.join(uncached_names)}"
         if cached_count:
