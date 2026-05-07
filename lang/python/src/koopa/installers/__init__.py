@@ -11,19 +11,16 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (120) ---------------------------------------------
+    # -- conda-package (117) ---------------------------------------------
     "agat": f"{_M}._conda",
     "aria2": f"{_M}._conda",
     "aspell": f"{_M}._conda",
     "autodock": f"{_M}._conda",
     "autodock-vina": f"{_M}._conda",
     "axel": f"{_M}._conda",
-    "bash-completion": f"{_M}._conda",
-    "bc": f"{_M}._conda",
     "docker-credential-helpers": f"{_M}._conda",
     "ghostscript": f"{_M}._conda",
     "git-lfs": f"{_M}._conda",
-    "grep": f"{_M}._conda",
     "htop": f"{_M}._conda",
     "lame": f"{_M}._conda",
     "llvm": f"{_M}._conda",
@@ -190,10 +187,11 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "yamllint": f"{_M}._python_pkg",
     "yapf": f"{_M}._python_pkg",
     "yt-dlp": f"{_M}._python_pkg",
-    # -- gnu-app (34) ----------------------------------------------------
+    # -- gnu-app (36) ----------------------------------------------------
     "attr": f"{_M}._gnu",
     "autoconf": f"{_M}._gnu",
     "automake": f"{_M}._gnu",
+    "bc": f"{_M}._gnu",
     "binutils": f"{_M}._gnu",
     "bison": f"{_M}._gnu",
     "coreutils": f"{_M}._gnu",
@@ -204,6 +202,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "gdbm": f"{_M}._gnu",
     "gettext": f"{_M}._gnu",
     "gperf": f"{_M}._gnu",
+    "grep": f"{_M}._gnu",
     "groff": f"{_M}._gnu",
     "gsl": f"{_M}._gnu",
     "gzip": f"{_M}._gnu",
@@ -253,6 +252,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "apr-util": f"{_M}.apr_util",
     "armadillo": f"{_M}.armadillo",
     "bash": f"{_M}.bash_app",
+    "bash-completion": f"{_M}.bash_completion",
     "brotli": f"{_M}.brotli",
     "byobu": f"{_M}.byobu",
     "c-ares": f"{_M}.c_ares",
