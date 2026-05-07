@@ -294,37 +294,6 @@ def _check_conda_api(package: str, channel: str = "conda-forge") -> str:
 
 
 def _check_conda(package: str, channel: str = "conda-forge") -> str:
-    exe = _conda_exe()
-    if exe:
-        with _conda_semaphore:
-            try:
-                result = subprocess.run(
-                    [
-                        exe,
-                        "search",
-                        package,
-                        f"--channel={channel}",
-                        "--override-channels",
-                        "--json",
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=60,
-                    check=False,
-                )
-            except (subprocess.TimeoutExpired, OSError):
-                result = None
-        if result is not None and result.returncode == 0:
-            try:
-                data = json.loads(result.stdout)
-                versions = [e["version"] for e in data.get(package, [])]
-                if versions:
-                    return max(
-                        versions,
-                        key=lambda v: tuple(int(x) for x in re.split(r"[.\-]", v) if x.isdigit()),
-                    )
-            except (json.JSONDecodeError, ValueError):
-                pass
     return _check_conda_api(package, channel)
 
 
