@@ -214,6 +214,8 @@ install_python() {
         "https://koopa.acidgenomics.com/src/python/${__kvar_filename}" \
         || return 1
     unset -v __kvar_filename
+    export BZIP2_CFLAGS="-I${DESTDIR}${PREFIX}/include"
+    export BZIP2_LIBS="-L${DESTDIR}${PREFIX}/lib -lbz2"
     export LIBLZMA_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export LIBLZMA_LIBS="-L${DESTDIR}${PREFIX}/lib -llzma"
     export LDLIBS='-lbz2 -lcrypto -llzma -lssl -lz'
@@ -224,7 +226,7 @@ install_python() {
         --with-openssl="${DESTDIR}${PREFIX}"
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
     make install DESTDIR="$DESTDIR"
-    unset -v LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
+    unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
     if is_macos
@@ -272,6 +274,21 @@ install_bzip2() {
         install
     [ -f "${DESTDIR}${PREFIX}/lib/libbz2.a" ] || return 1
     [ -f "${DESTDIR}${PREFIX}/include/bzlib.h" ] || return 1
+    mkdir -p "${DESTDIR}${PREFIX}/lib/pkgconfig"
+    cat > "${DESTDIR}${PREFIX}/lib/pkgconfig/bzip2.pc" << BZIP2_PC_EOF
+prefix=${PREFIX}
+exec_prefix=\${prefix}
+bindir=\${exec_prefix}/bin
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: bzip2
+Description: Lossless, block-sorting data compression
+Version: ${__kvar_version}
+Libs: -L\${libdir} -lbz2
+Cflags: -I\${includedir}
+BZIP2_PC_EOF
+    [ -f "${DESTDIR}${PREFIX}/lib/pkgconfig/bzip2.pc" ] || return 1
     (
         cd "${DESTDIR}${PREFIX}/bin"
         ln -sf bzdiff bzcmp
