@@ -2694,14 +2694,15 @@ def update_stale_apps(*, verbose: bool = False) -> None:
             except Exception as exc:
                 alert(f"Failed to install {app}: {exc}")
                 failed.add(app)
+                break
     finally:
         if acquired:
             _release_install_lock()
     if failed:
-        alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
-    else:
-        _save_pending_plan([])
-        alert_success("All stale apps updated successfully.")
+        msg = f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}."
+        raise RuntimeError(msg)
+    _save_pending_plan([])
+    alert_success("All stale apps updated successfully.")
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:

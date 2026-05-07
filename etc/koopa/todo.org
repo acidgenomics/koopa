@@ -1,23 +1,11 @@
 * High complexity
 * Medium complexity
-** TODO `koopa system --help` doesn't list supported subcommands:
-    $ koopa system --help
-    usage: koopa system [-h] ...
-
-    positional arguments:
-    remainder
-
-    options:
-    -h, --help  show this help message and exit
-** TODO `koopa app --help` is also not informative.
-** TODO Reduce the number of dependencies when building r and r-devel from source. For example, we don't want to include gdal here.
+** TODO Can we reduce the number of dependencies when building r and r-devel from source. For example, we don't want to include gdal here. We previously used to bundle more dependencies for complicated R analysis, but we don't need to support this anymore. Can we identify apps that are only used here in relation to R, like proj, geos, and consider removing them from koopa install support?
 ** TODO Does `koopa install --all` attempt to install private apps like `cellranger`, even if a user doesn't have access to our private S3 bucket?
 * Low complexity
-** DONE Remove `koopa internal`
-** DONE Remove 'koopa version' in favor of 'koopa --version'.
-** DONE Can we add support for 'koopa -v' resolving to 'koopa --version'.
-** DONE Consider reverting black and mypy build from source optimizations. Maybe not worth tradeoff of dealing with corporate environment URL issues.
 ** TODO Remove `koopa system test`
     $ koopa system test
     Error: tests prefix does not exist: '/Users/stmich14/.local/share/koopa/etc/koopa/tests'.
 ** TODO `koopa system spotlight` is very unclear.
+    koopa system spotlight hello-world
+    What is this supposed to do?

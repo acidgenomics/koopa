@@ -22,8 +22,10 @@ def _use_color() -> bool:
     return _supports_color()
 
 
-def _styled_time(elapsed: str) -> str:
+def _styled_time(elapsed: str, *, seconds: float | None = None) -> str:
     if _use_color():
+        if seconds is not None and seconds >= 300:
+            return f"\033[31m[{elapsed}]\033[0m"
         return f"\033[33m[{elapsed}]\033[0m"
     return f"[{elapsed}]"
 
@@ -202,7 +204,7 @@ class BuildProgress:
         else:
             eta = ""
         label = self._styled_label()
-        time_str = _styled_time(elapsed)
+        time_str = _styled_time(elapsed, seconds=elapsed_secs)
         line = f"\r\033[K   {label} [{current}/{total}] {time_str}{eta}"
         if self.capturing and self._tty_fd >= 0:
             try:
@@ -254,10 +256,11 @@ class BuildProgress:
         self._saved_stderr_fd = -1
         tty = self._tty_fd
         if failed or not self._steps_finished:
-            elapsed = _fmt_duration(self.elapsed)
+            elapsed_secs = self.elapsed
+            elapsed = _fmt_duration(elapsed_secs)
             marker = "x" if failed else "OK"
             label = self._styled_label()
-            time_str = _styled_time(elapsed)
+            time_str = _styled_time(elapsed, seconds=elapsed_secs)
             os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
         if failed and self._log_file is not None:
             self._log_file.flush()
@@ -285,9 +288,10 @@ class BuildProgress:
             return
         while not self._spinner_stop.wait(0.2):
             frame = _SPINNER_FRAMES[idx % len(_SPINNER_FRAMES)]
-            elapsed = _fmt_duration(self.elapsed)
+            elapsed_secs = self.elapsed
+            elapsed = _fmt_duration(elapsed_secs)
             label = self._styled_label()
-            time_str = _styled_time(elapsed)
+            time_str = _styled_time(elapsed, seconds=elapsed_secs)
             line = f"\r\033[K   {label} {frame} {time_str}"
             try:
                 os.write(tty, line.encode())
