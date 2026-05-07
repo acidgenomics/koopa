@@ -6,21 +6,21 @@
 complete -c koopa -f
 
 # Level 1: top-level flags.
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -l help -d 'Show help'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -l version -d 'Show version'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -l help -d 'Show help'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -l version -d 'Show version'
 
 # Level 1: top-level subcommands.
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'app' -d 'Application management'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'configure' -d 'Configure system'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'develop' -d 'Development utilities'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'install' -d 'Install apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'list-all-apps' -d 'List all available apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'list-default-apps' -d 'List default apps'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'reinstall' -d 'Reinstall an app'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'run' -d 'Run a utility command'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'system' -d 'System operations'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'uninstall' -d 'Uninstall an app'
-complete -c koopa -n 'not __fish_seen_subcommand_from app configure develop install list-all-apps list-default-apps reinstall run system uninstall update' -a 'update' -d 'Update installed apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'admin' -d 'System administration (requires sudo)'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'app' -d 'Application management'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'configure' -d 'Configure system'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'develop' -d 'Development utilities'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'install' -d 'Install apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'list' -d 'List available apps'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'reinstall' -d 'Reinstall an app'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'run' -d 'Run a utility command'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'system' -d 'System information and management'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'uninstall' -d 'Uninstall an app'
+complete -c koopa -n 'not __fish_seen_subcommand_from admin app configure develop install list reinstall run system uninstall update' -a 'update' -d 'Update installed apps'
 
 # Level 2: app subcommands.
 complete -c koopa -n '__fish_seen_subcommand_from app; and not __fish_seen_subcommand_from aws bioconda bowtie2 brew conda current docker file ftp git gpg hisat2 jekyll kallisto md5sum miso photos r rnaeditingindexer rsem salmon sra ssh star sys wget' -a 'aws'
@@ -270,6 +270,34 @@ complete -c koopa -n '__fish_seen_subcommand_from run; and not __fish_seen_subco
 complete -c koopa -n '__fish_seen_subcommand_from run; and not __fish_seen_subcommand_from autopad-zeros clone convert-svg-to-png convert-utf8-nfd-to-nfc create-dmg delete-broken-symlinks delete-empty-dirs delete-named-subdirs detab df2 dot-clean download download-cran-latest download-github-latest entab eol-lf extract extract-all file-count find-and-move-in-sequence find-and-replace find-broken-symlinks find-empty-dirs find-files-without-line-ending find-large-dirs find-large-files ip-address ip-info line-count merge-pdf move-files-in-batch move-files-up-1-level move-into-dated-dirs-by-filename move-into-dated-dirs-by-timestamp nfiletypes rename-camel-case rename-from-csv rename-kebab-case rename-lowercase rename-snake-case rg-sort rg-unique sort-lines tar-multiple-dirs' -a 'rg-unique'
 complete -c koopa -n '__fish_seen_subcommand_from run; and not __fish_seen_subcommand_from autopad-zeros clone convert-svg-to-png convert-utf8-nfd-to-nfc create-dmg delete-broken-symlinks delete-empty-dirs delete-named-subdirs detab df2 dot-clean download download-cran-latest download-github-latest entab eol-lf extract extract-all file-count find-and-move-in-sequence find-and-replace find-broken-symlinks find-empty-dirs find-files-without-line-ending find-large-dirs find-large-files ip-address ip-info line-count merge-pdf move-files-in-batch move-files-up-1-level move-into-dated-dirs-by-filename move-into-dated-dirs-by-timestamp nfiletypes rename-camel-case rename-from-csv rename-kebab-case rename-lowercase rename-snake-case rg-sort rg-unique sort-lines tar-multiple-dirs' -a 'sort-lines'
 complete -c koopa -n '__fish_seen_subcommand_from run; and not __fish_seen_subcommand_from autopad-zeros clone convert-svg-to-png convert-utf8-nfd-to-nfc create-dmg delete-broken-symlinks delete-empty-dirs delete-named-subdirs detab df2 dot-clean download download-cran-latest download-github-latest entab eol-lf extract extract-all file-count find-and-move-in-sequence find-and-replace find-broken-symlinks find-empty-dirs find-files-without-line-ending find-large-dirs find-large-files ip-address ip-info line-count merge-pdf move-files-in-batch move-files-up-1-level move-into-dated-dirs-by-filename move-into-dated-dirs-by-timestamp nfiletypes rename-camel-case rename-from-csv rename-kebab-case rename-lowercase rename-snake-case rg-sort rg-unique sort-lines tar-multiple-dirs' -a 'tar-multiple-dirs'
+
+# system subcommands.
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'check'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'hostname'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'ifactive'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'info'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'list'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'os-string'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'prefix'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'prune-apps'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'spotlight'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'switch-to-develop'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'test'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'version'
+complete -c koopa -n '__fish_seen_subcommand_from system; and not __fish_seen_subcommand_from check hostname ifactive info list os-string prefix prune-apps spotlight switch-to-develop test version which' -a 'which'
+
+# admin subcommands.
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'clean-launch-services'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'delete-cache'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'disable-passwordless-sudo'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'disable-touch-id-sudo'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'enable-passwordless-sudo'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'enable-touch-id-sudo'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'fix-sudo-setrlimit-error'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'flush-dns'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'force-eject'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'reload-autofs'
+complete -c koopa -n '__fish_seen_subcommand_from admin; and not __fish_seen_subcommand_from clean-launch-services delete-cache disable-passwordless-sudo disable-touch-id-sudo enable-passwordless-sudo enable-touch-id-sudo fix-sudo-setrlimit-error flush-dns force-eject reload-autofs zsh-compaudit-set-permissions' -a 'zsh-compaudit-set-permissions'
 
 # install/reinstall/uninstall: app names.
 complete -c koopa -n '__fish_seen_subcommand_from install' -a 'ack'
@@ -1677,6 +1705,7 @@ complete -c koopa -n '__fish_seen_subcommand_from update' -a 'system'
 complete -c koopa -n '__fish_seen_subcommand_from update' -a 'user'
 
 # Per-command flag completions.
+complete -c koopa -n '__fish_seen_subcommand_from admin' -l help
 complete -c koopa -n '__fish_seen_subcommand_from app' -l help
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l help
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from aws and __fish_seen_subcommand_from batch and __fish_seen_subcommand_from fetch-and-run' -l job-definition
@@ -1874,8 +1903,6 @@ complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from wget and __fish_seen_subcommand_from recursive' -l url
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from wget and __fish_seen_subcommand_from recursive' -l user
 complete -c koopa -n '__fish_seen_subcommand_from configure' -l help
-complete -c koopa -n '__fish_seen_subcommand_from configure' -l system
-complete -c koopa -n '__fish_seen_subcommand_from configure' -l user
 complete -c koopa -n '__fish_seen_subcommand_from configure' -l verbose
 complete -c koopa -n '__fish_seen_subcommand_from develop' -l help
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l help
@@ -1888,17 +1915,13 @@ complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcom
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from format-app-json' -l prettier
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from remove-app' -l help
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from remove-app' -l revdeps
-complete -c koopa -n '__fish_seen_subcommand_from header' -l help
 complete -c koopa -n '__fish_seen_subcommand_from install' -l all
 complete -c koopa -n '__fish_seen_subcommand_from install' -l help
 complete -c koopa -n '__fish_seen_subcommand_from install' -l no-dependencies
-complete -c koopa -n '__fish_seen_subcommand_from install' -l private
 complete -c koopa -n '__fish_seen_subcommand_from install' -l reinstall
-complete -c koopa -n '__fish_seen_subcommand_from install' -l system
-complete -c koopa -n '__fish_seen_subcommand_from install' -l user
 complete -c koopa -n '__fish_seen_subcommand_from install' -l verbose
-complete -c koopa -n '__fish_seen_subcommand_from list-all-apps' -l help
-complete -c koopa -n '__fish_seen_subcommand_from list-default-apps' -l help
+complete -c koopa -n '__fish_seen_subcommand_from list' -l all
+complete -c koopa -n '__fish_seen_subcommand_from list' -l help
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l all
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l all-revdeps
 complete -c koopa -n '__fish_seen_subcommand_from reinstall' -l help
@@ -1910,8 +1933,6 @@ complete -c koopa -n '__fish_seen_subcommand_from system' -l help
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l help
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l no-revdeps
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l non-default
-complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l system
-complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l user
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l verbose
 complete -c koopa -n '__fish_seen_subcommand_from uninstall' -l yes
 complete -c koopa -n '__fish_seen_subcommand_from update' -l help
