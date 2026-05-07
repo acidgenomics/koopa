@@ -137,6 +137,38 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
                     )
                     stale_dep = True
                     break
+            if not stale_dep:
+                recorded_dep_vers = _info.get("dep_versions", {})
+                if recorded_dep_vers:
+                    for dep in app_deps:
+                        if installer.startswith(dep):
+                            continue
+                        resolved_dep = dep
+                        dep_entry = json_data.get(dep, {})
+                        if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
+                            resolved_dep = dep_entry["alias_of"]
+                        resolved_entry = json_data.get(resolved_dep, {})
+                        current_ver = (
+                            resolved_entry.get("version", "")
+                            if isinstance(resolved_entry, dict)
+                            else ""
+                        )
+                        recorded_ver = recorded_dep_vers.get(resolved_dep, "")
+                        if (
+                            recorded_ver
+                            and current_ver
+                            and recorded_ver != current_ver
+                        ):
+                            issues.append(
+                                (
+                                    name,
+                                    f"{name} dependency {resolved_dep} version"
+                                    f" changed: {recorded_ver} -> {current_ver}",
+                                    True,
+                                ),
+                            )
+                            stale_dep = True
+                            break
             if stale_dep:
                 continue
         expected_bins = entry.get("bin", [])

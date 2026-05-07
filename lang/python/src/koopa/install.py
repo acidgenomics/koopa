@@ -2546,6 +2546,69 @@ def _compute_install_plan(
     return plan, transitive_deps_in_plan
 
 
+def _update_plan_cache_path() -> str:
+    from koopa.xdg import xdg_cache_home
+
+    return os.path.join(xdg_cache_home(), "koopa", "update-plan.json")
+
+
+def _load_pending_plan() -> list[tuple[str, str]]:
+    path = _update_plan_cache_path()
+    if not os.path.isfile(path):
+        return []
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return []
+    created = data.get("created", "")
+    if created:
+        from datetime import UTC, datetime
+
+        try:
+            ts = datetime.fromisoformat(created)
+            if (datetime.now(tz=UTC) - ts).days > 7:
+                os.unlink(path)
+                return []
+        except ValueError:
+            pass
+    return [(e["app"], e["reason"]) for e in data.get("plan", [])]
+
+
+def _save_pending_plan(plan: list[tuple[str, str]]) -> None:
+    path = _update_plan_cache_path()
+    if not plan:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(path)
+        return
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    from datetime import UTC, datetime
+
+    data = {
+        "created": datetime.now(tz=UTC).isoformat(),
+        "plan": [{"app": a, "reason": r} for a, r in plan],
+    }
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def _remove_from_pending_plan(app: str) -> None:
+    path = _update_plan_cache_path()
+    if not os.path.isfile(path):
+        return
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return
+    data["plan"] = [e for e in data.get("plan", []) if e["app"] != app]
+    if not data["plan"]:
+        os.unlink(path)
+    else:
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2)
+
+
 def update_stale_apps(*, verbose: bool = False) -> None:
     """Find and reinstall all outdated or broken shared apps."""
     from koopa.alert import alert, alert_success
@@ -2561,23 +2624,39 @@ def update_stale_apps(*, verbose: bool = False) -> None:
         if app not in seen:
             seen[app] = reason
     apps_with_reasons = [(a, r) for a, r in seen.items() if _is_supported_app(a)]
+    # Iteratively expand reverse dependencies: if openssl3 is being rebuilt,
+    # python3.14 (which links against it) also needs rebuilding, etc.
+    if apps_with_reasons:
+        from koopa.app import stale_revdeps
+
+        seen_names = {a for a, _ in apps_with_reasons}
+        changed = True
+        while changed:
+            changed = False
+            revdeps = stale_revdeps([a for a, _ in apps_with_reasons])
+            for rd in revdeps:
+                if rd not in seen_names and _is_supported_app(rd):
+                    apps_with_reasons.append((rd, "dependency rebuilt"))
+                    seen_names.add(rd)
+                    changed = True
+    else:
+        seen_names = set()
+    # Merge cached plan from a previous aborted run.
+    cached_plan = _load_pending_plan()
+    if cached_plan:
+        from koopa.app import installed_apps
+        from koopa.io import import_app_json
+
+        json_data = import_app_json()
+        installed = set(installed_apps())
+        for app, reason in cached_plan:
+            if app not in seen_names and app in json_data and app in installed:
+                if _is_supported_app(app):
+                    apps_with_reasons.append((app, f"resumed: {reason}"))
+                    seen_names.add(app)
     if not apps_with_reasons:
         alert_success("All installed apps are up to date.")
         return
-    # Iteratively expand reverse dependencies: if openssl3 is being rebuilt,
-    # python3.14 (which links against it) also needs rebuilding, etc.
-    from koopa.app import stale_revdeps
-
-    seen_names = {a for a, _ in apps_with_reasons}
-    changed = True
-    while changed:
-        changed = False
-        revdeps = stale_revdeps([a for a, _ in apps_with_reasons])
-        for rd in revdeps:
-            if rd not in seen_names and _is_supported_app(rd):
-                apps_with_reasons.append((rd, "dependency rebuilt"))
-                seen_names.add(rd)
-                changed = True
     stale_set = seen_names
     plan, dep_map = _compute_install_plan(apps_with_reasons)
     apps = [a for a, _ in plan]
@@ -2588,24 +2667,39 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     else:
         display = ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
+    _save_pending_plan(plan)
     acquired = _acquire_install_lock()
+    failed: set[str] = set()
     try:
         for app, reason in plan:
-            config = InstallConfig(
-                name=app,
-                reinstall=(app in stale_set),
-                reinstall_reason=reason if app in stale_set else "",
-                deps=False,
-                verbose=verbose,
-                binary=_can_install_binary(),
-                push=_can_push_binary(),
-                passthrough_args=_build_passthrough_args(app),
-            )
-            install_app(config)
+            app_deps_in_plan = dep_map.get(app, set())
+            if app_deps_in_plan & failed:
+                failed.add(app)
+                continue
+            try:
+                config = InstallConfig(
+                    name=app,
+                    reinstall=(app in stale_set),
+                    reinstall_reason=reason if app in stale_set else "",
+                    deps=False,
+                    verbose=verbose,
+                    binary=_can_install_binary(),
+                    push=_can_push_binary(),
+                    passthrough_args=_build_passthrough_args(app),
+                )
+                install_app(config)
+                _remove_from_pending_plan(app)
+            except Exception as exc:
+                alert(f"Failed to install {app}: {exc}")
+                failed.add(app)
     finally:
         if acquired:
             _release_install_lock()
-    alert_success("All stale apps updated successfully.")
+    if failed:
+        alert(f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}.")
+    else:
+        _save_pending_plan([])
+        alert_success("All stale apps updated successfully.")
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
