@@ -5,4 +5,3 @@
     ~/.local/share/koopa/app/git/2.54.0/libexec/git-core/git-remote-https: /lib/x86_64-linux-gnu/libssl.so.3: version `OPENSSL_3.2.0' not found (required by /home/stmich14/.local/share/koopa/app/curl/8.18.0/lib/libcurl.so.4)
     fatal: remote helper 'https' aborted session
 * Low complexity
-** TODO Should we just shift install of groff to conda-forge?
