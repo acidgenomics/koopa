@@ -5,12 +5,11 @@ authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = [
   "Private :: Do Not Upload",
   "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.14",
 ]
 description = "Shell bootloader for data science."
 keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.12.*"
 
 [project.optional-dependencies]
 extra = [
@@ -26,12 +25,12 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
 [tool.bumpver]
-current_version = "0.16.0"
-version_pattern = "MAJOR.MINOR.PATCH"
-commit_message = "Bump version to {new_version}."
 commit = true
-tag = true
+commit_message = "Bump version to {new_version}."
+current_version = "0.16.0"
 push = false
+tag = true
+version_pattern = "MAJOR.MINOR.PATCH"
 
 [tool.bumpver.file_patterns]
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
@@ -74,7 +73,7 @@ verboseOutput = true
 [tool.ruff]
 indent-width = 4
 line-length = 100
-target-version = "py313"
+target-version = "py312"
 
 [tool.ruff.format]
 docstring-code-format = true

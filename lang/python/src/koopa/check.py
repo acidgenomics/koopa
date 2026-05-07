@@ -17,7 +17,7 @@ from koopa.prefix import (
 )
 
 
-def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
+def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, PLR0912, PLR0915
     """Return ``(app_name, reason, actionable)`` for each installed app issue.
 
     *actionable* is True when the issue can be fixed by reinstalling the app
@@ -44,7 +44,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:
             target = entry["alias_of"]
             if target in json_data:
                 entry = json_data[target]
-                name = target
+                name = target  # noqa: PLW2901
             else:
                 issues.append(
                     (name, f"{name} alias target '{target}' not found", False),
@@ -368,9 +368,7 @@ def check_bootstrap_version() -> bool:
         expected_version = fh.read().strip()
     with open(installed_version_file) as fh:
         installed_version = fh.read().strip()
-    if installed_version != expected_version:
-        return False
-    return True
+    return installed_version == expected_version
 
 
 def check_venv_version() -> bool:

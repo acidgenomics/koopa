@@ -23,15 +23,13 @@ def is_valid_archive(path: str) -> bool:
         return False
     if len(header) < 4:
         return False
-    if header[:2] == b"\x1f\x8b":
-        return True
-    if header[:3] == b"BZh":
-        return True
-    if header[:6] == b"\xfd7zXZ\x00":
-        return True
-    if header[:4] == b"\x28\xb5\x2f\xfd":
-        return True
-    return header[:4] == b"LZIP"
+    return (
+        header[:2] == b"\x1f\x8b"
+        or header[:3] == b"BZh"
+        or header[:6] == b"\xfd7zXZ\x00"
+        or header[:4] == b"\x28\xb5\x2f\xfd"
+        or header[:4] == b"LZIP"
+    )
 
 
 def extract(path: str, output_dir: str | None = None) -> None:

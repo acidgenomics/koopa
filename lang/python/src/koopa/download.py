@@ -98,7 +98,8 @@ def download_with_mirror(primary_url: str, name: str, filename: str) -> str:
                     else f"Mirror failed, trying: '{next_url}'.",
                     file=sys.stderr,
                 )
-    raise last_exc  # type: ignore[misc]
+    assert last_exc is not None
+    raise last_exc
 
 
 def _derive_filename(url: str) -> str:

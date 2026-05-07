@@ -1079,12 +1079,12 @@ def _handle_conda_candidates(args: list[str]) -> None:
         for channel in channels:
             url = f"https://api.anaconda.org/package/{channel}/{name}"
             try:
-                with urllib.request.urlopen(url, timeout=10) as resp:  # noqa: S310
+                with urllib.request.urlopen(url, timeout=10) as resp:
                     pkg_data = json_mod.loads(resp.read())
                     conda_ver = pkg_data.get("latest_version", "?")
                     found.append((name, channel, current_ver, conda_ver))
                     break
-            except Exception:  # noqa: BLE001
+            except Exception:
                 continue
     if not found:
         print("No conda candidates found.")

@@ -222,13 +222,14 @@ def installed_apps() -> list:
     return names
 
 
-def prune_apps(dry_run: bool = False) -> None:
+def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
     """Prune apps."""
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
     supported_names = json_data.keys()
     installed_names = installed_apps()
     opt_prefix = koopa_opt_prefix()
+    pruned: list[str] = []
     for name in installed_names:
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
@@ -252,8 +253,13 @@ def prune_apps(dry_run: bool = False) -> None:
             if dry_run:
                 print(f"[dry-run] Pruning {subdir!r}.")
                 continue
-            print(f"Pruning {subdir!r}.")
+            if verbose:
+                print(f"Pruning {subdir!r}.")
+            pruned.append(subdir)
             rmtree(subdir)
+    if not dry_run and pruned:
+        n = len(pruned)
+        print(f"Pruned {n} app version{'s' if n != 1 else ''}.")
 
 
 def prune_app_binaries(dry_run: bool = False) -> None:

@@ -1884,10 +1884,7 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 10:
-        display = ", ".join(apps[:10]) + f", ... and {n - 10} more"
-    else:
-        display = ", ".join(apps)
+    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} missing default {label}: {display}.")
     acquired = _acquire_install_lock()
     try:
@@ -1955,10 +1952,7 @@ def install_shared_apps(mode: str = "default") -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 10:
-        display = ", ".join(apps[:10]) + f", ... and {n - 10} more"
-    else:
-        display = ", ".join(apps)
+    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
     acquired = _acquire_install_lock()
     try:
@@ -2435,7 +2429,8 @@ def _compute_install_plan(
 ) -> tuple[list[tuple[str, str]], dict[str, set[str]]]:
     """Compute ordered install plan with full transitive dep expansion.
 
-    Returns:
+    Returns
+    -------
         plan: ordered (app, reason) tuples in install order (deps first)
         dep_map: for each app in plan, its transitive deps also in the plan
     """
@@ -2461,9 +2456,7 @@ def _compute_install_plan(
         supported = entry.get("supported", {})
         if current_os in supported and not supported[current_os]:
             return False
-        if entry.get("private") or entry.get("system") or entry.get("user"):
-            return False
-        return True
+        return not (entry.get("private") or entry.get("system") or entry.get("user"))
 
     # DFS to expand transitive deps and collect missing ones.
     full_set: set[str] = set(stale_set)
@@ -2673,10 +2666,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    if n > 10:
-        display = ", ".join(apps[:10]) + f", ... and {n - 10} more"
-    else:
-        display = ", ".join(apps)
+    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
     _save_pending_plan(plan)
     acquired = _acquire_install_lock()
@@ -2782,10 +2772,7 @@ def update_user_apps(*, verbose: bool = False) -> list[str]:
     prefixes = _user_app_prefixes()
     n_user = len(apps)
     label_user = "app" if n_user == 1 else "apps"
-    if n_user > 100:
-        display_user = ", ".join(apps[:100]) + ", ..."
-    else:
-        display_user = ", ".join(apps)
+    display_user = ", ".join(apps[:100]) + ", ..." if n_user > 100 else ", ".join(apps)
     alert(f"Updating {n_user} user {label_user}: {display_user}.")
     updated: list[str] = []
     for app in apps:
