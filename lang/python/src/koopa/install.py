@@ -758,9 +758,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         all_deps = list(dict.fromkeys(build_deps + deps))
         if all_deps:
             if not config.quiet:
-                from koopa.alert import alert_note, styled_name, styled_reason
+                from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
-                version_suffix = f" {config.version}" if config.version else ""
+                version_suffix = f" {styled_version(config.version)}" if config.version else ""
                 if config.reinstall_reason:
                     reason_str = config.reinstall_reason
                     prefix_to_strip = f"{config.name} "
@@ -775,9 +775,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 for d in all_deps:
                     resolved = _resolve_alias(d)
                     if resolved != d:
-                        deps_display.append(
-                            f"{styled_name(resolved)} [{d}]"
-                        )
+                        deps_display.append(f"{styled_name(resolved)} [{d}]")
                     else:
                         deps_display.append(styled_name(d))
                 alert_note(
@@ -801,9 +799,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app(dep_config)
     # -- Start install --------------------------------------------------------
     if not config.quiet and not _announced:
-        from koopa.alert import alert_note, styled_name, styled_reason
+        from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
-        version_suffix = f" {config.version}" if config.version else ""
+        version_suffix = f" {styled_version(config.version)}" if config.version else ""
         if config.reinstall and config.reinstall_reason:
             reason_str = config.reinstall_reason
             prefix_to_strip = f"{config.name} "
@@ -949,9 +947,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if not config.quiet and config.verbose:
         from koopa.alert import alert_install_success
 
-        name_with_version = (
-            f"{config.name} {config.version}" if config.version else config.name
-        )
+        name_with_version = f"{config.name} {config.version}" if config.version else config.name
         alert_install_success(name_with_version, "", progress.elapsed_formatted)
 
 
@@ -2531,7 +2527,8 @@ def remove_alias_app_dirs(*, verbose: bool = False) -> None:
         return
     n = len(to_remove)
     label = "alias" if n == 1 else "aliases"
-    alert(f"Removing {n} app {label} installed under old names: {', '.join(to_remove)}.")
+    name_label = "old name" if n == 1 else "old names"
+    alert(f"Removing {n} app {label} installed under {name_label}: {', '.join(to_remove)}.")
     for name in to_remove:
         path = os.path.join(app_dir, name)
         shutil.rmtree(path, ignore_errors=True)

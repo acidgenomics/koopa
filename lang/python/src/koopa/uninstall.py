@@ -267,3 +267,37 @@ def uninstall_koopa() -> None:
     else:
         print(f"Removing {kp}.", file=sys.stderr)
         shutil.rmtree(kp, ignore_errors=True)
+
+
+def uninstall_non_default_apps(yes: bool = False, verbose: bool = False) -> None:
+    """Uninstall installed apps that are not default and not dependencies of defaults."""
+    from koopa.app import app_deps, import_app_json, installed_apps, shared_apps
+    from koopa.install import _acquire_install_lock, _release_install_lock
+
+    installed = set(installed_apps())
+    default_apps = set(shared_apps(mode="default")) & installed
+    json_data = import_app_json()
+    protected: set[str] = set(default_apps)
+    for app in default_apps:
+        if app in json_data:
+            protected.update(app_deps(app))
+    targets = sorted(installed - protected)
+    if not targets:
+        print("No non-default apps to uninstall.")
+        return
+    print(f"Apps to uninstall ({len(targets)}):")
+    for app in targets:
+        print(f"  {app}")
+    if not yes and sys.stdin.isatty():
+        answer = input("\nProceed? [y/N] ").strip().lower()
+        if answer not in ("y", "yes"):
+            print("Aborted.", file=sys.stderr)
+            return
+    acquired = _acquire_install_lock()
+    try:
+        for app in targets:
+            config = UninstallConfig(name=app, mode="shared", verbose=verbose)
+            uninstall_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
