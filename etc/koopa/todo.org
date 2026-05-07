@@ -3,8 +3,8 @@
 ** DONE Rework bootstrap.sh to use uv and bundled astral Python when not in a corporate environment.
 ** DONE Check gcc install support on macOS.
 ** DONE We need a way to retrigger reinstall of all default apps and any other optional apps currently installed by the user on the system. Basically a total app rebuild trigger that automatically resolves depdency logic and rebuilds everything in order.
-** TODO We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
-** TODO Rework 'koopa install-default-apps' as 'koopa install'.
+** DONE We need to come up with a new idea for 'koopa install-all-apps'. How about 'koopa install --all'.
+** DONE Rework 'koopa install-default-apps' as 'koopa install'.
 ** TODO Consider reorganizing 'koopa uninstall-non-default-apps' to `koopa uninstall --all-non-default-apps`.
 ** TODO We need to rework and declutter some koopa CLI commands:
     - install, install-all-apps, install-default-apps
@@ -38,6 +38,12 @@
     We're mixing things that help manage koopa install, and other things manage the system machine and require sudo permissions. That's not clear currently.
 ** TODO Reduce the number of dependencies when building r and r-devel from source. For example, we don't want to include gdal here.
 ** TODO Our language regarding "system" in the koopa CLI is inconsistent. Some commands require system admin privileges, some don't. This applies to `koopa update --all-system` for example.
+** TODO Evaluate and consider reworking our flow with:
+    - koopa install --system
+    - koopa install --user
+    - koopa uninstall --system
+    - koopa uninstall --user
+    Does it make more sense to use `koopa install system <APP>` and `koopa install user <APP>`? I think I like that better.
 * Low complexity
 ** DONE Remove `koopa internal`
 ** DONE Remove 'koopa version' in favor of 'koopa --version'.

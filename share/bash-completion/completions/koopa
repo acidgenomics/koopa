@@ -74,8 +74,7 @@ _koopa_complete() {
         ['reinstall']='--all --all-revdeps --help --no-revdeps --only-revdeps --verbose'
         ['run']='--help'
         ['system']='--help'
-        ['uninstall']='--help --no-revdeps --system --user --verbose --yes'
-        ['uninstall-non-default-apps']='--help --verbose --yes'
+        ['uninstall']='--help --no-revdeps --non-default --system --user --verbose --yes'
         ['update']='--help --verbose'
     )
     case "${COMP_CWORD:-}" in
@@ -93,7 +92,6 @@ _koopa_complete() {
                 'run'
                 'system'
                 'uninstall'
-                'uninstall-non-default-apps'
                 'update'
             )
             ;;
