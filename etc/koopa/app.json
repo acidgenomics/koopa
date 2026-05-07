@@ -1322,7 +1322,7 @@
       "bzless.1",
       "bzmore.1"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://sourceware.org/pub/bzip2/bzip2-{version}.tar.gz",
     "type": "build_tool",
     "url": [
