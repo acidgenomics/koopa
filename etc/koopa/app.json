@@ -3568,6 +3568,7 @@
       "gzmore.1",
       "gznew.1"
     ],
+    "revision": 1,
     "src_url": "https://ftpmirror.gnu.org/gzip/gzip-{version}.tar.gz",
     "type": "build_tool",
     "url": [
