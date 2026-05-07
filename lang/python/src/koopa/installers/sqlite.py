@@ -1,6 +1,7 @@
 """Install sqlite."""
 
 import os
+import subprocess
 
 from koopa.build import activate_app, make_build
 from koopa.installers._build_helper import download_extract_cd
@@ -17,6 +18,13 @@ def main(
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("zlib", "readline", env=env)
     download_extract_cd()
+    # SQLite >= 3.53 uses autosetup with proj.tcl which requires Tcl 8.6
+    # (tailcall). macOS ships Tcl 8.5 at /usr/bin/tclsh which passes the
+    # autosetup version check but fails at runtime. Pre-build the bundled
+    # jimsh0 interpreter so autosetup-find-tclsh picks it up first.
+    jimsh0_src = os.path.join("autosetup", "jimsh0.c")
+    if os.path.isfile(jimsh0_src) and not os.path.isfile("jimsh0"):
+        subprocess.run(["cc", "-o", "jimsh0", jimsh0_src], check=True)
     cppflags = " ".join(
         [
             "-DSQLITE_ENABLE_API_ARMOR=1",
