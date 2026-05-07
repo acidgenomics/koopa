@@ -9083,23 +9083,19 @@
   },
   "which": {
     "bin": [
-      "gwhich"
+      "which"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-07",
     "default": true,
     "dependencies": [
       "conda"
     ],
     "description": "shows the full path of shell commands",
     "installer": "conda-package",
-    "installer_args": {
-      "program_prefix": "g"
-    },
     "man1": [
-      "gwhich.1"
+      "which.1"
     ],
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/which/?C=M;O=D"
