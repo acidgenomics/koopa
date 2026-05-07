@@ -2152,13 +2152,14 @@
       "duckdb"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-04-15",
-    "default": false,
+    "date": "2026-05-07",
+    "default": true,
     "dependencies": [
       "conda"
     ],
     "description": "in-process analytical SQL database",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://duckdb.org/",
