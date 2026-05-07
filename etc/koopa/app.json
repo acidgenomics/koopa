@@ -3529,19 +3529,19 @@
   },
   "gzip": {
     "bin": [
-      "gunzip",
-      "gzexe",
-      "gzip",
-      "zcat",
-      "zcmp",
-      "zdiff",
-      "zegrep",
-      "zfgrep",
-      "zforce",
-      "zgrep",
-      "zless",
-      "zmore",
-      "znew"
+      "ggunzip",
+      "ggzexe",
+      "ggzip",
+      "gzcat",
+      "gzcmp",
+      "gzdiff",
+      "gzegrep",
+      "gzfgrep",
+      "gzforce",
+      "gzgrep",
+      "gzless",
+      "gzmore",
+      "gznew"
     ],
     "build_dependencies": [
       "make"
@@ -3550,18 +3550,23 @@
     "default": true,
     "description": "GNU file compression and decompression utility",
     "installer": "gnu-app",
+    "installer_args": {
+      "disable_dependency_tracking": "",
+      "disable_gcc_warnings": "",
+      "program_prefix": "g"
+    },
     "man1": [
-      "gunzip.1",
-      "gzexe.1",
-      "gzip.1",
-      "zcat.1",
-      "zcmp.1",
-      "zdiff.1",
-      "zforce.1",
-      "zgrep.1",
-      "zless.1",
-      "zmore.1",
-      "znew.1"
+      "ggunzip.1",
+      "ggzexe.1",
+      "ggzip.1",
+      "gzcat.1",
+      "gzcmp.1",
+      "gzdiff.1",
+      "gzforce.1",
+      "gzgrep.1",
+      "gzless.1",
+      "gzmore.1",
+      "gznew.1"
     ],
     "src_url": "https://ftpmirror.gnu.org/gzip/gzip-{version}.tar.gz",
     "type": "build_tool",
