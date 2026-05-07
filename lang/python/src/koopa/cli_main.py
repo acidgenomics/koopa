@@ -480,6 +480,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         _release_install_lock,
         _update_venv,
         install_missing_default_apps,
+        remove_alias_app_dirs,
         remove_unsupported_apps,
         update_bootstrap,
         update_koopa,
@@ -535,6 +536,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             acquired = False
             _exec_restart_with_bootstrap()
         _update_venv(_koopa_prefix())
+        remove_alias_app_dirs(verbose=args.verbose)
         remove_unsupported_apps(verbose=args.verbose)
         update_stale_apps(verbose=args.verbose)
         install_missing_default_apps(verbose=args.verbose)
