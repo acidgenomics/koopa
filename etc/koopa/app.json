@@ -2996,19 +2996,18 @@
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
-      "bison",
-      "icu4c",
       "libiconv",
       "libunistring",
-      "libxml2",
       "ncurses"
     ],
     "description": "GNU internationalization and localization tools",
     "installer": "gnu-app",
     "installer_args": {
       "compress_ext": "xz",
+      "disable-c++": "",
       "disable-csharp": "",
       "disable-java": "",
+      "disable-libasprintf": "",
       "disable-native-java": "",
       "disable-openmp": "",
       "without-cvs": "",
