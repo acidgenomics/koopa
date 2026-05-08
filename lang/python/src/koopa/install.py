@@ -1004,6 +1004,8 @@ def install_gnu_app(
     os.makedirs("src", exist_ok=True)
     _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")
+    if not os.path.isfile("configure") and os.path.isfile("configure.ac"):
+        _run("autoreconf", "-fi")
     _run("./configure", *all_conf_args)
     _run("make", f"-j{jobs}")
     _run("make", "install")
