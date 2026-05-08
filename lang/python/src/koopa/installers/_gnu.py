@@ -1,12 +1,12 @@
 """Generic GNU app installer."""
 
-import json
 import os
 from pathlib import Path
 
 from koopa.build import activate_app
 from koopa.install import install_gnu_app
 from koopa.installers._args import get_str, parse_passthrough
+from koopa.io import import_json
 
 
 def _get_app_deps(name: str) -> tuple[list[str], list[str]]:
@@ -16,8 +16,7 @@ def _get_app_deps(name: str) -> tuple[list[str], list[str]]:
 
     koopa_prefix = str(Path(__file__).resolve().parents[5])
     json_path = os.path.join(koopa_prefix, "etc", "koopa", "app.json")
-    with open(json_path) as f:
-        data = json.load(f)
+    data = import_json(json_path)
     entry = data.get(name, {})
     sys_dict = {"os_id": os_id()}
     build_deps = entry.get("build_dependencies", [])
