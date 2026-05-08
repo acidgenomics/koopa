@@ -2813,12 +2813,12 @@
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "gettext",
       "mpfr"
     ],
     "description": "GNU implementation of the awk programming language",
     "installer": "gnu-app",
     "installer_args": {
+      "disable-nls": "",
       "disable_pma": "",
       "without_readline": ""
     },
@@ -3139,7 +3139,6 @@
     "dependencies": [
       "curl",
       "expat",
-      "gettext",
       "libiconv",
       "openssl",
       "pcre2",
@@ -9051,7 +9050,6 @@
     "date": "2026-04-24",
     "default": true,
     "dependencies": [
-      "gettext",
       "gnutls",
       "libidn",
       "libtasn1",
@@ -9061,6 +9059,9 @@
     ],
     "description": "non-interactive command-line file downloader",
     "installer": "gnu-app",
+    "installer_args": {
+      "disable-nls": ""
+    },
     "man1": [
       "wget.1"
     ],
@@ -9085,7 +9086,6 @@
     "dependencies": [
       "brotli",
       "bzip2",
-      "gettext",
       "gnutls",
       "icu4c",
       "libassuan",
@@ -9102,6 +9102,9 @@
     ],
     "description": "successor to wget with HTTP/2 support",
     "installer": "gnu-app",
+    "installer_args": {
+      "disable-nls": ""
+    },
     "src_url": "https://ftpmirror.gnu.org/wget/wget2-{version}.tar.gz",
     "type": "cli",
     "url": [

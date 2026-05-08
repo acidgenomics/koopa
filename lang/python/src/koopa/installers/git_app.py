@@ -22,7 +22,6 @@ def main(
     env = activate_app(
         "expat",
         "zlib",
-        "gettext",
         "openssl",
         "libssh2",
         "curl",
@@ -59,6 +58,7 @@ def main(
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1
     conf_args = [
+        "--disable-nls",
         f"--prefix={prefix}",
         f"--with-curl={curl_prefix}",
         f"--with-editor={vim}",
