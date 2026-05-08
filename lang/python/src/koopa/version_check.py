@@ -275,55 +275,20 @@ def _check_pypi(package: str) -> str:
     return data["info"]["version"]
 
 
-_CONDA_FEEDSTOCK_MAP: dict[str, str] = {
-    "awscli": "awscliv2",
-    "llvm": "llvmdev",
-    "nvim": "nvim",
-}
-
-
-def _check_conda_feedstock(package: str, channel: str = "conda-forge") -> str | None:
-    """Check version from conda-forge feedstock recipe on GitHub."""
-    if channel != "conda-forge":
-        return None
-    feedstock = _CONDA_FEEDSTOCK_MAP.get(package, package)
-    base = f"https://raw.githubusercontent.com/conda-forge/{feedstock}-feedstock/refs/heads/main/recipe"
-    for recipe in ("recipe.yaml", "meta.yaml"):
-        try:
-            text = _http_get_text(f"{base}/{recipe}", timeout=5, _retries=0)
-        except (urllib.error.URLError, OSError):
-            continue
-        for pattern in (
-            r'\{%\s*set\s+version\s*=\s*["\'](\d[\d.]*)["\']\s*%\}',
-            r'^\s*version:\s*["\'](\d[\d.]*)["\']',
-        ):
-            match = re.search(pattern, text, re.MULTILINE)
-            if match:
-                return match.group(1)
-    return None
-
-
-def _check_conda_api(package: str, channel: str = "conda-forge") -> str:
-    data = _http_get_json(
-        f"https://api.anaconda.org/package/{channel}/{package}",
-        timeout=5,
-        _retries=0,
-    )
+def _check_conda(package: str, channel: str = "conda-forge") -> str:
+    try:
+        data = _http_get_json(
+            f"https://api.anaconda.org/package/{channel}/{package}",
+            timeout=5,
+            _retries=0,
+        )
+    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
     version = data.get("latest_version", "")
     if not version:
         msg = f"No version found via Anaconda API for {channel}/{package}"
         raise RuntimeError(msg)
     return version
-
-
-def _check_conda(package: str, channel: str = "conda-forge") -> str:
-    version = _check_conda_feedstock(package, channel)
-    if version:
-        return version
-    try:
-        return _check_conda_api(package, channel)
-    except (urllib.error.URLError, OSError, TimeoutError) as exc:
-        raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
 
 
 class _NetworkUnavailableError(RuntimeError):
