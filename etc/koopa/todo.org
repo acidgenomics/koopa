@@ -1,3 +1,5 @@
 * High complexity
 * Medium complexity
+** TODO Add a new function to review app dependency chain.
+** TODO Ensure we can identify cyclic dependencies.
 * Low complexity

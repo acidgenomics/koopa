@@ -2814,13 +2814,13 @@
     "default": true,
     "dependencies": [
       "gettext",
-      "mpfr",
-      "readline"
+      "mpfr"
     ],
     "description": "GNU implementation of the awk programming language",
     "installer": "gnu-app",
     "installer_args": {
-      "disable_pma": ""
+      "disable_pma": "",
+      "without_readline": ""
     },
     "man1": [
       "gawk.1"
