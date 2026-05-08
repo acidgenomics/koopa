@@ -4,7 +4,7 @@ import os
 import sys
 from glob import glob
 
-from koopa.build import shared_ext
+from koopa.build import activate_app, shared_ext
 from koopa.file_ops import ln
 from koopa.install import install_gnu_app
 from koopa.version import major_minor_version, major_version
@@ -18,6 +18,14 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install ncurses."""
+    os.environ.pop("DYLD_FALLBACK_LIBRARY_PATH", None)
+    os.environ.pop("DYLD_LIBRARY_PATH", None)
+    os.environ.pop("LD_LIBRARY_PATH", None)
+    os.environ.pop("LIBRARY_PATH", None)
+    os.environ.pop("TERMINFO", None)
+    os.environ.pop("TERMINFO_DIRS", None)
+    env = activate_app("gawk", "make", "pkg-config", build_only=True)
+    env.apply()
     ext = shared_ext()
     maj_ver = major_version(version)
     maj_min_ver = major_minor_version(version)
@@ -26,24 +34,26 @@ def main(
     existing_ldflags = os.environ.get("LDFLAGS", "")
     rpath = f"-Wl,-rpath,{prefix}/lib"
     os.environ["LDFLAGS"] = f"{rpath} {existing_ldflags}".strip()
+    conf_args = [
+        "--enable-pc-files",
+        "--enable-sigwinch",
+        "--enable-symlinks",
+        "--enable-widec",
+        "--with-cxx-binding",
+        "--with-cxx-shared",
+        "--with-gpm=no",
+        "--with-manpage-format=normal",
+        f"--with-pkg-config-libdir={pkgconfig_dir}",
+        "--with-shared",
+        "--without-ada",
+    ]
+    if sys.platform != "darwin":
+        conf_args.append("--with-versioned-syms")
     install_gnu_app(
         name=name,
         version=version,
         prefix=prefix,
-        conf_args=[
-            "--enable-pc-files",
-            "--enable-sigwinch",
-            "--enable-symlinks",
-            "--enable-widec",
-            "--with-cxx-binding",
-            "--with-cxx-shared",
-            "--with-gpm=no",
-            "--with-manpage-format=normal",
-            f"--with-pkg-config-libdir={pkgconfig_dir}",
-            "--with-shared",
-            "--with-versioned-syms",
-            "--without-ada",
-        ],
+        conf_args=conf_args,
     )
     bin_dir = os.path.join(prefix, "bin")
     ln(

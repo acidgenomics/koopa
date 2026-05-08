@@ -83,9 +83,10 @@ class BuildProgress:
     """Track build elapsed time and optional step progress.
 
     When ``verbose`` is False (the default), stdout and stderr are redirected
-    to a temporary log file and a spinner is shown on the terminal. On failure
-    the last 100 lines of the log are printed.  When ``verbose`` is True,
-    output streams through to the terminal as before.
+    to a temporary log file and a spinner is shown on the terminal. On failure,
+    any lines containing "error" (case-insensitive) are surfaced first, followed
+    by the last 100 lines of the log.  When ``verbose`` is True, output streams
+    through to the terminal as before.
     """
 
     def __init__(
@@ -302,7 +303,7 @@ class BuildProgress:
             idx += 1
 
     def _dump_log_tail(self, tty: int) -> None:
-        """Print the last N lines of the build log to the tty."""
+        """Print error lines and the last N lines of the build log to the tty."""
         if self._log_file is None:
             return
         try:
@@ -310,18 +311,28 @@ class BuildProgress:
                 lines = f.readlines()
         except OSError:
             return
-        tail = lines[-_LOG_TAIL_LINES:]
-        if not tail:
+        if not lines:
             os.write(tty, b"  Build failed.\n")
             return
         sep = "─" * 40
-        os.write(tty, f"  Build failed. Last {_LOG_TAIL_LINES} lines:\n".encode())
+        error_lines = [l for l in lines if "error" in l.lower()]
+        tail = lines[-_LOG_TAIL_LINES:]
+        os.write(tty, b"  Build failed.\n")
+        os.write(tty, f"  Last {_LOG_TAIL_LINES} lines:\n".encode())
         os.write(tty, f"  {sep}\n".encode())
         for line in tail:
             os.write(tty, f"  {line}".encode())
             if not line.endswith("\n"):
                 os.write(tty, b"\n")
         os.write(tty, f"  {sep}\n".encode())
+        if error_lines:
+            os.write(tty, f"  Error lines ({len(error_lines)}):\n".encode())
+            os.write(tty, f"  {sep}\n".encode())
+            for line in error_lines:
+                os.write(tty, f"  {line}".encode())
+                if not line.endswith("\n"):
+                    os.write(tty, b"\n")
+            os.write(tty, f"  {sep}\n".encode())
 
     def _record_duration(self) -> None:
         history = _load_history()
