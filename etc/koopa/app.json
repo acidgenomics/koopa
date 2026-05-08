@@ -5596,7 +5596,6 @@
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
-      "gettext",
       "ncurses"
     ],
     "description": "simple, user-friendly terminal text editor",

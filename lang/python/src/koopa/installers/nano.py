@@ -13,12 +13,13 @@ def main(
 ) -> None:
     """Install nano."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app("gettext", "ncurses", env=env)
+    env = activate_app("ncurses", env=env)
     download_extract_cd()
     make_build(
         conf_args=[
             "--disable-debug",
             "--disable-dependency-tracking",
+            "--disable-nls",
             "--enable-color",
             "--enable-extra",
             "--enable-multibuffer",
