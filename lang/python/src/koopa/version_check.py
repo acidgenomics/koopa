@@ -284,42 +284,60 @@ def _conda_exe() -> str | None:
     return os.environ.get("CONDA_EXE") or shutil.which("conda")
 
 
-def _check_conda(package: str, channel: str = "conda-forge") -> str:
+def _check_conda(
+    package: str,
+    channel: str = "conda-forge",
+    *,
+    subdirs: tuple[str, ...] = ("linux-64",),
+) -> str:
     exe = _conda_exe()
+    versions_per_subdir: list[str] = []
     if exe:
-        with _conda_semaphore:
-            try:
-                result = subprocess.run(
-                    [
-                        exe,
-                        "search",
-                        package,
-                        f"--channel={channel}",
-                        "--override-channels",
-                        "--json",
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=60,
-                    check=False,
-                )
-            except (subprocess.TimeoutExpired, OSError):
-                result = None
-        if result is not None and result.returncode == 0:
-            try:
-                data = json.loads(result.stdout)
-                versions = [e["version"] for e in data.get(package, [])]
-                if versions:
-                    return max(
-                        versions,
-                        key=lambda v: tuple(
-                            int(x)
-                            for x in re.split(r"[.\-p]", v)
-                            if x.isdigit()
-                        ),
+        for subdir in subdirs:
+            with _conda_semaphore:
+                try:
+                    result = subprocess.run(
+                        [
+                            exe,
+                            "search",
+                            package,
+                            f"--channel={channel}",
+                            "--override-channels",
+                            f"--subdir={subdir}",
+                            "--json",
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=60,
+                        check=False,
                     )
-            except (json.JSONDecodeError, ValueError):
-                pass
+                except (subprocess.TimeoutExpired, OSError):
+                    result = None
+            if result is not None and result.returncode == 0:
+                try:
+                    data = json.loads(result.stdout)
+                    versions = [e["version"] for e in data.get(package, [])]
+                    if versions:
+                        best = max(
+                            versions,
+                            key=lambda v: tuple(
+                                int(x)
+                                for x in re.split(r"[.\-p]", v)
+                                if x.isdigit()
+                            ),
+                        )
+                        versions_per_subdir.append(best)
+                except (json.JSONDecodeError, ValueError):
+                    pass
+    if versions_per_subdir:
+        return min(
+            versions_per_subdir,
+            key=lambda v: tuple(
+                int(x)
+                for x in re.split(r"[.\-p]", v)
+                if x.isdigit()
+            ),
+        )
     try:
         data = _http_get_json(
             f"https://api.anaconda.org/package/{channel}/{package}",
@@ -1379,7 +1397,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "curl": _AppCheckSpec("github", _check_github, ("curl", "curl")),
-    "google-cloud-sdk": _AppCheckSpec("conda", _check_conda, ("google-cloud-sdk", "conda-forge")),
+    "google-cloud-sdk": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("google-cloud-sdk", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
@@ -1393,8 +1415,16 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "man-db": _AppCheckSpec("gitlab", _check_gitlab, ("gitlab.com", "man-db/man-db")),
     "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
-    "aws-cli": _AppCheckSpec("conda", _check_conda, ("awscli", "conda-forge")),
-    "vim": _AppCheckSpec("conda", _check_conda, ("vim", "conda-forge")),
+    "aws-cli": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("awscli", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
+    "vim": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("vim", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",
@@ -1409,7 +1439,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "expat": _AppCheckSpec("github", _check_expat, ()),
     "gcc": _make_dirlist_spec("https://mirrors.kernel.org/gnu/gcc/", "gcc-"),
-    "ghostscript": _AppCheckSpec("conda", _check_conda, ("ghostscript", "conda-forge")),
+    "ghostscript": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("ghostscript", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "git": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1450,7 +1484,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "openssl3": _make_openssl_spec("3"),
     "openssl4": _make_openssl_spec("4"),
     "perl": _AppCheckSpec("dirlist", _check_perl, ()),
-    "postgresql": _AppCheckSpec("conda", _check_conda, ("postgresql", "conda-forge")),
+    "postgresql": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("postgresql", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "r": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1472,11 +1510,19 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
     "libheif": _AppCheckSpec("github", _check_github, ("strukturag", "libheif")),
     "libsolv": _AppCheckSpec("github", _check_libsolv, ()),
-    "llvm": _AppCheckSpec("conda", _check_conda, ("llvm", "conda-forge")),
+    "llvm": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("llvm", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "mpdecimal": _AppCheckSpec("dirlist", _check_mpdecimal, ()),
     "msgpack": _AppCheckSpec("github", _check_msgpack, ()),
     "openjpeg": _AppCheckSpec("github", _check_github, ("uclouvain", "openjpeg")),
-    "openssh": _AppCheckSpec("conda", _check_conda, ("openssh", "conda-forge")),
+    "openssh": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("openssh", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "r-devel": _AppCheckSpec("svn", _check_r_devel, (), batch_size=100),
     "staden-io-lib": _AppCheckSpec("github", _check_staden_io_lib, ()),
     "taglib": _AppCheckSpec("github", _check_github, ("taglib", "taglib")),
@@ -1487,7 +1533,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_gnu("wget2", parent="wget"),
         (),
     ),
-    "woff2": _AppCheckSpec("conda", _check_conda, ("woff2", "conda-forge")),
+    "woff2": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("woff2", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "anaconda": _AppCheckSpec("dirlist", _check_anaconda, ()),
     "apache-arrow": _AppCheckSpec(
         "github",
@@ -1539,7 +1589,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "jpeg": _AppCheckSpec("dirlist", _check_jpeg, ()),
     "krb5": _AppCheckSpec("dirlist", _check_krb5, ()),
-    "lame": _AppCheckSpec("conda", _check_conda, ("lame", "conda-forge")),
+    "lame": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("lame", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "libev": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1561,7 +1615,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_github_head("LuaJIT", "LuaJIT"),
         (),
     ),
-    "nim": _AppCheckSpec("conda", _check_conda, ("nim", "conda-forge")),
+    "nim": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("nim", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "openldap": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing(
@@ -1614,7 +1672,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "illumina-ica-cli": _AppCheckSpec("dirlist", _check_illumina_ica_cli, ()),
-    "pkgconf": _AppCheckSpec("conda", _check_conda, ("pkgconf", "conda-forge")),
+    "pkgconf": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("pkgconf", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "ont-guppy": _AppCheckSpec("dirlist", _check_ont_guppy, ()),
     "cellranger": _AppCheckSpec("github", _check_github, ("10XGenomics", "cellranger")),
     "r-gfortran": _AppCheckSpec("dirlist", _check_r_gfortran, ()),
@@ -1644,7 +1706,13 @@ def _classify_generic(  # noqa: PLR0911
     if source == "conda":
         pkg = _get_str(args, "name") or name
         channel = _infer_conda_channel(name, urls)
-        return _AppCheckSpec("conda", _check_conda, (pkg, channel))
+        supported = info.get("supported", {})
+        subdirs = ("linux-64", "osx-arm64") if supported.get("macos-arm64", True) else ("linux-64",)
+        return _AppCheckSpec(
+            "conda",
+            lambda p=pkg, c=channel, s=subdirs: _check_conda(p, c, subdirs=s),
+            (),
+        )
     if source == "pypi":
         pkg = _resolve_pypi_name(name, args, urls)
         return _AppCheckSpec("pypi", _check_pypi, (pkg,))

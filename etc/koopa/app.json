@@ -159,7 +159,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -283,7 +282,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -310,7 +308,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "library",
@@ -362,7 +359,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -379,7 +375,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -407,7 +402,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -508,7 +502,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "system": true,
@@ -579,8 +572,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -785,7 +777,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -809,7 +800,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": true,
       "macos-arm64": true
     },
     "type": "cli",
@@ -849,7 +839,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": true
     },
     "type": "cli",
@@ -911,8 +900,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -936,7 +924,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -1008,15 +995,14 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.17.0"
+    "version": "2.16.0"
   },
   "boost": {
     "date": "2026-05-02",
@@ -1070,8 +1056,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -1186,8 +1171,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -1393,7 +1377,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -1434,19 +1417,19 @@
       "chezmoi"
     ],
     "build_dependencies": {
-      "macos-amd64": [
+      "noarch": [],
+      "macos-arm64": [
         "go"
-      ],
-      "noarch": []
+      ]
     },
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
     "dependencies": {
-      "macos-amd64": [],
       "noarch": [
         "conda"
-      ]
+      ],
+      "macos-arm64": []
     },
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
@@ -1493,7 +1476,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -1570,7 +1552,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": true
     },
     "type": "build_tool",
@@ -1706,9 +1687,6 @@
     "date": "2026-05-02",
     "default": true,
     "dependencies": {
-      "macos-amd64": [
-        "gmp"
-      ],
       "macos-arm64": [
         "gmp"
       ],
@@ -1993,8 +1971,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -2054,7 +2031,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": true
     },
     "type": "cli",
@@ -2248,7 +2224,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "library",
@@ -2338,8 +2313,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -2447,8 +2421,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -2514,8 +2487,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -2698,7 +2670,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -2723,8 +2694,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -2792,7 +2762,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -2855,7 +2824,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "build_tool",
@@ -3037,8 +3005,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -3063,8 +3030,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -3468,7 +3434,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
     ],
-    "version": "1.24.1"
+    "version": "1.23.0"
   },
   "gseapy": {
     "bin": [
@@ -3599,7 +3565,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -3733,8 +3698,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -3782,8 +3746,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -3986,7 +3949,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -5003,7 +4965,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -5420,7 +5381,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -5622,8 +5582,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -5652,7 +5611,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -5968,7 +5926,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "type": "cli",
@@ -5987,7 +5944,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
-      "macos-amd64": false,
       "macos-arm64": true
     },
     "type": "cli",
@@ -6087,7 +6043,7 @@
       "https://github.com/openssh/openssh-portable",
       "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
     ],
-    "version": "9.8p1"
+    "version": "10.2p1"
   },
   "openssl": {
     "alias_of": "openssl4",
@@ -6147,7 +6103,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "system": true,
@@ -6257,7 +6212,6 @@
     "date": "2026-05-02",
     "default": true,
     "dependencies": {
-      "macos-amd64": [],
       "macos-arm64": [],
       "noarch": [
         "attr"
@@ -6388,8 +6342,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -6820,7 +6773,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": false
     },
     "type": "cli",
@@ -7371,7 +7323,6 @@
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": true
     },
     "type": "cli",
@@ -7393,7 +7344,6 @@
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": true
     },
     "system": true,
@@ -7411,7 +7361,6 @@
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": true
     },
     "system": true,
@@ -7620,8 +7569,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -7677,8 +7625,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -7695,7 +7642,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "system": true,
@@ -7871,8 +7817,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -7910,7 +7855,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
       "macos-arm64": true
     },
     "type": "cli",
@@ -8057,8 +8001,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -8116,7 +8059,6 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": false,
       "macos-arm64": false
     },
     "system": true,
@@ -8350,8 +8292,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -8376,8 +8317,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -8459,8 +8399,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
@@ -8841,8 +8780,7 @@
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
+      "macos-arm64": true
     },
     "type": "cli",
     "url": [
