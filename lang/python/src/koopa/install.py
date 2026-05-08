@@ -970,6 +970,7 @@ def install_gnu_app(
     package_name: str = "",
     parent_name: str = "",
     non_gnu_mirror: bool = False,
+    extra_urls: list[str] | None = None,
     conf_args: list[str] | None = None,
     jobs: int | None = None,
 ) -> None:
@@ -999,7 +1000,7 @@ def install_gnu_app(
 
     filename = f"{package_name}-{version}.tar.{compress_ext}"
     url = f"{mirror}/{parent_name}/{filename}"
-    tarball = download_with_mirror(url, name, filename)
+    tarball = download_with_mirror(url, name, filename, extra_urls=extra_urls)
     os.makedirs("src", exist_ok=True)
     _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")

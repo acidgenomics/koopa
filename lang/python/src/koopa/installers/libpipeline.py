@@ -16,4 +16,7 @@ def main(
         version=version,
         prefix=prefix,
         non_gnu_mirror=True,
+        extra_urls=[
+            f"https://gitlab.com/libpipeline/libpipeline/-/archive/{version}/libpipeline-{version}.tar.gz",
+        ],
     )

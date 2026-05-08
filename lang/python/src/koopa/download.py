@@ -75,12 +75,14 @@ def download_with_mirror(
     name: str,
     filename: str,
     *,
+    extra_urls: list[str] | None = None,
     connect_timeout: int = 10,
 ) -> str:
     """Download from primary URL, falling back to mirrors.
 
     Tries the primary URL first, then GNU mirrors (if applicable), then
-    the koopa mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
+    any extra_urls, then the koopa mirror at
+    https://koopa.acidgenomics.com/src/{name}/{filename}.
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
@@ -88,6 +90,7 @@ def download_with_mirror(
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     urls = [primary_url]
     urls.extend(_gnu_mirrors(primary_url, name, filename))
+    urls.extend(extra_urls or [])
     urls.append(koopa_mirror)
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
