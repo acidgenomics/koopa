@@ -308,7 +308,7 @@ def _check_conda(
                         ],
                         capture_output=True,
                         text=True,
-                        timeout=60,
+                        timeout=30,
                         check=False,
                     )
                 except (subprocess.TimeoutExpired, OSError):
@@ -400,7 +400,7 @@ def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) 
     html: str | None = None
     for base in bases:
         try:
-            html = _http_get_text(base)
+            html = _http_get_text(base, timeout=5, _retries=0)
             break
         except (urllib.error.URLError, OSError) as exc:
             last_exc = exc

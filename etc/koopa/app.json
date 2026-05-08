@@ -2087,7 +2087,7 @@
       "https://github.com/doomemacs/doomemacs/"
     ],
     "user": true,
-    "version": "410a9bf397c4b3577628b808e89eca3d83d07b10"
+    "version": "b04599f3746fbe5aa8fba572130a0257f3ecc8a6"
   },
   "dotfiles": {
     "build_dependencies": [
