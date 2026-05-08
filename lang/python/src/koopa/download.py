@@ -70,6 +70,17 @@ def _gnu_mirrors(primary_url: str, name: str, filename: str) -> list[str]:
     ]
 
 
+def _savannah_mirrors(primary_url: str, name: str, filename: str) -> list[str]:
+    """Return alternative Savannah mirror URLs if primary is a Savannah source."""
+    if "download.savannah.nongnu.org" not in primary_url:
+        return []
+    return [
+        f"https://nongnu.uib.no/{name}/{filename}",
+        f"https://mirror.csclub.uwaterloo.ca/nongnu/{name}/{filename}",
+        f"https://mirrors.ocf.berkeley.edu/nongnu/{name}/{filename}",
+    ]
+
+
 def download_with_mirror(
     primary_url: str,
     name: str,
@@ -81,8 +92,8 @@ def download_with_mirror(
     """Download from primary URL, falling back to mirrors.
 
     Tries the primary URL first, then GNU mirrors (if applicable), then
-    any extra_urls, then the koopa mirror at
-    https://koopa.acidgenomics.com/src/{name}/{filename}.
+    Savannah mirrors (if applicable), then any extra_urls, then the koopa
+    mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
@@ -90,6 +101,7 @@ def download_with_mirror(
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     urls = [primary_url]
     urls.extend(_gnu_mirrors(primary_url, name, filename))
+    urls.extend(_savannah_mirrors(primary_url, name, filename))
     urls.extend(extra_urls or [])
     urls.append(koopa_mirror)
     last_exc: Exception | None = None
@@ -98,7 +110,7 @@ def download_with_mirror(
             is_last = url == koopa_mirror
             tarball = download(
                 url,
-                retry=is_last,
+                retry=False,
                 connect_timeout=connect_timeout if not is_last else None,
             )
             if not archive.is_valid_archive(tarball):
