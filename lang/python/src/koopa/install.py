@@ -122,15 +122,27 @@ def _cpu_count() -> int:
 
 
 def _import_app_json() -> dict[str, Any]:
-    """Import app.json data."""
+    """Import app.json data with retry on parse failure."""
+    import time
+
     json_path = os.path.join(
         _koopa_prefix(),
         "etc",
         "koopa",
         "app.json",
     )
-    with open(json_path) as f:
-        return json.load(f)
+    last_exc: json.JSONDecodeError | None = None
+    for attempt in range(3):
+        with open(json_path) as f:
+            content = f.read()
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError as exc:
+            last_exc = exc
+            if attempt < 2:
+                time.sleep(0.2 * (attempt + 1))
+    assert last_exc is not None
+    raise last_exc
 
 
 def _app_json_version(key: str) -> str:

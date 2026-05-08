@@ -1,6 +1,5 @@
 """Shared helpers for build-from-source installers."""
 
-import json
 import os
 from glob import glob
 from pathlib import Path
@@ -8,6 +7,7 @@ from urllib.parse import urlparse
 
 from koopa.archive import extract
 from koopa.download import download, download_with_mirror
+from koopa.io import import_json
 
 
 def _resolve_src_url(name: str, version: str) -> str:
@@ -16,8 +16,7 @@ def _resolve_src_url(name: str, version: str) -> str:
 
     koopa_prefix = str(Path(__file__).resolve().parents[5])
     json_path = os.path.join(koopa_prefix, "etc", "koopa", "app.json")
-    with open(json_path) as f:
-        data = json.load(f)
+    data = import_json(json_path)
     entry = data.get(name, {})
     template = entry.get("src_url", "")
     if not template:
@@ -32,8 +31,7 @@ def _resolve_extra_src_urls(name: str, version: str) -> list[str]:
 
     koopa_prefix = str(Path(__file__).resolve().parents[5])
     json_path = os.path.join(koopa_prefix, "etc", "koopa", "app.json")
-    with open(json_path) as f:
-        data = json.load(f)
+    data = import_json(json_path)
     entry = data.get(name, {})
     templates = entry.get("extra_src_urls", [])
     return [_expand_src_url(t, version) for t in templates]
