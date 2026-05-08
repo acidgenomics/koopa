@@ -264,6 +264,7 @@ def _can_install_binary() -> bool:
     - KOOPA_CAN_INSTALL_BINARY=0 -> deny
     - KOOPA_CAN_INSTALL_BINARY=1 -> allow
     - KOOPA_BUILDER=1 -> deny (builders always build from source)
+    - koopa prefix must be /opt/koopa (binaries are built against this path)
     - otherwise: allow only if acidgenomics AWS profile is present
     """
     flag = os.environ.get("KOOPA_CAN_INSTALL_BINARY", "")
@@ -271,6 +272,8 @@ def _can_install_binary() -> bool:
         return False
     if flag == "1":
         return True
+    if _koopa_prefix() != "/opt/koopa":
+        return False
     if can_build_binary():
         return False
     return _has_private_access()
