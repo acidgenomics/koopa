@@ -4713,6 +4713,11 @@
     "date": "2024-12-30",
     "default": false,
     "description": "pipeline manipulation library",
+    "installer": "gnu-app",
+    "installer_args": {
+      "non_gnu_mirror": "true"
+    },
+    "src_url": "https://download.savannah.nongnu.org/releases/libpipeline/libpipeline-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://libpipeline.nongnu.org/",
