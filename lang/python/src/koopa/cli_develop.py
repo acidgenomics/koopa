@@ -597,29 +597,25 @@ def _handle_mirror_src(args: list[str]) -> None:
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    print(f"Mirroring {len(targets)} app(s) to S3.", file=sys.stderr)
+    from tqdm import tqdm
+
     bucket = "koopa.acidgenomics.com"
     cache = _load_mirror_src_cache()
     now = time.time()
     _cache_ttl = 86400  # 24 hours
-    total = len(targets)
     failures: dict[str, str] = {}
-    for i, name in enumerate(targets, 1):
-        prefix = f"[{i}/{total}]"
+    for name in tqdm(targets, desc="Mirroring", unit="app"):
         entry = data[name]
         version = entry.get("version", "")
         src_url = entry.get("src_url", "")
         if not version or not src_url:
-            print(f"  {prefix} Skipping '{name}': missing version or src_url.", file=sys.stderr)
             continue
         url = _expand_src_url(src_url, version)
         filename = url.rsplit("/", 1)[-1]
         cache_key = f"{name}/{filename}"
         if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
-            print(f"  {prefix} Already present (cached): {cache_key}", file=sys.stderr)
             continue
         key = f"src/{cache_key}"
-        print(f"  {prefix} Checking: {cache_key}", file=sys.stderr)
         head = subprocess.run(
             [
                 aws,
@@ -638,16 +634,15 @@ def _handle_mirror_src(args: list[str]) -> None:
         if head.returncode == 0:
             cache[cache_key] = now
             _save_mirror_src_cache(cache)
-            print(f"  {prefix} Already present: {cache_key}", file=sys.stderr)
             continue
         try:
-            print(f"  {prefix} Uploading: {cache_key}", file=sys.stderr)
+            tqdm.write(f"  Uploading: {cache_key}")
             _mirror_src_to_s3(name, version, src_url, strict=True)
             cache[cache_key] = now
             _save_mirror_src_cache(cache)
         except Exception as exc:
             failures[name] = str(exc)
-            print(f"  {prefix} FAILED: {name}: {exc}", file=sys.stderr)
+            tqdm.write(f"  FAILED: {name}: {exc}")
             continue
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
@@ -661,7 +656,7 @@ def _handle_mirror_src(args: list[str]) -> None:
                 _save_mirror_src_cache(cache)
             except Exception as exc:
                 failures[name] = str(exc)
-                print(f"  {prefix} FAILED (extra): {name}/{extra_filename}: {exc}", file=sys.stderr)
+                tqdm.write(f"  FAILED (extra): {name}/{extra_filename}: {exc}")
 
     if failures:
         print(
@@ -707,14 +702,15 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
+    from tqdm import tqdm
+
     bucket = "koopa.acidgenomics.com"
     missing: list[str] = []
-    for name in targets:
+    for name in tqdm(targets, desc="Auditing", unit="app"):
         entry = data[name]
         version = entry.get("version", "")
         src_url = entry.get("src_url", "")
         if not version or not src_url:
-            print(f"  skip  {name}: missing version or src_url.", file=sys.stderr)
             continue
         url = _expand_src_url(src_url, version)
         filename = url.rsplit("/", 1)[-1]
@@ -734,10 +730,8 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
             capture_output=True,
             check=False,
         )
-        if result.returncode == 0:
-            print(f"  ok    {name}/{filename}")
-        else:
-            print(f"  MISS  {name}/{filename}")
+        if result.returncode != 0:
+            tqdm.write(f"  MISS  {name}/{filename}")
             missing.append(name)
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
@@ -758,10 +752,8 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
                 capture_output=True,
                 check=False,
             )
-            if extra_result.returncode == 0:
-                print(f"  ok    {name}/{extra_filename}")
-            else:
-                print(f"  MISS  {name}/{extra_filename}")
+            if extra_result.returncode != 0:
+                tqdm.write(f"  MISS  {name}/{extra_filename}")
                 if name not in missing:
                     missing.append(name)
     if missing:
