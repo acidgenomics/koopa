@@ -1,6 +1,6 @@
 """Install lesspipe."""
 
-from koopa.build import locate, make_build
+from koopa.build import activate_app, locate, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
@@ -12,6 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install lesspipe."""
+    env = activate_app("bash", build_only=True)
     bash = locate("bash")
     download_extract_cd()
     make_build(
@@ -21,4 +22,5 @@ def main(
             f"--shell={bash}",
             f"--zsh-completion-dir={prefix}/share/zsh/site-functions",
         ],
+        env=env,
     )
