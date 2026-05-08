@@ -276,6 +276,7 @@ def _check_pypi(package: str) -> str:
 
 
 _CONDA_FEEDSTOCK_MAP: dict[str, str] = {
+    "awscli": "awscliv2",
     "llvm": "llvmdev",
     "nvim": "nvim",
 }
@@ -1770,13 +1771,13 @@ def check_app_versions(  # noqa: C901, PLR0915
     try:
         from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
-        desc = f"Checking {', '.join(uncached_names)}"
+        desc = f"Checking {len(uncached_names)} app(s)"
         if cached_count:
             desc += f" ({cached_count} cached)"
         pbar = tqdm(total=total, desc=desc, unit="app")
     except ModuleNotFoundError:
         pbar = None
-        msg = f"Checking {', '.join(uncached_names)}..."
+        msg = f"Checking {len(uncached_names)} app(s)..."
         if cached_count:
             msg += f" ({cached_count} cached)"
         print(msg, file=sys.stderr)
@@ -2131,9 +2132,10 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
 
 
 def update_venv_version(outdated: list[VersionCheckResult]) -> None:
-    """Bump venv-version.txt if any PyPI package versions changed."""
-    pypi_changes = [r for r in outdated if r.source == "pypi"]
-    if not pypi_changes:
+    """Bump venv-version.txt if the Python interpreter version changed."""
+    py_ver = (Path(koopa_prefix()) / ".python-version").read_text().strip()
+    python_key = f"python{py_ver}"
+    if not any(r.name == python_key for r in outdated):
         return
     version_path = Path(koopa_prefix()) / "etc" / "koopa" / "venv-version.txt"
     today = time.strftime("%Y.%m.%d.%H%M")
