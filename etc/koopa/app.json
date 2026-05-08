@@ -3014,7 +3014,7 @@
       "without-emacs": "",
       "without-git": ""
     },
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://ftpmirror.gnu.org/gettext/gettext-{version}.tar.xz",
     "type": "library",
     "url": [
