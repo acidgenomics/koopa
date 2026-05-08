@@ -998,7 +998,7 @@
       "blastp"
     ],
     "conda_channel": "bioconda",
-    "date": "2026-05-05",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "conda"
@@ -1016,7 +1016,7 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.16.0"
+    "version": "2.17.0"
   },
   "boost": {
     "date": "2026-05-02",
@@ -1440,7 +1440,7 @@
       "noarch": []
     },
     "conda_channel": "conda-forge",
-    "date": "2026-04-22",
+    "date": "2026-05-08",
     "default": true,
     "dependencies": {
       "macos-amd64": [],
@@ -1455,13 +1455,13 @@
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
     ],
-    "version": "2.70.2"
+    "version": "2.70.3"
   },
   "claude-code": {
     "bin": [
       "claude"
     ],
-    "date": "2026-05-07",
+    "date": "2026-05-08",
     "default": true,
     "dependencies": [
       "node"
@@ -1475,7 +1475,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.132"
+    "version": "2.1.136"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -2083,25 +2083,24 @@
   },
   "docker-credential-helpers": {
     "conda_channel": "conda-forge",
-    "date": "2026-04-22",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "conda"
     ],
     "description": "credential helpers for Docker",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
     ],
-    "version": "0.9.6"
+    "version": "0.9.7"
   },
   "doom-emacs": {
     "build_dependencies": [
       "git"
     ],
-    "date": "2026-05-07",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2112,7 +2111,7 @@
       "https://github.com/doomemacs/doomemacs/"
     ],
     "user": true,
-    "version": "dfd506bbba268d1f6cc684c92e3e1f0f735309dd"
+    "version": "410a9bf397c4b3577628b808e89eca3d83d07b10"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -2578,7 +2577,7 @@
       "fish"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-06",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "conda"
@@ -2593,7 +2592,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.7.0"
+    "version": "4.7.1"
   },
   "flac": {
     "bin": [
@@ -3001,6 +3000,19 @@
       "ncurses"
     ],
     "description": "GNU internationalization and localization tools",
+    "installer": "gnu-app",
+    "installer_args": {
+      "compress_ext": "xz",
+      "disable-c++": "",
+      "disable-csharp": "",
+      "disable-java": "",
+      "disable-libasprintf": "",
+      "disable-native-java": "",
+      "disable-openmp": "",
+      "without-cvs": "",
+      "without-emacs": "",
+      "without-git": ""
+    },
     "revision": 3,
     "src_url": "https://ftpmirror.gnu.org/gettext/gettext-{version}.tar.xz",
     "type": "library",
@@ -3442,7 +3454,7 @@
       "groff"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-07",
+    "date": "2026-05-08",
     "default": true,
     "dependencies": [
       "conda"
@@ -3456,7 +3468,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
     ],
-    "version": "1.23.0"
+    "version": "1.24.1"
   },
   "gseapy": {
     "bin": [
@@ -6054,7 +6066,7 @@
   },
   "openssh": {
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "krb5",
@@ -6069,14 +6081,13 @@
     "description": "OpenBSD SSH connectivity tools",
     "installer": "conda-package",
     "mirror": true,
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.openssh.com/portable.html",
       "https://github.com/openssh/openssh-portable",
       "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
     ],
-    "version": "10.3p1"
+    "version": "9.8p1"
   },
   "openssl": {
     "alias_of": "openssl4",
@@ -6722,7 +6733,7 @@
     "build_dependencies": [
       "sed"
     ],
-    "date": "2026-04-29",
+    "date": "2026-05-08",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -6733,7 +6744,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.6.28"
+    "version": "2.6.30"
   },
   "pyflakes": {
     "bin": [
@@ -6822,7 +6833,7 @@
     "bin": [
       "pyrefly"
     ],
-    "date": "2026-05-06",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "python"
@@ -6835,7 +6846,7 @@
       "https://github.com/facebook/pyrefly/",
       "https://pypi.org/project/pyrefly/"
     ],
-    "version": "0.64.0"
+    "version": "0.64.1"
   },
   "pyright": {
     "bin": [
@@ -7467,7 +7478,7 @@
       "rclone"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-08",
     "default": true,
     "dependencies": [
       "conda"
@@ -7482,7 +7493,7 @@
     "url": [
       "https://rclone.org/"
     ],
-    "version": "1.74.0"
+    "version": "1.74.1"
   },
   "readline": {
     "build_dependencies": [
@@ -7969,7 +7980,7 @@
     "build_dependencies": [
       "make"
     ],
-    "date": "2026-05-07",
+    "date": "2026-05-08",
     "default": false,
     "dependencies": [
       "libxcrypt",
@@ -7985,7 +7996,7 @@
       "https://www.gnu.org/software/screen",
       "https://mirrors.kernel.org/gnu/screen/?C=M;O=D"
     ],
-    "version": "4.8.0"
+    "version": "5.0.1"
   },
   "sd": {
     "bin": [
