@@ -4833,6 +4833,7 @@
       "glibtool.1",
       "glibtoolize.1"
     ],
+    "src_url": "https://ftpmirror.gnu.org/libtool/libtool-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/libtool/?C=M;O=D"
