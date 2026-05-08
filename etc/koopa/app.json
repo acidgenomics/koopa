@@ -3001,20 +3001,7 @@
       "ncurses"
     ],
     "description": "GNU internationalization and localization tools",
-    "installer": "gnu-app",
-    "installer_args": {
-      "compress_ext": "xz",
-      "disable-c++": "",
-      "disable-csharp": "",
-      "disable-java": "",
-      "disable-libasprintf": "",
-      "disable-native-java": "",
-      "disable-openmp": "",
-      "without-cvs": "",
-      "without-emacs": "",
-      "without-git": ""
-    },
-    "revision": 2,
+    "revision": 3,
     "src_url": "https://ftpmirror.gnu.org/gettext/gettext-{version}.tar.xz",
     "type": "library",
     "url": [

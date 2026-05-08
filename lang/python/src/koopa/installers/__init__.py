@@ -187,7 +187,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "yamllint": f"{_M}._python_pkg",
     "yapf": f"{_M}._python_pkg",
     "yt-dlp": f"{_M}._python_pkg",
-    # -- gnu-app (36) ----------------------------------------------------
+    # -- gnu-app (35) ----------------------------------------------------
     "attr": f"{_M}._gnu",
     "autoconf": f"{_M}._gnu",
     "automake": f"{_M}._gnu",
@@ -200,7 +200,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "findutils": f"{_M}._gnu",
     "gawk": f"{_M}._gnu",
     "gdbm": f"{_M}._gnu",
-    "gettext": f"{_M}._gnu",
     "gperf": f"{_M}._gnu",
     "grep": f"{_M}._gnu",
     "groff": f"{_M}._conda",
@@ -272,6 +271,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "fontconfig": f"{_M}.fontconfig",
     "fribidi": f"{_M}.fribidi",
     "geos": f"{_M}.geos",
+    "gettext": f"{_M}.gettext",
     "glib": f"{_M}.glib",
     "gmp": f"{_M}.gmp",
     "gnupg": f"{_M}.gnupg",
