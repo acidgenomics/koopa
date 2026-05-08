@@ -2106,8 +2106,8 @@ def _cleanup_legacy_config() -> None:
 
 def update_koopa(*, verbose: bool = False) -> None:
     """Update koopa installation via git pull."""
-    from koopa.alert import alert_note
-    from koopa.git import git_pull, is_git_repo
+    from koopa.alert import alert, alert_info, alert_note
+    from koopa.git import git_branch, git_last_commit_local, git_pull, is_git_repo
 
     if verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
@@ -2130,6 +2130,12 @@ def update_koopa(*, verbose: bool = False) -> None:
     if not is_git_repo(prefix):
         alert_note(f"Pinned release detected at '{prefix}'.")
         return
+    branch = git_branch(prefix)
+    if branch == "HEAD":
+        alert_note(f"Pinned release detected (detached HEAD) at '{prefix}'.")
+        return
+    commit_before = git_last_commit_local(prefix)
+    alert(f"Pulling koopa on '{branch}' ({commit_before[:7]}).")
     try:
         result = git_pull(prefix, rebase=True, autostash=True, capture=True)
     except Exception:
@@ -2146,6 +2152,9 @@ def update_koopa(*, verbose: bool = False) -> None:
 
             warn(f"Failed to update koopa source code: {e}")
             return
+    commit_after = git_last_commit_local(prefix)
+    if commit_before != commit_after:
+        alert_info(f"Updated: {commit_before[:7]} -> {commit_after[:7]}.")
     stdout = (result.stdout or "").strip() if result else ""
     if verbose and stdout and "Already up to date" not in stdout:
         print(stdout, file=sys.stderr)
