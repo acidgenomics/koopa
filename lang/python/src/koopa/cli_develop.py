@@ -561,6 +561,15 @@ def _handle_mirror_src(args: list[str]) -> None:
     from koopa.io import import_app_json
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
 
+    if "--help" in args or "-h" in args:
+        print(
+            "usage: koopa develop mirror-src [<name>...]\n\n"
+            "Download source tarballs from upstream and upload to the\n"
+            "s3://koopa.acidgenomics.com/src/ mirror.\n\n"
+            "With no args, mirrors all apps with a 'src_url' in app.json.",
+            file=sys.stderr,
+        )
+        return
     print("Checking AWS credentials...", file=sys.stderr)
     if not _has_acidgenomics_aws():
         print(
