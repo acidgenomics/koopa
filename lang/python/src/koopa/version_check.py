@@ -275,7 +275,51 @@ def _check_pypi(package: str) -> str:
     return data["info"]["version"]
 
 
+_conda_semaphore = threading.Semaphore(2)
+
+
+def _conda_exe() -> str | None:
+    import shutil
+
+    return os.environ.get("CONDA_EXE") or shutil.which("conda")
+
+
 def _check_conda(package: str, channel: str = "conda-forge") -> str:
+    exe = _conda_exe()
+    if exe:
+        with _conda_semaphore:
+            try:
+                result = subprocess.run(
+                    [
+                        exe,
+                        "search",
+                        package,
+                        f"--channel={channel}",
+                        "--override-channels",
+                        "--json",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                    check=False,
+                )
+            except (subprocess.TimeoutExpired, OSError):
+                result = None
+        if result is not None and result.returncode == 0:
+            try:
+                data = json.loads(result.stdout)
+                versions = [e["version"] for e in data.get(package, [])]
+                if versions:
+                    return max(
+                        versions,
+                        key=lambda v: tuple(
+                            int(x)
+                            for x in re.split(r"[.\-p]", v)
+                            if x.isdigit()
+                        ),
+                    )
+            except (json.JSONDecodeError, ValueError):
+                pass
     try:
         data = _http_get_json(
             f"https://api.anaconda.org/package/{channel}/{package}",
@@ -283,7 +327,9 @@ def _check_conda(package: str, channel: str = "conda-forge") -> str:
             _retries=0,
         )
     except (urllib.error.URLError, OSError, TimeoutError) as exc:
-        raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
+        raise _NetworkUnavailableError(
+            f"conda {channel}/{package}: {exc}"
+        ) from exc
     version = data.get("latest_version", "")
     if not version:
         msg = f"No version found via Anaconda API for {channel}/{package}"
