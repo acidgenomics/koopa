@@ -106,6 +106,84 @@ def _merge_semicolon(new: list[str], existing: str) -> str:
     return ";".join(dict.fromkeys(parts))
 
 
+# -- RPATH validation ---------------------------------------------------------
+
+
+def _check_rpath(prefix: str, app_name: str) -> None:
+    """Verify RPATH targets exist for the app's primary binary."""
+    bin_path = os.path.join(prefix, "bin", app_name)
+    if not os.path.isfile(bin_path):
+        return
+    rpath_dirs = _extract_rpath(bin_path)
+    missing = [d for d in rpath_dirs if not os.path.isdir(d)]
+    if missing:
+        msg = (
+            f"App '{app_name}' has broken library paths "
+            f"(missing: {', '.join(missing)}). "
+            f"Reinstall with: koopa reinstall {app_name}"
+        )
+        raise RuntimeError(msg)
+
+
+def _extract_rpath(binary: str) -> list[str]:
+    """Extract RPATH/RUNPATH directories from a binary."""
+    if is_macos():
+        return _extract_rpath_macos(binary)
+    return _extract_rpath_linux(binary)
+
+
+def _extract_rpath_macos(binary: str) -> list[str]:
+    """Extract LC_RPATH entries via otool."""
+    try:
+        result = subprocess.run(
+            ["otool", "-l", binary],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return []
+    paths: list[str] = []
+    lines = result.stdout.splitlines()
+    for i, line in enumerate(lines):
+        if "cmd LC_RPATH" in line:
+            for j in range(i + 1, min(i + 4, len(lines))):
+                if "path " in lines[j]:
+                    path = lines[j].strip().split("path ", 1)[1]
+                    path = path.split(" (offset")[0].strip()
+                    if path and not path.startswith("@"):
+                        paths.append(path)
+                    break
+    return paths
+
+
+def _extract_rpath_linux(binary: str) -> list[str]:
+    """Extract RPATH/RUNPATH entries via readelf."""
+    try:
+        result = subprocess.run(
+            ["readelf", "-d", binary],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return []
+    paths: list[str] = []
+    for line in result.stdout.splitlines():
+        if "RPATH" not in line and "RUNPATH" not in line:
+            continue
+        start = line.find("[")
+        end = line.find("]")
+        if start != -1 and end != -1:
+            rpath_str = line[start + 1 : end]
+            paths.extend(
+                p.strip()
+                for p in rpath_str.split(":")
+                if p.strip() and not p.strip().startswith("$")
+            )
+    return paths
+
+
 # -- activate_app -------------------------------------------------------------
 
 
@@ -146,6 +224,7 @@ def activate_app(
             msg = f"App not installed: {resolved!r} (expected at {app_link})"
             raise FileNotFoundError(msg)
         prefix = os.path.realpath(app_link)
+        _check_rpath(prefix, resolved)
         bin_dir = os.path.join(prefix, "bin")
         if os.path.isdir(bin_dir):
             env.path.append(bin_dir)
