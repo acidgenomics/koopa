@@ -315,7 +315,7 @@ class BuildProgress:
             os.write(tty, b"  Build failed.\n")
             return
         sep = "─" * 40
-        error_lines = [l for l in lines if "error" in l.lower()]
+        error_lines = [line for line in lines if "error" in line.lower()]
         tail = lines[-_LOG_TAIL_LINES:]
         os.write(tty, b"  Build failed.\n")
         os.write(tty, f"  Last {_LOG_TAIL_LINES} lines:\n".encode())
