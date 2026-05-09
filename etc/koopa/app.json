@@ -38,14 +38,12 @@
       "agat"
     ],
     "build_dependencies": [
+      "conda",
       "patch"
     ],
     "conda_channel": "bioconda",
     "date": "2026-04-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "toolkit for working with GFF/GTF annotation files",
     "installer": "conda-package",
     "type": "cli",
@@ -206,19 +204,19 @@
     "bin": [
       "aria2c"
     ],
-    "conda_channel": "conda-forge",
-    "date": "2023-11-15",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
+      "conda",
       "gettext",
       "icu4c",
       "libssh2",
       "libxml2",
       "openssl",
       "sqlite",
-      "zlib",
-      "conda"
+      "zlib"
     ],
+    "conda_channel": "conda-forge",
+    "date": "2023-11-15",
+    "default": false,
     "description": "lightweight multi-protocol download utility",
     "installer": "conda-package",
     "revision": 1,
@@ -251,12 +249,12 @@
     "bin": [
       "aspell"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "spell checker",
     "installer": "conda-package",
     "man1": [
@@ -348,12 +346,12 @@
     "bin": [
       "autodock4"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "molecular docking software",
     "installer": "conda-package",
     "supported": {
@@ -387,12 +385,12 @@
     "bin": [
       "vina"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast molecular docking software",
     "installer": "conda-package",
     "installer_args": {
@@ -476,12 +474,12 @@
     "bin": [
       "aws"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
     "installer_args": {
@@ -516,14 +514,14 @@
     "bin": [
       "axel"
     ],
+    "build_dependencies": [
+      "conda",
+      "gettext",
+      "openssl"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
-    "dependencies": [
-      "gettext",
-      "openssl",
-      "conda"
-    ],
     "description": "lightweight command-line download accelerator",
     "installer": "conda-package",
     "man1": [
@@ -561,12 +559,12 @@
     "bin": [
       "bamtools"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2025-05-22",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "C++ API and toolkit for working with BAM files",
     "installer": "conda-package",
     "supported": {
@@ -634,7 +632,7 @@
     "man1": [
       "bash.1"
     ],
-    "revision": 2,
+    "revision": 3,
     "src_url": "https://ftpmirror.gnu.org/bash/bash-{version}.tar.gz",
     "type": "build_tool",
     "url": [
@@ -663,12 +661,12 @@
     "bin": [
       "bash-language-server"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-04-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "LSP server for bash scripts",
     "installer": "conda-package",
     "type": "cli",
@@ -700,12 +698,12 @@
     "bin": [
       "bat"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-12-05",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "cat clone with syntax highlighting and Git integration",
     "installer": "conda-package",
     "type": "cli",
@@ -787,12 +785,12 @@
     "bin": [
       "bedtk"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-05",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast BED file toolkit focused on performance",
     "installer": "conda-package",
     "supported": {
@@ -814,17 +812,9 @@
       "macos-arm64": [
         "autoconf",
         "automake",
-        "make"
-      ],
-      "noarch": []
-    },
-    "conda_channel": "bioconda",
-    "date": "2023-11-08",
-    "default": false,
-    "dependencies": {
-      "macos-arm64": [
         "bzip2",
         "curl",
+        "make",
         "xz",
         "zlib"
       ],
@@ -832,6 +822,9 @@
         "conda"
       ]
     },
+    "conda_channel": "bioconda",
+    "date": "2023-11-08",
+    "default": false,
     "description": "swiss-army knife for genome interval arithmetic",
     "installer": "conda-package",
     "supported": {
@@ -887,12 +880,12 @@
     "bin": [
       "bioawk"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "awk extended with bioinformatics-aware field parsing",
     "installer": "conda-package",
     "supported": {
@@ -908,12 +901,12 @@
     "version": "1.0"
   },
   "bioconda-utils": {
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-06",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "helper tools for building Bioconda packages",
     "installer": "conda-package",
     "notes": [
@@ -982,12 +975,12 @@
       "blastn",
       "blastp"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-08",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "NCBI sequence similarity search tool",
     "installer": "conda-package",
     "supported": {
@@ -1025,12 +1018,12 @@
     "bin": [
       "btm"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "cross-platform graphical process and system monitor",
     "installer": "conda-package",
     "type": "cli",
@@ -1043,12 +1036,12 @@
     "bin": [
       "bowtie2"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-02-22",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast short-read aligner for long reference sequences",
     "installer": "conda-package",
     "supported": {
@@ -1085,12 +1078,12 @@
     "bin": [
       "broot"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
     "type": "cli",
@@ -1122,12 +1115,12 @@
     "bin": [
       "btop"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "resource monitor showing CPU, memory, disks, and network",
     "installer": "conda-package",
     "type": "cli",
@@ -1158,12 +1151,12 @@
     "bin": [
       "bustools"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "utilities for processing BUS format single-cell data",
     "installer": "conda-package",
     "supported": {
@@ -1415,7 +1408,9 @@
       "chezmoi"
     ],
     "build_dependencies": {
-      "noarch": [],
+      "noarch": [
+        "conda"
+      ],
       "macos-arm64": [
         "go"
       ]
@@ -1423,12 +1418,6 @@
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
-    "dependencies": {
-      "noarch": [
-        "conda"
-      ],
-      "macos-arm64": []
-    },
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
     "type": "cli",
@@ -1488,11 +1477,11 @@
       "cpack",
       "ctest"
     ],
-    "date": "2026-04-24",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
       "conda"
     ],
+    "date": "2026-04-24",
+    "default": false,
     "description": "cross-platform build system generator",
     "installer": "conda-package",
     "type": "build_tool",
@@ -1865,12 +1854,12 @@
     "bin": [
       "csvtk"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "cross-platform CSV/TSV toolkit",
     "installer": "conda-package",
     "type": "cli",
@@ -1957,12 +1946,12 @@
     "bin": [
       "deeptools"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2025-01-24",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "tools for analysis of deep-sequencing data",
     "installer": "conda-package",
     "outdated": true,
@@ -1983,12 +1972,12 @@
     "bin": [
       "delta"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "syntax-highlighting pager for git and diff output",
     "installer": "conda-package",
     "installer_args": {
@@ -2018,12 +2007,12 @@
     "bin": [
       "difft"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "structural diff tool that understands syntax",
     "installer": "conda-package",
     "supported": {
@@ -2041,12 +2030,12 @@
     "bin": [
       "direnv"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-12-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "loads and unloads environment variables per directory",
     "installer": "conda-package",
     "type": "build_tool",
@@ -2056,12 +2045,12 @@
     "version": "2.37.1"
   },
   "docker-credential-helpers": {
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "credential helpers for Docker",
     "installer": "conda-package",
     "type": "cli",
@@ -2107,12 +2096,12 @@
     "bin": [
       "dust"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "more intuitive disk usage tool (du + rust = dust)",
     "installer": "conda-package",
     "installer_args": {
@@ -2130,12 +2119,12 @@
     "bin": [
       "duckdb"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "in-process analytical SQL database",
     "installer": "conda-package",
     "installer_args": {
@@ -2300,12 +2289,12 @@
       "efetch",
       "esearch"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "NCBI E-utilities command-line tools",
     "installer": "conda-package",
     "supported": {
@@ -2388,12 +2377,12 @@
     "bin": [
       "eza"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-10-08",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "modern ls replacement with color, icons, and Git support",
     "installer": "conda-package",
     "outdated": true,
@@ -2408,12 +2397,12 @@
     "bin": [
       "fastqc"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2023-1016",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "quality control analysis for high-throughput sequencing data",
     "installer": "conda-package",
     "supported": {
@@ -2432,12 +2421,12 @@
     "bin": [
       "fd"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-03-19",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "simple, fast alternative to the find command",
     "installer": "conda-package",
     "type": "cli",
@@ -2451,12 +2440,12 @@
       "ffmpeg",
       "ffprobe"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-04",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "record, convert, and stream audio and video",
     "installer": "conda-package",
     "man1": [
@@ -2474,12 +2463,12 @@
     "bin": [
       "ffq"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2024-12-24",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "retrieve metadata from sequencing data repositories",
     "installer": "conda-package",
     "supported": {
@@ -2495,12 +2484,12 @@
     "version": "0.3.1"
   },
   "fgbio": {
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-04-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "tools for working with genomic and sequencing data",
     "installer": "conda-package",
     "type": "cli",
@@ -2546,12 +2535,12 @@
     "bin": [
       "fish"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "friendly interactive shell",
     "installer": "conda-package",
     "man1": [
@@ -2657,12 +2646,12 @@
     "bin": [
       "fq"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2025-01-03",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "bioformat-aware FASTQ file toolkit",
     "installer": "conda-package",
     "supported": {
@@ -2681,12 +2670,12 @@
     "bin": [
       "fqtk"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2024-09-09",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "full-featured FASTQ toolkit for genomics",
     "installer": "conda-package",
     "supported": {
@@ -2724,12 +2713,12 @@
     "bin": [
       "fzf"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "command-line fuzzy finder",
     "installer": "conda-package",
     "man1": [
@@ -2745,12 +2734,12 @@
     "bin": [
       "gatk"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "GATK variant discovery toolkit from Broad Institute",
     "installer": "conda-package",
     "installer_args": {
@@ -2857,12 +2846,12 @@
     "bin": [
       "gdc-client"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2025-11-06",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "NCI Genomic Data Commons data transfer tool",
     "installer": "conda-package",
     "type": "cli",
@@ -2878,7 +2867,7 @@
       "gemini"
     ],
     "date": "2026-05-06",
-    "default": false,
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -2898,12 +2887,12 @@
     "bin": [
       "genomepy"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "download and manage genomic sequences and annotation",
     "installer": "conda-package",
     "type": "cli",
@@ -2992,12 +2981,12 @@
     "bin": [
       "gffutils-cli"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Python interface for working with GFF and GTF files",
     "installer": "conda-package",
     "supported": {
@@ -3016,12 +3005,12 @@
     "bin": [
       "gget"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "efficient querying of genomic databases",
     "installer": "conda-package",
     "outdated": true,
@@ -3041,12 +3030,12 @@
     "bin": [
       "gh"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "official GitHub command-line interface",
     "installer": "conda-package",
     "type": "cli",
@@ -3059,12 +3048,12 @@
     "bin": [
       "gs"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "PostScript and PDF interpreter",
     "installer": "conda-package",
     "man1": [
@@ -3141,12 +3130,12 @@
     "bin": [
       "git-lfs"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Git extension for versioning large files",
     "installer": "conda-package",
     "revision": 1,
@@ -3160,12 +3149,12 @@
     "bin": [
       "gitui"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "blazing fast terminal UI for Git",
     "installer": "conda-package",
     "outdated": true,
@@ -3312,12 +3301,12 @@
       "gcloud",
       "gsutil"
     ],
-    "conda_channel": "conda-forge",
-    "date": "2026-05-06",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
       "conda"
     ],
+    "conda_channel": "conda-forge",
+    "date": "2026-05-06",
+    "default": true,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
     "python_version_pin": true,
@@ -3399,12 +3388,12 @@
     "bin": [
       "grex"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-11-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "generate regular expressions from example test cases",
     "installer": "conda-package",
     "type": "cli",
@@ -3417,12 +3406,12 @@
     "bin": [
       "groff"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "GNU document formatting system",
     "installer": "conda-package",
     "man1": [
@@ -3685,12 +3674,12 @@
     "bin": [
       "hisat2"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-02-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "graph-based aligner for spliced RNA-seq reads",
     "installer": "conda-package",
     "supported": {
@@ -3709,13 +3698,13 @@
     "bin": [
       "htop"
     ],
+    "build_dependencies": [
+      "conda",
+      "ncurses"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
-    "dependencies": [
-      "ncurses",
-      "conda"
-    ],
     "description": "interactive process viewer",
     "installer": "conda-package",
     "man1": [
@@ -3733,12 +3722,12 @@
     "bin": [
       "htseq-count"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Python framework for processing NGS data",
     "installer": "conda-package",
     "supported": {
@@ -3875,12 +3864,12 @@
     "bin": [
       "hyperfine"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-11-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "command-line benchmarking tool",
     "installer": "conda-package",
     "type": "cli",
@@ -4070,12 +4059,12 @@
     "bin": [
       "jq"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-10-08",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "lightweight command-line JSON processor",
     "installer": "conda-package",
     "man1": [
@@ -4124,12 +4113,12 @@
     "bin": [
       "k9s"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-02-22",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "terminal UI for managing Kubernetes clusters",
     "installer": "conda-package",
     "type": "cli",
@@ -4143,12 +4132,12 @@
     "bin": [
       "kallisto"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-03-21",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast RNA-seq quantification via pseudoalignment",
     "installer": "conda-package",
     "outdated": true,
@@ -4205,12 +4194,12 @@
     "bin": [
       "lame"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2022-08-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "LAME MP3 encoder",
     "installer": "conda-package",
     "man1": [
@@ -4917,11 +4906,9 @@
     "type": "cli"
   },
   "llvm": {
-    "conda_channel": "conda-forge",
-    "date": "2026-05-06",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
       "binutils",
+      "conda",
       "elfutils",
       "icu4c",
       "libedit",
@@ -4931,9 +4918,11 @@
       "python",
       "xz",
       "zlib",
-      "zstd",
-      "conda"
+      "zstd"
     ],
+    "conda_channel": "conda-forge",
+    "date": "2026-05-06",
+    "default": false,
     "description": "LLVM compiler infrastructure",
     "installer": "conda-package",
     "revision": 1,
@@ -4976,12 +4965,12 @@
     "bin": [
       "lsd"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "colorized ls replacement with icons",
     "installer": "conda-package",
     "installer_args": {
@@ -5058,12 +5047,12 @@
     "bin": [
       "luigi"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Python workflow manager by Spotify",
     "installer": "conda-package",
     "type": "cli",
@@ -5175,12 +5164,12 @@
     "bin": [
       "mamba"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-01",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
     "outdated": true,
@@ -5268,12 +5257,12 @@
     "bin": [
       "mcfly"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "smart shell history search with neural networks",
     "installer": "conda-package",
     "type": "cli",
@@ -5286,12 +5275,12 @@
     "bin": [
       "mdcat"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
     "outdated": true,
@@ -5324,12 +5313,12 @@
     "bin": [
       "mlr"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-22",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "like awk/sed/cut/join for name-indexed data formats",
     "installer": "conda-package",
     "revision": 1,
@@ -5349,12 +5338,12 @@
     "bin": [
       "minimap2"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2025-06-17",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "versatile pairwise sequence aligner",
     "installer": "conda-package",
     "type": "cli",
@@ -5368,12 +5357,12 @@
     "bin": [
       "miso"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2023-01-10",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "mixture-of-isoforms model for alternative splicing analysis",
     "installer": "conda-package",
     "supported": {
@@ -5569,12 +5558,12 @@
     "bin": [
       "nanopolish"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2022-10-11",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "signal-level analysis of Oxford Nanopore sequencing data",
     "installer": "conda-package",
     "supported": {
@@ -5595,12 +5584,12 @@
       "sam-dump",
       "vdb-config"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "tools for the NCBI Sequence Read Archive",
     "installer": "conda-package",
     "installer_args": {
@@ -5686,12 +5675,12 @@
     "bin": [
       "nvim"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "hyperextensible Vim-based text editor",
     "installer": "conda-package",
     "installer_args": {
@@ -5732,12 +5721,12 @@
     "bin": [
       "nextflow"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
     "type": "cli",
@@ -5776,12 +5765,12 @@
     "bin": [
       "nim"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "statically typed compiled systems programming language",
     "installer": "conda-package",
     "type": "cli",
@@ -5846,12 +5835,12 @@
       "npm",
       "npx"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
     "installer_args": {
@@ -5890,12 +5879,12 @@
     "bin": [
       "nu"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-04-22",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
     "type": "cli",
@@ -6019,19 +6008,19 @@
     "version": "2.6.13"
   },
   "openssh": {
-    "conda_channel": "conda-forge",
-    "date": "2026-05-08",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
+      "conda",
       "krb5",
       "ldns",
       "libedit",
       "libfido2",
       "libxcrypt",
       "openssl",
-      "zlib",
-      "conda"
+      "zlib"
     ],
+    "conda_channel": "conda-forge",
+    "date": "2026-05-08",
+    "default": false,
     "description": "OpenBSD SSH connectivity tools",
     "installer": "conda-package",
     "mirror": true,
@@ -6138,12 +6127,12 @@
     "bin": [
       "pandoc"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-03-20",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "universal document format converter",
     "installer": "conda-package",
     "type": "cli",
@@ -6157,12 +6146,12 @@
     "bin": [
       "parallel"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "GNU shell tool for executing jobs in parallel",
     "installer": "conda-package",
     "installer_args": {
@@ -6329,12 +6318,12 @@
     "bin": [
       "picard"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2025-04-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Java tools for high-throughput sequencing data",
     "installer": "conda-package",
     "supported": {
@@ -6355,13 +6344,13 @@
       "pigz",
       "unpigz"
     ],
+    "build_dependencies": [
+      "conda",
+      "zlib"
+    ],
     "conda_channel": "conda-forge",
     "date": "2023-08-31",
     "default": true,
-    "dependencies": [
-      "zlib",
-      "conda"
-    ],
     "description": "parallel gzip for fast multi-threaded compression",
     "installer": "conda-package",
     "man1": [
@@ -6457,12 +6446,12 @@
     "bin": [
       "pkgconf"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-11-05",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "drop-in replacement for pkg-config",
     "installer": "conda-package",
     "man1": [
@@ -6499,19 +6488,19 @@
       "pg_ctl",
       "psql"
     ],
-    "conda_channel": "conda-forge",
-    "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
+    "build_dependencies": [
+      "conda",
       "icu4c",
       "libxml2",
       "libxslt",
       "lz4",
       "openssl",
       "perl",
-      "readline",
-      "conda"
+      "readline"
     ],
+    "conda_channel": "conda-forge",
+    "date": "2026-05-02",
+    "default": false,
     "description": "powerful open-source relational database",
     "installer": "conda-package",
     "revision": 1,
@@ -6571,12 +6560,12 @@
     "bin": [
       "procs"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-03-19",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "modern replacement for ps with color output",
     "installer": "conda-package",
     "type": "cli",
@@ -6757,12 +6746,12 @@
     "bin": [
       "pymol"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "molecular visualization system",
     "installer": "conda-package",
     "installer_args": {
@@ -7372,12 +7361,12 @@
     "bin": [
       "radian"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-08-24",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "modern R console with syntax highlighting and completion",
     "installer": "conda-package",
     "type": "cli",
@@ -7391,12 +7380,12 @@
     "bin": [
       "ranger"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "vim-inspired terminal file manager",
     "installer": "conda-package",
     "type": "cli",
@@ -7424,12 +7413,12 @@
     "bin": [
       "rclone"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "sync files to and from cloud storage providers",
     "installer": "conda-package",
     "man1": [
@@ -7503,12 +7492,12 @@
     "bin": [
       "rg"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-10-28",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "recursively search directories with regex patterns",
     "installer": "conda-package",
     "type": "cli",
@@ -7521,12 +7510,12 @@
     "bin": [
       "rga"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "ripgrep with support for searching many file formats",
     "installer": "conda-package",
     "type": "cli",
@@ -7556,12 +7545,12 @@
     "bin": [
       "rmats"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2024-12-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "rMATS splicing analysis from RNA-seq data",
     "installer": "conda-package",
     "supported": {
@@ -7612,12 +7601,12 @@
       "rsem-calculate-expression",
       "rsem-prepare-reference"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "accurate quantification of gene and isoform expression",
     "installer": "conda-package",
     "supported": {
@@ -7784,12 +7773,12 @@
     "bin": [
       "salmon"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-03-19",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
     "type": "cli",
@@ -7803,12 +7792,12 @@
     "bin": [
       "sambamba"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2024-12-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast parallel tools for working with SAM/BAM files",
     "installer": "conda-package",
     "outdated": true,
@@ -7830,16 +7819,8 @@
     ],
     "build_dependencies": {
       "macos-arm64": [
-        "make"
-      ],
-      "noarch": []
-    },
-    "conda_channel": "bioconda",
-    "date": "2026-03-19",
-    "default": false,
-    "dependencies": {
-      "macos-arm64": [
         "htslib",
+        "make",
         "ncurses",
         "zlib"
       ],
@@ -7847,6 +7828,9 @@
         "conda"
       ]
     },
+    "conda_channel": "bioconda",
+    "date": "2026-03-19",
+    "default": false,
     "description": "tools for manipulating alignments in SAM and BAM format",
     "installer": "conda-package",
     "outdated": true,
@@ -7944,12 +7928,12 @@
     "bin": [
       "sd"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "intuitive find and replace CLI tool",
     "installer": "conda-package",
     "type": "cli",
@@ -7987,12 +7971,12 @@
     "bin": [
       "seqkit"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-03-19",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "cross-platform and ultrafast FASTQ/FASTA toolkit",
     "installer": "conda-package",
     "outdated": true,
@@ -8034,12 +8018,12 @@
     "bin": [
       "shellcheck"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "static analysis tool for shell scripts",
     "installer": "conda-package",
     "outdated": true,
@@ -8126,12 +8110,12 @@
     "bin": [
       "snakemake"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
     "type": "cli",
@@ -8146,12 +8130,12 @@
     "bin": [
       "sox"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2022-08-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Swiss army knife of audio manipulation tools",
     "installer": "conda-package",
     "man1": [
@@ -8278,12 +8262,12 @@
     "bin": [
       "STAR"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2024-12-30",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "ultrafast universal RNA-seq aligner",
     "installer": "conda-package",
     "outdated": true,
@@ -8303,12 +8287,12 @@
     "bin": [
       "STAR-Fusion"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "detects gene fusions using STAR alignments",
     "installer": "conda-package",
     "outdated": true,
@@ -8328,12 +8312,12 @@
     "bin": [
       "starship"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast, customizable cross-shell prompt",
     "installer": "conda-package",
     "type": "build_tool",
@@ -8347,13 +8331,13 @@
     "bin": [
       "stow"
     ],
+    "build_dependencies": [
+      "conda",
+      "perl"
+    ],
     "conda_channel": "conda-forge",
     "date": "2024-12-30",
     "default": false,
-    "dependencies": [
-      "perl",
-      "conda"
-    ],
     "description": "symlink farm manager for managing dotfiles",
     "installer": "conda-package",
     "revision": 1,
@@ -8386,12 +8370,12 @@
     "bin": [
       "featureCounts"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "toolkit including featureCounts for RNA-seq counting",
     "installer": "conda-package",
     "supported": {
@@ -8534,12 +8518,12 @@
     "bin": [
       "tldr"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast tldr client for concise command examples",
     "installer": "conda-package",
     "outdated": true,
@@ -8646,12 +8630,12 @@
     "bin": [
       "tokei"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "count lines of code quickly",
     "installer": "conda-package",
     "type": "cli",
@@ -8681,12 +8665,12 @@
     "bin": [
       "tree"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "display directory contents in a tree structure",
     "installer": "conda-package",
     "man1": [
@@ -8725,12 +8709,12 @@
     "bin": [
       "tuc"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-10-08",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "cut text by fields, bytes, or characters",
     "installer": "conda-package",
     "type": "cli",
@@ -8767,12 +8751,12 @@
     "bin": [
       "umis"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "tools for processing reads with UMI barcodes",
     "installer": "conda-package",
     "supported": {
@@ -8890,12 +8874,12 @@
       "vimtutor",
       "xxd"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "highly configurable text editor",
     "installer": "conda-package",
     "man1": [
@@ -9050,12 +9034,12 @@
     "bin": [
       "which"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "shows the full path of shell commands",
     "installer": "conda-package",
     "man1": [
@@ -9073,12 +9057,12 @@
       "woff2_decompress",
       "woff2_info"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2023-05-15",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "encode and decode WOFF2 web font format",
     "installer": "conda-package",
     "revision": 1,
@@ -9389,12 +9373,12 @@
     "bin": [
       "xsv"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-01-03",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "fast CSV command-line toolkit",
     "installer": "conda-package",
     "type": "cli",
@@ -9563,12 +9547,12 @@
     "bin": [
       "zellij"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-05",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "terminal workspace with layouts and plugins",
     "installer": "conda-package",
     "type": "cli",
@@ -9581,12 +9565,12 @@
     "bin": [
       "zenith"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "graphical terminal process monitor",
     "installer": "conda-package",
     "outdated": true,
@@ -9649,12 +9633,12 @@
     "bin": [
       "zoxide"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2026-02-02",
     "default": true,
-    "dependencies": [
-      "conda"
-    ],
     "description": "smarter cd command that learns your habits",
     "installer": "conda-package",
     "type": "cli",
@@ -9667,12 +9651,12 @@
     "bin": [
       "zsh"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
     "conda_channel": "conda-forge",
     "date": "2025-01-03",
     "default": false,
-    "dependencies": [
-      "conda"
-    ],
     "description": "Z shell, extended Bourne-compatible shell",
     "installer": "conda-package",
     "man1": [

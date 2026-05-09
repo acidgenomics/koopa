@@ -94,6 +94,7 @@ _APP_CATEGORIES: dict[str, list[str]] = {
         "snakefmt",
         "sqlfluff",
         "tqdm",
+        "ty",
         "uv",
     ],
     "R": [
@@ -102,11 +103,20 @@ _APP_CATEGORIES: dict[str, list[str]] = {
         "r-xcode-openmp",
         "radian",
     ],
+    "AI": [
+        "claude-code",
+        "gemini-cli",
+    ],
+    "Data": [
+        "duckdb",
+    ],
     "Cloud & DevOps": [
         "aws-cli",
         "direnv",
         "editorconfig",
+        "google-cloud-sdk",
         "openssl",
+        "openssl4",
     ],
     "Miscellaneous": [
         "chezmoi",
