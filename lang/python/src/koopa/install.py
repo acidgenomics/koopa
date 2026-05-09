@@ -814,21 +814,20 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 install_app(dep_config)
     # -- Start install --------------------------------------------------------
     if not config.quiet and not _announced:
-        from koopa.alert import alert_note, styled_name, styled_reason, styled_version
+        if config.reinstall and config.reinstall_reason and config.verbose:
+            from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
-        version_suffix = f" {styled_version(config.version)}" if config.version else ""
-        if config.reinstall and config.reinstall_reason:
-            if config.verbose:
-                reason_str = config.reinstall_reason
-                prefix_to_strip = f"{config.name} "
-                if reason_str.startswith(prefix_to_strip):
-                    reason_str = reason_str[len(prefix_to_strip) :]
-                alert_note(
-                    f"Reinstalling {styled_name(config.name)}{version_suffix}"
-                    f" {styled_reason(reason_str)}."
-                )
-        elif not config.reinstall:
-            alert_note(f"Installing {styled_name(config.name)}{version_suffix}.")
+            version_suffix = (
+                f" {styled_version(config.version)}" if config.version else ""
+            )
+            reason_str = config.reinstall_reason
+            prefix_to_strip = f"{config.name} "
+            if reason_str.startswith(prefix_to_strip):
+                reason_str = reason_str[len(prefix_to_strip) :]
+            alert_note(
+                f"Reinstalling {styled_name(config.name)}{version_suffix}"
+                f" {styled_reason(reason_str)}."
+            )
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
         os.makedirs(config.prefix, exist_ok=True)
