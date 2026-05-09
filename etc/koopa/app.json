@@ -634,7 +634,7 @@
     "man1": [
       "bash.1"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://ftpmirror.gnu.org/bash/bash-{version}.tar.gz",
     "type": "build_tool",
     "url": [
