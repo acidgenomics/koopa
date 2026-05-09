@@ -31,6 +31,7 @@ def download(
     retry: bool = True,
     connect_timeout: int | None = None,
     max_time: int | None = None,
+    quiet: bool = False,
 ) -> str:
     """Download a file from a URL.
 
@@ -39,9 +40,13 @@ def download(
     if output is None:
         output = _derive_filename(url)
     Path(os.path.dirname(output) or ".").mkdir(parents=True, exist_ok=True)
-    print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
+    if not quiet:
+        print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
     try:
-        _download_curl(url, output, retry=retry, connect_timeout=connect_timeout, max_time=max_time)
+        _download_curl(
+            url, output, retry=retry, connect_timeout=connect_timeout,
+            max_time=max_time, quiet=quiet,
+        )
     except (FileNotFoundError, subprocess.CalledProcessError):
         try:
             _download_curl(
@@ -51,6 +56,7 @@ def download(
                 connect_timeout=connect_timeout,
                 max_time=max_time,
                 curl_cmd="/usr/bin/curl",
+                quiet=quiet,
             )
         except (FileNotFoundError, subprocess.CalledProcessError):
             _download_urllib(url, output)
@@ -88,6 +94,10 @@ def download_with_mirror(
     *,
     extra_urls: list[str] | None = None,
     connect_timeout: int = 10,
+    max_time: int | None = None,
+    output: str | None = None,
+    quiet: bool = False,
+    skip_koopa_mirror: bool = False,
 ) -> str:
     """Download from primary URL, falling back to mirrors.
 
@@ -103,15 +113,19 @@ def download_with_mirror(
     urls.extend(_gnu_mirrors(primary_url, name, filename))
     urls.extend(_savannah_mirrors(primary_url, name, filename))
     urls.extend(extra_urls or [])
-    urls.append(koopa_mirror)
+    if not skip_koopa_mirror:
+        urls.append(koopa_mirror)
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:
-            is_last = url == koopa_mirror
+            is_last = not skip_koopa_mirror and url == koopa_mirror
             tarball = download(
                 url,
+                output,
                 retry=False,
                 connect_timeout=connect_timeout if not is_last else None,
+                max_time=max_time,
+                quiet=quiet,
             )
             if not archive.is_valid_archive(tarball):
                 raise ValueError("invalid archive")
@@ -120,12 +134,14 @@ def download_with_mirror(
             last_exc = exc
             if i < len(urls) - 1:
                 next_url = urls[i + 1]
-                print(
-                    f"All mirrors failed, trying koopa mirror: '{next_url}'."
-                    if next_url == koopa_mirror
-                    else f"Mirror failed, trying: '{next_url}'.",
-                    file=sys.stderr,
-                )
+                if not quiet:
+                    print(
+                        f"All mirrors failed, trying koopa mirror:"
+                        f" '{next_url}'."
+                        if next_url == koopa_mirror
+                        else f"Mirror failed, trying: '{next_url}'.",
+                        file=sys.stderr,
+                    )
     assert last_exc is not None
     raise last_exc
 
@@ -149,6 +165,7 @@ def _download_curl(
     connect_timeout: int | None = None,
     max_time: int | None = None,
     curl_cmd: str = "curl",
+    quiet: bool = False,
 ) -> None:
     """Download using curl."""
     curl_args = [
@@ -160,6 +177,8 @@ def _download_curl(
         "-o",
         output,
     ]
+    if quiet:
+        curl_args.append("--silent")
     if connect_timeout is not None:
         curl_args.extend(["--connect-timeout", str(connect_timeout)])
     if max_time is not None:

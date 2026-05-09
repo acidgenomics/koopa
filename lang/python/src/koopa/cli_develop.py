@@ -637,7 +637,7 @@ def _handle_mirror_src(args: list[str]) -> None:
             continue
         try:
             tqdm.write(f"  Uploading: {cache_key}")
-            _mirror_src_to_s3(name, version, src_url, strict=True)
+            _mirror_src_to_s3(name, version, src_url, strict=True, quiet=True)
             cache[cache_key] = now
             _save_mirror_src_cache(cache)
         except Exception as exc:
@@ -651,7 +651,7 @@ def _handle_mirror_src(args: list[str]) -> None:
             if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
                 continue
             try:
-                _mirror_src_to_s3(name, version, extra_tmpl, strict=True)
+                _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=True)
                 cache[extra_cache_key] = now
                 _save_mirror_src_cache(cache)
             except Exception as exc:
