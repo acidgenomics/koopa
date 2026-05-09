@@ -763,7 +763,7 @@ _koopa_complete() {
                         'hostname'
                         'info'
                         'list'
-                        'os-string'
+                        'os-slug'
                         'prefix'
                         'prune-apps'
                         'switch-to-develop'
