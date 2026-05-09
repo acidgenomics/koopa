@@ -239,7 +239,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  hostname           Print system hostname\n"
             "  info               Show system information\n"
             "  list               List system info (app-versions, launch-agents, path-priority)\n"
-            "  os-string          Print OS identifier string\n"
+            "  os-slug            Print OS identifier slug\n"
             "  prefix             Print installation prefix\n"
             "  prune-apps         Remove stale app versions\n"
             "  switch-to-develop  Switch to development branch\n"

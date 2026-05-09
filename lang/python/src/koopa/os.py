@@ -8,7 +8,7 @@
 from koopa.prefix import app_prefix as koopa_app_prefix  # noqa: F401
 from koopa.prefix import koopa_prefix  # noqa: F401
 from koopa.prefix import opt_prefix as koopa_opt_prefix  # noqa: F401
-from koopa.system import arch, arch2, is_macos, os_string  # noqa: F401
+from koopa.system import arch, arch2, is_macos, os_slug  # noqa: F401
 
 
 def os_id() -> str:

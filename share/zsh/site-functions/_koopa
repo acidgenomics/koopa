@@ -593,6 +593,8 @@ _koopa_develop() {
 _koopa_develop_cmds() {
     local -a cmds
     cmds=(
+        'app-deps'
+        'app-revdeps'
         'audit-src-mirror'
         'bump-bootstrap'
         'bump-revision'

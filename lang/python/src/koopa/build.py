@@ -5,7 +5,6 @@ Python equivalents of the Bash functions ``_koopa_activate_app``,
 ``_koopa_cmake_build``, and ``_koopa_make_build``.
 """
 
-import json
 import os
 import re
 import shutil
@@ -15,51 +14,14 @@ import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
-
-def _koopa_prefix() -> str:
-    """Return koopa installation prefix."""
-    return os.environ.get("KOOPA_PREFIX", str(Path(__file__).resolve().parents[4]))
-
-
-def _opt_prefix() -> str:
-    """Return koopa opt prefix."""
-    return os.path.join(_koopa_prefix(), "opt")
-
-
-def _app_prefix() -> str:
-    """Return koopa app prefix."""
-    return os.path.join(_koopa_prefix(), "app")
-
-
-def _resolve_alias(name: str) -> str:
-    """Resolve app alias via app.json (e.g. 'python' -> 'python3.14')."""
-    json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
-    try:
-        with open(json_path) as f:
-            data = json.load(f)
-    except (OSError, json.JSONDecodeError):
-        return name
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        alias = entry.get("alias_of", "")
-        if alias:
-            return alias
-    return name
-
-
-def _cpu_count() -> int:
-    """Return CPU count."""
-    return os.cpu_count() or 1
-
-
-def _is_macos() -> bool:
-    """Check if running on macOS."""
-    return sys.platform == "darwin"
+from koopa.app import resolve_alias
+from koopa.prefix import app_prefix, bin_prefix, koopa_prefix, opt_prefix
+from koopa.system import cpu_count, is_macos
 
 
 def _shared_ext() -> str:
     """Return shared library extension for current platform."""
-    return "dylib" if _is_macos() else "so"
+    return "dylib" if is_macos() else "so"
 
 
 # -- BuildEnv -----------------------------------------------------------------
@@ -177,9 +139,9 @@ def activate_app(
     """
     if env is None:
         env = BuildEnv()
-    opt = _opt_prefix()
+    opt = opt_prefix()
     for name in names:
-        resolved = _resolve_alias(name)
+        resolved = resolve_alias(name)
         app_link = os.path.join(opt, resolved)
         if not os.path.exists(app_link):
             msg = f"App not installed: {resolved!r} (expected at {app_link})"
@@ -207,7 +169,7 @@ def activate_app(
             if os.path.isdir(ld):
                 env.ldflags.append(f"-Wl,-rpath,{ld}")
                 env.library_path.append(ld)
-        if not _is_macos():
+        if not is_macos():
             env.ldflags.append("-Wl,--disable-new-dtags")
         cmake_dir = os.path.join(prefix, "lib", "cmake")
         if os.path.isdir(cmake_dir):
@@ -325,7 +287,7 @@ def cmake_build(
         Build environment from ``activate_app``.
     """
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     cmake = locate("cmake")
     if generator == "Unix Makefiles":
         try:
@@ -462,7 +424,7 @@ def _cmake_std_args(
     cmake_prefix = subprocess_env.get("CMAKE_PREFIX_PATH", "")
     if cmake_prefix:
         args.append(f"-DCMAKE_PREFIX_PATH={cmake_prefix}")
-    if _is_macos():
+    if is_macos():
         args.append("-DCMAKE_MACOSX_RPATH=ON")
         sdk = _macos_sdk_prefix()
         if sdk:
@@ -509,7 +471,7 @@ def make_build(
         Build environment from ``activate_app``.
     """
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     if targets is None:
         targets = ["install"]
     make = locate("make")
@@ -561,7 +523,7 @@ def meson_build(
         Build environment from ``activate_app``.
     """
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     meson = locate("meson")
     ninja = locate("ninja")
     subprocess_env = env.to_env_dict() if env else os.environ.copy()
@@ -595,7 +557,7 @@ def meson_build(
 
 def app_prefix(name: str) -> str:
     """Return the resolved prefix for an installed app."""
-    link = os.path.join(_opt_prefix(), name)
+    link = os.path.join(opt_prefix(), name)
     return os.path.realpath(link)
 
 
@@ -606,7 +568,7 @@ def shared_ext() -> str:
 
 def locate(name: str) -> str:
     """Locate an executable, preferring koopa bin/."""
-    koopa_bin = os.path.join(_koopa_prefix(), "bin")
+    koopa_bin = os.path.join(koopa_prefix(), "bin")
     candidate = os.path.join(koopa_bin, name)
     if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
         return candidate
