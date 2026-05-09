@@ -367,9 +367,10 @@ def cmake_build(
     if jobs is None:
         jobs = cpu_count()
     cmake = locate("cmake")
+    ninja_path: str | None = None
     if generator == "Unix Makefiles":
         try:
-            locate("ninja")
+            ninja_path = locate("ninja")
             generator = "Ninja"
         except FileNotFoundError:
             pass
@@ -385,6 +386,8 @@ def cmake_build(
         generator=generator,
         subprocess_env=subprocess_env,
     )
+    if ninja_path is not None:
+        cmake_args.append(f"-DCMAKE_MAKE_PROGRAM={ninja_path}")
     if args:
         cmake_args.extend(args)
     try:
