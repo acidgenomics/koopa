@@ -50,11 +50,12 @@ def main(
         env=subprocess_env,
         check=True,
     )
+    verbose_args = ["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []
     subprocess.run(
         [
             make,
             f"SHLIB_LIBS={ncurses_libs}",
-            "VERBOSE=1",
+            *verbose_args,
             f"--jobs={jobs}",
         ],
         env=subprocess_env,
@@ -64,7 +65,7 @@ def main(
         [
             make,
             f"SHLIB_LIBS={ncurses_libs}",
-            "VERBOSE=1",
+            *verbose_args,
             "install",
         ],
         env=subprocess_env,

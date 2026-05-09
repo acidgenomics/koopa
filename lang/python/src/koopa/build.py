@@ -448,7 +448,11 @@ def _cmake_std_args(
         f"-DCMAKE_INSTALL_INCLUDEDIR={prefix}/include",
         f"-DCMAKE_INSTALL_LIBDIR={prefix}/lib",
         f"-DCMAKE_INSTALL_RPATH={prefix}/lib",
-        "-DCMAKE_VERBOSE_MAKEFILE=ON",
+        *(
+            ["-DCMAKE_VERBOSE_MAKEFILE=ON"]
+            if os.environ.get("KOOPA_VERBOSE") == "1"
+            else []
+        ),
     ]
     cppflags = subprocess_env.get("CPPFLAGS", "")
     if cppflags:
@@ -523,8 +527,9 @@ def make_build(
             env=subprocess_env,
             check=True,
         )
+    verbose_args = ["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []
     subprocess.run(
-        [make, f"-j{jobs}", "VERBOSE=1"],
+        [make, f"-j{jobs}", *verbose_args],
         env=subprocess_env,
         check=True,
     )
@@ -577,12 +582,13 @@ def meson_build(
         env=subprocess_env,
         check=True,
     )
+    verbose_args = ["-v"] if os.environ.get("KOOPA_VERBOSE") == "1" else []
     _run_ninja_with_progress(
-        [ninja, "-v", "-j", str(jobs), "-C", "build"],
+        [ninja, *verbose_args, "-j", str(jobs), "-C", "build"],
         env=subprocess_env,
     )
     subprocess.run(
-        [ninja, "-v", "-j", str(jobs), "-C", "build", "install"],
+        [ninja, *verbose_args, "-j", str(jobs), "-C", "build", "install"],
         env=subprocess_env,
         check=True,
     )
