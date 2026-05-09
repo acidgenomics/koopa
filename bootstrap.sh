@@ -312,6 +312,7 @@ install_xz() {
         || return 1
     unset -v __kvar_filename
     ./configure \
+        CFLAGS='-fPIC' \
         --disable-dependency-tracking \
         --disable-nls \
         --disable-shared \
