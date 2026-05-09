@@ -1,3 +1,6 @@
 * High complexity
 * Medium complexity
 * Low complexity
+** TODO Ensure these completion files are under git:
+    share/elvish/completions/koopa.elv
+    share/nushell/completions/koopa.nu
