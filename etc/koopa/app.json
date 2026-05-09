@@ -645,14 +645,12 @@
   },
   "bash-completion": {
     "build_dependencies": [
+      "bash",
       "make",
       "xz"
     ],
     "date": "2025-10-31",
     "default": true,
-    "dependencies": [
-      "bash"
-    ],
     "description": "programmable completion functions for bash",
     "src_url": "https://github.com/scop/bash-completion/releases/download/{version}/bash-completion-{version}.tar.xz",
     "type": "cli",
