@@ -37,7 +37,7 @@ version_pattern = "MAJOR.MINOR.PATCH"
 
 [tool.coverage.run]
 relative_files = true
-source = ["lang/python/src/kooa"]
+source = ["lang/python/src"]
 
 [tool.interrogate]
 fail-under = 80
@@ -109,13 +109,12 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"lang/python/scripts/*.py" = ["E402"]
-"lang/python/src/koopa/cli_main.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_app.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_system.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_bin.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_develop.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_internal.py" = ["PLC0415"]
+"lang/python/src/cli_app.py" = ["PLC0415"]
+"lang/python/src/cli_bin.py" = ["PLC0415"]
+"lang/python/src/cli_develop.py" = ["PLC0415"]
+"lang/python/src/cli_internal.py" = ["PLC0415"]
+"lang/python/src/cli_main.py" = ["PLC0415"]
+"lang/python/src/cli_system.py" = ["PLC0415"]
 
 [tool.ruff.lint.isort]
 extra-standard-library = ["typing"]
