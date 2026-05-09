@@ -301,33 +301,3 @@ def delete_named_subdirs(dir_path: str, name: str) -> list[str]:
     return deleted
 
 
-def find_large_files(dir_path: str, min_size_mb: float = 100) -> list[tuple[str, float]]:
-    """Find files larger than a threshold."""
-    large = []
-    min_bytes = min_size_mb * 1024 * 1024
-    for root, _dirs, files in os.walk(dir_path):
-        for f in files:
-            full = os.path.join(root, f)
-            try:
-                size = os.path.getsize(full)
-                if size >= min_bytes:
-                    large.append((full, size / (1024 * 1024)))
-            except OSError:
-                pass
-    large.sort(key=lambda x: x[1], reverse=True)
-    return large
-
-
-def find_large_dirs(dir_path: str, min_size_mb: float = 100) -> list[tuple[str, float]]:
-    """Find directories larger than a threshold."""
-    dir_sizes: dict[str, float] = {}
-    for root, _dirs, files in os.walk(dir_path):
-        total = 0.0
-        for f in files:
-            full = os.path.join(root, f)
-            with contextlib.suppress(OSError):
-                total += os.path.getsize(full)
-        dir_sizes[root] = total / (1024 * 1024)
-    large = [(d, s) for d, s in dir_sizes.items() if s >= min_size_mb]
-    large.sort(key=lambda x: x[1], reverse=True)
-    return large
