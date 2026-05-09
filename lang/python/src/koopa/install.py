@@ -21,7 +21,26 @@ from typing import Any
 
 from koopa.archive import extract
 from koopa.download import download
-from koopa.system import arch2, is_admin, is_linux, is_macos, is_owner, is_windows
+from koopa.prefix import (
+    app_prefix,
+    bash_completions_prefix,
+    bin_prefix,
+    fish_completions_prefix,
+    koopa_prefix,
+    man1_prefix,
+    opt_prefix,
+    zsh_completions_prefix,
+)
+from koopa.system import (
+    arch2,
+    cpu_count,
+    is_admin,
+    is_linux,
+    is_macos,
+    is_owner,
+    is_windows,
+    os_slug,
+)
 
 # -- Data classes -------------------------------------------------------------
 
@@ -62,138 +81,23 @@ class InstallConfig:
 # -- Helper functions ---------------------------------------------------------
 
 
-def _run(
-    *args: str,
-    sudo: bool = False,
-    capture: bool = False,
-    check: bool = True,
-) -> subprocess.CompletedProcess:
-    """Run a shell command."""
-    cmd = list(args)
-    if sudo:
-        cmd = ["sudo", *cmd]
-    return subprocess.run(cmd, capture_output=capture, text=True, check=check)
-
-
-def _koopa_prefix() -> str:
-    """Return koopa installation prefix."""
-    p = Path(__file__).resolve()
-    return str(p.parents[4])
-
-
-def _app_prefix() -> str:
-    """Return koopa app prefix."""
-    return os.path.join(_koopa_prefix(), "app")
-
-
-def _opt_prefix() -> str:
-    """Return koopa opt prefix."""
-    return os.path.join(_koopa_prefix(), "opt")
-
-
-def _bin_prefix() -> str:
-    """Return koopa bin prefix."""
-    return os.path.join(_koopa_prefix(), "bin")
-
-
-def _man1_prefix() -> str:
-    """Return koopa man1 prefix."""
-    return os.path.join(_koopa_prefix(), "share", "man", "man1")
-
-
-def _bash_completions_prefix() -> str:
-    """Return koopa central bash-completion completions directory."""
-    return os.path.join(_koopa_prefix(), "share", "bash-completion", "completions")
-
-
-def _fish_completions_prefix() -> str:
-    """Return koopa central fish completions directory."""
-    return os.path.join(_koopa_prefix(), "share", "fish", "vendor_completions.d")
-
-
-def _zsh_completions_prefix() -> str:
-    """Return koopa central zsh completions directory."""
-    return os.path.join(_koopa_prefix(), "share", "zsh", "site-functions")
-
-
-def _cpu_count() -> int:
-    """Return CPU count."""
-    return os.cpu_count() or 1
-
-
-def _import_app_json() -> dict[str, Any]:
-    """Import app.json data with retry on parse failure."""
-    import time
-
-    json_path = os.path.join(
-        _koopa_prefix(),
-        "etc",
-        "koopa",
-        "app.json",
-    )
-    last_exc: json.JSONDecodeError | None = None
-    for attempt in range(3):
-        with open(json_path) as f:
-            content = f.read()
-        try:
-            return json.loads(content)
-        except json.JSONDecodeError as exc:
-            last_exc = exc
-            if attempt < 2:
-                time.sleep(0.2 * (attempt + 1))
-    assert last_exc is not None
-    raise last_exc
+from koopa.app import app_json_bin, app_json_man1, resolve_alias
+from koopa.exec import run
+from koopa.io import import_app_json
 
 
 def _app_json_version(key: str) -> str:
     """Get application version from app.json."""
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(key, {})
     if isinstance(entry, dict):
         return entry.get("version", "")
     return ""
 
 
-def _app_json_bin(name: str) -> list[str]:
-    """Get bin names for an app from app.json."""
-    data = _import_app_json()
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        bins = entry.get("bin", [])
-        if isinstance(bins, str):
-            return [bins]
-        if isinstance(bins, list):
-            return bins
-    return []
-
-
-def _app_json_man1(name: str) -> list[str]:
-    """Get man1 page names for an app from app.json."""
-    data = _import_app_json()
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        man1 = entry.get("man1", [])
-        if isinstance(man1, str):
-            return [man1]
-        if isinstance(man1, list):
-            return man1
-    return []
-
-
-def _resolve_alias(name: str) -> str:
-    """Resolve app alias to its target name."""
-    data = _import_app_json()
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        alias = entry.get("alias_of", "")
-        if alias:
-            return alias
-    return name
-
-
 def _app_json_installer(name: str) -> str:
     """Get installer name from app.json, if different from app name."""
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         return entry.get("installer", "")
@@ -205,7 +109,7 @@ def _app_dependencies(name: str) -> list[str]:
     from koopa.app import _resolve_dep_dict
     from koopa.os import os_id
 
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         deps = entry.get("dependencies", [])
@@ -223,7 +127,7 @@ def _app_build_dependencies(name: str) -> list[str]:
     from koopa.app import _resolve_dep_dict
     from koopa.os import os_id
 
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         deps = entry.get("build_dependencies", [])
@@ -238,7 +142,7 @@ def _app_build_dependencies(name: str) -> list[str]:
 
 def _app_json_revision(name: str) -> int:
     """Get recipe revision from app.json (default 0)."""
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         return int(entry.get("revision", 0))
@@ -284,7 +188,7 @@ def _can_install_binary() -> bool:
         return False
     if flag == "1":
         return True
-    if _koopa_prefix() != "/opt/koopa":
+    if koopa_prefix() != "/opt/koopa":
         return False
     if can_build_binary():
         return False
@@ -319,29 +223,6 @@ def _can_push_binary() -> bool:
     return True
 
 
-def _os_string() -> str:
-    """Get OS string for binary package S3 paths (e.g. 'macos-15', 'ubuntu-24')."""
-    if is_macos():
-        ver = platform.mac_ver()[0]
-        major = ver.split(".")[0] if ver else ""
-        return f"macos-{major}" if major else "macos"
-    if is_linux():
-        try:
-            data: dict[str, str] = {}
-            with open("/etc/os-release") as f:
-                for line in f:
-                    if "=" in line:
-                        k, v = line.strip().split("=", 1)
-                        data[k] = v.strip('"')
-            os_id = data.get("ID", "linux")
-            version = data.get("VERSION_ID", "")
-            major = version.split(".")[0] if version else ""
-            return f"{os_id}-{major}" if major else os_id
-        except FileNotFoundError:
-            pass
-    return "linux"
-
-
 # -- Link helpers -------------------------------------------------------------
 
 
@@ -350,7 +231,7 @@ def link_in_opt(*, name: str, source: str) -> None:
     if not os.path.exists(source):
         msg = f"Link source does not exist: {source!r}"
         raise FileNotFoundError(msg)
-    target = os.path.join(_opt_prefix(), name)
+    target = os.path.join(opt_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
     if os.path.islink(target):
@@ -363,7 +244,7 @@ def link_in_bin(*, name: str, source: str) -> None:
     if not os.path.isfile(source):
         msg = f"Binary does not exist: {source!r}"
         raise FileNotFoundError(msg)
-    target = os.path.join(_bin_prefix(), name)
+    target = os.path.join(bin_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
     if os.path.islink(target):
@@ -376,7 +257,7 @@ def link_in_man1(*, name: str, source: str) -> None:
     if not os.path.isfile(source):
         msg = f"Man page does not exist: {source!r}"
         raise FileNotFoundError(msg)
-    target = os.path.join(_man1_prefix(), name)
+    target = os.path.join(man1_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
     if os.path.islink(target):
@@ -455,7 +336,7 @@ def link_in_bash_completions(prefix: str) -> None:
     """Symlink bash completion files from an app prefix into the central dir."""
     _link_completions(
         prefix,
-        _bash_completions_prefix(),
+        bash_completions_prefix(),
         _find_bash_completion_files(prefix),
     )
 
@@ -464,7 +345,7 @@ def link_in_fish_completions(prefix: str) -> None:
     """Symlink fish completion files from an app prefix into the central dir."""
     _link_completions(
         prefix,
-        _fish_completions_prefix(),
+        fish_completions_prefix(),
         _find_fish_completion_files(prefix),
     )
 
@@ -473,7 +354,7 @@ def link_in_zsh_completions(prefix: str) -> None:
     """Symlink zsh completion files from an app prefix into the central dir."""
     _link_completions(
         prefix,
-        _zsh_completions_prefix(),
+        zsh_completions_prefix(),
         _find_zsh_completion_files(prefix),
     )
 
@@ -493,13 +374,13 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     arch = arch2()
     aws_profile = "acidgenomics"
     binary_prefix = "/opt/koopa"
-    koopa_prefix = _koopa_prefix()
-    os_str = _os_string()
+    kp = koopa_prefix()
+    os_str = os_slug()
     s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
-    if koopa_prefix != binary_prefix:
+    if kp != binary_prefix:
         msg = (
             f"Binary package installation not supported for koopa install "
-            f"located at '{koopa_prefix}'. Koopa must be installed at "
+            f"located at '{kp}'. Koopa must be installed at "
             f"default '{binary_prefix}' location."
         )
         raise RuntimeError(msg)
@@ -512,7 +393,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
             tarball_name = _binary_tarball_basename(name, version)
             tar_file = os.path.join(tmp_dir, f"{name}-{version}.tar.gz")
             tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{tarball_name}"
-            _run(
+            run(
                 "aws",
                 "s3",
                 "cp",
@@ -524,7 +405,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
             if not os.path.isfile(tar_file):
                 msg = f"Failed to download binary: {tar_file}"
                 raise FileNotFoundError(msg)
-            _run("tar", "-Pxz", "-f", tar_file)
+            run("tar", "-Pxz", "-f", tar_file)
             # Touch marker file.
             Path(os.path.join(prefix_path, ".koopa-binary")).touch()
     finally:
@@ -540,9 +421,9 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 def push_app_build(name: str) -> None:
     """Push completed build to AWS S3 bucket."""
     arch = arch2()
-    os_str = _os_string()
+    os_str = os_slug()
     s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
-    app_dir = os.path.join(_app_prefix(), name)
+    app_dir = os.path.join(app_prefix(), name)
     if not os.path.isdir(app_dir):
         msg = f"App directory does not exist: {app_dir}"
         raise FileNotFoundError(msg)
@@ -556,9 +437,9 @@ def push_app_build(name: str) -> None:
     fd, tar_file = tempfile.mkstemp(suffix=".tar.gz", prefix="koopa-push-")
     os.close(fd)
     try:
-        _run("tar", "-Pcz", "-f", tar_file, prefix)
+        run("tar", "-Pcz", "-f", tar_file, prefix)
         tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{tarball_name}"
-        _run(
+        run(
             "aws",
             "s3",
             "cp",
@@ -587,10 +468,10 @@ def push_missing_app_builds() -> None:
     from koopa.alert import alert, alert_note, alert_success
 
     arch = arch2()
-    os_str = _os_string()
+    os_str = os_slug()
     s3_bucket_bare = "private.koopa.acidgenomics.com"
-    opt = _opt_prefix()
-    app_dir = _app_prefix()
+    opt = opt_prefix()
+    app_dir = app_prefix()
     aws = shutil.which("aws")
     if aws is None:
         return
@@ -686,7 +567,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if is_windows():
         msg = "App installs are not supported on Windows."
         raise NotImplementedError(msg)
-    config.name = _resolve_alias(config.name)
+    config.name = resolve_alias(config.name)
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
     # Resolve mode-specific defaults.
@@ -696,7 +577,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if is_macos():
             config.platform = "macos"
         elif is_linux():
-            config.platform = _os_string()
+            config.platform = os_slug()
     if not config.version_key:
         config.version_key = config.name
     # Resolve version from app.json if not provided.
@@ -705,7 +586,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         current_version = _app_json_version(config.version_key)
     if not config.version:
         config.version = current_version
-    app_dir = _app_prefix()
+    app_dir = app_prefix()
     # -- Mode-specific configuration ------------------------------------------
     if config.mode == "shared":
         if not is_owner():
@@ -788,7 +669,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 dep_word = "dependency" if len(all_deps) == 1 else "dependencies"
                 deps_display = []
                 for d in all_deps:
-                    resolved = _resolve_alias(d)
+                    resolved = resolve_alias(d)
                     if resolved != d:
                         deps_display.append(f"{styled_name(resolved)} [{d}]")
                     else:
@@ -800,8 +681,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 )
                 _announced = True
             for dep in all_deps:
-                resolved_dep = _resolve_alias(dep)
-                dep_opt = os.path.join(_opt_prefix(), resolved_dep)
+                resolved_dep = resolve_alias(dep)
+                dep_opt = os.path.join(opt_prefix(), resolved_dep)
                 if os.path.exists(dep_opt):
                     continue
                 dep_config = InstallConfig(
@@ -817,9 +698,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         if config.reinstall and config.reinstall_reason and config.verbose:
             from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
-            version_suffix = (
-                f" {styled_version(config.version)}" if config.version else ""
-            )
+            version_suffix = f" {styled_version(config.version)}" if config.version else ""
             reason_str = config.reinstall_reason
             prefix_to_strip = f"{config.name} "
             if reason_str.startswith(prefix_to_strip):
@@ -909,12 +788,12 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if config.link_in_opt:
                 link_in_opt(name=config.name, source=config.prefix)
             if config.link_in_bin:
-                bins = _app_json_bin(config.name)
+                bins = app_json_bin(config.name)
                 for b in bins:
                     source = os.path.join(config.prefix, "bin", b)
                     link_in_bin(name=b, source=source)
             if config.link_in_man1:
-                man1_names = _app_json_man1(config.name)
+                man1_names = app_json_man1(config.name)
                 for m in man1_names:
                     mf1 = os.path.join(
                         config.prefix,
@@ -933,9 +812,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             link_in_zsh_completions(config.prefix)
         elif config.mode == "system":
             if config.update_ldconfig:
-                _run("ldconfig", sudo=True, check=False)
+                run("ldconfig", sudo=True, check=False)
     except Exception:
-        opt_link = os.path.join(_opt_prefix(), config.name)
+        opt_link = os.path.join(opt_prefix(), config.name)
         if os.path.islink(opt_link):
             os.unlink(opt_link)
         if config.prefix and os.path.isdir(config.prefix):
@@ -1004,7 +883,7 @@ def install_gnu_app(
     if not parent_name:
         parent_name = name
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     if non_gnu_mirror:
         mirror = "https://download.savannah.nongnu.org/releases"
     all_conf_args = list(conf_args or [])
@@ -1016,13 +895,13 @@ def install_gnu_app(
     url = f"{mirror}/{parent_name}/{filename}"
     tarball = download_with_mirror(url, name, filename, extra_urls=extra_urls)
     os.makedirs("src", exist_ok=True)
-    _run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
+    run("tar", "-xf", tarball, "-C", "src", "--strip-components=1")
     os.chdir("src")
     if not os.path.isfile("configure") and os.path.isfile("configure.ac"):
-        _run("autoreconf", "-fi")
-    _run("./configure", *all_conf_args)
-    _run("make", f"-j{jobs}")
-    _run("make", "install")
+        run("autoreconf", "-fi")
+    run("./configure", *all_conf_args)
+    run("make", f"-j{jobs}")
+    run("make", "install")
 
 
 # -- Go package installer -----------------------------------------------------
@@ -1194,7 +1073,7 @@ def install_python_package(
         deps = _app_dependencies(name)
         for dep in deps:
             if dep == "python" or dep.startswith("python3."):
-                resolved = _resolve_alias(dep)
+                resolved = resolve_alias(dep)
                 ver = resolved.removeprefix("python")
                 if ver:
                     python_version = ver
@@ -1202,7 +1081,7 @@ def install_python_package(
     python_cmd = f"python{python_version}" if python_version else "python3"
     python: str | None = None
     if python_version:
-        opt_python = os.path.join(_opt_prefix(), f"python{python_version}", "bin", python_cmd)
+        opt_python = os.path.join(opt_prefix(), f"python{python_version}", "bin", python_cmd)
         if os.path.isfile(opt_python):
             python = opt_python
     if python is None:
@@ -1345,7 +1224,7 @@ def install_rust_package(
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     cargo = shutil.which("cargo")
     if cargo is None:
         msg = "cargo not found."
@@ -1356,7 +1235,7 @@ def install_rust_package(
     env["CARGO_NET_GIT_FETCH_WITH_CLI"] = "true"
     env["RUST_BACKTRACE"] = "full"
     if with_openssl:
-        openssl_dir = os.path.join(_app_prefix(), "openssl")
+        openssl_dir = os.path.join(app_prefix(), "openssl")
         if os.path.isdir(openssl_dir):
             env["OPENSSL_DIR"] = openssl_dir
     bin_dir = os.path.join(prefix, "bin")
@@ -1408,8 +1287,8 @@ def install_ruby_package(
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if jobs is None:
-        jobs = _cpu_count()
-    ruby_opt = os.path.join(_opt_prefix(), "ruby")
+        jobs = cpu_count()
+    ruby_opt = os.path.join(opt_prefix(), "ruby")
     ruby_bin = os.path.join(os.path.realpath(ruby_opt), "bin") if os.path.isdir(ruby_opt) else None
 
     def _find(cmd: str) -> str | None:
@@ -1486,7 +1365,7 @@ def install_perl_package(
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     cpan = shutil.which("cpan")
     perl = shutil.which("perl")
     make = shutil.which("make") or "/usr/bin/make"
@@ -1634,7 +1513,7 @@ def _resolve_conda_channel_url(channel_name: str) -> str:
 
 def _app_json_conda_channel(name: str) -> str:
     """Get conda channel for app from app.json (default 'conda-forge')."""
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
         return entry.get("conda_channel", "conda-forge")
@@ -1765,7 +1644,7 @@ def install_haskell_package(
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if jobs is None:
-        jobs = _cpu_count()
+        jobs = cpu_count()
     cabal = shutil.which("cabal")
     ghcup = shutil.which("ghcup")
     if cabal is None or ghcup is None:
@@ -1799,7 +1678,7 @@ def install_haskell_package(
                 f.write(f"store-dir: {cabal_store}\n")
                 if dependencies:
                     for dep in dependencies:
-                        dep_prefix = os.path.join(_app_prefix(), dep)
+                        dep_prefix = os.path.join(app_prefix(), dep)
                         if os.path.isdir(dep_prefix):
                             f.write(f"extra-include-dirs: {dep_prefix}/include\n")
                             f.write(f"extra-lib-dirs: {dep_prefix}/lib\n")
@@ -1848,7 +1727,7 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     if not is_owner():
         return
     app_names = shared_apps(mode="default")
-    opt = _opt_prefix()
+    opt = opt_prefix()
     missing = [a for a in app_names if not os.path.exists(os.path.join(opt, a))]
     if not missing:
         return
@@ -1906,15 +1785,13 @@ def install_shared_apps(mode: str = "default") -> None:
     from koopa.app import shared_apps
 
     app_names = shared_apps(mode=mode)
-    app_dir = _app_prefix()
+    app_dir = app_prefix()
     missing = []
     for app_name in app_names:
-        app_prefix = os.path.join(app_dir, app_name)
-        if os.path.isdir(app_prefix):
-            versions = [
-                d for d in os.listdir(app_prefix) if os.path.isdir(os.path.join(app_prefix, d))
-            ]
-            if any(os.path.isdir(os.path.join(app_prefix, v, ".install")) for v in versions):
+        app_path = os.path.join(app_dir, app_name)
+        if os.path.isdir(app_path):
+            versions = [d for d in os.listdir(app_path) if os.path.isdir(os.path.join(app_path, d))]
+            if any(os.path.isdir(os.path.join(app_path, v, ".install")) for v in versions):
                 continue
         missing.append(app_name)
     if not missing:
@@ -2002,7 +1879,7 @@ def install_koopa(
     Copies the source tree to the target prefix, optionally as a shared
     (system-wide) install. Converted from install-koopa.sh.
     """
-    source_prefix = _koopa_prefix()
+    source_prefix = koopa_prefix()
     xdg_data_home = os.environ.get(
         "XDG_DATA_HOME",
         os.path.join(os.path.expanduser("~"), ".local", "share"),
@@ -2023,10 +1900,10 @@ def install_koopa(
         if not is_admin():
             msg = "Admin permissions required for shared install."
             raise PermissionError(msg)
-        _run("cp", "-a", source_prefix, prefix, sudo=True)
+        run("cp", "-a", source_prefix, prefix, sudo=True)
         uid = str(os.getuid())
         gid = str(os.getgid())
-        _run(
+        run(
             "chown",
             "-R",
             f"{uid}:{gid}",
@@ -2050,19 +1927,19 @@ def _zsh_compaudit_set_permissions() -> None:
 
     uid = os.getuid()
     prefixes = [
-        os.path.join(_koopa_prefix(), "lang", "zsh"),
-        os.path.join(_opt_prefix(), "zsh", "share", "zsh"),
+        os.path.join(koopa_prefix(), "lang", "zsh"),
+        os.path.join(opt_prefix(), "zsh", "share", "zsh"),
     ]
     for prefix in prefixes:
         if not os.path.isdir(prefix):
             continue
         st = os.stat(prefix)
         if st.st_uid != uid:
-            _run("chown", "-R", str(uid), prefix, sudo=True)
+            run("chown", "-R", str(uid), prefix, sudo=True)
         mode = stat_mod.S_IMODE(st.st_mode)
         access = oct(mode)[-3:]
         if access not in ("700", "744", "755"):
-            _run("chmod", "-R", "go-w", prefix, sudo=(st.st_uid != uid))
+            run("chmod", "-R", "go-w", prefix, sudo=(st.st_uid != uid))
 
 
 def _cleanup_legacy_config() -> None:
@@ -2074,7 +1951,7 @@ def _cleanup_legacy_config() -> None:
     legacy_activate = os.path.join(xdg_config_home, "koopa", "activate")
     if os.path.islink(legacy_activate):
         target = os.readlink(legacy_activate)
-        activate_sh = os.path.join(_koopa_prefix(), "activate.sh")
+        activate_sh = os.path.join(koopa_prefix(), "activate.sh")
         if target != activate_sh:
             os.unlink(legacy_activate)
             os.symlink(activate_sh, legacy_activate)
@@ -2110,7 +1987,7 @@ def _cleanup_legacy_config() -> None:
         )
         for path, lineno, line in flagged:
             print(f"  {path}:{lineno}: {line}", file=sys.stderr)
-    legacy_build_times = os.path.join(_koopa_prefix(), "etc", "koopa", "build-times.json")
+    legacy_build_times = os.path.join(koopa_prefix(), "etc", "koopa", "build-times.json")
     if os.path.isfile(legacy_build_times):
         os.unlink(legacy_build_times)
 
@@ -2128,7 +2005,7 @@ def update_koopa(*, verbose: bool = False) -> None:
 
     if verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
-    prefix = _koopa_prefix()
+    prefix = koopa_prefix()
     if not is_owner():
         uid = os.getuid()
         st = os.stat(prefix)
@@ -2137,7 +2014,7 @@ def update_koopa(*, verbose: bool = False) -> None:
 
             warn(f"koopa prefix '{prefix}' is owned by root. Attempting to repair ownership.")
             gid = os.getgid()
-            _run("chown", "-R", f"{uid}:{gid}", prefix, sudo=True)
+            run("chown", "-R", f"{uid}:{gid}", prefix, sudo=True)
             if not is_owner():
                 msg = f"Failed to repair ownership of '{prefix}'."
                 raise PermissionError(msg)
@@ -2409,7 +2286,7 @@ def _is_supported_app(name: str) -> bool:
     """Check if an app is supported on the current platform."""
     from koopa.os import os_id
 
-    json_data = _import_app_json()
+    json_data = import_app_json()
     entry = json_data.get(name, {})
     if not isinstance(entry, dict):
         return False
@@ -2431,8 +2308,8 @@ def _compute_install_plan(
     from koopa.app import extract_app_deps
     from koopa.os import os_id
 
-    json_data = _import_app_json()
-    opt_prefix = _opt_prefix()
+    json_data = import_app_json()
+    opt_dir = opt_prefix()
     current_os = os_id()
     stale_set = {a for a, _ in apps_with_reasons}
     reason_map: dict[str, str] = {a: r for a, r in apps_with_reasons}
@@ -2470,7 +2347,7 @@ def _compute_install_plan(
             if not _is_includable(dep_resolved):
                 continue
             if dep_resolved not in stale_set:
-                dep_opt = os.path.join(opt_prefix, dep_resolved)
+                dep_opt = os.path.join(opt_dir, dep_resolved)
                 if not os.path.exists(dep_opt):
                     full_set.add(dep_resolved)
                     reason_map.setdefault(dep_resolved, "missing dependency")
@@ -2735,8 +2612,8 @@ def remove_alias_app_dirs(*, verbose: bool = False) -> None:
 
     if not is_owner():
         return
-    json_data = _import_app_json()
-    app_dir = _app_prefix()
+    json_data = import_app_json()
+    app_dir = app_prefix()
     if not os.path.isdir(app_dir):
         return
     to_remove: list[str] = []
@@ -2755,7 +2632,7 @@ def remove_alias_app_dirs(*, verbose: bool = False) -> None:
     for name in to_remove:
         path = os.path.join(app_dir, name)
         shutil.rmtree(path, ignore_errors=True)
-        opt_link = os.path.join(_opt_prefix(), name)
+        opt_link = os.path.join(opt_prefix(), name)
         if os.path.islink(opt_link):
             os.unlink(opt_link)
 
@@ -2769,7 +2646,7 @@ def update_user_apps(*, verbose: bool = False) -> list[str]:
     apps = outdated_user_apps()
     if not apps:
         return []
-    json_data = _import_app_json()
+    json_data = import_app_json()
     prefixes = _user_app_prefixes()
     n_user = len(apps)
     label_user = "app" if n_user == 1 else "apps"
@@ -2999,7 +2876,7 @@ def _update_system_python(*, verbose: bool = False) -> None:
 
     if check_macos_system_python():
         return
-    json_data = _import_app_json()
+    json_data = import_app_json()
     py_keys = sorted(
         (k for k in json_data if k.startswith("python3.")),
         reverse=True,
@@ -3026,7 +2903,7 @@ def _update_system_python(*, verbose: bool = False) -> None:
 
 def _build_passthrough_args(name: str) -> list[str]:
     """Build passthrough args from app.json installer_args."""
-    data = _import_app_json()
+    data = import_app_json()
     entry = data.get(name, {})
     installer_args = entry.get("installer_args", {}) if isinstance(entry, dict) else {}
     if not installer_args:

@@ -143,9 +143,9 @@ def _handle_push_app_build(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.alert import alert, alert_note
-    from koopa.install import _binary_tarball_basename, _os_string
+    from koopa.install import _binary_tarball_basename
     from koopa.prefix import opt_prefix
-    from koopa.system import arch2
+    from koopa.system import arch2, os_slug
 
     aws = shutil.which("aws")
     tar = shutil.which("tar")
@@ -156,7 +156,7 @@ def _handle_push_app_build(args: list[str]) -> None:
         msg = "tar is not installed."
         raise RuntimeError(msg)
     architecture = arch2()
-    os_str = _os_string()
+    os_str = os_slug()
     prefix = opt_prefix()
     profile = "acidgenomics"
     s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
@@ -939,6 +939,49 @@ def _handle_bump_bootstrap(_: list[str]) -> None:
     print(f"  bootstrap-version: {current} -> {new}")
 
 
+def _handle_app_deps(args: list[str]) -> None:
+    """Handle ``koopa develop app-deps <name>``."""
+    from koopa.app import app_deps
+
+    if not args:
+        print("Usage: koopa develop app-deps <name>", file=sys.stderr)
+        sys.exit(1)
+    name = args[0]
+    try:
+        deps = app_deps(name)
+    except NameError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    if not deps:
+        print(f"{name} has no dependencies.")
+        return
+    print(f"{name} ({len(deps)} dependencies):")
+    for dep in deps:
+        print(f"  {dep}")
+
+
+def _handle_app_revdeps(args: list[str]) -> None:
+    """Handle ``koopa develop app-revdeps <name>``."""
+    from koopa.app import app_revdeps
+
+    if not args:
+        print("Usage: koopa develop app-revdeps <name>", file=sys.stderr)
+        sys.exit(1)
+    name = args[0]
+    mode = "all" if "--all" in args else "default"
+    try:
+        revdeps = app_revdeps(name, mode=mode)
+    except NameError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    if not revdeps:
+        print(f"No apps depend on {name}.")
+        return
+    print(f"{name} is depended on by ({len(revdeps)} apps):")
+    for dep in revdeps:
+        print(f"  {dep}")
+
+
 def _handle_circular_dependencies() -> None:
     """Handle ``koopa develop circular-dependencies``."""
     from koopa.check import check_circular_deps
@@ -1111,6 +1154,8 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "push-app-builds": lambda _: _handle_push_app_builds(),
     "shellcheck": lambda _: _handle_shellcheck(),
     "check-app-versions": _handle_check_app_versions,
+    "app-deps": _handle_app_deps,
+    "app-revdeps": _handle_app_revdeps,
     "circular-dependencies": lambda _: _handle_circular_dependencies(),
     "mirror-src": _handle_mirror_src,
     "audit-src-mirror": _handle_audit_src_mirror,

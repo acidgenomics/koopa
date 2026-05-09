@@ -126,11 +126,101 @@ Enable passwordless sudo for the current user.
 Fix Zsh compaudit permissions.
 .SS "Linux\-specific admin subcommands"
 .TP
+\fBadmin add\-group\fR
+
+.TP
+\fBadmin add\-user\fR
+
+.TP
+\fBadmin apk\-install\fR
+
+.TP
+\fBadmin apk\-remove\fR
+
+.TP
+\fBadmin apk\-update\fR
+
+.TP
+\fBadmin apt\-install\fR
+
+.TP
+\fBadmin apt\-list\-installed\fR
+
+.TP
+\fBadmin apt\-remove\fR
+
+.TP
+\fBadmin apt\-update\fR
+
+.TP
+\fBadmin apt\-upgrade\fR
+
+.TP
+\fBadmin configure\-lmod\fR
+
+.TP
+\fBadmin configure\-sshd\fR
+
+.TP
 \fBadmin delete\-cache\fR
 Delete cache, log, and temporary files (Docker images only).
 .TP
+\fBadmin delete\-user\fR
+
+.TP
+\fBadmin dnf\-install\fR
+
+.TP
+\fBadmin dnf\-remove\fR
+
+.TP
+\fBadmin dnf\-update\fR
+
+.TP
 \fBadmin fix\-sudo\-setrlimit\-error\fR
 Fix the sudo setrlimit error on Linux.
+.TP
+\fBadmin install\-app\fR
+
+.TP
+\fBadmin os\-version\fR
+
+.TP
+\fBadmin pacman\-install\fR
+
+.TP
+\fBadmin pacman\-remove\fR
+
+.TP
+\fBadmin pacman\-update\fR
+
+.TP
+\fBadmin proc\-cmdline\fR
+
+.TP
+\fBadmin systemctl\-disable\fR
+
+.TP
+\fBadmin systemctl\-restart\fR
+
+.TP
+\fBadmin systemctl\-status\fR
+
+.TP
+\fBadmin systemctl\-stop\fR
+
+.TP
+\fBadmin uninstall\-app\fR
+
+.TP
+\fBadmin zypper\-install\fR
+
+.TP
+\fBadmin zypper\-remove\fR
+
+.TP
+\fBadmin zypper\-update\fR
+
 .SS "macOS\-specific admin subcommands"
 .TP
 \fBadmin clean\-launch\-services\fR
@@ -152,6 +242,12 @@ Force eject a mounted volume.
 Reload the autofs automount daemon.
 .
 .SH "DEVELOP SUBCOMMANDS"
+.TP
+\fBdevelop app\-deps\fR
+
+.TP
+\fBdevelop app\-revdeps\fR
+
 .TP
 \fBdevelop audit\-src\-mirror\fR
 Audit S3 source mirror for missing or stale tarballs.

@@ -12,6 +12,43 @@ from koopa.io import import_app_json
 from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
 
 
+def resolve_alias(name: str) -> str:
+    """Resolve app alias to its target name (e.g. 'python' -> 'python3.14')."""
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        alias = entry.get("alias_of", "")
+        if alias:
+            return alias
+    return name
+
+
+def app_json_bin(name: str) -> list[str]:
+    """Get bin names for an app from app.json."""
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        bins = entry.get("bin", [])
+        if isinstance(bins, str):
+            return [bins]
+        if isinstance(bins, list):
+            return bins
+    return []
+
+
+def app_json_man1(name: str) -> list[str]:
+    """Get man1 page names for an app from app.json."""
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        man1 = entry.get("man1", [])
+        if isinstance(man1, str):
+            return [man1]
+        if isinstance(man1, list):
+            return man1
+    return []
+
+
 def app_deps(name: str) -> list:
     """Get application dependencies in topological order (deepest first)."""
     json_data = import_app_json()

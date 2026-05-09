@@ -92,11 +92,6 @@ def alert_success(message: str) -> None:
     msg(message, prefix="✓", color="32")
 
 
-def alert_coffee_time() -> None:
-    """Print coffee time message."""
-    msg("This is going to take a while. Time for a coffee break! ☕", prefix="", color="33")
-
-
 def styled_name(name: str) -> str:
     """Return bold-styled name string."""
     return f"{_bold()}{name}{_reset()}"
@@ -187,30 +182,6 @@ def alert_update_success(name: str) -> None:
     msg(f"Successfully updated {styled_name(name)}.", prefix="✓", color="32")
 
 
-def alert_process_start(name: str, reason: str = "") -> None:
-    """Alert process starting."""
-    s = f"Processing {styled_name(name)}"
-    if reason:
-        s += f" {styled_reason(reason)}"
-    s += "."
-    msg(s)
-
-
-def alert_process_success(name: str) -> None:
-    """Alert process succeeded."""
-    msg(f"Successfully processed {styled_name(name)}.", prefix="✓", color="32")
-
-
-def alert_is_not_installed(name: str) -> None:
-    """Alert that something is not installed."""
-    msg(f"{styled_name(name)} is not installed.")
-
-
-def alert_restart() -> None:
-    """Alert that restart is required."""
-    msg("Restart is required.", prefix="⚠", color="33")
-
-
 def h(level: int, message: str) -> None:
     """Print a header at a given level (1-7)."""
     headers = {
@@ -268,12 +239,6 @@ def dl(key: str, value: str) -> None:
     print(f"  {c}{key}{r}: {value}", file=sys.stderr)
 
 
-def dl_pairs(pairs: list[tuple[str, str]]) -> None:
-    """Print multiple definition list entries."""
-    for k, v in pairs:
-        dl(k, v)
-
-
 def stop(message: str) -> None:
     """Print error message and exit."""
     c = _red()
@@ -287,8 +252,3 @@ def warn(message: str) -> None:
     c = _yellow()
     r = _reset()
     print(f"{c}Warning:{r} {message}", file=sys.stderr)
-
-
-def invalid_arg(arg: str) -> None:
-    """Print invalid argument error and exit."""
-    stop(f"Invalid argument: '{arg}'.")

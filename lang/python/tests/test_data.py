@@ -1,6 +1,6 @@
 """Data module unit tests."""
 
-from koopa.data import argsort, flatten, unique_pos
+from koopa.data import argsort, unique_pos
 
 
 def test_argsort_ascending() -> None:
@@ -29,26 +29,6 @@ def test_argsort_empty() -> None:
 def test_argsort_single() -> None:
     """Test argsort with single element."""
     assert argsort(["x"]) == [0]
-
-
-def test_flatten_simple() -> None:
-    """Test flatten with simple nested list."""
-    assert flatten([["a", "b"], ["c"]]) == ["a", "b", "c"]
-
-
-def test_flatten_deeply_nested() -> None:
-    """Test flatten with deeply nested list."""
-    assert flatten([[[1]], [[2, 3]]]) == [1, 2, 3]
-
-
-def test_flatten_already_flat() -> None:
-    """Test flatten with already flat list."""
-    assert flatten([1, 2, 3]) == [1, 2, 3]
-
-
-def test_flatten_empty() -> None:
-    """Test flatten with empty list."""
-    assert flatten([]) == []
 
 
 def test_unique_pos_basic() -> None:

@@ -131,6 +131,8 @@ _koopa_complete() {
                     ;;
                 'develop')
                     args+=(
+                        'app-deps'
+                        'app-revdeps'
                         'audit-src-mirror'
                         'bump-bootstrap'
                         'bump-revision'
@@ -709,8 +711,38 @@ _koopa_complete() {
                     if _koopa_is_linux
                     then
                         args+=(
+                            'add-group'
+                            'add-user'
+                            'apk-install'
+                            'apk-remove'
+                            'apk-update'
+                            'apt-install'
+                            'apt-list-installed'
+                            'apt-remove'
+                            'apt-update'
+                            'apt-upgrade'
+                            'configure-lmod'
+                            'configure-sshd'
                             'delete-cache'
+                            'delete-user'
+                            'dnf-install'
+                            'dnf-remove'
+                            'dnf-update'
                             'fix-sudo-setrlimit-error'
+                            'install-app'
+                            'os-version'
+                            'pacman-install'
+                            'pacman-remove'
+                            'pacman-update'
+                            'proc-cmdline'
+                            'systemctl-disable'
+                            'systemctl-restart'
+                            'systemctl-status'
+                            'systemctl-stop'
+                            'uninstall-app'
+                            'zypper-install'
+                            'zypper-remove'
+                            'zypper-update'
                         )
                     fi
                     if _koopa_is_macos

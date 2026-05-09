@@ -5,7 +5,6 @@ Provides ``uninstall_app`` — the Python equivalent of the Bash function
 and its symlinks from bin/, opt/, and man1/.
 """
 
-import json
 import os
 import shutil
 import subprocess
@@ -13,78 +12,19 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from koopa.app import app_json_bin, app_json_man1
+from koopa.prefix import (
+    app_prefix,
+    bash_completions_prefix,
+    bin_prefix,
+    fish_completions_prefix,
+    koopa_prefix,
+    man1_prefix,
+    opt_prefix,
+    zsh_completions_prefix,
+)
 from koopa.system import is_admin, is_owner
 from koopa.uninstallers import get_python_uninstaller, has_python_uninstaller
-
-
-def _koopa_prefix() -> str:
-    """Return koopa installation prefix."""
-    return os.environ.get("KOOPA_PREFIX", str(Path(__file__).resolve().parents[4]))
-
-
-def _app_prefix() -> str:
-    """Return koopa app prefix."""
-    return os.path.join(_koopa_prefix(), "app")
-
-
-def _opt_prefix() -> str:
-    """Return koopa opt prefix."""
-    return os.path.join(_koopa_prefix(), "opt")
-
-
-def _bin_prefix() -> str:
-    """Return koopa bin prefix."""
-    return os.path.join(_koopa_prefix(), "bin")
-
-
-def _man1_prefix() -> str:
-    """Return koopa man1 prefix."""
-    return os.path.join(_koopa_prefix(), "share", "man", "man1")
-
-
-def _bash_completions_prefix() -> str:
-    """Return koopa central bash-completion completions directory."""
-    return os.path.join(_koopa_prefix(), "share", "bash-completion", "completions")
-
-
-def _fish_completions_prefix() -> str:
-    """Return koopa central fish completions directory."""
-    return os.path.join(_koopa_prefix(), "share", "fish", "vendor_completions.d")
-
-
-def _zsh_completions_prefix() -> str:
-    """Return koopa central zsh completions directory."""
-    return os.path.join(_koopa_prefix(), "share", "zsh", "site-functions")
-
-
-def _import_app_json_bin(name: str) -> list[str]:
-    """Get bin names for an app from app.json."""
-    json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
-    with open(json_path) as f:
-        data = json.load(f)
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        bins = entry.get("bin", [])
-        if isinstance(bins, str):
-            return [bins]
-        if isinstance(bins, list):
-            return bins
-    return []
-
-
-def _import_app_json_man1(name: str) -> list[str]:
-    """Get man1 page names for an app from app.json."""
-    json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
-    with open(json_path) as f:
-        data = json.load(f)
-    entry = data.get(name, {})
-    if isinstance(entry, dict):
-        man1 = entry.get("man1", [])
-        if isinstance(man1, str):
-            return [man1]
-        if isinstance(man1, list):
-            return man1
-    return []
 
 
 @dataclass
@@ -111,7 +51,7 @@ def uninstall_app(config: UninstallConfig) -> None:
     """
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
-    app_dir = _app_prefix()
+    app_dir = app_prefix()
     if config.mode == "shared":
         if not is_owner():
             msg = "Only the koopa owner can uninstall shared apps."
@@ -174,11 +114,11 @@ def uninstall_app(config: UninstallConfig) -> None:
         if config.unlink_in_opt:
             _unlink_in_opt(config.name)
         if config.unlink_in_bin:
-            bins = _import_app_json_bin(config.name)
+            bins = app_json_bin(config.name)
             for b in bins:
                 _unlink_in_bin(b)
         if config.unlink_in_man1:
-            man1_names = _import_app_json_man1(config.name)
+            man1_names = app_json_man1(config.name)
             for m in man1_names:
                 _unlink_in_man1(m)
         _unlink_broken_completions()
@@ -191,21 +131,21 @@ def uninstall_app(config: UninstallConfig) -> None:
 
 def _unlink_in_opt(name: str) -> None:
     """Remove symlink from koopa opt/ directory."""
-    target = os.path.join(_opt_prefix(), name)
+    target = os.path.join(opt_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
 
 
 def _unlink_in_bin(name: str) -> None:
     """Remove symlink from koopa bin/ directory."""
-    target = os.path.join(_bin_prefix(), name)
+    target = os.path.join(bin_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
 
 
 def _unlink_in_man1(name: str) -> None:
     """Remove symlink from koopa man1/ directory."""
-    target = os.path.join(_man1_prefix(), name)
+    target = os.path.join(man1_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
 
@@ -213,9 +153,9 @@ def _unlink_in_man1(name: str) -> None:
 def _unlink_broken_completions() -> None:
     """Remove broken symlinks from all shell completion central directories."""
     for completions_dir in (
-        _bash_completions_prefix(),
-        _fish_completions_prefix(),
-        _zsh_completions_prefix(),
+        bash_completions_prefix(),
+        fish_completions_prefix(),
+        zsh_completions_prefix(),
     ):
         if not os.path.isdir(completions_dir):
             continue
@@ -228,12 +168,12 @@ def _unlink_broken_completions() -> None:
 def _is_shared_install() -> bool:
     """Check if koopa is a shared (non-user-home) install."""
     home = os.path.expanduser("~")
-    return not _koopa_prefix().startswith(home)
+    return not koopa_prefix().startswith(home)
 
 
 def uninstall_koopa() -> None:
     """Uninstall koopa itself."""
-    kp = _koopa_prefix()
+    kp = koopa_prefix()
     bootstrap = kp.rstrip(os.sep) + "-bootstrap"
     config = os.path.join(kp, "etc", "koopa")
     print("Removing bootstrap prefix.", file=sys.stderr)

@@ -27,7 +27,7 @@ _SYSTEM_DESCRIPTIONS: dict[str, str] = {
     "hostname": "Print the system hostname.",
     "info": "Show system information.",
     "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
-    "os-string": "Print the operating system identifier string.",
+    "os-slug": "Print the operating system identifier slug.",
     "prefix": "Print the installation prefix for koopa or a named application.",
     "prune-apps": "Remove stale application versions.",
     "switch-to-develop": "Switch koopa installation to the development branch.",
