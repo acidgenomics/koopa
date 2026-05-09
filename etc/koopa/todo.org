@@ -2,4 +2,6 @@
 * Medium complexity
 ** TODO Add a new function to review app dependency chain.
 ** TODO Ensure we can identify cyclic dependencies.
+** TODO texinfo build takes too long
+    texinfo 7.3 | [4m06s]
 * Low complexity

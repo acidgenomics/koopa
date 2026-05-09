@@ -219,7 +219,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "patch": f"{_M}._gnu",
     "sed": f"{_M}._gnu",
     "tar": f"{_M}.tar",
-    "texinfo": f"{_M}._gnu",
+    "texinfo": f"{_M}.texinfo",
     "units": f"{_M}._gnu",
     "wget": f"{_M}._gnu",
     "wget2": f"{_M}._gnu",
