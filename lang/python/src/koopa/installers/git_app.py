@@ -89,11 +89,7 @@ def main(
             f"--jobs={jobs}",
             "NO_IMAP_SEND=YesPlease",
             "NO_INSTALL_HARDLINKS=YesPlease",
-            *(
-                ["VERBOSE=1"]
-                if os.environ.get("KOOPA_VERBOSE") == "1"
-                else []
-            ),
+            *(["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
         ],
         env=subprocess_env,
         check=True,
