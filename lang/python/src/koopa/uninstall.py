@@ -10,7 +10,6 @@ import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
-from pathlib import Path
 
 from koopa.app import app_json_bin, app_json_man1
 from koopa.prefix import (

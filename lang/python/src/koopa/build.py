@@ -12,10 +12,9 @@ import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass, field
-from pathlib import Path
 
 from koopa.app import resolve_alias
-from koopa.prefix import app_prefix, bin_prefix, koopa_prefix, opt_prefix
+from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import cpu_count, is_macos
 
 
