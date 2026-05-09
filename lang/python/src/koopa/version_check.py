@@ -2047,12 +2047,12 @@ def _expand_src_url(template: str, version: str) -> str:
 
 
 def _mirror_src_to_s3(
-    name: str, version: str, src_url_template: str, *, strict: bool = False
+    name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
     """Download source tarball and upload to s3://koopa.acidgenomics.com/src/."""
     import tempfile
 
-    from koopa.download import download
+    from koopa.download import download_with_mirror
 
     url = _expand_src_url(src_url_template, version)
     filename = url.rsplit("/", 1)[-1]
@@ -2060,7 +2060,11 @@ def _mirror_src_to_s3(
     with tempfile.TemporaryDirectory() as tmp:
         local = os.path.join(tmp, filename)
         try:
-            download(url, local, retry=False, connect_timeout=10, max_time=120)
+            download_with_mirror(
+                url, name, filename,
+                output=local, quiet=quiet, skip_koopa_mirror=True,
+                max_time=120,
+            )
         except Exception as exc:
             if strict:
                 raise RuntimeError(f"Download failed for '{name}': {exc}") from exc
@@ -2073,7 +2077,8 @@ def _mirror_src_to_s3(
             check=False,
         )
         if result.returncode == 0:
-            print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
+            if not quiet:
+                print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
         else:
             msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
             if strict:
