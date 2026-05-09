@@ -448,11 +448,7 @@ def _cmake_std_args(
         f"-DCMAKE_INSTALL_INCLUDEDIR={prefix}/include",
         f"-DCMAKE_INSTALL_LIBDIR={prefix}/lib",
         f"-DCMAKE_INSTALL_RPATH={prefix}/lib",
-        *(
-            ["-DCMAKE_VERBOSE_MAKEFILE=ON"]
-            if os.environ.get("KOOPA_VERBOSE") == "1"
-            else []
-        ),
+        *(["-DCMAKE_VERBOSE_MAKEFILE=ON"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
     ]
     cppflags = subprocess_env.get("CPPFLAGS", "")
     if cppflags:
