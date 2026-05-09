@@ -321,9 +321,7 @@ def _check_conda(
                         best = max(
                             versions,
                             key=lambda v: tuple(
-                                int(x)
-                                for x in re.split(r"[.\-p]", v)
-                                if x.isdigit()
+                                int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()
                             ),
                         )
                         versions_per_subdir.append(best)
@@ -332,11 +330,7 @@ def _check_conda(
     if versions_per_subdir:
         return min(
             versions_per_subdir,
-            key=lambda v: tuple(
-                int(x)
-                for x in re.split(r"[.\-p]", v)
-                if x.isdigit()
-            ),
+            key=lambda v: tuple(int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()),
         )
     try:
         data = _http_get_json(
@@ -345,9 +339,7 @@ def _check_conda(
             _retries=0,
         )
     except (urllib.error.URLError, OSError, TimeoutError) as exc:
-        raise _NetworkUnavailableError(
-            f"conda {channel}/{package}: {exc}"
-        ) from exc
+        raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
     version = data.get("latest_version", "")
     if not version:
         msg = f"No version found via Anaconda API for {channel}/{package}"
