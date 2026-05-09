@@ -9,9 +9,9 @@ from koopa.installers._build_helper import download_extract_cd
 
 def _readline_prefix() -> str:
     """Resolve the installed readline prefix."""
-    from koopa.build import _opt_prefix
+    from koopa.prefix import opt_prefix
 
-    return os.path.realpath(os.path.join(_opt_prefix(), "readline"))
+    return os.path.realpath(os.path.join(opt_prefix(), "readline"))
 
 
 def main(

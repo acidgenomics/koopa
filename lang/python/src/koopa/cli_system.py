@@ -10,6 +10,7 @@ import shutil
 import stat
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 
@@ -1186,7 +1187,52 @@ def _handle_zypper_update(_args: list[str]) -> None:
     zypper_update()
 
 
-def handle_admin(remainder: list[str]) -> None:  # noqa: PLR0911
+_ADMIN_HANDLERS: dict[str, Callable[[list[str]], None]] = {
+    "add-group": _handle_add_group,
+    "add-user": _handle_add_user,
+    "apk-install": _handle_apk_install,
+    "apk-remove": _handle_apk_remove,
+    "apk-update": _handle_apk_update,
+    "apt-install": _handle_apt_install,
+    "apt-list-installed": _handle_apt_list_installed,
+    "apt-remove": _handle_apt_remove,
+    "apt-update": _handle_apt_update,
+    "apt-upgrade": _handle_apt_upgrade,
+    "clean-launch-services": lambda _: _handle_macos_clean_launch_services(),
+    "configure-lmod": _handle_configure_lmod,
+    "configure-sshd": _handle_configure_sshd,
+    "delete-cache": lambda _: _handle_linux_delete_cache(),
+    "delete-user": _handle_delete_user,
+    "disable-passwordless-sudo": lambda _: _handle_disable_passwordless_sudo(),
+    "disable-touch-id-sudo": lambda _: _handle_macos_disable_touch_id_sudo(),
+    "dnf-install": _handle_dnf_install,
+    "dnf-remove": _handle_dnf_remove,
+    "dnf-update": _handle_dnf_update,
+    "enable-passwordless-sudo": lambda _: _handle_enable_passwordless_sudo(),
+    "enable-touch-id-sudo": lambda _: _handle_macos_enable_touch_id_sudo(),
+    "fix-sudo-setrlimit-error": lambda _: _handle_linux_fix_sudo_setrlimit_error(),
+    "flush-dns": lambda _: _handle_macos_flush_dns(),
+    "force-eject": _handle_macos_force_eject,
+    "install-app": _handle_install_app,
+    "os-version": _handle_os_version,
+    "pacman-install": _handle_pacman_install,
+    "pacman-remove": _handle_pacman_remove,
+    "pacman-update": _handle_pacman_update,
+    "proc-cmdline": _handle_proc_cmdline,
+    "reload-autofs": lambda _: _handle_macos_reload_autofs(),
+    "systemctl-disable": _handle_systemctl_disable,
+    "systemctl-restart": _handle_systemctl_restart,
+    "systemctl-status": _handle_systemctl_status,
+    "systemctl-stop": _handle_systemctl_stop,
+    "uninstall-app": _handle_uninstall_app,
+    "zypper-install": _handle_zypper_install,
+    "zypper-remove": _handle_zypper_remove,
+    "zypper-update": _handle_zypper_update,
+    "zsh-compaudit-set-permissions": lambda _: _handle_zsh_compaudit_set_permissions(),
+}
+
+
+def handle_admin(remainder: list[str]) -> None:
     """Dispatch ``koopa admin ...`` commands (require sudo/admin)."""
     from koopa.system import is_linux, is_macos
 
@@ -1201,128 +1247,8 @@ def handle_admin(remainder: list[str]) -> None:  # noqa: PLR0911
     if subcmd in _MACOS_ADMIN_COMMANDS and not is_macos():
         print(f"Error: '{subcmd}' is only supported on macOS.", file=sys.stderr)
         sys.exit(1)
-    if subcmd == "add-group":
-        _handle_add_group(rest)
-        return
-    if subcmd == "add-user":
-        _handle_add_user(rest)
-        return
-    if subcmd == "apk-install":
-        _handle_apk_install(rest)
-        return
-    if subcmd == "apk-remove":
-        _handle_apk_remove(rest)
-        return
-    if subcmd == "apk-update":
-        _handle_apk_update(rest)
-        return
-    if subcmd == "apt-install":
-        _handle_apt_install(rest)
-        return
-    if subcmd == "apt-list-installed":
-        _handle_apt_list_installed(rest)
-        return
-    if subcmd == "apt-remove":
-        _handle_apt_remove(rest)
-        return
-    if subcmd == "apt-update":
-        _handle_apt_update(rest)
-        return
-    if subcmd == "apt-upgrade":
-        _handle_apt_upgrade(rest)
-        return
-    if subcmd == "clean-launch-services":
-        _handle_macos_clean_launch_services()
-        return
-    if subcmd == "configure-lmod":
-        _handle_configure_lmod(rest)
-        return
-    if subcmd == "configure-sshd":
-        _handle_configure_sshd(rest)
-        return
-    if subcmd == "delete-cache":
-        _handle_linux_delete_cache()
-        return
-    if subcmd == "delete-user":
-        _handle_delete_user(rest)
-        return
-    if subcmd == "disable-passwordless-sudo":
-        _handle_disable_passwordless_sudo()
-        return
-    if subcmd == "disable-touch-id-sudo":
-        _handle_macos_disable_touch_id_sudo()
-        return
-    if subcmd == "dnf-install":
-        _handle_dnf_install(rest)
-        return
-    if subcmd == "dnf-remove":
-        _handle_dnf_remove(rest)
-        return
-    if subcmd == "dnf-update":
-        _handle_dnf_update(rest)
-        return
-    if subcmd == "enable-passwordless-sudo":
-        _handle_enable_passwordless_sudo()
-        return
-    if subcmd == "enable-touch-id-sudo":
-        _handle_macos_enable_touch_id_sudo()
-        return
-    if subcmd == "fix-sudo-setrlimit-error":
-        _handle_linux_fix_sudo_setrlimit_error()
-        return
-    if subcmd == "flush-dns":
-        _handle_macos_flush_dns()
-        return
-    if subcmd == "force-eject":
-        _handle_macos_force_eject(rest)
-        return
-    if subcmd == "install-app":
-        _handle_install_app(rest)
-        return
-    if subcmd == "os-version":
-        _handle_os_version(rest)
-        return
-    if subcmd == "pacman-install":
-        _handle_pacman_install(rest)
-        return
-    if subcmd == "pacman-remove":
-        _handle_pacman_remove(rest)
-        return
-    if subcmd == "pacman-update":
-        _handle_pacman_update(rest)
-        return
-    if subcmd == "proc-cmdline":
-        _handle_proc_cmdline(rest)
-        return
-    if subcmd == "reload-autofs":
-        _handle_macos_reload_autofs()
-        return
-    if subcmd == "systemctl-disable":
-        _handle_systemctl_disable(rest)
-        return
-    if subcmd == "systemctl-restart":
-        _handle_systemctl_restart(rest)
-        return
-    if subcmd == "systemctl-status":
-        _handle_systemctl_status(rest)
-        return
-    if subcmd == "systemctl-stop":
-        _handle_systemctl_stop(rest)
-        return
-    if subcmd == "uninstall-app":
-        _handle_uninstall_app(rest)
-        return
-    if subcmd == "zypper-install":
-        _handle_zypper_install(rest)
-        return
-    if subcmd == "zypper-remove":
-        _handle_zypper_remove(rest)
-        return
-    if subcmd == "zypper-update":
-        _handle_zypper_update(rest)
-        return
-    if subcmd == "zsh-compaudit-set-permissions":
-        _handle_zsh_compaudit_set_permissions()
-        return
-    print(f"Error: unknown admin command '{subcmd}'.", file=sys.stderr)
-    sys.exit(1)
+    handler = _ADMIN_HANDLERS.get(subcmd)
+    if handler is None:
+        print(f"Error: unknown admin command '{subcmd}'.", file=sys.stderr)
+        sys.exit(1)
+    handler(rest)

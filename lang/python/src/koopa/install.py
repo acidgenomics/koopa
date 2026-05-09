@@ -9,7 +9,6 @@ Converted from Bash functions:
 import contextlib
 import json
 import os
-import platform
 import shutil
 import subprocess
 import sys
@@ -17,10 +16,12 @@ import tempfile
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
+from koopa.app import app_json_bin, app_json_man1, resolve_alias
 from koopa.archive import extract
 from koopa.download import download
+from koopa.exec import run
+from koopa.io import import_app_json
 from koopa.prefix import (
     app_prefix,
     bash_completions_prefix,
@@ -79,11 +80,6 @@ class InstallConfig:
 
 
 # -- Helper functions ---------------------------------------------------------
-
-
-from koopa.app import app_json_bin, app_json_man1, resolve_alias
-from koopa.exec import run
-from koopa.io import import_app_json
 
 
 def _app_json_version(key: str) -> str:
@@ -694,19 +690,23 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     dep_config.verbose = True
                 install_app(dep_config)
     # -- Start install --------------------------------------------------------
-    if not config.quiet and not _announced:
-        if config.reinstall and config.reinstall_reason and config.verbose:
-            from koopa.alert import alert_note, styled_name, styled_reason, styled_version
+    if (
+        not config.quiet
+        and not _announced
+        and config.reinstall
+        and config.reinstall_reason
+        and config.verbose
+    ):
+        from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
-            version_suffix = f" {styled_version(config.version)}" if config.version else ""
-            reason_str = config.reinstall_reason
-            prefix_to_strip = f"{config.name} "
-            if reason_str.startswith(prefix_to_strip):
-                reason_str = reason_str[len(prefix_to_strip) :]
-            alert_note(
-                f"Reinstalling {styled_name(config.name)}{version_suffix}"
-                f" {styled_reason(reason_str)}."
-            )
+        version_suffix = f" {styled_version(config.version)}" if config.version else ""
+        reason_str = config.reinstall_reason
+        prefix_to_strip = f"{config.name} "
+        if reason_str.startswith(prefix_to_strip):
+            reason_str = reason_str[len(prefix_to_strip) :]
+        alert_note(
+            f"Reinstalling {styled_name(config.name)}{version_suffix} {styled_reason(reason_str)}."
+        )
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
         os.makedirs(config.prefix, exist_ok=True)
