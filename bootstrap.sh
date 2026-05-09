@@ -343,7 +343,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.11.11'
+    __kvar_uv_version='0.11.12'
     __kvar_python_version='3.12.13'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"

@@ -195,13 +195,15 @@ def _http_get_json(
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return json.loads(resp.read().decode())
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
-            if isinstance(exc, urllib.error.URLError) and not isinstance(
+            if isinstance(exc, urllib.error.HTTPError) and exc.code >= 500:
+                pass
+            elif isinstance(exc, urllib.error.URLError) and not isinstance(
                 exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError)
             ):
                 raise
             last_exc = exc
             if attempt < _retries:
-                time.sleep(1 * (attempt + 1))
+                time.sleep(2 * (attempt + 1))
     assert last_exc is not None
     raise last_exc
 
@@ -216,13 +218,15 @@ def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return resp.read().decode()
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
-            if isinstance(exc, urllib.error.URLError) and not isinstance(
+            if isinstance(exc, urllib.error.HTTPError) and exc.code >= 500:
+                pass
+            elif isinstance(exc, urllib.error.URLError) and not isinstance(
                 exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError)
             ):
                 raise
             last_exc = exc
             if attempt < _retries:
-                time.sleep(1 * (attempt + 1))
+                time.sleep(2 * (attempt + 1))
     assert last_exc is not None
     raise last_exc
 
