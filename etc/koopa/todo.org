@@ -1,3 +1,6 @@
 * High complexity
 * Medium complexity
 * Low complexity
+** TODO Need to fix these timeout errors
+koopa develop check-app-versions --reset-cache
+bash-completion: error: HTTP Error 504: Gateway Timeout
