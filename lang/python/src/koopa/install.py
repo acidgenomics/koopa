@@ -1561,13 +1561,18 @@ def install_conda_package(
     if channel_name == "bioconda":
         forge_url = _resolve_conda_channel_url("conda-forge")
         create_args.insert(-1, f"--channel={forge_url}")
-    if channel_url.startswith("http"):
-        create_args.insert(4, "--solver=classic")
     tmp_pkg_cache = tempfile.mkdtemp()
     env = os.environ.copy()
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
     try:
-        subprocess.run(create_args, check=True, env=env)
+        subprocess.run(create_args, check=True, env=env, timeout=300)
+    except subprocess.TimeoutExpired:
+        msg = (
+            f"Conda solver timed out after 5 minutes installing '{name}'. "
+            "The package dependency resolution may be too complex or the "
+            "channel may be unreachable."
+        )
+        raise RuntimeError(msg) from None
     finally:
         shutil.rmtree(tmp_pkg_cache, ignore_errors=True)
     _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
