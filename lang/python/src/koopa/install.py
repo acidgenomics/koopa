@@ -2118,7 +2118,13 @@ def _cleanup_legacy_config() -> None:
 
 def update_koopa(*, verbose: bool = False) -> None:
     """Update koopa installation via git pull."""
-    from koopa.alert import alert, alert_info, alert_note
+    from koopa.alert import (
+        alert,
+        alert_info,
+        alert_note,
+        ansi_escape,
+        styled_name,
+    )
     from koopa.git import git_branch, git_last_commit_local, git_pull, is_git_repo
 
     if verbose:
@@ -2147,7 +2153,13 @@ def update_koopa(*, verbose: bool = False) -> None:
         alert_note(f"Pinned release detected (detached HEAD) at '{prefix}'.")
         return
     commit_before = git_last_commit_local(prefix)
-    alert(f"Pulling koopa on '{branch}' ({commit_before[:7]}).")
+    green = ansi_escape("32")
+    reset = ansi_escape("0")
+    alert(
+        f"Pulling {styled_name('koopa')} on"
+        f" {green}{branch}{reset}"
+        f" ({green}{commit_before[:7]}{reset})."
+    )
     try:
         result = git_pull(prefix, rebase=True, autostash=True, capture=True)
     except Exception:

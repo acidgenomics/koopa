@@ -667,7 +667,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             _configure_user_dotfiles(verbose=args.verbose)
             run_user_app_post_hooks(updated_user_apps, verbose=args.verbose)
             return
-        from koopa.alert import alert_success, warn
+        from koopa.alert import alert_success, styled_name, warn
         from koopa.app import prune_apps
         from koopa.check import prune_broken_symlinks
 
@@ -696,7 +696,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")
-        alert_success("koopa update was successful.")
+        alert_success(f"{styled_name('koopa')} update was successful.")
     finally:
         if acquired:
             _release_install_lock()
