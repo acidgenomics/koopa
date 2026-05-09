@@ -1431,7 +1431,7 @@
     "bin": [
       "claude"
     ],
-    "date": "2026-05-08",
+    "date": "2026-05-09",
     "default": true,
     "dependencies": [
       "node"
@@ -1445,7 +1445,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.136"
+    "version": "2.1.138"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1908,7 +1908,7 @@
       "automake",
       "make"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-09",
     "default": false,
     "dependencies": [
       "libedit"
@@ -1924,7 +1924,7 @@
       "http://gondor.apana.org.au/~herbert/dash/",
       "https://git.kernel.org/pub/scm/utils/dash/dash.git"
     ],
-    "version": "0.5.13.3"
+    "version": "0.5.13.4"
   },
   "databricks-cli": {
     "bin": [
@@ -4422,7 +4422,7 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-09",
     "default": false,
     "dependencies": [
       "ncurses"
@@ -4434,7 +4434,7 @@
     "url": [
       "https://thrysoee.dk/editline/"
     ],
-    "version": "20251016-3.1"
+    "version": "20260508-3.1"
   },
   "libev": {
     "date": "2026-05-03",
@@ -6469,7 +6469,7 @@
     "bin": [
       "poetry"
     ],
-    "date": "2026-05-04",
+    "date": "2026-05-09",
     "default": true,
     "dependencies": [
       "python"
@@ -6481,7 +6481,7 @@
       "https://python-poetry.org/",
       "https://pypi.org/project/poetry/"
     ],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "postgresql": {
     "bin": [
@@ -6528,7 +6528,7 @@
     "build_dependencies": [
       "git"
     ],
-    "date": "2026-05-02",
+    "date": "2026-05-09",
     "default": false,
     "description": "community-maintained Emacs configuration",
     "type": "cli",
@@ -6536,7 +6536,7 @@
       "https://github.com/bbatsov/prelude/"
     ],
     "user": true,
-    "version": "be4232e5643b9908c69dbfc363d1bb4f56f27053"
+    "version": "bab03706490bb5bd12e7dcc63b131132a4566015"
   },
   "prettier": {
     "bin": [
@@ -8854,14 +8854,14 @@
       "uv",
       "uvx"
     ],
-    "date": "2026-05-06",
+    "date": "2026-05-09",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.11"
+    "version": "0.11.12"
   },
   "vim": {
     "bin": [
@@ -9569,7 +9569,7 @@
       "conda"
     ],
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-09",
     "default": false,
     "description": "graphical terminal process monitor",
     "installer": "conda-package",
@@ -9578,7 +9578,7 @@
     "url": [
       "https://github.com/bvaisvil/zenith/"
     ],
-    "version": "0.14.3"
+    "version": "0.15.0"
   },
   "zip": {
     "bin": [
