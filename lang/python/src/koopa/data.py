@@ -29,28 +29,6 @@ def argsort(object: list, reverse: bool = False) -> list[int]:
     return out
 
 
-def flatten(items: list, seqtypes: type | tuple[type, ...] = (list, tuple)) -> list:
-    """Flatten an arbitrarily nested list.
-
-    See Also
-    --------
-    - https://stackoverflow.com/a/10824086
-
-    Examples
-    --------
-    >>> items = [["a", "b"], ["c", "d"]]
-    >>> flatten(items)
-    ['a', 'b', 'c', 'd']
-    """
-    try:
-        for i, _ in enumerate(items):
-            while isinstance(items[i], seqtypes):
-                items[i : i + 1] = items[i]
-    except IndexError:
-        pass
-    return items
-
-
 def unique_pos(object: list) -> list:
     """Return the position index of unique values.
 
