@@ -54,7 +54,11 @@ def main(
         check=True,
     )
     subprocess.run(
-        ["make", f"-j{jobs}", "VERBOSE=1"],
+        [
+            "make",
+            f"-j{jobs}",
+            *(["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
+        ],
         env=subprocess_env,
         check=True,
     )

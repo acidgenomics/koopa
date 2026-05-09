@@ -1,7 +1,6 @@
 """Install bash."""
 
 import os
-import platform
 import sys
 
 from koopa.build import activate_app, make_build
@@ -23,10 +22,14 @@ def main(
         f"--prefix={prefix}",
         "--with-curses",
         "--with-installed-readline",
+        "--without-bash-malloc",
+        "--disable-nls",
+        "--disable-profiling",
+        "--disable-help-builtin",
+        "--disable-bang-history",
+        "--disable-restricted",
     ]
     if sys.platform == "darwin":
         cflags = os.environ.get("CFLAGS", "")
         os.environ["CFLAGS"] = f"-DSSH_SOURCE_BASHRC {cflags}".strip()
-    if platform.machine() == "aarch64" and os.path.isfile("/etc/alpine-release"):
-        conf_args.append("--without-bash-malloc")
     make_build(conf_args=conf_args, env=env)

@@ -33,7 +33,14 @@ USE_OPENMP={use_openmp}
         fh.write(makefile_rule)
     subprocess_env = env.to_env_dict()
     subprocess.run(
-        [make, "VERBOSE=1", "--jobs=1", "libs", "netlib", "shared"],
+        [
+            make,
+            *(["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
+            "--jobs=1",
+            "libs",
+            "netlib",
+            "shared",
+        ],
         env=subprocess_env,
         check=True,
     )

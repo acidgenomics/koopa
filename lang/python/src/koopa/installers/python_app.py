@@ -97,7 +97,11 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     )
     jobs = os.cpu_count() or 1
     subprocess.run(
-        [make, "VERBOSE=1", f"--jobs={jobs}"],
+        [
+            make,
+            *(["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
+            f"--jobs={jobs}",
+        ],
         env=subprocess_env,
         check=True,
     )
