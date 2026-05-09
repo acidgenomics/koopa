@@ -26,7 +26,6 @@ def main(
         "--disable-nls",
         "--disable-profiling",
         "--disable-help-builtin",
-        "--disable-bang-history",
         "--disable-restricted",
     ]
     if sys.platform == "darwin":

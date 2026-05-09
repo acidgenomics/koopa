@@ -1,6 +1,6 @@
 # Changelog
 
-## koopa 0.16.0 (2026-05-07)
+## koopa 0.16.0 (2026-05-09)
 
 Major changes:
 
