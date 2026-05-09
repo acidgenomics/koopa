@@ -2063,7 +2063,7 @@ def _mirror_src_to_s3(
             download_with_mirror(
                 url, name, filename,
                 output=local, quiet=quiet, skip_koopa_mirror=True,
-                max_time=120,
+                max_time=60,
             )
         except Exception as exc:
             if strict:
