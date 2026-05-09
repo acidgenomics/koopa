@@ -649,7 +649,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         deps = _app_dependencies(config.name)
         all_deps = list(dict.fromkeys(build_deps + deps))
         if all_deps:
-            if not config.quiet and (not config.reinstall or config.verbose):
+            if config.verbose:
                 from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
                 version_suffix = f" {styled_version(config.version)}" if config.version else ""
