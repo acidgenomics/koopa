@@ -169,7 +169,7 @@ def _download_curl(
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and os.path.isfile(ca_bundle):
         curl_args.extend(["--cacert", ca_bundle])
-    if "sourceforge.net/" not in url:
+    if "sourceforge.net/" in url:
         curl_args.extend(["--user-agent", _USER_AGENT])
     if os.environ.get("http_proxy") or os.environ.get("https_proxy"):
         curl_args.append("--insecure")

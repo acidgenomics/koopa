@@ -2106,20 +2106,19 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             file=sys.stderr,
         )
     update_venv_version(outdated)
-    if s3_upload:
-        if not _has_acidgenomics_aws():
-            print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
-        else:
-            print("Uploading source tarballs to S3 mirror.", file=sys.stderr)
-            for r in outdated:
-                if r.name not in data or not r.latest_version:
-                    continue
-                src_url = data[r.name].get("src_url", "")
-                if not src_url:
-                    continue
-                _mirror_src_to_s3(r.name, r.latest_version, src_url)
-                for extra_tmpl in data[r.name].get("extra_src_urls", []):
-                    _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
+    if _has_acidgenomics_aws():
+        print("Uploading source tarballs to S3 mirror.", file=sys.stderr)
+        for r in outdated:
+            if r.name not in data or not r.latest_version:
+                continue
+            src_url = data[r.name].get("src_url", "")
+            if not src_url:
+                continue
+            _mirror_src_to_s3(r.name, r.latest_version, src_url)
+            for extra_tmpl in data[r.name].get("extra_src_urls", []):
+                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
+    elif s3_upload:
+        print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
     return count
 
 
