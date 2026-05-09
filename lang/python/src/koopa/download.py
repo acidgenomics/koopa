@@ -157,6 +157,26 @@ def _derive_filename(url: str) -> str:
     return name if name else "download"
 
 
+_curl_ok: set[str] = set()
+
+
+def _check_curl(curl_cmd: str) -> None:
+    """Verify curl's RPATH targets exist. Runs once per curl_cmd."""
+    if curl_cmd in _curl_ok:
+        return
+    import shutil
+
+    from koopa.build import _check_rpath
+    from koopa.prefix import koopa_prefix
+
+    koopa_bin = os.path.join(koopa_prefix(), "bin", "curl")
+    resolved = shutil.which(curl_cmd)
+    if resolved and os.path.realpath(resolved) == os.path.realpath(koopa_bin):
+        prefix = os.path.dirname(os.path.dirname(os.path.realpath(resolved)))
+        _check_rpath(prefix, "curl")
+    _curl_ok.add(curl_cmd)
+
+
 def _download_curl(
     url: str,
     output: str,
@@ -168,6 +188,7 @@ def _download_curl(
     quiet: bool = False,
 ) -> None:
     """Download using curl."""
+    _check_curl(curl_cmd)
     curl_args = [
         curl_cmd,
         "--create-dirs",

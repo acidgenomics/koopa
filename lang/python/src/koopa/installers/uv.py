@@ -1,10 +1,22 @@
 """Install uv."""
 
 import os
-import stat
-import subprocess
+import sys
 
+from koopa.archive import extract
 from koopa.download import download
+from koopa.system import arch, is_alpine
+
+
+def _platform_triple() -> str:
+    """Return the Rust-style platform triple for uv release assets."""
+    machine = arch()
+    arch_map = {"arm64": "aarch64", "x86_64": "x86_64", "aarch64": "aarch64"}
+    rust_arch = arch_map.get(machine, machine)
+    if sys.platform == "darwin":
+        return f"{rust_arch}-apple-darwin"
+    libc = "musl" if is_alpine() else "gnu"
+    return f"{rust_arch}-unknown-linux-{libc}"
 
 
 def main(
@@ -15,14 +27,10 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install uv."""
-    script = download("https://astral.sh/uv/install.sh", output="uv-install.sh")
-    os.chmod(script, os.stat(script).st_mode | stat.S_IEXEC)
-    env = os.environ.copy()
-    env["UV_NO_MODIFY_PATH"] = "1"
-    env["UV_PRINT_VERBOSE"] = "1"
-    env["UV_UNMANAGED_INSTALL"] = os.path.join(prefix, "bin")
-    subprocess.run(
-        ["bash", script],
-        env=env,
-        check=True,
+    triple = _platform_triple()
+    url = (
+        f"https://github.com/astral-sh/uv/releases/download/"
+        f"{version}/uv-{triple}.tar.gz"
     )
+    tarball = download(url)
+    extract(tarball, os.path.join(prefix, "bin"))
