@@ -1513,8 +1513,11 @@ def _resolve_conda_channel_url(channel_name: str) -> str:
 
 def _app_json_conda_channel(name: str) -> str:
     """Get conda channel for app from app.json (default 'conda-forge')."""
+    from koopa.installers._context import get_app_name
+
+    app_name = get_app_name() or name
     data = import_app_json()
-    entry = data.get(name, {})
+    entry = data.get(app_name, {})
     if isinstance(entry, dict):
         return entry.get("conda_channel", "conda-forge")
     return "conda-forge"
