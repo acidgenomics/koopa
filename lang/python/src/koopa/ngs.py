@@ -11,21 +11,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-
-def _run_cmd(
-    args: list[str],
-    *,
-    cwd: str | None = None,
-    capture: bool = False,
-) -> subprocess.CompletedProcess:
-    """Run a subprocess command."""
-    return subprocess.run(
-        args,
-        cwd=cwd,
-        capture_output=capture,
-        text=True,
-        check=True,
-    )
+from koopa.exec import run
 
 
 # -- Salmon ------------------------------------------------------------------
@@ -60,7 +46,7 @@ def salmon_detect_fastq_library_type(
             args.extend(["-1", r1, "-2", r2])
         else:
             args.extend(["-r", r1])
-        result = _run_cmd(args, capture=True)
+        result = run(*args, capture=True)
         for line in result.stderr.splitlines():
             if "library type" in line.lower():
                 return line.strip()
@@ -97,7 +83,7 @@ def salmon_index(
     ]
     if gencode:
         args.append("--gencode")
-    _run_cmd(args)
+    run(*args)
 
 
 def salmon_quant(
@@ -133,7 +119,7 @@ def salmon_quant(
         if isinstance(unmated, list):
             unmated = " ".join(unmated)
         args.extend(["-r", unmated])
-    _run_cmd(args)
+    run(*args)
 
 
 # -- STAR ---------------------------------------------------------------------
@@ -164,7 +150,7 @@ def star_index(
         args.extend(["--sjdbGTFfile", gtf])
     if sa_index_nbases is not None:
         args.extend(["--genomeSAindexNbases", str(sa_index_nbases)])
-    _run_cmd(args)
+    run(*args)
 
 
 def star_align(
@@ -196,7 +182,7 @@ def star_align(
         args.append(r2)
     if r1.endswith(".gz"):
         args.extend(["--readFilesCommand", "zcat"])
-    _run_cmd(args)
+    run(*args)
 
 
 # -- samtools -----------------------------------------------------------------
@@ -204,7 +190,7 @@ def star_align(
 
 def samtools_index(bam: str, *, threads: int = 1) -> None:
     """Index a BAM file."""
-    _run_cmd(["samtools", "index", "-@", str(threads), bam])
+    run("samtools", "index", "-@", str(threads), bam)
 
 
 def samtools_sort(
@@ -219,24 +205,18 @@ def samtools_sort(
     if by_name:
         args.append("-n")
     args.append(input_bam)
-    _run_cmd(args)
+    run(*args)
 
 
 def samtools_flagstat(bam: str, *, threads: int = 1) -> str:
     """Get BAM flagstat."""
-    result = _run_cmd(
-        ["samtools", "flagstat", "-@", str(threads), bam],
-        capture=True,
-    )
+    result = run("samtools", "flagstat", "-@", str(threads), bam, capture=True)
     return result.stdout
 
 
 def samtools_stats(bam: str, *, threads: int = 1) -> str:
     """Get BAM stats."""
-    result = _run_cmd(
-        ["samtools", "stats", "-@", str(threads), bam],
-        capture=True,
-    )
+    result = run("samtools", "stats", "-@", str(threads), bam, capture=True)
     return result.stdout
 
 
@@ -263,9 +243,9 @@ def samtools_view(
     args.append(input_bam)
     if output_bam:
         args.extend(["-o", output_bam])
-        _run_cmd(args)
+        run(*args)
         return None
-    result = _run_cmd(args, capture=True)
+    result = run(*args, capture=True)
     return result.stdout
 
 
@@ -279,14 +259,12 @@ def bowtie2_build(
     threads: int = 1,
 ) -> None:
     """Build a Bowtie2 index."""
-    _run_cmd(
-        [
-            "bowtie2-build",
-            "--threads",
-            str(threads),
-            fasta,
-            index_prefix,
-        ]
+    run(
+        "bowtie2-build",
+        "--threads",
+        str(threads),
+        fasta,
+        index_prefix,
     )
 
 
@@ -320,7 +298,7 @@ def bowtie2_align(
         bowtie2_args.extend(["-U", r1])
     if output_fmt == "sam":
         bowtie2_args.extend(["-S", output_sam])
-        _run_cmd(bowtie2_args)
+        run(*bowtie2_args)
         return
     # Pipe bowtie2 SAM stdout → samtools sort → sorted BAM/CRAM
     samtools_args = [
@@ -359,14 +337,12 @@ def hisat2_build(
     threads: int = 1,
 ) -> None:
     """Build a HISAT2 index."""
-    _run_cmd(
-        [
-            "hisat2-build",
-            "-p",
-            str(threads),
-            fasta,
-            index_prefix,
-        ]
+    run(
+        "hisat2-build",
+        "-p",
+        str(threads),
+        fasta,
+        index_prefix,
     )
 
 
@@ -375,7 +351,7 @@ def hisat2_build(
 
 def kallisto_index(fasta: str, output: str, *, kmer: int = 31) -> None:
     """Build a Kallisto index."""
-    _run_cmd(["kallisto", "index", "-i", output, "-k", str(kmer), fasta])
+    run("kallisto", "index", "-i", output, "-k", str(kmer), fasta)
 
 
 def kallisto_quant(
@@ -404,7 +380,7 @@ def kallisto_quant(
         args.extend([r1, r2])
     else:
         args.extend(["--single", r1])
-    _run_cmd(args)
+    run(*args)
 
 
 # -- BAM utilities ------------------------------------------------------------
@@ -443,7 +419,7 @@ def bam_to_fastq(
     else:
         args.extend(["-o", r1])
     args.append(bam)
-    _run_cmd(args)
+    run(*args)
 
 
 # -- QC -----------------------------------------------------------------------
@@ -460,7 +436,7 @@ def fastqc(
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         args.extend(["--outdir", output_dir])
     args.extend(files)
-    _run_cmd(args)
+    run(*args)
 
 
 def multiqc(
@@ -477,7 +453,7 @@ def multiqc(
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         args.extend(["--outdir", output_dir])
     args.append(input_dir)
-    _run_cmd(args)
+    run(*args)
 
 
 # -- RSEM ---------------------------------------------------------------------
@@ -499,7 +475,7 @@ def rsem_prepare_reference(
     if gtf:
         args.extend(["--gtf", gtf])
     args.extend([fasta, reference_prefix])
-    _run_cmd(args)
+    run(*args)
 
 
 def rsem_calculate_expression(
@@ -521,7 +497,7 @@ def rsem_calculate_expression(
     if paired_end:
         args.append("--paired-end")
     args.extend([bam, reference_prefix, output_prefix])
-    _run_cmd(args)
+    run(*args)
 
 
 # -- bedtools -----------------------------------------------------------------
@@ -542,7 +518,7 @@ def bedtools_intersect(
         with open(output, "w") as f:
             subprocess.run(args, stdout=f, check=True)
         return None
-    result = _run_cmd(args, capture=True)
+    result = run(*args, capture=True)
     return result.stdout
 
 
@@ -563,7 +539,7 @@ def minimap2_align(
         with open(output, "w") as f:
             subprocess.run(args, stdout=f, check=True)
         return None
-    result = _run_cmd(args, capture=True)
+    result = run(*args, capture=True)
     return result.stdout
 
 

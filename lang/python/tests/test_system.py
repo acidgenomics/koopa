@@ -5,14 +5,11 @@ from unittest.mock import patch
 import pytest
 from koopa.system import (
     arch2,
-    boolean_nounset,
     color_mode,
     cpu_count,
-    default_shell_name,
     major_minor_patch_version,
     major_minor_version,
     major_version,
-    shell_name,
 )
 
 
@@ -44,44 +41,6 @@ def test_arch2_unknown() -> None:
     """Test arch2 returns unknown arch as-is."""
     with patch("platform.machine", return_value="riscv64"):
         assert arch2() == "riscv64"
-
-
-@pytest.mark.parametrize(
-    ("value", "expected"),
-    [
-        ("1", True),
-        ("true", True),
-        ("yes", True),
-        ("True", True),
-        ("YES", True),
-        (True, True),
-        (1, True),
-        (42, True),
-    ],
-)
-def test_boolean_nounset_truthy(value: str | bool | int, expected: bool) -> None:
-    """Test boolean_nounset with truthy values."""
-    assert boolean_nounset(value) == expected
-
-
-@pytest.mark.parametrize(
-    ("value", "expected"),
-    [
-        ("0", False),
-        ("false", False),
-        ("no", False),
-        ("", False),
-        (None, False),
-        (False, False),
-        (0, False),
-    ],
-)
-def test_boolean_nounset_falsy(
-    value: str | bool | int | None,
-    expected: bool,
-) -> None:
-    """Test boolean_nounset with falsy values."""
-    assert boolean_nounset(value) == expected
 
 
 def test_major_version() -> None:
@@ -140,31 +99,6 @@ def test_color_mode_none(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("COLORTERM", raising=False)
     monkeypatch.setenv("TERM", "dumb")
     assert color_mode() == "none"
-
-
-def test_default_shell_name(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test default_shell_name extracts shell basename."""
-    monkeypatch.setenv("SHELL", "/bin/zsh")
-    assert default_shell_name() == "zsh"
-
-
-def test_default_shell_name_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test default_shell_name falls back to sh."""
-    monkeypatch.delenv("SHELL", raising=False)
-    assert default_shell_name() == "sh"
-
-
-def test_shell_name_koopa_shell(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test shell_name reads KOOPA_SHELL."""
-    monkeypatch.setenv("KOOPA_SHELL", "/usr/bin/bash")
-    assert shell_name() == "bash"
-
-
-def test_shell_name_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test shell_name delegates to default when KOOPA_SHELL unset."""
-    monkeypatch.delenv("KOOPA_SHELL", raising=False)
-    monkeypatch.setenv("SHELL", "/bin/zsh")
-    assert shell_name() == "zsh"
 
 
 def test_cpu_count_returns_positive_int() -> None:

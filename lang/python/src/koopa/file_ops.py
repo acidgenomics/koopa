@@ -12,18 +12,13 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-
-def _run(args: list[str], *, sudo: bool = False) -> subprocess.CompletedProcess:
-    """Run a command, optionally with sudo."""
-    if sudo:
-        args = ["sudo", *args]
-    return subprocess.run(args, check=True, capture_output=True, text=True)
+from koopa.exec import run
 
 
 def mkdir(path: str, *, sudo: bool = False) -> None:
     """Create a directory recursively."""
     if sudo:
-        _run(["mkdir", "-p", path], sudo=True)
+        run("mkdir", "-p", path, sudo=True, capture=True)
     else:
         Path(path).mkdir(parents=True, exist_ok=True)
 
@@ -53,7 +48,7 @@ def cp(source: str, target: str, *, sudo: bool = False, recursive: bool = False)
         if recursive:
             args.append("-r")
         args.extend([source, target])
-        _run(args, sudo=True)
+        run(*args, sudo=True, capture=True)
     elif recursive or os.path.isdir(source):
         shutil.copytree(source, target, dirs_exist_ok=True)
     else:
@@ -70,7 +65,7 @@ def cp_to_dir(source: str, target_dir: str, *, sudo: bool = False) -> None:
 def mv(source: str, target: str, *, sudo: bool = False) -> None:
     """Move/rename a file or directory."""
     if sudo:
-        _run(["mv", source, target], sudo=True)
+        run("mv", source, target, sudo=True, capture=True)
     else:
         shutil.move(source, target)
 
@@ -85,7 +80,7 @@ def mv_to_dir(source: str, target_dir: str, *, sudo: bool = False) -> None:
 def rm(path: str, *, sudo: bool = False) -> None:
     """Remove a file or directory."""
     if sudo:
-        _run(["rm", "-rf", path], sudo=True)
+        run("rm", "-rf", path, sudo=True, capture=True)
     elif os.path.isdir(path) and not os.path.islink(path):
         shutil.rmtree(path)
     elif os.path.exists(path) or os.path.islink(path):
@@ -95,7 +90,7 @@ def rm(path: str, *, sudo: bool = False) -> None:
 def ln(source: str, target: str, *, sudo: bool = False) -> None:
     """Create a symbolic link."""
     if sudo:
-        _run(["ln", "-sfn", source, target], sudo=True)
+        run("ln", "-sfn", source, target, sudo=True, capture=True)
     else:
         target_path = Path(target)
         if target_path.is_symlink() or target_path.exists():
@@ -117,7 +112,7 @@ def chmod(path: str, mode: str | int, *, sudo: bool = False, recursive: bool = F
         if recursive:
             args.append("-R")
         args.extend([str(mode), path])
-        _run(args, sudo=sudo)
+        run(*args, sudo=sudo, capture=True)
     else:
         if isinstance(mode, str):
             mode = int(mode, 8)
@@ -144,13 +139,13 @@ def chown(
     if recursive:
         args.append("-R")
     args.extend([owner, path])
-    _run(args, sudo=sudo)
+    run(*args, sudo=sudo, capture=True)
 
 
 def touch(path: str, *, sudo: bool = False) -> None:
     """Touch a file (create if not exists, update timestamp)."""
     if sudo:
-        _run(["touch", path], sudo=True)
+        run("touch", path, sudo=True, capture=True)
     else:
         Path(path).touch()
 
@@ -299,5 +294,3 @@ def delete_named_subdirs(dir_path: str, name: str) -> list[str]:
             shutil.rmtree(full)
             deleted.append(full)
     return deleted
-
-
