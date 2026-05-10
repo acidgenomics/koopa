@@ -4,7 +4,7 @@
     - koopa configure user
     - koopa update user
 * Medium complexity
-** TODO Let's not trigger automatic configuration our emacs and vim apps during install.
+** DONE Let's not trigger automatic configuration our emacs and vim apps during install.
 ** TODO Confirm install support for emacs and vim interfaces:
     - doom-emacs
     - spacemacs

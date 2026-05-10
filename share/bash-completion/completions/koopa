@@ -806,7 +806,13 @@ _koopa_complete() {
                             fi
                             ;;
                         'user')
-                            args+=('dotfiles')
+                            args+=(
+                                'doom-emacs'
+                                'dotfiles'
+                                'prelude-emacs'
+                                'spacemacs'
+                                'spacevim'
+                            )
                             if _koopa_is_macos
                             then
                                 args+=('preferences')
@@ -886,13 +892,6 @@ _koopa_complete() {
                             fi
                             ;;
                         'user')
-                            args+=(
-                                'bootstrap'
-                                'doom-emacs'
-                                'prelude-emacs'
-                                'spacemacs'
-                                'spacevim'
-                            )
                             ;;
                         esac
                         ;;
