@@ -1566,6 +1566,15 @@ def install_conda_package(
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
     try:
         subprocess.run(create_args, check=True, env=env, timeout=300)
+    except subprocess.CalledProcessError:
+        if channel_url.startswith("http"):
+            shutil.rmtree(libexec, ignore_errors=True)
+            os.makedirs(libexec, exist_ok=True)
+            classic_args = create_args.copy()
+            classic_args.insert(2, "--solver=classic")
+            subprocess.run(classic_args, check=True, env=env, timeout=300)
+        else:
+            raise
     except subprocess.TimeoutExpired:
         msg = (
             f"Conda solver timed out after 5 minutes installing '{name}'. "
