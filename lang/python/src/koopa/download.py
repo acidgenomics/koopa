@@ -44,8 +44,12 @@ def download(
         print(f"Downloading '{url}' to '{output}'.", file=sys.stderr)
     try:
         _download_curl(
-            url, output, retry=retry, connect_timeout=connect_timeout,
-            max_time=max_time, quiet=quiet,
+            url,
+            output,
+            retry=retry,
+            connect_timeout=connect_timeout,
+            max_time=max_time,
+            quiet=quiet,
         )
     except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
         try:
@@ -136,8 +140,7 @@ def download_with_mirror(
                 next_url = urls[i + 1]
                 if not quiet:
                     print(
-                        f"All mirrors failed, trying koopa mirror:"
-                        f" '{next_url}'."
+                        f"All mirrors failed, trying koopa mirror: '{next_url}'."
                         if next_url == koopa_mirror
                         else f"Mirror failed, trying: '{next_url}'.",
                         file=sys.stderr,

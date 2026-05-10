@@ -1093,9 +1093,7 @@ def _generate_elvish_completion(
     first_d4 = True
     for (gp, p), leaves in sorted(depth4.items()):
         keyword = "if" if first_d4 else "} elif"
-        lines.append(
-            f"            {keyword} (and (eq $args[2] '{gp}') (eq $args[3] '{p}')) {{"
-        )
+        lines.append(f"            {keyword} (and (eq $args[2] '{gp}') (eq $args[3] '{p}')) {{")
         lines.append(f"                put {' '.join(leaves)}")
         first_d4 = False
     if not first_d4:

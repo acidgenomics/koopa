@@ -28,9 +28,6 @@ def main(
 ) -> None:
     """Install uv."""
     triple = _platform_triple()
-    url = (
-        f"https://github.com/astral-sh/uv/releases/download/"
-        f"{version}/uv-{triple}.tar.gz"
-    )
+    url = f"https://github.com/astral-sh/uv/releases/download/{version}/uv-{triple}.tar.gz"
     tarball = download(url)
     extract(tarball, os.path.join(prefix, "bin"))
