@@ -25,6 +25,13 @@ _STATIC_REFS: dict[str, str] = {
     "zsh": "https://www.zsh.org/",
 }
 
+_EXCLUDE_FROM_DOCS: frozenset[str] = frozenset(
+    [
+        "r-gfortran",
+        "r-xcode-openmp",
+    ]
+)
+
 # Ordered category → known app names mapping.
 # Apps with "default": true in app.json that are not listed here will be
 # placed in "Miscellaneous" and a warning will be printed.
@@ -120,8 +127,6 @@ _APP_CATEGORIES: dict[str, list[str]] = {
     ],
     "R": [
         "quarto",
-        "r-gfortran",
-        "r-xcode-openmp",
         "radian",
     ],
     "AI": [
@@ -200,6 +205,8 @@ def _render_default_apps_section(apps: list[str]) -> str:
     bucketed: dict[str, list[str]] = {cat: [] for cat in _APP_CATEGORIES}
     uncategorized: list[str] = []
     for app in apps:
+        if app in _EXCLUDE_FROM_DOCS:
+            continue
         cat = known.get(app)
         if cat is None:
             uncategorized.append(app)
