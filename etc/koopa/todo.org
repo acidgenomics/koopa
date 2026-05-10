@@ -1,14 +1,18 @@
 * High complexity
+** DONE python has dual path installation using uv or building from source.
+** DONE Think about configuration and trigger scope support for:
+    - koopa configure user
+    - koopa update user
 * Medium complexity
-** TODO Deferred: doom_emacs, python_app (need new abstractions)
-    Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs, spacevim.
-** TODO python has dual path installation using uv or building from source.
-** TODO `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
-** TODO Audit any user-specific installation approaches, and consider removing these apps from koopa if they don't work for multiple users.
-    Potential candidates:
+** TODO Let's not trigger automatic configuration our emacs and vim apps during install.
+** TODO Confirm install support for emacs and vim interfaces:
     - doom-emacs
     - spacemacs
+    - prelude-emacs
     - spacevim
+** DONE Deferred: doom_emacs, python_app (need new abstractions)
+    Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs, spacevim.
+** DONE `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
 * Low complexity
 ** TODO vim maps to _conda, not vim.py. That means vim.py is a dead file.
     Review if we have any other dead installer files like this that are safe to remove.
@@ -24,3 +28,5 @@
     Update will install 1 apps: fontconfig.
     Warning: System checks completed with warnings.
     ** Run 'koopa update' to resolve these issues.
+** TODO Consider installing emacs from conda-forge instead of building from source.
+    We need to evaluate if GUI usage is useful, otherwise switch to conda build, which only supports terminal.

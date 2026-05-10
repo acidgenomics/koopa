@@ -111,3 +111,9 @@ def main(
     completion_dst = os.path.join(prefix, "share", "completion")
     if os.path.isdir(completion_src):
         shutil.copytree(completion_src, completion_dst, dirs_exist_ok=True)
+    git_remote_http = os.path.join(prefix, "libexec", "git-core", "git-remote-http")
+    if not os.path.isfile(git_remote_http):
+        raise RuntimeError(
+            "git-remote-http was not compiled — HTTPS transport will not work. "
+            "Check that curl's transitive deps (e.g. nghttp2) are resolvable at link time."
+        )

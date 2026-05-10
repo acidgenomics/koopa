@@ -2142,6 +2142,10 @@
     "version": "0.9.7"
   },
   "doom-emacs": {
+    "bin": [
+      "doom",
+      "doom-emacs"
+    ],
     "build_dependencies": [
       "emacs",
       "git"
@@ -2151,10 +2155,6 @@
     "default": false,
     "dependencies": [
       "emacs"
-    ],
-    "bin": [
-      "doom",
-      "doom-emacs"
     ],
     "description": "opinionated Emacs configuration framework",
     "type": "cli",
@@ -2340,7 +2340,8 @@
       "etags"
     ],
     "build_dependencies": [
-      "make"
+      "make",
+      "pkg-config"
     ],
     "category": "Editor",
     "date": "2025-08-18",
@@ -3237,7 +3238,7 @@
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -6818,6 +6819,9 @@
     "version": "7.6.1"
   },
   "prelude-emacs": {
+    "bin": [
+      "prelude-emacs"
+    ],
     "build_dependencies": [
       "emacs",
       "git"
@@ -6827,9 +6831,6 @@
     "default": false,
     "dependencies": [
       "emacs"
-    ],
-    "bin": [
-      "prelude-emacs"
     ],
     "description": "community-maintained Emacs configuration",
     "type": "cli",
@@ -8511,6 +8512,9 @@
     "version": "14.4.2"
   },
   "spacemacs": {
+    "bin": [
+      "spacemacs"
+    ],
     "build_dependencies": [
       "emacs",
       "git"
@@ -8521,9 +8525,6 @@
     "dependencies": [
       "emacs"
     ],
-    "bin": [
-      "spacemacs"
-    ],
     "description": "Emacs configuration centered around evil-mode",
     "type": "cli",
     "url": [
@@ -8532,15 +8533,15 @@
     "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
   },
   "spacevim": {
+    "bin": [
+      "spacevim"
+    ],
     "build_dependencies": [
       "git"
     ],
     "category": "Editor",
     "date": "2026-05-02",
     "default": false,
-    "bin": [
-      "spacevim"
-    ],
     "description": "modular Vim and Neovim configuration",
     "type": "cli",
     "url": [
