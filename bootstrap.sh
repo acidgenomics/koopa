@@ -516,27 +516,39 @@ main() {
     then
         if [ "$__kvar_use_sudo" -eq 1 ]
         then
-            sudo /bin/rm -fr "${PREFIX}.old"
+            sudo /bin/rm -fr "${PREFIX}.old" 2>/dev/null || true
+            if [ -d "${PREFIX}.old" ]; then
+                sudo /bin/mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+            fi
             sudo /bin/mv "$PREFIX" "${PREFIX}.old"
         else
-            rm -fr "${PREFIX}.old"
+            rm -fr "${PREFIX}.old" 2>/dev/null || true
+            if [ -d "${PREFIX}.old" ]; then
+                mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+            fi
             mv "$PREFIX" "${PREFIX}.old"
         fi
     elif [ "$__kvar_use_sudo" -eq 1 ]
     then
-        sudo /bin/rm -fr "${PREFIX}.old"
+        sudo /bin/rm -fr "${PREFIX}.old" 2>/dev/null || true
+        if [ -d "${PREFIX}.old" ]; then
+            sudo /bin/mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+        fi
     else
-        rm -fr "${PREFIX}.old"
+        rm -fr "${PREFIX}.old" 2>/dev/null || true
+        if [ -d "${PREFIX}.old" ]; then
+            mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+        fi
     fi
     if [ "$__kvar_use_sudo" -eq 1 ]
     then
         sudo /bin/mkdir -p "$(dirname "$PREFIX")"
         sudo /bin/mv "$__kvar_staged" "$PREFIX"
         sudo /usr/sbin/chown -R "$(id -u):$(id -g)" "$PREFIX"
-        sudo /bin/rm -fr "${PREFIX}.old" "$__kvar_destdir"
+        sudo /bin/rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
     else
         mv "$__kvar_staged" "$PREFIX"
-        rm -fr "${PREFIX}.old" "$__kvar_destdir"
+        rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
     fi
     printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
     printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
