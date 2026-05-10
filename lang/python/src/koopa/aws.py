@@ -15,9 +15,13 @@ def _aws(
     *args: str, capture: bool = True, timeout: int = 300
 ) -> subprocess.CompletedProcess:
     """Run an AWS CLI command."""
+    import os
+
     cmd = ["aws", *args]
+    env = os.environ.copy()
+    env["AWS_PAGER"] = ""
     return subprocess.run(
-        cmd, capture_output=capture, text=True, check=True, timeout=timeout
+        cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=env
     )
 
 
