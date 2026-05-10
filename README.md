@@ -18,7 +18,7 @@ Shell bootloader for data science.
   [elvish](https://elv.sh/),
   [nushell](https://www.nushell.sh/),
   or [powershell](https://learn.microsoft.com/en-us/powershell/).
-- [Python](https://www.python.org/) 3.12+, which will be bootstrap installed
+- [Python](https://www.python.org/) 3.12, which will be bootstrap installed
   into `~/.local/share/koopa-bootstrap` automatically when necessary.
 - Core utilities: `curl`, `git`, `grep`, `mkdir`, `mktemp`, `rm`, `sed`, `tar`.
 
