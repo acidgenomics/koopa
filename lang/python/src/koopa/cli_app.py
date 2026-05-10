@@ -1214,12 +1214,13 @@ def _handle_aws_ec2_stop(args: list[str]) -> None:
     parser = argparse.ArgumentParser(
         prog="koopa app aws ec2 stop",
     )
-    parser.add_argument("instance_ids", nargs="+", help="EC2 instance IDs")
+    parser.add_argument("instance_ids", nargs="*", help="EC2 instance IDs")
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
-    from koopa.aws import aws_ec2_stop
+    from koopa.aws import aws_ec2_instance_id, aws_ec2_stop
 
-    aws_ec2_stop(parsed.instance_ids, profile=parsed.profile)
+    instance_ids = parsed.instance_ids or [aws_ec2_instance_id()]
+    aws_ec2_stop(instance_ids, profile=parsed.profile)
 
 
 def _handle_aws_ecr_login_private(args: list[str]) -> None:
