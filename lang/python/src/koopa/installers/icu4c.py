@@ -3,8 +3,8 @@
 import os
 from pathlib import Path
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -15,7 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install icu4c."""
-    env = activate_app("pkg-config", build_only=True)
+    env = activate_app_deps()
     download_extract_cd()
     if os.path.islink("LICENSE") and not os.path.exists("LICENSE"):
         os.unlink("LICENSE")

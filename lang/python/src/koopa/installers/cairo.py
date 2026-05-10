@@ -2,8 +2,8 @@
 
 import sys
 
-from koopa.build import activate_app, meson_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import meson_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,36 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install cairo."""
-    env = activate_app("meson", "ninja", "pkg-config", build_only=True)
-    deps = [
-        "zlib",
-        "gettext",
-        "freetype",
-        "icu4c",
-        "libxml2",
-        "fontconfig",
-        "libffi",
-        "pcre2",
-        "glib",
-        "libpng",
-        "pixman",
-        "expat",
-    ]
-    if sys.platform != "darwin":
-        deps.extend(
-            [
-                "xorg-xorgproto",
-                "xorg-xcb-proto",
-                "xorg-libpthread-stubs",
-                "xorg-libxau",
-                "xorg-libxdmcp",
-                "xorg-libxcb",
-                "xorg-libx11",
-                "xorg-libxext",
-                "xorg-libxrender",
-            ]
-        )
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     download_extract_cd()
     meson_args = [
         "-Dfontconfig=enabled",

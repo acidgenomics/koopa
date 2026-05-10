@@ -1,35 +1,35 @@
 {
-    "folders": [
-        {
-            "path": "."
-        }
-    ],
-    "settings": {
-        "chat.editing.autoAcceptDelay": 10,
-        "chat.tools.global.autoApprove": false,
-        "chat.tools.terminal.autoApprove": {
-            "/^.*$/": true
-        },
-        "chat.tools.terminal.enableAutoApprove": true,
-        "chat.tools.urls.autoApprove": {
-            "https://*/*": {
-                "approveRequest": true,
-                "approveResponse": true
-            }
-        },
-        "python.analysis.exclude": [
-            "./app",
-            "./bin",
-            "./etc",
-            "./lang/bash",
-            "./lang/r",
-            "./lang/sh",
-            "./lang/zsh",
-            "./opt",
-            "./share"
-        ],
-        "python.analysis.extraPaths": [
-            "./lang/python"
-        ]
+  "folders": [
+    {
+      "path": "."
     }
+  ],
+  "settings": {
+    "chat.editing.autoAcceptDelay": 10,
+    "chat.tools.global.autoApprove": false,
+    "chat.tools.terminal.autoApprove": {
+      "/^.*$/": true
+    },
+    "chat.tools.terminal.enableAutoApprove": true,
+    "chat.tools.urls.autoApprove": {
+      "https://*/*": {
+        "approveRequest": true,
+        "approveResponse": true
+      }
+    },
+    "python.analysis.exclude": [
+      "./app",
+      "./bin",
+      "./etc",
+      "./lang/bash",
+      "./lang/r",
+      "./lang/sh",
+      "./lang/zsh",
+      "./opt",
+      "./share"
+    ],
+    "python.analysis.extraPaths": [
+      "./lang/python"
+    ]
+  }
 }

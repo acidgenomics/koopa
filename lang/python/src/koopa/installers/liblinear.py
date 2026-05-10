@@ -4,9 +4,9 @@ import os
 import subprocess
 import sys
 
-from koopa.build import activate_app, locate, shared_ext
+from koopa.build import locate, shared_ext
 from koopa.file_ops import ln
-from koopa.installers._build_helper import download_extract_cd
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -17,7 +17,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install liblinear."""
-    env = activate_app("make", build_only=True)
+    env = activate_app_deps()
     make = locate("make")
     ext = shared_ext()
     download_extract_cd()

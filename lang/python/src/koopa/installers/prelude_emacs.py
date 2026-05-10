@@ -2,8 +2,8 @@
 
 import subprocess
 
-from koopa.build import activate_app
 from koopa.git import git_clone
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -14,7 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install prelude-emacs."""
-    env = activate_app("git", build_only=True)
+    env = activate_app_deps()
     env.apply()
     git_clone(
         "https://github.com/bbatsov/prelude.git",

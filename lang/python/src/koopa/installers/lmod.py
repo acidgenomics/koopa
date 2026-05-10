@@ -4,10 +4,10 @@ import os
 import re
 import subprocess
 
-from koopa.build import activate_app, app_prefix
+from koopa.build import app_prefix
 from koopa.download import download_with_mirror
 from koopa.file_ops import init_dir
-from koopa.installers._build_helper import _resolve_src_url, extract_cd
+from koopa.installers._build_helper import _resolve_src_url, activate_app_deps, extract_cd
 from koopa.system import cpu_count
 
 
@@ -19,8 +19,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install Lmod."""
-    env = activate_app("make", "pkg-config", build_only=True)
-    env = activate_app("zlib", "lua", "luarocks", "tcl-tk", env=env)
+    env = activate_app_deps()
     subprocess_env = env.to_env_dict()
     lua_prefix = app_prefix("lua")
     lua_bin = os.path.join(lua_prefix, "bin", "lua")

@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 
-from koopa.build import activate_app
+from koopa.installers._build_helper import activate_app_deps
 
 _PACKAGES = [
     "collection-fontsrecommended",
@@ -49,7 +49,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install TeX packages."""
-    activate_app("curl", "gnupg", "wget", build_only=True)
+    env = activate_app_deps()
     tlmgr = shutil.which("tlmgr")
     if tlmgr is None:
         msg = "tlmgr not found. Install TeX Live first."

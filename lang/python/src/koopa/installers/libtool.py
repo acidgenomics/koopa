@@ -2,9 +2,9 @@
 
 import os
 
-from koopa.build import activate_app
 from koopa.file_ops import ln
 from koopa.install import install_gnu_app
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -15,8 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libtool."""
-    env = activate_app("make", build_only=True)
-    env = activate_app("m4", env=env)
+    env = activate_app_deps()
     env.apply()
     install_gnu_app(
         name=name,

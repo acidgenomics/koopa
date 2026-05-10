@@ -4,8 +4,8 @@ import os
 import stat
 import subprocess
 
-from koopa.build import activate_app
 from koopa.download import download
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -16,7 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install ldc."""
-    env = activate_app("gnupg", "libarchive", "xz", build_only=True)
+    env = activate_app_deps()
     script = download(
         "https://dlang.org/install.sh",
         output="dlang-install.sh",

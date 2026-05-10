@@ -3,8 +3,9 @@
 import os
 import stat
 
-from koopa.build import activate_app, locate
+from koopa.build import locate
 from koopa.download import download
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -15,7 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install bfg."""
-    activate_app("temurin")
+    env = activate_app_deps()
     java = locate("java")
     libexec = os.path.join(prefix, "libexec")
     bin_dir = os.path.join(prefix, "bin")

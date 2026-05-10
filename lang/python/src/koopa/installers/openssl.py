@@ -5,9 +5,9 @@ import platform
 import subprocess
 import sys
 
-from koopa.build import activate_app, app_prefix, locate
+from koopa.build import app_prefix, locate
 from koopa.file_ops import ln
-from koopa.installers._build_helper import download_extract_cd, remove_static_libs
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd, remove_static_libs
 
 
 def main(
@@ -18,8 +18,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install openssl."""
-    env = activate_app("make", "pkg-config", "perl", build_only=True)
-    env = activate_app("ca-certificates", env=env)
+    env = activate_app_deps()
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = os.path.join(ca_prefix, "share", "ca-certificates", "cacert.pem")
     make = locate("make")

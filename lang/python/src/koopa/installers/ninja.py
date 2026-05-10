@@ -4,8 +4,8 @@ import os
 import shutil
 import subprocess
 
-from koopa.build import activate_app, locate
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import locate
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -16,7 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install ninja."""
-    env = activate_app("python", build_only=True)
+    env = activate_app_deps()
     python = locate("python3")
     download_extract_cd()
     subprocess.run(

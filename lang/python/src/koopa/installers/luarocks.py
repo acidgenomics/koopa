@@ -2,8 +2,8 @@
 
 import subprocess
 
-from koopa.build import activate_app, locate, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import locate, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 from koopa.version import major_minor_version
 
 
@@ -15,8 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install luarocks."""
-    env = activate_app("make", build_only=True)
-    env = activate_app("lua", env=env)
+    env = activate_app_deps()
     lua = locate("lua")
     result = subprocess.run(
         [lua, "-v"],
