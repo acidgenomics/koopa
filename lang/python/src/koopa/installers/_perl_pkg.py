@@ -17,10 +17,12 @@ def main(
     if not cpan_path:
         msg = f"Perl package '{name}' requires a --cpan-path passthrough arg."
         raise ValueError(msg)
+    version_prefix = get_str(kwargs, "version_prefix")
     deps = get_list(kwargs, "dependencies")
     install_perl_package(
         cpan_path=cpan_path,
         version=version,
         prefix=prefix,
+        version_prefix=version_prefix,
         dependencies=deps or None,
     )

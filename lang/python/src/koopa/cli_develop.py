@@ -591,11 +591,10 @@ def _handle_mirror_src(args: list[str]) -> None:
                 print(f"Error: '{name}' has no 'src_url' in app.json.", file=sys.stderr)
                 sys.exit(1)
     else:
-        targets = sorted(k for k, v in data.items() if v.get("src_url"))
+        targets = sorted(k for k, v in data.items() if v.get("src_url") and not v.get("removed"))
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    import threading
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
     from tqdm import tqdm
@@ -605,7 +604,6 @@ def _handle_mirror_src(args: list[str]) -> None:
     now = time.time()
     _cache_ttl = 86400  # 24 hours
     failures: dict[str, str] = {}
-    lock = threading.Lock()
 
     def _mirror_one(name: str) -> None:
         entry = data[name]
@@ -616,9 +614,8 @@ def _handle_mirror_src(args: list[str]) -> None:
         url = _expand_src_url(src_url, version)
         filename = url.rsplit("/", 1)[-1]
         cache_key = f"{name}/{filename}"
-        with lock:
-            if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
-                return
+        if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
+            return
         key = f"src/{cache_key}"
         head = subprocess.run(
             [
@@ -636,47 +633,34 @@ def _handle_mirror_src(args: list[str]) -> None:
             check=False,
         )
         if head.returncode == 0:
-            with lock:
-                cache[cache_key] = now
+            cache[cache_key] = now
+            return
+        if head.returncode != 254:
+            tqdm.write(f"  SKIPPED (head-object failed): {cache_key}")
             return
         try:
             tqdm.write(f"  Uploading: {cache_key}")
             _mirror_src_to_s3(name, version, src_url, strict=True, quiet=True)
-            with lock:
-                cache[cache_key] = now
+            cache[cache_key] = now
         except Exception as exc:
-            with lock:
-                failures[name] = str(exc)
+            failures[name] = str(exc)
             tqdm.write(f"  FAILED: {name}: {exc}")
             return
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
             extra_filename = extra_url.rsplit("/", 1)[-1]
             extra_cache_key = f"{name}/{extra_filename}"
-            with lock:
-                if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
-                    continue
+            if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
+                continue
             try:
                 _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=True)
-                with lock:
-                    cache[extra_cache_key] = now
+                cache[extra_cache_key] = now
             except Exception as exc:
-                with lock:
-                    failures[name] = str(exc)
+                failures[name] = str(exc)
                 tqdm.write(f"  FAILED (extra): {name}/{extra_filename}: {exc}")
 
-    pbar = tqdm(total=len(targets), desc="Mirroring", unit="app")
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        futures = {pool.submit(_mirror_one, name): name for name in targets}
-        for future in as_completed(futures):
-            app_name = futures[future]
-            pbar.set_description(f"Mirroring {app_name}")
-            pbar.update(1)
-            exc = future.exception()
-            if exc and app_name not in failures:
-                failures[app_name] = str(exc)
-                tqdm.write(f"  FAILED: {app_name}: {exc}")
-    pbar.close()
+    for name in tqdm(targets, desc="Mirroring", unit="app"):
+        _mirror_one(name)
     _save_mirror_src_cache(cache)
 
     def _prune_one(name: str) -> list[str]:
@@ -730,11 +714,54 @@ def _handle_mirror_src(args: list[str]) -> None:
                 deleted.append(key)
         return deleted
 
-    pbar = tqdm(total=len(targets), desc="Pruning", unit="app")
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        futures = {pool.submit(_prune_one, name): name for name in targets}
-        for future in as_completed(futures):
-            app_name = futures[future]
+    removed_apps = sorted(k for k, v in data.items() if v.get("src_url") and v.get("removed"))
+
+    def _remove_all(name: str) -> list[str]:
+        prefix = f"src/{name}/"
+        result = subprocess.run(
+            [
+                aws,
+                "s3api",
+                "list-objects-v2",
+                "--bucket",
+                bucket,
+                "--prefix",
+                prefix,
+                "--profile",
+                "acidgenomics",
+                "--output",
+                "json",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return []
+        import json as _json
+
+        resp = _json.loads(result.stdout)
+        contents = resp.get("Contents", [])
+        deleted: list[str] = []
+        for obj in contents:
+            key = obj["Key"]
+            uri = f"s3://{bucket}/{key}"
+            subprocess.run(
+                [aws, "s3", "rm", uri, "--profile", "acidgenomics"],
+                capture_output=True,
+                check=False,
+            )
+            deleted.append(key)
+        return deleted
+
+    prune_targets = targets + removed_apps
+    pbar = tqdm(total=len(prune_targets), desc="Pruning", unit="app")
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        prune_futures = {pool.submit(_prune_one, name): name for name in targets}
+        remove_futures = {pool.submit(_remove_all, name): name for name in removed_apps}
+        all_futures = {**prune_futures, **remove_futures}
+        for future in as_completed(all_futures):
+            app_name = all_futures[future]
             pbar.set_description(f"Pruning {app_name}")
             pbar.update(1)
             deleted = future.result()
@@ -782,7 +809,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
                 print(f"Error: '{name}' not found in app.json.", file=sys.stderr)
                 sys.exit(1)
     else:
-        targets = sorted(k for k, v in data.items() if v.get("src_url"))
+        targets = sorted(k for k, v in data.items() if v.get("src_url") and not v.get("removed"))
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)

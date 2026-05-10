@@ -1353,6 +1353,7 @@ def install_perl_package(
     cpan_path: str,
     version: str = "",
     prefix: str = "",
+    version_prefix: str = "",
     dependencies: list[str] | None = None,
     jobs: int | None = None,
 ) -> None:
@@ -1416,7 +1417,7 @@ __END__
                 check=True,
             )
         subprocess.run(
-            [cpan, "-j", cpan_config, f"{cpan_path}-{version}.tar.gz"],
+            [cpan, "-j", cpan_config, f"{cpan_path}-{version_prefix}{version}.tar.gz"],
             env=env,
             check=True,
         )
