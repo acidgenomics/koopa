@@ -773,6 +773,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     except Exception:
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
+            parent = os.path.dirname(config.prefix)
+            if os.path.isdir(parent) and not os.listdir(parent):
+                os.rmdir(parent)
         raise
     finally:
         os.chdir(orig_cwd)
@@ -819,6 +822,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             os.unlink(opt_link)
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
+            parent = os.path.dirname(config.prefix)
+            if os.path.isdir(parent) and not os.listdir(parent):
+                os.rmdir(parent)
         raise
     if config.mode == "shared" and config.push:
         push_app_build(config.name)

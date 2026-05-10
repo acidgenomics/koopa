@@ -2152,7 +2152,7 @@
     ],
     "category": "Editor",
     "date": "2026-05-08",
-    "default": false,
+    "default": true,
     "dependencies": [
       "emacs"
     ],
@@ -2334,7 +2334,6 @@
   },
   "emacs": {
     "bin": [
-      "ebrowse",
       "emacs",
       "emacsclient",
       "etags"
@@ -2359,8 +2358,12 @@
     ],
     "description": "extensible, customizable GNU text editor",
     "installer": "gnu-app",
+    "installer_args": {
+      "with_x_toolkit": "no",
+      "without_ns": "",
+      "without_x": ""
+    },
     "man1": [
-      "ebrowse.1.gz",
       "emacs.1.gz",
       "emacsclient.1.gz",
       "etags.1.gz"
@@ -8521,7 +8524,7 @@
     ],
     "category": "Editor",
     "date": "2026-05-02",
-    "default": false,
+    "default": true,
     "dependencies": [
       "emacs"
     ],
@@ -8541,7 +8544,7 @@
     ],
     "category": "Editor",
     "date": "2026-05-02",
-    "default": false,
+    "default": true,
     "description": "modular Vim and Neovim configuration",
     "type": "cli",
     "url": [

@@ -14,7 +14,7 @@ def koopa_system_cmds [] { ["check", "hostname", "info", "list", "os-slug", "pre
 
 def koopa_admin_cmds [] { ["add-group", "add-user", "apk-install", "apk-remove", "apk-update", "apt-install", "apt-list-installed", "apt-remove", "apt-update", "apt-upgrade", "clean-launch-services", "configure-lmod", "configure-sshd", "delete-cache", "delete-user", "disable-passwordless-sudo", "disable-touch-id-sudo", "dnf-install", "dnf-remove", "dnf-update", "enable-passwordless-sudo", "enable-touch-id-sudo", "fix-sudo-setrlimit-error", "flush-dns", "force-eject", "install-app", "os-version", "pacman-install", "pacman-remove", "pacman-update", "proc-cmdline", "reload-autofs", "systemctl-disable", "systemctl-restart", "systemctl-status", "systemctl-stop", "uninstall-app", "zsh-compaudit-set-permissions", "zypper-install", "zypper-remove", "zypper-update"] }
 
-def koopa_update_modes [] { ["koopa", "system", "user"] }
+def koopa_update_modes [] { ["koopa", "system"] }
 
 def koopa_configure_modes [] { ["system", "user"] }
 
