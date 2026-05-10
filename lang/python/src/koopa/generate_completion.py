@@ -122,7 +122,6 @@ def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
     result: dict[str, list[tuple[str, str | None]]] = {
         "system-install": [],
         "system": [],
-        "user": [],
         "update-system": [],
     }
     for name, platform, mode in PYTHON_INSTALLER_MODES:
@@ -604,7 +603,7 @@ def _generate_fish_completion(
             )
 
     lines += ["", "# update: mode completions."]
-    for mode in ("koopa", "system", "user"):
+    for mode in ("koopa", "system"):
         lines.append(f"complete -c koopa -n '__fish_seen_subcommand_from update' -a '{mode}'")
 
     lines += ["", "# Per-command flag completions."]
@@ -845,7 +844,7 @@ def _generate_zsh_completion(
     lines += ["_koopa_update() {", "    _arguments \\"]
     for flag in update_flags_zsh:
         lines.append(f"        '{flag}[{flag}]' \\")
-    lines += ["        '1:mode:(koopa system user)'", "}", ""]
+    lines += ["        '1:mode:(koopa system)'", "}", ""]
 
     lines.append('_koopa "$@"')
     return "\n".join(lines) + "\n"
@@ -1156,7 +1155,7 @@ def _generate_nushell_completion(
     _nu_completer(lines, "koopa_run_cmds", run_cmds)
     _nu_completer(lines, "koopa_system_cmds", system_cmds)
     _nu_completer(lines, "koopa_admin_cmds", admin_cmds)
-    _nu_completer(lines, "koopa_update_modes", ["koopa", "system", "user"])
+    _nu_completer(lines, "koopa_update_modes", ["koopa", "system"])
     _nu_completer(lines, "koopa_configure_modes", ["system", "user"])
 
     # Per-namespace completers for app sub-tree.
