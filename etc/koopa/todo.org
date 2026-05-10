@@ -13,6 +13,7 @@
 ** DONE Deferred: doom_emacs, python_app (need new abstractions)
     Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs.
 ** DONE `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
+** TODO Is usage of 'libexec' in our installers suboptimal? Is this the wrong name to use?
 * Low complexity
 ** TODO Review our configuration of doom-emacs and spacemacs for any updates and modernization.
 ** TODO Review our modernization of neovim and vim config.
