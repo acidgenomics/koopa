@@ -1,0 +1,9 @@
+{
+    "System": ["Core", "Shell", "Compression", "Filesystem", "Text"],
+    "Connectivity": ["Network", "Cloud"],
+    "Development": ["Build", "VCS", "Editor", "Terminal", "Dotfile"],
+    "Language": ["Language", "Python", "R"],
+    "Domain": ["AI", "Bioinformatics", "Database"],
+    "Infrastructure": ["Workflow", "Container", "Security"],
+    "Other": ["Multimedia", "Documentation", "Library", "Miscellaneous"]
+}
