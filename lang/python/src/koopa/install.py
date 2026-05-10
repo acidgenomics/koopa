@@ -1369,6 +1369,7 @@ def install_perl_package(
     cpan = shutil.which("cpan")
     perl = shutil.which("perl")
     make = shutil.which("make") or "/usr/bin/make"
+    curl = shutil.which("curl") or ""
     if cpan is None or perl is None:
         msg = "cpan and perl are required."
         raise FileNotFoundError(msg)
@@ -1385,6 +1386,7 @@ def install_perl_package(
   'make_install_arg' => q[-j{jobs}],
   'makepl_arg' => q[INSTALL_BASE={prefix}],
   'mbuildpl_arg' => q[--install_base {prefix}],
+  'curl' => q[{curl}],
   'prerequisites_policy' => q[follow],
   'urllist' => [q[http://www.cpan.org/]],
   'use_prompt_default' => q[1],
@@ -1565,19 +1567,19 @@ def install_conda_package(
     env = os.environ.copy()
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
     try:
-        subprocess.run(create_args, check=True, env=env, timeout=300)
+        subprocess.run(create_args, check=True, env=env, timeout=600)
     except subprocess.CalledProcessError:
         if channel_url.startswith("http"):
             shutil.rmtree(libexec, ignore_errors=True)
             os.makedirs(libexec, exist_ok=True)
             classic_args = create_args.copy()
             classic_args.insert(2, "--solver=classic")
-            subprocess.run(classic_args, check=True, env=env, timeout=300)
+            subprocess.run(classic_args, check=True, env=env, timeout=600)
         else:
             raise
     except subprocess.TimeoutExpired:
         msg = (
-            f"Conda solver timed out after 5 minutes installing '{name}'. "
+            f"Conda solver timed out after 10 minutes installing '{name}'. "
             "The package dependency resolution may be too complex or the "
             "channel may be unreachable."
         )
