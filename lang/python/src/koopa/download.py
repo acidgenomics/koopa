@@ -47,7 +47,7 @@ def download(
             url, output, retry=retry, connect_timeout=connect_timeout,
             max_time=max_time, quiet=quiet,
         )
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
         try:
             _download_curl(
                 url,
@@ -58,7 +58,7 @@ def download(
                 curl_cmd="/usr/bin/curl",
                 quiet=quiet,
             )
-        except (FileNotFoundError, subprocess.CalledProcessError):
+        except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
             _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
