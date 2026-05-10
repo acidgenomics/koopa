@@ -13,7 +13,7 @@ def main(
 ) -> None:
     """Install fontconfig."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app("gperf", "freetype", "icu4c", "libxml2", env=env)
+    env = activate_app("gperf", "freetype", "icu4c", "zlib", "libxml2", env=env)
     download_extract_cd()
     make_build(
         conf_args=[
