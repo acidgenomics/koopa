@@ -520,6 +520,40 @@ def _handle_generate_completion() -> None:
     alert_note("Reload your shell to apply changes.")
 
 
+def _list_s3_keys(aws: str, bucket: str, prefix: str, profile: str) -> set[str]:
+    """List all object keys in bucket under prefix via paginated list-objects-v2."""
+    import json as _json
+
+    keys: set[str] = set()
+    token = None
+    while True:
+        cmd = [
+            aws,
+            "s3api",
+            "list-objects-v2",
+            "--bucket",
+            bucket,
+            "--prefix",
+            prefix,
+            "--profile",
+            profile,
+            "--output",
+            "json",
+        ]
+        if token:
+            cmd += ["--continuation-token", token]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if result.returncode != 0:
+            break
+        resp = _json.loads(result.stdout)
+        for obj in resp.get("Contents", []):
+            keys.add(obj["Key"])
+        token = resp.get("NextContinuationToken")
+        if not token:
+            break
+    return keys
+
+
 def _mirror_src_cache_path() -> str:
     from koopa.xdg import xdg_cache_home
 
@@ -563,13 +597,17 @@ def _handle_mirror_src(args: list[str]) -> None:
 
     if "--help" in args or "-h" in args:
         print(
-            "usage: koopa develop mirror-src [<name>...]\n\n"
+            "usage: koopa develop mirror-src [--prune] [<name>...]\n\n"
             "Download source tarballs from upstream and upload to the\n"
             "s3://koopa.acidgenomics.com/src/ mirror.\n\n"
-            "With no args, mirrors all apps with a 'src_url' in app.json.",
+            "With no args, mirrors all apps with a 'src_url' in app.json.\n\n"
+            "Options:\n"
+            "  --prune  Delete stale files from S3 after mirroring",
             file=sys.stderr,
         )
         return
+    prune = "--prune" in args
+    args = [a for a in args if a != "--prune"]
     if not _has_acidgenomics_aws():
         print(
             "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
@@ -595,8 +633,6 @@ def _handle_mirror_src(args: list[str]) -> None:
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
     from tqdm import tqdm
 
     bucket = "koopa.acidgenomics.com"
@@ -604,6 +640,8 @@ def _handle_mirror_src(args: list[str]) -> None:
     now = time.time()
     _cache_ttl = 86400  # 24 hours
     failures: dict[str, str] = {}
+    print("Listing S3 objects...", file=sys.stderr)
+    existing_keys = _list_s3_keys(aws, bucket, "src/", "acidgenomics")
 
     def _mirror_one(name: str) -> None:
         entry = data[name]
@@ -617,26 +655,8 @@ def _handle_mirror_src(args: list[str]) -> None:
         if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
             return
         key = f"src/{cache_key}"
-        head = subprocess.run(
-            [
-                aws,
-                "s3api",
-                "head-object",
-                "--bucket",
-                bucket,
-                "--key",
-                key,
-                "--profile",
-                "acidgenomics",
-            ],
-            capture_output=True,
-            check=False,
-        )
-        if head.returncode == 0:
+        if key in existing_keys:
             cache[cache_key] = now
-            return
-        if head.returncode != 254:
-            tqdm.write(f"  SKIPPED (head-object failed): {cache_key}")
             return
         try:
             tqdm.write(f"  Uploading: {cache_key}")
@@ -652,6 +672,10 @@ def _handle_mirror_src(args: list[str]) -> None:
             extra_cache_key = f"{name}/{extra_filename}"
             if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
                 continue
+            extra_key = f"src/{extra_cache_key}"
+            if extra_key in existing_keys:
+                cache[extra_cache_key] = now
+                continue
             try:
                 _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=True)
                 cache[extra_cache_key] = now
@@ -663,12 +687,24 @@ def _handle_mirror_src(args: list[str]) -> None:
         _mirror_one(name)
     _save_mirror_src_cache(cache)
 
-    def _prune_one(name: str) -> list[str]:
+    if not prune:
+        if failures:
+            print(
+                f"\n{len(failures)} app(s) failed to mirror:",
+                file=sys.stderr,
+            )
+            for fname, reason in sorted(failures.items()):
+                print(f"  {fname}: {reason}", file=sys.stderr)
+            sys.exit(1)
+        return
+    removed_apps = sorted(k for k, v in data.items() if v.get("src_url") and v.get("removed"))
+    stale_keys: list[str] = []
+    for name in targets:
         entry = data[name]
         version = entry.get("version", "")
         src_url = entry.get("src_url", "")
         if not version or not src_url:
-            return []
+            continue
         expected: set[str] = set()
         url = _expand_src_url(src_url, version)
         expected.add(url.rsplit("/", 1)[-1])
@@ -676,98 +712,50 @@ def _handle_mirror_src(args: list[str]) -> None:
             extra_url = _expand_src_url(extra_tmpl, version)
             expected.add(extra_url.rsplit("/", 1)[-1])
         prefix = f"src/{name}/"
-        result = subprocess.run(
-            [
-                aws,
-                "s3api",
-                "list-objects-v2",
-                "--bucket",
-                bucket,
-                "--prefix",
-                prefix,
-                "--profile",
-                "acidgenomics",
-                "--output",
-                "json",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode != 0:
-            return []
-        import json as _json
-
-        resp = _json.loads(result.stdout)
-        contents = resp.get("Contents", [])
-        deleted: list[str] = []
-        for obj in contents:
-            key = obj["Key"]
+        for key in existing_keys:
+            if not key.startswith(prefix):
+                continue
             filename = key.rsplit("/", 1)[-1]
             if filename not in expected:
-                uri = f"s3://{bucket}/{key}"
-                subprocess.run(
-                    [aws, "s3", "rm", uri, "--profile", "acidgenomics"],
-                    capture_output=True,
-                    check=False,
-                )
-                deleted.append(key)
-        return deleted
-
-    removed_apps = sorted(k for k, v in data.items() if v.get("src_url") and v.get("removed"))
-
-    def _remove_all(name: str) -> list[str]:
+                stale_keys.append(key)
+    for name in removed_apps:
         prefix = f"src/{name}/"
-        result = subprocess.run(
-            [
-                aws,
-                "s3api",
-                "list-objects-v2",
-                "--bucket",
-                bucket,
-                "--prefix",
-                prefix,
-                "--profile",
-                "acidgenomics",
-                "--output",
-                "json",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode != 0:
-            return []
+        for key in existing_keys:
+            if key.startswith(prefix):
+                stale_keys.append(key)
+    if stale_keys:
         import json as _json
 
-        resp = _json.loads(result.stdout)
-        contents = resp.get("Contents", [])
-        deleted: list[str] = []
-        for obj in contents:
-            key = obj["Key"]
-            uri = f"s3://{bucket}/{key}"
-            subprocess.run(
-                [aws, "s3", "rm", uri, "--profile", "acidgenomics"],
+        print(f"Pruning {len(stale_keys)} stale file(s)...", file=sys.stderr)
+        delete_payload = {"Objects": [{"Key": k} for k in stale_keys]}
+        try:
+            result = subprocess.run(
+                [
+                    aws,
+                    "s3api",
+                    "delete-objects",
+                    "--bucket",
+                    bucket,
+                    "--delete",
+                    _json.dumps(delete_payload),
+                    "--profile",
+                    "acidgenomics",
+                ],
                 capture_output=True,
+                text=True,
                 check=False,
+                timeout=60,
             )
-            deleted.append(key)
-        return deleted
-
-    prune_targets = targets + removed_apps
-    pbar = tqdm(total=len(prune_targets), desc="Pruning", unit="app")
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        prune_futures = {pool.submit(_prune_one, name): name for name in targets}
-        remove_futures = {pool.submit(_remove_all, name): name for name in removed_apps}
-        all_futures = {**prune_futures, **remove_futures}
-        for future in as_completed(all_futures):
-            app_name = all_futures[future]
-            pbar.set_description(f"Pruning {app_name}")
-            pbar.update(1)
-            deleted = future.result()
-            for key in deleted:
-                tqdm.write(f"  Deleted: {key}")
-    pbar.close()
+            if result.returncode == 0:
+                for key in stale_keys:
+                    print(f"  Deleted: {key}", file=sys.stderr)
+            else:
+                print(
+                    f"  FAILED batch delete: {result.stderr.strip()}",
+                    file=sys.stderr,
+                )
+        except subprocess.TimeoutExpired:
+            print("  TIMEOUT: batch delete timed out after 60s", file=sys.stderr)
 
     if failures:
         print(
