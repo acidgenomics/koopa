@@ -39,6 +39,19 @@ def main(
         libexec,
         commit=version,
     )
+    lock_file = os.path.join(libexec, ".lock")
+    with open(lock_file, "w") as f:
+        f.write(
+            ";; -*- mode: emacs-lisp; lexical-binding: t; -*-\n"
+            "\n"
+            '(setq configuration-layer-elpa-subdirectory "develop")\n'
+            "\n"
+            "(setq configuration-layer-elpa-archives\n"
+            "      '((\"melpa\" . \"melpa.org/packages/\")))\n"
+            "\n"
+            "(setq package-archive-priorities\n"
+            "      '((\"melpa\" . 4)))\n"
+        )
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
     wrapper = os.path.join(bin_dir, "spacemacs")

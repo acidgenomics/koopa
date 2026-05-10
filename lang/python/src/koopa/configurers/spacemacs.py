@@ -27,8 +27,12 @@ def main(
         raise FileNotFoundError(msg)
     libexec = os.path.join(opt_spacemacs, "libexec")
     home = os.path.expanduser("~")
+    spacemacs_file = os.path.join(home, ".spacemacs")
     spacemacs_d = os.path.join(home, ".spacemacs.d")
     init_el = os.path.join(spacemacs_d, "init.el")
+    if os.path.isfile(spacemacs_file):
+        alert_info(f"Spacemacs user config already exists: {spacemacs_file}")
+        return
     if os.path.isfile(init_el):
         alert_info(f"Spacemacs user config already exists: {init_el}")
         return
