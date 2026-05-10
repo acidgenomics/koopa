@@ -2,8 +2,8 @@
 
 import os
 
-from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, cmake_build, shared_ext
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,8 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install editorconfig."""
-    env = activate_app("pkg-config", build_only=True)
-    env = activate_app("pcre2", env=env)
+    env = activate_app_deps()
     pcre2_prefix = app_prefix("pcre2")
     pcre2_lib = os.path.join(pcre2_prefix, "lib")
     pcre2_include = os.path.join(pcre2_prefix, "include")

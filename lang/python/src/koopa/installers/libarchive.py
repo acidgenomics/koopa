@@ -1,9 +1,7 @@
 """Install libarchive."""
 
-import sys
-
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,11 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libarchive."""
-    env = activate_app("pkg-config", build_only=True)
-    deps = ["expat", "lz4", "xz", "zlib", "zstd"]
-    if sys.platform != "darwin":
-        deps.append("bzip2")
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     download_extract_cd()
     make_build(
         conf_args=[

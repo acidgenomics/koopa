@@ -1,7 +1,7 @@
 """Install libxml2."""
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -12,8 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libxml2."""
-    env = activate_app("make", "pkg-config", build_only=True)
-    env = activate_app("zlib", "icu4c", "readline", "xz", "libiconv", env=env)
+    env = activate_app_deps()
     download_extract_cd()
     make_build(
         conf_args=[

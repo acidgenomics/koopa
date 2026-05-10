@@ -3,8 +3,8 @@
 import os
 import platform
 
-from koopa.build import activate_app, cmake_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import cmake_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -15,8 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install apache-arrow."""
-    env = activate_app("pkg-config", "python", build_only=True)
-    env = activate_app("boost", "openssl", "curl", env=env)
+    env = activate_app_deps()
     download_extract_cd()
     os.chdir("cpp")
     cmake_args = [

@@ -4,7 +4,8 @@ import os
 import sys
 from glob import glob
 
-from koopa.build import activate_app, shared_ext
+from koopa.build import shared_ext
+from koopa.installers._build_helper import activate_app_deps
 from koopa.file_ops import ln
 from koopa.install import install_gnu_app
 from koopa.version import major_minor_version, major_version
@@ -24,7 +25,7 @@ def main(
     os.environ.pop("LIBRARY_PATH", None)
     os.environ.pop("TERMINFO", None)
     os.environ.pop("TERMINFO_DIRS", None)
-    env = activate_app("gawk", "make", "pkg-config", build_only=True)
+    env = activate_app_deps()
     env.apply()
     ext = shared_ext()
     maj_ver = major_version(version)
