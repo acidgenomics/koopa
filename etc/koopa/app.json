@@ -2742,7 +2742,8 @@
       "libxml2"
     ],
     "description": "font configuration and customization library",
-    "src_url": "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/{version}/fontconfig-{version}.tar.xz",
+    "revision": 1,
+    "src_url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.freedesktop.org/wiki/Software/fontconfig/"
