@@ -480,9 +480,8 @@ PYTHON_INSTALLERS: dict[str, str] = {
     # -- user-mode installers ---------------------------------------------------
     "bootstrap": f"{_M}.bootstrap_user",
     "doom-emacs": f"{_M}.doom_emacs",
-    "prelude-emacs": f"{_M}.prelude_emacs",
+    "emacs-prelude": f"{_M}.emacs_prelude",
     "spacemacs": f"{_M}.spacemacs",
-    "spacevim": f"{_M}.spacevim",
     # -- system-install mode (koopa install system install <name>) ----------------
     "homebrew-bundle": f"{_M}.homebrew_bundle",
     "rosetta": f"{_M}.rosetta",

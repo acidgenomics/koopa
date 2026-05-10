@@ -1,6 +1,5 @@
 * High complexity
-** DONE python has dual path installation using uv or building from source.
-** DONE Think about configuration and trigger scope support for:
+** TODO Think about configuration and trigger scope support for:
     - koopa configure user
     - koopa update user
 * Medium complexity
@@ -8,13 +7,16 @@
 ** TODO Confirm install support for emacs and vim interfaces:
     - doom-emacs
     - spacemacs
-    - prelude-emacs
-    - spacevim
+    - emacs-prelude
+** TODO We likely need to guard against user calling 'doom-emacs', 'spacemacs', and 'emacs-prelude' without running user configuration via `koopa configure user <APP>` first.
 ** DONE Deferred: doom_emacs, python_app (need new abstractions)
-    Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs, spacevim.
+    Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs.
 ** DONE `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
+** TODO Rework koopa emacs aliases in shell to thin-layer bin exports. Need to think about how to automatically handle and bootstrap configuration for a user automatically.
 * Low complexity
-** TODO vim maps to _conda, not vim.py. That means vim.py is a dead file.
+** TODO Review our configuration of doom-emacs and spacemacs for any updates and modernization.
+** TODO Review our modernization of neovim and vim config.
+** DONE vim maps to _conda, not vim.py. That means vim.py is a dead file.
     Review if we have any other dead installer files like this that are safe to remove.
 ** DONE Need to fix broken app links in website documentation.
 ** DONE See if we need to clean up some man1 links in app.json
