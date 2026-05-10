@@ -4,6 +4,11 @@
     Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs, spacevim.
 ** TODO python has dual path installation using uv or building from source.
 ** TODO `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
+** TODO Audit any user-specific installation approaches, and consider removing these apps from koopa if they don't work for multiple users.
+    Potential candidates:
+    - doom-emacs
+    - spacemacs
+    - spacevim
 * Low complexity
 ** TODO vim maps to _conda, not vim.py. That means vim.py is a dead file.
     Review if we have any other dead installer files like this that are safe to remove.
