@@ -2739,10 +2739,11 @@
     "dependencies": [
       "gperf",
       "freetype",
-      "libxml2"
+      "libxml2",
+      "zlib"
     ],
     "description": "font configuration and customization library",
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-{version}.tar.xz",
     "type": "library",
     "url": [
