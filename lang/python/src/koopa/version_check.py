@@ -294,9 +294,6 @@ def _check_conda(
     *,
     subdirs: tuple[str, ...] = ("linux-64",),
 ) -> str:
-    from koopa.install import _resolve_conda_channel_url
-
-    resolved_channel = _resolve_conda_channel_url(channel)
     exe = _conda_exe()
     versions_per_subdir: list[str] = []
     if exe:
@@ -308,7 +305,7 @@ def _check_conda(
                             exe,
                             "search",
                             package,
-                            f"--channel={resolved_channel}",
+                            f"--channel={channel}",
                             "--override-channels",
                             f"--subdir={subdir}",
                             "--json",
@@ -339,9 +336,6 @@ def _check_conda(
             versions_per_subdir,
             key=lambda v: tuple(int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()),
         )
-    if resolved_channel != channel:
-        msg = f"No conda packages found for {package} on {resolved_channel}"
-        raise RuntimeError(msg)
     try:
         data = _http_get_json(
             f"https://api.anaconda.org/package/{channel}/{package}",
