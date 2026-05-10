@@ -7804,7 +7804,7 @@
     "description": "Perl-based file renaming tool",
     "installer": "perl-package",
     "installer_args": {
-      "cpan_path": "PEDERMDl/File-Rename"
+      "cpan_path": "RMBARKER/File-Rename"
     },
     "man1": [
       "rename.1"
