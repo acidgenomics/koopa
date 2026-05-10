@@ -22,7 +22,8 @@
     "description": "grep-like text finder optimized for source code",
     "installer": "perl-package",
     "installer_args": {
-      "cpan_path": "PETDANCE/ack"
+      "cpan_path": "PETDANCE/ack",
+      "version_prefix": "v"
     },
     "man1": [
       "ack.1"
