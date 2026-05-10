@@ -5,10 +5,10 @@ import shutil
 import subprocess
 import sys
 
-from koopa.build import activate_app, app_prefix, locate
+from koopa.build import app_prefix, locate
 from koopa.file_ops import ln
 from koopa.install import can_build_binary
-from koopa.installers._build_helper import download_extract_cd
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 from koopa.system import has_firewall
 from koopa.version import major_minor_version
 
@@ -21,33 +21,14 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install python."""
+    env = activate_app_deps()
     if has_firewall() or can_build_binary():
-        _install_from_source(version=version, prefix=prefix)
+        _install_from_source(version=version, prefix=prefix, env=env)
     else:
-        _install_from_uv(version=version, prefix=prefix)
+        _install_from_uv(version=version, prefix=prefix, env=env)
 
 
-def _install_from_source(*, version: str, prefix: str) -> None:
-    env = activate_app("make", "pkg-config", build_only=True)
-    deps = []
-    if sys.platform != "darwin":
-        deps.append("libxcrypt")
-    deps.extend(
-        [
-            "bzip2",
-            "expat",
-            "libedit",
-            "libffi",
-            "mpdecimal",
-            "ncurses",
-            "openssl3",
-            "readline",
-            "sqlite",
-            "xz",
-            "zlib",
-        ]
-    )
-    env = activate_app(*deps, env=env)
+def _install_from_source(*, version: str, prefix: str, env) -> None:
     make = locate("make")
     openssl_prefix = app_prefix("openssl3")
     bzip2_prefix = app_prefix("bzip2")
@@ -115,7 +96,9 @@ def _install_from_source(*, version: str, prefix: str) -> None:
     _create_unversioned_symlinks(prefix)
 
 
-def _install_from_uv(*, version: str, prefix: str) -> None:
+def _install_from_uv(*, version: str, prefix: str, env) -> None:
+    if env is not None:
+        env.apply()
     uv = locate("uv")
     maj_min_ver = major_minor_version(version)
     subprocess.run(
