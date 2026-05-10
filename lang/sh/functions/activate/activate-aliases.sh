@@ -78,18 +78,6 @@ _koopa_activate_aliases() {
     then
         alias emacs='_koopa_alias_emacs'
         alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-        if [ -d "${__kvar_xdg_data_home}/doom" ]
-        then
-            alias doom-emacs='_koopa_doom_emacs'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/prelude" ]
-        then
-            alias emacs-prelude='_koopa_emacs_prelude'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/spacemacs" ]
-        then
-            alias spacemacs='_koopa_spacemacs'
-        fi
     fi
     # fd-find.
     if [ -x "${__kvar_bin_prefix}/fd" ]

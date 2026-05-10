@@ -6,6 +6,28 @@ import stat
 from koopa.git import git_clone
 from koopa.installers._build_helper import activate_app_deps
 
+_SPACEMACS_WRAPPER = """\
+#!/bin/sh
+set -eu
+prefix="$(cd "$(dirname "$0")/.." && pwd)"
+init_dir="${prefix}/libexec"
+if [ ! -f "${HOME}/.spacemacs.d/init.el" ]; then
+    printf 'First run: configuring spacemacs...\\n' >&2
+    koopa configure user spacemacs
+fi
+emacs="emacs"
+if [ "$(uname -s)" = "Darwin" ]; then
+    _homebrew_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}"
+    if [ -x "${_homebrew_prefix}/bin/emacs" ]; then
+        emacs="${_homebrew_prefix}/bin/emacs"
+    fi
+fi
+if [ "$(uname -s)" = "Darwin" ] && [ -e "${HOME}/.terminfo/78/xterm-24bit" ]; then
+    export TERM='xterm-24bit'
+fi
+exec "$emacs" --init-directory="$init_dir" "$@" >/dev/null 2>&1
+"""
+
 
 def main(
     *,
@@ -17,14 +39,15 @@ def main(
     """Install Spacemacs."""
     env = activate_app_deps()
     env.apply()
+    libexec = os.path.join(prefix, "libexec")
     git_clone(
         "https://github.com/syl20bnr/spacemacs.git",
-        prefix,
+        libexec,
         commit=version,
     )
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
     wrapper = os.path.join(bin_dir, "spacemacs")
     with open(wrapper, "w") as f:
-        f.write('#!/bin/sh\nexec emacs --init-directory="$(dirname "$0")/.." "$@"\n')
+        f.write(_SPACEMACS_WRAPPER)
     os.chmod(wrapper, os.stat(wrapper).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)

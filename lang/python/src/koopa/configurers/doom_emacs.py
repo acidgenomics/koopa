@@ -26,7 +26,8 @@ def main(
     if not os.path.isdir(opt_doom):
         msg = f"Doom Emacs shared install not found: {opt_doom}"
         raise FileNotFoundError(msg)
-    doom = os.path.join(opt_doom, "bin", "doom")
+    libexec = os.path.join(opt_doom, "libexec")
+    doom = os.path.join(libexec, "bin", "doom")
     if not os.path.isfile(doom):
         msg = f"doom CLI not found: {doom}"
         raise FileNotFoundError(msg)
@@ -35,7 +36,7 @@ def main(
     env = os.environ.copy()
     koopa_bin = os.path.join(koopa_prefix(), "bin")
     env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
-    env["EMACSDIR"] = opt_doom
+    env["EMACSDIR"] = libexec
     env["DOOMDIR"] = doom_dir
     already_configured = os.path.isfile(os.path.join(doom_dir, "init.el"))
     if already_configured:

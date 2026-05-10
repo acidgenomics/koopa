@@ -104,18 +104,6 @@ _koopa_activate_aliases() {
     then
         alias emacs='_koopa_alias_emacs'
         alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-        if [[ -d "${xdg_data_home}/doom" ]]
-        then
-            alias doom-emacs='_koopa_doom_emacs'
-        fi
-        if [[ -d "${xdg_data_home}/prelude" ]]
-        then
-            alias emacs-prelude='_koopa_emacs_prelude'
-        fi
-        if [[ -d "${xdg_data_home}/spacemacs" ]]
-        then
-            alias spacemacs='_koopa_spacemacs'
-        fi
     fi
     if [[ -x "${bin_prefix}/fd" ]]
     then
@@ -1093,7 +1081,27 @@ _koopa_alias_emacs_vanilla() {
 }
 
 _koopa_alias_emacs() {
-    _koopa_emacs "$@"
+    local emacs
+    if _koopa_is_macos
+    then
+        local homebrew_prefix
+        homebrew_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}"
+        emacs="${homebrew_prefix}/bin/emacs"
+    else
+        emacs="$(_koopa_bin_prefix)/emacs"
+    fi
+    if [[ ! -x "$emacs" ]]
+    then
+        _koopa_print "Emacs not installed at '${emacs}'."
+        return 1
+    fi
+    if [[ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]] && _koopa_is_macos
+    then
+        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
+    else
+        "$emacs" "$@" >/dev/null 2>&1
+    fi
+    return 0
 }
 
 _koopa_alias_glances() {
@@ -1481,18 +1489,6 @@ _koopa_cpu_count() {
     return 0
 }
 
-_koopa_doom_emacs() {
-    local doom_emacs_prefix
-    doom_emacs_prefix="$(_koopa_doom_emacs_prefix)"
-    if [[ ! -d "$doom_emacs_prefix" ]]
-    then
-        _koopa_print 'Doom Emacs is not installed.'
-        return 1
-    fi
-    _koopa_emacs --init-directory="$doom_emacs_prefix" "$@"
-    return 0
-}
-
 _koopa_duration_start() {
     local date
     date="$(_koopa_bin_prefix)/gdate"
@@ -1536,28 +1532,6 @@ _koopa_duration_stop() {
     [[ -n "$duration" ]] || return 1
     _koopa_print "${key}: ${duration} ms"
     unset -v KOOPA_DURATION_START
-    return 0
-}
-
-_koopa_emacs() {
-    local emacs
-    if _koopa_is_macos
-    then
-        emacs="$(_koopa_macos_emacs)"
-    else
-        emacs="$(_koopa_bin_prefix)/emacs"
-    fi
-    if [[ ! -e "$emacs" ]]
-    then
-        _koopa_print "Emacs not installed at '${emacs}'."
-        return 1
-    fi
-    if [[ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]] && _koopa_is_macos
-    then
-        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
-    else
-        "$emacs" "$@" >/dev/null 2>&1
-    fi
     return 0
 }
 
@@ -1627,18 +1601,6 @@ _koopa_logged_in_users() {
     )"
     [[ -n "$string" ]] || return 1
     _koopa_print "$string"
-    return 0
-}
-
-_koopa_emacs_prelude() {
-    local emacs_prelude_prefix
-    emacs_prelude_prefix="$(_koopa_emacs_prelude_prefix)"
-    if [[ ! -d "$emacs_prelude_prefix" ]]
-    then
-        _koopa_print 'Emacs Prelude is not installed.'
-        return 1
-    fi
-    _koopa_emacs --init-directory="$emacs_prelude_prefix" "$@"
     return 0
 }
 
@@ -1724,18 +1686,6 @@ _koopa_shell_name() {
     shell="$(basename "$shell")"
     [[ -n "$shell" ]] || return 1
     _koopa_print "$shell"
-    return 0
-}
-
-_koopa_spacemacs() {
-    local spacemacs_prefix
-    spacemacs_prefix="$(_koopa_spacemacs_prefix)"
-    if [[ ! -d "$spacemacs_prefix" ]]
-    then
-        _koopa_print 'Spacemacs is not installed.'
-        return 1
-    fi
-    _koopa_emacs --init-directory="$spacemacs_prefix" "$@"
     return 0
 }
 
@@ -2026,11 +1976,6 @@ _koopa_config_prefix() {
     return 0
 }
 
-_koopa_doom_emacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/doom"
-    return 0
-}
-
 _koopa_homebrew_prefix() {
     local string
     string="${HOMEBREW_PREFIX:-}"
@@ -2078,11 +2023,6 @@ _koopa_pipx_prefix() {
     return 0
 }
 
-_koopa_emacs_prelude_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/prelude"
-    return 0
-}
-
 _koopa_pyenv_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
@@ -2095,11 +2035,6 @@ _koopa_rbenv_prefix() {
 
 _koopa_scripts_private_prefix() {
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
-    return 0
-}
-
-_koopa_spacemacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/spacemacs"
     return 0
 }
 
