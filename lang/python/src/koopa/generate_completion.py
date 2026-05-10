@@ -112,9 +112,6 @@ def _get_main_command_flags() -> dict[str, list[str]]:
                     flags.append(opt)
         if flags:
             result[name] = sorted(set(flags))
-    # Manual flag parsing not detectable via argparse introspection.
-    result["develop/format-app-json"] = ["--help", "--prettier"]
-    result["develop/remove-app"] = ["--help", "--revdeps"]
     return result
 
 
@@ -234,20 +231,35 @@ def _extract_handler_flags(filepath: str) -> dict[str, list[str]]:
             continue
         flags: list[str] = []
         for child in ast.walk(node):
-            if not isinstance(child, ast.Call):
-                continue
-            func = child.func
-            if not (isinstance(func, ast.Attribute) and func.attr == "add_argument"):
-                continue
-            if not child.args:
-                continue
-            arg0 = child.args[0]
-            if (
-                isinstance(arg0, ast.Constant)
-                and isinstance(arg0.value, str)
-                and arg0.value.startswith("--")
-            ):
-                flags.append(arg0.value)
+            if isinstance(child, ast.Call):
+                func = child.func
+                if not (isinstance(func, ast.Attribute) and func.attr == "add_argument"):
+                    continue
+                if not child.args:
+                    continue
+                arg0 = child.args[0]
+                if (
+                    isinstance(arg0, ast.Constant)
+                    and isinstance(arg0.value, str)
+                    and arg0.value.startswith("--")
+                ):
+                    flags.append(arg0.value)
+            elif isinstance(child, ast.Compare):
+                if (
+                    isinstance(child.left, ast.Constant)
+                    and isinstance(child.left.value, str)
+                    and child.left.value.startswith("--")
+                    and any(isinstance(op, ast.In) for op in child.ops)
+                ):
+                    flags.append(child.left.value)
+                elif any(isinstance(op, ast.Eq) for op in child.ops):
+                    for cmp_node in [child.left, *child.comparators]:
+                        if (
+                            isinstance(cmp_node, ast.Constant)
+                            and isinstance(cmp_node.value, str)
+                            and cmp_node.value.startswith("--")
+                        ):
+                            flags.append(cmp_node.value)
         if flags:
             result[node.name] = flags
     return result
