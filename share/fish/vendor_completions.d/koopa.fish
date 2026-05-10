@@ -1735,7 +1735,6 @@ complete -c koopa -n '__fish_seen_subcommand_from uninstall' -a 'zstd'
 # update: mode completions.
 complete -c koopa -n '__fish_seen_subcommand_from update' -a 'koopa'
 complete -c koopa -n '__fish_seen_subcommand_from update' -a 'system'
-complete -c koopa -n '__fish_seen_subcommand_from update' -a 'user'
 
 # Per-command flag completions.
 complete -c koopa -n '__fish_seen_subcommand_from admin' -l help

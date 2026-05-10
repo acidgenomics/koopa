@@ -646,10 +646,14 @@ def prune_broken_symlinks() -> None:
 
 def _print_update_plan() -> None:
     """Print the full list of apps that 'koopa update' will install."""
-    from koopa.app import stale_revdeps
+    from koopa.app import shared_apps, stale_revdeps
 
     outdated = outdated_apps_with_reasons()
     broken = broken_app_installs()
+    opt = koopa_opt_prefix()
+    missing_defaults = [
+        a for a in shared_apps(mode="default") if not os.path.islink(os.path.join(opt, a))
+    ]
     seen: dict[str, str] = {}
     for app, reason in outdated:
         if app not in seen:
@@ -657,6 +661,9 @@ def _print_update_plan() -> None:
     for app in broken:
         if app not in seen:
             seen[app] = "broken install"
+    for app in missing_defaults:
+        if app not in seen:
+            seen[app] = "not installed"
     if not seen:
         return
     direct = set(seen)
@@ -677,6 +684,21 @@ def _print_update_plan() -> None:
         )
     else:
         print(f"Update will install {len(apps)} apps: {', '.join(apps)}.")
+
+
+def check_missing_default_apps() -> bool:
+    """Check whether all default apps are installed."""
+    from koopa.app import shared_apps
+
+    opt = koopa_opt_prefix()
+    app_names = shared_apps(mode="default")
+    missing = [a for a in app_names if not os.path.islink(os.path.join(opt, a))]
+    if not missing:
+        return True
+    n = len(missing)
+    label = "app" if n == 1 else "apps"
+    print(f"{n} default {label} not installed: {', '.join(missing)}.")
+    return False
 
 
 def check_system() -> bool:
@@ -700,6 +722,8 @@ def check_system() -> bool:
     if not check_broken_app_installs():
         needs_update = True
     if not check_broken_symlinks():
+        needs_update = True
+    if not check_missing_default_apps():
         needs_update = True
     if not check_disk("/"):
         needs_disk_space = True

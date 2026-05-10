@@ -1159,7 +1159,7 @@ _koopa_update() {
     _arguments \
         '--help[--help]' \
         '--verbose[--verbose]' \
-        '1:mode:(koopa system user)'
+        '1:mode:(koopa system)'
 }
 
 _koopa "$@"

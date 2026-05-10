@@ -122,6 +122,7 @@ def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
     result: dict[str, list[tuple[str, str | None]]] = {
         "system-install": [],
         "system": [],
+        "user": [],
         "update-system": [],
     }
     for name, platform, mode in PYTHON_INSTALLER_MODES:

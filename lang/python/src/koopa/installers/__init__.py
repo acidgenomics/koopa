@@ -517,12 +517,6 @@ PYTHON_INSTALLER_MODES: list[tuple[str, str, str]] = [
     ("shiny-server", "debian_or_fedora", "system"),
     ("wine", "linux", "system"),
     ("xcode-clt", "macos", "system"),
-    # user (koopa install user <name>)
-    ("bootstrap", "common", "user"),
-    ("doom-emacs", "common", "user"),
-    ("prelude-emacs", "common", "user"),
-    ("spacemacs", "common", "user"),
-    ("spacevim", "common", "user"),
     # update-system (koopa update system)
     ("homebrew", "common", "update-system"),
     ("r", "macos", "update-system"),
