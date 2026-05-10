@@ -4,15 +4,15 @@
     - koopa update user
 * Medium complexity
 ** DONE Let's not trigger automatic configuration our emacs and vim apps during install.
-** TODO Confirm install support for emacs and vim interfaces:
+** DONE Confirm install support for emacs and vim interfaces:
     - doom-emacs
     - spacemacs
     - emacs-prelude
+** TODO Rework koopa emacs aliases in shell to thin-layer per app bin exports. Need to think about how to automatically handle and bootstrap configuration for a user automatically. Or does it make more sense to use shell alias approach?
 ** TODO We likely need to guard against user calling 'doom-emacs', 'spacemacs', and 'emacs-prelude' without running user configuration via `koopa configure user <APP>` first.
 ** DONE Deferred: doom_emacs, python_app (need new abstractions)
     Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs.
 ** DONE `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
-** TODO Rework koopa emacs aliases in shell to thin-layer bin exports. Need to think about how to automatically handle and bootstrap configuration for a user automatically.
 * Low complexity
 ** TODO Review our configuration of doom-emacs and spacemacs for any updates and modernization.
 ** TODO Review our modernization of neovim and vim config.
