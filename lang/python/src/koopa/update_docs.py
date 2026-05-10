@@ -1,5 +1,6 @@
 """Update koopa documentation files."""
 
+import json
 import re
 import sys
 from os.path import isfile, join
@@ -32,129 +33,13 @@ _EXCLUDE_FROM_DOCS: frozenset[str] = frozenset(
     ]
 )
 
-# Ordered category → known app names mapping.
-# Apps with "default": true in app.json that are not listed here will be
-# placed in "Miscellaneous" and a warning will be printed.
-_APP_CATEGORIES: dict[str, list[str]] = {
-    "Shells": [
-        "bash",
-        "bash-completion",
-    ],
-    "Core utilities": [
-        "bc",
-        "coreutils",
-        "findutils",
-        "gawk",
-        "gperf",
-        "grep",
-        "groff",
-        "gzip",
-        "make",
-        "parallel",
-        "patch",
-        "perl",
-        "pigz",
-        "pkg-config",
-        "sed",
-        "tar",
-        "which",
-        "xz",
-        "zstd",
-    ],
-    "Compression": [
-        "bzip2",
-        "p7zip",
-    ],
-    "File & disk": [
-        "du-dust",
-        "eza",
-        "fd-find",
-        "fzf",
-        "less",
-        "lesspipe",
-        "mcfly",
-        "ripgrep",
-        "tree",
-        "zoxide",
-    ],
-    "Networking": [
-        "curl",
-        "rclone",
-        "rsync",
-        "wget",
-    ],
-    "Version control": [
-        "delta",
-        "diff-so-fancy",
-        "difftastic",
-        "gh",
-        "git",
-        "gitui",
-    ],
-    "Editors": [
-        "nano",
-        "neovim",
-        "vim",
-    ],
-    "Terminal utilities": [
-        "btop",
-        "htop",
-        "mdcat",
-        "starship",
-        "tealdeer",
-        "tmux",
-    ],
-    "Python": [
-        "black",
-        "bumpver",
-        "commitizen",
-        "conda",
-        "ipython",
-        "jupyterlab",
-        "poetry",
-        "pyflakes",
-        "pyright",
-        "pytest",
-        "python3.13",
-        "python3.14",
-        "ruff",
-        "ruff-lsp",
-        "snakefmt",
-        "sqlfluff",
-        "tqdm",
-        "ty",
-        "uv",
-    ],
-    "R": [
-        "quarto",
-        "radian",
-    ],
-    "AI": [
-        "claude-code",
-        "gemini-cli",
-    ],
-    "Data": [
-        "duckdb",
-    ],
-    "Cloud & DevOps": [
-        "aws-cli",
-        "direnv",
-        "editorconfig",
-        "google-cloud-sdk",
-        "openssl",
-        "openssl4",
-    ],
-    "Miscellaneous": [
-        "chezmoi",
-        "convmv",
-        "dotfiles",
-        "gnupg",
-        "jq",
-        "man-db",
-        "shellcheck",
-        "units",
-    ],
-}
+def _load_category_order() -> list[str]:
+    from koopa.prefix import koopa_prefix
+
+    categories_file = join(koopa_prefix(), "etc", "koopa", "app-categories.json")
+    with open(categories_file, encoding="utf-8") as fh:
+        groups = json.load(fh)
+    return [cat for cats in groups.values() for cat in cats]
 
 
 def default_app_names() -> list[str]:
@@ -197,18 +82,17 @@ def _wrap_bullet(category: str, names: list[str], width: int = 72) -> str:
 
 def _render_default_apps_section(apps: list[str]) -> str:
     """Render the '### Default application stack' markdown section."""
-    known: dict[str, str] = {}
-    for cat, cat_apps in _APP_CATEGORIES.items():
-        for app in cat_apps:
-            known[app] = cat
+    from koopa.io import import_app_json
 
-    bucketed: dict[str, list[str]] = {cat: [] for cat in _APP_CATEGORIES}
+    json_data = import_app_json()
+    category_order = _load_category_order()
+    bucketed: dict[str, list[str]] = {cat: [] for cat in category_order}
     uncategorized: list[str] = []
     for app in apps:
         if app in _EXCLUDE_FROM_DOCS:
             continue
-        cat = known.get(app)
-        if cat is None:
+        cat = json_data.get(app, {}).get("category")
+        if cat is None or cat not in bucketed:
             uncategorized.append(app)
             bucketed["Miscellaneous"].append(app)
         else:
