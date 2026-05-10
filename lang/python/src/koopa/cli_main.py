@@ -198,7 +198,7 @@ def _build_parser() -> argparse.ArgumentParser:
     update_p.add_argument(
         "mode",
         nargs="?",
-        choices=["system", "user", "koopa"],
+        choices=["system", "koopa"],
         default=None,
     )
     _add_common_flags(update_p)
@@ -292,7 +292,7 @@ def _resolve_apps_and_mode(
     """Resolve apps and mode from positional args."""
     apps = list(args.apps) if args.apps else []
     mode = "shared"
-    if apps and apps[0] in ("system", "user"):
+    if apps and apps[0] in ("system",):
         mode = apps[0]
         apps = apps[1:]
     return apps, mode
@@ -636,7 +636,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         update_koopa,
         update_stale_apps,
         update_system_apps,
-        update_user_apps,
     )
 
     mode = args.mode
@@ -658,14 +657,6 @@ def _handle_update(args: argparse.Namespace) -> None:
             return
         if mode == "system":
             update_system_apps(verbose=args.verbose)
-            return
-        if mode == "user":
-            from koopa.install import fetch_user_repos, run_user_app_post_hooks
-
-            updated_user_apps = update_user_apps(verbose=args.verbose)
-            fetch_user_repos()
-            _configure_user_dotfiles(verbose=args.verbose)
-            run_user_app_post_hooks(updated_user_apps, verbose=args.verbose)
             return
         from koopa.alert import alert_success, styled_name, warn
         from koopa.app import prune_apps
@@ -693,7 +684,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         repair_app_symlinks()
         update_stale_apps(verbose=args.verbose)
         install_missing_default_apps(verbose=args.verbose)
-        update_user_apps(verbose=args.verbose)
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
