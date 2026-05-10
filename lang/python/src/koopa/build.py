@@ -5,6 +5,7 @@ Python equivalents of the Bash functions ``_koopa_activate_app``,
 ``_koopa_cmake_build``, and ``_koopa_make_build``.
 """
 
+import json
 import os
 import re
 import shutil
@@ -252,6 +253,8 @@ def activate_app(
         cmake_dir = os.path.join(prefix, "lib", "cmake")
         if os.path.isdir(cmake_dir):
             env.cmake_prefix_path.append(cmake_dir)
+    if not build_only and not is_macos():
+        _add_transitive_rpath_links(names, env)
     return env
 
 
@@ -265,6 +268,38 @@ def _add_pkg_config_paths(prefix: str, env: BuildEnv) -> None:
     for d in candidates:
         if os.path.isdir(d):
             env.pkg_config_path.append(d)
+
+
+def _add_transitive_rpath_links(names: tuple[str, ...], env: BuildEnv) -> None:
+    """Add -Wl,-rpath-link for each direct dep's own dependencies (Linux only).
+
+    The GNU linker verifies transitive shared library deps at link time. This
+    function adds -rpath-link paths so the linker can find them without baking
+    those paths into the output binary's RPATH.
+    """
+    app_json_path = os.path.join(koopa_prefix(), "etc", "koopa", "app.json")
+    with open(app_json_path) as f:
+        app_data = json.load(f)
+    opt = opt_prefix()
+    seen_dirs: set[str] = set()
+    for name in names:
+        resolved = resolve_alias(name)
+        entry = app_data.get(resolved, {})
+        sub_deps = entry.get("dependencies", [])
+        if isinstance(sub_deps, dict):
+            continue
+        for sub_dep in sub_deps:
+            sub_resolved = resolve_alias(sub_dep)
+            sub_link = os.path.join(opt, sub_resolved)
+            if not os.path.exists(sub_link):
+                continue
+            sub_prefix = os.path.realpath(sub_link)
+            for lib_suffix in ("lib", "lib64"):
+                ld = os.path.join(sub_prefix, lib_suffix)
+                if os.path.isdir(ld) and ld not in seen_dirs:
+                    seen_dirs.add(ld)
+                    env.ldflags.append(f"-Wl,-rpath-link,{ld}")
+            _add_pkg_config_paths(sub_prefix, env)
 
 
 def _find_pc_files(prefix: str) -> list[str]:
