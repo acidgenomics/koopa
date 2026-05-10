@@ -1,5 +1,318 @@
 # Changelog
 
+## koopa 0.16.0 (2026-05-09)
+
+Major changes:
+
+- Completed migration of all CLI dispatch from Bash to native Python. The
+  `koopa app`, `koopa system`, and `koopa develop` command trees are now
+  100% Python with zero Bash fallback.
+- Reduced the Bash function library to 182 activation-critical functions
+  (down from ~1,400). Removed all non-activation functions that have been
+  ported to the Python `koopa` package.
+- Removed the unused `env.py` module (28 Bash activation functions that had
+  no callers in the Python package) and `shell/find.py`.
+- Made `lang/bash` fully isolated from `lang/sh` — Bash now has its own
+  copies of all activation functions and does not depend on POSIX shell.
+- Reworked Bash function library from a flat alphabetical layout (`common/a/`,
+  `common/b/`, etc.) to a semantic directory structure (`activate/`, `alias/`,
+  `assert/`, `core/`, `export/`, `is/`, `locate/`, `macos/`, `prefix/`,
+  `xdg/`).
+- Reworked POSIX shell (`lang/sh`) function library to use semantic layout.
+- Made Zsh function library (`lang/zsh`) independent from POSIX shell. Zsh now
+  has its own `functions.sh` cache file and no longer depends on `lang/sh`.
+- Optimized shell activation and function caching. Split the monolithic
+  `activate.sh` file into individual function files.
+- Build output is now hidden by default behind a spinner with elapsed timer.
+  The last 100 lines of the build log are shown on failure. Use `--verbose`
+  to see full build output. CMake/ninja and meson builds display
+  `[current/total]` step progress when output is captured.
+- Added archive validation via magic bytes (gzip, bzip2, xz, zstd) to catch
+  corrupt or HTML-masquerading downloads from mirrors.
+- Added GNU and Savannah mirror fallback system — automatically retries with
+  canonical mirrors when `ftpmirror.gnu.org` or Savannah mirrors return
+  invalid archives.
+- Added recipe revision system for forcing rebuilds when build recipes change
+  without a version bump. Uses `"revision"` key in `app.json` and
+  `.install/revision` marker file.
+- Added `--all-system` flag to `koopa update` for opt-in system-level updates
+  requiring admin access. System updates are no longer run by default.
+- Added `koopa run` subcommand. All 46 standalone utility scripts previously
+  in `bin/` (e.g., `find-and-replace`, `download`, `extract`, `ip-address`)
+  are now dispatched via `koopa run <command>`.
+- Deprecated `koopa header bash`. Scripts using
+  `source "$(koopa header bash)"` must be updated — the command now errors
+  with a deprecation message.
+- Added Nushell and Fish shell activation support (`lang/nushell/`,
+  `lang/fish/`) with direnv, fzf, starship, and zoxide integration.
+- Version source of truth moved from `VERSION` file to `pyproject.toml`.
+  The `VERSION` file has been removed.
+- `openssl` is now an alias of `openssl4` (version 4.0.0).
+
+New apps:
+
+- `bumpver`.
+- `elvish`.
+- `powershell`.
+
+Minor changes:
+
+- Installer framework now runs in a temporary directory, preventing build
+  artifacts from being left in the user's working directory.
+- Failed installs now clean up their prefix directory automatically, preventing
+  stale empty directories from blocking retry attempts.
+- Failed binary linkage (missing expected binaries after build) now cleans up
+  the prefix directory and opt symlink, ensuring the app is detected as
+  not installed on the next update.
+- Dependency checks now verify the `opt/` symlink (created on successful
+  install) rather than the `app/` directory, which can exist from failed
+  installs.
+- Added `check_broken_app_installs()` to `koopa system check`, which detects
+  app directories with missing opt symlinks or empty prefixes from failed
+  installs.
+- Added `--all` flag to `koopa reinstall` for rebuilding all installed apps.
+- Added `--non-default` flag to `koopa uninstall` for removing all
+  non-default apps at once.
+- Added `--no-revdeps` flag to `koopa reinstall` to skip automatic stale
+  reverse dependency rebuilds.
+- Extended process locking to `koopa uninstall`, preventing concurrent
+  install/uninstall operations.
+- Hardened `_update_venv()` against missing venv python, added ownership
+  checks, and cleanup on failure.
+- Shell bootstrap now validates that the Python interpreter actually works
+  (imports `lzma` and `subprocess`) rather than just checking the executable
+  bit.
+- `activate_app()` now resolves `alias_of` from `app.json`, fixing activation
+  of aliased apps like `python` -> `python3.14` in all installers.
+- Added `.editorconfig` to enforce project indentation conventions (2-space
+  for JSON, 4-space for Python and shell).
+- Fixed `download_extract_cd` to descend into the single extracted
+  subdirectory, matching the `--strip-components=1` behavior.
+- Fixed `install_ruby_package` to prefer koopa-installed Ruby over system Ruby.
+- Fixed Python 2 style `except` syntax in `download.py` that prevented the
+  urllib fallback from triggering on curl failures.
+- Fixed Perl version checker to filter out odd minor versions (development
+  releases), only tracking stable even-minor releases.
+- Fixed readline build error where `pkg-config --libs ncurses` was not
+  receiving the build environment with `PKG_CONFIG_PATH`.
+- Fixed pkg-config build failure on newer Apple Clang due to
+  `-Wint-conversion` error.
+- Fixed libidn download by specifying correct `package_name="libidn2"`.
+- Fixed man-db build by adding `--disable-setuid` and `--program-prefix=g`
+  to installer args.
+- Removed `corepack` from node binary list (dropped in Node.js 25).
+- Fixed bootstrap script reliability with atomic install and improved
+  fallback Python discovery.
+- Removed defunct `list-dotfiles` and `list-programs` system list subcommands.
+- Added `PYTHON_BUILD_MIRROR_URL` support in `install-app`.
+- Improved header consistency across shell includes.
+- Optimized OS handling in completion logic.
+- Added `koopa develop shellcheck` support for linting shell scripts.
+- Added `koopa develop conda-candidates`, `reset-revisions`, `orphan-apps`,
+  and `push-all-app-builds` developer subcommands.
+- Auto-generated `koopa.1` man page from the Python CLI tree, replacing the
+  hand-maintained ronn file.
+- Added `src_url` field to `app.json` for all source-built apps, enabling
+  standardized source mirroring.
+- `ty` is now a default app (installed automatically).
+- Switched `vim` and `duckdb` from source builds to conda-forge packages.
+- App pruning messages are now summarized by default; use `--verbose` to see
+  individual paths.
+- Added automated app version checking system for tracking upstream releases.
+- Added broken symlink detection and cleanup to system checks.
+- Reworked cache handling for improved reliability.
+- Completely reworked shell completion system — pre-built Bash, Zsh, and Fish
+  completion scripts are now generated from the Python CLI tree and distributed
+  in `share/`. Completion files are loaded at shell activation rather than
+  generated at runtime.
+- Fixed homebrew updater.
+- Fixed macOS system R and Python framework cleanup.
+- Improved Debian configuration and admin detection consistency.
+- Added `description` field to all entries in `app.json`.
+- Added `reason` field to outdated app output in `koopa system check`,
+  explaining why an app is considered outdated.
+- Added mirror-src caching support to `koopa develop` for faster
+  offline/repeated source uploads.
+- Improved download timeout handling with per-request timeouts and better
+  retry logic.
+- Reduced CMake build parallelism to avoid OOM kills on memory-constrained
+  systems.
+- Hardened `koopa install` against attempted use on Windows platforms.
+- Improved NGS library batch alignment handling.
+- Removed 57 apps that are no longer needed (build-only dependencies replaced
+  by conda packages, deprecated tools, or unused libraries). Notable removals
+  include `armadillo`, `gdal`, `graphviz`, `harfbuzz`, `imagemagick`,
+  `libgit2`, `libheif`, `mold`, `tree-sitter`, and `udunits`.
+- Fixed `man1` binary linkage in `app.json`.
+
+App version updates:
+
+- `ack` 3.9.0.
+- `air` 0.9.0.
+- `apache-spark` 4.2.0.
+- `apr` 1.7.6.
+- `aspell` 0.60.8.2.
+- `aspera-connect` 4.2.19.956.
+- `autoconf` 2.73.
+- `autodock-vina` 1.2.6.
+- `automake` 1.18.1.
+- `aws-cli` 2.34.41.
+- `aws-mountpoint-s3` 1.22.3.
+- `azure-cli` 2.85.0.
+- `bc` 1.08.2.
+- `binutils` 2.46.0.
+- `bioconda-utils` 4.4.0.
+- `blast` 2.17.0.
+- `boost` 1.91.0.
+- `bottom` 0.12.2.
+- `btop` 1.4.7.
+- `bustools` 0.45.1.
+- `c-ares` 1.34.6.
+- `claude-code` 2.1.126.
+- `commitizen` 4.13.10.
+- `conda` 26.3.2-2.
+- `convmv` 2.06.
+- `coreutils` 9.11.
+- `curl` 8.20.0.
+- `dash` 0.5.13.3.
+- `databricks-cli` 0.299.0.
+- `difftastic` 0.69.0.
+- `du-dust` 1.2.4.
+- `ed` 1.22.5.
+- `elfutils` 0.195.
+- `ensembl-perl-api` 116.
+- `entrez-direct` 25.3.
+- `exiftool` 13.55.
+- `expat` 2.8.0.
+- `ffmpeg` 8.0.1.
+- `flac` 1.5.0.
+- `fontconfig` 2.16.0.
+- `freetype` 2.14.3.
+- `gatk` 4.6.2.0.
+- `gawk` 5.4.0.
+- `gcc` 16.1.0.
+- `gdbm` 1.26.
+- `gemini-cli` 0.40.1.
+- `genomepy` 0.16.3.
+- `gentropy` 3.2.0.
+- `gettext` 1.0.
+- `gffutils` 0.14.
+- `gget` 0.29.0.
+- `ghostscript` 10.7.0.
+- `git-lfs` 3.7.1.
+- `gitui` 0.28.1.
+- `glib` 2.88.1.
+- `gnupg` 2.5.19.
+- `gnutls` 3.8.13.
+- `go` 1.26.2.
+- `grep` 3.12.
+- `groff` 1.24.1.
+- `gzip` 1.14.
+- `htseq` 2.1.2.
+- `huggingface-hub` 1.13.0.
+- `hugo` 0.161.1.
+- `icu4c` 78.3.
+- `illumina-ica-cli` 2.45.0.
+- `ipython` 9.13.0.
+- `jfrog-cli` 2.103.0.
+- `jupyterlab` 4.5.7.
+- `krb5` 1.22.2.
+- `latch` 2.71.2.
+- `ldns` 1.9.0.
+- `less` 700.
+- `libassuan` 3.0.2.
+- `libcbor` 0.13.0.
+- `libedit` 20251016-3.1.
+- `libfido2` 1.17.0.
+- `libgcrypt` 1.12.2.
+- `libgpg-error` 1.60.
+- `libiconv` 1.19.
+- `libidn` 2.3.8.
+- `libksba` 1.6.8.
+- `liblinear` 2.50.
+- `libpcap` 1.10.6.
+- `libpng` 1.6.58.
+- `libtasn1` 4.21.0.
+- `libtiff` 4.7.1.
+- `libunistring` 1.4.2.
+- `libxml2` 2.15.3.
+- `libxslt` 1.1.45.
+- `llvm` 22.1.4.
+- `lsd` 1.1.5.
+- `lzip` 1.26.
+- `m4` 1.4.21.
+- `mamba` 2.6.0.
+- `man-db` 2.13.1.
+- `marimo` 0.23.4.
+- `mdcat` 2.7.1.
+- `mpc` 1.4.1.
+- `mpdecimal` 4.0.1.
+- `mpfr` 4.2.2.
+- `mypy` 1.20.2.
+- `nano` 9.0.
+- `ncbi-sra-tools` 3.4.1.
+- `neovim` 0.12.2.
+- `nettle` 4.0.
+- `nextflow` 26.04.0.
+- `nim` 2.2.10.
+- `ninja` 1.13.2.
+- `nmap` 7.99.
+- `node` 25.8.2.
+- `openssh` 10.3p1.
+- `oracle-instant-client` 21.21.0.0.0-1.
+- `parallel` 20260422.
+- `patch` 2.8.
+- `pcre2` 10.47.
+- `perl` 5.43.10.
+- `pinentry` 1.3.2.
+- `pixman` 0.46.4.
+- `postgresql` 18.3.
+- `pymol` 3.1.0.
+- `pyrefly` 0.63.1.
+- `pyright` 1.1.409.
+- `quarto` 1.9.37.
+- `r` 4.6.0.
+- `r-devel` 89993.
+- `r-xcode-openmp` 19.1.5.
+- `rbenv` 1.3.2.
+- `rclone` 1.74.0.
+- `ripgrep-all` 0.10.10.
+- `rmate` 1.5.9.
+- `rstudio-server` 2026.04.0-526.
+- `rsync` 3.4.2.
+- `ruby` 4.0.3.
+- `scalene` 2.2.1.
+- `scanpy` 1.12.1.
+- `screen` 5.0.1.
+- `sd` 1.0.0.
+- `sed` 4.10.
+- `shellcheck` 0.11.0.
+- `snakefmt` 1.1.0.
+- `snakemake` 9.20.0.
+- `sqlfluff` 4.1.0.
+- `sqlite` 3.53.0.
+- `star-fusion` 1.15.1.
+- `starship` 1.25.1.
+- `subread` 2.1.1.
+- `swig` 4.4.1.
+- `tcl-tk` 9.0.4.
+- `tealdeer` 1.8.1.
+- `temurin` 25.0.3+9.
+- `texinfo` 7.3.
+- `tqdm` 4.67.3.
+- `tree` 2.3.2.
+- `ty` 0.0.34.
+- `units` 2.27.
+- `vim` 9.2.0433.
+- `which` 2.23.
+- `xorg-libsm` 1.2.6.
+- `xorg-libx11` 1.8.13.
+- `xorg-libxext` 1.3.7.
+- `xorg-xorgproto` 2025.1.
+- `xorg-xtrans` 1.6.0.
+- `xsra` 0.2.28.
+- `zenith` 0.14.3.
+
 ## koopa 0.15.1 (2026-04-29)
 
 New apps:

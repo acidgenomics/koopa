@@ -35,7 +35,7 @@ __koopa_error_trap() {
     # """
     local status
     status="$?"
-    # Alternatively, can use 'koopa_stop' here instead if we know our Bash
+    # Alternatively, can use '_koopa_stop' here instead if we know our Bash
     # library is properly sourced first. This will provide better stack trace
     # information.
     __koopa_print "Exit status ${status} at line ${BASH_LINENO[0]}."
@@ -134,47 +134,14 @@ __koopa_realpath() {
         then
             string="$( \
                 python3 -c \
-                    "import os; print(os.path.realpath('${arg}'))" \
+                    "import os,sys; print(os.path.realpath(sys.argv[1]))" \
+                    "$arg" \
                 2>/dev/null \
                 || true \
             )"
         fi
         [[ -n "$string" ]] || return 1
         __koopa_print "$string"
-    done
-    return 0
-}
-
-__koopa_source_functions() {
-    # """
-    # Source multiple Bash script files inside a directory.
-    # @note Updated 2022-05-20.
-    #
-    # Note that macOS ships with an ancient version of Bash by default that
-    # doesn't support readarray/mapfile.
-    # """
-    local -a files
-    local cache_file file prefix
-    prefix="$(_koopa_koopa_prefix)/lang/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
-    cache_file="${prefix}.sh"
-    if [[ -f "$cache_file" ]]
-    then
-        # shellcheck source=/dev/null
-        source "$cache_file"
-        return 0
-    fi
-    readarray -t files <<< "$( \
-        find -L "$prefix" \
-            -mindepth 1 \
-            -type 'f' \
-            -name '*.sh' \
-            -print \
-    )"
-    for file in "${files[@]}"
-    do
-        # shellcheck source=/dev/null
-        source "$file"
     done
     return 0
 }
@@ -189,6 +156,77 @@ __koopa_warn() {
     do
         printf '%b\n' "$string" >&2
     done
+    return 0
+}
+
+__koopa_activate_koopa() {
+    if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
+    then
+        _koopa_activate_path_helper || return 1
+    fi
+    _koopa_activate_bootstrap || return 1
+    _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
+    _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
+    [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]] || return 0
+    _koopa_export_home || return 1
+    _koopa_activate_profile_files || return 1
+    _koopa_export_koopa_cpu_count || return 1
+    _koopa_export_koopa_shell || return 1
+    _koopa_activate_xdg || return 1
+    _koopa_export_editor || return 1
+    _koopa_export_gnupg || return 1
+    _koopa_export_history || return 1
+    _koopa_export_manpager || return 1
+    _koopa_export_pager || return 1
+    _koopa_activate_ca_certificates || return 1
+    _koopa_activate_ruby || return 1
+    _koopa_activate_julia || return 1
+    _koopa_activate_python || return 1
+    _koopa_activate_pipx || return 1
+    _koopa_activate_color_mode || return 1
+    _koopa_activate_alacritty || return 1
+    _koopa_activate_bat || return 1
+    _koopa_activate_bottom || return 1
+    _koopa_activate_delta || return 1
+    _koopa_activate_difftastic || return 1
+    _koopa_activate_dircolors || return 1
+    _koopa_activate_direnv || return 1
+    _koopa_activate_docker || return 1
+    _koopa_activate_fzf || return 1
+    _koopa_activate_gcc_colors || return 1
+    _koopa_activate_kitty || return 1
+    _koopa_activate_lesspipe || return 1
+    _koopa_activate_pyright || return 1
+    _koopa_activate_ripgrep || return 1
+    _koopa_activate_tealdeer || return 1
+    if _koopa_is_macos
+    then
+        _koopa_macos_activate_cli_colors || return 1
+        _koopa_macos_activate_egnyte || return 1
+        _koopa_macos_activate_homebrew || return 1
+    fi
+    _koopa_activate_micromamba || return 1
+    _koopa_add_to_path_start \
+        '/usr/local/sbin' \
+        '/usr/local/bin' \
+        "$(_koopa_scripts_private_prefix)/bin" \
+        "$(_koopa_xdg_local_home)/bin" \
+        "${HOME:?}/.bin" \
+        "${HOME:?}/bin" \
+        || return 1
+    _koopa_add_to_manpath_start \
+        '/usr/local/man' \
+        '/usr/local/share/man' \
+        || return 1
+    _koopa_add_to_manpath_end \
+        '/usr/share/man' \
+        || return 1
+    if ! _koopa_is_subshell
+    then
+        _koopa_activate_today_bucket || return 1
+        _koopa_check_multiple_users || return 1
+    fi
+    _koopa_activate_aliases || return 1
     return 0
 }
 
@@ -356,14 +394,33 @@ __koopa_bash_header() {
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX:?}/lang/sh/include/header.sh"
+    if [[ -f "${KOOPA_PREFIX}/lang/bash/include/functions.sh" ]]
+    then
+        source "${KOOPA_PREFIX}/lang/bash/include/functions.sh"
+    else
+        local __kvar_dir __kvar_file
+        for __kvar_dir in "${KOOPA_PREFIX}"/lang/bash/functions/*/
+        do
+            for __kvar_file in "${__kvar_dir}"*.sh
+            do
+                [[ -f "$__kvar_file" ]] || continue
+                # shellcheck source=/dev/null
+                source "$__kvar_file"
+            done
+        done
+        unset __kvar_dir __kvar_file
+    fi
+    if [[ -z "${KOOPA_DEFAULT_SYSTEM_PATH:-}" ]]
+    then
+        export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:-}"
+    fi
     if [[ "${bool['test']}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
     fi
     if [[ "${bool['activate']}" -eq 1 ]]
     then
-        __koopa_source_functions 'activate'
+        __koopa_activate_koopa || return 1
         if [[ "${bool['minimal']}" -eq 0 ]]
         then
             _koopa_activate_bash_extras
@@ -371,38 +428,16 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['activate']}" -eq 0 ]]
     then
-        __koopa_source_functions 'common'
-        dict['os_id']="$(_koopa_os_id)"
-        if _koopa_is_linux
-        then
-            dict['linux_prefix']='os/linux'
-            __koopa_source_functions "${dict['linux_prefix']}/common"
-            if _koopa_is_debian_like
-            then
-                __koopa_source_functions "${dict['linux_prefix']}/debian"
-                # > _koopa_is_ubuntu_like && \
-                # >     __koopa_source_functions \
-                # >         "${dict['linux_prefix']}/ubuntu"
-            elif _koopa_is_fedora_like
-            then
-                __koopa_source_functions "${dict['linux_prefix']}/fedora"
-                _koopa_is_rhel_like && \
-                    __koopa_source_functions "${dict['linux_prefix']}/rhel"
-            fi
-            __koopa_source_functions "${dict['linux_prefix']}/${dict['os_id']}"
-        else
-            __koopa_source_functions "os/${dict['os_id']}"
-        fi
         # Check if user is requesting help documentation.
         case "${1:-}" in
             '--help' | \
             '-h')
-                koopa_help_2
+                _koopa_help_2
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
-            if koopa_is_admin
+            if _koopa_is_admin
             then
                 export KOOPA_ADMIN=1
             else
@@ -410,27 +445,27 @@ __koopa_bash_header() {
             fi
         fi
         # Require admin account to run 'sbin/' scripts.
-        if koopa_str_detect_fixed --string="$0" --pattern='/sbin'
+        if _koopa_str_detect_fixed --string="$0" --pattern='/sbin'
         then
-            koopa_assert_is_admin
+            _koopa_assert_is_admin
         fi
         export PS1='[koopa] '
     fi
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        app['locale']="$(koopa_locate_locale --allow-missing --allow-system)"
-        koopa_alert_info 'Shell options'
+        app['locale']="$(_koopa_locate_locale --allow-missing --allow-system)"
+        _koopa_alert_info 'Shell options'
         set +o
         shopt
-        koopa_alert_info 'Shell variables'
-        koopa_dl \
+        _koopa_alert_info 'Shell variables'
+        _koopa_dl \
             '$' "${$}" \
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
         if [[ -x "${app['locale']}" ]]
         then
-            koopa_alert_info 'Locale'
+            _koopa_alert_info 'Locale'
             "${app['locale']}"
         fi
     fi

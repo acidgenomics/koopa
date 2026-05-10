@@ -1,7 +1,7 @@
 """Utility functions for datatype handling/coercion."""
 
 
-def argsort(object: list, reverse: bool = False) -> list:
+def argsort(object: list, reverse: bool = False) -> list[int]:
     """Return the indices that would sort an array.
 
     See Also
@@ -25,31 +25,8 @@ def argsort(object: list, reverse: bool = False) -> list:
     ['c', 'c', 'c', 'b', 'a', 'a']
     """
     iterable = range(len(object))
-    key = object.__getitem__
-    out = sorted(iterable, key=key, reverse=reverse)
+    out = sorted(iterable, key=lambda i: object[i], reverse=reverse)
     return out
-
-
-def flatten(items: list, seqtypes: type | tuple[type, ...] = (list, tuple)) -> list:
-    """Flatten an arbitrarily nested list.
-
-    See Also
-    --------
-    - https://stackoverflow.com/a/10824086
-
-    Examples
-    --------
-    >>> items = [["a", "b"], ["c", "d"]]
-    >>> flatten(items)
-    ['a', 'b', 'c', 'd']
-    """
-    try:
-        for i, _ in enumerate(items):
-            while isinstance(items[i], seqtypes):
-                items[i : i + 1] = items[i]
-    except IndexError:
-        pass
-    return items
 
 
 def unique_pos(object: list) -> list:

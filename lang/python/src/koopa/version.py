@@ -4,8 +4,6 @@ Converted from POSIX shell functions: koopa-version, extract-version,
 sanitize-version, major-version, etc.
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 
@@ -13,10 +11,14 @@ from koopa.prefix import koopa_prefix
 
 
 def koopa_version() -> str:
-    """Return koopa version from VERSION file."""
-    version_file = Path(koopa_prefix()) / "VERSION"
-    if version_file.is_file():
-        return version_file.read_text().strip()
+    """Return koopa version from pyproject.toml."""
+    import tomllib
+
+    pyproject = Path(koopa_prefix()) / "pyproject.toml"
+    if pyproject.is_file():
+        with open(pyproject, "rb") as fh:
+            data = tomllib.load(fh)
+        return data.get("project", {}).get("version", "unknown")
     return "unknown"
 
 
@@ -78,5 +80,5 @@ def sanitize_version(version: str) -> str:
     v = version.strip()
     if v.startswith("v") or v.startswith("V"):
         v = v[1:]
-    match = re.match(r"(\d+(?:\.\d+)*)", v)
+    match = re.match(r"(\d+(?:\.\d+)*[a-zA-Z]?)", v)
     return match.group(1) if match else v

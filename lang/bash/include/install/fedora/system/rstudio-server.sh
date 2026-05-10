@@ -1,1 +1,0 @@
-../../linux/system/rstudio-server.sh

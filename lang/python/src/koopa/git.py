@@ -6,8 +6,6 @@ git-push-submodules, git-submodule-init, git-reset, git-rm-untracked,
 git-rename-master-to-main, git-set-remote-url, git-rm-submodule, etc.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess
@@ -34,26 +32,61 @@ def git_clone(
     target: str | None = None,
     *,
     branch: str | None = None,
+    commit: str | None = None,
+    tag: str | None = None,
     recursive: bool = False,
 ) -> None:
-    """Clone a git repository."""
-    args = ["clone"]
+    """Clone a git repository.
+
+    Matches bash ``koopa_git_clone`` behaviour:
+    - branch: shallow clone with ``--depth=1 --single-branch``
+    - commit/tag: blobless clone with ``--filter=blob:none``, then checkout
+    """
+    args = ["clone", "--quiet"]
     if branch:
-        args.extend(["--branch", branch])
+        args.extend(["--depth=1", "--single-branch", "--branch", branch])
+    elif tag:
+        args.extend(["--depth=1", "--single-branch", "--branch", tag])
+    else:
+        args.append("--filter=blob:none")
     if recursive:
         args.append("--recursive")
     args.append(url)
     if target:
         args.append(target)
     _git(*args, capture=False)
+    cwd = target or os.path.basename(url).removesuffix(".git")
+    if commit:
+        _git("checkout", "--quiet", commit, cwd=cwd, capture=False)
 
 
-def git_pull(path: str = ".", *, rebase: bool = False) -> None:
+def git_fetch(path: str = ".") -> None:
+    """Fetch from remote."""
+    _git("fetch", "--all", cwd=path, capture=False)
+
+
+def git_checkout(path: str = ".", *, ref: str = "HEAD") -> None:
+    """Checkout a specific ref."""
+    _git("checkout", ref, cwd=path, capture=False)
+
+
+def git_pull(
+    path: str = ".",
+    *,
+    rebase: bool = False,
+    autostash: bool = False,
+    capture: bool = False,
+) -> subprocess.CompletedProcess | None:
     """Pull latest changes."""
     args = ["pull"]
     if rebase:
         args.append("--rebase")
-    _git(*args, cwd=path, capture=False)
+    if autostash:
+        args.append("--autostash")
+    result = _git(*args, cwd=path, capture=capture)
+    if capture:
+        return result
+    return None
 
 
 def git_branch(path: str = ".") -> str:

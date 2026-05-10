@@ -3,17 +3,17 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2025-12-03.
+    # @note Updated 2026-04-30.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    if [ -f "${KOOPA_PREFIX}/lang/sh/functions.sh" ]
+    if [ -f "${KOOPA_PREFIX}/lang/sh/include/functions.sh" ]
     then
         # shellcheck source=/dev/null
-        . "${KOOPA_PREFIX}/lang/sh/functions.sh"
+        . "${KOOPA_PREFIX}/lang/sh/include/functions.sh"
     else
         for __kvar_file in \
             "${KOOPA_PREFIX}/lang/sh/functions/"*'/'*'.sh'
@@ -81,7 +81,7 @@ __koopa_activate_koopa() {
     _koopa_activate_dircolors || return 1
     _koopa_activate_direnv || return 1
     _koopa_activate_docker || return 1
-    _koopa_activate_fzf || return 0
+    _koopa_activate_fzf || return 1
     _koopa_activate_gcc_colors || return 1
     _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1

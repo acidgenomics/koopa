@@ -6,8 +6,6 @@ brew-reset-permissions, brew-uninstall-all-brews, brew-install-brewfile,
 brew-list-formulae, brew-list-casks, brew-info, etc.
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 

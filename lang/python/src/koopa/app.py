@@ -6,69 +6,90 @@ from os.path import isdir, islink, join, realpath
 from shutil import rmtree
 from subprocess import run
 
-from koopa.data import argsort, flatten, unique_pos
+from koopa.data import argsort, unique_pos
 from koopa.fs import list_subdirs
 from koopa.io import import_app_json
 from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
 
 
+def resolve_alias(name: str) -> str:
+    """Resolve app alias to its target name (e.g. 'python' -> 'python3.14')."""
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        alias = entry.get("alias_of", "")
+        if alias:
+            return alias
+    return name
+
+
+def app_json_bin(name: str) -> list[str]:
+    """Get bin names for an app from app.json."""
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        bins = entry.get("bin", [])
+        if isinstance(bins, str):
+            return [bins]
+        if isinstance(bins, list):
+            return bins
+    return []
+
+
+def app_json_man1(name: str) -> list[str]:
+    """Get man1 page names for an app from app.json."""
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        man1 = entry.get("man1", [])
+        if isinstance(man1, str):
+            return [man1]
+        if isinstance(man1, list):
+            return man1
+    return []
+
+
 def app_deps(name: str) -> list:
-    """Get application dependencies."""
+    """Get application dependencies in topological order (deepest first)."""
     json_data = import_app_json()
-    keys = json_data.keys()
-    if name not in keys:
+    if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
-    lst = []
-    deps = extract_app_deps(name=name, json_data=json_data)
-    if not deps:
-        return lst
-    i = 0
-    lst.append(deps)
-    while i <= len(deps):
-        lvl1 = []
-        for lvl2 in lst[i]:
-            if isinstance(lvl2, list):
-                for lvl3 in lvl2:
-                    lvl4 = extract_app_deps(name=lvl3, json_data=json_data)
-                    if lvl4:
-                        lvl1.append(lvl4)
-            else:
-                lvl3 = extract_app_deps(name=lvl2, json_data=json_data)
-                if lvl3:
-                    lvl1.append(lvl3)
-        if not lvl1:
-            break
-        lst.append(lvl1)
-        i = i + 1
-    lst.reverse()
-    lst = flatten(lst)
-    lst = list(dict.fromkeys(lst))
-    lst = filter_app_deps(names=lst, json_data=json_data)
-    return lst
+    order: list[str] = []
+    visited: set[str] = set()
+
+    def _dfs(node: str) -> None:
+        if node in visited:
+            return
+        visited.add(node)
+        for dep in extract_app_deps(name=node, json_data=json_data):
+            if dep in json_data:
+                _dfs(dep)
+        order.append(node)
+
+    for dep in extract_app_deps(name=name, json_data=json_data):
+        if dep in json_data:
+            _dfs(dep)
+    return filter_app_deps(names=order, json_data=json_data)
 
 
 def app_revdeps(name: str, mode: str, include_build_deps: bool = True) -> list:
     """Get reverse application dependencies."""
     json_data = import_app_json()
-    keys = list(json_data.keys())
-    if name not in keys:
+    if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
-    all_deps = []
-    for key in keys:
-        key_deps = extract_app_deps(
-            name=key, json_data=json_data, include_build_deps=include_build_deps
+    lst = [
+        key
+        for key in json_data
+        if name
+        in extract_app_deps(
+            name=key,
+            json_data=json_data,
+            include_build_deps=include_build_deps,
         )
-        all_deps.append(key_deps)
-    lst = []
-    i = 0
-    while i < len(all_deps):
-        if name in all_deps[i]:
-            lst.append(keys[i])
-        i += 1
+    ]
     if not lst:
         return lst
-    lst = filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
-    return lst
+    return filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
 
 
 def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
@@ -76,22 +97,23 @@ def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
 
     Supports three dispatch strategies, checked in order:
 
-    1. **firewall** conditional – keys such as ``"firewall"``,
+    1. **firewall** conditional - keys such as ``"firewall"``,
        ``"firewall_linux"``, ``"firewall_macos"`` combined with a
        ``"default"`` fallback.  When ``SSL_CERT_FILE`` is set externally the
        firewall-prefixed key matching the current platform is used;
        otherwise the ``"default"`` key is used.
-    2. **os_id** dispatch – e.g. ``"macos-arm64"``, ``"linux-amd64"`` with a
+    2. **os_id** dispatch - e.g. ``"macos-arm64"``, ``"linux-amd64"`` with a
        ``"noarch"`` fallback (existing behaviour).
-    3. Plain list (not a dict) – returned as-is by the caller before this
+    3. Plain list (not a dict) - returned as-is by the caller before this
        function is reached.
     """
+    from koopa.install import can_build_binary
     from koopa.system import has_firewall, is_macos
 
-    # Strategy 1: firewall conditional.
+    # Strategy 1: firewall / builder conditional.
     has_fw_keys = any(k.startswith("firewall") for k in dep_dict)
     if has_fw_keys:
-        if has_firewall():
+        if has_firewall() or can_build_binary():
             platform_key = "firewall_macos" if is_macos() else "firewall_linux"
             if platform_key in dep_dict:
                 return list(dep_dict[platform_key])
@@ -139,11 +161,11 @@ def filter_app_deps(names: list, json_data: dict) -> list:
         supported = json.get("supported", {})
         if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
             continue
-        if "private" in json and json["private"]:
+        if json.get("private"):
             continue
-        if "system" in json and json["system"]:
+        if json.get("system"):
             continue
-        if "user" in json and json["user"]:
+        if json.get("user"):
             continue
         lst.append(val)
     return lst
@@ -165,6 +187,8 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
             continue
         json = json_data[val]
         keys = json.keys()
+        if "alias_of" in keys:
+            continue
         if "default" in keys and mode != "all" and not json["default"]:
             continue
         if "removed" in keys and json["removed"]:
@@ -185,6 +209,44 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
+def stale_revdeps(names: list) -> list:
+    """Get installed apps whose runtime dependencies are being reinstalled.
+
+    Given a list of app names being installed, returns any currently installed
+    apps that have one or more of those names as a runtime dependency. Only
+    considers 'dependencies', not 'build_dependencies'.
+    """
+    json_data = import_app_json()
+    keys = list(json_data.keys())
+    targets = set(names)
+    if not targets:
+        return []
+    installed = set(installed_apps())
+    sys_dict = {"os_id": os_id()}
+    lst = []
+    for key in keys:
+        if key not in installed:
+            continue
+        if key in targets:
+            continue
+        deps = []
+        if "dependencies" in json_data[key]:
+            deps = json_data[key]["dependencies"]
+            if isinstance(deps, dict):
+                deps = _resolve_dep_dict(deps, sys_dict)
+        triggering = set()
+        for d in deps:
+            resolved_d = d
+            d_entry = json_data.get(d, {})
+            if isinstance(d_entry, dict) and d_entry.get("alias_of"):
+                resolved_d = d_entry["alias_of"]
+            if d in targets or resolved_d in targets:
+                triggering.add(d)
+        if triggering:
+            lst.append(key)
+    return lst
+
+
 def installed_apps() -> list:
     """List installed apps."""
     app_prefix = koopa_app_prefix()
@@ -192,21 +254,20 @@ def installed_apps() -> list:
     return names
 
 
-def prune_apps(dry_run: bool = False) -> None:
+def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
     """Prune apps."""
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
     supported_names = json_data.keys()
     installed_names = installed_apps()
     opt_prefix = koopa_opt_prefix()
+    pruned: list[str] = []
     for name in installed_names:
-        prune = True
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
         json = json_data[name]
-        if "prune" in json and not json["prune"]:
-            prune = False
-        if not prune:
+        app_type = json.get("type", "library")
+        if app_type != "cli":
             continue
         opt_path = join(opt_prefix, name)
         if not islink(opt_path):
@@ -224,8 +285,13 @@ def prune_apps(dry_run: bool = False) -> None:
             if dry_run:
                 print(f"[dry-run] Pruning {subdir!r}.")
                 continue
-            print(f"Pruning {subdir!r}.")
+            if verbose:
+                print(f"Pruning {subdir!r}.")
+            pruned.append(subdir)
             rmtree(subdir)
+    if not dry_run and pruned:
+        n = len(pruned)
+        print(f"Pruned {n} app version{'s' if n != 1 else ''}.")
 
 
 def prune_app_binaries(dry_run: bool = False) -> None:
@@ -311,6 +377,8 @@ def shared_apps(mode: str) -> list:
     for val in names:
         json = json_data[val]
         keys = json.keys()
+        if "alias_of" in keys:
+            continue
         if "removed" in keys and json["removed"]:
             continue
         if isdir(join(sys_dict["opt_prefix"], val)):
