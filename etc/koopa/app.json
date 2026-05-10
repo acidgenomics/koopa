@@ -8507,7 +8507,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-02",
+    "date": "2026-05-10",
     "default": true,
     "dependencies": [
       "emacs"
@@ -8517,7 +8517,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
+    "version": "37e2a32b95d548a8e4c37996df408ec02e3f22f6"
   },
   "spacevim": {
     "date": "2026-05-10",

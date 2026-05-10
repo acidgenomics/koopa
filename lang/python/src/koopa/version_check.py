@@ -1054,11 +1054,12 @@ def _check_liblinear() -> str:
     return m.group(1)
 
 
-def _check_github_head(owner: str, repo: str) -> str:
-    for branch in ("main", "master"):
+def _check_github_head(owner: str, repo: str, *, branch: str | None = None) -> str:
+    branches = (branch,) if branch else ("main", "master")
+    for b in branches:
         try:
             data = _http_get_json(
-                f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}",
+                f"https://api.github.com/repos/{owner}/{repo}/commits/{b}",
                 github=True,
             )
             return data["sha"]
@@ -1656,7 +1657,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "spacemacs": _AppCheckSpec(
         "github",
-        lambda: _check_github_head("syl20bnr", "spacemacs"),
+        lambda: _check_github_head("syl20bnr", "spacemacs", branch="develop"),
         (),
     ),
     "sqlite": _AppCheckSpec("dirlist", _check_sqlite, ()),
