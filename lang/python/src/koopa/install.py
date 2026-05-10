@@ -2339,7 +2339,7 @@ def _compute_install_plan(
         supported = entry.get("supported", {})
         if current_os in supported and not supported[current_os]:
             return False
-        return not (entry.get("private") or entry.get("system") or entry.get("user"))
+        return not (entry.get("private") or entry.get("system"))
 
     # DFS to expand transitive deps and collect missing ones.
     full_set: set[str] = set(stale_set)
@@ -2693,87 +2693,6 @@ def remove_alias_app_dirs(*, verbose: bool = False) -> None:
         opt_link = os.path.join(opt_prefix(), name)
         if os.path.islink(opt_link):
             os.unlink(opt_link)
-
-
-def update_user_apps(*, verbose: bool = False) -> list[str]:
-    """Update outdated user-mode apps (git-based). Returns names of updated apps."""
-    from koopa.alert import alert, warn
-    from koopa.check import _user_app_prefixes, outdated_user_apps
-    from koopa.git import git_checkout, git_fetch
-
-    apps = outdated_user_apps()
-    if not apps:
-        return []
-    json_data = import_app_json()
-    prefixes = _user_app_prefixes()
-    n_user = len(apps)
-    label_user = "app" if n_user == 1 else "apps"
-    display_user = ", ".join(apps[:100]) + ", ..." if n_user > 100 else ", ".join(apps)
-    alert(f"Updating {n_user} user {label_user}: {display_user}.")
-    updated: list[str] = []
-    for app in apps:
-        prefix = prefixes.get(app, "")
-        if not prefix or not os.path.isdir(prefix):
-            continue
-        version = json_data.get(app, {}).get("version", "")
-        if not version:
-            continue
-        try:
-            git_fetch(prefix)
-            git_checkout(prefix, ref=version)
-            updated.append(app)
-        except Exception as exc:
-            warn(f"Failed to update user app '{app}': {exc}")
-    return updated
-
-
-def run_user_app_post_hooks(updated_apps: list[str], *, verbose: bool = False) -> None:
-    """Run post-update hooks for user apps that were updated."""
-    import subprocess
-
-    from koopa.alert import alert_note, warn
-    from koopa.check import _user_app_prefixes
-    from koopa.system import is_linux, is_macos
-
-    if not updated_apps:
-        return
-    prefixes = _user_app_prefixes()
-    for app in updated_apps:
-        prefix = prefixes.get(app, "")
-        if not prefix or not os.path.isdir(prefix):
-            continue
-        try:
-            if app == "doom-emacs":
-                doom = os.path.join(prefix, "bin", "doom")
-                if os.path.isfile(doom):
-                    alert_note("Running 'doom sync'.")
-                    if is_linux():
-                        from koopa.build import activate_app
-
-                        activate_app("emacs", build_only=True)
-                    elif is_macos():
-                        brew_prefix = (
-                            "/opt/homebrew" if os.path.isdir("/opt/homebrew") else "/usr/local"
-                        )
-                        os.environ["PATH"] = (
-                            os.path.join(brew_prefix, "bin") + ":" + os.environ.get("PATH", "")
-                        )
-                    subprocess.run([doom, "sync"], check=True)
-            elif app == "prelude-emacs":
-                init_el = os.path.join(prefix, "init.el")
-                if os.path.isfile(init_el):
-                    alert_note("Running prelude-emacs init.")
-                    subprocess.run(
-                        ["emacs", "--no-window-system", "--batch", "--load", init_el],
-                        check=True,
-                    )
-            elif app == "spacevim":
-                vimproc_dir = os.path.join(prefix, "bundle", "vimproc.vim")
-                if os.path.isdir(vimproc_dir):
-                    alert_note("Rebuilding vimproc for SpaceVim.")
-                    subprocess.run(["make"], cwd=vimproc_dir, check=True)
-        except Exception as exc:
-            warn(f"Post-update hook failed for '{app}': {exc}")
 
 
 def fetch_user_repos() -> None:
