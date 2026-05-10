@@ -1,5 +1,6 @@
 * High complexity
 * Medium complexity
+** TODO `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.
 * Low complexity
 ** TODO Need to fix broken app links in website documentation.
 ** TODO See if we need to clean up some man1 links in app.json
