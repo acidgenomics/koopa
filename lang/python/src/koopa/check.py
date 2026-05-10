@@ -646,14 +646,10 @@ def prune_broken_symlinks() -> None:
 
 def _print_update_plan() -> None:
     """Print the full list of apps that 'koopa update' will install."""
-    from koopa.app import shared_apps, stale_revdeps
+    from koopa.app import stale_revdeps
 
     outdated = outdated_apps_with_reasons()
     broken = broken_app_installs()
-    opt = koopa_opt_prefix()
-    missing_defaults = [
-        a for a in shared_apps(mode="default") if not os.path.islink(os.path.join(opt, a))
-    ]
     seen: dict[str, str] = {}
     for app, reason in outdated:
         if app not in seen:
@@ -661,9 +657,6 @@ def _print_update_plan() -> None:
     for app in broken:
         if app not in seen:
             seen[app] = "broken install"
-    for app in missing_defaults:
-        if app not in seen:
-            seen[app] = "not installed"
     if not seen:
         return
     direct = set(seen)
