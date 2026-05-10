@@ -11,10 +11,14 @@ import re
 import subprocess
 
 
-def _aws(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
+def _aws(
+    *args: str, capture: bool = True, timeout: int = 300
+) -> subprocess.CompletedProcess:
     """Run an AWS CLI command."""
     cmd = ["aws", *args]
-    return subprocess.run(cmd, capture_output=capture, text=True, check=True)
+    return subprocess.run(
+        cmd, capture_output=capture, text=True, check=True, timeout=timeout
+    )
 
 
 def aws_s3_sync(
