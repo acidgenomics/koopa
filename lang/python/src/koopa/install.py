@@ -2537,6 +2537,17 @@ def update_stale_apps(*, verbose: bool = False) -> None:
                     changed = True
     else:
         seen_names = set()
+    # Include missing default apps so everything installs in one pass.
+    from koopa.app import shared_apps
+
+    for app in shared_apps(mode="default"):
+        if (
+            not os.path.exists(os.path.join(opt_prefix(), app))
+            and app not in seen_names
+            and _is_supported_app(app)
+        ):
+            apps_with_reasons.append((app, "not installed"))
+            seen_names.add(app)
     # Merge cached plan from a previous aborted run.
     cached_plan = _load_pending_plan(source="update")
     if cached_plan:

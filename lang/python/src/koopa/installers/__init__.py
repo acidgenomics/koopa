@@ -196,7 +196,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bison": f"{_M}._gnu",
     "coreutils": f"{_M}._gnu",
     "ed": f"{_M}._gnu",
-    "emacs": f"{_M}._gnu",
+    "emacs": f"{_M}._conda",
     "findutils": f"{_M}._gnu",
     "gawk": f"{_M}._gnu",
     "gdbm": f"{_M}._gnu",
