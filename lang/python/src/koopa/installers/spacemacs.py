@@ -9,23 +9,17 @@ from koopa.installers._build_helper import activate_app_deps
 _SPACEMACS_WRAPPER = """\
 #!/bin/sh
 set -eu
-prefix="$(cd "$(dirname "$0")/.." && pwd)"
+_self="$0"
+if [ -L "$_self" ]; then
+    _self="$(readlink "$_self")"
+fi
+prefix="$(cd "$(dirname "$_self")/.." && pwd)"
 init_dir="${prefix}/libexec"
 if [ ! -f "${HOME}/.spacemacs.d/init.el" ]; then
     printf 'First run: configuring spacemacs...\\n' >&2
     koopa configure user spacemacs
 fi
-emacs="emacs"
-if [ "$(uname -s)" = "Darwin" ]; then
-    _homebrew_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}"
-    if [ -x "${_homebrew_prefix}/bin/emacs" ]; then
-        emacs="${_homebrew_prefix}/bin/emacs"
-    fi
-fi
-if [ "$(uname -s)" = "Darwin" ] && [ -e "${HOME}/.terminfo/78/xterm-24bit" ]; then
-    export TERM='xterm-24bit'
-fi
-exec "$emacs" --init-directory="$init_dir" "$@" >/dev/null 2>&1
+exec emacs --init-directory="$init_dir" "$@"
 """
 
 

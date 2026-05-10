@@ -71,14 +71,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    # emacs.
-    if [ -x '/usr/local/bin/emacs' ] || \
-        [ -x '/usr/bin/emacs' ] || \
-        [ -x "${__kvar_bin_prefix}/emacs" ]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-    fi
     # fd-find.
     if [ -x "${__kvar_bin_prefix}/fd" ]
     then

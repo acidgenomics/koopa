@@ -98,13 +98,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    if [[ -x '/usr/local/bin/emacs' ]] || \
-        [[ -x '/usr/bin/emacs' ]] || \
-        [[ -x "${bin_prefix}/emacs" ]]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-    fi
     if [[ -x "${bin_prefix}/fd" ]]
     then
         alias fd='fd --absolute-path --ignore-case --no-ignore'
@@ -1040,34 +1033,6 @@ _koopa_alias_colorls() {
         "$color_flag" \
         --group-directories-first \
         "$@"
-    return 0
-}
-
-_koopa_alias_emacs_vanilla() {
-    emacs --no-init-file --no-window-system "$@"
-}
-
-_koopa_alias_emacs() {
-    local emacs
-    if _koopa_is_macos
-    then
-        local homebrew_prefix
-        homebrew_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}"
-        emacs="${homebrew_prefix}/bin/emacs"
-    else
-        emacs="$(_koopa_bin_prefix)/emacs"
-    fi
-    if [[ ! -x "$emacs" ]]
-    then
-        _koopa_print "Emacs not installed at '${emacs}'."
-        return 1
-    fi
-    if [[ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]] && _koopa_is_macos
-    then
-        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
-    else
-        "$emacs" "$@" >/dev/null 2>&1
-    fi
     return 0
 }
 

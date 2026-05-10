@@ -62,13 +62,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    if [[ -x '/usr/local/bin/emacs' ]] || \
-        [[ -x '/usr/bin/emacs' ]] || \
-        [[ -x "${bin_prefix}/emacs" ]]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-    fi
     if [[ -x "${bin_prefix}/fd" ]]
     then
         alias fd='fd --absolute-path --ignore-case --no-ignore'

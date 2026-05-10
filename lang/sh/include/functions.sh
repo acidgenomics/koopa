@@ -104,13 +104,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    if [ -x '/usr/local/bin/emacs' ] || \
-        [ -x '/usr/bin/emacs' ] || \
-        [ -x "${__kvar_bin_prefix}/emacs" ]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-    fi
     if [ -x "${__kvar_bin_prefix}/fd" ]
     then
         alias fd='fd --absolute-path --ignore-case --no-ignore'
@@ -975,38 +968,6 @@ _koopa_alias_colorls() {
     return 0
 }
 
-_koopa_alias_emacs_vanilla() {
-    emacs --no-init-file --no-window-system "$@"
-}
-
-_koopa_alias_emacs() {
-    __kvar_emacs="emacs"
-    if _koopa_is_macos
-    then
-        __kvar_homebrew_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}"
-        if [ -x "${__kvar_homebrew_prefix}/bin/emacs" ]
-        then
-            __kvar_emacs="${__kvar_homebrew_prefix}/bin/emacs"
-        fi
-    else
-        __kvar_emacs="$(_koopa_bin_prefix)/emacs"
-    fi
-    if [ ! -x "$__kvar_emacs" ]
-    then
-        _koopa_print "Emacs not installed at '${__kvar_emacs}'."
-        unset -v __kvar_emacs __kvar_homebrew_prefix
-        return 1
-    fi
-    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
-    then
-        TERM='xterm-24bit' "$__kvar_emacs" "$@" >/dev/null 2>&1
-    else
-        "$__kvar_emacs" "$@" >/dev/null 2>&1
-    fi
-    unset -v __kvar_emacs __kvar_homebrew_prefix
-    return 0
-}
-
 _koopa_alias_glances() {
     case "$(_koopa_color_mode)" in
         'light')
@@ -1770,16 +1731,6 @@ _koopa_macos_activate_homebrew() {
         export HOMEBREW_NO_ENV_HINTS=1
     fi
     unset -v __kvar_brewfile __kvar_prefix
-    return 0
-}
-
-_koopa_macos_emacs() {
-    __kvar_homebrew_prefix="$(_koopa_homebrew_prefix)"
-    [ -d "$__kvar_homebrew_prefix" ] || return 1
-    __kvar_emacs="${__kvar_homebrew_prefix}/bin/emacs"
-    [ -x "$__kvar_emacs" ] || return 1
-    _koopa_print "$__kvar_emacs"
-    unset -v __kvar_emacs __kvar_homebrew_prefix
     return 0
 }
 
