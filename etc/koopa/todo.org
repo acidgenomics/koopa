@@ -1,4 +1,5 @@
 * High complexity
+** TODO I think during `koopa update` call we need to trigger a reload of Python code that may have changed when we pulled the source code.
 ** TODO Think about configuration and trigger scope support for:
     - koopa configure user
     - koopa update user
@@ -8,8 +9,8 @@
     - doom-emacs
     - spacemacs
     - emacs-prelude
-** TODO Rework koopa emacs aliases in shell to thin-layer per app bin exports. Need to think about how to automatically handle and bootstrap configuration for a user automatically. Or does it make more sense to use shell alias approach?
-** TODO We likely need to guard against user calling 'doom-emacs', 'spacemacs', and 'emacs-prelude' without running user configuration via `koopa configure user <APP>` first.
+** DONE Rework koopa emacs aliases in shell to thin-layer per app bin exports. Need to think about how to automatically handle and bootstrap configuration for a user automatically. Or does it make more sense to use shell alias approach?
+** DONE We likely need to guard against user calling 'doom-emacs', 'spacemacs', and 'emacs-prelude' without running user configuration via `koopa configure user <APP>` first.
 ** DONE Deferred: doom_emacs, python_app (need new abstractions)
     Homebrew Emacs and MacVim GUI support for doom-emacs, spacemacs.
 ** DONE `koopa` entrypoint needs to be smarter about loading venv to make tqdm accessible when running outside of development repo where we have `.venv` loaded with direnv. Need to double check this.

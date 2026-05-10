@@ -2157,6 +2157,7 @@
       "emacs"
     ],
     "description": "opinionated Emacs configuration framework",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/doomemacs/doomemacs/"
@@ -2374,6 +2375,7 @@
     ],
     "description": "community-maintained Emacs configuration",
     "name": "Emacs Prelude",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/bbatsov/prelude/"
@@ -8513,6 +8515,7 @@
       "emacs"
     ],
     "description": "Emacs configuration centered around evil-mode",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
