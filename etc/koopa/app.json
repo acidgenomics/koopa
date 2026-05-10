@@ -2358,6 +2358,28 @@
     ],
     "version": "30.2"
   },
+  "emacs-prelude": {
+    "bin": [
+      "emacs-prelude"
+    ],
+    "build_dependencies": [
+      "emacs",
+      "git"
+    ],
+    "category": "Editor",
+    "date": "2026-05-09",
+    "default": false,
+    "dependencies": [
+      "emacs"
+    ],
+    "description": "community-maintained Emacs configuration",
+    "name": "Emacs Prelude",
+    "type": "cli",
+    "url": [
+      "https://github.com/bbatsov/prelude/"
+    ],
+    "version": "bab03706490bb5bd12e7dcc63b131132a4566015"
+  },
   "ensembl-perl-api": {
     "category": "Bioinformatics",
     "date": "2026-05-02",
@@ -6804,27 +6826,6 @@
     ],
     "version": "7.6.1"
   },
-  "prelude-emacs": {
-    "bin": [
-      "prelude-emacs"
-    ],
-    "build_dependencies": [
-      "emacs",
-      "git"
-    ],
-    "category": "Editor",
-    "date": "2026-05-09",
-    "default": false,
-    "dependencies": [
-      "emacs"
-    ],
-    "description": "community-maintained Emacs configuration",
-    "type": "cli",
-    "url": [
-      "https://github.com/bbatsov/prelude/"
-    ],
-    "version": "bab03706490bb5bd12e7dcc63b131132a4566015"
-  },
   "prettier": {
     "bin": [
       "prettier"
@@ -8519,22 +8520,9 @@
     "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
   },
   "spacevim": {
-    "bin": [
-      "spacevim"
-    ],
-    "build_dependencies": [
-      "git"
-    ],
-    "category": "Editor",
-    "date": "2026-05-02",
-    "default": true,
+    "date": "2026-05-10",
     "description": "modular Vim and Neovim configuration",
-    "type": "cli",
-    "url": [
-      "https://spacevim.org/",
-      "https://github.com/SpaceVim/SpaceVim"
-    ],
-    "version": "eed9d8f14951d9802665aa3429e449b71bb15a3a"
+    "removed": true
   },
   "spdlog": {
     "date": "2026-01-09",

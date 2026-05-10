@@ -25,6 +25,7 @@ ca-certificates"
     export DEFAULT_CA_BUNDLE_PATH="$prefix"
     export NODE_EXTRA_CA_CERTS="$file"
     export REQUESTS_CA_BUNDLE="$file"
+    export GIT_SSL_CAINFO="$file"
     export SSL_CERT_FILE="$file"
     if _koopa_is_linux
     then

@@ -1,9 +1,7 @@
-"""Install SpaceVim."""
+"""Install emacs-prelude."""
 
 import os
 import stat
-import subprocess
-import sys
 
 from koopa.git import git_clone
 from koopa.installers._build_helper import activate_app_deps
@@ -16,22 +14,17 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install SpaceVim."""
+    """Install emacs-prelude."""
     env = activate_app_deps()
-    if env is not None:
-        env.apply()
+    env.apply()
     git_clone(
-        "https://gitlab.com/SpaceVim/SpaceVim.git",
+        "https://github.com/bbatsov/prelude.git",
         prefix,
         commit=version,
     )
-    vimproc_prefix = os.path.join(prefix, "bundle", "vimproc.vim")
-    if os.path.isdir(vimproc_prefix):
-        print(f"Fixing vimproc at '{vimproc_prefix}'.", file=sys.stderr)
-        subprocess.run(["make"], cwd=vimproc_prefix, check=True)
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
-    wrapper = os.path.join(bin_dir, "spacevim")
+    wrapper = os.path.join(bin_dir, "emacs-prelude")
     with open(wrapper, "w") as f:
-        f.write('#!/bin/sh\nexec vim -u "$(dirname "$0")/../vimrc" "$@"\n')
+        f.write('#!/bin/sh\nexec emacs --init-directory="$(dirname "$0")/.." "$@"\n')
     os.chmod(wrapper, os.stat(wrapper).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
