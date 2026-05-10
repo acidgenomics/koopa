@@ -487,9 +487,9 @@ def _cmake_std_args(
     args = [
         "-DCMAKE_BUILD_TYPE=Release",
         f"-DCMAKE_INSTALL_PREFIX={prefix}",
-        f"-DCMAKE_INSTALL_BINDIR={prefix}/bin",
-        f"-DCMAKE_INSTALL_INCLUDEDIR={prefix}/include",
-        f"-DCMAKE_INSTALL_LIBDIR={prefix}/lib",
+        "-DCMAKE_INSTALL_BINDIR=bin",
+        "-DCMAKE_INSTALL_INCLUDEDIR=include",
+        "-DCMAKE_INSTALL_LIBDIR=lib",
         f"-DCMAKE_INSTALL_RPATH={prefix}/lib",
         *(["-DCMAKE_VERBOSE_MAKEFILE=ON"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
     ]

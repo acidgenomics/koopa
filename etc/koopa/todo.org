@@ -2,3 +2,14 @@
 * Medium complexity
 * Low complexity
 ** TODO Need to fix broken app links in website documentation.
+** TODO See if we need to clean up some man1 links in app.json
+    pigz (broken man1 symlink: pigz.1)
+    rclone (broken man1 symlink: rclone.1)
+    tree (broken man1 symlink: tree.1)
+** TODO koopa update isn't catching this issue on macOS
+    ~/.local/share/koopa/share/man/man1 develop f047d7e [!] <python 3.12.13: .venv>
+    $ koopa system check
+    fontconfig is not linked at /Users/stmich14/.local/share/koopa/opt/fontconfig
+    Update will install 1 apps: fontconfig.
+    Warning: System checks completed with warnings.
+    ** Run 'koopa update' to resolve these issues.
