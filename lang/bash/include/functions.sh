@@ -424,7 +424,6 @@ ca-certificates"
     then
         return 0
     fi
-    export AWS_CA_BUNDLE="$file"
     export CURL_CA_BUNDLE="$file"
     export DEFAULT_CA_BUNDLE_PATH="$prefix"
     export NODE_EXTRA_CA_CERTS="$file"
