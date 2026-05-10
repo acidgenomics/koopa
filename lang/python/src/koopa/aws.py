@@ -19,6 +19,7 @@ def _aws(
 
     cmd = ["aws", *args]
     env = os.environ.copy()
+    env.pop("AWS_CA_BUNDLE", None)
     env["AWS_PAGER"] = ""
     return subprocess.run(
         cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=env
@@ -308,7 +309,8 @@ def aws_ec2_stop(
     args = ["ec2", "stop-instances", "--instance-ids", *instance_ids]
     if profile:
         args.extend(["--profile", profile])
-    _aws(*args, capture=False)
+    _aws(*args)
+    print(f"Stopping: {', '.join(instance_ids)}")
 
 
 def aws_ecr_login_private(
