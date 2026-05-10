@@ -670,6 +670,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         from koopa.alert import alert_success, styled_name, warn
         from koopa.app import prune_apps
         from koopa.check import prune_broken_symlinks
+        from koopa.install import repair_app_symlinks
 
         _cleanup_legacy_config()
         update_koopa(verbose=args.verbose)
@@ -688,10 +689,11 @@ def _handle_update(args: argparse.Namespace) -> None:
         _update_venv(_koopa_prefix())
         remove_alias_app_dirs(verbose=args.verbose)
         remove_unsupported_apps(verbose=args.verbose)
+        prune_broken_symlinks()
+        repair_app_symlinks()
         update_stale_apps(verbose=args.verbose)
         install_missing_default_apps(verbose=args.verbose)
         update_user_apps(verbose=args.verbose)
-        prune_broken_symlinks()
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:

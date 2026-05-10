@@ -2602,6 +2602,52 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     alert_success("All stale apps updated successfully.")
 
 
+def repair_app_symlinks() -> None:
+    """Re-create missing bin/man1/completion symlinks for installed apps."""
+    from koopa.app import installed_apps
+    from koopa.io import import_app_json
+
+    json_data = import_app_json()
+    opt = opt_prefix()
+    bin_dir = bin_prefix()
+    man1_dir = man1_prefix()
+    for name in installed_apps():
+        entry = json_data.get(name)
+        if not entry:
+            continue
+        if entry.get("alias_of"):
+            target = entry["alias_of"]
+            entry = json_data.get(target, entry)
+            name = target  # noqa: PLW2901
+        app_link = os.path.join(opt, name)
+        if not os.path.islink(app_link) or not os.path.isdir(os.path.realpath(app_link)):
+            continue
+        prefix = os.path.realpath(app_link)
+        for b in entry.get("bin", []):
+            link = os.path.join(bin_dir, b)
+            if os.path.islink(link) and os.path.exists(link):
+                continue
+            source = os.path.join(prefix, "bin", b)
+            if os.path.isfile(source):
+                if os.path.islink(link):
+                    os.unlink(link)
+                link_in_bin(name=b, source=source)
+        for m in entry.get("man1", []):
+            link = os.path.join(man1_dir, m)
+            if os.path.islink(link) and os.path.exists(link):
+                continue
+            mf1 = os.path.join(prefix, "share", "man", "man1", m)
+            mf2 = os.path.join(prefix, "man", "man1", m)
+            source = mf1 if os.path.isfile(mf1) else mf2 if os.path.isfile(mf2) else None
+            if source:
+                if os.path.islink(link):
+                    os.unlink(link)
+                link_in_man1(name=m, source=source)
+        link_in_bash_completions(prefix)
+        link_in_fish_completions(prefix)
+        link_in_zsh_completions(prefix)
+
+
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
     """Remove installed apps that are no longer in app.json or marked removed."""
     from koopa.alert import alert
