@@ -856,6 +856,16 @@ def _classify_by_known_pattern(
             lambda u=url, p=prefix: _check_directory_listing(u, p),
             (),
         )
+    if info.get("installer") == "gnu-app":
+        args = info.get("installer_args", {})
+        pkg_name = _get_str(args, "package_name") or name
+        parent = _get_str(args, "parent_name") or ""
+        non_gnu = _get_str(args, "non_gnu_mirror") == "true"
+        return _AppCheckSpec(
+            "gnu",
+            lambda p=pkg_name, pa=parent, ng=non_gnu: _check_gnu(p, parent=pa, non_gnu_mirror=ng),
+            (),
+        )
     return None
 
 
@@ -1899,9 +1909,11 @@ def check_app_versions(  # noqa: C901, PLR0915
             for app_name, version, spec in to_check
         }
         for future in as_completed(futures):
+            app_name = futures[future]
             result, msg = future.result()
             results.append(result)
             if pbar is not None:
+                pbar.set_description(f"Checking {app_name}")
                 if msg:
                     pbar.write(msg, file=sys.stderr)
                 pbar.update(1)
