@@ -4,10 +4,9 @@ Converted from Bash functions: alert, alert-info, alert-note, alert-success,
 alert-install-start, h1-h7, dl, stop, warn, invalid-arg, etc.
 """
 
-from __future__ import annotations
-
 import os
 import sys
+from typing import TextIO
 
 
 def _supports_color() -> bool:
@@ -61,7 +60,7 @@ def _white() -> str:
     return ansi_escape("37")
 
 
-def msg(message: str, *, prefix: str = "", color: str = "", file: object = None) -> None:
+def msg(message: str, *, prefix: str = "", color: str = "", file: TextIO | None = None) -> None:
     """Print a formatted message."""
     if file is None:
         file = sys.stderr
@@ -80,7 +79,7 @@ def alert(message: str) -> None:
 
 def alert_info(message: str) -> None:
     """Print an info message."""
-    msg(message, prefix="ℹ", color="36")
+    msg(message, prefix="ℹ", color="36")  # noqa: RUF001
 
 
 def alert_note(message: str) -> None:
@@ -93,85 +92,94 @@ def alert_success(message: str) -> None:
     msg(message, prefix="✓", color="32")
 
 
-def alert_coffee_time() -> None:
-    """Print coffee time message."""
-    msg("This is going to take a while. Time for a coffee break! ☕", prefix="", color="33")
+def styled_name(name: str) -> str:
+    """Return bold-styled name string."""
+    return f"{_bold()}{name}{_reset()}"
 
 
-def alert_install_start(name: str, prefix: str = "") -> None:
+def styled_prefix(prefix: str) -> str:
+    """Return cyan-styled prefix string."""
+    return f"'{_cyan()}{prefix}{_reset()}'"
+
+
+def styled_reason(reason: str) -> str:
+    """Return magenta-styled reason string."""
+    return f"({_magenta()}{reason}{_reset()})"
+
+
+def styled_version(version: str) -> str:
+    """Return blue-styled version string."""
+    return f"{_blue()}{version}{_reset()}"
+
+
+def alert_install_start(name: str, prefix: str = "", reason: str = "") -> None:
     """Alert that installation is starting."""
-    s = f"Installing {name}"
+    s = f"Installing {styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {styled_prefix(prefix)}"
+    if reason:
+        s += f" {styled_reason(reason)}"
     s += "."
-    msg(s, prefix="", color="33")
+    msg(s)
 
 
-def alert_install_success(name: str, prefix: str = "") -> None:
+def alert_install_success(name: str, prefix: str = "", duration: str = "") -> None:
     """Alert that installation succeeded."""
-    s = f"Successfully installed {name}"
+    s = f"Successfully installed {styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {styled_prefix(prefix)}"
+    if duration:
+        s += f" in {duration}"
     s += "."
     msg(s, prefix="✓", color="32")
 
 
-def alert_uninstall_start(name: str, prefix: str = "") -> None:
+def alert_uninstall_start(name: str, prefix: str = "", reason: str = "") -> None:
     """Alert that uninstallation is starting."""
-    s = f"Uninstalling {name}"
+    s = f"Uninstalling {styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {styled_prefix(prefix)}"
+    if reason:
+        s += f" {styled_reason(reason)}"
     s += "."
-    msg(s, prefix="", color="33")
+    msg(s)
 
 
 def alert_uninstall_success(name: str, prefix: str = "") -> None:
     """Alert that uninstallation succeeded."""
-    s = f"Successfully uninstalled {name}"
+    s = f"Successfully uninstalled {styled_name(name)}"
     if prefix:
-        s += f" at '{prefix}'"
+        s += f" at {styled_prefix(prefix)}"
     s += "."
     msg(s, prefix="✓", color="32")
 
 
-def alert_configure_start(name: str) -> None:
+def alert_configure_start(name: str, reason: str = "") -> None:
     """Alert configuration starting."""
-    msg(f"Configuring {name}.", prefix="", color="33")
+    s = f"Configuring {styled_name(name)}"
+    if reason:
+        s += f" {styled_reason(reason)}"
+    s += "."
+    msg(s)
 
 
 def alert_configure_success(name: str) -> None:
     """Alert configuration succeeded."""
-    msg(f"Successfully configured {name}.", prefix="✓", color="32")
+    msg(f"Successfully configured {styled_name(name)}.", prefix="✓", color="32")
 
 
-def alert_update_start(name: str) -> None:
+def alert_update_start(name: str, reason: str = "") -> None:
     """Alert update starting."""
-    msg(f"Updating {name}.", prefix="", color="33")
+    s = f"Updating {styled_name(name)}"
+    if reason:
+        s += f" {styled_reason(reason)}"
+    s += "."
+    msg(s)
 
 
 def alert_update_success(name: str) -> None:
     """Alert update succeeded."""
-    msg(f"Successfully updated {name}.", prefix="✓", color="32")
-
-
-def alert_process_start(name: str) -> None:
-    """Alert process starting."""
-    msg(f"Processing {name}.", prefix="", color="33")
-
-
-def alert_process_success(name: str) -> None:
-    """Alert process succeeded."""
-    msg(f"Successfully processed {name}.", prefix="✓", color="32")
-
-
-def alert_is_not_installed(name: str) -> None:
-    """Alert that something is not installed."""
-    msg(f"{name} is not installed.", prefix="", color="33")
-
-
-def alert_restart() -> None:
-    """Alert that restart is required."""
-    msg("Restart is required.", prefix="⚠", color="33")
+    msg(f"Successfully updated {styled_name(name)}.", prefix="✓", color="32")
 
 
 def h(level: int, message: str) -> None:
@@ -231,12 +239,6 @@ def dl(key: str, value: str) -> None:
     print(f"  {c}{key}{r}: {value}", file=sys.stderr)
 
 
-def dl_pairs(pairs: list[tuple[str, str]]) -> None:
-    """Print multiple definition list entries."""
-    for k, v in pairs:
-        dl(k, v)
-
-
 def stop(message: str) -> None:
     """Print error message and exit."""
     c = _red()
@@ -250,8 +252,3 @@ def warn(message: str) -> None:
     c = _yellow()
     r = _reset()
     print(f"{c}Warning:{r} {message}", file=sys.stderr)
-
-
-def invalid_arg(arg: str) -> None:
-    """Print invalid argument error and exit."""
-    stop(f"Invalid argument: '{arg}'.")

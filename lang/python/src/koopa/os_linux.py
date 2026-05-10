@@ -5,24 +5,10 @@ user/group management, systemctl, apt/dnf/apk/pacman/zypper package managers,
 configure-system-sshd, configure-lmod, etc.
 """
 
-from __future__ import annotations
-
 import os
-import subprocess
 from pathlib import Path
 
-
-def _run(
-    *args: str,
-    sudo: bool = False,
-    capture: bool = False,
-) -> subprocess.CompletedProcess:
-    """Run a command."""
-    cmd = list(args)
-    if sudo:
-        cmd = ["sudo", *cmd]
-    return subprocess.run(cmd, capture_output=capture, text=True, check=True)
-
+from koopa.exec import run
 
 # -- OS info -----------------------------------------------------------------
 
@@ -70,9 +56,9 @@ def add_user(
     if home:
         args.extend(["--home-dir", home, "--create-home"])
     args.extend(["--shell", shell, name])
-    _run(*args, sudo=True)
+    run(*args, sudo=True)
     if sudo_access:
-        _run("usermod", "-aG", "sudo", name, sudo=True)
+        run("usermod", "-aG", "sudo", name, sudo=True)
 
 
 def delete_user(name: str, *, remove_home: bool = False) -> None:
@@ -81,7 +67,7 @@ def delete_user(name: str, *, remove_home: bool = False) -> None:
     if remove_home:
         args.append("--remove")
     args.append(name)
-    _run(*args, sudo=True)
+    run(*args, sudo=True)
 
 
 def add_group(name: str, *, system: bool = False) -> None:
@@ -90,12 +76,12 @@ def add_group(name: str, *, system: bool = False) -> None:
     if system:
         args.append("--system")
     args.append(name)
-    _run(*args, sudo=True)
+    run(*args, sudo=True)
 
 
 def add_user_to_group(user: str, group: str) -> None:
     """Add a user to a group."""
-    _run("usermod", "-aG", group, user, sudo=True)
+    run("usermod", "-aG", group, user, sudo=True)
 
 
 # -- systemctl ---------------------------------------------------------------
@@ -103,37 +89,32 @@ def add_user_to_group(user: str, group: str) -> None:
 
 def systemctl_start(service: str) -> None:
     """Start a systemd service."""
-    _run("systemctl", "start", service, sudo=True)
+    run("systemctl", "start", service, sudo=True)
 
 
 def systemctl_stop(service: str) -> None:
     """Stop a systemd service."""
-    _run("systemctl", "stop", service, sudo=True)
+    run("systemctl", "stop", service, sudo=True)
 
 
 def systemctl_restart(service: str) -> None:
     """Restart a systemd service."""
-    _run("systemctl", "restart", service, sudo=True)
+    run("systemctl", "restart", service, sudo=True)
 
 
 def systemctl_enable(service: str) -> None:
     """Enable a systemd service."""
-    _run("systemctl", "enable", service, sudo=True)
+    run("systemctl", "enable", service, sudo=True)
 
 
 def systemctl_disable(service: str) -> None:
     """Disable a systemd service."""
-    _run("systemctl", "disable", service, sudo=True)
+    run("systemctl", "disable", service, sudo=True)
 
 
 def systemctl_status(service: str) -> str:
     """Get systemd service status."""
-    result = subprocess.run(
-        ["systemctl", "status", service],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    result = run("systemctl", "status", service, capture=True)
     return result.stdout
 
 
@@ -142,94 +123,99 @@ def systemctl_status(service: str) -> str:
 
 def apt_install(*packages: str) -> None:
     """Install packages with apt."""
-    _run("apt-get", "install", "-y", *packages, sudo=True)
+    run("apt-get", "install", "-y", *packages, sudo=True)
 
 
 def apt_remove(*packages: str) -> None:
     """Remove packages with apt."""
-    _run("apt-get", "remove", "-y", *packages, sudo=True)
+    run("apt-get", "remove", "-y", *packages, sudo=True)
 
 
 def apt_update() -> None:
     """Update apt package lists."""
-    _run("apt-get", "update", "-y", sudo=True)
+    run("apt-get", "update", "-y", sudo=True)
 
 
 def apt_upgrade() -> None:
     """Upgrade apt packages."""
-    _run("apt-get", "upgrade", "-y", sudo=True)
+    run("apt-get", "upgrade", "-y", sudo=True)
+
+
+def apt_full_upgrade() -> None:
+    """Full-upgrade apt packages."""
+    run("apt-get", "full-upgrade", "-y", sudo=True)
 
 
 def apt_clean() -> None:
     """Clean apt cache."""
-    _run("apt-get", "clean", sudo=True)
-    _run("apt-get", "autoremove", "-y", sudo=True)
+    run("apt-get", "clean", sudo=True)
+    run("apt-get", "autoremove", "-y", sudo=True)
 
 
 def apt_list_installed() -> list[str]:
     """List installed apt packages."""
-    result = _run("dpkg", "--get-selections", capture=True)
+    result = run("dpkg", "--get-selections", capture=True)
     return [line.split()[0] for line in result.stdout.splitlines() if "install" in line]
 
 
 def dnf_install(*packages: str) -> None:
     """Install packages with dnf."""
-    _run("dnf", "install", "-y", *packages, sudo=True)
+    run("dnf", "install", "-y", *packages, sudo=True)
 
 
 def dnf_remove(*packages: str) -> None:
     """Remove packages with dnf."""
-    _run("dnf", "remove", "-y", *packages, sudo=True)
+    run("dnf", "remove", "-y", *packages, sudo=True)
 
 
 def dnf_update() -> None:
     """Update dnf packages."""
-    _run("dnf", "update", "-y", sudo=True)
+    run("dnf", "update", "-y", sudo=True)
 
 
 def apk_install(*packages: str) -> None:
     """Install packages with apk (Alpine)."""
-    _run("apk", "add", *packages, sudo=True)
+    run("apk", "add", *packages, sudo=True)
 
 
 def apk_remove(*packages: str) -> None:
     """Remove packages with apk (Alpine)."""
-    _run("apk", "del", *packages, sudo=True)
+    run("apk", "del", *packages, sudo=True)
 
 
 def apk_update() -> None:
     """Update apk package index."""
-    _run("apk", "update", sudo=True)
+    run("apk", "update", sudo=True)
 
 
 def pacman_install(*packages: str) -> None:
     """Install packages with pacman (Arch)."""
-    _run("pacman", "-S", "--noconfirm", *packages, sudo=True)
+    run("pacman", "-S", "--noconfirm", *packages, sudo=True)
 
 
 def pacman_remove(*packages: str) -> None:
     """Remove packages with pacman (Arch)."""
-    _run("pacman", "-R", "--noconfirm", *packages, sudo=True)
+    run("pacman", "-R", "--noconfirm", *packages, sudo=True)
 
 
 def pacman_update() -> None:
     """Update pacman packages."""
-    _run("pacman", "-Syu", "--noconfirm", sudo=True)
+    run("pacman", "-Syu", "--noconfirm", sudo=True)
 
 
 def zypper_install(*packages: str) -> None:
     """Install packages with zypper (openSUSE)."""
-    _run("zypper", "install", "-y", *packages, sudo=True)
+    run("zypper", "install", "-y", *packages, sudo=True)
 
 
 def zypper_remove(*packages: str) -> None:
     """Remove packages with zypper (openSUSE)."""
-    _run("zypper", "remove", "-y", *packages, sudo=True)
+    run("zypper", "remove", "-y", *packages, sudo=True)
 
 
 def zypper_update() -> None:
     """Update zypper packages."""
-    _run("zypper", "update", "-y", sudo=True)
+    run("zypper", "update", "-y", sudo=True)
 
 
 # -- System configuration ----------------------------------------------------

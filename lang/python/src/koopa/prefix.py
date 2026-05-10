@@ -3,13 +3,8 @@
 Converted from POSIX shell and Bash prefix functions.
 """
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
-
-from koopa.system import arch, is_macos
-from koopa.xdg import xdg_local_home
 
 
 def koopa_prefix() -> str:
@@ -41,7 +36,9 @@ def opt_prefix() -> str:
 
 def bootstrap_prefix() -> str:
     """Return bootstrap prefix."""
-    return os.environ.get("KOOPA_BOOTSTRAP_PREFIX", os.path.join(koopa_prefix(), "bootstrap"))
+    if "KOOPA_BOOTSTRAP_PREFIX" in os.environ:
+        return os.environ["KOOPA_BOOTSTRAP_PREFIX"]
+    return koopa_prefix().rstrip(os.sep) + "-bootstrap"
 
 
 def config_prefix() -> str:
@@ -59,34 +56,39 @@ def man1_prefix() -> str:
     return os.path.join(man_prefix(), "man1")
 
 
-def etc_prefix() -> str:
-    """Return koopa etc prefix."""
-    return os.path.join(koopa_prefix(), "etc")
+def bash_completions_prefix() -> str:
+    """Return koopa central bash-completion completions directory."""
+    return os.path.join(koopa_prefix(), "share", "bash-completion", "completions")
 
 
-def local_data_prefix() -> str:
-    """Return local data prefix."""
-    return xdg_local_home()
+def fish_completions_prefix() -> str:
+    """Return koopa central fish completions directory."""
+    return os.path.join(koopa_prefix(), "share", "fish", "vendor_completions.d")
 
 
-def monorepo_prefix() -> str:
-    """Return monorepo prefix."""
-    return os.environ.get("KOOPA_MONOREPO_PREFIX", os.path.expanduser("~/monorepo"))
+def zsh_completions_prefix() -> str:
+    """Return koopa central zsh completions directory."""
+    return os.path.join(koopa_prefix(), "share", "zsh", "site-functions")
 
 
 def scripts_private_prefix() -> str:
     """Return private scripts prefix."""
-    return os.environ.get("KOOPA_SCRIPTS_PRIVATE_PREFIX", os.path.expanduser("~/scripts-private"))
+    return os.environ.get(
+        "KOOPA_SCRIPTS_PRIVATE_PREFIX",
+        os.path.join(
+            os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
+            "koopa",
+            "scripts-private",
+        ),
+    )
 
 
-def tests_prefix() -> str:
-    """Return koopa tests prefix."""
-    return os.path.join(config_prefix(), "tests")
-
-
-def patch_prefix() -> str:
-    """Return patch prefix."""
-    return os.path.join(etc_prefix(), "koopa", "patch")
+def website_prefix() -> str:
+    """Return koopa website prefix."""
+    return os.environ.get(
+        "KOOPA_WEBSITE_PREFIX",
+        os.path.expanduser("~/git/koopa-acidgenomics-com"),
+    )
 
 
 def bash_prefix() -> str:
@@ -119,43 +121,9 @@ def conda_prefix() -> str:
     return os.environ.get("CONDA_PREFIX", os.path.join(app_prefix(), "conda"))
 
 
-def homebrew_prefix() -> str:
-    """Return Homebrew prefix."""
-    if is_macos():
-        if arch() == "arm64":
-            return "/opt/homebrew"
-        return "/usr/local"
-    return os.path.join(koopa_prefix(), "app", "homebrew")
-
-
 def go_prefix() -> str:
     """Return Go prefix."""
     return os.environ.get("GOPATH", os.path.expanduser("~/go"))
-
-
-def pipx_prefix() -> str:
-    """Return pipx prefix."""
-    return os.environ.get("PIPX_HOME", os.path.expanduser("~/.local/pipx"))
-
-
-def pyenv_prefix() -> str:
-    """Return pyenv prefix."""
-    return os.environ.get("PYENV_ROOT", os.path.expanduser("~/.pyenv"))
-
-
-def rbenv_prefix() -> str:
-    """Return rbenv prefix."""
-    return os.environ.get("RBENV_ROOT", os.path.expanduser("~/.rbenv"))
-
-
-def asdf_prefix() -> str:
-    """Return asdf prefix."""
-    return os.environ.get("ASDF_DIR", os.path.expanduser("~/.asdf"))
-
-
-def julia_packages_prefix() -> str:
-    """Return Julia packages prefix."""
-    return os.environ.get("JULIA_DEPOT_PATH", os.path.expanduser("~/.julia"))
 
 
 def emacs_prefix() -> str:
@@ -181,13 +149,3 @@ def spacemacs_prefix() -> str:
 def spacevim_prefix() -> str:
     """Return SpaceVim prefix."""
     return os.path.expanduser("~/.SpaceVim.d")
-
-
-def aspera_connect_prefix() -> str:
-    """Return Aspera Connect prefix."""
-    return os.path.expanduser("~/.aspera/connect")
-
-
-def docker_private_prefix() -> str:
-    """Return Docker private prefix."""
-    return os.environ.get("KOOPA_DOCKER_PRIVATE_PREFIX", os.path.expanduser("~/docker-private"))

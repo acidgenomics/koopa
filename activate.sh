@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# Csh is not supported, primarily due to lack of functions.
+# Csh/Tcsh lack functions, so full activation is not possible.
+# Use 'activate.csh' instead for minimal activation.
 # > csh -l or csh -i
 [ "$0" = 'csh' ] && \
-    printf '%s\n' 'koopa does not support csh.' && \
+    printf '%s\n' "koopa: use 'activate.csh' for csh support." && \
     exit 1
 
-# Tcsh is not supported, primarily due to lack of functions.
 # > tcsh -l or tcsh -i
 [ "$0" = 'tcsh' ] && \
-    printf '%s\n' 'koopa does not support tcsh.' && \
+    printf '%s\n' "koopa: use 'activate.csh' for tcsh support." && \
     exit 1
 
 __koopa_activate_usage() {
@@ -40,7 +40,7 @@ supported environment variables:
 
 details:
     Bash or Zsh is currently recommended.
-    Also supports Ash, Busybox, and Dash POSIX shells.
+    Also supports Ash, Busybox, Dash, and Ksh93 POSIX shells.
 
     For system-wide configuration on Linux, this should be called inside
     '/etc/profile.d/zzz-koopa.sh', owned by root.
@@ -51,11 +51,11 @@ details:
 
 examples:
     # Default mode.
-    . /usr/local/koopa/activate
+    . /usr/local/koopa/activate.sh
 
     # Minimal mode.
     export KOOPA_MINIMAL=1
-    . /usr/local/koopa/activate
+    . /usr/local/koopa/activate.sh
 END
 }
 
@@ -103,7 +103,7 @@ __koopa_export_koopa_prefix() {
         return 1
     fi
     # Note that running realpath on the file instead of the directory will
-    # properly resolve '~/.config/koopa/activate' symlink case.
+    # properly resolve symlinked activate scripts.
     if [ -L "$__kvar_script" ]
     then
         __kvar_script="$(__koopa_realpath "$__kvar_script")"
@@ -163,6 +163,21 @@ __koopa_is_interactive() {
     __koopa_str_detect "$-" 'i'
 }
 
+__koopa_is_macos() {
+    [ "$(uname -s)" = 'Darwin' ]
+}
+
+__koopa_is_amd64() {
+    [ "$(uname -m)" = 'x86_64' ]
+}
+
+__koopa_is_arm64() {
+    case "$(uname -m)" in
+        'aarch64' | 'arm64') return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 __koopa_posix_source() {
     # """
     # POSIX source file location.
@@ -182,7 +197,7 @@ __koopa_posix_source() {
             "Required 'KOOPA_PREFIX' variable is unset."
         return 1
     fi
-    __koopa_print "${__kvar_prefix}/activate"
+    __koopa_print "${__kvar_prefix}/activate.sh"
     unset -v __kvar_prefix
     return 0
 }
@@ -238,14 +253,15 @@ __koopa_realpath() {
         then
             __kvar_string="$( \
                 python3 -c \
-                    "import os; print(os.path.realpath('${__kvar_arg}'))" \
+                    "import os,sys; print(os.path.realpath(sys.argv[1]))" \
+                    "$__kvar_arg" \
                 2>/dev/null \
                 || true \
             )"
         fi
         if [ -z "$__kvar_string" ]
         then
-            unset -v __kvar_arg _kvar_string
+            unset -v __kvar_arg __kvar_string
             return 1
         fi
         __koopa_print "$__kvar_string"
@@ -266,6 +282,7 @@ __koopa_shell_name() {
     then
         __kvar_string='zsh'
     else
+        # ksh93, ash, busybox, dash all use the POSIX sh path.
         __kvar_string='sh'
     fi
     __koopa_print "$__kvar_string"
@@ -307,10 +324,33 @@ __koopa_zsh_source() {
     return 0
 }
 
+__koopa_ensure_xdg_data_symlink() {
+    # """
+    # Ensure XDG_DATA_HOME/koopa symlink exists for shared installs.
+    # @note Updated 2026-05-02.
+    # """
+    __kvar_home="${HOME:?}"
+    case "${KOOPA_PREFIX:?}" in
+        "${__kvar_home}"*)
+            unset -v __kvar_home
+            return 0
+            ;;
+    esac
+    __kvar_xdg_data_home="${XDG_DATA_HOME:-${__kvar_home}/.local/share}"
+    __kvar_link="${__kvar_xdg_data_home}/koopa"
+    if [ ! -e "$__kvar_link" ]
+    then
+        mkdir -p "$__kvar_xdg_data_home"
+        ln -s "${KOOPA_PREFIX:?}" "$__kvar_link"
+    fi
+    unset -v __kvar_home __kvar_link __kvar_xdg_data_home
+    return 0
+}
+
 __koopa_activate() {
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2022-09-02.
+    # @note Updated 2026-05-02.
     # """
     case "${1:-}" in
         '--help' | '-h')
@@ -319,8 +359,12 @@ __koopa_activate() {
             ;;
     esac
     __koopa_preflight || return 0
+    if __koopa_is_macos && __koopa_is_amd64; then
+        __koopa_warn 'koopa: Intel Mac (x86_64) is no longer supported. Run "koopa uninstall" to remove.'
+    fi
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
+    __koopa_ensure_xdg_data_symlink
     KOOPA_ACTIVATE="${KOOPA_ACTIVATE:-1}"
     export KOOPA_ACTIVATE
     # shellcheck source=/dev/null

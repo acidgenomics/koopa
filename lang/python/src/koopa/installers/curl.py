@@ -1,0 +1,48 @@
+"""Install curl."""
+
+import sys
+
+from koopa.build import activate_app, app_prefix, make_build
+from koopa.installers._build_helper import download_extract_cd
+
+
+def main(
+    *,
+    name: str,
+    version: str,
+    prefix: str,
+    passthrough_args: list[str] | None = None,
+) -> None:
+    """Install curl."""
+    env = activate_app("pkg-config", build_only=True)
+    env = activate_app("ca-certificates", "zlib", "openssl", "libssh2", "nghttp2", env=env)
+    ca_prefix = app_prefix("ca-certificates")
+    ca_bundle = f"{ca_prefix}/share/ca-certificates/cacert.pem"
+    download_extract_cd()
+    conf_args = [
+        "--disable-debug",
+        "--disable-ldap",
+        "--disable-static",
+        "--enable-threaded-resolver",
+        "--enable-versioned-symbols",
+        f"--with-ca-bundle={ca_bundle}",
+        "--with-libssh2",
+        "--with-openssl",
+        "--with-zlib",
+        "--without-zstd",
+        "--without-ca-path",
+        "--without-gssapi",
+        "--without-libidn2",
+        "--without-libpsl",
+        "--without-librtmp",
+        "--with-nghttp2",
+        f"--prefix={prefix}",
+    ]
+    if sys.platform == "darwin":
+        conf_args.extend(
+            [
+                "--with-default-ssl-backend=openssl",
+                "--without-secure-transport",
+            ]
+        )
+    make_build(conf_args=conf_args, env=env)

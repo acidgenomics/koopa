@@ -1,49 +1,345 @@
 """System check functions."""
 
+import os
+import shutil
+import subprocess
 from os.path import basename, isdir, isfile, islink, join, realpath
 
-from koopa.app import installed_apps
+from koopa.app import extract_app_deps, installed_apps
 from koopa.io import import_app_json
 from koopa.os import koopa_opt_prefix
-from koopa.prefix import bootstrap_prefix, koopa_prefix
+from koopa.prefix import (
+    bash_completions_prefix,
+    bootstrap_prefix,
+    fish_completions_prefix,
+    koopa_prefix,
+    zsh_completions_prefix,
+)
+
+
+def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, PLR0912, PLR0915
+    """Return ``(app_name, reason, actionable)`` for each installed app issue.
+
+    *actionable* is True when the issue can be fixed by reinstalling the app
+    (version mismatch, broken symlink).  Unsupported or removed apps are not
+    actionable.
+    """
+    from koopa.prefix import bin_prefix, man1_prefix
+
+    opt_prefix = koopa_opt_prefix()
+    bin_dir = bin_prefix()
+    man1_dir = man1_prefix()
+    json_data = import_app_json()
+    names = installed_apps()
+    issues: list[tuple[str, str, bool]] = []
+    from koopa.os import os_id
+
+    current_os = os_id()
+    for name in names:
+        if name not in json_data:
+            issues.append((name, f"{name} is an unsupported app", False))
+            continue
+        entry = json_data[name]
+        if entry.get("alias_of"):
+            target = entry["alias_of"]
+            if target in json_data:
+                entry = json_data[target]
+                name = target  # noqa: PLW2901
+            else:
+                issues.append(
+                    (name, f"{name} alias target '{target}' not found", False),
+                )
+                continue
+        supported = entry.get("supported", {})
+        if current_os in supported and not supported[current_os]:
+            issues.append((name, f"{name} is not supported on {current_os}", False))
+            continue
+        path = join(opt_prefix, name)
+        if not islink(path):
+            issues.append((name, f"{name} is not linked at {path}", True))
+            continue
+        path = realpath(path)
+        if not isdir(path):
+            issues.append(
+                (name, f"{name} is not a directory at {path}", True),
+            )
+            continue
+        assert isdir(path)
+        linked_ver = basename(path)
+        if json_data[name].get("removed"):
+            issues.append((name, f"{name} is a removed app", False))
+            continue
+        current_ver = json_data[name]["version"]
+        if len(current_ver) == 40:
+            current_ver = current_ver[:7]
+        if linked_ver != current_ver:
+            issues.append(
+                (name, f"{name} {linked_ver} != {current_ver}", True),
+            )
+            continue
+        expected_rev = entry.get("revision", 0)
+        if expected_rev > 0:
+            rev_file = join(path, ".install", "revision")
+            installed_rev = 0
+            if isfile(rev_file):
+                try:
+                    with open(rev_file) as f:
+                        installed_rev = int(f.read().strip() or "0")
+                except (ValueError, OSError):
+                    pass
+            if installed_rev != expected_rev:
+                issues.append(
+                    (name, f"{name} revision {installed_rev} != {expected_rev}", True),
+                )
+                continue
+        # Check if any dependency has been revised since this app was installed.
+        # Skip isolated environments (e.g. conda-package apps) where the
+        # installer tool updating doesn't break the installed app.
+        info_file = join(path, ".install", "info.json")
+        installer = entry.get("installer", "")
+        if isfile(info_file):
+            import json as _json_mod
+
+            try:
+                with open(info_file) as _f:
+                    _info = _json_mod.load(_f)
+            except (ValueError, OSError):
+                _info = {}
+            recorded_dep_revs = _info.get("dep_revisions", {})
+            app_deps = entry.get("dependencies", [])
+            if isinstance(app_deps, dict):
+                from koopa.app import _resolve_dep_dict
+
+                app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
+            stale_dep = False
+            for dep in app_deps:
+                if installer.startswith(dep):
+                    continue
+                resolved_dep = dep
+                dep_entry = json_data.get(dep, {})
+                if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
+                    resolved_dep = dep_entry["alias_of"]
+                resolved_entry = json_data.get(resolved_dep, {})
+                current_rev = (
+                    int(resolved_entry.get("revision", 0))
+                    if isinstance(resolved_entry, dict)
+                    else 0
+                )
+                recorded_rev = recorded_dep_revs.get(resolved_dep, 0)
+                if current_rev > recorded_rev:
+                    issues.append(
+                        (
+                            name,
+                            f"{name} dependency {resolved_dep} revised:"
+                            f" {recorded_rev} -> {current_rev}",
+                            True,
+                        ),
+                    )
+                    stale_dep = True
+                    break
+            if not stale_dep:
+                recorded_dep_vers = _info.get("dep_versions", {})
+                if recorded_dep_vers:
+                    for dep in app_deps:
+                        if installer.startswith(dep):
+                            continue
+                        resolved_dep = dep
+                        dep_entry = json_data.get(dep, {})
+                        if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
+                            resolved_dep = dep_entry["alias_of"]
+                        resolved_entry = json_data.get(resolved_dep, {})
+                        current_ver = (
+                            resolved_entry.get("version", "")
+                            if isinstance(resolved_entry, dict)
+                            else ""
+                        )
+                        recorded_ver = recorded_dep_vers.get(resolved_dep, "")
+                        if recorded_ver and current_ver and recorded_ver != current_ver:
+                            issues.append(
+                                (
+                                    name,
+                                    f"{name} dependency {resolved_dep} version"
+                                    f" changed: {recorded_ver} -> {current_ver}",
+                                    True,
+                                ),
+                            )
+                            stale_dep = True
+                            break
+            if stale_dep:
+                continue
+        expected_bins = entry.get("bin", [])
+        broken_bin = False
+        for b in expected_bins:
+            link = join(bin_dir, b)
+            if islink(link) and not os.path.exists(link):
+                issues.append(
+                    (name, f"{name} broken bin symlink: {b}", True),
+                )
+                broken_bin = True
+                break
+        if broken_bin:
+            continue
+        expected_man1 = entry.get("man1", [])
+        for m in expected_man1:
+            link = join(man1_dir, m)
+            if islink(link) and not os.path.exists(link):
+                issues.append(
+                    (name, f"{name} (broken man1 symlink: {m})", True),
+                )
+                break
+        # Check for missing shell completion symlinks (bash, fish, zsh).
+        from koopa.install import (
+            _find_bash_completion_files,
+            _find_fish_completion_files,
+            _find_zsh_completion_files,
+        )
+
+        for find_fn, central_dir, shell in (
+            (_find_bash_completion_files, bash_completions_prefix(), "bash"),
+            (_find_fish_completion_files, fish_completions_prefix(), "fish"),
+            (_find_zsh_completion_files, zsh_completions_prefix(), "zsh"),
+        ):
+            for _source, completion_name in find_fn(path):
+                link = join(central_dir, completion_name)
+                if not islink(link) or not os.path.exists(link):
+                    issues.append(
+                        (
+                            name,
+                            f"{name} (missing {shell} completion: {completion_name})",
+                            True,
+                        ),
+                    )
+                    break
+    return issues
+
+
+def outdated_apps() -> list[str]:
+    """Return names of installed apps that need updating."""
+    return [name for name, _reason, actionable in _iter_installed_app_issues() if actionable]
+
+
+def outdated_apps_with_reasons() -> list[tuple[str, str]]:
+    """Return (name, reason) for installed apps that need updating."""
+    return [
+        (name, reason) for name, reason, actionable in _iter_installed_app_issues() if actionable
+    ]
+
+
+def unsupported_apps() -> list[str]:
+    """Return names of installed apps no longer in app.json or marked removed."""
+    return [name for name, _reason, actionable in _iter_installed_app_issues() if not actionable]
 
 
 def check_installed_apps() -> bool:
     """Check system integrity."""
-    ok = True
+    issues = _iter_installed_app_issues()
+    for _name, reason, _actionable in issues:
+        print(reason)
+    return not issues
+
+
+def _iter_broken_app_installs() -> list[tuple[str, str]]:
+    """Return ``(app_name, reason)`` for each broken app install."""
+    from koopa.prefix import app_prefix as get_app_prefix
+
+    app_dir = get_app_prefix()
     opt_prefix = koopa_opt_prefix()
+    issues: list[tuple[str, str]] = []
+    if not isdir(app_dir):
+        return issues
+    for name in sorted(os.listdir(app_dir)):
+        app_path = join(app_dir, name)
+        if not isdir(app_path):
+            continue
+        opt_link = join(opt_prefix, name)
+        if islink(opt_link) and isdir(realpath(opt_link)):
+            linked_path = realpath(opt_link)
+            if not isfile(join(linked_path, ".install", "info.json")):
+                issues.append(
+                    (name, f"{name}: failed install (empty .install directory)"),
+                )
+            continue
+        versions = [v for v in os.listdir(app_path) if isdir(join(app_path, v))]
+        if not versions:
+            issues.append((name, f"{name}: failed install (empty app directory)"))
+            continue
+        for ver in versions:
+            ver_path = join(app_path, ver)
+            if isdir(join(ver_path, ".install")):
+                if not isfile(join(ver_path, ".install", "info.json")):
+                    issues.append(
+                        (name, f"{name}/{ver}: failed install (empty .install directory)"),
+                    )
+                else:
+                    issues.append(
+                        (name, f"{name}/{ver}: installed but not linked in opt"),
+                    )
+            else:
+                issues.append(
+                    (name, f"{name}/{ver}: failed install (no .install marker)"),
+                )
+    return issues
+
+
+def broken_app_installs() -> list[str]:
+    """Return names of apps with broken or incomplete installs."""
+    return list(dict.fromkeys(name for name, _reason in _iter_broken_app_installs()))
+
+
+def check_broken_app_installs() -> bool:
+    """Check for broken app installs.
+
+    Scans app prefix for directories that have no corresponding opt symlink,
+    indicating a failed or incomplete install. Reports empty version
+    directories that should be cleaned up.
+
+    Skips apps already reported by check_installed_apps to avoid duplicates.
+    """
+    already_reported = {name for name, _r, a in _iter_installed_app_issues() if a}
+    issues = [(n, r) for n, r in _iter_broken_app_installs() if n not in already_reported]
+    for _name, reason in issues:
+        print(reason)
+    return not issues
+
+
+def check_circular_deps() -> list:
+    """Check for circular dependencies in app.json.
+
+    Returns a list of cycles, where each cycle is a list of package names
+    forming the loop (e.g. ["curl", "zstd", "cmake", "curl"]).
+    """
     json_data = import_app_json()
-    names = installed_apps()
+    names = list(json_data.keys())
+    graph = {}
     for name in names:
-        if name not in json_data:
-            ok = False
-            print(f"{name} is an unsupported app")
-            continue
-        path = join(opt_prefix, name)
-        if not islink(path):
-            ok = False
-            print(f"{name} is not linked at {path}")
-            continue
-        path = realpath(path)
-        if not isdir(path):
-            ok = False
-            print(f"{name} is not a directory at {path}")
-            continue
-        assert isdir(path)
-        linked_ver = basename(path)
-        if "removed" in json_data[name] and json_data[name]["removed"]:
-            ok = False
-            print(f"{name} is a removed app")
-            continue
-        current_ver = json_data[name]["version"]
-        # Sanitize commit hashes.
-        if len(current_ver) == 40:
-            current_ver = current_ver[:7]
-        if linked_ver != current_ver:
-            ok = False
-            print(f"{name} ({linked_ver} != {current_ver})")
-            continue
-    return ok
+        try:
+            deps = extract_app_deps(name=name, json_data=json_data)
+        except NameError:
+            deps = []
+        graph[name] = deps
+    cycles = []
+    white = set(names)
+    gray = set()
+    black = set()
+
+    def _dfs(node: str, path: list) -> None:
+        white.discard(node)
+        gray.add(node)
+        path.append(node)
+        for dep in graph.get(node, []):
+            if dep in gray:
+                cycle_start = path.index(dep)
+                cycles.append([*path[cycle_start:], dep])
+            elif dep in white:
+                _dfs(dep, path)
+        path.pop()
+        gray.discard(node)
+        black.add(node)
+
+    for name in names:
+        if name in white:
+            _dfs(name, [])
+    return cycles
 
 
 def check_bootstrap_version() -> bool:
@@ -72,7 +368,393 @@ def check_bootstrap_version() -> bool:
         expected_version = fh.read().strip()
     with open(installed_version_file) as fh:
         installed_version = fh.read().strip()
-    if installed_version != expected_version:
-        print(f"Bootstrap is out of date ({installed_version} != {expected_version})")
+    return installed_version == expected_version
+
+
+def check_venv_version() -> bool:
+    """Check if venv installation is current.
+
+    Compares the installed venv VERSION file against the expected
+    version defined in 'etc/koopa/venv-version.txt'.
+
+    Returns
+    -------
+    bool
+        True if versions match or venv is not installed, False otherwise.
+    """
+    kp = koopa_prefix()
+    expected_version_file = join(kp, "etc", "koopa", "venv-version.txt")
+    venv_dir = join(kp, ".venv")
+    installed_version_file = join(venv_dir, "VERSION")
+    if not isfile(expected_version_file):
+        return True
+    if not isdir(venv_dir):
+        return True
+    if not isfile(installed_version_file):
         return False
+    with open(expected_version_file) as fh:
+        expected_version = fh.read().strip()
+    with open(installed_version_file) as fh:
+        installed_version = fh.read().strip()
+    if installed_version != expected_version:
+        print(f"Venv is out of date ({installed_version} != {expected_version})")
+        return False
+    return True
+
+
+def _version_tuple(version: str) -> tuple[int, ...]:
+    """Parse a version string into a tuple of integers for comparison."""
+    parts = []
+    for part in version.split("."):
+        try:
+            parts.append(int(part))
+        except ValueError:
+            break
+    return tuple(parts)
+
+
+def _get_version(path: str) -> str:
+    """Get version string from a binary."""
+    from koopa.version import extract_version
+
+    try:
+        result = subprocess.run(
+            [path, "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return ""
+    if result.returncode != 0:
+        return ""
+    return extract_version(result.stdout or result.stderr)
+
+
+def check_build_system() -> bool:
+    """Check that the current environment supports building from source."""
+    from koopa.system import is_linux, is_macos
+
+    ok = True
+    if is_macos():
+        try:
+            result = subprocess.run(
+                ["xcrun", "--show-sdk-path"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            sdk_prefix = result.stdout.strip()
+        except FileNotFoundError:
+            sdk_prefix = ""
+        if not sdk_prefix or not isdir(sdk_prefix):
+            from koopa.alert import stop
+
+            stop("Xcode CLT not installed. Run 'xcode-select --install' to resolve.")
+    required = {
+        "cc": "cc",
+        "git": "git",
+        "ld": "ld",
+        "make": "make",
+        "perl": "perl",
+        "python": "python3",
+    }
+    min_versions: dict[str, str] = {
+        "git": "1.8",
+        "make": "3.8",
+        "perl": "5.16",
+        "python": "3.6",
+    }
+    if is_macos():
+        min_versions["cc"] = "14.0"
+    elif is_linux():
+        min_versions["cc"] = "7.0"
+    for key, cmd in required.items():
+        path = shutil.which(cmd)
+        if path is None:
+            from koopa.alert import stop
+
+            stop(f"'{cmd}' is not installed.")
+        if key == "ld":
+            continue
+        assert path is not None
+        version = _get_version(path)
+        if not version:
+            continue
+        min_ver = min_versions.get(key)
+        if min_ver is None:
+            continue
+        if _version_tuple(version) < _version_tuple(min_ver):
+            from koopa.alert import stop
+
+            stop(f"Unsupported {key}: {path} ({version} < {min_ver}).")
+    return ok
+
+
+def check_disk(path: str = "/") -> bool:
+    """Check disk usage at a path."""
+    from koopa.disk import disk_pct_used
+
+    pct = disk_pct_used(path)
+    if pct > 90:
+        from koopa.alert import warn
+
+        warn(f"Disk usage at '{path}' is {pct:.0f}%.")
+        return False
+    return True
+
+
+def check_macos_system_r() -> bool:
+    """Check if system R is current on macOS."""
+    from koopa.version import extract_version
+
+    json_data = import_app_json()
+    expected = json_data.get("r", {}).get("version", "")
+    if not expected:
+        return True
+    ok = True
+    seen: set[str] = set()
+    for r_bin in (
+        "/usr/local/bin/R",
+        "/Library/Frameworks/R.framework/Resources/bin/R",
+    ):
+        if not os.path.isfile(r_bin) or not os.access(r_bin, os.X_OK):
+            continue
+        real = os.path.realpath(r_bin)
+        if real in seen:
+            continue
+        seen.add(real)
+        try:
+            result = subprocess.run(
+                [r_bin, "--version"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            installed = extract_version(result.stdout or result.stderr)
+        except OSError:
+            continue
+        if installed and installed != expected:
+            from koopa.alert import warn
+
+            warn(f"System R is out of date at '{r_bin}': {installed} != {expected}.")
+            ok = False
+    return ok
+
+
+def check_macos_system_python() -> bool:
+    """Check if system Python is current on macOS."""
+    from koopa.version import extract_version, major_minor_version
+
+    json_data = import_app_json()
+    py_keys = sorted(
+        (k for k in json_data if k.startswith("python3.")),
+        reverse=True,
+    )
+    if not py_keys:
+        return True
+    latest_key = py_keys[0]
+    expected = json_data[latest_key].get("version", "")
+    if not expected:
+        return True
+    ok = True
+    seen: set[str] = set()
+    for python_bin in (
+        "/usr/local/bin/python3",
+        "/Library/Frameworks/Python.framework/Versions/Current/bin/python3",
+    ):
+        if not os.path.isfile(python_bin) or not os.access(python_bin, os.X_OK):
+            continue
+        real = os.path.realpath(python_bin)
+        if real in seen:
+            continue
+        seen.add(real)
+        try:
+            result = subprocess.run(
+                [python_bin, "--version"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            installed = extract_version(result.stdout or result.stderr)
+        except OSError:
+            continue
+        if not installed:
+            continue
+        inst_mm = major_minor_version(installed)
+        exp_mm = major_minor_version(expected)
+        if inst_mm != exp_mm:
+            continue
+        if installed != expected:
+            from koopa.alert import warn
+
+            warn(f"System Python is out of date at '{python_bin}': {installed} != {expected}.")
+            ok = False
+    return ok
+
+
+def _user_app_prefixes() -> dict[str, str]:
+    """Return mapping of user-mode app names to their install prefixes."""
+    from koopa.prefix import (
+        doom_emacs_prefix,
+        prelude_emacs_prefix,
+        spacemacs_prefix,
+        spacevim_prefix,
+    )
+
+    return {
+        "doom-emacs": doom_emacs_prefix(),
+        "prelude-emacs": prelude_emacs_prefix(),
+        "spacemacs": spacemacs_prefix(),
+        "spacevim": spacevim_prefix(),
+    }
+
+
+def _iter_outdated_user_apps() -> list[tuple[str, str]]:
+    """Return ``(app_name, reason)`` for each outdated user-mode app."""
+    from koopa.git import git_last_commit_local, is_git_repo
+
+    json_data = import_app_json()
+    prefixes = _user_app_prefixes()
+    issues: list[tuple[str, str]] = []
+    for name, prefix in prefixes.items():
+        if not isdir(prefix):
+            continue
+        if not is_git_repo(prefix):
+            continue
+        if name not in json_data:
+            continue
+        expected = json_data[name].get("version", "")
+        if not expected:
+            continue
+        try:
+            installed = git_last_commit_local(prefix)
+        except Exception:
+            continue
+        if installed != expected:
+            short_installed = installed[:7] if len(installed) == 40 else installed
+            short_expected = expected[:7] if len(expected) == 40 else expected
+            issues.append(
+                (name, f"{name} ({short_installed} != {short_expected})"),
+            )
+    return issues
+
+
+def outdated_user_apps() -> list[str]:
+    """Return names of user-mode apps that need updating."""
+    return [name for name, _reason in _iter_outdated_user_apps()]
+
+
+def check_user_apps() -> bool:
+    """Check user-mode app versions."""
+    issues = _iter_outdated_user_apps()
+    for _name, reason in issues:
+        print(reason)
+    return not issues
+
+
+def check_broken_symlinks() -> bool:
+    """Check for broken symlinks in bin, opt, and man1 directories."""
+    from koopa.file_ops import find_broken_symlinks
+    from koopa.prefix import bin_prefix, man1_prefix, opt_prefix
+
+    counts: dict[str, int] = {}
+    for prefix in (bin_prefix(), opt_prefix(), man1_prefix()):
+        if not isdir(prefix):
+            continue
+        broken = find_broken_symlinks(prefix)
+        if broken:
+            label = basename(prefix)
+            counts[label] = counts.get(label, 0) + len(broken)
+    if not counts:
+        return True
+    parts = [f"{n} in {d}/" for d, n in counts.items()]
+    print(f"broken symlinks: {', '.join(parts)}")
+    return False
+
+
+def prune_broken_symlinks() -> None:
+    """Remove broken symlinks from bin, opt, and man1 directories."""
+    from koopa.file_ops import delete_broken_symlinks
+    from koopa.prefix import bin_prefix, man1_prefix, opt_prefix
+
+    for prefix in (bin_prefix(), opt_prefix(), man1_prefix()):
+        if not isdir(prefix):
+            continue
+        delete_broken_symlinks(prefix)
+
+
+def _print_update_plan() -> None:
+    """Print the full list of apps that 'koopa update' will install."""
+    from koopa.app import stale_revdeps
+
+    outdated = outdated_apps_with_reasons()
+    broken = broken_app_installs()
+    seen: dict[str, str] = {}
+    for app, reason in outdated:
+        if app not in seen:
+            seen[app] = reason
+    for app in broken:
+        if app not in seen:
+            seen[app] = "broken install"
+    if not seen:
+        return
+    direct = set(seen)
+    changed = True
+    while changed:
+        changed = False
+        for rd in stale_revdeps(list(seen)):
+            if rd not in seen:
+                seen[rd] = "dependency rebuilt"
+                changed = True
+    revdeps = sorted(set(seen) - direct)
+    apps = sorted(seen)
+    if revdeps:
+        print(
+            f"Update will install {len(apps)} apps"
+            f" ({len(direct)} outdated + {len(revdeps)} reverse deps):"
+            f" {', '.join(apps)}."
+        )
+    else:
+        print(f"Update will install {len(apps)} apps: {', '.join(apps)}.")
+
+
+def check_system() -> bool:
+    """Run all system checks."""
+    from koopa.alert import alert_note, alert_success, warn
+    from koopa.system import is_macos
+
+    needs_update = False
+    needs_system_update = False
+    needs_disk_space = False
+    check_build_system()
+    if not check_bootstrap_version():
+        needs_update = True
+    if is_macos():
+        if not check_macos_system_r():
+            needs_system_update = True
+        if not check_macos_system_python():
+            needs_system_update = True
+    if not check_installed_apps():
+        needs_update = True
+    if not check_broken_app_installs():
+        needs_update = True
+    if not check_user_apps():
+        needs_update = True
+    if not check_broken_symlinks():
+        needs_update = True
+    if not check_disk("/"):
+        needs_disk_space = True
+    if needs_update:
+        _print_update_plan()
+    if needs_update or needs_system_update or needs_disk_space:
+        warn("System checks completed with warnings.")
+        if needs_system_update:
+            alert_note("Run 'koopa update --all-system' to resolve these issues.")
+        elif needs_update:
+            alert_note("Run 'koopa update' to resolve these issues.")
+        if needs_disk_space:
+            alert_note("Free up disk space on '/'.")
+        return False
+    alert_success("System passed all checks.")
     return True

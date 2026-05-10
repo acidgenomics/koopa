@@ -4,8 +4,6 @@ Converted from POSIX shell and Bash functions for system identification,
 architecture detection, and OS-level queries.
 """
 
-from __future__ import annotations
-
 import grp
 import os
 import platform
@@ -64,32 +62,6 @@ def cpu_count() -> int:
     return os.cpu_count() or 1
 
 
-def default_shell_name() -> str:
-    """Return the default login shell name.
-
-    Returns
-    -------
-    str
-        Shell name (e.g. 'bash', 'zsh').
-    """
-    shell = os.environ.get("SHELL", "/bin/sh")
-    return os.path.basename(shell)
-
-
-def shell_name() -> str:
-    """Return the current shell name.
-
-    Returns
-    -------
-    str
-        Shell name.
-    """
-    shell = os.environ.get("KOOPA_SHELL", "")
-    if shell:
-        return os.path.basename(shell)
-    return default_shell_name()
-
-
 def group_id() -> int:
     """Return effective group ID."""
     return os.getegid()
@@ -120,26 +92,49 @@ def is_macos() -> bool:
     return platform.system() == "Darwin"
 
 
+def is_windows() -> bool:
+    """Check if running on Windows."""
+    return platform.system() == "Windows"
+
+
 def is_root() -> bool:
     """Check if effective user is root."""
     return os.geteuid() == 0
 
 
+def is_owner() -> bool:
+    """Check if current user is the koopa installation owner."""
+    from koopa.prefix import koopa_prefix
+
+    try:
+        return os.stat(koopa_prefix()).st_uid == os.getuid()
+    except OSError:
+        return False
+
+
 def is_admin() -> bool:
-    """Check if user has admin privileges."""
+    """Check if user has admin privileges.
+
+    On macOS, checks membership in the 'admin' group.
+    On Linux, checks if the user can run sudo (membership in 'sudo' or
+    'wheel' groups, which is the standard convention on Debian/Ubuntu and
+    Fedora/RHEL respectively).
+    """
     if is_root():
         return True
     if is_macos():
         try:
-            result = subprocess.run(
-                ["groups"],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            return "admin" in result.stdout.split()
-        except FileNotFoundError:
+            return grp.getgrnam("admin").gr_gid in os.getgroups()
+        except KeyError:
             return False
+    if is_linux():
+        user_groups = os.getgroups()
+        for name in ("sudo", "wheel"):
+            try:
+                if grp.getgrnam(name).gr_gid in user_groups:
+                    return True
+            except KeyError:
+                continue
     return False
 
 
@@ -150,7 +145,7 @@ def is_installed(name: str) -> bool:
 
 def is_interactive() -> bool:
     """Check if running in an interactive session."""
-    return hasattr(sys, "ps1") or sys.flags.interactive
+    return bool(hasattr(sys, "ps1") or sys.flags.interactive)
 
 
 def is_alpine() -> bool:
@@ -257,24 +252,23 @@ def _read_os_release() -> dict[str, str]:
     return result
 
 
-def os_string() -> str:
-    """Get a human-readable OS string.
+def os_slug() -> str:
+    """Get machine-readable OS version slug.
 
     Returns
     -------
     str
-        e.g. 'Ubuntu 22.04' or 'macOS 14.0'.
+        e.g. 'macos-15', 'ubuntu-24', 'fedora-40'.
     """
     if is_macos():
         ver = platform.mac_ver()[0]
-        return f"macOS {ver}"
+        major = ver.split(".")[0] if ver else ""
+        return f"macos-{major}" if major else "macos"
     release = _read_os_release()
-    name = release.get("PRETTY_NAME", "")
-    if name:
-        return name
-    os_id = release.get("ID", "Linux")
+    os_id = release.get("ID", "linux")
     version = release.get("VERSION_ID", "")
-    return f"{os_id} {version}".strip()
+    major = version.split(".")[0] if version else ""
+    return f"{os_id}-{major}" if major else os_id
 
 
 def logged_in_users() -> list[str]:
@@ -299,11 +293,6 @@ def logged_in_users() -> list[str]:
 def check_multiple_users() -> bool:
     """Check if multiple users are logged in."""
     return len(logged_in_users()) > 1
-
-
-def locate_shell(name: str) -> str | None:
-    """Locate a shell executable."""
-    return shutil.which(name)
 
 
 def macos_is_dark_mode() -> bool:
@@ -358,14 +347,16 @@ def mem_gb() -> float:
                 check=True,
             )
             return round(int(result.stdout.strip()) / (1024**3), 1)
-        except FileNotFoundError, subprocess.CalledProcessError, ValueError:
+        except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
             pass
     meminfo = "/proc/meminfo"
     if os.path.isfile(meminfo):
         for line in Path(meminfo).read_text().splitlines():
             if line.startswith("MemTotal:"):
-                kb = int(re.search(r"(\d+)", line).group(1))
-                return round(kb / (1024**2), 1)
+                match = re.search(r"(\d+)", line)
+                if match:
+                    kb = int(match.group(1))
+                    return round(kb / (1024**2), 1)
     return 0.0
 
 
@@ -406,28 +397,4 @@ def has_firewall() -> bool:
     if not ssl_cert_file:
         return False
     kp = koopa_prefix()
-    if ssl_cert_file.startswith(kp + "/"):
-        return False
-    return True
-
-
-def boolean_nounset(value: str | bool | int | None) -> bool:
-    """Convert shell-style boolean to Python bool.
-
-    Parameters
-    ----------
-    value : str | bool | int | None
-        Input value. Truthy: '1', 'true', 'yes'. Falsy: '0', 'false', 'no', '', None.
-
-    Returns
-    -------
-    bool
-        Converted boolean.
-    """
-    if value is None:
-        return False
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, int):
-        return value != 0
-    return str(value).lower().strip() in ("1", "true", "yes")
+    return not ssl_cert_file.startswith(kp + "/")
