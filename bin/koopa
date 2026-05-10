@@ -39,21 +39,27 @@ _koopa_prefix="$(__koopa_realpath "$(dirname "$_koopa_bin")/..")"
 [ -d "$_koopa_prefix" ] || exit 1
 
 _python=""
-if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
-    _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
-else
-    _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
+_venv_python="${_koopa_prefix}/.venv/bin/python3"
+if __koopa_check_python "$_venv_python"; then
+    _python="$_venv_python"
 fi
-if __koopa_check_python "$_bootstrap_python"; then
-    _python="$_bootstrap_python"
-elif [ -x "$_bootstrap_python" ]; then
-    printf '%s\n' \
-        'Error: koopa bootstrap Python is invalid.' \
-        '' \
-        'Run the following to rebuild:' \
-        "  sh '${_koopa_prefix}/bootstrap.sh'" \
-        >&2
-    exit 1
+if [ -z "$_python" ]; then
+    if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
+        _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
+    else
+        _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
+    fi
+    if __koopa_check_python "$_bootstrap_python"; then
+        _python="$_bootstrap_python"
+    elif [ -x "$_bootstrap_python" ]; then
+        printf '%s\n' \
+            'Error: koopa bootstrap Python is invalid.' \
+            '' \
+            'Run the following to rebuild:' \
+            "  sh '${_koopa_prefix}/bootstrap.sh'" \
+            >&2
+        exit 1
+    fi
 fi
 if [ -z "$_python" ]; then
     _sys_python="/usr/bin/python3"

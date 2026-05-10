@@ -11,6 +11,28 @@ import tempfile
 from collections.abc import Callable
 
 
+class _TqdmFallback:
+    """Minimal progress-bar shim when tqdm is not installed."""
+
+    def __init__(self, iterable=None, *, desc="", unit="", total=None):
+        self._iterable = iterable
+        if desc:
+            print(f"{desc}...", file=sys.stderr)
+
+    def __iter__(self):
+        return iter(self._iterable)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        pass
+
+    @staticmethod
+    def write(msg, file=sys.stderr):
+        print(msg, file=file)
+
+
 def _handle_prune_app_binaries() -> None:
     """Handle ``koopa develop prune-app-binaries``."""
     from koopa.app import prune_app_binaries
@@ -633,7 +655,10 @@ def _handle_mirror_src(args: list[str]) -> None:
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    from tqdm import tqdm
+    try:
+        from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
+    except ModuleNotFoundError:
+        tqdm = _TqdmFallback  # type: ignore[assignment,misc]
 
     bucket = "koopa.acidgenomics.com"
     cache = _load_mirror_src_cache()
@@ -726,12 +751,14 @@ def _handle_mirror_src(args: list[str]) -> None:
     if stale_keys:
         import json as _json
 
+        from koopa.aws import _aws
+
         print(f"Pruning {len(stale_keys)} stale file(s)...", file=sys.stderr)
-        delete_payload = {"Objects": [{"Key": k} for k in stale_keys]}
-        try:
-            result = subprocess.run(
-                [
-                    aws,
+        for i in range(0, len(stale_keys), 1000):
+            chunk = stale_keys[i : i + 1000]
+            delete_payload = {"Objects": [{"Key": k} for k in chunk]}
+            try:
+                _aws(
                     "s3api",
                     "delete-objects",
                     "--bucket",
@@ -740,22 +767,16 @@ def _handle_mirror_src(args: list[str]) -> None:
                     _json.dumps(delete_payload),
                     "--profile",
                     "acidgenomics",
-                ],
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=60,
-            )
-            if result.returncode == 0:
-                for key in stale_keys:
+                )
+                for key in chunk:
                     print(f"  Deleted: {key}", file=sys.stderr)
-            else:
+            except subprocess.CalledProcessError as exc:
                 print(
-                    f"  FAILED batch delete: {result.stderr.strip()}",
+                    f"  FAILED batch delete: {exc.stderr.strip()}",
                     file=sys.stderr,
                 )
-        except subprocess.TimeoutExpired:
-            print("  TIMEOUT: batch delete timed out after 60s", file=sys.stderr)
+            except subprocess.TimeoutExpired:
+                print("  TIMEOUT: batch delete timed out after 300s", file=sys.stderr)
 
     if failures:
         print(
@@ -801,7 +822,10 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    from tqdm import tqdm
+    try:
+        from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
+    except ModuleNotFoundError:
+        tqdm = _TqdmFallback  # type: ignore[assignment,misc]
 
     bucket = "koopa.acidgenomics.com"
     missing: list[str] = []
