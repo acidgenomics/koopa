@@ -2063,6 +2063,7 @@ def _mirror_src_to_s3(
 ) -> None:
     """Download source tarball and upload to s3://koopa.acidgenomics.com/src/."""
     import tempfile
+    import time
 
     from koopa.download import download_with_mirror
 
@@ -2086,20 +2087,24 @@ def _mirror_src_to_s3(
                 raise RuntimeError(f"Download failed for '{name}': {exc}") from exc
             print(f"  Mirror upload skipped for '{name}': download failed: {exc}", file=sys.stderr)
             return
-        result = subprocess.run(
-            ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode == 0:
-            if not quiet:
-                print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
-        else:
-            msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
-            if strict:
-                raise RuntimeError(msg)
-            print(f"  {msg}", file=sys.stderr)
+        max_attempts = 3
+        for attempt in range(1, max_attempts + 1):
+            result = subprocess.run(
+                ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode == 0:
+                if not quiet:
+                    print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
+                return
+            if attempt < max_attempts:
+                time.sleep(2**attempt)
+        msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
+        if strict:
+            raise RuntimeError(msg)
+        print(f"  {msg}", file=sys.stderr)
 
 
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:

@@ -570,7 +570,6 @@ def _handle_mirror_src(args: list[str]) -> None:
             file=sys.stderr,
         )
         return
-    print("Checking AWS credentials...", file=sys.stderr)
     if not _has_acidgenomics_aws():
         print(
             "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
@@ -581,7 +580,6 @@ def _handle_mirror_src(args: list[str]) -> None:
     if aws is None:
         print("Error: aws CLI is not installed.", file=sys.stderr)
         sys.exit(1)
-    print("Loading app.json...", file=sys.stderr)
     data = import_app_json()
     if args:
         targets = args
