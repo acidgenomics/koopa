@@ -1875,14 +1875,6 @@ def install_system_app(name: str, **kwargs: str) -> None:
     _make_app_installer(name, mode="system", **kwargs)
 
 
-def install_user_app(name: str, **kwargs: str) -> None:
-    """Install a user-level application.
-
-    Equivalent to ``koopa_install_app --name=<name> --user``.
-    """
-    _make_app_installer(name, mode="user", **kwargs)
-
-
 # -- Koopa self-installer -----------------------------------------------------
 
 

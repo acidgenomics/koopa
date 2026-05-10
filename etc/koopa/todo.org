@@ -12,8 +12,8 @@
 * Low complexity
 ** TODO vim maps to _conda, not vim.py. That means vim.py is a dead file.
     Review if we have any other dead installer files like this that are safe to remove.
-** TODO Need to fix broken app links in website documentation.
-** TODO See if we need to clean up some man1 links in app.json
+** DONE Need to fix broken app links in website documentation.
+** DONE See if we need to clean up some man1 links in app.json
     pigz (broken man1 symlink: pigz.1)
     rclone (broken man1 symlink: rclone.1)
     tree (broken man1 symlink: tree.1)
