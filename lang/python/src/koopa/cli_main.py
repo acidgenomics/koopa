@@ -83,6 +83,21 @@ def _exec_restart_with_bootstrap() -> None:
     os.execv(new_python, [new_python, main_module, *sys.argv[1:]])
 
 
+def _exec_restart_after_pull() -> None:
+    """Replace the current process after Python source changed via git pull.
+
+    Ensures installer modules updated in the pull run with fresh code.
+    Sets _KOOPA_UPDATE_PULLED so the restarted process skips the git pull.
+    """
+    os.environ["_KOOPA_UPDATE_PULLED"] = "1"
+    koopa_prefix = _koopa_prefix()
+    src = os.path.join(koopa_prefix, "lang", "python", "src")
+    existing = os.environ.get("PYTHONPATH", "")
+    if src not in existing.split(os.pathsep):
+        os.environ["PYTHONPATH"] = f"{src}{os.pathsep}{existing}".rstrip(os.pathsep)
+    os.execv(sys.executable, [sys.executable, "-m", "koopa.cli_main", *sys.argv[1:]])
+
+
 def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
     """Abort if the app is not supported on the current platform."""
     supported = app_meta.get("supported", {})
@@ -652,7 +667,11 @@ def _handle_update(args: argparse.Namespace) -> None:
         sys.exit(1)
     try:
         if mode == "koopa":
-            update_koopa(verbose=args.verbose)
+            python_changed = update_koopa(verbose=args.verbose)
+            if python_changed:
+                _release_install_lock()
+                acquired = False
+                _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             return
         if mode == "system":
@@ -664,7 +683,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         from koopa.install import repair_app_symlinks
 
         _cleanup_legacy_config()
-        update_koopa(verbose=args.verbose)
+        python_changed = update_koopa(verbose=args.verbose)
         try:
             bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
         except Exception as exc:
@@ -677,6 +696,10 @@ def _handle_update(args: argparse.Namespace) -> None:
             _release_install_lock()
             acquired = False
             _exec_restart_with_bootstrap()
+        if python_changed:
+            _release_install_lock()
+            acquired = False
+            _exec_restart_after_pull()
         _update_venv(_koopa_prefix())
         remove_alias_app_dirs(verbose=args.verbose)
         remove_unsupported_apps(verbose=args.verbose)

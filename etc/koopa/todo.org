@@ -34,3 +34,12 @@
     ** Run 'koopa update' to resolve these issues.
 ** TODO Consider installing emacs from conda-forge instead of building from source.
     We need to evaluate if GUI usage is useful, otherwise switch to conda build, which only supports terminal.
+** TODO See if we can handle doom emacs font bootstrapping automatically.
+    M-x nerd-icons-install-fonts
+** TODO Both spacemacs and prelude fresh boot generate warnings about compat not being available
+    error: Package 'compat' (version 31.0) is unavailable
+** TODO spacemacs missing package fix:
+    M-x package-install RET hl-todo RET
+    M-x package-install RET treemacs-projectile RET
+** DONE Fix for missing symbols in doom emacs:
+    brew install --cask font-symbols-only-nerd-font
