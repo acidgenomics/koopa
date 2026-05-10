@@ -2,8 +2,8 @@
 
 import sys
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,13 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install pcre2."""
-    env = activate_app("autoconf", "automake", "libtool", "pkg-config", build_only=True)
-    deps = ["zlib"]
-    if sys.platform != "darwin":
-        deps.append("bzip2")
-    else:
-        deps.append("libedit")
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     download_extract_cd()
     conf_args = [
         "--disable-dependency-tracking",

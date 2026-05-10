@@ -2,8 +2,8 @@
 
 import os
 
-from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,8 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libassuan."""
-    env = activate_app("pkg-config", build_only=True)
-    env = activate_app("libgpg-error", env=env)
+    env = activate_app_deps()
     lgpe_prefix = app_prefix("libgpg-error")
     download_extract_cd()
     cflags = os.environ.get("CFLAGS", "")

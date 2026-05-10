@@ -17,7 +17,6 @@ def _aws(*args: str, capture: bool = True, timeout: int = 300) -> subprocess.Com
 
     cmd = ["aws", *args]
     env = os.environ.copy()
-    env.pop("AWS_CA_BUNDLE", None)
     env["AWS_PAGER"] = ""
     return subprocess.run(
         cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=env

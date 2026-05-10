@@ -4,9 +4,9 @@ import os
 import subprocess
 import sys
 
-from koopa.build import activate_app
 from koopa.file_ops import ln
 from koopa.git import git_clone
+from koopa.installers._build_helper import activate_app_deps
 from koopa.system import is_macos
 
 
@@ -18,8 +18,9 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install SpaceVim."""
-    env = activate_app("git", build_only=True)
-    env.apply()
+    env = activate_app_deps()
+    if env is not None:
+        env.apply()
     xdg_data_home = os.environ.get(
         "XDG_DATA_HOME",
         os.path.join(os.path.expanduser("~"), ".local", "share"),

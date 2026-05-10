@@ -749,34 +749,28 @@ def _handle_mirror_src(args: list[str]) -> None:
             if key.startswith(prefix):
                 stale_keys.append(key)
     if stale_keys:
-        import json as _json
-
         from koopa.aws import _aws
 
         print(f"Pruning {len(stale_keys)} stale file(s)...", file=sys.stderr)
-        for i in range(0, len(stale_keys), 1000):
-            chunk = stale_keys[i : i + 1000]
-            delete_payload = {"Objects": [{"Key": k} for k in chunk]}
-            try:
-                _aws(
-                    "s3api",
-                    "delete-objects",
-                    "--bucket",
-                    bucket,
-                    "--delete",
-                    _json.dumps(delete_payload),
-                    "--profile",
-                    "acidgenomics",
-                )
-                for key in chunk:
+        for key in stale_keys:
+            print(f"  s3://{bucket}/{key}", file=sys.stderr)
+        for key in stale_keys:
+            uri = f"s3://{bucket}/{key}"
+            for attempt in range(3):
+                try:
+                    _aws("s3", "rm", uri, "--profile", "acidgenomics")
                     print(f"  Deleted: {key}", file=sys.stderr)
-            except subprocess.CalledProcessError as exc:
-                print(
-                    f"  FAILED batch delete: {exc.stderr.strip()}",
-                    file=sys.stderr,
-                )
-            except subprocess.TimeoutExpired:
-                print("  TIMEOUT: batch delete timed out after 300s", file=sys.stderr)
+                    break
+                except subprocess.CalledProcessError as exc:
+                    if attempt < 2:
+                        time.sleep(2)
+                        continue
+                    print(f"  FAILED: {key}: {exc.stderr.strip()}", file=sys.stderr)
+                except subprocess.TimeoutExpired:
+                    if attempt < 2:
+                        time.sleep(2)
+                        continue
+                    print(f"  TIMEOUT: {key}", file=sys.stderr)
 
     if failures:
         print(

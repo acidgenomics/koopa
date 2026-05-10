@@ -4,9 +4,9 @@ import os
 import subprocess
 
 from koopa.archive import extract
-from koopa.build import activate_app
 from koopa.download import download
 from koopa.file_ops import chmod
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -17,7 +17,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install Apptainer."""
-    env = activate_app("go", "make", "pkg-config", build_only=True)
+    env = activate_app_deps()
     subprocess_env = env.to_env_dict()
     gocache = os.path.join(os.getcwd(), "gocache")
     gopath = os.path.join(os.getcwd(), "go")

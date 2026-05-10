@@ -5,10 +5,10 @@ import subprocess
 import sys
 
 from koopa.archive import extract
-from koopa.build import activate_app, locate
+from koopa.build import locate
 from koopa.download import download_with_mirror
 from koopa.file_ops import ln
-from koopa.installers._build_helper import _resolve_extra_src_urls, _resolve_src_url
+from koopa.installers._build_helper import activate_app_deps, _resolve_extra_src_urls, _resolve_src_url
 from koopa.version import major_minor_version
 
 
@@ -20,20 +20,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install tcl-tk."""
-    env = activate_app("make", "pkg-config", build_only=True)
-    if sys.platform != "darwin":
-        env = activate_app(
-            "xorg-xorgproto",
-            "xorg-xcb-proto",
-            "xorg-libpthread-stubs",
-            "xorg-libxau",
-            "xorg-libxdmcp",
-            "xorg-libxcb",
-            "xorg-libx11",
-            "xorg-libxext",
-            "xorg-libxrender",
-            env=env,
-        )
+    env = activate_app_deps()
     make = locate("make")
     maj_min_ver = major_minor_version(version)
     subprocess_env = env.to_env_dict()

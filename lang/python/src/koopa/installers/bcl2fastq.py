@@ -6,8 +6,8 @@ import subprocess
 from glob import glob
 
 from koopa.archive import extract
-from koopa.build import activate_app
 from koopa.file_ops import init_dir, rm
+from koopa.installers._build_helper import activate_app_deps
 from koopa.system import cpu_count
 
 
@@ -26,13 +26,7 @@ def main(
     if not os.path.isfile("/usr/include/zlib.h"):
         msg = "System zlib is required."
         raise RuntimeError(msg)
-    build_deps = ["cmake", "make"]
-    deps: list[str] = []
-    if platform.system() != "Darwin":
-        deps.append("bzip2")
-    deps.extend(["icu4c", "xz", "zlib", "zstd"])
-    env = activate_app(*build_deps, build_only=True)
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     subprocess_env = env.to_env_dict()
     jobs = cpu_count()
     arch = platform.machine()

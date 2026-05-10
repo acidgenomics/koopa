@@ -2,8 +2,8 @@
 
 import os
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,7 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install krb5."""
-    env = activate_app("libedit", "openssl", env=None)
+    env = activate_app_deps()
     download_extract_cd()
     os.chdir(os.path.join("krb5", "src"))
     make_build(

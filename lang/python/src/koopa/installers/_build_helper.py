@@ -62,6 +62,38 @@ def extract_cd(tarball: str) -> None:
     os.chdir("src")
 
 
+def activate_app_deps():
+    """Activate build_dependencies and dependencies from app.json for the current app."""
+    from koopa.app import _resolve_dep_dict
+    from koopa.build import activate_app
+    from koopa.installers._context import get_app_name
+    from koopa.io import import_json
+    from koopa.os import os_id
+
+    name = get_app_name()
+    koopa_prefix = str(Path(__file__).resolve().parents[5])
+    json_path = os.path.join(koopa_prefix, "etc", "koopa", "app.json")
+    data = import_json(json_path)
+    entry = data.get(name, {})
+    sys_dict = {"os_id": os_id()}
+    build_deps = entry.get("build_dependencies", [])
+    deps = entry.get("dependencies", [])
+    if isinstance(build_deps, dict):
+        build_deps = _resolve_dep_dict(build_deps, sys_dict)
+    elif isinstance(build_deps, str):
+        build_deps = [build_deps]
+    if isinstance(deps, dict):
+        deps = _resolve_dep_dict(deps, sys_dict)
+    elif isinstance(deps, str):
+        deps = [deps]
+    env = None
+    if build_deps:
+        env = activate_app(*build_deps, build_only=True)
+    if deps:
+        env = activate_app(*deps, env=env)
+    return env
+
+
 def remove_static_libs(prefix: str) -> None:
     """Remove static ``.a`` libraries from prefix lib directory."""
     for f in glob(os.path.join(prefix, "lib", "*.a")):

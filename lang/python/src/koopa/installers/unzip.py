@@ -4,8 +4,8 @@ import os
 import subprocess
 import sys
 
-from koopa.build import activate_app, locate
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import locate
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -16,7 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install unzip."""
-    env = activate_app("make", build_only=True)
+    env = activate_app_deps()
     make = locate("make")
     download_extract_cd()
     subprocess_env = env.to_env_dict()

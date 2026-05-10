@@ -3,8 +3,8 @@
 import os
 import subprocess
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def _readline_prefix() -> str:
@@ -22,8 +22,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install sqlite."""
-    env = activate_app("pkg-config", build_only=True)
-    env = activate_app("zlib", "readline", env=env)
+    env = activate_app_deps()
     download_extract_cd()
     # SQLite >= 3.53 uses autosetup with proj.tcl which requires Tcl 8.6
     # (tailcall). macOS ships Tcl 8.5 at /usr/bin/tclsh which passes the

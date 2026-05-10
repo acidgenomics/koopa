@@ -2,8 +2,8 @@
 
 import subprocess
 
-from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, cmake_build, shared_ext
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,8 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install taglib."""
-    env = activate_app("pkg-config", build_only=True)
-    env = activate_app("zlib", env=env)
+    env = activate_app_deps()
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
     download_extract_cd()

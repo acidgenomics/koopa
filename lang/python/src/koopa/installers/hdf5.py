@@ -1,7 +1,7 @@
 """Install hdf5."""
 
-from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, cmake_build, shared_ext
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -12,7 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install hdf5."""
-    env = activate_app("libaec", "zlib", env=None)
+    env = activate_app_deps()
     libaec_prefix = app_prefix("libaec")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()

@@ -4,9 +4,9 @@ import os
 import subprocess
 
 from koopa.archive import extract
-from koopa.build import activate_app, app_prefix
+from koopa.build import app_prefix
 from koopa.download import download_with_mirror
-from koopa.installers._build_helper import _resolve_src_url
+from koopa.installers._build_helper import _resolve_src_url, activate_app_deps
 from koopa.system import cpu_count
 
 
@@ -18,7 +18,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install GCC."""
-    env = activate_app("make", build_only=True)
+    env = activate_app_deps()
     gmp_prefix = app_prefix("gmp")
     isl_prefix = app_prefix("isl")
     mpc_prefix = app_prefix("mpc")

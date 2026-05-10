@@ -2,8 +2,8 @@
 
 import sys
 
-from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,15 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install elfutils."""
-    deps: list[str] = []
-    if sys.platform != "darwin":
-        deps.append("bzip2")
-    deps.extend(["xz", "zlib", "zstd"])
-    if sys.platform == "darwin":
-        deps.append("gettext")
-    deps.append("libiconv")
-    env = activate_app("m4", build_only=True)
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     gettext_prefix = app_prefix("gettext")
     libiconv_prefix = app_prefix("libiconv")
     conf_args = [

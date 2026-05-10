@@ -2,8 +2,8 @@
 
 import subprocess
 
-from koopa.build import activate_app, locate
-from koopa.installers._build_helper import download_extract_cd, remove_static_libs
+from koopa.build import locate
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd, remove_static_libs
 
 
 def main(
@@ -14,7 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install utf8proc."""
-    env = activate_app("make", "pkg-config", build_only=True)
+    env = activate_app_deps()
     make = locate("make")
     download_extract_cd()
     subprocess.run(

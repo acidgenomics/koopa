@@ -2,8 +2,8 @@
 
 import subprocess
 
-from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,14 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libyaml."""
-    env = activate_app(
-        "autoconf",
-        "automake",
-        "libtool",
-        "m4",
-        "pkg-config",
-        build_only=True,
-    )
+    env = activate_app_deps()
     libtool_prefix = app_prefix("libtool")
     download_extract_cd()
     subprocess_env = env.to_env_dict()

@@ -1,12 +1,11 @@
 """Install proj."""
 
 from koopa.build import (
-    activate_app,
     app_prefix,
     cmake_build,
     shared_ext,
 )
-from koopa.installers._build_helper import download_extract_cd
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -17,18 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install proj."""
-    env = activate_app("pkg-config", "python", build_only=True)
-    env = activate_app(
-        "zlib",
-        "zstd",
-        "openssl",
-        "libssh2",
-        "curl",
-        "libjpeg-turbo",
-        "libtiff",
-        "sqlite",
-        env=env,
-    )
+    env = activate_app_deps()
     sqlite_prefix = app_prefix("sqlite")
     curl_prefix = app_prefix("curl")
     libtiff_prefix = app_prefix("libtiff")

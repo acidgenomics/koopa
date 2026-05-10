@@ -1,35 +1,8 @@
 """Generic GNU app installer."""
 
-import os
-from pathlib import Path
-
-from koopa.build import activate_app
 from koopa.install import install_gnu_app
 from koopa.installers._args import get_str, parse_passthrough
-from koopa.io import import_json
-
-
-def _get_app_deps(name: str) -> tuple[list[str], list[str]]:
-    """Get build_dependencies and dependencies for an app from app.json."""
-    from koopa.app import _resolve_dep_dict
-    from koopa.os import os_id
-
-    koopa_prefix = str(Path(__file__).resolve().parents[5])
-    json_path = os.path.join(koopa_prefix, "etc", "koopa", "app.json")
-    data = import_json(json_path)
-    entry = data.get(name, {})
-    sys_dict = {"os_id": os_id()}
-    build_deps = entry.get("build_dependencies", [])
-    deps = entry.get("dependencies", [])
-    if isinstance(build_deps, dict):
-        build_deps = _resolve_dep_dict(build_deps, sys_dict)
-    elif isinstance(build_deps, str):
-        build_deps = [build_deps]
-    if isinstance(deps, dict):
-        deps = _resolve_dep_dict(deps, sys_dict)
-    elif isinstance(deps, str):
-        deps = [deps]
-    return build_deps, deps
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -40,12 +13,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install a GNU app from source."""
-    build_deps, deps = _get_app_deps(name)
-    env = None
-    if build_deps:
-        env = activate_app(*build_deps, build_only=True)
-    if deps:
-        env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     if env is not None:
         env.apply()
     kwargs = parse_passthrough(passthrough_args)

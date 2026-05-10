@@ -4,8 +4,8 @@ import os
 import platform
 import subprocess
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -16,8 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install dash."""
-    env = activate_app("autoconf", "automake", build_only=True)
-    env = activate_app("libedit", env=env)
+    env = activate_app_deps()
     download_extract_cd()
     conf_args = [
         "--disable-dependency-tracking",

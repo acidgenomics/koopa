@@ -1,7 +1,7 @@
 """Install swig."""
 
-from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -12,7 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install swig."""
-    env = activate_app("pcre2", env=None)
+    env = activate_app_deps()
     pcre2_prefix = app_prefix("pcre2")
     download_extract_cd()
     make_build(

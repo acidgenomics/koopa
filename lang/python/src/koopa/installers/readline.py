@@ -4,9 +4,9 @@ import os
 import re
 import subprocess
 
-from koopa.build import activate_app, locate
+from koopa.build import locate
 from koopa.download import download_with_mirror
-from koopa.installers._build_helper import _resolve_src_url, extract_cd
+from koopa.installers._build_helper import _resolve_src_url, activate_app_deps, extract_cd
 
 
 def main(
@@ -17,8 +17,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install readline."""
-    env = activate_app("make", "pkg-config", build_only=True)
-    env = activate_app("ncurses", env=env)
+    env = activate_app_deps()
     make = locate("make")
     pkg_config = locate("pkg-config")
     url = _resolve_src_url(name, version)

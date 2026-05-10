@@ -3,8 +3,8 @@
 import os
 import subprocess
 
-from koopa.build import activate_app, app_prefix, locate
-from koopa.installers._build_helper import download_extract_cd, remove_static_libs
+from koopa.build import app_prefix, locate
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd, remove_static_libs
 
 
 def main(
@@ -15,8 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install serf."""
-    env = activate_app("pkg-config", "scons", build_only=True)
-    env = activate_app("zlib", "apr", "apr-util", "openssl", env=env)
+    env = activate_app_deps()
     scons = locate("scons")
     zlib_prefix = app_prefix("zlib")
     apr_prefix = app_prefix("apr")

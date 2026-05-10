@@ -5,8 +5,8 @@ import shutil
 import subprocess
 import sys
 
-from koopa.build import activate_app, app_prefix, locate
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, locate
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -18,51 +18,7 @@ def main(
 ) -> None:
     """Install r."""
     is_devel = name == "r-devel"
-    build_deps = ["autoconf", "automake", "libtool", "make", "pkg-config"]
-    env = activate_app(*build_deps, build_only=True)
-    deps = []
-    if sys.platform != "darwin":
-        deps.append("bzip2")
-    deps.extend(
-        [
-            "xz",
-            "zlib",
-            "zstd",
-            "gettext",
-            "icu4c",
-            "readline",
-            "openssl",
-            "libssh2",
-            "curl",
-            "libjpeg-turbo",
-            "libpng",
-            "libtiff",
-            "openblas",
-            "pcre2",
-            "texinfo",
-            "libffi",
-            "glib",
-            "freetype",
-            "libxml2",
-            "fontconfig",
-            "pixman",
-            "xorg-xorgproto",
-            "xorg-xcb-proto",
-            "xorg-libpthread-stubs",
-            "xorg-libice",
-            "xorg-libsm",
-            "xorg-libxau",
-            "xorg-libxdmcp",
-            "xorg-libxcb",
-            "xorg-libx11",
-            "xorg-libxext",
-            "xorg-libxrender",
-            "xorg-libxt",
-            "cairo",
-            "tcl-tk",
-        ]
-    )
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     make = locate("make")
     pkg_config = locate("pkg-config")
     tcl_tk_prefix = app_prefix("tcl-tk")

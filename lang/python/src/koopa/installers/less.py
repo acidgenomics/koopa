@@ -2,8 +2,8 @@
 
 import subprocess
 
-from koopa.build import activate_app, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,8 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install less."""
-    env = activate_app("autoconf", "groff", build_only=True)
-    env = activate_app("ncurses", "pcre2", env=env)
+    env = activate_app_deps()
     download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess.run(

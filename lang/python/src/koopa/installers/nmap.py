@@ -2,8 +2,8 @@
 
 import sys
 
-from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -14,11 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install nmap."""
-    env = activate_app("pkg-config", build_only=True)
-    deps = ["liblinear", "libpcap", "libssh2", "openssl", "pcre2", "zlib"]
-    if sys.platform == "darwin":
-        deps.append("lua")
-    env = activate_app(*deps, env=env)
+    env = activate_app_deps()
     liblinear_prefix = app_prefix("liblinear")
     libpcap_prefix = app_prefix("libpcap")
     libssh2_prefix = app_prefix("libssh2")

@@ -1,7 +1,7 @@
 """Install libjpeg-turbo."""
 
-from koopa.build import activate_app, cmake_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import cmake_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -12,7 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install libjpeg-turbo."""
-    env = activate_app("pkg-config", build_only=True)
+    env = activate_app_deps()
     download_extract_cd()
     cmake_build(
         prefix=prefix,
