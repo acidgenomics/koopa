@@ -25,6 +25,7 @@ def main(
     if not os.path.isdir(opt_spacemacs):
         msg = f"Spacemacs shared install not found: {opt_spacemacs}"
         raise FileNotFoundError(msg)
+    libexec = os.path.join(opt_spacemacs, "libexec")
     home = os.path.expanduser("~")
     spacemacs_d = os.path.join(home, ".spacemacs.d")
     init_el = os.path.join(spacemacs_d, "init.el")
@@ -32,7 +33,7 @@ def main(
         alert_info(f"Spacemacs user config already exists: {init_el}")
         return
     os.makedirs(spacemacs_d, exist_ok=True)
-    template = os.path.join(opt_spacemacs, "core", "templates", ".spacemacs.template")
+    template = os.path.join(libexec, "core", "templates", ".spacemacs.template")
     if os.path.isfile(template):
         import shutil
         shutil.copy2(template, init_el)

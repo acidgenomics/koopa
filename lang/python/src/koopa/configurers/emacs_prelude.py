@@ -25,7 +25,8 @@ def main(
     if not os.path.isdir(opt_prelude):
         msg = f"Emacs Prelude shared install not found: {opt_prelude}"
         raise FileNotFoundError(msg)
-    init_el = os.path.join(opt_prelude, "init.el")
+    libexec = os.path.join(opt_prelude, "libexec")
+    init_el = os.path.join(libexec, "init.el")
     if not os.path.isfile(init_el):
         msg = f"Prelude init.el not found: {init_el}"
         raise FileNotFoundError(msg)
