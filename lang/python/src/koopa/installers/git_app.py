@@ -87,6 +87,7 @@ def main(
         [
             make,
             f"--jobs={jobs}",
+            "NO_GETTEXT=YesPlease",
             "NO_IMAP_SEND=YesPlease",
             "NO_INSTALL_HARDLINKS=YesPlease",
             *(["VERBOSE=1"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
@@ -97,6 +98,7 @@ def main(
     subprocess.run(
         [
             make,
+            "NO_GETTEXT=YesPlease",
             "NO_IMAP_SEND=YesPlease",
             "NO_INSTALL_HARDLINKS=YesPlease",
             "install",

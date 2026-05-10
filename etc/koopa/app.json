@@ -2909,12 +2909,12 @@
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
-      "python3.10"
+      "python3.13"
     ],
     "description": "open-source genetics evidence platform",
     "installer": "python-package",
     "installer_args": {
-      "python_version": "3.10"
+      "python_version": "3.13"
     },
     "type": "cli",
     "url": [
