@@ -11,9 +11,7 @@ import re
 import subprocess
 
 
-def _aws(
-    *args: str, capture: bool = True, timeout: int = 300
-) -> subprocess.CompletedProcess:
+def _aws(*args: str, capture: bool = True, timeout: int = 300) -> subprocess.CompletedProcess:
     """Run an AWS CLI command."""
     import os
 
