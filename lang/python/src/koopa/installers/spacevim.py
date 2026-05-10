@@ -1,13 +1,12 @@
 """Install SpaceVim."""
 
 import os
+import stat
 import subprocess
 import sys
 
-from koopa.file_ops import ln
 from koopa.git import git_clone
 from koopa.installers._build_helper import activate_app_deps
-from koopa.system import is_macos
 
 
 def main(
@@ -21,17 +20,6 @@ def main(
     env = activate_app_deps()
     if env is not None:
         env.apply()
-    xdg_data_home = os.environ.get(
-        "XDG_DATA_HOME",
-        os.path.join(os.path.expanduser("~"), ".local", "share"),
-    )
-    if is_macos():
-        fonts_link = os.path.join(xdg_data_home, "fonts")
-        if not os.path.exists(fonts_link):
-            ln(
-                os.path.join(os.path.expanduser("~"), "Library", "Fonts"),
-                fonts_link,
-            )
     git_clone(
         "https://gitlab.com/SpaceVim/SpaceVim.git",
         prefix,
@@ -41,3 +29,9 @@ def main(
     if os.path.isdir(vimproc_prefix):
         print(f"Fixing vimproc at '{vimproc_prefix}'.", file=sys.stderr)
         subprocess.run(["make"], cwd=vimproc_prefix, check=True)
+    bin_dir = os.path.join(prefix, "bin")
+    os.makedirs(bin_dir, exist_ok=True)
+    wrapper = os.path.join(bin_dir, "spacevim")
+    with open(wrapper, "w") as f:
+        f.write('#!/bin/sh\nexec vim -u "$(dirname "$0")/../vimrc" "$@"\n')
+    os.chmod(wrapper, os.stat(wrapper).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)

@@ -6,13 +6,13 @@
     "build_dependencies": [
       "bash",
       "bzip2",
+      "curl",
       "gnupg",
       "gzip",
       "less",
       "patch",
       "tar",
-      "unzip",
-      "wget"
+      "unzip"
     ],
     "category": "Text",
     "date": "2026-05-02",
@@ -2152,12 +2152,15 @@
     "dependencies": [
       "emacs"
     ],
+    "bin": [
+      "doom",
+      "doom-emacs"
+    ],
     "description": "opinionated Emacs configuration framework",
     "type": "cli",
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "user": true,
     "version": "b04599f3746fbe5aa8fba572130a0257f3ecc8a6"
   },
   "dotfiles": {
@@ -2341,7 +2344,7 @@
     ],
     "category": "Editor",
     "date": "2025-08-18",
-    "default": false,
+    "default": true,
     "dependencies": [
       "gmp",
       "gnutls",
@@ -2424,13 +2427,13 @@
     "build_dependencies": [
       "bash",
       "bzip2",
+      "curl",
       "gnupg",
       "gzip",
       "less",
       "patch",
       "tar",
-      "unzip",
-      "wget"
+      "unzip"
     ],
     "category": "Multimedia",
     "date": "2026-05-02",
@@ -6825,12 +6828,14 @@
     "dependencies": [
       "emacs"
     ],
+    "bin": [
+      "prelude-emacs"
+    ],
     "description": "community-maintained Emacs configuration",
     "type": "cli",
     "url": [
       "https://github.com/bbatsov/prelude/"
     ],
-    "user": true,
     "version": "bab03706490bb5bd12e7dcc63b131132a4566015"
   },
   "prettier": {
@@ -7781,13 +7786,13 @@
     "build_dependencies": [
       "bash",
       "bzip2",
+      "curl",
       "gnupg",
       "gzip",
       "less",
       "patch",
       "tar",
-      "unzip",
-      "wget"
+      "unzip"
     ],
     "category": "Filesystem",
     "date": "2024-12-30",
@@ -8516,12 +8521,14 @@
     "dependencies": [
       "emacs"
     ],
+    "bin": [
+      "spacemacs"
+    ],
     "description": "Emacs configuration centered around evil-mode",
     "type": "cli",
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "user": true,
     "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
   },
   "spacevim": {
@@ -8531,13 +8538,15 @@
     "category": "Editor",
     "date": "2026-05-02",
     "default": false,
+    "bin": [
+      "spacevim"
+    ],
     "description": "modular Vim and Neovim configuration",
     "type": "cli",
     "url": [
       "https://spacevim.org/",
       "https://github.com/SpaceVim/SpaceVim"
     ],
-    "user": true,
     "version": "eed9d8f14951d9802665aa3429e449b71bb15a3a"
   },
   "spdlog": {

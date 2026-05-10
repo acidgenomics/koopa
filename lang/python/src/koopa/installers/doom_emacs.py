@@ -1,8 +1,7 @@
 """Install Doom Emacs."""
 
 import os
-import subprocess
-import sys
+import stat
 
 from koopa.git import git_clone
 from koopa.installers._build_helper import activate_app_deps
@@ -28,9 +27,7 @@ def main(
     if not os.path.isfile(doom):
         msg = f"doom executable not found: {doom}"
         raise FileNotFoundError(msg)
-    print("Running doom install.", file=sys.stderr)
-    subprocess.run(
-        [doom, "install", "--debug", "--force", "--no-env", "--no-fonts", "--verbose"],
-        check=True,
-    )
-    subprocess.run([doom, "sync"], check=True)
+    wrapper = os.path.join(prefix, "bin", "doom-emacs")
+    with open(wrapper, "w") as f:
+        f.write('#!/bin/sh\nexec emacs --init-directory="$(dirname "$0")/.." "$@"\n')
+    os.chmod(wrapper, os.stat(wrapper).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)

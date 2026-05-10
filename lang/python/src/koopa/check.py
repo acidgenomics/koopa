@@ -613,66 +613,6 @@ def check_macos_system_python() -> bool:
     return ok
 
 
-def _user_app_prefixes() -> dict[str, str]:
-    """Return mapping of user-mode app names to their install prefixes."""
-    from koopa.prefix import (
-        doom_emacs_prefix,
-        prelude_emacs_prefix,
-        spacemacs_prefix,
-        spacevim_prefix,
-    )
-
-    return {
-        "doom-emacs": doom_emacs_prefix(),
-        "prelude-emacs": prelude_emacs_prefix(),
-        "spacemacs": spacemacs_prefix(),
-        "spacevim": spacevim_prefix(),
-    }
-
-
-def _iter_outdated_user_apps() -> list[tuple[str, str]]:
-    """Return ``(app_name, reason)`` for each outdated user-mode app."""
-    from koopa.git import git_last_commit_local, is_git_repo
-
-    json_data = import_app_json()
-    prefixes = _user_app_prefixes()
-    issues: list[tuple[str, str]] = []
-    for name, prefix in prefixes.items():
-        if not isdir(prefix):
-            continue
-        if not is_git_repo(prefix):
-            continue
-        if name not in json_data:
-            continue
-        expected = json_data[name].get("version", "")
-        if not expected:
-            continue
-        try:
-            installed = git_last_commit_local(prefix)
-        except Exception:
-            continue
-        if installed != expected:
-            short_installed = installed[:7] if len(installed) == 40 else installed
-            short_expected = expected[:7] if len(expected) == 40 else expected
-            issues.append(
-                (name, f"{name} ({short_installed} != {short_expected})"),
-            )
-    return issues
-
-
-def outdated_user_apps() -> list[str]:
-    """Return names of user-mode apps that need updating."""
-    return [name for name, _reason in _iter_outdated_user_apps()]
-
-
-def check_user_apps() -> bool:
-    """Check user-mode app versions."""
-    issues = _iter_outdated_user_apps()
-    for _name, reason in issues:
-        print(reason)
-    return not issues
-
-
 def check_broken_symlinks() -> bool:
     """Check for broken symlinks in bin, opt, and man1 directories."""
     from koopa.file_ops import find_broken_symlinks
@@ -758,8 +698,6 @@ def check_system() -> bool:
     if not check_installed_apps():
         needs_update = True
     if not check_broken_app_installs():
-        needs_update = True
-    if not check_user_apps():
         needs_update = True
     if not check_broken_symlinks():
         needs_update = True
