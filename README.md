@@ -6,7 +6,7 @@ Shell bootloader for data science.
 
 ## Requirements
 
-- Linux (x86_64 or ARM64) or macOS (Apple Silicon / arm64 only).
+- Linux (x86_64 or arm64) or macOS (Apple Silicon / arm64 only).
   Intel Macs (x86_64) are no longer supported.
   On Windows, consider using [Ubuntu for WSL](https://ubuntu.com/wsl/).
 - [POSIX](https://en.wikipedia.org/wiki/POSIX)-compliant login shell
