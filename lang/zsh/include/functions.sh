@@ -110,7 +110,7 @@ _koopa_activate_aliases() {
         fi
         if [[ -d "${xdg_data_home}/prelude" ]]
         then
-            alias prelude-emacs='_koopa_prelude_emacs'
+            alias emacs-prelude='_koopa_emacs_prelude'
         fi
         if [[ -d "${xdg_data_home}/spacemacs" ]]
         then
@@ -167,10 +167,6 @@ _koopa_activate_aliases() {
         if [[ -x "${bin_prefix}/fzf" ]]
         then
             alias vim-fzf='_koopa_alias_vim_fzf'
-        fi
-        if [[ -d "${xdg_data_home}/spacevim" ]]
-        then
-            alias spacevim='_koopa_spacevim'
         fi
     fi
     if [[ -x "${bin_prefix}/walk" ]]
@@ -349,6 +345,7 @@ ca-certificates"
     export DEFAULT_CA_BUNDLE_PATH="$prefix"
     export NODE_EXTRA_CA_CERTS="$file"
     export REQUESTS_CA_BUNDLE="$file"
+    export GIT_SSL_CAINFO="$file"
     export SSL_CERT_FILE="$file"
     if _koopa_is_linux
     then
@@ -1633,15 +1630,15 @@ _koopa_logged_in_users() {
     return 0
 }
 
-_koopa_prelude_emacs() {
-    local prelude_emacs_prefix
-    prelude_emacs_prefix="$(_koopa_prelude_emacs_prefix)"
-    if [[ ! -d "$prelude_emacs_prefix" ]]
+_koopa_emacs_prelude() {
+    local emacs_prelude_prefix
+    emacs_prelude_prefix="$(_koopa_emacs_prelude_prefix)"
+    if [[ ! -d "$emacs_prelude_prefix" ]]
     then
-        _koopa_print 'Prelude Emacs is not installed.'
+        _koopa_print 'Emacs Prelude is not installed.'
         return 1
     fi
-    _koopa_emacs --init-directory="$prelude_emacs_prefix" "$@"
+    _koopa_emacs --init-directory="$emacs_prelude_prefix" "$@"
     return 0
 }
 
@@ -1739,26 +1736,6 @@ _koopa_spacemacs() {
         return 1
     fi
     _koopa_emacs --init-directory="$spacemacs_prefix" "$@"
-    return 0
-}
-
-_koopa_spacevim() {
-    local vim
-    vim='vim'
-    if _koopa_is_macos
-    then
-        local gvim
-        gvim='/Applications/MacVim.app/Contents/bin/gvim'
-        [[ -x "$gvim" ]] && vim="$gvim"
-    fi
-    local vimrc
-    vimrc="$(_koopa_spacevim_prefix)/vimrc"
-    if [[ ! -f "$vimrc" ]]
-    then
-        _koopa_print 'SpaceVim is not installed.'
-        return 1
-    fi
-    "$vim" -u "$vimrc" "$@"
     return 0
 }
 
@@ -2101,7 +2078,7 @@ _koopa_pipx_prefix() {
     return 0
 }
 
-_koopa_prelude_emacs_prefix() {
+_koopa_emacs_prelude_prefix() {
     _koopa_print "$(_koopa_xdg_data_home)/prelude"
     return 0
 }
@@ -2123,11 +2100,6 @@ _koopa_scripts_private_prefix() {
 
 _koopa_spacemacs_prefix() {
     _koopa_print "$(_koopa_xdg_data_home)/spacemacs"
-    return 0
-}
-
-_koopa_spacevim_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/spacevim"
     return 0
 }
 

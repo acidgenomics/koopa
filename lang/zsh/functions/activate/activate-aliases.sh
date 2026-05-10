@@ -74,7 +74,7 @@ _koopa_activate_aliases() {
         fi
         if [[ -d "${xdg_data_home}/prelude" ]]
         then
-            alias prelude-emacs='_koopa_prelude_emacs'
+            alias emacs-prelude='_koopa_emacs_prelude'
         fi
         if [[ -d "${xdg_data_home}/spacemacs" ]]
         then
@@ -131,10 +131,6 @@ _koopa_activate_aliases() {
         if [[ -x "${bin_prefix}/fzf" ]]
         then
             alias vim-fzf='_koopa_alias_vim_fzf'
-        fi
-        if [[ -d "${xdg_data_home}/spacevim" ]]
-        then
-            alias spacevim='_koopa_spacevim'
         fi
     fi
     if [[ -x "${bin_prefix}/walk" ]]

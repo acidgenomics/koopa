@@ -1644,7 +1644,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "prelude-emacs": _AppCheckSpec(
+    "emacs-prelude": _AppCheckSpec(
         "github",
         lambda: _check_github_head("bbatsov", "prelude"),
         (),
@@ -1657,11 +1657,6 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "spacemacs": _AppCheckSpec(
         "github",
         lambda: _check_github_head("syl20bnr", "spacemacs"),
-        (),
-    ),
-    "spacevim": _AppCheckSpec(
-        "github",
-        lambda: _check_github_head("SpaceVim", "SpaceVim"),
         (),
     ),
     "sqlite": _AppCheckSpec("dirlist", _check_sqlite, ()),

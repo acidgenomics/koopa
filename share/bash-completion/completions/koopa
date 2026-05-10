@@ -308,6 +308,7 @@ _koopa_complete() {
                         'editorconfig'
                         'elvish'
                         'emacs'
+                        'emacs-prelude'
                         'ensembl-perl-api'
                         'entrez-direct'
                         'exa'
@@ -529,7 +530,6 @@ _koopa_complete() {
                         'poetry'
                         'postgresql'
                         'powershell'
-                        'prelude-emacs'
                         'prettier'
                         'procs'
                         'proj'
@@ -596,7 +596,6 @@ _koopa_complete() {
                         'snakemake'
                         'sox'
                         'spacemacs'
-                        'spacevim'
                         'spdlog'
                         'sphinx'
                         'sqlfluff'
@@ -809,9 +808,8 @@ _koopa_complete() {
                             args+=(
                                 'doom-emacs'
                                 'dotfiles'
-                                'prelude-emacs'
+                                'emacs-prelude'
                                 'spacemacs'
-                                'spacevim'
                             )
                             if _koopa_is_macos
                             then
