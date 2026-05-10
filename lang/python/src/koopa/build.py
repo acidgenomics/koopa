@@ -271,17 +271,42 @@ def _add_pkg_config_paths(prefix: str, env: BuildEnv) -> None:
 
 
 def _add_transitive_rpath_links(names: tuple[str, ...], env: BuildEnv) -> None:
-    """Add -Wl,-rpath-link for each direct dep's own dependencies (Linux only).
+    """Add -Wl,-rpath-link for all transitive runtime deps (Linux only).
 
-    The GNU linker verifies transitive shared library deps at link time. This
-    function adds -rpath-link paths so the linker can find them without baking
-    those paths into the output binary's RPATH.
+    The GNU linker recursively verifies all DT_NEEDED entries at link time.
+    This adds -rpath-link for every lib dir in the full transitive runtime
+    dependency closure so the linker can find them without baking those paths
+    into the output binary's RPATH.
     """
     app_json_path = os.path.join(koopa_prefix(), "etc", "koopa", "app.json")
     with open(app_json_path) as f:
         app_data = json.load(f)
     opt = opt_prefix()
     seen_dirs: set[str] = set()
+    visited: set[str] = set()
+
+    def _collect(dep_name: str) -> None:
+        resolved = resolve_alias(dep_name)
+        if resolved in visited:
+            return
+        visited.add(resolved)
+        sub_link = os.path.join(opt, resolved)
+        if not os.path.exists(sub_link):
+            return
+        sub_prefix = os.path.realpath(sub_link)
+        for lib_suffix in ("lib", "lib64"):
+            ld = os.path.join(sub_prefix, lib_suffix)
+            if os.path.isdir(ld) and ld not in seen_dirs:
+                seen_dirs.add(ld)
+                env.ldflags.append(f"-Wl,-rpath-link,{ld}")
+        _add_pkg_config_paths(sub_prefix, env)
+        entry = app_data.get(resolved, {})
+        sub_deps = entry.get("dependencies", [])
+        if isinstance(sub_deps, dict):
+            return
+        for sub_dep in sub_deps:
+            _collect(sub_dep)
+
     for name in names:
         resolved = resolve_alias(name)
         entry = app_data.get(resolved, {})
@@ -289,17 +314,7 @@ def _add_transitive_rpath_links(names: tuple[str, ...], env: BuildEnv) -> None:
         if isinstance(sub_deps, dict):
             continue
         for sub_dep in sub_deps:
-            sub_resolved = resolve_alias(sub_dep)
-            sub_link = os.path.join(opt, sub_resolved)
-            if not os.path.exists(sub_link):
-                continue
-            sub_prefix = os.path.realpath(sub_link)
-            for lib_suffix in ("lib", "lib64"):
-                ld = os.path.join(sub_prefix, lib_suffix)
-                if os.path.isdir(ld) and ld not in seen_dirs:
-                    seen_dirs.add(ld)
-                    env.ldflags.append(f"-Wl,-rpath-link,{ld}")
-            _add_pkg_config_paths(sub_prefix, env)
+            _collect(sub_dep)
 
 
 def _find_pc_files(prefix: str) -> list[str]:
