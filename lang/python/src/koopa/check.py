@@ -168,6 +168,26 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             if stale_dep:
                 continue
         expected_bins = entry.get("bin", [])
+        if expected_bins and not installer.startswith(
+            ("conda-package", "node-package", "perl-package", "python-package", "ruby-package")
+        ):
+            from koopa.build import _extract_rpath
+
+            broken_rpath = False
+            for b in expected_bins:
+                bin_path = join(path, "bin", b)
+                if not isfile(bin_path):
+                    continue
+                rpath_dirs = _extract_rpath(bin_path)
+                missing = [d for d in rpath_dirs if not isdir(d)]
+                if missing:
+                    issues.append(
+                        (name, f"{name} broken RPATH: {missing[0]}", True),
+                    )
+                    broken_rpath = True
+                    break
+            if broken_rpath:
+                continue
         broken_bin = False
         for b in expected_bins:
             link = join(bin_dir, b)
