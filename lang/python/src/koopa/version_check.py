@@ -43,16 +43,8 @@ class VersionCheckResult:
         if re.match(r"^[0-9a-f]{40}$", self.latest_version):
             return self.latest_version != self.current_version
         try:
-            cur = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.current_version))
-                if x.isdigit()
-            )
-            lat = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.latest_version))
-                if x.isdigit()
-            )
+            cur = _version_key(sanitize_version(self.current_version))
+            lat = _version_key(sanitize_version(self.latest_version))
             return lat > cur
         except (ValueError, AttributeError):
             return self.current_version != self.latest_version
@@ -65,16 +57,8 @@ class VersionCheckResult:
         if re.match(r"^[0-9a-f]{40}$", self.latest_version):
             return False
         try:
-            cur = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.current_version))
-                if x.isdigit()
-            )
-            lat = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.latest_version))
-                if x.isdigit()
-            )
+            cur = _version_key(sanitize_version(self.current_version))
+            lat = _version_key(sanitize_version(self.latest_version))
             return cur > lat
         except (ValueError, AttributeError):
             return False
@@ -172,6 +156,16 @@ _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 _VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _version_key(version: str) -> tuple[int, ...]:
+    """Parse version string into a comparable int tuple, handling trailing letters."""
+    nums = []
+    for part in re.split(r"[.\-]", version):
+        m = re.match(r"(\d+)", part)
+        if m:
+            nums.append(int(m.group(1)))
+    return tuple(nums)
 
 
 def _http_get_json(
@@ -322,20 +316,12 @@ def _check_conda(
                     data = json.loads(result.stdout)
                     versions = [e["version"] for e in data.get(package, [])]
                     if versions:
-                        best = max(
-                            versions,
-                            key=lambda v: tuple(
-                                int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()
-                            ),
-                        )
+                        best = max(versions, key=_version_key)
                         versions_per_subdir.append(best)
                 except (json.JSONDecodeError, ValueError):
                     pass
     if versions_per_subdir:
-        return min(
-            versions_per_subdir,
-            key=lambda v: tuple(int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()),
-        )
+        return min(versions_per_subdir, key=_version_key)
     try:
         data = _http_get_json(
             f"https://api.anaconda.org/package/{channel}/{package}",
@@ -1904,8 +1890,8 @@ def check_app_versions(  # noqa: C901, PLR0915
                 msg = None
             else:
                 try:
-                    cur_p = tuple(int(x) for x in re.split(r"[.\-]", current_san) if x.isdigit())
-                    lat_p = tuple(int(x) for x in re.split(r"[.\-]", latest_san) if x.isdigit())
+                    cur_p = _version_key(current_san)
+                    lat_p = _version_key(latest_san)
                     if lat_p < cur_p:
                         msg = f"{app_name}: {current} pinned too high (latest stable: {latest})"
                     else:
