@@ -755,6 +755,7 @@ _koopa_install() {
         'cli11'
         'cloudbiolinux'
         'cmake'
+        'codex'
         'colorls'
         'commitizen'
         'conda'

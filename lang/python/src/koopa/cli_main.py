@@ -219,8 +219,21 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
-    configure_p = subparsers.add_parser("configure")
-    configure_p.add_argument("apps", nargs="*")
+    configure_p = subparsers.add_parser(
+        "configure",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Configure installed applications.",
+        epilog=(
+            "usage:\n"
+            "  koopa configure system <app> [<app>...]   Configure as system admin\n"
+            "  koopa configure user <app> [<app>...]     Configure for current user\n"
+            "\n"
+            "modes:\n"
+            "  system    Requires admin/root. System-wide configuration.\n"
+            "  user      Current user only. Must not be root."
+        ),
+    )
+    configure_p.add_argument("apps", nargs="*", metavar="app")
     _add_common_flags(configure_p)
 
     # -- app ------------------------------------------------------------------
@@ -723,10 +736,11 @@ def _handle_configure(args: argparse.Namespace) -> None:
     from koopa.configure import ConfigureConfig, configure_app
 
     apps = list(args.apps) if args.apps else []
-    mode = "shared"
-    if apps and apps[0] in ("system", "user"):
-        mode = apps[0]
-        apps = apps[1:]
+    if not apps or apps[0] not in ("system", "user"):
+        print("Error: mode required ('system' or 'user').", file=sys.stderr)
+        sys.exit(1)
+    mode = apps[0]
+    apps = apps[1:]
     if not apps:
         print("Error: no apps specified.", file=sys.stderr)
         sys.exit(1)
