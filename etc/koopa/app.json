@@ -8514,7 +8514,7 @@
       "emacs"
     ],
     "description": "Emacs configuration centered around evil-mode",
-    "revision": 1,
+    "revision": 2,
     "type": "cli",
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
