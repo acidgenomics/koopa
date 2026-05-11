@@ -1508,24 +1508,9 @@
     "removed": true
   },
   "cloudbiolinux": {
-    "build_dependencies": [
-      "git"
-    ],
-    "category": "Bioinformatics",
-    "date": "2023-12-22",
-    "default": false,
+    "date": "2026-05-11",
     "description": "automated bioinformatics environment setup",
-    "installer_platform": "linux",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": false
-    },
-    "type": "cli",
-    "url": [
-      "https://github.com/chapmanb/cloudbiolinux/"
-    ],
-    "version": "cd1b727402e20f3b2c98a9bd116724ebdde83181"
+    "removed": true
   },
   "cmake": {
     "bin": [
