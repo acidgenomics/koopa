@@ -162,9 +162,11 @@ def _version_key(version: str) -> tuple[int, ...]:
     """Parse version string into a comparable int tuple, handling trailing letters."""
     nums = []
     for part in re.split(r"[.\-]", version):
-        m = re.match(r"(\d+)", part)
+        m = re.match(r"(\d+)([a-zA-Z]?)", part)
         if m:
             nums.append(int(m.group(1)))
+            if m.group(2):
+                nums.append(ord(m.group(2).lower()))
     return tuple(nums)
 
 
@@ -2118,7 +2120,7 @@ def _mirror_src_to_s3(
 
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes."""
-    outdated = [r for r in results if r.is_outdated or r.is_pinned_too_high]
+    outdated = [r for r in results if r.is_outdated]
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
         return 0
