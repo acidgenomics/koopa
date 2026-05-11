@@ -54,8 +54,11 @@ class BuildEnv:
         activated app bins, isolating builds from the ambient environment.
         """
         env = os.environ.copy()
-        base_path = env.get("KOOPA_DEFAULT_SYSTEM_PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
-        env["PATH"] = _merge_colon(self.path, base_path) if self.path else base_path
+        if env.get("LOADEDMODULES"):
+            env["PATH"] = _merge_colon(self.path, env.get("PATH", "")) if self.path else env.get("PATH", "")
+        else:
+            base_path = env.get("KOOPA_DEFAULT_SYSTEM_PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
+            env["PATH"] = _merge_colon(self.path, base_path) if self.path else base_path
         if self.cppflags:
             existing = env.get("CPPFLAGS", "")
             env["CPPFLAGS"] = _merge_space(self.cppflags, existing)

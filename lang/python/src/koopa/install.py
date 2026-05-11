@@ -81,6 +81,33 @@ class InstallConfig:
 
 # -- Helper functions ---------------------------------------------------------
 
+_GLIBC_MIN = (2, 28)
+
+
+def _check_glibc_minimum() -> None:
+    if not is_linux():
+        return
+    import ctypes
+    try:
+        libc = ctypes.CDLL("libc.so.6")
+        gnu_get_libc_version = libc.gnu_get_libc_version
+        gnu_get_libc_version.restype = ctypes.c_char_p
+        ver_str = gnu_get_libc_version().decode()
+        major, minor = (int(x) for x in ver_str.split(".")[:2])
+        if (major, minor) < _GLIBC_MIN:
+            msg = (
+                f"This system has glibc {ver_str}, but koopa installs"
+                f" require glibc >= {_GLIBC_MIN[0]}.{_GLIBC_MIN[1]}."
+                " RHEL 7 / CentOS 7 are not supported."
+            )
+            raise RuntimeError(msg)
+    except OSError:
+        pass
+
+
+def _is_lmod_active() -> bool:
+    return bool(os.environ.get("LOADEDMODULES"))
+
 
 def _app_json_version(key: str) -> str:
     """Get application version from app.json."""
@@ -563,6 +590,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if is_windows():
         msg = "App installs are not supported on Windows."
         raise NotImplementedError(msg)
+    _check_glibc_minimum()
     config.name = resolve_alias(config.name)
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
@@ -727,6 +755,16 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         "CMAKE_PREFIX_PATH",
     )
     saved_env = {k: os.environ.get(k) for k in _build_env_keys}
+    if _is_lmod_active():
+        for var in (
+            "CC", "CXX", "FC", "F77",
+            "LD_LIBRARY_PATH", "LIBRARY_PATH",
+            "CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH",
+            "INCLUDE", "PKG_CONFIG_PATH",
+        ):
+            val = os.environ.get(var, "")
+            if val:
+                os.environ[var] = val
     try:
         with BuildProgress(
             config.name, version=config.version, quiet=config.quiet, verbose=config.verbose
@@ -1977,34 +2015,62 @@ def _cleanup_legacy_config() -> None:
                 f"Repointed legacy symlink: {legacy_activate} -> {activate_sh}",
                 file=sys.stderr,
             )
+    import re
+    import shutil
+
+    _legacy_re = re.compile(
+        r"__koopa_activate_user_profile\(\).*?^\}[ \t]*\n+__koopa_activate_user_profile[ \t]*\n?",
+        re.MULTILINE | re.DOTALL,
+    )
+    _correct_block = (
+        '__koopa_activate_user_profile() {\n'
+        '    __kvar_xdg_data_home="${XDG_DATA_HOME:-}"\n'
+        '    if [ -z "$__kvar_xdg_data_home" ]\n'
+        '    then\n'
+        '        __kvar_xdg_data_home="${HOME:?}/.local/share"\n'
+        '    fi\n'
+        '    __kvar_script="${__kvar_xdg_data_home}/koopa/activate.sh"\n'
+        '    if [ -r "$__kvar_script" ]\n'
+        '    then\n'
+        '        # shellcheck source=/dev/null\n'
+        '        . "$__kvar_script"\n'
+        '    fi\n'
+        '    unset -v __kvar_script __kvar_xdg_data_home\n'
+        '    return 0\n'
+        '}\n'
+        '\n'
+        '__koopa_activate_user_profile\n'
+    )
     shell_profiles = [
         os.path.join(os.path.expanduser("~"), name)
         for name in (".profile", ".bashrc", ".bash_profile", ".zshrc", ".zprofile")
     ]
-    flagged: list[tuple[str, int, str]] = []
     for profile in shell_profiles:
         if not os.path.isfile(profile):
             continue
         try:
             with open(profile) as fh:
-                for lineno, line in enumerate(fh, 1):
-                    # Match the old extensionless path but not the correct .sh form
-                    if "/.config/koopa/activate" in line and ".sh" not in line:
-                        flagged.append((profile, lineno, line.rstrip()))
+                content = fh.read()
         except OSError:
             continue
-    if flagged:
-        print(
-            "WARNING: The following shell profile(s) reference the legacy "
-            "'~/.config/koopa/activate' path (without .sh extension).",
-            file=sys.stderr,
-        )
-        print(
-            "Update them to source '$KOOPA_PREFIX/activate.sh' instead:",
-            file=sys.stderr,
-        )
-        for path, lineno, line in flagged:
-            print(f"  {path}:{lineno}: {line}", file=sys.stderr)
+        match = _legacy_re.search(content)
+        if not match:
+            continue
+        block = match.group(0)
+        if "xdg_config_home" not in block and "/.config/koopa/activate" not in block:
+            continue
+        bak = profile + ".bak"
+        shutil.copy2(profile, bak)
+        new_content = content[: match.start()] + _correct_block + content[match.end() :]
+        try:
+            with open(profile, "w") as fh:
+                fh.write(new_content)
+            print(
+                f"Fixed legacy koopa activation in {profile} (backup: {bak})",
+                file=sys.stderr,
+            )
+        except OSError as exc:
+            print(f"WARNING: Could not fix {profile}: {exc}", file=sys.stderr)
     legacy_build_times = os.path.join(koopa_prefix(), "etc", "koopa", "build-times.json")
     if os.path.isfile(legacy_build_times):
         os.unlink(legacy_build_times)

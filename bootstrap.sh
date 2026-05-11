@@ -453,7 +453,12 @@ if [ -z "$PREFIX" ]
 then
     PREFIX="${KOOPA_PREFIX}-bootstrap"
 fi
-PATH="${PREFIX}/bin:/usr/bin:/bin"
+if [ -n "${LOADEDMODULES:-}" ]
+then
+    PATH="${PREFIX}/bin:${PATH}"
+else
+    PATH="${PREFIX}/bin:/usr/bin:/bin"
+fi
 CPU_COUNT="$(cpu_count)"
 DESTDIR=''
 export CPU_COUNT DESTDIR PATH PREFIX

@@ -11,6 +11,7 @@ import ssl
 import subprocess
 import sys
 import urllib.request
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -173,6 +174,21 @@ def _derive_filename(url: str) -> str:
 _curl_ok: set[str] = set()
 
 
+@lru_cache(maxsize=4)
+def _curl_version(curl_cmd: str = "curl") -> tuple[int, ...]:
+    try:
+        out = subprocess.run(
+            [curl_cmd, "--version"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        ver_str = out.split()[1]
+        return tuple(int(x) for x in ver_str.split(".")[:3])
+    except Exception:
+        return (0, 0, 0)
+
+
 def _check_curl(curl_cmd: str) -> None:
     """Verify curl's RPATH targets exist. Runs once per curl_cmd."""
     if curl_cmd in _curl_ok:
@@ -224,7 +240,9 @@ def _download_curl(
     if speed_time is not None:
         curl_args.extend(["--speed-time", str(speed_time)])
     if retry:
-        curl_args.extend(["--retry", "3", "--retry-delay", "5", "--retry-all-errors"])
+        curl_args.extend(["--retry", "3", "--retry-delay", "5"])
+        if _curl_version(curl_cmd) >= (7, 71, 0):
+            curl_args.append("--retry-all-errors")
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and os.path.isfile(ca_bundle):
         curl_args.extend(["--cacert", ca_bundle])
