@@ -103,6 +103,8 @@ def git_pull_safe(path: str) -> None:
     if git_repo_has_unstaged_changes(path):
         warn(f"Skipping pull for '{name}': repo has active changes.")
         return
+    if git_branch(path) == "HEAD":
+        return
     alert_note(f"Pulling '{name}'.")
     _auth_failure_patterns = (
         "repository not found",
