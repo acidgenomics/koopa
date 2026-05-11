@@ -31,6 +31,8 @@ def download(
     retry: bool = True,
     connect_timeout: int | None = None,
     max_time: int | None = None,
+    speed_limit: int | None = None,
+    speed_time: int | None = None,
     quiet: bool = False,
 ) -> str:
     """Download a file from a URL.
@@ -49,6 +51,8 @@ def download(
             retry=retry,
             connect_timeout=connect_timeout,
             max_time=max_time,
+            speed_limit=speed_limit,
+            speed_time=speed_time,
             quiet=quiet,
         )
     except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
@@ -59,6 +63,8 @@ def download(
                 retry=retry,
                 connect_timeout=connect_timeout,
                 max_time=max_time,
+                speed_limit=speed_limit,
+                speed_time=speed_time,
                 curl_cmd="/usr/bin/curl",
                 quiet=quiet,
             )
@@ -99,6 +105,8 @@ def download_with_mirror(
     extra_urls: list[str] | None = None,
     connect_timeout: int = 10,
     max_time: int | None = None,
+    speed_limit: int = 1000,
+    speed_time: int = 30,
     output: str | None = None,
     quiet: bool = False,
     skip_koopa_mirror: bool = False,
@@ -129,6 +137,8 @@ def download_with_mirror(
                 retry=False,
                 connect_timeout=connect_timeout if not is_last else None,
                 max_time=max_time,
+                speed_limit=speed_limit,
+                speed_time=speed_time,
                 quiet=quiet,
             )
             if not archive.is_valid_archive(tarball):
@@ -187,6 +197,8 @@ def _download_curl(
     retry: bool = True,
     connect_timeout: int | None = None,
     max_time: int | None = None,
+    speed_limit: int | None = None,
+    speed_time: int | None = None,
     curl_cmd: str = "curl",
     quiet: bool = False,
 ) -> None:
@@ -207,6 +219,10 @@ def _download_curl(
         curl_args.extend(["--connect-timeout", str(connect_timeout)])
     if max_time is not None:
         curl_args.extend(["--max-time", str(max_time)])
+    if speed_limit is not None:
+        curl_args.extend(["--speed-limit", str(speed_limit)])
+    if speed_time is not None:
+        curl_args.extend(["--speed-time", str(speed_time)])
     if retry:
         curl_args.extend(["--retry", "3", "--retry-delay", "5", "--retry-all-errors"])
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")

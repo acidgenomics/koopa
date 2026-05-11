@@ -416,7 +416,6 @@
     "installer_args": {
       "name": "vina"
     },
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -553,7 +552,6 @@
     "man1": [
       "axel.1"
     ],
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
@@ -1423,7 +1421,6 @@
     "description": "10x Genomics single-cell RNA-seq pipeline",
     "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
     "installer_platform": "linux",
-    "outdated": true,
     "private": true,
     "supported": {
       "linux-amd64": true,
@@ -1468,14 +1465,9 @@
     "bin": [
       "chezmoi"
     ],
-    "build_dependencies": {
-      "noarch": [
-        "conda"
-      ],
-      "macos-arm64": [
-        "go"
-      ]
-    },
+    "build_dependencies": [
+      "conda"
+    ],
     "category": "Dotfile",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
@@ -2031,7 +2023,6 @@
     "default": false,
     "description": "tools for analysis of deep-sequencing data",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2196,7 +2187,6 @@
     "installer_args": {
       "name": "dust"
     },
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/bootandy/dust/",
@@ -2343,7 +2333,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-05-10",
+    "date": "2026-05-11",
     "default": true,
     "description": "extensible, customizable GNU text editor",
     "installer": "conda-package",
@@ -2356,7 +2346,8 @@
     "url": [
       "https://www.gnu.org/software/emacs/"
     ],
-    "version": "29.4"
+    "version": "29.4",
+    "version_pin": true
   },
   "emacs-prelude": {
     "bin": [
@@ -2459,7 +2450,6 @@
     "man1": [
       "exiftool.1"
     ],
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://exiftool.org/",
@@ -2474,7 +2464,7 @@
       "xz"
     ],
     "category": "Library",
-    "date": "2026-05-02",
+    "date": "2026-05-11",
     "default": false,
     "description": "fast stream-oriented XML parser library",
     "src_url": "https://github.com/libexpat/libexpat/releases/download/R_{version_underscore}/expat-{version}.tar.xz",
@@ -2482,7 +2472,7 @@
     "url": [
       "https://libexpat.github.io/"
     ],
-    "version": "2.8.0"
+    "version": "2.8.1"
   },
   "eza": {
     "bin": [
@@ -2497,7 +2487,6 @@
     "default": true,
     "description": "modern ls replacement with color, icons, and Git support",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/eza-community/eza/",
@@ -2876,7 +2865,6 @@
     "installer_args": {
       "name": "gatk4"
     },
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -3155,7 +3143,6 @@
     "default": false,
     "description": "efficient querying of genomic databases",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -3306,7 +3293,6 @@
     "default": true,
     "description": "blazing fast terminal UI for Git",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/extrawurst/gitui/",
@@ -4098,7 +4084,6 @@
       "Pinning to conda-forge version.",
       "libxml2 currently doesn't support ICU 76."
     ],
-    "outdated": true,
     "src_url": "https://github.com/unicode-org/icu/releases/download/release-{version}/icu4c-{version}-sources.tgz",
     "type": "build_tool",
     "url": [
@@ -4332,7 +4317,6 @@
     "default": false,
     "description": "fast RNA-seq quantification via pseudoalignment",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://pachterlab.github.io/kallisto/",
@@ -5181,7 +5165,6 @@
     ],
     "description": "Lua-based environment modules system",
     "installer_platform": "linux",
-    "outdated": true,
     "src_url": "https://github.com/TACC/Lmod/archive/{version}.tar.gz",
     "supported": {
       "linux-amd64": true,
@@ -5416,7 +5399,6 @@
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://mamba.readthedocs.io/",
@@ -5532,7 +5514,6 @@
     "default": true,
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/lunaryorn/mdcat/"
@@ -6693,7 +6674,6 @@
     ],
     "description": "install and run Python CLI apps in isolated environments",
     "installer": "python-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/pypa/pipx/",
@@ -6971,7 +6951,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-05-08",
+    "date": "2026-05-11",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -6982,7 +6962,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.6.30"
+    "version": "2.6.31"
   },
   "pyflakes": {
     "bin": [
@@ -7439,7 +7419,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-05-04",
+    "date": "2026-05-11",
     "default": true,
     "dependencies": {
       "default": [],
@@ -7478,13 +7458,12 @@
       "python3.1",
       "python3.14.1"
     ],
-    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.14.4"
+    "version": "3.14.5"
   },
   "quarto": {
     "bin": [
@@ -7742,7 +7721,6 @@
     "man1": [
       "rclone.1"
     ],
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://rclone.org/"
@@ -8018,7 +7996,6 @@
     "man1": [
       "ruby.1"
     ],
-    "outdated": true,
     "src_url": "https://cache.ruby-lang.org/pub/ruby/{major_minor}/ruby-{version}.tar.gz",
     "type": "build_tool",
     "url": [
@@ -8135,7 +8112,6 @@
     "default": false,
     "description": "fast parallel tools for working with SAM/BAM files",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8169,7 +8145,6 @@
     "default": false,
     "description": "tools for manipulating alignments in SAM and BAM format",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8322,7 +8297,6 @@
     "default": false,
     "description": "cross-platform and ultrafast FASTQ/FASTA toolkit",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8371,7 +8345,6 @@
     "default": true,
     "description": "static analysis tool for shell scripts",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/koalaman/shellcheck/"
@@ -8620,7 +8593,6 @@
     "default": false,
     "description": "ultrafast universal RNA-seq aligner",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8646,7 +8618,6 @@
     "default": false,
     "description": "detects gene fusions using STAR alignments",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8806,7 +8777,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-03-19",
+    "date": "2026-05-11",
     "default": false,
     "dependencies": [
       "zlib"
@@ -8817,7 +8788,7 @@
     "url": [
       "https://github.com/taglib/taglib/"
     ],
-    "version": "2.2.1"
+    "version": "2.3"
   },
   "tar": {
     "bin": [
@@ -8889,7 +8860,6 @@
     "default": true,
     "description": "fast tldr client for concise command examples",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/dbrgn/tealdeer/"
@@ -9099,20 +9069,19 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-05-02",
+    "date": "2026-05-11",
     "default": true,
     "dependencies": [
       "python"
     ],
     "description": "extremely fast Python type checker",
     "installer": "python-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.34"
+    "version": "0.0.35"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9231,14 +9200,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-05-09",
+    "date": "2026-05-11",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.12"
+    "version": "0.11.13"
   },
   "vim": {
     "bin": [
@@ -9740,7 +9709,6 @@
       "xorg-xorgproto"
     ],
     "description": "X transport library",
-    "outdated": true,
     "src_url": "https://xorg.freedesktop.org/archive/individual/lib/xtrans-{version}.tar.xz",
     "type": "library",
     "url": [
@@ -9981,7 +9949,6 @@
     "default": false,
     "description": "graphical terminal process monitor",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/bvaisvil/zenith/"
