@@ -43,14 +43,12 @@ def _os_id() -> str:
 
 
 def _require_supported_platform() -> None:
-    """Abort if running on an unsupported platform (Intel Mac)."""
-    if _os_id() == "macos-amd64":
-        print(
-            "Error: Intel Mac (x86_64) is no longer supported.\n"
-            "koopa requires macOS on Apple Silicon (arm64).\n"
-            "Linux x86_64 remains fully supported.",
-            file=sys.stderr,
-        )
+    """Abort if running on an unsupported platform."""
+    from koopa.system import check_platform
+    try:
+        check_platform()
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
 
 

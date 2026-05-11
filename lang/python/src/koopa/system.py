@@ -97,6 +97,47 @@ def is_windows() -> bool:
     return platform.system() == "Windows"
 
 
+def check_platform() -> None:
+    """Raise RuntimeError if running on an unsupported platform.
+
+    Unsupported platforms:
+    - Windows (use WSL instead)
+    - Linux with glibc < 2.28 (RHEL 7 / CentOS 7)
+    - macOS on x86_64 (Intel Macs)
+
+    Run 'koopa uninstall' to remove koopa from an unsupported system.
+    """
+    if sys.platform == "win32":
+        msg = (
+            "Windows is not supported."
+            " Use Windows Subsystem for Linux (WSL) instead."
+            " Run 'koopa uninstall' to remove."
+        )
+        raise RuntimeError(msg)
+    if sys.platform == "linux":
+        try:
+            ver_str = os.confstr("CS_GNU_LIBC_VERSION").split()[1]
+            major, minor = (int(x) for x in ver_str.split(".")[:2])
+            if (major, minor) < (2, 28):
+                msg = (
+                    f"This system has glibc {ver_str}."
+                    " koopa requires glibc >= 2.28."
+                    " RHEL 7 / CentOS 7 are not supported."
+                    " Run 'koopa uninstall' to remove."
+                )
+                raise RuntimeError(msg)
+        except (OSError, ValueError, AttributeError):
+            pass
+    elif sys.platform == "darwin":
+        if platform.machine() != "arm64":
+            msg = (
+                "Intel (x86_64) Macs are not supported."
+                " koopa requires Apple Silicon (arm64)."
+                " Run 'koopa uninstall' to remove."
+            )
+            raise RuntimeError(msg)
+
+
 def is_root() -> bool:
     """Check if effective user is root."""
     return os.geteuid() == 0
