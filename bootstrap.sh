@@ -217,9 +217,11 @@ install_python() {
     unset -v __kvar_filename
     export BZIP2_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export BZIP2_LIBS="-L${DESTDIR}${PREFIX}/lib -lbz2"
+    export LIBFFI_CFLAGS="-I${DESTDIR}${PREFIX}/include"
+    export LIBFFI_LIBS="-L${DESTDIR}${PREFIX}/lib -lffi"
     export LIBLZMA_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export LIBLZMA_LIBS="-L${DESTDIR}${PREFIX}/lib -llzma"
-    export LDLIBS='-lbz2 -lcrypto -llzma -lssl -lz'
+    export LDLIBS='-lbz2 -lcrypto -lffi -llzma -lssl -lz'
     ./configure \
         --disable-test-modules \
         --without-ensurepip \
@@ -228,14 +230,14 @@ install_python() {
         || return 1
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
     make install DESTDIR="$DESTDIR" || return 1
-    unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
+    unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBFFI_CFLAGS LIBFFI_LIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
     if is_macos
     then
         if ! DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
-            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
         then
             printf 'Python module integrity check failed.\n' >&2
             return 1
@@ -243,7 +245,7 @@ install_python() {
     else
         if ! LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
-            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
         then
             printf 'Python module integrity check failed.\n' >&2
             return 1
@@ -332,6 +334,31 @@ install_xz() {
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
     make install DESTDIR="$DESTDIR" || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/liblzma.a" ] || return 1
+    unset -v __kvar_version
+    return 0
+}
+
+install_libffi() {
+    __kvar_version='3.5.2'
+    printf 'Installing libffi.\n'
+    __kvar_filename="libffi-${__kvar_version}.tar.gz"
+    download_with_fallback \
+        'libffi' \
+        "libffi-${__kvar_version}" \
+        "https://github.com/libffi/libffi/releases/download/v${__kvar_version}/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/libffi/${__kvar_filename}" \
+        || return 1
+    unset -v __kvar_filename
+    ./configure \
+        --disable-static \
+        --prefix="$PREFIX" \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
+    [ -f "${DESTDIR}${PREFIX}/lib/libffi.so" ] \
+        || [ -f "${DESTDIR}${PREFIX}/lib64/libffi.so" ] \
+        || [ -f "${DESTDIR}${PREFIX}/lib/libffi.dylib" ] \
+        || return 1
     unset -v __kvar_version
     return 0
 }
@@ -432,7 +459,7 @@ install_python_uv() {
         return 1
     fi
     printf 'Checking python module integrity.\n'
-    if ! "${__kvar_target}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+    if ! "${__kvar_target}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
     then
         printf 'Python module integrity check failed.\n' >&2
         rm -fr "$__kvar_tmpdir"
@@ -517,6 +544,7 @@ main() {
             install_zlib
             install_bzip2
             install_xz
+            install_libffi
             install_python
         )
         then

@@ -87,12 +87,8 @@ _GLIBC_MIN = (2, 28)
 def _check_glibc_minimum() -> None:
     if not is_linux():
         return
-    import ctypes
     try:
-        libc = ctypes.CDLL("libc.so.6")
-        gnu_get_libc_version = libc.gnu_get_libc_version
-        gnu_get_libc_version.restype = ctypes.c_char_p
-        ver_str = gnu_get_libc_version().decode()
+        ver_str = os.confstr("CS_GNU_LIBC_VERSION").split()[1]
         major, minor = (int(x) for x in ver_str.split(".")[:2])
         if (major, minor) < _GLIBC_MIN:
             msg = (
@@ -101,7 +97,7 @@ def _check_glibc_minimum() -> None:
                 " RHEL 7 / CentOS 7 are not supported."
             )
             raise RuntimeError(msg)
-    except OSError:
+    except (OSError, ValueError, AttributeError):
         pass
 
 
