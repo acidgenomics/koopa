@@ -4,3 +4,5 @@
     - koopa configure user
     - koopa update user
 * Low complexity
+** TODO Need to rework spacemacs cache:
+    ~/.local/share/koopa/app/spacemacs/37e2a32/libexec/.cache/
