@@ -829,11 +829,6 @@
     "default": false,
     "description": "fast BED file toolkit focused on performance",
     "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "cli",
     "url": [
       "https://github.com/lh3/bedtk"
@@ -1602,11 +1597,6 @@
     "default": true,
     "description": "cross-platform package and environment manager",
     "revision": 1,
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "build_tool",
     "url": [
       "https://repo.anaconda.com/miniconda/"
@@ -2092,11 +2082,6 @@
     "default": true,
     "description": "structural diff tool that understands syntax",
     "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "cli",
     "url": [
       "https://github.com/Wilfred/difftastic/"
@@ -6193,11 +6178,6 @@
     "date": "2026-02-22",
     "default": false,
     "description": "Oxford Nanopore high-accuracy basecaller",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "cli",
     "url": [
       "https://github.com/nanoporetech/dorado/"
