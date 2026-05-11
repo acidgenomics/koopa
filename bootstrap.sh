@@ -158,6 +158,32 @@ download_with_fallback() {
     return 0
 }
 
+install_perl() {
+    __kvar_version='5.42.2'
+    printf 'Installing perl.\n'
+    __kvar_filename="perl-${__kvar_version}.tar.gz"
+    __kvar_major="${__kvar_version%%.*}"
+    download_with_fallback \
+        'perl' \
+        "perl-${__kvar_version}" \
+        "https://www.cpan.org/src/${__kvar_major}.0/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/perl/${__kvar_filename}" \
+        || return 1
+    unset -v __kvar_filename __kvar_major
+    ./Configure \
+        -des \
+        -Dprefix="$PREFIX" \
+        -Duserelocatableinc \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
+    [ -x "${DESTDIR}${PREFIX}/bin/perl" ] || return 1
+    PATH="${DESTDIR}${PREFIX}/bin:${PATH}"
+    export PATH
+    unset -v __kvar_version
+    return 0
+}
+
 install_openssl() {
     __kvar_version='3.6.2'
     printf 'Installing openssl.\n'
@@ -180,6 +206,10 @@ install_openssl() {
         'no-zlib' \
         'shared' \
         || return 1
+    [ -f 'Makefile' ] || {
+        printf 'OpenSSL configure failed (no Makefile generated).\n' >&2
+        return 1
+    }
     make ${_make_verbose:+"$_make_verbose"} --jobs=1 depend || return 1
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
     make install_sw DESTDIR="$DESTDIR" || return 1
@@ -541,6 +571,10 @@ main() {
             fi
             export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
             export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
+            if ! perl -e 'use IPC::Cmd;' 2>/dev/null
+            then
+                install_perl
+            fi
             install_openssl
             install_zlib
             install_bzip2

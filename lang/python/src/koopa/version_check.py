@@ -2165,6 +2165,7 @@ def _bootstrap_app_map() -> dict[str, str]:
         "bzip2": "bzip2",
         "libffi": "libffi",
         "openssl": "openssl3",
+        "perl": "perl",
         "python": f"python{py_ver}",
         "xz": "xz",
         "zlib": "zlib",
