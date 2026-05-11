@@ -380,16 +380,16 @@ install_libffi() {
         || return 1
     unset -v __kvar_filename
     ./configure \
-        --disable-static \
+        CFLAGS='-fPIC' \
+        --disable-multi-os-directory \
+        --disable-shared \
         --includedir="${PREFIX}/include" \
         --libdir="${PREFIX}/lib" \
         --prefix="$PREFIX" \
         || return 1
     make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
     make install DESTDIR="$DESTDIR" || return 1
-    [ -f "${DESTDIR}${PREFIX}/lib/libffi.so" ] \
-        || [ -f "${DESTDIR}${PREFIX}/lib/libffi.dylib" ] \
-        || return 1
+    [ -f "${DESTDIR}${PREFIX}/lib/libffi.a" ] || return 1
     unset -v __kvar_version
     return 0
 }
