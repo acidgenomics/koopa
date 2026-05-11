@@ -15,7 +15,7 @@ if [ -L "$_self" ]; then
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"
 init_dir="${prefix}/libexec"
-if [ ! -f "${HOME}/.spacemacs.d/init.el" ]; then
+if [ ! -f "${HOME}/.spacemacs" ] && [ ! -f "${HOME}/.spacemacs.d/init.el" ]; then
     printf 'First run: configuring spacemacs...\\n' >&2
     koopa configure user spacemacs
 fi
