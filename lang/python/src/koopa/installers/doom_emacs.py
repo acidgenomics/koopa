@@ -15,6 +15,7 @@ if [ -L "$_self" ]; then
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"
 export EMACSDIR="${prefix}/libexec"
+export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
 exec "${prefix}/libexec/bin/doom" "$@"
 """
 
