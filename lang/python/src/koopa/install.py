@@ -39,7 +39,6 @@ from koopa.system import (
     is_linux,
     is_macos,
     is_owner,
-    is_windows,
     os_slug,
 )
 
@@ -80,26 +79,6 @@ class InstallConfig:
 
 
 # -- Helper functions ---------------------------------------------------------
-
-_GLIBC_MIN = (2, 28)
-
-
-def _check_glibc_minimum() -> None:
-    if not is_linux():
-        return
-    try:
-        ver_str = os.confstr("CS_GNU_LIBC_VERSION").split()[1]
-        major, minor = (int(x) for x in ver_str.split(".")[:2])
-        if (major, minor) < _GLIBC_MIN:
-            msg = (
-                f"This system has glibc {ver_str}, but koopa installs"
-                f" require glibc >= {_GLIBC_MIN[0]}.{_GLIBC_MIN[1]}."
-                " RHEL 7 / CentOS 7 are not supported."
-            )
-            raise RuntimeError(msg)
-    except (OSError, ValueError, AttributeError):
-        pass
-
 
 def _is_lmod_active() -> bool:
     return bool(os.environ.get("LOADEDMODULES"))
@@ -583,10 +562,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if not config.name:
         msg = "--name is required."
         raise ValueError(msg)
-    if is_windows():
-        msg = "App installs are not supported on Windows."
-        raise NotImplementedError(msg)
-    _check_glibc_minimum()
     config.name = resolve_alias(config.name)
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
@@ -1931,6 +1906,8 @@ def install_koopa(
     Copies the source tree to the target prefix, optionally as a shared
     (system-wide) install. Converted from install-koopa.sh.
     """
+    from koopa.system import check_platform
+    check_platform()
     source_prefix = koopa_prefix()
     xdg_data_home = os.environ.get(
         "XDG_DATA_HOME",
