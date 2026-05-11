@@ -45,7 +45,6 @@ def main(
             "bundle",
             "install",
             "--force",
-            "--no-lock",
             "--no-upgrade",
             f"--file={brewfile}",
         ],

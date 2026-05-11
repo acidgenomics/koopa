@@ -596,6 +596,7 @@ _koopa_complete() {
                         'snakemake'
                         'sox'
                         'spacemacs'
+                        'spacevim'
                         'spdlog'
                         'sphinx'
                         'sqlfluff'
@@ -947,6 +948,7 @@ _koopa_complete() {
                             args+=(
                                 'cleanup'
                                 'dump-brewfile'
+                                'install-bundle'
                                 'outdated'
                                 'reset-core-repo'
                                 'reset-permissions'

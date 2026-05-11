@@ -229,6 +229,7 @@ _koopa_app_brew() {
     cmds=(
         'cleanup'
         'dump-brewfile'
+        'install-bundle'
         'outdated'
         'reset-core-repo'
         'reset-permissions'
@@ -1074,6 +1075,7 @@ _koopa_install() {
         'snakemake'
         'sox'
         'spacemacs'
+        'spacevim'
         'spdlog'
         'sphinx'
         'sqlfluff'
