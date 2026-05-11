@@ -1,15 +1,6 @@
 * High complexity
 * Medium complexity
-** TODO We need to improve argparse documentation for these situations with `koopa configure`:
-    - koopa configure system
-    - koopa configure user
-    positional arguments:
-        apps
-    Not really the current sitaution. It's modal between system and user.
-    What happens if the user runs `koopa configure user` and `koopa configure system`?
 * Low complexity
-** DONE Need to add support for codex (from openai).
-    Follow install patterns for claude-code and gemini-cli.
 ** TODO Disable autocompletion in nvim for org and markdown. Too crazy.
     This autocompletion is too crazy. Need to disable.
 ** koopa develop check-app-versions isn't writing star downgrade correctly:
