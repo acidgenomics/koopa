@@ -156,11 +156,6 @@ extern "koopa develop conda-candidates" [
     --verify
 ]
 
-extern "koopa develop format-app-json" [
-    --help
-    --prettier
-]
-
 extern "koopa develop mirror-src" [
     --help
     --help

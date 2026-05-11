@@ -68,7 +68,6 @@ _koopa_complete() {
         ['develop/app-revdeps']='--help --all'
         ['develop/check-app-versions']='--help --json --source --no-update --s3-upload --reset-cache'
         ['develop/conda-candidates']='--help --verify'
-        ['develop/format-app-json']='--help --prettier'
         ['develop/mirror-src']='--help --prune --help'
         ['develop/orphan-apps']='--help --all'
         ['develop/remove-app']='--help --revdeps'

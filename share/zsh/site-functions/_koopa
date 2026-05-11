@@ -588,7 +588,6 @@ _koopa_develop() {
         app-revdeps) _arguments '*--all[--all]' '*--help[--help]' ;;
         check-app-versions) _arguments '*--help[--help]' '*--json[--json]' '*--no-update[--no-update]' '*--reset-cache[--reset-cache]' '*--s3-upload[--s3-upload]' '*--source[--source]' ;;
         conda-candidates) _arguments '*--help[--help]' '*--verify[--verify]' ;;
-        format-app-json) _arguments '*--help[--help]' '*--prettier[--prettier]' ;;
         mirror-src) _arguments '*--help[--help]' '*--help[--help]' '*--prune[--prune]' ;;
         orphan-apps) _arguments '*--all[--all]' '*--help[--help]' ;;
         remove-app) _arguments '*--help[--help]' '*--revdeps[--revdeps]' ;;
