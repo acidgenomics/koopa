@@ -459,7 +459,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "aspera-connect": f"{_M}.aspera_connect",
     "bcl2fastq": f"{_M}.bcl2fastq",
     "cellranger": f"{_M}.cellranger",
-    "cloudbiolinux": f"{_M}.cloudbiolinux",
     "elfutils": f"{_M}.elfutils",
     "gcc": f"{_M}.gcc",
     "lmod": f"{_M}.lmod",
