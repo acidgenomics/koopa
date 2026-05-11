@@ -47,10 +47,14 @@ def main(
             '(setq configuration-layer-elpa-subdirectory "develop")\n'
             "\n"
             "(setq configuration-layer-elpa-archives\n"
-            "      '((\"melpa\" . \"melpa.org/packages/\")))\n"
+            "      '((\"melpa\" . \"https://melpa.org/packages/\")))\n"
             "\n"
             "(setq package-archive-priorities\n"
             "      '((\"melpa\" . 4)))\n"
+            "\n"
+            "(setq spacemacs-cache-directory\n"
+            "      (expand-file-name \"spacemacs/\"\n"
+            "                        (or (getenv \"XDG_CACHE_HOME\") \"~/.cache\")))\n"
         )
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
