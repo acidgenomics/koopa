@@ -573,6 +573,7 @@ main() {
             export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
             if ! perl -e 'use IPC::Cmd;' 2>/dev/null
             then
+                printf 'System perl is missing IPC::Cmd; building perl from source.\n'
                 install_perl
             fi
             install_openssl
