@@ -1948,8 +1948,6 @@ complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcom
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from check-app-versions' -l source
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from conda-candidates' -l help
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from conda-candidates' -l verify
-complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from format-app-json' -l help
-complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from format-app-json' -l prettier
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from mirror-src' -l help
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from mirror-src' -l help
 complete -c koopa -n '__fish_seen_subcommand_from develop and __fish_seen_subcommand_from mirror-src' -l prune

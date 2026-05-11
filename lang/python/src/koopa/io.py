@@ -51,22 +51,20 @@ def _atomic_json_write(file: str, data: dict) -> None:
         raise
 
 
-def export_app_json(data: dict, pretty: bool = False) -> None:
+def export_app_json(data: dict) -> None:
     """Sort and write 'app.json' data file."""
+    from shutil import which
+    from subprocess import run
+
     sorted_data = dict(sorted(data.items()))
     for key, value in sorted_data.items():
         if isinstance(value, dict):
             sorted_data[key] = dict(sorted(value.items()))
     file = join(koopa_prefix(), "etc/koopa/app.json")
     _atomic_json_write(file, sorted_data)
-    if pretty:
-        from shutil import which
-        from subprocess import run
-
-        prettier = which("prettier")
-        if prettier is None:
-            raise SystemExit("prettier is not installed.")
-        run([prettier, "--write", file], check=True)
+    prettier = which("prettier")
+    if prettier is not None:
+        run([prettier, "--log-level", "silent", "--write", file], check=True)
         with open(file, encoding="utf-8") as con:
             normalized = load(con)
         sorted_normalized = dict(sorted(normalized.items()))

@@ -134,8 +134,6 @@ set edit:completion:arg-completer[koopa] = {|@args|
             put --help --json --no-update --reset-cache --s3-upload --source
         } elif (eq $path 'develop/conda-candidates') {
             put --help --verify
-        } elif (eq $path 'develop/format-app-json') {
-            put --help --prettier
         } elif (eq $path 'develop/mirror-src') {
             put --help --help --prune
         } elif (eq $path 'develop/orphan-apps') {

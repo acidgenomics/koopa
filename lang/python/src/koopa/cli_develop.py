@@ -44,9 +44,8 @@ def _handle_format_app_json(args: list[str]) -> None:
     """Handle ``koopa develop format-app-json``."""
     from koopa.io import export_app_json, import_app_json
 
-    pretty = "--prettier" in args
     data = import_app_json()
-    export_app_json(data, pretty=pretty)
+    export_app_json(data)
 
 
 def _handle_view_latest_tmp_log_file() -> None:
