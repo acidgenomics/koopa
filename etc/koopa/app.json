@@ -1532,6 +1532,27 @@
     ],
     "version": "4.3.2"
   },
+  "codex": {
+    "bin": [
+      "codex"
+    ],
+    "category": "AI",
+    "date": "2026-05-11",
+    "default": true,
+    "dependencies": [
+      "node"
+    ],
+    "description": "OpenAI Codex AI coding assistant CLI",
+    "installer": "node-package",
+    "installer_args": {
+      "name": "@openai/codex"
+    },
+    "type": "cli",
+    "url": [
+      "https://www.npmjs.com/package/@openai/codex"
+    ],
+    "version": "0.130.0"
+  },
   "colorls": {
     "bin": [
       "colorls"

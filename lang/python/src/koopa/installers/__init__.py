@@ -226,6 +226,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     # -- node-package (6) ------------------------------------------------
     "aws-azure-login": f"{_M}._node_pkg",
     "claude-code": f"{_M}._node_pkg",
+    "codex": f"{_M}._node_pkg",
     "gemini-cli": f"{_M}._node_pkg",
     "gtop": f"{_M}._node_pkg",
     "markdownlint-cli": f"{_M}._node_pkg",
