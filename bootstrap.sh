@@ -178,10 +178,11 @@ install_openssl() {
         'no-legacy' \
         'no-tests' \
         'no-zlib' \
-        'shared'
-    make ${_make_verbose:+"$_make_verbose"} --jobs=1 depend
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install_sw DESTDIR="$DESTDIR"
+        'shared' \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs=1 depend || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install_sw DESTDIR="$DESTDIR" || return 1
     [ -x "${DESTDIR}${PREFIX}/bin/openssl" ] || return 1
     unset -v __kvar_version
     return 0
@@ -223,21 +224,30 @@ install_python() {
         --disable-test-modules \
         --without-ensurepip \
         --prefix="$PREFIX" \
-        --with-openssl="${DESTDIR}${PREFIX}"
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
+        --with-openssl="${DESTDIR}${PREFIX}" \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
     unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
     if is_macos
     then
-        DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        if ! DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
             "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+        then
+            printf 'Python module integrity check failed.\n' >&2
+            return 1
+        fi
     else
-        LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        if ! LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
             "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+        then
+            printf 'Python module integrity check failed.\n' >&2
+            return 1
+        fi
     fi
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
@@ -271,7 +281,8 @@ install_bzip2() {
         ${_make_verbose:+"$_make_verbose"} \
         --jobs="${CPU_COUNT:?}" \
         PREFIX="${DESTDIR}${PREFIX}" \
-        install
+        install \
+        || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/libbz2.a" ] || return 1
     [ -f "${DESTDIR}${PREFIX}/include/bzlib.h" ] || return 1
     mkdir -p "${DESTDIR}${PREFIX}/lib/pkgconfig"
@@ -316,9 +327,10 @@ install_xz() {
         --disable-dependency-tracking \
         --disable-nls \
         --disable-shared \
-        --prefix="$PREFIX"
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
+        --prefix="$PREFIX" \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/liblzma.a" ] || return 1
     unset -v __kvar_version
     return 0
@@ -335,9 +347,9 @@ install_zlib() {
         "https://www.zlib.net/${__kvar_filename}" \
         || return 1
     unset -v __kvar_filename
-    ./configure --prefix="$PREFIX"
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
+    ./configure --prefix="$PREFIX" || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/libz.a" ] || return 1
     unset -v __kvar_version
     return 0

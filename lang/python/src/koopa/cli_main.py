@@ -624,30 +624,6 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
             _release_install_lock()
 
 
-def _configure_user_dotfiles(verbose: bool = False) -> None:
-    """Run dotfiles configurer if dotfiles and chezmoi are available."""
-    import shutil
-
-    from koopa.system import is_root
-
-    if is_root():
-        return
-    from koopa.prefix import opt_prefix
-
-    dotfiles_dir = os.path.join(opt_prefix(), "dotfiles")
-    if not os.path.isdir(dotfiles_dir):
-        return
-    if shutil.which("chezmoi") is None:
-        return
-    from koopa.alert import warn
-    from koopa.configure import ConfigureConfig, configure_app
-
-    try:
-        config = ConfigureConfig(name="dotfiles", mode="user", verbose=verbose)
-        configure_app(config)
-    except Exception as exc:
-        warn(f"Dotfiles configuration failed: {exc}")
-
 
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
