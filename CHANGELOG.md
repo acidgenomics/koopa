@@ -1,5 +1,57 @@
 # Changelog
 
+## koopa 0.17.0 (2026-05-10)
+
+Major changes:
+
+- Reworked Emacs distribution support. `spacemacs`, `doom-emacs`, and
+  `emacs-prelude` are now installed as shared apps under `app/` with wrapper
+  scripts, replacing the per-user install model. Each distribution stores
+  mutable data (packages, builds) in `$XDG_DATA_HOME` rather than inside the
+  managed app tree.
+- Converted all Emacs shell functions (activation, aliases, prefix lookups) to
+  Python. Removed 40+ Bash/Zsh/POSIX shell function files across
+  `lang/bash/`, `lang/sh/`, and `lang/zsh/`.
+- Added `koopa configure user` support for `spacemacs`, `doom-emacs`, and
+  `emacs-prelude`. First-launch configuration is triggered automatically from
+  the wrapper scripts.
+- Spacemacs installer now patches the `.lock` file to use MELPA-only archives
+  (GNU ELPA is network-blocked in corporate environments). The configurer
+  creates `compat` and `spinner` stub packages so MELPA dependencies that
+  declare GNU ELPA shims are satisfied.
+- Doom emacs wrapper now sets `DOOMLOCALDIR` to `$XDG_DATA_HOME/doom`, keeping
+  all mutable state outside the immutable git-cloned source tree.
+- Added `koopa app brew install-bundle` subcommand for installing from the
+  user's Brewfile (`$XDG_CONFIG_HOME/homebrew/brewfile`).
+
+New apps:
+
+- `emacs-prelude`.
+
+Minor changes:
+
+- Reworked app dependency handling in install scripts.
+- Improved RPATH detection and stale app trigger logic.
+- Added `etc/koopa/app-categories.json` for app categorization.
+- Fixed fontconfig build failures.
+- Fixed Perl rename regression.
+- Fixed transitive recursive linkage bug.
+- Fixed git install issue.
+- Fixed `homebrew-bundle` installer (`--no-lock` flag removed, not valid for
+  `brew bundle install`).
+- Improved conda environment resolution on slow file systems (NFS).
+- Hardened cleanup logic for old app versions on NFS.
+- Improved `mirror-src` cleanup and caching.
+- Increased download timeout for slow mirrors.
+- Improved generation-completion and `update-docs` developer commands.
+- Fixed `mirror-src` and Perl package handling.
+- Ensured Python venv is preferred when available, with `tqdm` fallback for
+  progress display.
+- Removed `spacevim` installer (deprecated in favor of spacemacs).
+- Removed `prelude-emacs` installer (replaced by `emacs-prelude`).
+- Removed `vim` source installer (now uses conda-forge package).
+- Removed `_go_pkg.py` and `bootstrap.py` dead installer modules.
+
 ## koopa 0.16.0 (2026-05-09)
 
 Major changes:
