@@ -2737,51 +2737,6 @@ def remove_alias_app_dirs(*, verbose: bool = False) -> None:
             os.unlink(opt_link)
 
 
-def fetch_user_repos() -> None:
-    """Pull latest changes for user git repos if they exist."""
-    from koopa.alert import alert_note, warn
-    from koopa.git import git_pull, is_git_repo
-    from koopa.prefix import scripts_private_prefix
-
-    _auth_failure_patterns = (
-        "repository not found",
-        "not found",
-        "could not read username",
-        "permission denied",
-        "authentication failed",
-        "403",
-        "401",
-    )
-    home = os.path.expanduser("~")
-    repos = [
-        os.path.join(home, ".config", "koopa", "dotfiles-work"),
-        os.path.join(home, ".config", "koopa", "dotfiles-private"),
-        scripts_private_prefix(),
-    ]
-    for repo in repos:
-        if not os.path.isdir(repo) or not is_git_repo(repo):
-            continue
-        name = os.path.basename(repo)
-        alert_note(f"Pulling user repo '{name}'.")
-        try:
-            git_pull(repo, rebase=True, autostash=True, capture=True)
-        except subprocess.CalledProcessError as exc:
-            stderr = (exc.stderr or "").lower()
-            if any(pat in stderr for pat in _auth_failure_patterns):
-                warn(
-                    f"Failed to pull '{name}': check that you are"
-                    " authenticated to the remote (try 'gh auth switch')."
-                )
-            else:
-                if exc.stderr:
-                    import sys
-
-                    print(exc.stderr, end="", file=sys.stderr)
-                warn(f"Failed to pull '{name}': {exc}")
-        except Exception as exc:
-            warn(f"Failed to pull '{name}': {exc}")
-
-
 def update_system_apps(*, verbose: bool = False) -> None:
     """Update system-level apps from the update-system registry."""
     from koopa.alert import alert_note

@@ -4,6 +4,7 @@ import os
 import subprocess
 
 from koopa.alert import alert_info
+from koopa.git import git_pull_safe
 from koopa.prefix import koopa_prefix, opt_prefix
 
 
@@ -32,6 +33,9 @@ def main(
     env = os.environ.copy()
     koopa_bin = os.path.join(koopa_prefix(), "bin")
     env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
+    git_pull_safe(opt_dotfiles)
+    git_pull_safe(dotfiles_work_prefix)
+    git_pull_safe(dotfiles_private_prefix)
     install_script = os.path.join(opt_dotfiles, "install")
     if not os.path.isfile(install_script):
         msg = f"Install script not found: {install_script}"

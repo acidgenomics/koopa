@@ -89,6 +89,45 @@ def git_pull(
     return None
 
 
+def git_pull_safe(path: str) -> None:
+    """Pull a git repo if clean, warn on failure without raising.
+
+    Uses git_repo_has_unstaged_changes() to skip repos with active changes.
+    On auth failure, suggests 'gh auth switch' if gh is installed.
+    """
+    from koopa.alert import alert_note, warn
+
+    if not os.path.isdir(path) or not is_git_repo(path):
+        return
+    name = os.path.basename(path)
+    if git_repo_has_unstaged_changes(path):
+        warn(f"Skipping pull for '{name}': repo has active changes.")
+        return
+    alert_note(f"Pulling '{name}'.")
+    _auth_failure_patterns = (
+        "repository not found",
+        "not found",
+        "could not read username",
+        "permission denied",
+        "authentication failed",
+        "403",
+        "401",
+    )
+    try:
+        git_pull(path, rebase=True, autostash=True, capture=True)
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").lower()
+        if any(pat in stderr for pat in _auth_failure_patterns):
+            msg = f"Failed to pull '{name}': authentication error."
+            if shutil.which("gh"):
+                msg += " Consider running 'gh auth switch'."
+            warn(msg)
+        else:
+            warn(f"Failed to pull '{name}': {exc}")
+    except Exception as exc:
+        warn(f"Failed to pull '{name}': {exc}")
+
+
 def git_branch(path: str = ".") -> str:
     """Get current branch name."""
     result = _git("rev-parse", "--abbrev-ref", "HEAD", cwd=path)
