@@ -32,13 +32,13 @@
     Update will install 1 apps: fontconfig.
     Warning: System checks completed with warnings.
     ** Run 'koopa update' to resolve these issues.
-** TODO Consider installing emacs from conda-forge instead of building from source.
+** DONE Consider installing emacs from conda-forge instead of building from source.
     We need to evaluate if GUI usage is useful, otherwise switch to conda build, which only supports terminal.
-** TODO See if we can handle doom emacs font bootstrapping automatically.
+** DONE See if we can handle doom emacs font bootstrapping automatically.
     M-x nerd-icons-install-fonts
-** TODO Both spacemacs and prelude fresh boot generate warnings about compat not being available
+** DONE Both spacemacs and prelude fresh boot generate warnings about compat not being available
     error: Package 'compat' (version 31.0) is unavailable
-** TODO spacemacs missing package fix:
+** DONE spacemacs missing package fix:
     M-x package-install RET hl-todo RET
     M-x package-install RET treemacs-projectile RET
 ** DONE Fix for missing symbols in doom emacs:
