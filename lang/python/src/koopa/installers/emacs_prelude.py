@@ -15,7 +15,15 @@ if [ -L "$_self" ]; then
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"
 init_dir="${prefix}/libexec"
+export PRELUDE_LOCAL_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/prelude"
 exec emacs --init-directory="$init_dir" "$@"
+"""
+
+_PRELUDE_EARLY_INIT = """\
+;; -*- mode: emacs-lisp; lexical-binding: t; -*-
+;; Store packages outside the managed install tree.
+(when-let ((local-dir (getenv "PRELUDE_LOCAL_DIR")))
+  (setq package-user-dir (expand-file-name "elpa" local-dir)))
 """
 
 
@@ -35,6 +43,9 @@ def main(
         libexec,
         commit=version,
     )
+    early_init = os.path.join(libexec, "early-init.el")
+    with open(early_init, "w") as f:
+        f.write(_PRELUDE_EARLY_INIT)
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
     wrapper = os.path.join(bin_dir, "prelude")

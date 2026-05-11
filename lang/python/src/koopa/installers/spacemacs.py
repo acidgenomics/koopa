@@ -47,12 +47,10 @@ def main(
             '(setq configuration-layer-elpa-subdirectory "develop")\n'
             "\n"
             "(setq configuration-layer-elpa-archives\n"
-            "      '((\"melpa\" . \"melpa.org/packages/\")\n"
-            "        (\"gnu\" . \"elpa.gnu.org/packages/\")))\n"
+            "      '((\"melpa\" . \"melpa.org/packages/\")))\n"
             "\n"
             "(setq package-archive-priorities\n"
-            "      '((\"melpa\" . 4)\n"
-            "        (\"gnu\" . 2)))\n"
+            "      '((\"melpa\" . 4)))\n"
         )
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
