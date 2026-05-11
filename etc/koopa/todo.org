@@ -1,9 +1,32 @@
 * High complexity
 * Medium complexity
-** TODO Think about configuration and trigger scope support for:
+** TODO We need to improve argparse documentation for these situations with `koopa configure`:
+    - koopa configure system
     - koopa configure user
-    - koopa update user
+    positional arguments:
+        apps
+    Not really the current sitaution. It's modal between system and user.
+    What happens if the user runs `koopa configure user` and `koopa configure system`?
 * Low complexity
-** TODO Need to add support for codex (from openai).
+** DONE Need to add support for codex (from openai).
+    Follow install patterns for claude-code and gemini-cli.
 ** TODO Disable autocompletion in nvim for org and markdown. Too crazy.
     This autocompletion is too crazy. Need to disable.
+** koopa develop check-app-versions isn't writing star downgrade correctly:
+    star: 2.7.11b -> 2.7.0b
+attr: check failed (network unavailable)
+lzip: check failed (network unavailable)
+star: 2.7.11b -> 2.7.0b
+Checking stow: 100%|███████████████████████████████████████████████████████████| 404/404 [13:22<00:00,  1.99s/app]
+
+Failed (2):
+  attr: check failed (network unavailable)
+  lzip: check failed (network unavailable)
+
+Up to date: 402
+Outdated: 0
+Pinned too high: 0
+Failed: 2
+Unsupported: 0
+All versions are up to date.
+Not showing that star is a version downgrade and it wasn't updated in app.json.
