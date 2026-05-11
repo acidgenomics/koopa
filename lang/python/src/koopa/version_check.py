@@ -363,6 +363,26 @@ def _raise_network_unavailable(exc: Exception | None) -> None:
     raise _NetworkUnavailableError(msg) from exc
 
 
+def _friendly_network_error(exc: Exception) -> str | None:
+    """Return a clean message for network exceptions, or None if not network-related."""
+    if isinstance(exc, ssl.SSLError):
+        return "check failed (network timeout)" if "timed out" in str(exc).lower() else "check failed (SSL error)"
+    if isinstance(exc, TimeoutError):
+        return "check failed (network timeout)"
+    if isinstance(exc, ConnectionResetError):
+        return "check failed (connection reset)"
+    if isinstance(exc, urllib.error.URLError):
+        reason = exc.reason
+        if isinstance(reason, (ssl.SSLError, TimeoutError)):
+            return "check failed (network timeout)"
+        if isinstance(reason, ConnectionResetError):
+            return "check failed (connection reset)"
+        if isinstance(reason, OSError):
+            return "check failed (network error)"
+        return "check failed (connection error)"
+    return None
+
+
 def _check_nongnu(package: str) -> str:
     """Check version from savannah non-GNU mirror with aggressive timeout."""
     url = f"https://download.savannah.nongnu.org/releases/{package}/"
@@ -1894,10 +1914,17 @@ def check_app_versions(  # noqa: C901, PLR0915
                     msg = f"{app_name}: {current} -> {latest}"
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except _NetworkUnavailableError:
-            return VersionCheckResult(app_name, current, current, spec.source, None), None
+            msg = f"{app_name}: check failed (network unavailable)"
+            return VersionCheckResult(app_name, current, None, spec.source, "check failed (network unavailable)"), msg
         except Exception as exc:
-            msg = f"{app_name}: error: {exc}"
-            return VersionCheckResult(app_name, current, None, spec.source, str(exc)), msg
+            friendly = _friendly_network_error(exc)
+            if friendly:
+                msg = f"{app_name}: {friendly}"
+                error_str = friendly
+            else:
+                msg = f"{app_name}: error: {exc}"
+                error_str = str(exc)
+            return VersionCheckResult(app_name, current, None, spec.source, error_str), msg
 
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {

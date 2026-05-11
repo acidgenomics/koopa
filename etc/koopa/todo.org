@@ -1,8 +1,20 @@
 * High complexity
 * Medium complexity
+** TODO Need to update chezmoi installer to always use conda
+    We don't want to build from source using Go on macOS.
+    This was previously used for Intel Mac build support and can be removed.
 ** TODO Think about configuration and trigger scope support for:
     - koopa configure user
     - koopa update user
 * Low complexity
+** TODO Need to add support for openai-codex.
+    What is the name used on Homebrew?
+** TODO We want to skip emacs 30.2 on conda-forge. Currently broken for macOS.
+    Should we just keep verion pinned to 29.4?
+    Can we be smart about specifically not wanting to support a specific verion like 30.2?
 ** TODO Need to rework spacemacs cache:
     ~/.local/share/koopa/app/spacemacs/37e2a32/libexec/.cache/
+** TODO Add install support for zenith
+    https://github.com/bvaisvil/zenith
+** TODO Disable autocompletion in nvim for org and markdown. Too crazy.
+    This autocompletion is too crazy. Need to disable.
