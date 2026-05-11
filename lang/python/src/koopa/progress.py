@@ -163,14 +163,17 @@ class BuildProgress:
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
     def _styled_label(self) -> str:
+        version = self._version
+        if len(version) == 40 and all(c in "0123456789abcdef" for c in version):
+            version = version[:7]
         if _use_color():
             label = f"\033[1m{self._name}\033[0m"
-            if self._version:
-                label += f" \033[34m{self._version}\033[0m"
+            if version:
+                label += f" \033[34m{version}\033[0m"
         else:
             label = self._name
-            if self._version:
-                label += f" {self._version}"
+            if version:
+                label += f" {version}"
         return label
 
     def switch_to_step_mode(self, total: int) -> bool:
