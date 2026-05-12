@@ -36,9 +36,12 @@ def main(
     template = os.path.join(libexec, "core", "templates", ".spacemacs.template")
     if os.path.isfile(template):
         import shutil
+
         shutil.copy2(template, init_el)
         alert_info(f"Created Spacemacs config from template: {init_el}")
     else:
         with open(init_el, "w") as f:
-            f.write(";; Spacemacs user config\n;; See https://www.spacemacs.org/doc/DOCUMENTATION.html\n")
+            f.write(
+                ";; Spacemacs user config\n;; See https://www.spacemacs.org/doc/DOCUMENTATION.html\n"
+            )
         alert_info(f"Created empty Spacemacs config: {init_el}")

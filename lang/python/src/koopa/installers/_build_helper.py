@@ -3,11 +3,15 @@
 import os
 from glob import glob
 from pathlib import Path
+from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from koopa.archive import extract
 from koopa.download import download, download_with_mirror
 from koopa.io import import_json
+
+if TYPE_CHECKING:
+    from koopa.build import BuildEnv
 
 
 def _resolve_src_url(name: str, version: str) -> str:
@@ -62,10 +66,10 @@ def extract_cd(tarball: str) -> None:
     os.chdir("src")
 
 
-def activate_app_deps():
+def activate_app_deps() -> "BuildEnv":
     """Activate build_dependencies and dependencies from app.json for the current app."""
     from koopa.app import _resolve_dep_dict
-    from koopa.build import activate_app
+    from koopa.build import BuildEnv, activate_app
     from koopa.installers._context import get_app_name
     from koopa.io import import_json
     from koopa.os import os_id
@@ -86,7 +90,7 @@ def activate_app_deps():
         deps = _resolve_dep_dict(deps, sys_dict)
     elif isinstance(deps, str):
         deps = [deps]
-    env = None
+    env = BuildEnv()
     if build_deps:
         env = activate_app(*build_deps, build_only=True)
     if deps:
