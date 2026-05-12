@@ -223,6 +223,7 @@ def activate_app(
     if env is None:
         env = BuildEnv()
     opt = opt_prefix()
+    prefixes: list[str] = []
     for name in names:
         resolved = resolve_alias(name)
         app_link = os.path.join(opt, resolved)
@@ -231,12 +232,16 @@ def activate_app(
             raise FileNotFoundError(msg)
         prefix = os.path.realpath(app_link)
         _check_rpath(prefix, resolved)
+        prefixes.append(prefix)
         bin_dir = os.path.join(prefix, "bin")
         if os.path.isdir(bin_dir):
             env.path.append(bin_dir)
         _add_pkg_config_paths(prefix, env)
-        if build_only:
-            continue
+    if build_only:
+        if not is_macos():
+            _add_transitive_rpath_links(names, env)
+        return env
+    for prefix in prefixes:
         include_dir = os.path.join(prefix, "include")
         lib_dir = os.path.join(prefix, "lib")
         lib64_dir = os.path.join(prefix, "lib64")
@@ -253,12 +258,11 @@ def activate_app(
             if os.path.isdir(ld):
                 env.ldflags.append(f"-Wl,-rpath,{ld}")
                 env.library_path.append(ld)
-        if not is_macos():
-            env.ldflags.append("-Wl,--disable-new-dtags")
         cmake_dir = os.path.join(prefix, "lib", "cmake")
         if os.path.isdir(cmake_dir):
             env.cmake_prefix_path.append(cmake_dir)
-    if not build_only and not is_macos():
+    if not is_macos():
+        env.ldflags.append("-Wl,--disable-new-dtags")
         _add_transitive_rpath_links(names, env)
     return env
 
