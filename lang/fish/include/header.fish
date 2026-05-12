@@ -38,6 +38,7 @@ function __koopa_activate_koopa
         return 0
     end
     _koopa_export_env
+    _koopa_activate_ca_certificates
     _koopa_activate_fzf
     _koopa_activate_direnv
     _koopa_activate_zoxide
