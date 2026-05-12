@@ -1,10 +1,7 @@
 * High complexity
 * Medium complexity
-** TODO In the case that we remove an unsupported app, we need to ensure that any apps that depended on them previously get rebuilt automatically during `koopa update`. For example, may hit this with zopfli:
-    => Removing 2 unsupported apps: oniguruma, zopfli
-    Uninstalling 'oniguruma' at '/home/stmich14/.local/share/koopa/app/oniguruma'.
-    Successfully uninstalled 'oniguruma'.
-    Uninstalling 'zopfli' at '/home/stmich14/.local/share/koopa/app/zopfli'.
-    Successfully uninstalled 'zopfli'.
 * Low complexity
+In ~/.local/share/koopa/opt/dotfiles:
 ** TODO nvim tab completion now breaks my ability to use tab to ident. Need to fix this.
+** TODO need to disable copilot in nvim config:
+    [Copilot.lua] Could not determine Node.js version
