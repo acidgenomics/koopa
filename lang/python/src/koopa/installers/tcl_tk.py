@@ -8,7 +8,11 @@ from koopa.archive import extract
 from koopa.build import locate
 from koopa.download import download_with_mirror
 from koopa.file_ops import ln
-from koopa.installers._build_helper import activate_app_deps, _resolve_extra_src_urls, _resolve_src_url
+from koopa.installers._build_helper import (
+    _resolve_extra_src_urls,
+    _resolve_src_url,
+    activate_app_deps,
+)
 from koopa.version import major_minor_version
 
 

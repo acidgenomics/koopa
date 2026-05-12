@@ -33,6 +33,7 @@ _EXCLUDE_FROM_DOCS: frozenset[str] = frozenset(
     ]
 )
 
+
 def _load_category_order() -> list[str]:
     from koopa.prefix import koopa_prefix
 

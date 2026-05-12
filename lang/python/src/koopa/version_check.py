@@ -351,10 +351,14 @@ def _raise_network_unavailable(exc: Exception | None) -> None:
     raise _NetworkUnavailableError(msg) from exc
 
 
-def _friendly_network_error(exc: Exception) -> str | None:
+def _friendly_network_error(exc: Exception) -> str | None:  # noqa: PLR0911
     """Return a clean message for network exceptions, or None if not network-related."""
     if isinstance(exc, ssl.SSLError):
-        return "check failed (network timeout)" if "timed out" in str(exc).lower() else "check failed (SSL error)"
+        return (
+            "check failed (network timeout)"
+            if "timed out" in str(exc).lower()
+            else "check failed (SSL error)"
+        )
     if isinstance(exc, TimeoutError):
         return "check failed (network timeout)"
     if isinstance(exc, ConnectionResetError):
@@ -838,7 +842,7 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
 }
 
 
-def _classify_by_known_pattern(
+def _classify_by_known_pattern(  # noqa: PLR0911
     name: str,
     info: dict,
     module_path: str,
@@ -1903,7 +1907,9 @@ def check_app_versions(  # noqa: C901, PLR0915
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except _NetworkUnavailableError:
             msg = f"{app_name}: check failed (network unavailable)"
-            return VersionCheckResult(app_name, current, None, spec.source, "check failed (network unavailable)"), msg
+            return VersionCheckResult(
+                app_name, current, None, spec.source, "check failed (network unavailable)"
+            ), msg
         except Exception as exc:
             friendly = _friendly_network_error(exc)
             if friendly:
@@ -2099,6 +2105,7 @@ def _mirror_src_to_s3(
             print(f"  Mirror upload skipped for '{name}': download failed: {exc}", file=sys.stderr)
             return
         max_attempts = 3
+        result = subprocess.CompletedProcess(args=[], returncode=1)
         for attempt in range(1, max_attempts + 1):
             result = subprocess.run(
                 ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],

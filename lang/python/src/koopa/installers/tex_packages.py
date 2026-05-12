@@ -49,7 +49,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install TeX packages."""
-    env = activate_app_deps()
+    activate_app_deps()
     tlmgr = shutil.which("tlmgr")
     if tlmgr is None:
         msg = "tlmgr not found. Install TeX Live first."

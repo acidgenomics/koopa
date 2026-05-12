@@ -8,28 +8,36 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Iterator
+from typing import IO, Any, Self, cast
 
 
 class _TqdmFallback:
     """Minimal progress-bar shim when tqdm is not installed."""
 
-    def __init__(self, iterable=None, *, desc="", unit="", total=None):
-        self._iterable = iterable
+    def __init__(
+        self,
+        iterable: Iterable[Any] | None = None,
+        *,
+        desc: str = "",
+        unit: str = "",
+        total: int | None = None,
+    ) -> None:
+        self._iterable: Iterable[Any] = iterable if iterable is not None else []
         if desc:
             print(f"{desc}...", file=sys.stderr)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Any]:
         return iter(self._iterable)
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *_):
+    def __exit__(self, *_: object) -> None:
         pass
 
     @staticmethod
-    def write(msg, file=sys.stderr):
+    def write(msg: str, file: IO[str] = sys.stderr) -> None:
         print(msg, file=file)
 
 
@@ -604,7 +612,7 @@ def _save_mirror_src_cache(cache: dict[str, float]) -> None:
         json.dump(cache, f, indent=2)
 
 
-def _handle_mirror_src(args: list[str]) -> None:
+def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     """Handle ``koopa develop mirror-src [<name>...]``.
 
     Downloads source tarballs from upstream and uploads to the
@@ -657,7 +665,7 @@ def _handle_mirror_src(args: list[str]) -> None:
     try:
         from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
     except ModuleNotFoundError:
-        tqdm = _TqdmFallback  # type: ignore[assignment,misc]
+        tqdm = cast(Any, _TqdmFallback)  # type: ignore[assignment]
 
     bucket = "koopa.acidgenomics.com"
     cache = _load_mirror_src_cache()
@@ -818,7 +826,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
     try:
         from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
     except ModuleNotFoundError:
-        tqdm = _TqdmFallback  # type: ignore[assignment,misc]
+        tqdm = cast(Any, _TqdmFallback)  # type: ignore[assignment]
 
     bucket = "koopa.acidgenomics.com"
     missing: list[str] = []

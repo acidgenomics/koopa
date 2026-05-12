@@ -129,5 +129,3 @@ def go_prefix() -> str:
 def emacs_prefix() -> str:
     """Return Emacs config prefix."""
     return os.path.expanduser("~/.emacs.d")
-
-

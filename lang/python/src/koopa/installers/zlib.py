@@ -1,7 +1,11 @@
 """Install zlib."""
 
 from koopa.build import make_build
-from koopa.installers._build_helper import activate_app_deps, download_extract_cd, remove_static_libs
+from koopa.installers._build_helper import (
+    activate_app_deps,
+    download_extract_cd,
+    remove_static_libs,
+)
 
 
 def main(

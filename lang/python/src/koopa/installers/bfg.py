@@ -16,7 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install bfg."""
-    env = activate_app_deps()
+    activate_app_deps()
     java = locate("java")
     libexec = os.path.join(prefix, "libexec")
     bin_dir = os.path.join(prefix, "bin")

@@ -5,9 +5,9 @@ import sys
 from glob import glob
 
 from koopa.build import shared_ext
-from koopa.installers._build_helper import activate_app_deps
 from koopa.file_ops import ln
 from koopa.install import install_gnu_app
+from koopa.installers._build_helper import activate_app_deps
 from koopa.version import major_minor_version, major_version
 
 

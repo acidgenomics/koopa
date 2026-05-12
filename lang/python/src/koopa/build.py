@@ -55,7 +55,9 @@ class BuildEnv:
         """
         env = os.environ.copy()
         if env.get("LOADEDMODULES"):
-            env["PATH"] = _merge_colon(self.path, env.get("PATH", "")) if self.path else env.get("PATH", "")
+            env["PATH"] = (
+                _merge_colon(self.path, env.get("PATH", "")) if self.path else env.get("PATH", "")
+            )
         else:
             base_path = env.get("KOOPA_DEFAULT_SYSTEM_PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
             env["PATH"] = _merge_colon(self.path, base_path) if self.path else base_path

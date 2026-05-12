@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import sys
 
-from koopa.build import app_prefix, locate
+from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
 from koopa.install import can_build_binary
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
@@ -28,7 +28,7 @@ def main(
         _install_from_uv(version=version, prefix=prefix, env=env)
 
 
-def _install_from_source(*, version: str, prefix: str, env) -> None:
+def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
     make = locate("make")
     openssl_prefix = app_prefix("openssl3")
     bzip2_prefix = app_prefix("bzip2")
@@ -96,7 +96,7 @@ def _install_from_source(*, version: str, prefix: str, env) -> None:
     _create_unversioned_symlinks(prefix)
 
 
-def _install_from_uv(*, version: str, prefix: str, env) -> None:
+def _install_from_uv(*, version: str, prefix: str, env: BuildEnv) -> None:
     if env is not None:
         env.apply()
     uv = locate("uv")

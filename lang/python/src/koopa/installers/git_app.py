@@ -7,7 +7,11 @@ import subprocess
 from koopa.archive import extract
 from koopa.build import app_prefix, locate
 from koopa.download import download
-from koopa.installers._build_helper import _resolve_extra_src_urls, activate_app_deps, download_extract_cd
+from koopa.installers._build_helper import (
+    _resolve_extra_src_urls,
+    activate_app_deps,
+    download_extract_cd,
+)
 
 
 def main(
