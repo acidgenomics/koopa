@@ -45,6 +45,7 @@ def _os_id() -> str:
 def _require_supported_platform() -> None:
     """Abort if running on an unsupported platform."""
     from koopa.system import check_platform
+
     try:
         check_platform()
     except RuntimeError as exc:
@@ -620,7 +621,6 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     finally:
         if acquired:
             _release_install_lock()
-
 
 
 def _handle_update(args: argparse.Namespace) -> None:

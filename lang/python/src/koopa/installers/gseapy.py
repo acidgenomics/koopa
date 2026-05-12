@@ -12,5 +12,5 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install gseapy."""
-    env = activate_app_deps()
+    activate_app_deps()
     install_python_package(name=name, version=version, prefix=prefix)

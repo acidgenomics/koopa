@@ -1,5 +1,6 @@
 """Install module unit tests."""
 
+from pathlib import Path
 from unittest.mock import patch
 
 
@@ -16,7 +17,7 @@ def _make_app_json(installed_name: str, dep_name: str) -> dict:
     }
 
 
-def test_apps_with_missing_runtime_deps_clean(tmp_path) -> None:
+def test_apps_with_missing_runtime_deps_clean(tmp_path: Path) -> None:
     """No results when all runtime deps are present in opt/."""
     from koopa.install import _apps_with_missing_runtime_deps
 
@@ -37,7 +38,7 @@ def test_apps_with_missing_runtime_deps_clean(tmp_path) -> None:
     assert result == []
 
 
-def test_apps_with_missing_runtime_deps_missing(tmp_path) -> None:
+def test_apps_with_missing_runtime_deps_missing(tmp_path: Path) -> None:
     """Dependent is flagged when its runtime dep is absent from opt/."""
     from koopa.install import _apps_with_missing_runtime_deps
 
@@ -59,7 +60,7 @@ def test_apps_with_missing_runtime_deps_missing(tmp_path) -> None:
     assert result == [("curl", "dependency openssl3 removed")]
 
 
-def test_apps_with_missing_runtime_deps_skips_removed(tmp_path) -> None:
+def test_apps_with_missing_runtime_deps_skips_removed(tmp_path: Path) -> None:
     """Apps marked removed: true are not reported as needing rebuild."""
     from koopa.install import _apps_with_missing_runtime_deps
 
@@ -87,7 +88,7 @@ def test_apps_with_missing_runtime_deps_skips_removed(tmp_path) -> None:
     assert result == []
 
 
-def test_apps_with_missing_runtime_deps_alias_resolved(tmp_path) -> None:
+def test_apps_with_missing_runtime_deps_alias_resolved(tmp_path: Path) -> None:
     """Alias-of entries are resolved before checking opt/."""
     from koopa.install import _apps_with_missing_runtime_deps
 
