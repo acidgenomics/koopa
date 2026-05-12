@@ -1591,19 +1591,19 @@ def install_conda_package(
     env = os.environ.copy()
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
     try:
-        subprocess.run(create_args, check=True, env=env, timeout=1800)
+        subprocess.run(create_args, check=True, env=env, timeout=3600)
     except subprocess.CalledProcessError:
         if channel_url.startswith("http"):
             shutil.rmtree(libexec, ignore_errors=True)
             os.makedirs(libexec, exist_ok=True)
             classic_args = create_args.copy()
             classic_args.insert(2, "--solver=classic")
-            subprocess.run(classic_args, check=True, env=env, timeout=1800)
+            subprocess.run(classic_args, check=True, env=env, timeout=3600)
         else:
             raise
     except subprocess.TimeoutExpired:
         msg = (
-            f"Conda solver timed out after 30 minutes installing '{name}'. "
+            f"Conda solver timed out after 60 minutes installing '{name}'. "
             "The package dependency resolution may be too complex or the "
             "channel may be unreachable."
         )
