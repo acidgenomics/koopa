@@ -36,7 +36,7 @@ ca-certificates"
     export REQUESTS_CA_BUNDLE="$__kvar_file"
     export GIT_SSL_CAINFO="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
-    if _koopa_is_linux
+    if _koopa_is_linux && [ -d '/etc/ssl/certs' ]
     then
         export SSL_CERT_DIR='/etc/ssl/certs'
     fi
