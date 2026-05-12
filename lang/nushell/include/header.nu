@@ -34,6 +34,7 @@ export use ../functions/prefix/xdg-data-home.nu *
 export use ../functions/prefix/xdg-config-home.nu *
 export use ../functions/export/export-env.nu *
 export use ../functions/activate/activate-bootstrap.nu *
+export use ../functions/activate/activate-ca-certificates.nu *
 export use ../functions/activate/activate-fzf.nu *
 export use ../functions/activate/activate-direnv.nu *
 export use ../functions/activate/activate-zoxide.nu *
@@ -53,6 +54,7 @@ export def _koopa_activate_koopa [] {
     }
 
     _koopa_export_env
+    _koopa_activate_ca_certificates
     _koopa_activate_fzf
     _koopa_activate_direnv
     _koopa_activate_zoxide
