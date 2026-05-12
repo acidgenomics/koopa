@@ -6943,6 +6943,7 @@
     "man1": [
       "pyenv.1"
     ],
+    "revision": 1,
     "src_url": "https://github.com/pyenv/pyenv/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
