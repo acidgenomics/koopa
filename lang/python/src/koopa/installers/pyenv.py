@@ -22,10 +22,10 @@ def main(
     plugins_dir = os.path.join(prefix, "plugins")
     os.makedirs(plugins_dir, exist_ok=True)
     for plugin_name, plugin_ver, plugin_repo in [
-        ("pyenv-multiuser", "1.0.8", "pyenv-multiuser"),
-        ("pyenv-virtualenv", "1.2.4", "pyenv-virtualenv"),
+        ("pyenv-multiuser", "1.0.8", "macdub/pyenv-multiuser"),
+        ("pyenv-virtualenv", "1.4.0", "pyenv/pyenv-virtualenv"),
     ]:
-        purl = f"https://github.com/pyenv/{plugin_repo}/archive/v{plugin_ver}.tar.gz"
+        purl = f"https://github.com/{plugin_repo}/archive/v{plugin_ver}.tar.gz"
         ptarball = download(purl)
         extract(ptarball, os.path.join(plugins_dir, plugin_name))
     for d in ("shims", "versions"):
