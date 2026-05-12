@@ -80,6 +80,7 @@ class InstallConfig:
 
 # -- Helper functions ---------------------------------------------------------
 
+
 def _is_lmod_active() -> bool:
     return bool(os.environ.get("LOADEDMODULES"))
 
@@ -728,10 +729,17 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     saved_env = {k: os.environ.get(k) for k in _build_env_keys}
     if _is_lmod_active():
         for var in (
-            "CC", "CXX", "FC", "F77",
-            "LD_LIBRARY_PATH", "LIBRARY_PATH",
-            "CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH",
-            "INCLUDE", "PKG_CONFIG_PATH",
+            "CC",
+            "CXX",
+            "FC",
+            "F77",
+            "LD_LIBRARY_PATH",
+            "LIBRARY_PATH",
+            "CPATH",
+            "C_INCLUDE_PATH",
+            "CPLUS_INCLUDE_PATH",
+            "INCLUDE",
+            "PKG_CONFIG_PATH",
         ):
             val = os.environ.get(var, "")
             if val:
@@ -1907,6 +1915,7 @@ def install_koopa(
     (system-wide) install. Converted from install-koopa.sh.
     """
     from koopa.system import check_platform
+
     check_platform()
     source_prefix = koopa_prefix()
     xdg_data_home = os.environ.get(
@@ -1996,23 +2005,23 @@ def _cleanup_legacy_config() -> None:
         re.MULTILINE | re.DOTALL,
     )
     _correct_block = (
-        '__koopa_activate_user_profile() {\n'
+        "__koopa_activate_user_profile() {\n"
         '    __kvar_xdg_data_home="${XDG_DATA_HOME:-}"\n'
         '    if [ -z "$__kvar_xdg_data_home" ]\n'
-        '    then\n'
+        "    then\n"
         '        __kvar_xdg_data_home="${HOME:?}/.local/share"\n'
-        '    fi\n'
+        "    fi\n"
         '    __kvar_script="${__kvar_xdg_data_home}/koopa/activate.sh"\n'
         '    if [ -r "$__kvar_script" ]\n'
-        '    then\n'
-        '        # shellcheck source=/dev/null\n'
+        "    then\n"
+        "        # shellcheck source=/dev/null\n"
         '        . "$__kvar_script"\n'
-        '    fi\n'
-        '    unset -v __kvar_script __kvar_xdg_data_home\n'
-        '    return 0\n'
-        '}\n'
-        '\n'
-        '__koopa_activate_user_profile\n'
+        "    fi\n"
+        "    unset -v __kvar_script __kvar_xdg_data_home\n"
+        "    return 0\n"
+        "}\n"
+        "\n"
+        "__koopa_activate_user_profile\n"
     )
     shell_profiles = [
         os.path.join(os.path.expanduser("~"), name)
@@ -2569,6 +2578,41 @@ def _remove_from_pending_plan(app: str) -> None:
             json.dump(data, f, indent=2)
 
 
+def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
+    """Return (app, reason) for installed apps whose runtime deps are absent from opt/.
+
+    Detects apps that depended on a now-removed koopa-managed app so they can
+    be scheduled for rebuild during update.  This is a runtime fallback for
+    cases where ``koopa develop remove-app`` was not used and no revision bump
+    was recorded on the dependent.
+    """
+    from koopa.app import _resolve_dep_dict, installed_apps
+    from koopa.os import os_id
+
+    json_data = import_app_json()
+    sys_dict = {"os_id": os_id()}
+    opt_dir = opt_prefix()
+    result: list[tuple[str, str]] = []
+    for name in installed_apps():
+        if name not in json_data:
+            continue
+        entry = json_data[name]
+        if entry.get("removed"):
+            continue
+        deps = entry.get("dependencies", [])
+        if isinstance(deps, dict):
+            deps = _resolve_dep_dict(deps, sys_dict)
+        for dep in deps:
+            if dep not in json_data:
+                continue
+            dep_entry = json_data[dep]
+            resolved = dep_entry.get("alias_of", dep) if isinstance(dep_entry, dict) else dep
+            if not os.path.isdir(os.path.join(opt_dir, resolved)):
+                result.append((name, f"dependency {dep} removed"))
+                break
+    return result
+
+
 def update_stale_apps(*, verbose: bool = False) -> None:
     """Find and reinstall all outdated or broken shared apps."""
     from koopa.alert import alert, alert_success
@@ -2578,9 +2622,10 @@ def update_stale_apps(*, verbose: bool = False) -> None:
         return
     outdated = outdated_apps_with_reasons()
     broken = broken_app_installs()
+    missing_dep = _apps_with_missing_runtime_deps()
     broken_with_reasons = [(a, "broken install") for a in broken]
     seen: dict[str, str] = {}
-    for app, reason in outdated + broken_with_reasons:
+    for app, reason in outdated + broken_with_reasons + missing_dep:
         if app not in seen:
             seen[app] = reason
     apps_with_reasons = [(a, r) for a, r in seen.items() if _is_supported_app(a)]
