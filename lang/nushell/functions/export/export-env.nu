@@ -59,6 +59,13 @@ export def _koopa_export_env [] {
         }
     }
 
+    # GnuPG.
+    if not ("GPG_TTY" in $env) {
+        try {
+            $env.GPG_TTY = (tty | str trim)
+        } catch { }
+    }
+
     # Color mode.
     if not ("KOOPA_COLOR_MODE" in $env) {
         $env.KOOPA_COLOR_MODE = "dark"

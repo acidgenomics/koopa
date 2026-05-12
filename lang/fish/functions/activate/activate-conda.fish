@@ -1,18 +1,11 @@
 function _koopa_activate_conda
     # Activate conda.
-    # @note Updated 2026-05-01.
-    set -l conda_prefix (string replace -r '/bin$' '' (_koopa_bin_prefix))
-    set conda_prefix "$KOOPA_PREFIX/app/conda"
-    set -l latest_dir ""
-    if test -d "$conda_prefix"
-        for d in $conda_prefix/*/
-            set latest_dir "$d"
-        end
-    end
-    if test -z "$latest_dir"
+    # @note Updated 2026-05-12.
+    set -l prefix (_koopa_opt_prefix)/conda
+    if not test -d "$prefix"
         return 0
     end
-    set -l conda "$latest_dir/bin/conda"
+    set -l conda "$prefix/bin/conda"
     if not test -x "$conda"
         return 0
     end

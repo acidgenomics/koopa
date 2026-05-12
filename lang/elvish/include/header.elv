@@ -36,6 +36,7 @@ fn activate-koopa {
 
     export-env
     activate-ca-certificates
+    activate-conda
     activate-fzf
     activate-direnv
     activate-zoxide
