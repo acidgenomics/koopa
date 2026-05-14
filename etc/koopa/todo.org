@@ -39,3 +39,5 @@ Warning: System checks completed with warnings.
 ❌1 $ koopa update --all-system
 usage: koopa [-h] {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header} ...
 koopa: error: unrecognized arguments: --all-system
+** TODO neovim vsplit autocomplete is funky now and has broken font icons.
+** TODO For neovim update, how to we properly view files in tree mode now?
