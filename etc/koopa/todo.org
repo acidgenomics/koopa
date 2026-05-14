@@ -20,3 +20,4 @@ There's no way to for an Intel Mac user to safely uninstall koopa currently.
 koopa develop check-app-versions --reset-cache
 Checking automake:   7%|██████▋                                                                                             | 27/404 [00:07<02:24,  2.61app/s]
 Put the app name in the right side of the tqdm progress bar
+Current approach with "Checking <APP>" on the left side looks crazy, moves the bar around too much
