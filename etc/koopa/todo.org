@@ -29,3 +29,13 @@ Current approach with "Checking <APP>" on the left side looks crazy, moves the b
 ** TODO Need to rename `koopa app brew upgrade-brews`
 We primarily use this to update our Homebrew casks, which are different than brews, so this needs a better name. Should we just do `koopa app brew upgrade`?
 ** TODO Consider installing perl and ruby from conda-forge instead of building from source.
+** TODO Need to fix argument support for upgrade of system packages like R.
+$ koopa system check
+Warning: System R is out of date at '/usr/local/bin/R': 4.5.3 != 4.6.0.
+Warning: System checks completed with warnings.
+** Run 'koopa update --all-system' to resolve these issues.
+
+/opt/koopa develop bd594f3 📦 0.18.0 <python 3.12.13: .venv>
+❌1 $ koopa update --all-system
+usage: koopa [-h] {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header} ...
+koopa: error: unrecognized arguments: --all-system
