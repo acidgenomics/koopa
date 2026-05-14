@@ -9,3 +9,7 @@ Installing bootstrap.
 Error: koopa bootstrap Python is invalid.
 Run the following to rebuild:
 sh '/Users/mike/.local/share/koopa/bootstrap.sh'
+Then when you try to run the bootstrap:
+Error: Intel Mac (x86_64) is no longer supported.
+koopa requires macOS on Apple Silicon (arm64).
+There's no way to for an Intel Mac user to safely uninstall koopa currently.
