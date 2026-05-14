@@ -1,5 +1,8 @@
 * High complexity
 * Medium complexity
+** TODO Need to handle this weird edge case with `koopa update`:
+=> Failed to install zstd: App 'cmake' has broken library paths (missing: /opt/koopa/app/cmake/4.3.2/lib). Reinstall with: koopa reinstall cmake
+Error: 1 app(s) failed: zstd.
 * Low complexity
 ** TODO Ensure we have reduced bootstrap message spam during `koopa update`:
 Bootstrap is out of date (2026.05.05.1404 != 2026.05.09.1333)
