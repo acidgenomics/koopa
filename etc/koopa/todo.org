@@ -5,3 +5,7 @@
 Bootstrap is out of date (2026.05.05.1404 != 2026.05.09.1333)
 => Updating bootstrap.
 Installing bootstrap.
+** TODO Interesting edge case with `koopa uninstall` after git pull on repo:
+Error: koopa bootstrap Python is invalid.
+Run the following to rebuild:
+sh '/Users/mike/.local/share/koopa/bootstrap.sh'
