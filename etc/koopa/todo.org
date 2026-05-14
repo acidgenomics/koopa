@@ -1,5 +1,6 @@
 * High complexity
 * Medium complexity
+** TODO Can I improve our VS Code dotfiles config to get Python and R IDE to behave like Positron?
 ** TODO Need to handle this weird edge case with `koopa update`:
 => Failed to install zstd: App 'cmake' has broken library paths (missing: /opt/koopa/app/cmake/4.3.2/lib). Reinstall with: koopa reinstall cmake
 Error: 1 app(s) failed: zstd.
