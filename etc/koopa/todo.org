@@ -1,3 +1,7 @@
 * High complexity
 * Medium complexity
 * Low complexity
+** TODO `koopa configure user dotfiles` should clean up unnecessary `dotfiles` symlink in config.
+** TODO Wire in better Linux system checks for `koopa system info`.
+    Use stdlib Python to get this.
+    Refer to linux-server-info-with-python notes.
