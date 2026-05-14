@@ -1521,6 +1521,7 @@
     "default": true,
     "description": "cross-platform build system generator",
     "installer": "conda-package",
+    "revision": 1,
     "type": "build_tool",
     "url": [
       "https://cmake.org/download/"
