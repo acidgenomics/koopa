@@ -138,7 +138,7 @@ def _handle_list(args: list[str]) -> None:
     sys.exit(1)
 
 
-def _handle_list_app_versions(args: list[str]) -> None:
+def _handle_list_app_versions(_args: list[str]) -> None:
     """Handle ``koopa system list app-versions``.
 
     Lists installed app versions from app prefix directories.
@@ -174,7 +174,7 @@ def _handle_list_app_versions(args: list[str]) -> None:
         print(r)
 
 
-def _handle_list_launch_agents(args: list[str]) -> None:
+def _handle_list_launch_agents(_args: list[str]) -> None:
     """Handle ``koopa system list launch-agents``.
 
     Lists files in LaunchAgents/LaunchDaemons directories (macOS).
@@ -254,7 +254,7 @@ def _handle_update_tex_packages() -> None:
     subprocess.run(["sudo", tlmgr, "update", "--all"], check=True)
 
 
-def _handle_check(args: list[str]) -> None:
+def _handle_check(_args: list[str]) -> None:
     """Handle ``koopa system check``."""
     from koopa.check import check_system
     from koopa.install import _install_lock_path
@@ -278,8 +278,54 @@ def _handle_check(args: list[str]) -> None:
         sys.exit(1)
 
 
-def _handle_system_info(args: list[str]) -> None:
+def _parse_os_release(path: str) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if "=" in line and not line.startswith("#"):
+                key, _, value = line.partition("=")
+                fields[key.strip()] = value.strip().strip('"')
+    return fields
+
+
+def _get_linux_distro() -> str:
+    if os.path.isfile("/etc/os-release"):
+        fields = _parse_os_release("/etc/os-release")
+        name = fields.get("NAME", "")
+        version = fields.get("VERSION_ID", "")
+        return f"{name} {version}".strip() if name else "Linux"
+    if os.path.isfile("/etc/redhat-release"):
+        with open("/etc/redhat-release") as f:
+            return f.read().strip()
+    return "Linux"
+
+
+def _get_glibc_version() -> str:
+    import platform
+
+    lib, version = platform.libc_ver()
+    if lib and version:
+        return f"{lib} {version}"
+    try:
+        result = subprocess.run(
+            ["ldd", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+        if result.stdout:
+            return result.stdout.splitlines()[0]
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        pass
+    return "unknown"
+
+
+def _handle_system_info(_args: list[str]) -> None:
     """Handle ``koopa system info``."""
+    import platform
+
     from koopa.git import (
         git_commit_date,
         git_last_commit_local,
@@ -333,14 +379,16 @@ def _handle_system_info(args: list[str]) -> None:
             check=False,
         )
         os_str = " ".join(result.stdout.split()) if result.stdout else "macOS"
+        sys_info_extra: list[str] = []
     else:
-        result = subprocess.run(
-            ["uname", "--all"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        os_str = result.stdout.strip() if result.stdout else "Linux"
+        uname = platform.uname()
+        os_str = f"{uname.system} {uname.release} {uname.version} {uname.machine}".strip()
+        distro_str = _get_linux_distro()
+        glibc_str = _get_glibc_version()
+        sys_info_extra = [
+            f"Distro: {distro_str}",
+            f"glibc: {glibc_str}",
+        ]
     info.extend(
         [
             "",
@@ -353,6 +401,7 @@ def _handle_system_info(args: list[str]) -> None:
             "------------------",
             f"OS: {os_str}",
             f"Architecture: {arch()} / {arch2()}",
+            *sys_info_extra,
             f"Bash: {bash or 'not found'}",
             f"Bash Version: {bash_ver}",
             f"Python: {python or 'not found'}",
@@ -377,7 +426,7 @@ def _handle_system_info(args: list[str]) -> None:
     print("\n".join(info))
 
 
-def _handle_switch_to_develop(args: list[str]) -> None:
+def _handle_switch_to_develop(_args: list[str]) -> None:
     """Handle ``koopa system switch-to-develop``."""
     from koopa.alert import alert, alert_note
     from koopa.git import git_branch

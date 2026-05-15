@@ -5,11 +5,10 @@
 => Failed to install zstd: App 'cmake' has broken library paths (missing: /opt/koopa/app/cmake/4.3.2/lib). Reinstall with: koopa reinstall cmake
 Error: 1 app(s) failed: zstd.
 * Low complexity
-** TODO `koopa configure user dotfiles` should clean up unnecessary `dotfiles` symlink in config.
-** TODO Wire in better Linux system checks for `koopa system info`.
+** DONE Wire in better Linux system checks for `koopa system info`.
     Use stdlib Python to get this.
     Refer to linux-server-info-with-python notes.
-** TODO Ensure we have reduced bootstrap message spam during `koopa update`:
+** DONE Ensure we have reduced bootstrap message spam during `koopa update`:
 Bootstrap is out of date (2026.05.05.1404 != 2026.05.09.1333)
 => Updating bootstrap.
 Installing bootstrap.
