@@ -41,3 +41,4 @@ usage: koopa [-h] {install,reinstall,uninstall,update,configure,app,list,system,
 koopa: error: unrecognized arguments: --all-system
 ** TODO neovim vsplit autocomplete is funky now and has broken font icons.
 ** TODO For neovim update, how to we properly view files in tree mode now?
+** TODO macOS Sequoia machine is missing links to Desktop and Documents. Is there a way to fix this in plist / system config?
