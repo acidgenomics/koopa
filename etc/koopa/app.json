@@ -501,7 +501,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-14",
+    "date": "2026-05-15",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -513,7 +513,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.46"
+    "version": "2.34.47"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1481,7 +1481,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-05-14",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "node"
@@ -1495,7 +1495,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.141"
+    "version": "2.1.142"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1574,7 +1574,7 @@
       "git-cz"
     ],
     "category": "Python",
-    "date": "2026-05-14",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "python"
@@ -1587,7 +1587,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.16.0"
+    "version": "4.16.2"
   },
   "conda": {
     "bin": [
@@ -2150,7 +2150,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-05-14",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2160,7 +2160,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "e130ea36450f81342b79810a86b229f4b4bf6ed3"
+    "version": "8d334fcc74818ee711f4eecced4831732678ee00"
   },
   "du-dust": {
     "bin": [
@@ -3977,7 +3977,7 @@
       "hf"
     ],
     "category": "AI",
-    "date": "2026-05-06",
+    "date": "2026-05-15",
     "default": false,
     "dependencies": [
       "python"
@@ -3993,7 +3993,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "hugo": {
     "bin": [
@@ -4392,7 +4392,7 @@
       "latch"
     ],
     "category": "Cloud",
-    "date": "2026-05-02",
+    "date": "2026-05-15",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -4409,7 +4409,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.71.2"
+    "version": "2.72.0"
   },
   "ldc": {
     "build_dependencies": [
@@ -6766,17 +6766,16 @@
     ],
     "category": "Database",
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-15",
     "default": true,
     "description": "powerful open-source relational database",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "18.3"
+    "version": "18.4"
   },
   "powershell": {
     "bin": [
@@ -8517,7 +8516,7 @@
       "sqlfluff"
     ],
     "category": "Python",
-    "date": "2026-05-14",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "python"
@@ -8529,7 +8528,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.2.0"
+    "version": "4.2.1"
   },
   "sqlite": {
     "bin": [
@@ -9055,7 +9054,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-05-11",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "python"
@@ -9067,7 +9066,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.35"
+    "version": "0.0.36"
   },
   "udunits": {
     "date": "2022-08-30",
