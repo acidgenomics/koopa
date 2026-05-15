@@ -382,7 +382,6 @@ def check_bootstrap_version() -> bool:
     if not isdir(bp):
         return True
     if not isfile(installed_version_file):
-        print(f"Bootstrap is installed but missing VERSION file at {installed_version_file}")
         return False
     with open(expected_version_file) as fh:
         expected_version = fh.read().strip()
