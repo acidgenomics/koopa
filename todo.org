@@ -1,7 +1,9 @@
 * High complexity
 * Medium complexity
 ** TODO Rethink our approach to building `r` from source. Can we just use conda-forge?
+** TODO Can we add vendor support for pushing src-mirror and binaries to a custom S3 path?
 ** TODO Can I improve our VS Code dotfiles config to get Python and R IDE to behave like Positron?
+** TODO Can we add a system check for macOS Xcode CLT being out of date?
 ** TODO Need to handle this weird edge case with `koopa update`:
     => Failed to install zstd: App 'cmake' has broken library paths (missing: /opt/koopa/app/cmake/4.3.2/lib). Reinstall with: koopa reinstall cmake
     Error: 1 app(s) failed: zstd.
