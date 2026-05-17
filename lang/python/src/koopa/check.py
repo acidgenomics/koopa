@@ -612,6 +612,39 @@ def check_macos_system_python() -> bool:
     return ok
 
 
+def check_macos_xcode_clt() -> bool:
+    """Check if Xcode Command Line Tools SDK is current on macOS."""
+    import json
+    import platform
+
+    sdk_settings = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/SDKSettings.json"
+    if not isfile(sdk_settings):
+        return True
+    try:
+        with open(sdk_settings) as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return True
+    sdk_version = data.get("Version", "")
+    if not sdk_version:
+        return True
+    macos_version = platform.mac_ver()[0]
+    if not macos_version:
+        return True
+    sdk_major = _version_tuple(sdk_version)[:1]
+    os_major = _version_tuple(macos_version)[:1]
+    if sdk_major < os_major:
+        from koopa.alert import warn
+
+        warn(
+            f"Xcode CLT SDK is out of date ({sdk_version})"
+            f" for macOS {macos_version}."
+            " Run 'xcode-select --install' to update."
+        )
+        return False
+    return True
+
+
 def check_broken_symlinks() -> bool:
     """Check for broken symlinks in bin, opt, and man1 directories."""
     from koopa.file_ops import find_broken_symlinks
@@ -708,6 +741,8 @@ def check_system() -> bool:
         if not check_macos_system_r():
             needs_system_update = True
         if not check_macos_system_python():
+            needs_system_update = True
+        if not check_macos_xcode_clt():
             needs_system_update = True
     if not check_installed_apps():
         needs_update = True
