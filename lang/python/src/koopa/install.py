@@ -2386,7 +2386,7 @@ def _is_supported_app(name: str) -> bool:
     return not (current_os in supported and not supported[current_os])
 
 
-def _compute_install_plan(
+def _compute_install_plan(  # noqa: C901
     apps_with_reasons: list[tuple[str, str]],
 ) -> tuple[list[tuple[str, str]], dict[str, set[str]]]:
     """Compute ordered install plan with full transitive dep expansion.
@@ -2442,6 +2442,9 @@ def _compute_install_plan(
                 if not os.path.exists(dep_opt):
                     full_set.add(dep_resolved)
                     reason_map.setdefault(dep_resolved, "missing dependency")
+                elif _dep_has_broken_rpath(dep_resolved, dep_opt):
+                    full_set.add(dep_resolved)
+                    reason_map.setdefault(dep_resolved, "broken library paths")
             _expand(dep_resolved)
 
     for app, _ in apps_with_reasons:
@@ -2611,6 +2614,24 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
                 result.append((name, f"dependency {dep} removed"))
                 break
     return result
+
+
+def _dep_has_broken_rpath(name: str, opt_link: str) -> bool:
+    """Return True if an installed dep has broken RPATH entries."""
+    from koopa.build import _extract_rpath
+
+    json_data = import_app_json()
+    entry = json_data.get(name, {})
+    if isinstance(entry, dict) and entry.get("installer", "").startswith(
+        ("conda-package", "node-package", "perl-package", "python-package", "ruby-package")
+    ):
+        return False
+    prefix = os.path.realpath(opt_link)
+    bin_path = os.path.join(prefix, "bin", name)
+    if not os.path.isfile(bin_path):
+        return False
+    rpath_dirs = _extract_rpath(bin_path)
+    return any(not os.path.isdir(d) for d in rpath_dirs)
 
 
 def update_stale_apps(*, verbose: bool = False) -> None:
