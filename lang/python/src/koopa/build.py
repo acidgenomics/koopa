@@ -114,6 +114,24 @@ def _merge_semicolon(new: list[str], existing: str) -> str:
 
 # -- RPATH validation ---------------------------------------------------------
 
+_PACKAGE_INSTALLERS = (
+    "conda-package",
+    "node-package",
+    "perl-package",
+    "python-package",
+    "ruby-package",
+)
+
+
+def _is_package_installer(app_name: str) -> bool:
+    from koopa.io import import_app_json
+
+    json_data = import_app_json()
+    entry = json_data.get(app_name, {})
+    if not isinstance(entry, dict):
+        return False
+    return entry.get("installer", "").startswith(_PACKAGE_INSTALLERS)
+
 
 def _check_rpath(prefix: str, app_name: str) -> None:
     """Verify RPATH targets exist for the app's primary binary."""
@@ -231,7 +249,8 @@ def activate_app(
             msg = f"App not installed: {resolved!r} (expected at {app_link})"
             raise FileNotFoundError(msg)
         prefix = os.path.realpath(app_link)
-        _check_rpath(prefix, resolved)
+        if not _is_package_installer(resolved):
+            _check_rpath(prefix, resolved)
         prefixes.append(prefix)
         bin_dir = os.path.join(prefix, "bin")
         if os.path.isdir(bin_dir):

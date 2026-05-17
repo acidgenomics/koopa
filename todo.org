@@ -1,21 +1,11 @@
 * High complexity
-* Medium complexity
-** TODO Rethink our approach to building `r` from source. Can we just use conda-forge?
 ** TODO Can we add vendor support for pushing src-mirror and binaries to a custom S3 path?
 ** TODO Can I improve our VS Code dotfiles config to get Python and R IDE to behave like Positron?
-** TODO Can we add a system check for macOS Xcode CLT being out of date?
-** TODO Need to handle this weird edge case with `koopa update`:
-    => Failed to install zstd: App 'cmake' has broken library paths (missing: /opt/koopa/app/cmake/4.3.2/lib). Reinstall with: koopa reinstall cmake
-    Error: 1 app(s) failed: zstd.
+* Medium complexity
+** TODO Rethink our approach to building `r` from source. Should we just use conda-forge?
+** DONE Can we add a system check for macOS Xcode CLT being out of date?
 * Low complexity
 ** TODO Tweak our nvim config to make plugin autoupdates less jarring. Currently they take over the session and I have to quit and re-edit the file I wanted.
-** DONE Wire in better Linux system checks for `koopa system info`.
-    Use stdlib Python to get this.
-    Refer to linux-server-info-with-python notes.
-** DONE Ensure we have reduced bootstrap message spam during `koopa update`:
-    Bootstrap is out of date (2026.05.05.1404 != 2026.05.09.1333)
-    => Updating bootstrap.
-    Installing bootstrap.
 ** TODO Interesting edge case with `koopa uninstall` after git pull on repo:
     Error: koopa bootstrap Python is invalid.
     Run the following to rebuild:
@@ -43,5 +33,6 @@
     usage: koopa [-h] {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header} ...
     koopa: error: unrecognized arguments: --all-system
 ** TODO neovim vsplit autocomplete is funky now and has broken font icons.
+    How do we fix this? Is there another nerd font or icon font we need to install?
 ** TODO For neovim update, how to we properly view files in tree mode now?
 ** TODO macOS Sequoia machine is missing links to Desktop and Documents. Is there a way to fix this in plist / system config?
