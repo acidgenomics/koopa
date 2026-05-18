@@ -622,13 +622,15 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     import time
 
     from koopa.io import import_app_json
+    from koopa.vendor import vendor_can_push
+    from koopa.vendor import vendor_config as _vendor_config
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
 
     if "--help" in args or "-h" in args:
         print(
             "usage: koopa develop mirror-src [--prune] [<name>...]\n\n"
             "Download source tarballs from upstream and upload to the\n"
-            "s3://koopa.acidgenomics.com/src/ mirror.\n\n"
+            "s3://koopa.acidgenomics.com/src/ mirror and/or vendor backend.\n\n"
             "With no args, mirrors all apps with a 'src_url' in app.json.\n\n"
             "Options:\n"
             "  --prune  Delete stale files from S3 after mirroring",
@@ -637,14 +639,16 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
         return
     prune = "--prune" in args
     args = [a for a in args if a != "--prune"]
-    if not _has_acidgenomics_aws():
+    _has_vendor = _vendor_config() is not None and vendor_can_push()
+    if not _has_acidgenomics_aws() and not _has_vendor:
         print(
-            "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
+            "Error: no upload destination available. "
+            "Configure the 'acidgenomics' AWS profile or a vendor backend.",
             file=sys.stderr,
         )
         sys.exit(1)
     aws = shutil.which("aws")
-    if aws is None:
+    if aws is None and not _has_vendor:
         print("Error: aws CLI is not installed.", file=sys.stderr)
         sys.exit(1)
     data = import_app_json()
@@ -672,8 +676,10 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     now = time.time()
     _cache_ttl = 86400  # 24 hours
     failures: dict[str, str] = {}
-    print("Listing S3 objects...", file=sys.stderr)
-    existing_keys = _list_s3_keys(aws, bucket, "src/", "acidgenomics")
+    existing_keys: set[str] = set()
+    if aws is not None and _has_acidgenomics_aws():
+        print("Listing S3 objects...", file=sys.stderr)
+        existing_keys = _list_s3_keys(aws, bucket, "src/", "acidgenomics")
 
     def _mirror_one(name: str) -> None:
         entry = data[name]

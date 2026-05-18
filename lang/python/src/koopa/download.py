@@ -114,24 +114,38 @@ def download_with_mirror(
 ) -> str:
     """Download from primary URL, falling back to mirrors.
 
-    Tries the primary URL first, then GNU mirrors (if applicable), then
-    Savannah mirrors (if applicable), then any extra_urls, then the koopa
-    mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
+    Tries the primary URL first, then the vendor mirror (if configured with
+    vendor_first priority), then GNU mirrors (if applicable), then Savannah
+    mirrors (if applicable), then any extra_urls, then the koopa mirror at
+    https://koopa.acidgenomics.com/src/{name}/{filename} (unless vendor_only).
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
     """
+    from koopa.vendor import vendor_config, vendor_download_src, vendor_pull_priority
+
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     urls = [primary_url]
+
+    # Insert vendor mirror URL at position 1 (right after the primary URL).
+    vendor_url = vendor_download_src(name, filename)
+    if vendor_url:
+        urls.append(vendor_url)
+
     urls.extend(_gnu_mirrors(primary_url, name, filename))
     urls.extend(_savannah_mirrors(primary_url, name, filename))
     urls.extend(extra_urls or [])
-    if not skip_koopa_mirror:
+
+    # Skip the default koopa mirror when vendor is configured as vendor_only.
+    _skip_koopa = skip_koopa_mirror or (
+        vendor_config() is not None and vendor_pull_priority() == "vendor_only"
+    )
+    if not _skip_koopa:
         urls.append(koopa_mirror)
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:
-            is_last = not skip_koopa_mirror and url == koopa_mirror
+            is_last = not _skip_koopa and url == koopa_mirror
             tarball = download(
                 url,
                 output,
