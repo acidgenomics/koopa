@@ -112,3 +112,12 @@ def main(
         ["koopa", "configure", "r", r_bin],
         check=True,
     )
+    import os
+
+    from koopa.r import r_migrate_non_base_packages, r_prefix, r_system_library_prefix
+
+    r_home = r_prefix(r_bin)
+    from_lib = r_system_library_prefix()
+    to_lib = os.path.join(r_home, "site-library")
+    if os.path.isdir(from_lib) and from_lib != to_lib:
+        r_migrate_non_base_packages(from_lib, to_lib)
