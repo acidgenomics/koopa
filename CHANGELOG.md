@@ -1,5 +1,39 @@
 # Changelog
 
+## koopa 0.18.0 (2026-05-18)
+
+Major changes:
+
+- Added shell activation functions for Elvish, Nushell, PowerShell, and Fish:
+  `activate-ca-certificates`, `activate-conda`, and `activate-direnv`, improving
+  parity with Bash/Zsh.
+- Heavily hardened the bootstrap system: added `libffi` to the bootstrap chain
+  (Python `_ctypes` module now verified at build time), added Perl
+  build-from-source fallback when system Perl is missing `IPC::Cmd`, added
+  return-code checking on all `make`/`./configure` steps, improved Lmod-aware
+  PATH handling, and improved RHEL 8 support.
+- Added standalone `uninstall.sh` script that removes koopa without requiring
+  the Python runtime.
+- Added Xcode Command Line Tools version checks and improved broken RPATH
+  detection in `koopa check`.
+- Added vendor backend support for downloading and pushing source mirrors and
+  binary packages from private infrastructure (custom S3 buckets or JFrog
+  Artifactory). Configure via `etc/koopa/vendor.json`. Supports `vendor_first`
+  and `vendor_only` pull strategies.
+
+Minor changes:
+
+- Improved `koopa system info` platform output.
+- Improved runtime dependency cleanup for removed apps (with unit tests).
+- Reworked R configuration handling; removed from-source R and Ruby app
+  installers in favor of system/package-manager installs.
+- Removed `cloudbiolinux` app support.
+- Fixed `pyenv`, `gnupg`, and STAR version-key installers.
+- Increased conda timeout.
+- Improved `koopa configure` CLI and `format-app-json` developer command.
+- Ensured Ruby and Perl version bumps are tracked in `app.json`.
+- Added detached HEAD detection.
+
 ## koopa 0.17.0 (2026-05-10)
 
 Major changes:
