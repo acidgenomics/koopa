@@ -1867,7 +1867,7 @@ def check_app_versions(  # noqa: C901, PLR0915
         desc = f"Checking {len(uncached_names)} app(s)"
         if cached_count:
             desc += f" ({cached_count} cached)"
-        pbar = tqdm(total=total, desc=desc, unit="app")
+        pbar = tqdm(total=total, desc="Checking", unit="app")
     except ModuleNotFoundError:
         pbar = None
         msg = f"Checking {len(uncached_names)} app(s)..."
@@ -1930,7 +1930,7 @@ def check_app_versions(  # noqa: C901, PLR0915
             result, msg = future.result()
             results.append(result)
             if pbar is not None:
-                pbar.set_description(f"Checking {app_name}")
+                pbar.set_postfix_str(app_name)
                 if msg:
                     pbar.write(msg, file=sys.stderr)
                 pbar.update(1)

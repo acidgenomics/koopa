@@ -119,14 +119,38 @@ def r_migrate_non_base_packages(from_lib: str, to_lib: str) -> None:
     _r_eval(code, capture=False)
 
 
-def configure_r_environ(r_home: str | None = None) -> None:
+def _r_major_minor(r_home: str) -> str:
+    """Get major.minor version from an R installation."""
+    rscript = os.path.join(r_home, "bin", "Rscript")
+    if not os.path.isfile(rscript):
+        rscript = "Rscript"
+    result = subprocess.run(
+        [rscript, "-e", 'cat(paste0(R.version$major, ".", R.version$minor))'],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    ver = result.stdout.strip()
+    parts = ver.split(".")
+    return f"{parts[0]}.{parts[1]}"
+
+
+def configure_r_environ(
+    r_home: str | None = None,
+    *,
+    name: str = "r",
+    system: bool = False,
+) -> None:
     """Configure R environ file."""
     if r_home is None:
         r_home = r_prefix()
     environ_file = os.path.join(r_home, "etc", "Renviron.site")
-    lines = [
-        f'R_LIBS_USER="{r_library_prefix()}"',
-    ]
+    lines: list[str] = []
+    if system:
+        lines.append(f'R_LIBS_USER="{r_library_prefix()}"')
+    else:
+        suffix = "devel" if name == "r-devel" else _r_major_minor(r_home)
+        lines.append(f'R_LIBS_USER="${{TMPDIR}}/koopa-R-{suffix}/library"')
     Path(environ_file).write_text("\n".join(lines) + "\n")
 
 

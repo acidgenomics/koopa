@@ -45,8 +45,8 @@ def brew_outdated() -> list[str]:
     return [x for x in result.stdout.strip().splitlines() if x]
 
 
-def brew_upgrade_brews() -> None:
-    """Upgrade all Homebrew formulae."""
+def brew_upgrade() -> None:
+    """Upgrade all Homebrew formulae and casks."""
     _brew("update", capture=False)
     _brew("upgrade", capture=False)
     _brew("cleanup", capture=False)

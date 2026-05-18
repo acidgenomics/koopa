@@ -52,7 +52,7 @@ _APP_TREE: dict[str, Any] = {
         "reset-core-repo": "brew-reset-core-repo",
         "reset-permissions": "brew-reset-permissions",
         "uninstall-all-brews": "brew-uninstall-all-brews",
-        "upgrade-brews": "brew-upgrade-brews",
+        "upgrade": "brew-upgrade",
         "version": "brew-version",
     },
     "conda": {
@@ -145,7 +145,6 @@ _APP_TREE: dict[str, Any] = {
         "copy-files-into-etc": "r-copy-files-into-etc",
         "gfortran-libs": "r-gfortran-libs",
         "install-packages-in-site-library": "r-install-packages-in-site-library",
-        "migrate-non-base-packages": "r-migrate-non-base-packages",
         "package-version": "r-package-version",
         "paste-to-vector": "r-paste-to-vector",
         "remove-packages-in-system-library": "r-remove-packages-in-system-library",
@@ -420,17 +419,6 @@ def _handle_r_install_packages(args: list[str]) -> None:
 
     install_packages_in_site_library(args)
 
-
-def _handle_r_migrate_non_base_packages(args: list[str]) -> None:
-    if len(args) != 2:
-        print(
-            "Usage: koopa app r migrate-non-base-packages <from-lib> <to-lib>",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    from koopa.r import r_migrate_non_base_packages
-
-    r_migrate_non_base_packages(args[0], args[1])
 
 
 def _handle_r_package_version(args: list[str]) -> None:
@@ -1026,10 +1014,10 @@ def _handle_brew_uninstall_all_brews(args: list[str]) -> None:
     brew_uninstall_all_brews()
 
 
-def _handle_brew_upgrade_brews(args: list[str]) -> None:
-    from koopa.brew import brew_upgrade_brews
+def _handle_brew_upgrade(args: list[str]) -> None:
+    from koopa.brew import brew_upgrade
 
-    brew_upgrade_brews()
+    brew_upgrade()
 
 
 def _handle_brew_version(args: list[str]) -> None:
@@ -1972,7 +1960,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "brew-reset-core-repo": _handle_brew_reset_core_repo,
     "brew-reset-permissions": _handle_brew_reset_permissions,
     "brew-uninstall-all-brews": _handle_brew_uninstall_all_brews,
-    "brew-upgrade-brews": _handle_brew_upgrade_brews,
+    "brew-upgrade": _handle_brew_upgrade,
     "brew-version": _handle_brew_version,
     # conda
     "conda-clean-cache": _handle_conda_clean_cache,
@@ -2061,7 +2049,6 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "r-copy-files-into-etc": _handle_r_copy_files_into_etc,
     "r-gfortran-libs": _handle_r_gfortran_libs,
     "r-install-packages-in-site-library": _handle_r_install_packages,
-    "r-migrate-non-base-packages": _handle_r_migrate_non_base_packages,
     "r-package-version": _handle_r_package_version,
     "r-paste-to-vector": _handle_r_paste_to_vector,
     "r-remove-packages-in-system-library": _handle_r_remove_packages,

@@ -6556,17 +6556,17 @@
       "perl"
     ],
     "build_dependencies": [
-      "make"
+      "conda"
     ],
     "category": "Language",
     "date": "2026-05-03",
     "default": true,
     "description": "Practical Extraction and Report Language",
+    "installer": "conda-package",
     "man1": [
       "cpan.1",
       "perl.1"
     ],
-    "src_url": "https://www.cpan.org/src/{major}.0/perl-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.perl.org/get.html"
@@ -7466,61 +7466,25 @@
     "version": "1.9.37"
   },
   "r": {
+    "bin": [
+      "R",
+      "Rscript"
+    ],
     "build_dependencies": [
-      "autoconf",
-      "automake",
-      "libtool",
-      "make",
-      "pkg-config"
+      "conda"
     ],
     "category": "Language",
     "date": "2026-05-01",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "cairo",
-      "curl",
-      "fontconfig",
-      "freetype",
-      "gettext",
-      "glib",
-      "icu4c",
-      "libffi",
-      "libjpeg-turbo",
-      "libpng",
-      "libssh2",
-      "libtiff",
-      "libxml2",
-      "openblas",
-      "openssl",
-      "pcre2",
-      "pixman",
-      "readline",
-      "tcl-tk",
-      "texinfo",
-      "xorg-libice",
-      "xorg-libpthread-stubs",
-      "xorg-libsm",
-      "xorg-libx11",
-      "xorg-libxau",
-      "xorg-libxcb",
-      "xorg-libxdmcp",
-      "xorg-libxext",
-      "xorg-libxrender",
-      "xorg-libxt",
-      "xorg-xcb-proto",
-      "xorg-xorgproto",
-      "xz",
-      "zlib",
-      "zstd"
-    ],
     "description": "R statistical computing language and environment",
-    "installer_platform": "debian",
+    "installer": "conda-package",
+    "installer_args": {
+      "name": "r-base"
+    },
     "man1": [
       "R.1",
       "Rscript.1"
     ],
-    "src_url": "https://cloud.r-project.org/src/base/R-{major}/R-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.r-project.org/",
@@ -7964,24 +7928,16 @@
       "ruby"
     ],
     "build_dependencies": [
-      "make",
-      "pkg-config"
+      "conda"
     ],
     "category": "Language",
     "date": "2026-05-14",
     "default": false,
-    "dependencies": [
-      "libffi",
-      "libyaml",
-      "openssl3",
-      "readline",
-      "zlib"
-    ],
     "description": "dynamic, open-source programming language",
+    "installer": "conda-package",
     "man1": [
       "ruby.1"
     ],
-    "src_url": "https://cache.ruby-lang.org/pub/ruby/{major_minor}/ruby-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"

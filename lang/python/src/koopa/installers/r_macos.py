@@ -102,5 +102,10 @@ def main(
             check=True,
         )
     from koopa.configure import ConfigureConfig, configure_app
+    from koopa.r import r_migrate_non_base_packages, r_system_library_prefix
 
     configure_app(ConfigureConfig(name="r", mode="system"))
+    from_lib = r_system_library_prefix()
+    to_lib = os.path.join(r_prefix, "site-library")
+    if os.path.isdir(from_lib) and from_lib != to_lib:
+        r_migrate_non_base_packages(from_lib, to_lib)

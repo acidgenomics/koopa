@@ -52,13 +52,24 @@ if [ -z "$_python" ]; then
     if __koopa_check_python "$_bootstrap_python"; then
         _python="$_bootstrap_python"
     elif [ -x "$_bootstrap_python" ]; then
-        printf '%s\n' \
-            'Error: koopa bootstrap Python is invalid.' \
-            '' \
-            'Run the following to rebuild:' \
-            "  sh '${_koopa_prefix}/bootstrap.sh'" \
-            >&2
-        exit 1
+        if [ "${1:-}" = "uninstall" ]; then
+            _sys_python="/usr/bin/python3"
+            if [ -x "$_sys_python" ]; then
+                _python="$_sys_python"
+            fi
+        fi
+        if [ -z "$_python" ]; then
+            printf '%s\n' \
+                'Error: koopa bootstrap Python is invalid.' \
+                '' \
+                'Run the following to rebuild:' \
+                "  sh '${_koopa_prefix}/bootstrap.sh'" \
+                '' \
+                'To uninstall koopa without Python:' \
+                "  sh '${_koopa_prefix}/uninstall.sh'" \
+                >&2
+            exit 1
+        fi
     fi
 fi
 if [ -z "$_python" ]; then
@@ -80,6 +91,9 @@ if [ -z "$_python" ]; then
         '' \
         'Run the following to bootstrap koopa:' \
         "  sh '${_koopa_prefix}/bootstrap.sh'" \
+        '' \
+        'To uninstall koopa without Python:' \
+        "  sh '${_koopa_prefix}/uninstall.sh'" \
         >&2
     exit 1
 fi
