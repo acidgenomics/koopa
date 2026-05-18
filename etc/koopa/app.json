@@ -6567,6 +6567,7 @@
       "cpan.1",
       "perl.1"
     ],
+    "revision": 1,
     "type": "build_tool",
     "url": [
       "https://www.perl.org/get.html"
@@ -7938,6 +7939,7 @@
     "man1": [
       "ruby.1"
     ],
+    "revision": 1,
     "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
