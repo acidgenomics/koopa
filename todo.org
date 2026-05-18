@@ -1,4 +1,3 @@
 * High complexity
 * Medium complexity
-** TODO Can we add vendor support for pushing src-mirror and binaries to a custom S3 path?
 * Low complexity
