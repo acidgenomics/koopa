@@ -1,0 +1,18 @@
+{
+  "_comment": "Vendor backend config. Set 'enabled' to true and fill in your backend details.",
+  "enabled": false,
+  "backend": "artifactory",
+  "artifactory": {
+    "base_url": "https://artifacts.example.com",
+    "src_repo": "generic-team-koopa-src",
+    "binary_repo": "generic-team-koopa-binaries",
+    "token_env_var": "JFROG_ACCESS_TOKEN"
+  },
+  "s3": {
+    "bucket": "my-org-koopa",
+    "profile": "my-aws-profile",
+    "src_prefix": "src",
+    "binary_prefix": "binaries"
+  },
+  "pull_priority": "vendor_first"
+}

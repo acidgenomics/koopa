@@ -8,6 +8,7 @@
 /bootstrap/
 /coverage/
 /etc/koopa/build-times.json
+/etc/koopa/vendor.json
 /libexec/
 /opt/
 /share/

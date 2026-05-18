@@ -554,8 +554,7 @@ def main(
         ),
         # Finder view: list view.
         ("com.apple.finder", "FXPreferredViewStyle", "-string", "Nlsv"),
-        # Disable Finder sidebar by default.
-        ("com.apple.finder", "ShowSidebar", "-bool", "false"),
+        ("com.apple.finder", "ShowSidebar", "-bool", "true"),
         # Disable warning before emptying Trash.
         ("com.apple.finder", "WarnOnEmptyTrash", "-bool", "false"),
         # Enable AirDrop over Ethernet.

@@ -2078,11 +2078,12 @@ def _expand_src_url(template: str, version: str) -> str:
 def _mirror_src_to_s3(
     name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
-    """Download source tarball and upload to s3://koopa.acidgenomics.com/src/."""
+    """Download source tarball and upload to s3://koopa.acidgenomics.com/src/ and/or vendor."""
     import tempfile
     import time
 
     from koopa.download import download_with_mirror
+    from koopa.vendor import vendor_config, vendor_push_src
 
     url = _expand_src_url(src_url_template, version)
     filename = url.rsplit("/", 1)[-1]
@@ -2116,13 +2117,25 @@ def _mirror_src_to_s3(
             if result.returncode == 0:
                 if not quiet:
                     print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
-                return
+                break
             if attempt < max_attempts:
                 time.sleep(2**attempt)
-        msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
-        if strict:
-            raise RuntimeError(msg)
-        print(f"  {msg}", file=sys.stderr)
+        else:
+            msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
+            if strict:
+                raise RuntimeError(msg)
+            print(f"  {msg}", file=sys.stderr)
+            return
+        if vendor_config() is not None:
+            try:
+                vendor_push_src(local, name, filename)
+                if not quiet:
+                    print(f"  Uploaded '{name}' source to vendor mirror.", file=sys.stderr)
+            except Exception as exc:
+                msg = f"Vendor upload failed for '{name}': {exc}"
+                if strict:
+                    raise RuntimeError(msg) from exc
+                print(f"  {msg}", file=sys.stderr)
 
 
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
@@ -2150,8 +2163,12 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             file=sys.stderr,
         )
     update_venv_version(outdated)
-    if _has_acidgenomics_aws():
-        print("Uploading source tarballs to S3 mirror.", file=sys.stderr)
+    from koopa.vendor import vendor_can_push
+    from koopa.vendor import vendor_config as _vendor_config
+
+    _do_mirror = _has_acidgenomics_aws() or (_vendor_config() is not None and vendor_can_push())
+    if _do_mirror:
+        print("Uploading source tarballs to mirror(s).", file=sys.stderr)
         for r in outdated:
             if r.name not in data or not r.latest_version:
                 continue
