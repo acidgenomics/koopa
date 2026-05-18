@@ -1,23 +1,4 @@
 * High complexity
-
-** TODO Can we add vendor support for pushing src-mirror and binaries to a custom S3 path?
-** TODO Can I improve our VS Code dotfiles config to get Python and R IDE to behave like Positron?
 * Medium complexity
-** TODO Rethink our approach to building `r` from source. Should we just use conda-forge?
-** TODO Consider installing perl and ruby from conda-forge instead of building from source.
+** TODO Can we add vendor support for pushing src-mirror and binaries to a custom S3 path?
 * Low complexity
-** TODO Need to fix argument support for upgrade of system packages like R.
-    $ koopa system check
-    Warning: System R is out of date at '/usr/local/bin/R': 4.5.3 != 4.6.0.
-    Warning: System checks completed with warnings.
-    ** Run 'koopa update --all-system' to resolve these issues.
-
-    /opt/koopa develop bd594f3 📦 0.18.0 <python 3.12.13: .venv>
-    ❌1 $ koopa update --all-system
-    usage: koopa [-h] {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header} ...
-    koopa: error: unrecognized arguments: --all-system
-** TODO neovim vsplit autocomplete is funky now and has broken font icons.
-    How do we fix this? Is there another nerd font or icon font we need to install?
-** TODO For neovim update, how to we properly view files in tree mode now?
-** TODO macOS Sequoia machine is missing links to Desktop and Documents. Is there a way to fix this in plist / system config?
-** TODO Tweak our nvim config to make plugin autoupdates less jarring. Currently they take over the session and I have to quit and re-edit the file I wanted.

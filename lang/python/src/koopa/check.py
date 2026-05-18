@@ -645,6 +645,40 @@ def check_macos_xcode_clt() -> bool:
     return True
 
 
+def check_macos_icloud_drive() -> bool:
+    """Check iCloud Drive Desktop & Documents sync is enabled on macOS."""
+    import subprocess
+
+    def _read_bool(key: str) -> int | None:
+        result = subprocess.run(
+            ["defaults", "read", "com.apple.finder", key],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return None
+        try:
+            return int(result.stdout.strip())
+        except ValueError:
+            return None
+
+    enabled = _read_bool("FXICloudDriveEnabled")
+    if not enabled:
+        return True
+    desktop = _read_bool("FXICloudDriveDesktop")
+    documents = _read_bool("FXICloudDriveDocuments")
+    if desktop == 0 or documents == 0:
+        from koopa.alert import warn
+
+        warn(
+            "iCloud Drive Desktop & Documents sync is disabled."
+            " Re-enable in System Settings > Apple ID > iCloud > iCloud Drive."
+        )
+        return False
+    return True
+
+
 def check_broken_symlinks() -> bool:
     """Check for broken symlinks in bin, opt, and man1 directories."""
     from koopa.file_ops import find_broken_symlinks
@@ -744,6 +778,8 @@ def check_system() -> bool:
             needs_system_update = True
         if not check_macos_xcode_clt():
             needs_system_update = True
+        if not check_macos_icloud_drive():
+            needs_system_update = True
     if not check_installed_apps():
         needs_update = True
     if not check_broken_app_installs():
@@ -759,7 +795,7 @@ def check_system() -> bool:
     if needs_update or needs_system_update or needs_disk_space:
         warn("System checks completed with warnings.")
         if needs_system_update:
-            alert_note("Run 'koopa update --all-system' to resolve these issues.")
+            alert_note("Run 'koopa update system' to resolve these issues.")
         elif needs_update:
             alert_note("Run 'koopa update' to resolve these issues.")
         if needs_disk_space:

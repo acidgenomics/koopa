@@ -180,8 +180,10 @@ def _can_install_binary() -> bool:
     - KOOPA_CAN_INSTALL_BINARY=1 -> allow
     - KOOPA_BUILDER=1 -> deny (builders always build from source)
     - koopa prefix must be /opt/koopa (binaries are built against this path)
-    - otherwise: allow only if acidgenomics AWS profile is present
+    - otherwise: allow if vendor backend can pull, or acidgenomics AWS profile present
     """
+    from koopa.vendor import vendor_can_pull
+
     flag = os.environ.get("KOOPA_CAN_INSTALL_BINARY", "")
     if flag == "0":
         return False
@@ -191,25 +193,29 @@ def _can_install_binary() -> bool:
         return False
     if can_build_binary():
         return False
-    return _has_private_access()
+    return vendor_can_pull() or _has_private_access()
 
 
 def _can_push_binary() -> bool:
-    """Check if binary push to S3 is available.
+    """Check if binary push is available.
 
-    Mirrors koopa_can_push_binary:
-    - acidgenomics AWS profile must be present in ~/.aws/credentials
-    - KOOPA_BUILDER=1 must be set
-    - AWS_CLOUDFRONT_DISTRIBUTION_ID must be set
-    - aws CLI must be executable
+    Allows push when:
+    - KOOPA_BUILDER=1 is set, AND
+    - either the vendor backend can push (vendor.json configured with credentials), OR
+    - the acidgenomics profile is present with AWS_CLOUDFRONT_DISTRIBUTION_ID set
 
     Note: aws-cli cannot push its own binary during its own post-install
     (aws not yet in PATH at that point). Use 'koopa develop push-app-build
     aws-cli' after installation completes.
     """
-    if not _has_private_access():
-        return False
+    from koopa.vendor import vendor_can_push
+
     if not can_build_binary():
+        return False
+    if vendor_can_push():
+        return True
+    # Fall back to acidgenomics S3 path.
+    if not _has_private_access():
         return False
     if not os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", ""):
         return False
@@ -364,9 +370,12 @@ def link_in_zsh_completions(prefix: str) -> None:
 def install_app_from_binary_package(*prefixes: str) -> None:
     """Install app from pre-built binary package.
 
-    Downloads a pre-built tarball from the private S3 bucket and extracts
-    it into the target prefix. Inspired by Homebrew bottles.
+    Downloads a pre-built tarball from the vendor backend (if configured) or
+    the private acidgenomics S3 bucket, and extracts it into the target prefix.
+    Inspired by Homebrew bottles.
     """
+    from koopa.vendor import vendor_config, vendor_pull_binary, vendor_pull_priority
+
     if not prefixes:
         msg = "At least one prefix is required."
         raise ValueError(msg)
@@ -383,6 +392,8 @@ def install_app_from_binary_package(*prefixes: str) -> None:
             f"default '{binary_prefix}' location."
         )
         raise RuntimeError(msg)
+    use_vendor = vendor_config() is not None
+    vendor_only = use_vendor and vendor_pull_priority() == "vendor_only"
     tmp_dir = tempfile.mkdtemp(prefix="koopa-binary-")
     try:
         for prefix in prefixes:
@@ -391,17 +402,26 @@ def install_app_from_binary_package(*prefixes: str) -> None:
             version = os.path.basename(prefix_path)
             tarball_name = _binary_tarball_basename(name, version)
             tar_file = os.path.join(tmp_dir, f"{name}-{version}.tar.gz")
-            tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{tarball_name}"
-            run(
-                "aws",
-                "s3",
-                "cp",
-                "--profile",
-                aws_profile,
-                tar_url,
-                tar_file,
-            )
-            if not os.path.isfile(tar_file):
+            downloaded = False
+            if use_vendor:
+                try:
+                    vendor_pull_binary(os_str, arch, name, tarball_name, tar_file)
+                    downloaded = os.path.isfile(tar_file)
+                except Exception:
+                    downloaded = False
+            if not downloaded and not vendor_only:
+                tar_url = f"{s3_bucket}/{os_str}/{arch}/{name}/{tarball_name}"
+                run(
+                    "aws",
+                    "s3",
+                    "cp",
+                    "--profile",
+                    aws_profile,
+                    tar_url,
+                    tar_file,
+                )
+                downloaded = os.path.isfile(tar_file)
+            if not downloaded:
                 msg = f"Failed to download binary: {tar_file}"
                 raise FileNotFoundError(msg)
             run("tar", "-Pxz", "-f", tar_file)
@@ -418,7 +438,9 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 
 
 def push_app_build(name: str) -> None:
-    """Push completed build to AWS S3 bucket."""
+    """Push completed build to S3 and/or vendor backend."""
+    from koopa.vendor import vendor_config, vendor_push_binary
+
     arch = arch2()
     os_str = os_slug()
     s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
@@ -447,6 +469,8 @@ def push_app_build(name: str) -> None:
             tar_file,
             tar_url,
         )
+        if vendor_config() is not None:
+            vendor_push_binary(tar_file, os_str, arch, name, tarball_name)
     finally:
         if os.path.isfile(tar_file):
             os.unlink(tar_file)
