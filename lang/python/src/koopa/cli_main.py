@@ -657,7 +657,6 @@ def _handle_update(args: argparse.Namespace) -> None:
             python_changed = update_koopa(verbose=args.verbose)
             if python_changed:
                 _release_install_lock()
-                acquired = False
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             return
@@ -688,12 +687,21 @@ def _handle_update(args: argparse.Namespace) -> None:
             acquired = False
             _exec_restart_after_pull()
         _update_venv(_koopa_prefix())
-        remove_alias_app_dirs(verbose=args.verbose)
-        remove_unsupported_apps(verbose=args.verbose)
+        remove_alias_app_dirs()
+        try:
+            remove_unsupported_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"Removing unsupported apps failed: {exc}")
         prune_broken_symlinks()
         repair_app_symlinks()
-        update_stale_apps(verbose=args.verbose)
-        install_missing_default_apps(verbose=args.verbose)
+        try:
+            update_stale_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"Updating stale apps failed: {exc}")
+        try:
+            install_missing_default_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"Installing missing default apps failed: {exc}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:

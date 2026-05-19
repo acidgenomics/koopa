@@ -72,7 +72,7 @@ def activate_app_deps() -> "BuildEnv":
     from koopa.build import BuildEnv, activate_app
     from koopa.installers._context import get_app_name
     from koopa.io import import_json
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     name = get_app_name()
     koopa_prefix = str(Path(__file__).resolve().parents[5])

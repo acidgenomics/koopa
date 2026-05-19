@@ -7,12 +7,12 @@ from os.path import basename, isdir, isfile, islink, join, realpath
 
 from koopa.app import extract_app_deps, installed_apps
 from koopa.io import import_app_json
-from koopa.os import koopa_opt_prefix
 from koopa.prefix import (
     bash_completions_prefix,
     bootstrap_prefix,
     fish_completions_prefix,
     koopa_prefix,
+    opt_prefix as koopa_opt_prefix,
     zsh_completions_prefix,
 )
 
@@ -32,7 +32,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     json_data = import_app_json()
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     current_os = os_id()
     for name in names:

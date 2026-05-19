@@ -420,7 +420,6 @@ def _handle_r_install_packages(args: list[str]) -> None:
     install_packages_in_site_library(args)
 
 
-
 def _handle_r_package_version(args: list[str]) -> None:
     if not args:
         print(

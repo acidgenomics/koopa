@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from json import dumps
 
 from koopa.io import import_app_json
-from koopa.os import os_id
+from koopa.system import os_id
 
 
 def write_install_info(output_file: str, name: str, version: str) -> None:
@@ -45,8 +45,6 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
             ver = resolved_entry.get("version", "")
             if ver:
                 dep_versions[resolved_d] = ver
-        else:
-            rev = 0
     info = {
         "name": name,
         "version": version,

@@ -106,7 +106,7 @@ def _app_json_installer(name: str) -> str:
 def _app_dependencies(name: str) -> list[str]:
     """Get application dependencies from app.json."""
     from koopa.app import _resolve_dep_dict
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     data = import_app_json()
     entry = data.get(name, {})
@@ -124,7 +124,7 @@ def _app_dependencies(name: str) -> list[str]:
 def _app_build_dependencies(name: str) -> list[str]:
     """Get application build dependencies from app.json."""
     from koopa.app import _resolve_dep_dict
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     data = import_app_json()
     entry = data.get(name, {})
@@ -327,7 +327,7 @@ def _find_zsh_completion_files(prefix: str) -> list[tuple[str, str]]:
     return results
 
 
-def _link_completions(prefix: str, central_dir: str, files: list[tuple[str, str]]) -> None:
+def _link_completions(central_dir: str, files: list[tuple[str, str]]) -> None:
     """Symlink a list of completion files into a central directory."""
     for source, name in files:
         os.makedirs(central_dir, exist_ok=True)
@@ -340,7 +340,6 @@ def _link_completions(prefix: str, central_dir: str, files: list[tuple[str, str]
 def link_in_bash_completions(prefix: str) -> None:
     """Symlink bash completion files from an app prefix into the central dir."""
     _link_completions(
-        prefix,
         bash_completions_prefix(),
         _find_bash_completion_files(prefix),
     )
@@ -349,7 +348,6 @@ def link_in_bash_completions(prefix: str) -> None:
 def link_in_fish_completions(prefix: str) -> None:
     """Symlink fish completion files from an app prefix into the central dir."""
     _link_completions(
-        prefix,
         fish_completions_prefix(),
         _find_fish_completion_files(prefix),
     )
@@ -358,7 +356,6 @@ def link_in_fish_completions(prefix: str) -> None:
 def link_in_zsh_completions(prefix: str) -> None:
     """Symlink zsh completion files from an app prefix into the central dir."""
     _link_completions(
-        prefix,
         zsh_completions_prefix(),
         _find_zsh_completion_files(prefix),
     )
@@ -975,8 +972,6 @@ def build_go_package(
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
-    if not version:
-        version = os.environ.get("KOOPA_INSTALL_VERSION", "")
     go = locate("go")
     if not bin_name:
         bin_name = name
@@ -1929,8 +1924,6 @@ def install_koopa(
     *,
     prefix: str = "",
     shared: bool = False,
-    add_to_user_profile: bool = True,
-    interactive: bool = True,
     verbose: bool = False,
 ) -> None:
     """Install koopa itself.
@@ -2399,7 +2392,7 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
 
 def _is_supported_app(name: str) -> bool:
     """Check if an app is supported on the current platform."""
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     json_data = import_app_json()
     entry = json_data.get(name, {})
@@ -2421,7 +2414,7 @@ def _compute_install_plan(  # noqa: C901
         dep_map: for each app in plan, its transitive deps also in the plan
     """
     from koopa.app import extract_app_deps
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     json_data = import_app_json()
     opt_dir = opt_prefix()
@@ -2614,7 +2607,7 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
     was recorded on the dependent.
     """
     from koopa.app import _resolve_dep_dict, installed_apps
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     json_data = import_app_json()
     sys_dict = {"os_id": os_id()}
@@ -2830,7 +2823,7 @@ def remove_unsupported_apps(*, verbose: bool = False) -> None:
         uninstall_app(config)
 
 
-def remove_alias_app_dirs(*, verbose: bool = False) -> None:
+def remove_alias_app_dirs() -> None:
     """Remove app directories installed under alias names.
 
     When an alias (e.g., 'openssl') was previously installed, the directory
@@ -2882,7 +2875,7 @@ def update_system_apps(*, verbose: bool = False) -> None:
     for name, plat in entries:
         if not _platform_matches(plat):
             continue
-        _run_system_update(name, platform=plat, verbose=verbose)
+        _run_system_update(name, verbose=verbose)
 
 
 def _platform_matches(plat: str) -> bool:
@@ -2901,7 +2894,7 @@ def _platform_matches(plat: str) -> bool:
     return check() if check is not None else False
 
 
-def _run_system_update(name: str, *, platform: str, verbose: bool) -> None:
+def _run_system_update(name: str, *, verbose: bool) -> None:
     """Dispatch a single system update by name."""
     if name == "homebrew":
         _update_system_homebrew(verbose=verbose)
