@@ -282,9 +282,9 @@ def _parse_os_release(path: str) -> dict[str, str]:
     fields: dict[str, str] = {}
     with open(path) as f:
         for line in f:
-            line = line.strip()
-            if "=" in line and not line.startswith("#"):
-                key, _, value = line.partition("=")
+            stripped = line.strip()
+            if "=" in stripped and not stripped.startswith("#"):
+                key, _, value = stripped.partition("=")
                 fields[key.strip()] = value.strip().strip('"')
     return fields
 
