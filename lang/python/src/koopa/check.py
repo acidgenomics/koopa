@@ -12,7 +12,7 @@ from koopa.prefix import (
     bootstrap_prefix,
     fish_completions_prefix,
     koopa_prefix,
-    opt_prefix as koopa_opt_prefix,
+    opt_prefix,
     zsh_completions_prefix,
 )
 
@@ -26,7 +26,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     """
     from koopa.prefix import bin_prefix, man1_prefix
 
-    opt_prefix = koopa_opt_prefix()
+    opt_dir = opt_prefix()
     bin_dir = bin_prefix()
     man1_dir = man1_prefix()
     json_data = import_app_json()
@@ -54,7 +54,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
         if current_os in supported and not supported[current_os]:
             issues.append((name, f"{name} is not supported on {current_os}", False))
             continue
-        path = join(opt_prefix, name)
+        path = join(opt_dir, name)
         if not islink(path):
             issues.append((name, f"{name} is not linked at {path}", True))
             continue
@@ -263,7 +263,7 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
     from koopa.prefix import app_prefix as get_app_prefix
 
     app_dir = get_app_prefix()
-    opt_prefix = koopa_opt_prefix()
+    opt_dir = opt_prefix()
     issues: list[tuple[str, str]] = []
     if not isdir(app_dir):
         return issues
@@ -271,7 +271,7 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
         app_path = join(app_dir, name)
         if not isdir(app_path):
             continue
-        opt_link = join(opt_prefix, name)
+        opt_link = join(opt_dir, name)
         if islink(opt_link) and isdir(realpath(opt_link)):
             linked_path = realpath(opt_link)
             if not isfile(join(linked_path, ".install", "info.json")):
@@ -749,7 +749,7 @@ def check_missing_default_apps() -> bool:
     """Check whether all default apps are installed."""
     from koopa.app import shared_apps
 
-    opt = koopa_opt_prefix()
+    opt = opt_prefix()
     app_names = shared_apps(mode="default")
     missing = [a for a in app_names if not os.path.islink(os.path.join(opt, a))]
     if not missing:
