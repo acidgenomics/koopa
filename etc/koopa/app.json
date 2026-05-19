@@ -2133,7 +2133,7 @@
     ],
     "category": "Editor",
     "date": "2026-05-19",
-    "default": true,
+    "default": false,
     "dependencies": [
       "emacs"
     ],
@@ -8423,7 +8423,7 @@
     ],
     "category": "Editor",
     "date": "2026-05-19",
-    "default": true,
+    "default": false,
     "dependencies": [
       "emacs"
     ],
