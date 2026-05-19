@@ -501,7 +501,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-15",
+    "date": "2026-05-19",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -513,7 +513,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.47"
+    "version": "2.34.48"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -987,7 +987,7 @@
       "blackd"
     ],
     "category": "Python",
-    "date": "2026-03-19",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "python"
@@ -1000,13 +1000,12 @@
       },
       "pip_name": "black[d]"
     },
-    "revision": 2,
     "type": "cli",
     "url": [
       "https://pypi.org/project/black/",
       "https://github.com/psf/black/"
     ],
-    "version": "26.3.1"
+    "version": "26.5.1"
   },
   "blast": {
     "bin": [
@@ -1481,7 +1480,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-05-15",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "node"
@@ -1495,7 +1494,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.142"
+    "version": "2.1.144"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1533,7 +1532,7 @@
       "codex"
     ],
     "category": "AI",
-    "date": "2026-05-11",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "node"
@@ -1547,7 +1546,7 @@
     "url": [
       "https://www.npmjs.com/package/@openai/codex"
     ],
-    "version": "0.130.0"
+    "version": "0.131.0"
   },
   "colorls": {
     "bin": [
@@ -2133,7 +2132,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-14",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "emacs"
@@ -2143,14 +2142,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "e53b9dfecea20f26e654902b272453359b938a36"
+    "version": "c2ff579a28ecfec90c343417bc04b2a9569d9ed7"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-05-15",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2160,7 +2159,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "f72b142121c1d6f3f79daea9a528247b9e010de0"
+    "version": "c5e2768fd6077d7328cc7ee827b904a51eafb65b"
   },
   "du-dust": {
     "bin": [
@@ -4392,7 +4391,7 @@
       "latch"
     ],
     "category": "Cloud",
-    "date": "2026-05-15",
+    "date": "2026-05-19",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -4409,7 +4408,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.72.0"
+    "version": "2.73.0"
   },
   "ldc": {
     "build_dependencies": [
@@ -5146,7 +5145,7 @@
       "pkg-config"
     ],
     "category": "Dotfile",
-    "date": "2026-04-15",
+    "date": "2026-05-19",
     "default": false,
     "dependencies": [
       "lua",
@@ -5167,7 +5166,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.2"
+    "version": "9.2.2"
   },
   "lsd": {
     "bin": [
@@ -7932,19 +7931,18 @@
       "conda"
     ],
     "category": "Language",
-    "date": "2026-05-18",
+    "date": "2026-05-19",
     "default": false,
     "description": "dynamic, open-source programming language",
     "installer": "conda-package",
     "man1": [
       "ruby.1"
     ],
-    "revision": 2,
     "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
     ],
-    "version": "4.0.2"
+    "version": "4.0.4"
   },
   "ruff": {
     "bin": [
@@ -8380,7 +8378,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-05-02",
+    "date": "2026-05-19",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -8390,7 +8388,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.20.0"
+    "version": "9.21.0"
   },
   "sox": {
     "bin": [
@@ -8424,18 +8422,17 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-10",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "emacs"
     ],
     "description": "Emacs configuration centered around evil-mode",
-    "revision": 2,
     "type": "cli",
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "37e2a32b95d548a8e4c37996df408ec02e3f22f6"
+    "version": "25949ce0935270b7fec779f2219bfc2c0c157e50"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9012,7 +9009,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-05-15",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "python"
@@ -9024,7 +9021,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.36"
+    "version": "0.0.37"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9143,14 +9140,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-05-14",
+    "date": "2026-05-19",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.14"
+    "version": "0.11.15"
   },
   "vim": {
     "bin": [
@@ -9334,7 +9331,7 @@
     ],
     "category": "Core",
     "conda_channel": "conda-forge",
-    "date": "2026-05-07",
+    "date": "2026-05-19",
     "default": true,
     "description": "shows the full path of shell commands",
     "installer": "conda-package",
@@ -9345,7 +9342,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/which/?C=M;O=D"
     ],
-    "version": "2.23"
+    "version": "2.24"
   },
   "woff2": {
     "bin": [
