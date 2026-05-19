@@ -1,3 +1,5 @@
 * High complexity
 * Medium complexity
+** TODO `koopa update` isn't handling case where we have added new default apps. I've noticed on some EC2 machines that it appears to only be updating currently installed apps. We need to check and make sure that any apps recently added with `"default": true` also automatically get installed when running `koopa update`.
+** TODO `koopa update` should also handle automatic uninstall of any apps with `"removed": true` in `app.json`.
 * Low complexity
