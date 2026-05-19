@@ -8,7 +8,7 @@ from os.path import dirname, isfile, join
 from re import compile
 from time import sleep
 
-from koopa.os import koopa_prefix
+from koopa.prefix import koopa_prefix
 
 
 def extract_conda_bin_names(json_file: str) -> list:

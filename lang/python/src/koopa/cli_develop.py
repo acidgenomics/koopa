@@ -1035,7 +1035,7 @@ def _handle_bump_venv_version(_: list[str]) -> None:
     """
     import time
 
-    from koopa.os import koopa_prefix
+    from koopa.prefix import koopa_prefix
 
     version_file = os.path.join(koopa_prefix(), "etc", "koopa", "venv-version.txt")
     current = ""
@@ -1056,7 +1056,7 @@ def _handle_bump_bootstrap(_: list[str]) -> None:
     """
     import time
 
-    from koopa.os import koopa_prefix
+    from koopa.prefix import koopa_prefix
 
     version_file = os.path.join(koopa_prefix(), "etc", "koopa", "bootstrap-version.txt")
     current = ""
