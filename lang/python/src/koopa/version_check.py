@@ -1516,7 +1516,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "ruby": _AppCheckSpec("github", _check_github, ("ruby", "ruby")),
+    "ruby": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("ruby", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
     "screen": _AppCheckSpec("gnu", lambda: _check_gnu("screen"), ()),
