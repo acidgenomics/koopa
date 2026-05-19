@@ -312,6 +312,12 @@ def os_slug() -> str:
     return f"{os_id}-{major}" if major else os_id
 
 
+def os_id() -> str:
+    """Platform and architecture-specific identifier (e.g. 'macos-arm64')."""
+    _platform = "macos" if is_macos() else "linux"
+    return f"{_platform}-{arch2()}"
+
+
 def logged_in_users() -> list[str]:
     """Get list of logged-in users."""
     try:

@@ -677,7 +677,7 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR091
         if gh_repo:
             owner, repo = gh_repo.split("/", 1)
             return _AppCheckSpec("github", _check_github, (owner, repo))
-    spec = _classify_by_known_pattern(name, info, module_path, urls)
+    spec = _classify_by_known_pattern(name, info)
     if spec:
         return spec
     return None
@@ -845,8 +845,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
 def _classify_by_known_pattern(  # noqa: PLR0911
     name: str,
     info: dict,
-    module_path: str,
-    urls: list[str],
 ) -> _AppCheckSpec | None:
     if name in _XORG_MAP:
         subdir, prefix = _XORG_MAP[name]

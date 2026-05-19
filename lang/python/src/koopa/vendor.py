@@ -70,9 +70,7 @@ def _s3_src_uri(cfg: dict[str, Any], name: str, filename: str) -> str:
     return f"s3://{bucket}/{prefix}/{name}/{filename}"
 
 
-def _s3_binary_uri(
-    cfg: dict[str, Any], os_str: str, arch: str, name: str, tarball: str
-) -> str:
+def _s3_binary_uri(cfg: dict[str, Any], os_str: str, arch: str, name: str, tarball: str) -> str:
     s3 = cfg["s3"]
     bucket = s3["bucket"]
     prefix = s3.get("binary_prefix", "binaries").rstrip("/")
@@ -91,9 +89,7 @@ def vendor_download_src(name: str, filename: str) -> str | None:
     return None
 
 
-def vendor_download_binary(
-    os_str: str, arch: str, name: str, tarball: str
-) -> str | None:
+def vendor_download_binary(os_str: str, arch: str, name: str, tarball: str) -> str | None:
     """Return HTTPS URL for binary tarball from vendor Artifactory backend, or None.
 
     For S3 backend returns None (callers use vendor_pull_binary instead).
@@ -135,9 +131,7 @@ def vendor_has_binary(os_str: str, arch: str, name: str, tarball: str) -> bool:
     return _s3_head(uri, cfg["s3"].get("profile", ""))
 
 
-def vendor_pull_binary(
-    os_str: str, arch: str, name: str, tarball: str, dest: str
-) -> None:
+def vendor_pull_binary(os_str: str, arch: str, name: str, tarball: str, dest: str) -> None:
     """Download binary tarball from vendor backend to dest path."""
     cfg = vendor_config()
     if cfg is None:
@@ -170,9 +164,7 @@ def vendor_push_src(local_path: str, name: str, filename: str) -> None:
         _s3_cp(local_path, uri, profile)
 
 
-def vendor_push_binary(
-    local_path: str, os_str: str, arch: str, name: str, tarball: str
-) -> None:
+def vendor_push_binary(local_path: str, os_str: str, arch: str, name: str, tarball: str) -> None:
     """Upload binary tarball to vendor backend."""
     cfg = vendor_config()
     if cfg is None:
