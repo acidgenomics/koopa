@@ -1,5 +1,9 @@
 # Lessons
 
+## Plan Files Must Have YYYY-MM-DD Prefix
+
+Plan files saved to `.claude/plans/` must always be named with a `YYYY-MM-DD-` date prefix (e.g., `2026-05-19-fix-completion-duplicates.md`). Names without the prefix are non-conforming and will need to be renamed.
+
 ## CLI Changes Require Regenerating Completions
 
 When renaming, adding, or removing CLI commands in koopa, always run

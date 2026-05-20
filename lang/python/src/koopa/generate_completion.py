@@ -125,13 +125,20 @@ def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
         "user": [],
         "update-system": [],
     }
+    seen: dict[str, set[tuple[str, str | None]]] = {k: set() for k in result}
     for name, platform, mode in PYTHON_INSTALLER_MODES:
         plat: str | None = None if platform == "common" else platform
-        result[mode].append((name, plat))
+        entry = (name, plat)
+        if entry not in seen[mode]:
+            seen[mode].add(entry)
+            result[mode].append(entry)
     for name, platform, mode in PYTHON_PLATFORM_INSTALLERS:
         if mode == "system":
             plat: str | None = None if platform == "common" else platform
-            result["system"].append((name, plat))
+            entry = (name, plat)
+            if entry not in seen["system"]:
+                seen["system"].add(entry)
+                result["system"].append(entry)
     return result
 
 
