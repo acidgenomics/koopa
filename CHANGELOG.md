@@ -1,6 +1,6 @@
 # Changelog
 
-## koopa 0.18.0 (2026-05-23)
+## koopa 0.17.0 (2026-05-23)
 
 Major changes:
 
@@ -20,24 +20,6 @@ Major changes:
   binary packages from private infrastructure (custom S3 buckets or JFrog
   Artifactory). Configure via `etc/koopa/vendor.json`. Supports `vendor_first`
   and `vendor_only` pull strategies.
-
-Minor changes:
-
-- Improved `koopa system info` platform output.
-- Improved runtime dependency cleanup for removed apps (with unit tests).
-- Reworked R configuration handling; removed from-source R and Ruby app
-  installers in favor of system/package-manager installs.
-- Removed `cloudbiolinux` app support.
-- Fixed `pyenv`, `gnupg`, and STAR version-key installers.
-- Increased conda timeout.
-- Improved `koopa configure` CLI and `format-app-json` developer command.
-- Ensured Ruby and Perl version bumps are tracked in `app.json`.
-- Added detached HEAD detection.
-
-## koopa 0.17.0 (2026-05-10)
-
-Major changes:
-
 - Reworked Emacs distribution support. `spacemacs`, `doom-emacs`, and
   `emacs-prelude` are now installed as shared apps under `app/` with wrapper
   scripts, replacing the per-user install model. Each distribution stores
@@ -58,12 +40,18 @@ Major changes:
 - Added `koopa app brew install-bundle` subcommand for installing from the
   user's Brewfile (`$XDG_CONFIG_HOME/homebrew/brewfile`).
 
-New apps:
-
-- `emacs-prelude`.
-
 Minor changes:
 
+- Improved `koopa system info` platform output.
+- Improved runtime dependency cleanup for removed apps (with unit tests).
+- Reworked R configuration handling; removed from-source R and Ruby app
+  installers in favor of system/package-manager installs.
+- Removed `cloudbiolinux` app support.
+- Fixed `pyenv`, `gnupg`, and STAR version-key installers.
+- Increased conda timeout.
+- Improved `koopa configure` CLI and `format-app-json` developer command.
+- Ensured Ruby and Perl version bumps are tracked in `app.json`.
+- Added detached HEAD detection.
 - Reworked app dependency handling in install scripts.
 - Improved RPATH detection and stale app trigger logic.
 - Added `etc/koopa/app-categories.json` for app categorization.
@@ -85,6 +73,10 @@ Minor changes:
 - Removed `prelude-emacs` installer (replaced by `emacs-prelude`).
 - Removed `vim` source installer (now uses conda-forge package).
 - Removed `_go_pkg.py` and `bootstrap.py` dead installer modules.
+
+New apps:
+
+- `emacs-prelude`.
 
 ## koopa 0.16.0 (2026-05-09)
 
