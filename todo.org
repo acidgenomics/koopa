@@ -1,3 +1,11 @@
 * High complexity
 * Medium complexity
 * Low complexity
+** TODO Our Claude rules aren't picking this up correctly for dotfiles:
+ 13 ⋮ 13 │    "chat.tools.terminal.enableAutoApprove": true,
+ 14 ⋮ 14 │    "chat.tools.urls.autoApprove": {
+    ⋮ 15 │      "https://code.visualstudio.com": true,
+    ⋮ 16 │      "https://github.com/microsoft/vscode/wiki/*": true,
+ 15 ⋮ 17 │      "https://*/*": {
+ 16 ⋮ 18 │        "approveRequest": true,
+ 17 ⋮ 19 │        "approveResponse": true
