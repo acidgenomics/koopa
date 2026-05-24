@@ -569,7 +569,9 @@ _koopa_activate_fzf() {
     [ -x "$(_koopa_bin_prefix)/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
     then
-        export FZF_DEFAULT_OPTS='--border --color bw --multi'
+        _fzf_color="$(_koopa_color_mode)"
+        export FZF_DEFAULT_OPTS="--border --color ${_fzf_color} --multi"
+        unset -v _fzf_color
     fi
     return 0
 }
