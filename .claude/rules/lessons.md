@@ -11,6 +11,27 @@ sudo is currently usable without a password prompt. Do not create additional hel
 (e.g., `_has_sudo`, `can_sudo`, `check_sudo`) for this purpose — they duplicate it.
 Always import and reuse `has_sudo` from `koopa.system`.
 
+## app.json Edits Require Formatting and a Revision Bump
+
+After modifying `etc/koopa/app.json`, always run:
+
+```
+koopa develop format-app-json
+```
+
+This keeps formatting consistent and all keys sorted correctly. Also increment
+the `revision` field for the edited app entry (add `"revision": 1` if absent)
+to signal that installed instances need to be re-linked or reinstalled.
+
+## Chezmoi Templates Run Before Post-Install Generators
+
+When a chezmoi template needs to detect something that an install script
+generates *after* `chezmoi apply` (e.g., a file written by a post-chezmoi
+function), `stat` on the generated output will always miss — chezmoi runs
+first. Instead, detect the *source* that triggers generation (e.g., the
+upstream `.tmTheme` file that causes `.rstheme` to be generated) rather than
+the generated artifact itself.
+
 ## CLI Changes Require Regenerating Completions
 
 When renaming, adding, or removing CLI commands in koopa, always run

@@ -494,7 +494,8 @@
   },
   "aws-cli": {
     "bin": [
-      "aws"
+      "aws",
+      "aws_completer"
     ],
     "build_dependencies": [
       "conda"
@@ -504,6 +505,7 @@
     "date": "2026-05-19",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
+    "revision": 1,
     "installer": "conda-package",
     "installer_args": {
       "name": "awscli"
