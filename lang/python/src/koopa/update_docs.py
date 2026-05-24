@@ -170,7 +170,7 @@ def update_website_index(apps: list[str]) -> None:
     new_content = pattern.sub(section, content)
 
     ref_pattern = re.compile(
-        r"\n\n(\[[^\]]+\]: [^\n]*\n?)+\Z",
+        r"\n\n(\[[^\]]+\]: [^\n]*\n)+\Z",
     )
     refs_section = _render_refs(apps)
     new_content = ref_pattern.sub("\n\n" + refs_section, new_content)
