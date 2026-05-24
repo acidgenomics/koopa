@@ -1,13 +1,9 @@
 * High complexity
 * Medium complexity
-** TODO Need to restore support in `koopa app brew upgrade` for:
-    brew outdated --cask --greedy
+** TODO Wire in full automatic config support for Dracula Pro at ~/.local/share/dracula-pro to our dotfiles configuration.
 * Low complexity
-** TODO Our Claude rules aren't picking this up correctly for dotfiles:
- 13 ⋮ 13 │    "chat.tools.terminal.enableAutoApprove": true,
- 14 ⋮ 14 │    "chat.tools.urls.autoApprove": {
-    ⋮ 15 │      "https://code.visualstudio.com": true,
-    ⋮ 16 │      "https://github.com/microsoft/vscode/wiki/*": true,
- 15 ⋮ 17 │      "https://*/*": {
- 16 ⋮ 18 │        "approveRequest": true,
- 17 ⋮ 19 │        "approveResponse": true
+** TODO "has_passwordless_sudo" is not the correct function name. Let's use "has_sudo" instead. Ensure we update lessons.md.
+** TODO For opt/dotfiles Dracula Pro color scheme is not being configured correctly in nvim update.
+   Dracula theme seems to work fine. On one of my machines with Dracula Pro, nvim theme doesn't load correctly. It just appears as a generic dark theme. Let's diagnose this problem.
+** TODO bash aws_completer: command not found
+   Need to fix this problem for our aws cli install and config.

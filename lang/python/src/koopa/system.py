@@ -180,6 +180,18 @@ def is_admin() -> bool:
     return False
 
 
+def has_sudo() -> bool:
+    """Check whether sudo is available without a password prompt."""
+    if is_root():
+        return True
+    result = subprocess.run(
+        ["sudo", "-n", "true"],
+        capture_output=True,
+        check=False,
+    )
+    return result.returncode == 0
+
+
 def is_installed(name: str) -> bool:
     """Check if a program is installed."""
     return shutil.which(name) is not None

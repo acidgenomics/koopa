@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_has_passwordless_sudo() {
+_koopa_has_sudo() {
     # """
     # Check if sudo is active or doesn't require a password.
     # @note Updated 2023-04-05.
