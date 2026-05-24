@@ -1,6 +1,6 @@
 [project]
 name = "koopa"
-version = "0.17.0"
+version = "0.18.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = [
   "Private :: Do Not Upload",
@@ -27,16 +27,13 @@ requires = ["setuptools"]
 [tool.bumpver]
 commit = true
 commit_message = "Bump version to {new_version}."
-current_version = "v0.17.0"
-post_commit_hook = ""
-pre_commit_hook = ""
+current_version = "v0.18.0"
 push = false
 tag = true
-tag_scope = "default"
 version_pattern = "vMAJOR.MINOR.PATCH"
 
 [tool.bumpver.file_patterns]
-"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{pep440_version}"']
 
 [tool.coverage.run]
 relative_files = true
