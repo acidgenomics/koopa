@@ -1,8 +1,10 @@
 # Lessons
 
-## Plan Files Must Have YYYY-MM-DD Prefix
+## Plan Files: System-Generated Names Must Be Used As-Is
 
-Plan files saved to `.claude/plans/` must always be named with a `YYYY-MM-DD-` date prefix (e.g., `2026-05-19-fix-completion-duplicates.md`). Names without the prefix are non-conforming and will need to be renamed.
+When the system specifies a plan filename (in the plan mode system message), use that exact path — do NOT rename it with a `YYYY-MM-DD-` prefix. VS Code's plan review UI looks for the exact filename the system specified; renaming breaks the UI.
+
+The `YYYY-MM-DD-` date prefix convention applies only to manually created plan/reference docs, not system-assigned plan filenames.
 
 ## Use `has_sudo` for Sudo Checks — Don't Add New Sudo Functions
 
