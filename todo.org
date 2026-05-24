@@ -1,23 +1,3 @@
 * High complexity
 * Medium complexity
-
-** TODO Wire in full automatic config support for Dracula Pro at ~/.local/share/dracula-pro to our dotfiles configuration.
-** TODO Does it make more sense to just store the dotfiles repo directly in koopa?
-   The code in the dotfiles `install` file is getting complex, and it may be a signal that we should just integrate all dotfiles configuration directly into koopa instead.
 * Low complexity
-** DONE "has_passwordless_sudo" is not the correct function name. Let's use "has_sudo" instead. Ensure we update lessons.md.
-** DONE For opt/dotfiles Dracula Pro color scheme is not being configured correctly in nvim update.
-   Dracula theme seems to work fine. On one of my machines with Dracula Pro, nvim theme doesn't load correctly. It just appears as a generic dark theme. Let's diagnose this problem.
-** DONE bash aws_completer: command not found
-   Need to fix this problem for our aws cli install and config.
-** TODO Need to fix this problem with RStudio after R reinstall, config isn't smart enough currently:
-Error in loadNamespace(x) : there is no package called ‘reticulate’
-Calls: .rs.reticulate.usePython ... loadNamespace -> withRestarts -> withOneRestart -> doWithOneRestart
-Backtrace:
-    ▆
- 1. ├─.rs.reticulate.usePython("~/.local/share/koopa/bin/python3")
- 2. └─base::loadNamespace(x)
- 3.   └─base::withRestarts(stop(cond), retry_loadNamespace = function() NULL)
- 4.     └─base (local) withOneRestart(expr, restarts[[1L]])
- 5.       └─base (local) doWithOneRestart(return(expr), restart)
->
