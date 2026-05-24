@@ -129,23 +129,3 @@ def go_prefix() -> str:
 def emacs_prefix() -> str:
     """Return Emacs config prefix."""
     return os.path.expanduser("~/.emacs.d")
-
-
-def doom_emacs_prefix() -> str:
-    """Return Doom Emacs prefix."""
-    return os.path.expanduser("~/.doom.d")
-
-
-def prelude_emacs_prefix() -> str:
-    """Return Prelude Emacs prefix."""
-    return os.path.expanduser("~/.emacs.d")
-
-
-def spacemacs_prefix() -> str:
-    """Return Spacemacs prefix."""
-    return os.path.expanduser("~/.spacemacs.d")
-
-
-def spacevim_prefix() -> str:
-    """Return SpaceVim prefix."""
-    return os.path.expanduser("~/.SpaceVim.d")

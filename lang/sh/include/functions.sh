@@ -104,25 +104,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    if [ -x '/usr/local/bin/emacs' ] || \
-        [ -x '/usr/bin/emacs' ] || \
-        [ -x "${__kvar_bin_prefix}/emacs" ]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-        if [ -d "${__kvar_xdg_data_home}/doom" ]
-        then
-            alias doom-emacs='_koopa_doom_emacs'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/prelude" ]
-        then
-            alias prelude-emacs='_koopa_prelude_emacs'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/spacemacs" ]
-        then
-            alias spacemacs='_koopa_spacemacs'
-        fi
-    fi
     if [ -x "${__kvar_bin_prefix}/fd" ]
     then
         alias fd='fd --absolute-path --ignore-case --no-ignore'
@@ -173,10 +154,6 @@ _koopa_activate_aliases() {
         if [ -x "${__kvar_bin_prefix}/fzf" ]
         then
             alias vim-fzf='_koopa_alias_vim_fzf'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/spacevim" ]
-        then
-            alias spacevim='_koopa_spacevim'
         fi
     fi
     if [ -x "${__kvar_bin_prefix}/walk" ]
@@ -373,10 +350,12 @@ ca-certificates"
         unset -v __kvar_file __kvar_prefix
         return 0
     fi
+    export AWS_CA_BUNDLE="$__kvar_file"
     export CURL_CA_BUNDLE="$__kvar_file"
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
     export NODE_EXTRA_CA_CERTS="$__kvar_file"
     export REQUESTS_CA_BUNDLE="$__kvar_file"
+    export GIT_SSL_CAINFO="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
     if _koopa_is_linux
     then
@@ -989,14 +968,6 @@ _koopa_alias_colorls() {
     return 0
 }
 
-_koopa_alias_emacs_vanilla() {
-    emacs --no-init-file --no-window-system "$@"
-}
-
-_koopa_alias_emacs() {
-    _koopa_emacs "$@"
-}
-
 _koopa_alias_glances() {
     case "$(_koopa_color_mode)" in
         'light')
@@ -1310,19 +1281,6 @@ _koopa_cpu_count() {
     return 0
 }
 
-_koopa_doom_emacs() {
-    __kvar_doom_emacs_prefix="$(_koopa_doom_emacs_prefix)"
-    if [ ! -d "$__kvar_doom_emacs_prefix" ]
-    then
-        _koopa_print 'Doom Emacs is not installed.'
-        unset -v __kvar_doom_emacs_prefix
-        return 1
-    fi
-    _koopa_emacs --init-directory="$__kvar_doom_emacs_prefix" "$@"
-    unset -v __kvar_doom_emacs_prefix
-    return 0
-}
-
 _koopa_duration_start() {
     __kvar_date="$(_koopa_bin_prefix)/gdate"
     if [ ! -x "$__kvar_date" ]
@@ -1368,29 +1326,6 @@ _koopa_duration_stop() {
         __kvar_duration \
         __kvar_start \
         __kvar_stop
-    return 0
-}
-
-_koopa_emacs() {
-    if _koopa_is_macos
-    then
-        __kvar_emacs="$(_koopa_macos_emacs)"
-    else
-        __kvar_emacs="$(_koopa_bin_prefix)/emacs"
-    fi
-    if [ ! -e "$__kvar_emacs" ]
-    then
-        _koopa_print "Emacs not installed at '${__kvar_emacs}'."
-        unset -v __kvar_emacs
-        return 1
-    fi
-    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
-    then
-        TERM='xterm-24bit' "$__kvar_emacs" "$@" >/dev/null 2>&1
-    else
-        "$__kvar_emacs" "$@" >/dev/null 2>&1
-    fi
-    unset -v __kvar_emacs
     return 0
 }
 
@@ -1460,19 +1395,6 @@ _koopa_logged_in_users() {
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
     unset -v __kvar_string
-    return 0
-}
-
-_koopa_prelude_emacs() {
-    __kvar_prelude_emacs_prefix="$(_koopa_prelude_emacs_prefix)"
-    if [ ! -d "$__kvar_prelude_emacs_prefix" ]
-    then
-        _koopa_print 'Prelude Emacs is not installed.'
-        unset -v __kvar_prelude_emacs_prefix
-        return 1
-    fi
-    _koopa_emacs --init-directory="$__kvar_prelude_emacs_prefix" "$@"
-    unset -v __kvar_prelude_emacs_prefix
     return 0
 }
 
@@ -1562,38 +1484,6 @@ _koopa_shell_name() {
     [ -n "$__kvar_shell" ] || return 1
     _koopa_print "$__kvar_shell"
     unset -v __kvar_shell
-    return 0
-}
-
-_koopa_spacemacs() {
-    __kvar_spacemacs_prefix="$(_koopa_spacemacs_prefix)"
-    if [ ! -d "$__kvar_spacemacs_prefix" ]
-    then
-        _koopa_print 'Spacemacs is not installed.'
-        unset -v __kvar_spacemacs_prefix
-        return 1
-    fi
-    _koopa_emacs --init-directory="$__kvar_spacemacs_prefix" "$@"
-    unset -v __kvar_spacemacs_prefix
-    return 0
-}
-
-_koopa_spacevim() {
-    __kvar_vim='vim'
-    if _koopa_is_macos
-    then
-        __kvar_gvim='/Applications/MacVim.app/Contents/bin/gvim'
-        [ -x "$__kvar_gvim" ] && __kvar_vim="$__kvar_gvim"
-        unset -v __kvar_gvim
-    fi
-    __kvar_vimrc="$(_koopa_spacevim_prefix)/vimrc"
-    if [ ! -f "$__kvar_vimrc" ]
-    then
-        _koopa_print 'SpaceVim is not installed.'
-        return 1
-    fi
-    "$__kvar_vim" -u "$__kvar_vimrc" "$@"
-    unset -v __kvar_vim __kvar_vimrc
     return 0
 }
 
@@ -1844,16 +1734,6 @@ _koopa_macos_activate_homebrew() {
     return 0
 }
 
-_koopa_macos_emacs() {
-    __kvar_homebrew_prefix="$(_koopa_homebrew_prefix)"
-    [ -d "$__kvar_homebrew_prefix" ] || return 1
-    __kvar_emacs="${__kvar_homebrew_prefix}/bin/emacs"
-    [ -x "$__kvar_emacs" ] || return 1
-    _koopa_print "$__kvar_emacs"
-    unset -v __kvar_emacs __kvar_homebrew_prefix
-    return 0
-}
-
 _koopa_macos_is_dark_mode() {
     [ \
         "$( \
@@ -1885,11 +1765,6 @@ _koopa_conda_prefix() {
 
 _koopa_config_prefix() {
     _koopa_print "$(_koopa_xdg_config_home)/koopa"
-    return 0
-}
-
-_koopa_doom_emacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/doom"
     return 0
 }
 
@@ -1940,11 +1815,6 @@ _koopa_pipx_prefix() {
     return 0
 }
 
-_koopa_prelude_emacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/prelude"
-    return 0
-}
-
 _koopa_pyenv_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
@@ -1957,16 +1827,6 @@ _koopa_rbenv_prefix() {
 
 _koopa_scripts_private_prefix() {
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
-    return 0
-}
-
-_koopa_spacemacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/spacemacs"
-    return 0
-}
-
-_koopa_spacevim_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/spacevim"
     return 0
 }
 

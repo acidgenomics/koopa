@@ -1,7 +1,7 @@
 """Install ldns."""
 
-from koopa.build import activate_app, app_prefix, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -12,7 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install ldns."""
-    env = activate_app("openssl", env=None)
+    env = activate_app_deps()
     openssl_prefix = app_prefix("openssl")
     download_extract_cd()
     make_build(

@@ -11,6 +11,7 @@ import ssl
 import subprocess
 import sys
 import urllib.request
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -31,6 +32,8 @@ def download(
     retry: bool = True,
     connect_timeout: int | None = None,
     max_time: int | None = None,
+    speed_limit: int | None = None,
+    speed_time: int | None = None,
     quiet: bool = False,
 ) -> str:
     """Download a file from a URL.
@@ -49,6 +52,8 @@ def download(
             retry=retry,
             connect_timeout=connect_timeout,
             max_time=max_time,
+            speed_limit=speed_limit,
+            speed_time=speed_time,
             quiet=quiet,
         )
     except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
@@ -59,6 +64,8 @@ def download(
                 retry=retry,
                 connect_timeout=connect_timeout,
                 max_time=max_time,
+                speed_limit=speed_limit,
+                speed_time=speed_time,
                 curl_cmd="/usr/bin/curl",
                 quiet=quiet,
             )
@@ -99,36 +106,54 @@ def download_with_mirror(
     extra_urls: list[str] | None = None,
     connect_timeout: int = 10,
     max_time: int | None = None,
+    speed_limit: int = 1000,
+    speed_time: int = 30,
     output: str | None = None,
     quiet: bool = False,
     skip_koopa_mirror: bool = False,
 ) -> str:
     """Download from primary URL, falling back to mirrors.
 
-    Tries the primary URL first, then GNU mirrors (if applicable), then
-    Savannah mirrors (if applicable), then any extra_urls, then the koopa
-    mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
+    Tries the primary URL first, then the vendor mirror (if configured with
+    vendor_first priority), then GNU mirrors (if applicable), then Savannah
+    mirrors (if applicable), then any extra_urls, then the koopa mirror at
+    https://koopa.acidgenomics.com/src/{name}/{filename} (unless vendor_only).
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
     """
+    from koopa.vendor import vendor_config, vendor_download_src, vendor_pull_priority
+
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     urls = [primary_url]
+
+    # Insert vendor mirror URL at position 1 (right after the primary URL).
+    vendor_url = vendor_download_src(name, filename)
+    if vendor_url:
+        urls.append(vendor_url)
+
     urls.extend(_gnu_mirrors(primary_url, name, filename))
     urls.extend(_savannah_mirrors(primary_url, name, filename))
     urls.extend(extra_urls or [])
-    if not skip_koopa_mirror:
+
+    # Skip the default koopa mirror when vendor is configured as vendor_only.
+    _skip_koopa = skip_koopa_mirror or (
+        vendor_config() is not None and vendor_pull_priority() == "vendor_only"
+    )
+    if not _skip_koopa:
         urls.append(koopa_mirror)
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:
-            is_last = not skip_koopa_mirror and url == koopa_mirror
+            is_last = not _skip_koopa and url == koopa_mirror
             tarball = download(
                 url,
                 output,
                 retry=False,
                 connect_timeout=connect_timeout if not is_last else None,
                 max_time=max_time,
+                speed_limit=speed_limit,
+                speed_time=speed_time,
                 quiet=quiet,
             )
             if not archive.is_valid_archive(tarball):
@@ -163,6 +188,21 @@ def _derive_filename(url: str) -> str:
 _curl_ok: set[str] = set()
 
 
+@lru_cache(maxsize=4)
+def _curl_version(curl_cmd: str = "curl") -> tuple[int, ...]:
+    try:
+        out = subprocess.run(
+            [curl_cmd, "--version"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        ver_str = out.split()[1]
+        return tuple(int(x) for x in ver_str.split(".")[:3])
+    except Exception:
+        return (0, 0, 0)
+
+
 def _check_curl(curl_cmd: str) -> None:
     """Verify curl's RPATH targets exist. Runs once per curl_cmd."""
     if curl_cmd in _curl_ok:
@@ -187,6 +227,8 @@ def _download_curl(
     retry: bool = True,
     connect_timeout: int | None = None,
     max_time: int | None = None,
+    speed_limit: int | None = None,
+    speed_time: int | None = None,
     curl_cmd: str = "curl",
     quiet: bool = False,
 ) -> None:
@@ -207,12 +249,19 @@ def _download_curl(
         curl_args.extend(["--connect-timeout", str(connect_timeout)])
     if max_time is not None:
         curl_args.extend(["--max-time", str(max_time)])
+    if speed_limit is not None:
+        curl_args.extend(["--speed-limit", str(speed_limit)])
+    if speed_time is not None:
+        curl_args.extend(["--speed-time", str(speed_time)])
     if retry:
-        curl_args.extend(["--retry", "3", "--retry-delay", "5", "--retry-all-errors"])
+        curl_args.extend(["--retry", "3", "--retry-delay", "5"])
+        if _curl_version(curl_cmd) >= (7, 71, 0):
+            curl_args.append("--retry-all-errors")
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and os.path.isfile(ca_bundle):
         curl_args.extend(["--cacert", ca_bundle])
-    if "sourceforge.net/" in url:
+    _host = urlparse(url).hostname or ""
+    if _host == "sourceforge.net" or _host.endswith(".sourceforge.net"):
         curl_args.extend(["--user-agent", _USER_AGENT])
     if os.environ.get("http_proxy") or os.environ.get("https_proxy"):
         curl_args.append("--insecure")

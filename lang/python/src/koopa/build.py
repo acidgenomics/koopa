@@ -5,6 +5,7 @@ Python equivalents of the Bash functions ``_koopa_activate_app``,
 ``_koopa_cmake_build``, and ``_koopa_make_build``.
 """
 
+import json
 import os
 import re
 import shutil
@@ -53,8 +54,13 @@ class BuildEnv:
         activated app bins, isolating builds from the ambient environment.
         """
         env = os.environ.copy()
-        base_path = env.get("KOOPA_DEFAULT_SYSTEM_PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
-        env["PATH"] = _merge_colon(self.path, base_path) if self.path else base_path
+        if env.get("LOADEDMODULES"):
+            env["PATH"] = (
+                _merge_colon(self.path, env.get("PATH", "")) if self.path else env.get("PATH", "")
+            )
+        else:
+            base_path = env.get("KOOPA_DEFAULT_SYSTEM_PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
+            env["PATH"] = _merge_colon(self.path, base_path) if self.path else base_path
         if self.cppflags:
             existing = env.get("CPPFLAGS", "")
             env["CPPFLAGS"] = _merge_space(self.cppflags, existing)
@@ -107,6 +113,24 @@ def _merge_semicolon(new: list[str], existing: str) -> str:
 
 
 # -- RPATH validation ---------------------------------------------------------
+
+_PACKAGE_INSTALLERS = (
+    "conda-package",
+    "node-package",
+    "perl-package",
+    "python-package",
+    "ruby-package",
+)
+
+
+def _is_package_installer(app_name: str) -> bool:
+    from koopa.io import import_app_json
+
+    json_data = import_app_json()
+    entry = json_data.get(app_name, {})
+    if not isinstance(entry, dict):
+        return False
+    return entry.get("installer", "").startswith(_PACKAGE_INSTALLERS)
 
 
 def _check_rpath(prefix: str, app_name: str) -> None:
@@ -217,6 +241,7 @@ def activate_app(
     if env is None:
         env = BuildEnv()
     opt = opt_prefix()
+    prefixes: list[str] = []
     for name in names:
         resolved = resolve_alias(name)
         app_link = os.path.join(opt, resolved)
@@ -224,13 +249,18 @@ def activate_app(
             msg = f"App not installed: {resolved!r} (expected at {app_link})"
             raise FileNotFoundError(msg)
         prefix = os.path.realpath(app_link)
-        _check_rpath(prefix, resolved)
+        if not _is_package_installer(resolved):
+            _check_rpath(prefix, resolved)
+        prefixes.append(prefix)
         bin_dir = os.path.join(prefix, "bin")
         if os.path.isdir(bin_dir):
             env.path.append(bin_dir)
         _add_pkg_config_paths(prefix, env)
-        if build_only:
-            continue
+    if build_only:
+        if not is_macos():
+            _add_transitive_rpath_links(names, env)
+        return env
+    for prefix in prefixes:
         include_dir = os.path.join(prefix, "include")
         lib_dir = os.path.join(prefix, "lib")
         lib64_dir = os.path.join(prefix, "lib64")
@@ -247,11 +277,12 @@ def activate_app(
             if os.path.isdir(ld):
                 env.ldflags.append(f"-Wl,-rpath,{ld}")
                 env.library_path.append(ld)
-        if not is_macos():
-            env.ldflags.append("-Wl,--disable-new-dtags")
         cmake_dir = os.path.join(prefix, "lib", "cmake")
         if os.path.isdir(cmake_dir):
             env.cmake_prefix_path.append(cmake_dir)
+    if not is_macos():
+        env.ldflags.append("-Wl,--disable-new-dtags")
+        _add_transitive_rpath_links(names, env)
     return env
 
 
@@ -265,6 +296,53 @@ def _add_pkg_config_paths(prefix: str, env: BuildEnv) -> None:
     for d in candidates:
         if os.path.isdir(d):
             env.pkg_config_path.append(d)
+
+
+def _add_transitive_rpath_links(names: tuple[str, ...], env: BuildEnv) -> None:
+    """Add -Wl,-rpath-link for all transitive runtime deps (Linux only).
+
+    The GNU linker recursively verifies all DT_NEEDED entries at link time.
+    This adds -rpath-link for every lib dir in the full transitive runtime
+    dependency closure so the linker can find them without baking those paths
+    into the output binary's RPATH.
+    """
+    app_json_path = os.path.join(koopa_prefix(), "etc", "koopa", "app.json")
+    with open(app_json_path) as f:
+        app_data = json.load(f)
+    opt = opt_prefix()
+    seen_dirs: set[str] = set()
+    visited: set[str] = set()
+
+    def _collect(dep_name: str) -> None:
+        resolved = resolve_alias(dep_name)
+        if resolved in visited:
+            return
+        visited.add(resolved)
+        sub_link = os.path.join(opt, resolved)
+        if not os.path.exists(sub_link):
+            return
+        sub_prefix = os.path.realpath(sub_link)
+        for lib_suffix in ("lib", "lib64"):
+            ld = os.path.join(sub_prefix, lib_suffix)
+            if os.path.isdir(ld) and ld not in seen_dirs:
+                seen_dirs.add(ld)
+                env.ldflags.append(f"-Wl,-rpath-link,{ld}")
+        _add_pkg_config_paths(sub_prefix, env)
+        entry = app_data.get(resolved, {})
+        sub_deps = entry.get("dependencies", [])
+        if isinstance(sub_deps, dict):
+            return
+        for sub_dep in sub_deps:
+            _collect(sub_dep)
+
+    for name in names:
+        resolved = resolve_alias(name)
+        entry = app_data.get(resolved, {})
+        sub_deps = entry.get("dependencies", [])
+        if isinstance(sub_deps, dict):
+            continue
+        for sub_dep in sub_deps:
+            _collect(sub_dep)
 
 
 def _find_pc_files(prefix: str) -> list[str]:
@@ -487,9 +565,9 @@ def _cmake_std_args(
     args = [
         "-DCMAKE_BUILD_TYPE=Release",
         f"-DCMAKE_INSTALL_PREFIX={prefix}",
-        f"-DCMAKE_INSTALL_BINDIR={prefix}/bin",
-        f"-DCMAKE_INSTALL_INCLUDEDIR={prefix}/include",
-        f"-DCMAKE_INSTALL_LIBDIR={prefix}/lib",
+        "-DCMAKE_INSTALL_BINDIR=bin",
+        "-DCMAKE_INSTALL_INCLUDEDIR=include",
+        "-DCMAKE_INSTALL_LIBDIR=lib",
         f"-DCMAKE_INSTALL_RPATH={prefix}/lib",
         *(["-DCMAKE_VERBOSE_MAKEFILE=ON"] if os.environ.get("KOOPA_VERBOSE") == "1" else []),
     ]

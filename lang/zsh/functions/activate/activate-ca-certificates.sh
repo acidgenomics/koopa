@@ -20,12 +20,14 @@ ca-certificates"
     then
         return 0
     fi
+    export AWS_CA_BUNDLE="$file"
     export CURL_CA_BUNDLE="$file"
     export DEFAULT_CA_BUNDLE_PATH="$prefix"
     export NODE_EXTRA_CA_CERTS="$file"
     export REQUESTS_CA_BUNDLE="$file"
+    export GIT_SSL_CAINFO="$file"
     export SSL_CERT_FILE="$file"
-    if _koopa_is_linux
+    if _koopa_is_linux && [[ -d '/etc/ssl/certs' ]]
     then
         export SSL_CERT_DIR='/etc/ssl/certs'
     fi

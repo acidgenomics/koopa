@@ -158,6 +158,32 @@ download_with_fallback() {
     return 0
 }
 
+install_perl() {
+    __kvar_version='5.42.2'
+    printf 'Installing perl.\n'
+    __kvar_filename="perl-${__kvar_version}.tar.gz"
+    __kvar_major="${__kvar_version%%.*}"
+    download_with_fallback \
+        'perl' \
+        "perl-${__kvar_version}" \
+        "https://www.cpan.org/src/${__kvar_major}.0/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/perl/${__kvar_filename}" \
+        || return 1
+    unset -v __kvar_filename __kvar_major
+    ./Configure \
+        -des \
+        -Dprefix="$PREFIX" \
+        -Duserelocatableinc \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
+    [ -x "${DESTDIR}${PREFIX}/bin/perl" ] || return 1
+    PATH="${DESTDIR}${PREFIX}/bin:${PATH}"
+    export PATH
+    unset -v __kvar_version
+    return 0
+}
+
 install_openssl() {
     __kvar_version='3.6.2'
     printf 'Installing openssl.\n'
@@ -178,10 +204,15 @@ install_openssl() {
         'no-legacy' \
         'no-tests' \
         'no-zlib' \
-        'shared'
-    make ${_make_verbose:+"$_make_verbose"} --jobs=1 depend
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install_sw DESTDIR="$DESTDIR"
+        'shared' \
+        || return 1
+    [ -f 'Makefile' ] || {
+        printf 'OpenSSL configure failed (no Makefile generated).\n' >&2
+        return 1
+    }
+    make ${_make_verbose:+"$_make_verbose"} --jobs=1 depend || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install_sw DESTDIR="$DESTDIR" || return 1
     [ -x "${DESTDIR}${PREFIX}/bin/openssl" ] || return 1
     unset -v __kvar_version
     return 0
@@ -216,28 +247,39 @@ install_python() {
     unset -v __kvar_filename
     export BZIP2_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export BZIP2_LIBS="-L${DESTDIR}${PREFIX}/lib -lbz2"
+    export LIBFFI_CFLAGS="-I${DESTDIR}${PREFIX}/include"
+    export LIBFFI_LIBS="-L${DESTDIR}${PREFIX}/lib -lffi"
     export LIBLZMA_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export LIBLZMA_LIBS="-L${DESTDIR}${PREFIX}/lib -llzma"
-    export LDLIBS='-lbz2 -lcrypto -llzma -lssl -lz'
+    export LDLIBS='-lbz2 -lcrypto -lffi -llzma -lssl -lz'
     ./configure \
         --disable-test-modules \
         --without-ensurepip \
         --prefix="$PREFIX" \
-        --with-openssl="${DESTDIR}${PREFIX}"
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
-    unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
+        --with-openssl="${DESTDIR}${PREFIX}" \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
+    unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBFFI_CFLAGS LIBFFI_LIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
     [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
     printf 'Checking python module integrity.\n'
     if is_macos
     then
-        DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        if ! DYLD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
-            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
+        then
+            printf 'Python module integrity check failed.\n' >&2
+            return 1
+        fi
     else
-        LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
+        if ! LD_LIBRARY_PATH="${DESTDIR}${PREFIX}/lib" \
             PYTHONHOME="${DESTDIR}${PREFIX}" \
-            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+            "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
+        then
+            printf 'Python module integrity check failed.\n' >&2
+            return 1
+        fi
     fi
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
@@ -271,7 +313,8 @@ install_bzip2() {
         ${_make_verbose:+"$_make_verbose"} \
         --jobs="${CPU_COUNT:?}" \
         PREFIX="${DESTDIR}${PREFIX}" \
-        install
+        install \
+        || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/libbz2.a" ] || return 1
     [ -f "${DESTDIR}${PREFIX}/include/bzlib.h" ] || return 1
     mkdir -p "${DESTDIR}${PREFIX}/lib/pkgconfig"
@@ -316,10 +359,37 @@ install_xz() {
         --disable-dependency-tracking \
         --disable-nls \
         --disable-shared \
-        --prefix="$PREFIX"
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
+        --prefix="$PREFIX" \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/liblzma.a" ] || return 1
+    unset -v __kvar_version
+    return 0
+}
+
+install_libffi() {
+    __kvar_version='3.5.2'
+    printf 'Installing libffi.\n'
+    __kvar_filename="libffi-${__kvar_version}.tar.gz"
+    download_with_fallback \
+        'libffi' \
+        "libffi-${__kvar_version}" \
+        "https://github.com/libffi/libffi/releases/download/v${__kvar_version}/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/libffi/${__kvar_filename}" \
+        || return 1
+    unset -v __kvar_filename
+    ./configure \
+        CFLAGS='-fPIC' \
+        --disable-multi-os-directory \
+        --disable-shared \
+        --includedir="${PREFIX}/include" \
+        --libdir="${PREFIX}/lib" \
+        --prefix="$PREFIX" \
+        || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
+    [ -f "${DESTDIR}${PREFIX}/lib/libffi.a" ] || return 1
     unset -v __kvar_version
     return 0
 }
@@ -335,16 +405,16 @@ install_zlib() {
         "https://www.zlib.net/${__kvar_filename}" \
         || return 1
     unset -v __kvar_filename
-    ./configure --prefix="$PREFIX"
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}"
-    make install DESTDIR="$DESTDIR"
+    ./configure --prefix="$PREFIX" || return 1
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
+    make install DESTDIR="$DESTDIR" || return 1
     [ -f "${DESTDIR}${PREFIX}/lib/libz.a" ] || return 1
     unset -v __kvar_version
     return 0
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.11.12'
+    __kvar_uv_version='0.11.15'
     __kvar_python_version='3.12.13'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
@@ -420,7 +490,7 @@ install_python_uv() {
         return 1
     fi
     printf 'Checking python module integrity.\n'
-    if ! "${__kvar_target}/bin/python3" -c 'import _bz2, _hashlib, _lzma, _ssl, zlib'
+    if ! "${__kvar_target}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
     then
         printf 'Python module integrity check failed.\n' >&2
         rm -fr "$__kvar_tmpdir"
@@ -441,7 +511,12 @@ if [ -z "$PREFIX" ]
 then
     PREFIX="${KOOPA_PREFIX}-bootstrap"
 fi
-PATH="${PREFIX}/bin:/usr/bin:/bin"
+if [ -n "${LOADEDMODULES:-}" ]
+then
+    PATH="${PREFIX}/bin:${PATH}"
+else
+    PATH="${PREFIX}/bin:/usr/bin:/bin"
+fi
 CPU_COUNT="$(cpu_count)"
 DESTDIR=''
 export CPU_COUNT DESTDIR PATH PREFIX
@@ -496,10 +571,16 @@ main() {
             fi
             export LIBRARY_PATH="${__kvar_staged:?}/lib:/usr/lib"
             export PKG_CONFIG_PATH="${__kvar_staged:?}/lib/pkgconfig"
+            if ! perl -e 'use IPC::Cmd;' 2>/dev/null
+            then
+                printf 'System perl is missing IPC::Cmd; building perl from source.\n'
+                install_perl
+            fi
             install_openssl
             install_zlib
             install_bzip2
             install_xz
+            install_libffi
             install_python
         )
         then
@@ -516,27 +597,39 @@ main() {
     then
         if [ "$__kvar_use_sudo" -eq 1 ]
         then
-            sudo /bin/rm -fr "${PREFIX}.old"
+            sudo /bin/rm -fr "${PREFIX}.old" 2>/dev/null || true
+            if [ -d "${PREFIX}.old" ]; then
+                sudo /bin/mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+            fi
             sudo /bin/mv "$PREFIX" "${PREFIX}.old"
         else
-            rm -fr "${PREFIX}.old"
+            rm -fr "${PREFIX}.old" 2>/dev/null || true
+            if [ -d "${PREFIX}.old" ]; then
+                mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+            fi
             mv "$PREFIX" "${PREFIX}.old"
         fi
     elif [ "$__kvar_use_sudo" -eq 1 ]
     then
-        sudo /bin/rm -fr "${PREFIX}.old"
+        sudo /bin/rm -fr "${PREFIX}.old" 2>/dev/null || true
+        if [ -d "${PREFIX}.old" ]; then
+            sudo /bin/mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+        fi
     else
-        rm -fr "${PREFIX}.old"
+        rm -fr "${PREFIX}.old" 2>/dev/null || true
+        if [ -d "${PREFIX}.old" ]; then
+            mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+        fi
     fi
     if [ "$__kvar_use_sudo" -eq 1 ]
     then
         sudo /bin/mkdir -p "$(dirname "$PREFIX")"
         sudo /bin/mv "$__kvar_staged" "$PREFIX"
         sudo /usr/sbin/chown -R "$(id -u):$(id -g)" "$PREFIX"
-        sudo /bin/rm -fr "${PREFIX}.old" "$__kvar_destdir"
+        sudo /bin/rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
     else
         mv "$__kvar_staged" "$PREFIX"
-        rm -fr "${PREFIX}.old" "$__kvar_destdir"
+        rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
     fi
     printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
     printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"

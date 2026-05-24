@@ -50,9 +50,9 @@ def main(
     r_cmd = _find_r_cmd(mode)
     r_home = r_prefix(r_cmd)
     is_system = mode == "system"
-    site_library = os.path.join(r_home, "site-library")
-    user = pwd.getpwuid(os.getuid()).pw_name
-    group = grp.getgrgid(os.getgid()).gr_name
+    site_library = os.path.join(r_home, "site-library") if is_system else ""
+    user = pwd.getpwuid(os.getuid()).pw_name if is_system else ""
+    group = grp.getgrgid(os.getgid()).gr_name if is_system else ""
     if is_system:
         if not os.path.isdir(site_library):
             subprocess.run(
@@ -67,9 +67,7 @@ def main(
             ["sudo", "chmod", "-R", "g+rw", site_library],
             check=True,
         )
-    else:
-        os.makedirs(site_library, exist_ok=True)
-    configure_r_environ(r_home)
+    configure_r_environ(r_home, name=name, system=is_system)
     r_configure_ldpaths(r_cmd)
     r_copy_files_into_etc(r_cmd)
     if is_system:

@@ -5,9 +5,13 @@ import shutil
 import subprocess
 
 from koopa.archive import extract
-from koopa.build import activate_app, app_prefix, locate
+from koopa.build import app_prefix, locate
 from koopa.download import download
-from koopa.installers._build_helper import _resolve_extra_src_urls, download_extract_cd
+from koopa.installers._build_helper import (
+    _resolve_extra_src_urls,
+    activate_app_deps,
+    download_extract_cd,
+)
 
 
 def main(
@@ -18,17 +22,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install git."""
-    env = activate_app("autoconf", "make", build_only=True)
-    env = activate_app(
-        "expat",
-        "zlib",
-        "openssl",
-        "libssh2",
-        "curl",
-        "pcre2",
-        "libiconv",
-        env=env,
-    )
+    env = activate_app_deps()
     make = locate("make")
     bash = locate("bash")
     less = locate("less")
@@ -121,3 +115,9 @@ def main(
     completion_dst = os.path.join(prefix, "share", "completion")
     if os.path.isdir(completion_src):
         shutil.copytree(completion_src, completion_dst, dirs_exist_ok=True)
+    git_remote_http = os.path.join(prefix, "libexec", "git-core", "git-remote-http")
+    if not os.path.isfile(git_remote_http):
+        raise RuntimeError(
+            "git-remote-http was not compiled — HTTPS transport will not work. "
+            "Check that curl's transitive deps (e.g. nghttp2) are resolvable at link time."
+        )

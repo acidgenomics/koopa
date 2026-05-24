@@ -43,14 +43,13 @@ def _os_id() -> str:
 
 
 def _require_supported_platform() -> None:
-    """Abort if running on an unsupported platform (Intel Mac)."""
-    if _os_id() == "macos-amd64":
-        print(
-            "Error: Intel Mac (x86_64) is no longer supported.\n"
-            "koopa requires macOS on Apple Silicon (arm64).\n"
-            "Linux x86_64 remains fully supported.",
-            file=sys.stderr,
-        )
+    """Abort if running on an unsupported platform."""
+    from koopa.system import check_platform
+
+    try:
+        check_platform()
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -81,6 +80,21 @@ def _exec_restart_with_bootstrap() -> None:
     if bp_lib not in ld_path.split(":"):
         os.environ["LD_LIBRARY_PATH"] = f"{bp_lib}:{ld_path}".rstrip(":")
     os.execv(new_python, [new_python, main_module, *sys.argv[1:]])
+
+
+def _exec_restart_after_pull() -> None:
+    """Replace the current process after Python source changed via git pull.
+
+    Ensures installer modules updated in the pull run with fresh code.
+    Sets _KOOPA_UPDATE_PULLED so the restarted process skips the git pull.
+    """
+    os.environ["_KOOPA_UPDATE_PULLED"] = "1"
+    koopa_prefix = _koopa_prefix()
+    src = os.path.join(koopa_prefix, "lang", "python", "src")
+    existing = os.environ.get("PYTHONPATH", "")
+    if src not in existing.split(os.pathsep):
+        os.environ["PYTHONPATH"] = f"{src}{os.pathsep}{existing}".rstrip(os.pathsep)
+    os.execv(sys.executable, [sys.executable, "-m", "koopa.cli_main", *sys.argv[1:]])
 
 
 def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
@@ -198,14 +212,27 @@ def _build_parser() -> argparse.ArgumentParser:
     update_p.add_argument(
         "mode",
         nargs="?",
-        choices=["system", "user", "koopa"],
+        choices=["system", "koopa"],
         default=None,
     )
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
-    configure_p = subparsers.add_parser("configure")
-    configure_p.add_argument("apps", nargs="*")
+    configure_p = subparsers.add_parser(
+        "configure",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Configure installed applications.",
+        epilog=(
+            "usage:\n"
+            "  koopa configure system <app> [<app>...]   Configure as system admin\n"
+            "  koopa configure user <app> [<app>...]     Configure for current user\n"
+            "\n"
+            "modes:\n"
+            "  system    Requires admin/root. System-wide configuration.\n"
+            "  user      Current user only. Must not be root."
+        ),
+    )
+    configure_p.add_argument("apps", nargs="*", metavar="app")
     _add_common_flags(configure_p)
 
     # -- app ------------------------------------------------------------------
@@ -292,7 +319,7 @@ def _resolve_apps_and_mode(
     """Resolve apps and mode from positional args."""
     apps = list(args.apps) if args.apps else []
     mode = "shared"
-    if apps and apps[0] in ("system", "user"):
+    if apps and apps[0] in ("system",):
         mode = apps[0]
         apps = apps[1:]
     return apps, mode
@@ -596,31 +623,6 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
             _release_install_lock()
 
 
-def _configure_user_dotfiles(verbose: bool = False) -> None:
-    """Run dotfiles configurer if dotfiles and chezmoi are available."""
-    import shutil
-
-    from koopa.system import is_root
-
-    if is_root():
-        return
-    from koopa.prefix import opt_prefix
-
-    dotfiles_dir = os.path.join(opt_prefix(), "dotfiles")
-    if not os.path.isdir(dotfiles_dir):
-        return
-    if shutil.which("chezmoi") is None:
-        return
-    from koopa.alert import warn
-    from koopa.configure import ConfigureConfig, configure_app
-
-    try:
-        config = ConfigureConfig(name="dotfiles", mode="user", verbose=verbose)
-        configure_app(config)
-    except Exception as exc:
-        warn(f"Dotfiles configuration failed: {exc}")
-
-
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     _require_supported_platform()
@@ -636,7 +638,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         update_koopa,
         update_stale_apps,
         update_system_apps,
-        update_user_apps,
     )
 
     mode = args.mode
@@ -653,26 +654,22 @@ def _handle_update(args: argparse.Namespace) -> None:
         sys.exit(1)
     try:
         if mode == "koopa":
-            update_koopa(verbose=args.verbose)
+            python_changed = update_koopa(verbose=args.verbose)
+            if python_changed:
+                _release_install_lock()
+                _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             return
         if mode == "system":
             update_system_apps(verbose=args.verbose)
             return
-        if mode == "user":
-            from koopa.install import fetch_user_repos, run_user_app_post_hooks
-
-            updated_user_apps = update_user_apps(verbose=args.verbose)
-            fetch_user_repos()
-            _configure_user_dotfiles(verbose=args.verbose)
-            run_user_app_post_hooks(updated_user_apps, verbose=args.verbose)
-            return
         from koopa.alert import alert_success, styled_name, warn
         from koopa.app import prune_apps
         from koopa.check import prune_broken_symlinks
+        from koopa.install import repair_app_symlinks
 
         _cleanup_legacy_config()
-        update_koopa(verbose=args.verbose)
+        python_changed = update_koopa(verbose=args.verbose)
         try:
             bootstrap_rebuilt = update_bootstrap(verbose=args.verbose)
         except Exception as exc:
@@ -685,13 +682,26 @@ def _handle_update(args: argparse.Namespace) -> None:
             _release_install_lock()
             acquired = False
             _exec_restart_with_bootstrap()
+        if python_changed:
+            _release_install_lock()
+            acquired = False
+            _exec_restart_after_pull()
         _update_venv(_koopa_prefix())
-        remove_alias_app_dirs(verbose=args.verbose)
-        remove_unsupported_apps(verbose=args.verbose)
-        update_stale_apps(verbose=args.verbose)
-        install_missing_default_apps(verbose=args.verbose)
-        update_user_apps(verbose=args.verbose)
+        remove_alias_app_dirs()
+        try:
+            remove_unsupported_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"Removing unsupported apps failed: {exc}")
         prune_broken_symlinks()
+        repair_app_symlinks()
+        try:
+            update_stale_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"Updating stale apps failed: {exc}")
+        try:
+            install_missing_default_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"Installing missing default apps failed: {exc}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
@@ -708,10 +718,11 @@ def _handle_configure(args: argparse.Namespace) -> None:
     from koopa.configure import ConfigureConfig, configure_app
 
     apps = list(args.apps) if args.apps else []
-    mode = "shared"
-    if apps and apps[0] in ("system", "user"):
-        mode = apps[0]
-        apps = apps[1:]
+    if not apps or apps[0] not in ("system", "user"):
+        print("Error: mode required ('system' or 'user').", file=sys.stderr)
+        sys.exit(1)
+    mode = apps[0]
+    apps = apps[1:]
     if not apps:
         print("Error: no apps specified.", file=sys.stderr)
         sys.exit(1)

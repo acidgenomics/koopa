@@ -12,6 +12,10 @@ from pathlib import Path
 
 from koopa.fs import list_subdirs
 
+_ECR_PRIVATE_RE = re.compile(
+    r"^\d+\.dkr\.ecr\.[a-z0-9-]+\.amazonaws\.com(/|$)"
+)
+
 
 def _docker(
     *args: str,
@@ -133,7 +137,7 @@ def build(
 
 def _authenticate(server: str) -> None:
     """Authenticate with a Docker registry."""
-    if ".dkr.ecr." in server and ".amazonaws.com" in server:
+    if _ECR_PRIVATE_RE.match(server):
         from koopa.aws import aws_ecr_login_private
 
         aws_ecr_login_private()
@@ -270,7 +274,7 @@ def run(
     bind: bool = False,
 ) -> None:
     """Run a Docker image interactively."""
-    if ".dkr.ecr." in image and ".amazonaws.com/" in image:
+    if _ECR_PRIVATE_RE.match(image):
         from koopa.aws import aws_ecr_login_private
 
         aws_ecr_login_private()

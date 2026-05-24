@@ -112,9 +112,6 @@ def _get_main_command_flags() -> dict[str, list[str]]:
                     flags.append(opt)
         if flags:
             result[name] = sorted(set(flags))
-    # Manual flag parsing not detectable via argparse introspection.
-    result["develop/format-app-json"] = ["--help", "--prettier"]
-    result["develop/remove-app"] = ["--help", "--revdeps"]
     return result
 
 
@@ -128,13 +125,20 @@ def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
         "user": [],
         "update-system": [],
     }
+    seen: dict[str, set[tuple[str, str | None]]] = {k: set() for k in result}
     for name, platform, mode in PYTHON_INSTALLER_MODES:
         plat: str | None = None if platform == "common" else platform
-        result[mode].append((name, plat))
+        entry = (name, plat)
+        if entry not in seen[mode]:
+            seen[mode].add(entry)
+            result[mode].append(entry)
     for name, platform, mode in PYTHON_PLATFORM_INSTALLERS:
         if mode == "system":
             plat: str | None = None if platform == "common" else platform
-            result["system"].append((name, plat))
+            entry = (name, plat)
+            if entry not in seen["system"]:
+                seen["system"].add(entry)
+                result["system"].append(entry)
     return result
 
 
@@ -234,20 +238,35 @@ def _extract_handler_flags(filepath: str) -> dict[str, list[str]]:
             continue
         flags: list[str] = []
         for child in ast.walk(node):
-            if not isinstance(child, ast.Call):
-                continue
-            func = child.func
-            if not (isinstance(func, ast.Attribute) and func.attr == "add_argument"):
-                continue
-            if not child.args:
-                continue
-            arg0 = child.args[0]
-            if (
-                isinstance(arg0, ast.Constant)
-                and isinstance(arg0.value, str)
-                and arg0.value.startswith("--")
-            ):
-                flags.append(arg0.value)
+            if isinstance(child, ast.Call):
+                func = child.func
+                if not (isinstance(func, ast.Attribute) and func.attr == "add_argument"):
+                    continue
+                if not child.args:
+                    continue
+                arg0 = child.args[0]
+                if (
+                    isinstance(arg0, ast.Constant)
+                    and isinstance(arg0.value, str)
+                    and arg0.value.startswith("--")
+                ):
+                    flags.append(arg0.value)
+            elif isinstance(child, ast.Compare):
+                if (
+                    isinstance(child.left, ast.Constant)
+                    and isinstance(child.left.value, str)
+                    and child.left.value.startswith("--")
+                    and any(isinstance(op, ast.In) for op in child.ops)
+                ):
+                    flags.append(child.left.value)
+                elif any(isinstance(op, ast.Eq) for op in child.ops):
+                    for cmp_node in [child.left, *child.comparators]:
+                        if (
+                            isinstance(cmp_node, ast.Constant)
+                            and isinstance(cmp_node.value, str)
+                            and cmp_node.value.startswith("--")
+                        ):
+                            flags.append(cmp_node.value)
         if flags:
             result[node.name] = flags
     return result
@@ -592,7 +611,7 @@ def _generate_fish_completion(
             )
 
     lines += ["", "# update: mode completions."]
-    for mode in ("koopa", "system", "user"):
+    for mode in ("koopa", "system"):
         lines.append(f"complete -c koopa -n '__fish_seen_subcommand_from update' -a '{mode}'")
 
     lines += ["", "# Per-command flag completions."]
@@ -833,7 +852,7 @@ def _generate_zsh_completion(
     lines += ["_koopa_update() {", "    _arguments \\"]
     for flag in update_flags_zsh:
         lines.append(f"        '{flag}[{flag}]' \\")
-    lines += ["        '1:mode:(koopa system user)'", "}", ""]
+    lines += ["        '1:mode:(koopa system)'", "}", ""]
 
     lines.append('_koopa "$@"')
     return "\n".join(lines) + "\n"
@@ -1144,7 +1163,7 @@ def _generate_nushell_completion(
     _nu_completer(lines, "koopa_run_cmds", run_cmds)
     _nu_completer(lines, "koopa_system_cmds", system_cmds)
     _nu_completer(lines, "koopa_admin_cmds", admin_cmds)
-    _nu_completer(lines, "koopa_update_modes", ["koopa", "system", "user"])
+    _nu_completer(lines, "koopa_update_modes", ["koopa", "system"])
     _nu_completer(lines, "koopa_configure_modes", ["system", "user"])
 
     # Per-namespace completers for app sub-tree.

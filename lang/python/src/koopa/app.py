@@ -9,7 +9,9 @@ from subprocess import run
 from koopa.data import argsort, unique_pos
 from koopa.fs import list_subdirs
 from koopa.io import import_app_json
-from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
+from koopa.prefix import app_prefix as koopa_app_prefix
+from koopa.prefix import opt_prefix as koopa_opt_prefix
+from koopa.system import arch2, os_id
 
 
 def resolve_alias(name: str) -> str:
@@ -343,7 +345,6 @@ def prune_app_binaries(dry_run: bool = False) -> None:
     # Sort lists by timestamp (newest to oldest).
     idx = argsort(dts, reverse=True)
     apps = [apps[i] for i in idx]
-    dts = [dts[i] for i in idx]
     keys = [keys[i] for i in idx]
     # Get index positions of first unique app build.
     idx = unique_pos(apps)

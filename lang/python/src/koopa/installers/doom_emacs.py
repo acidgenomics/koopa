@@ -1,12 +1,23 @@
 """Install Doom Emacs."""
 
 import os
-import subprocess
-import sys
+import stat
 
-from koopa.build import activate_app
 from koopa.git import git_clone
-from koopa.system import is_linux, is_macos
+from koopa.installers._build_helper import activate_app_deps
+
+_DOOM_WRAPPER = """\
+#!/bin/sh
+set -eu
+_self="$0"
+if [ -L "$_self" ]; then
+    _self="$(readlink "$_self")"
+fi
+prefix="$(cd "$(dirname "$_self")/.." && pwd)"
+export EMACSDIR="${prefix}/libexec"
+export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
+exec "${prefix}/libexec/bin/doom" "$@"
+"""
 
 
 def main(
@@ -17,25 +28,22 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install Doom Emacs."""
-    env = activate_app("git", build_only=True)
-    env.apply()
+    env = activate_app_deps()
+    if env is not None:
+        env.apply()
+    libexec = os.path.join(prefix, "libexec")
     git_clone(
         "https://github.com/hlissner/doom-emacs.git",
-        prefix,
+        libexec,
         commit=version,
     )
-    doom = os.path.join(prefix, "bin", "doom")
-    if not os.path.isfile(doom):
-        msg = f"doom executable not found: {doom}"
+    doom_cli = os.path.join(libexec, "bin", "doom")
+    if not os.path.isfile(doom_cli):
+        msg = f"doom executable not found: {doom_cli}"
         raise FileNotFoundError(msg)
-    if is_linux():
-        activate_app("emacs", build_only=True)
-    elif is_macos():
-        brew_prefix = "/opt/homebrew" if os.path.isdir("/opt/homebrew") else "/usr/local"
-        os.environ["PATH"] = os.path.join(brew_prefix, "bin") + ":" + os.environ.get("PATH", "")
-    print("Running doom install.", file=sys.stderr)
-    subprocess.run(
-        [doom, "install", "--debug", "--force", "--no-env", "--no-fonts", "--verbose"],
-        check=True,
-    )
-    subprocess.run([doom, "sync"], check=True)
+    bin_dir = os.path.join(prefix, "bin")
+    os.makedirs(bin_dir, exist_ok=True)
+    path = os.path.join(bin_dir, "doom")
+    with open(path, "w") as f:
+        f.write(_DOOM_WRAPPER)
+    os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)

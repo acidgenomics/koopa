@@ -98,25 +98,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    if [[ -x '/usr/local/bin/emacs' ]] || \
-        [[ -x '/usr/bin/emacs' ]] || \
-        [[ -x "${bin_prefix}/emacs" ]]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-        if [[ -d "${xdg_data_home}/doom" ]]
-        then
-            alias doom-emacs='_koopa_doom_emacs'
-        fi
-        if [[ -d "${xdg_data_home}/prelude" ]]
-        then
-            alias prelude-emacs='_koopa_prelude_emacs'
-        fi
-        if [[ -d "${xdg_data_home}/spacemacs" ]]
-        then
-            alias spacemacs='_koopa_spacemacs'
-        fi
-    fi
     if [[ -x "${bin_prefix}/fd" ]]
     then
         alias fd='fd --absolute-path --ignore-case --no-ignore'
@@ -167,10 +148,6 @@ _koopa_activate_aliases() {
         if [[ -x "${bin_prefix}/fzf" ]]
         then
             alias vim-fzf='_koopa_alias_vim_fzf'
-        fi
-        if [[ -d "${xdg_data_home}/spacevim" ]]
-        then
-            alias spacevim='_koopa_spacevim'
         fi
     fi
     if [[ -x "${bin_prefix}/walk" ]]
@@ -424,10 +401,12 @@ ca-certificates"
     then
         return 0
     fi
+    export AWS_CA_BUNDLE="$file"
     export CURL_CA_BUNDLE="$file"
     export DEFAULT_CA_BUNDLE_PATH="$prefix"
     export NODE_EXTRA_CA_CERTS="$file"
     export REQUESTS_CA_BUNDLE="$file"
+    export GIT_SSL_CAINFO="$file"
     export SSL_CERT_FILE="$file"
     if _koopa_is_linux
     then
@@ -1057,14 +1036,6 @@ _koopa_alias_colorls() {
     return 0
 }
 
-_koopa_alias_emacs_vanilla() {
-    emacs --no-init-file --no-window-system "$@"
-}
-
-_koopa_alias_emacs() {
-    _koopa_emacs "$@"
-}
-
 _koopa_alias_glances() {
     case "$(_koopa_color_mode)" in
         'light')
@@ -1682,18 +1653,6 @@ _koopa_dirname() {
     return 0
 }
 
-_koopa_doom_emacs() {
-    local doom_emacs_prefix
-    doom_emacs_prefix="$(_koopa_doom_emacs_prefix)"
-    if [[ ! -d "$doom_emacs_prefix" ]]
-    then
-        _koopa_print 'Doom Emacs is not installed.'
-        return 1
-    fi
-    _koopa_emacs --init-directory="$doom_emacs_prefix" "$@"
-    return 0
-}
-
 _koopa_duration_start() {
     local date
     date="$(_koopa_bin_prefix)/gdate"
@@ -1737,28 +1696,6 @@ _koopa_duration_stop() {
     [[ -n "$duration" ]] || return 1
     _koopa_print "${key}: ${duration} ms"
     unset -v KOOPA_DURATION_START
-    return 0
-}
-
-_koopa_emacs() {
-    local emacs
-    if _koopa_is_macos
-    then
-        emacs="$(_koopa_macos_emacs)"
-    else
-        emacs="$(_koopa_bin_prefix)/emacs"
-    fi
-    if [[ ! -e "$emacs" ]]
-    then
-        _koopa_print "Emacs not installed at '${emacs}'."
-        return 1
-    fi
-    if [[ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]] && _koopa_is_macos
-    then
-        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
-    else
-        "$emacs" "$@" >/dev/null 2>&1
-    fi
     return 0
 }
 
@@ -2080,18 +2017,6 @@ ${dict['c2']}${string}${dict['nc']}"
     return 0
 }
 
-_koopa_prelude_emacs() {
-    local prelude_emacs_prefix
-    prelude_emacs_prefix="$(_koopa_prelude_emacs_prefix)"
-    if [[ ! -d "$prelude_emacs_prefix" ]]
-    then
-        _koopa_print 'Prelude Emacs is not installed.'
-        return 1
-    fi
-    _koopa_emacs --init-directory="$prelude_emacs_prefix" "$@"
-    return 0
-}
-
 _koopa_print() {
     if [[ "$#" -eq 0 ]]
     then
@@ -2186,38 +2111,6 @@ _koopa_shell_name() {
     shell="$(basename "$shell")"
     [[ -n "$shell" ]] || return 1
     _koopa_print "$shell"
-    return 0
-}
-
-_koopa_spacemacs() {
-    local spacemacs_prefix
-    spacemacs_prefix="$(_koopa_spacemacs_prefix)"
-    if [[ ! -d "$spacemacs_prefix" ]]
-    then
-        _koopa_print 'Spacemacs is not installed.'
-        return 1
-    fi
-    _koopa_emacs --init-directory="$spacemacs_prefix" "$@"
-    return 0
-}
-
-_koopa_spacevim() {
-    local vim
-    vim='vim'
-    if _koopa_is_macos
-    then
-        local gvim
-        gvim='/Applications/MacVim.app/Contents/bin/gvim'
-        [[ -x "$gvim" ]] && vim="$gvim"
-    fi
-    local vimrc
-    vimrc="$(_koopa_spacevim_prefix)/vimrc"
-    if [[ ! -f "$vimrc" ]]
-    then
-        _koopa_print 'SpaceVim is not installed.'
-        return 1
-    fi
-    "$vim" -u "$vimrc" "$@"
     return 0
 }
 
@@ -2868,17 +2761,6 @@ _koopa_macos_activate_homebrew() {
     return 0
 }
 
-_koopa_macos_emacs() {
-    local homebrew_prefix
-    homebrew_prefix="$(_koopa_homebrew_prefix)"
-    [[ -d "$homebrew_prefix" ]] || return 1
-    local emacs
-    emacs="${homebrew_prefix}/bin/emacs"
-    [[ -x "$emacs" ]] || return 1
-    _koopa_print "$emacs"
-    return 0
-}
-
 _koopa_macos_is_dark_mode() {
     [[ "$( \
         /usr/bin/defaults read -g 'AppleInterfaceStyle' \
@@ -2908,11 +2790,6 @@ _koopa_conda_prefix() {
 
 _koopa_config_prefix() {
     _koopa_print "$(_koopa_xdg_config_home)/koopa"
-    return 0
-}
-
-_koopa_doom_emacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/doom"
     return 0
 }
 
@@ -2963,11 +2840,6 @@ _koopa_pipx_prefix() {
     return 0
 }
 
-_koopa_prelude_emacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/prelude"
-    return 0
-}
-
 _koopa_pyenv_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
@@ -2980,16 +2852,6 @@ _koopa_rbenv_prefix() {
 
 _koopa_scripts_private_prefix() {
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
-    return 0
-}
-
-_koopa_spacemacs_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/spacemacs"
-    return 0
-}
-
-_koopa_spacevim_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/spacevim"
     return 0
 }
 

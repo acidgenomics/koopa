@@ -5,9 +5,9 @@ import shutil
 import stat
 import subprocess
 
-from koopa.build import activate_app
 from koopa.download import download
 from koopa.file_ops import ln
+from koopa.installers._build_helper import activate_app_deps
 
 
 def main(
@@ -18,7 +18,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install haskell-ghcup."""
-    env = activate_app("curl", build_only=True)
+    env = activate_app_deps()
     build_prefix = os.path.join(os.getcwd(), "ghcup-build")
     os.makedirs(build_prefix, exist_ok=True)
     subprocess_env = env.to_env_dict()

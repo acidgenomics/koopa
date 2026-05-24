@@ -7,12 +7,12 @@ from os.path import basename, isdir, isfile, islink, join, realpath
 
 from koopa.app import extract_app_deps, installed_apps
 from koopa.io import import_app_json
-from koopa.os import koopa_opt_prefix
 from koopa.prefix import (
     bash_completions_prefix,
     bootstrap_prefix,
     fish_completions_prefix,
     koopa_prefix,
+    opt_prefix,
     zsh_completions_prefix,
 )
 
@@ -26,13 +26,13 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     """
     from koopa.prefix import bin_prefix, man1_prefix
 
-    opt_prefix = koopa_opt_prefix()
+    opt_dir = opt_prefix()
     bin_dir = bin_prefix()
     man1_dir = man1_prefix()
     json_data = import_app_json()
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
-    from koopa.os import os_id
+    from koopa.system import os_id
 
     current_os = os_id()
     for name in names:
@@ -54,7 +54,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
         if current_os in supported and not supported[current_os]:
             issues.append((name, f"{name} is not supported on {current_os}", False))
             continue
-        path = join(opt_prefix, name)
+        path = join(opt_dir, name)
         if not islink(path):
             issues.append((name, f"{name} is not linked at {path}", True))
             continue
@@ -168,6 +168,26 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             if stale_dep:
                 continue
         expected_bins = entry.get("bin", [])
+        if expected_bins and not installer.startswith(
+            ("conda-package", "node-package", "perl-package", "python-package", "ruby-package")
+        ):
+            from koopa.build import _extract_rpath
+
+            broken_rpath = False
+            for b in expected_bins:
+                bin_path = join(path, "bin", b)
+                if not isfile(bin_path):
+                    continue
+                rpath_dirs = _extract_rpath(bin_path)
+                missing = [d for d in rpath_dirs if not isdir(d)]
+                if missing:
+                    issues.append(
+                        (name, f"{name} broken RPATH: {missing[0]}", True),
+                    )
+                    broken_rpath = True
+                    break
+            if broken_rpath:
+                continue
         broken_bin = False
         for b in expected_bins:
             link = join(bin_dir, b)
@@ -243,7 +263,7 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
     from koopa.prefix import app_prefix as get_app_prefix
 
     app_dir = get_app_prefix()
-    opt_prefix = koopa_opt_prefix()
+    opt_dir = opt_prefix()
     issues: list[tuple[str, str]] = []
     if not isdir(app_dir):
         return issues
@@ -251,7 +271,7 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
         app_path = join(app_dir, name)
         if not isdir(app_path):
             continue
-        opt_link = join(opt_prefix, name)
+        opt_link = join(opt_dir, name)
         if islink(opt_link) and isdir(realpath(opt_link)):
             linked_path = realpath(opt_link)
             if not isfile(join(linked_path, ".install", "info.json")):
@@ -362,7 +382,6 @@ def check_bootstrap_version() -> bool:
     if not isdir(bp):
         return True
     if not isfile(installed_version_file):
-        print(f"Bootstrap is installed but missing VERSION file at {installed_version_file}")
         return False
     with open(expected_version_file) as fh:
         expected_version = fh.read().strip()
@@ -593,64 +612,71 @@ def check_macos_system_python() -> bool:
     return ok
 
 
-def _user_app_prefixes() -> dict[str, str]:
-    """Return mapping of user-mode app names to their install prefixes."""
-    from koopa.prefix import (
-        doom_emacs_prefix,
-        prelude_emacs_prefix,
-        spacemacs_prefix,
-        spacevim_prefix,
-    )
+def check_macos_xcode_clt() -> bool:
+    """Check if Xcode Command Line Tools SDK is current on macOS."""
+    import json
+    import platform
 
-    return {
-        "doom-emacs": doom_emacs_prefix(),
-        "prelude-emacs": prelude_emacs_prefix(),
-        "spacemacs": spacemacs_prefix(),
-        "spacevim": spacevim_prefix(),
-    }
+    sdk_settings = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/SDKSettings.json"
+    if not isfile(sdk_settings):
+        return True
+    try:
+        with open(sdk_settings) as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return True
+    sdk_version = data.get("Version", "")
+    if not sdk_version:
+        return True
+    macos_version = platform.mac_ver()[0]
+    if not macos_version:
+        return True
+    sdk_major = _version_tuple(sdk_version)[:1]
+    os_major = _version_tuple(macos_version)[:1]
+    if sdk_major < os_major:
+        from koopa.alert import warn
+
+        warn(
+            f"Xcode CLT SDK is out of date ({sdk_version})"
+            f" for macOS {macos_version}."
+            " Run 'xcode-select --install' to update."
+        )
+        return False
+    return True
 
 
-def _iter_outdated_user_apps() -> list[tuple[str, str]]:
-    """Return ``(app_name, reason)`` for each outdated user-mode app."""
-    from koopa.git import git_last_commit_local, is_git_repo
+def check_macos_icloud_drive() -> bool:
+    """Check iCloud Drive Desktop & Documents sync is enabled on macOS."""
+    import subprocess
 
-    json_data = import_app_json()
-    prefixes = _user_app_prefixes()
-    issues: list[tuple[str, str]] = []
-    for name, prefix in prefixes.items():
-        if not isdir(prefix):
-            continue
-        if not is_git_repo(prefix):
-            continue
-        if name not in json_data:
-            continue
-        expected = json_data[name].get("version", "")
-        if not expected:
-            continue
+    def _read_bool(key: str) -> int | None:
+        result = subprocess.run(
+            ["defaults", "read", "com.apple.finder", key],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return None
         try:
-            installed = git_last_commit_local(prefix)
-        except Exception:
-            continue
-        if installed != expected:
-            short_installed = installed[:7] if len(installed) == 40 else installed
-            short_expected = expected[:7] if len(expected) == 40 else expected
-            issues.append(
-                (name, f"{name} ({short_installed} != {short_expected})"),
-            )
-    return issues
+            return int(result.stdout.strip())
+        except ValueError:
+            return None
 
+    enabled = _read_bool("FXICloudDriveEnabled")
+    if not enabled:
+        return True
+    desktop = _read_bool("FXICloudDriveDesktop")
+    documents = _read_bool("FXICloudDriveDocuments")
+    if desktop == 0 or documents == 0:
+        from koopa.alert import warn
 
-def outdated_user_apps() -> list[str]:
-    """Return names of user-mode apps that need updating."""
-    return [name for name, _reason in _iter_outdated_user_apps()]
-
-
-def check_user_apps() -> bool:
-    """Check user-mode app versions."""
-    issues = _iter_outdated_user_apps()
-    for _name, reason in issues:
-        print(reason)
-    return not issues
+        warn(
+            "iCloud Drive Desktop & Documents sync is disabled."
+            " Re-enable in System Settings > Apple ID > iCloud > iCloud Drive."
+        )
+        return False
+    return True
 
 
 def check_broken_symlinks() -> bool:
@@ -719,6 +745,21 @@ def _print_update_plan() -> None:
         print(f"Update will install {len(apps)} apps: {', '.join(apps)}.")
 
 
+def check_missing_default_apps() -> bool:
+    """Check whether all default apps are installed."""
+    from koopa.app import shared_apps
+
+    opt = opt_prefix()
+    app_names = shared_apps(mode="default")
+    missing = [a for a in app_names if not os.path.islink(os.path.join(opt, a))]
+    if not missing:
+        return True
+    n = len(missing)
+    label = "app" if n == 1 else "apps"
+    print(f"{n} default {label} not installed: {', '.join(missing)}.")
+    return False
+
+
 def check_system() -> bool:
     """Run all system checks."""
     from koopa.alert import alert_note, alert_success, warn
@@ -735,13 +776,17 @@ def check_system() -> bool:
             needs_system_update = True
         if not check_macos_system_python():
             needs_system_update = True
+        if not check_macos_xcode_clt():
+            needs_system_update = True
+        if not check_macos_icloud_drive():
+            needs_system_update = True
     if not check_installed_apps():
         needs_update = True
     if not check_broken_app_installs():
         needs_update = True
-    if not check_user_apps():
-        needs_update = True
     if not check_broken_symlinks():
+        needs_update = True
+    if not check_missing_default_apps():
         needs_update = True
     if not check_disk("/"):
         needs_disk_space = True
@@ -750,7 +795,7 @@ def check_system() -> bool:
     if needs_update or needs_system_update or needs_disk_space:
         warn("System checks completed with warnings.")
         if needs_system_update:
-            alert_note("Run 'koopa update --all-system' to resolve these issues.")
+            alert_note("Run 'koopa update system' to resolve these issues.")
         elif needs_update:
             alert_note("Run 'koopa update' to resolve these issues.")
         if needs_disk_space:

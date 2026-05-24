@@ -1,7 +1,7 @@
 """Install lesspipe."""
 
-from koopa.build import activate_app, locate, make_build
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import locate, make_build
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -12,7 +12,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install lesspipe."""
-    env = activate_app("bash", build_only=True)
+    env = activate_app_deps()
     bash = locate("bash")
     download_extract_cd()
     make_build(

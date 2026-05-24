@@ -29,12 +29,14 @@ ca-certificates"
         unset -v __kvar_file __kvar_prefix
         return 0
     fi
+    export AWS_CA_BUNDLE="$__kvar_file"
     export CURL_CA_BUNDLE="$__kvar_file"
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
     export NODE_EXTRA_CA_CERTS="$__kvar_file"
     export REQUESTS_CA_BUNDLE="$__kvar_file"
+    export GIT_SSL_CAINFO="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
-    if _koopa_is_linux
+    if _koopa_is_linux && [ -d '/etc/ssl/certs' ]
     then
         export SSL_CERT_DIR='/etc/ssl/certs'
     fi

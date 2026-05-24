@@ -71,26 +71,6 @@ _koopa_activate_aliases() {
     then
         alias conda='_koopa_activate_conda; conda'
     fi
-    # emacs.
-    if [ -x '/usr/local/bin/emacs' ] || \
-        [ -x '/usr/bin/emacs' ] || \
-        [ -x "${__kvar_bin_prefix}/emacs" ]
-    then
-        alias emacs='_koopa_alias_emacs'
-        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-        if [ -d "${__kvar_xdg_data_home}/doom" ]
-        then
-            alias doom-emacs='_koopa_doom_emacs'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/prelude" ]
-        then
-            alias prelude-emacs='_koopa_prelude_emacs'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/spacemacs" ]
-        then
-            alias spacemacs='_koopa_spacemacs'
-        fi
-    fi
     # fd-find.
     if [ -x "${__kvar_bin_prefix}/fd" ]
     then
@@ -152,10 +132,6 @@ _koopa_activate_aliases() {
         if [ -x "${__kvar_bin_prefix}/fzf" ]
         then
             alias vim-fzf='_koopa_alias_vim_fzf'
-        fi
-        if [ -d "${__kvar_xdg_data_home}/spacevim" ]
-        then
-            alias spacevim='_koopa_spacevim'
         fi
     fi
     # walk.

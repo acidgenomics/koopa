@@ -6,14 +6,15 @@
     "build_dependencies": [
       "bash",
       "bzip2",
+      "curl",
       "gnupg",
       "gzip",
       "less",
       "patch",
       "tar",
-      "unzip",
-      "wget"
+      "unzip"
     ],
+    "category": "Text",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -22,7 +23,8 @@
     "description": "grep-like text finder optimized for source code",
     "installer": "perl-package",
     "installer_args": {
-      "cpan_path": "PETDANCE/ack"
+      "cpan_path": "PETDANCE/ack",
+      "version_prefix": "v"
     },
     "man1": [
       "ack.1"
@@ -41,6 +43,7 @@
       "conda",
       "patch"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-04-15",
     "default": false,
@@ -60,6 +63,7 @@
     "build_dependencies": [
       "rust"
     ],
+    "category": "R",
     "date": "2026-05-02",
     "default": false,
     "description": "R code formatter",
@@ -71,6 +75,7 @@
     "version": "0.9.0"
   },
   "anaconda": {
+    "category": "Python",
     "date": "2026-02-22",
     "default": false,
     "description": "full Anaconda Python distribution",
@@ -85,6 +90,7 @@
     "bin": [
       "airflow"
     ],
+    "category": "Workflow",
     "date": "2026-04-22",
     "default": false,
     "dependencies": [
@@ -106,15 +112,16 @@
   "apache-arrow": {
     "build_dependencies": [
       "cmake",
-      "curl",
       "ninja",
       "pkg-config",
       "python"
     ],
+    "category": "Database",
     "date": "2026-04-22",
     "default": false,
     "dependencies": [
       "boost",
+      "curl",
       "openssl"
     ],
     "description": "cross-language columnar in-memory data format",
@@ -130,6 +137,7 @@
       "pyspark",
       "sparkR"
     ],
+    "category": "Database",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -150,6 +158,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Container",
     "date": "2026-05-07",
     "default": false,
     "description": "container runtime for HPC environments",
@@ -170,6 +179,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "Apache Portable Runtime library",
@@ -185,6 +195,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2023-02-08",
     "default": false,
     "dependencies": [
@@ -214,6 +225,7 @@
       "sqlite",
       "zlib"
     ],
+    "category": "Network",
     "conda_channel": "conda-forge",
     "date": "2023-11-15",
     "default": false,
@@ -235,6 +247,7 @@
     "bin": [
       "asdf"
     ],
+    "category": "Dotfile",
     "date": "2026-04-29",
     "default": false,
     "description": "multi-language runtime version manager",
@@ -252,6 +265,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
@@ -270,6 +284,7 @@
     "bin": [
       "ascp"
     ],
+    "category": "Cloud",
     "date": "2026-05-02",
     "default": false,
     "description": "high-speed file transfer client by IBM",
@@ -294,6 +309,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Filesystem",
     "date": "2024-12-24",
     "default": false,
     "description": "utilities for managing extended filesystem attributes",
@@ -328,6 +344,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -349,6 +366,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
@@ -367,6 +385,7 @@
     "version": "4.2.6"
   },
   "autodock-adfr": {
+    "category": "Bioinformatics",
     "date": "2023-10-16",
     "default": false,
     "description": "AutoDock Flexible Receptor docking suite",
@@ -388,6 +407,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -396,7 +416,6 @@
     "installer_args": {
       "name": "vina"
     },
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -413,6 +432,7 @@
     "bin": [
       "autoflake"
     ],
+    "category": "Python",
     "date": "2026-02-22",
     "default": false,
     "dependencies": [
@@ -438,6 +458,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -456,6 +477,7 @@
     "bin": [
       "aws-azure-login"
     ],
+    "category": "Cloud",
     "date": "2024-11-16",
     "default": false,
     "dependencies": [
@@ -477,8 +499,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-05-19",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -490,9 +513,10 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.31"
+    "version": "2.34.48"
   },
   "aws-mountpoint-s3": {
+    "category": "Cloud",
     "date": "2026-05-02",
     "default": false,
     "description": "mount S3 buckets as local filesystems",
@@ -519,6 +543,7 @@
       "gettext",
       "openssl"
     ],
+    "category": "Network",
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
@@ -527,7 +552,6 @@
     "man1": [
       "axel.1"
     ],
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/axel-download-accelerator/axel/"
@@ -538,6 +562,7 @@
     "bin": [
       "az"
     ],
+    "category": "Cloud",
     "date": "2026-05-05",
     "default": false,
     "dependencies": [
@@ -562,6 +587,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2025-05-22",
     "default": false,
@@ -583,6 +609,7 @@
     "bin": [
       "bandit"
     ],
+    "category": "Security",
     "date": "2026-03-19",
     "default": false,
     "dependencies": [
@@ -604,6 +631,7 @@
     "build_dependencies": [
       "rust"
     ],
+    "category": "Terminal",
     "date": "2024-10-14",
     "default": false,
     "description": "terminal bandwidth utilization tool",
@@ -622,6 +650,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Shell",
     "date": "2025-08-21",
     "default": true,
     "dependencies": [
@@ -647,6 +676,7 @@
       "make",
       "xz"
     ],
+    "category": "Shell",
     "date": "2025-10-31",
     "default": true,
     "description": "programmable completion functions for bash",
@@ -664,6 +694,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Shell",
     "conda_channel": "conda-forge",
     "date": "2025-04-15",
     "default": false,
@@ -680,6 +711,7 @@
     "bin": [
       "bashcov"
     ],
+    "category": "Shell",
     "date": "2026-02-22",
     "default": false,
     "dependencies": [
@@ -701,6 +733,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2025-12-05",
     "default": false,
@@ -720,6 +753,7 @@
       "make",
       "texinfo"
     ],
+    "category": "Core",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -757,6 +791,7 @@
       "cmake",
       "make"
     ],
+    "category": "Bioinformatics",
     "date": "2023-05-24",
     "default": false,
     "dependencies": [
@@ -788,16 +823,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "conda-forge",
     "date": "2026-05-05",
     "default": false,
     "description": "fast BED file toolkit focused on performance",
     "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "cli",
     "url": [
       "https://github.com/lh3/bedtk"
@@ -822,6 +853,7 @@
         "conda"
       ]
     },
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-11-08",
     "default": false,
@@ -844,6 +876,7 @@
     "bin": [
       "bfg"
     ],
+    "category": "VCS",
     "date": "2025-05-02",
     "default": false,
     "dependencies": [
@@ -861,6 +894,7 @@
       "bison",
       "flex"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -883,6 +917,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
@@ -904,6 +939,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-06",
     "default": false,
@@ -929,6 +965,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Build",
     "date": "2022-08-29",
     "default": false,
     "dependencies": [
@@ -949,7 +986,8 @@
       "black",
       "blackd"
     ],
-    "date": "2026-03-19",
+    "category": "Python",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "python"
@@ -962,13 +1000,12 @@
       },
       "pip_name": "black[d]"
     },
-    "revision": 2,
     "type": "cli",
     "url": [
       "https://pypi.org/project/black/",
       "https://github.com/psf/black/"
     ],
-    "version": "26.3.1"
+    "version": "26.5.1"
   },
   "blast": {
     "bin": [
@@ -978,6 +1015,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-08",
     "default": false,
@@ -996,6 +1034,7 @@
     "version": "2.16.0"
   },
   "boost": {
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -1021,6 +1060,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -1039,6 +1079,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-02-22",
     "default": false,
@@ -1060,6 +1101,7 @@
     "bin": [
       "bpytop"
     ],
+    "category": "Terminal",
     "date": "2022-09-26",
     "default": false,
     "dependencies": [
@@ -1081,6 +1123,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": false,
@@ -1101,6 +1144,7 @@
       "cmake",
       "make"
     ],
+    "category": "Library",
     "date": "2025-10-28",
     "default": false,
     "description": "lossless compression algorithm and library by Google",
@@ -1118,6 +1162,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
@@ -1133,6 +1178,7 @@
     "bin": [
       "bumpver"
     ],
+    "category": "Python",
     "date": "2026-05-01",
     "default": true,
     "dependencies": [
@@ -1154,6 +1200,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -1267,6 +1314,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Compression",
     "date": "2022-09-26",
     "default": true,
     "description": "high-quality block-sorting file compressor",
@@ -1293,6 +1341,7 @@
       "cmake",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "asynchronous DNS resolver library",
@@ -1304,6 +1353,7 @@
     "version": "1.34.6"
   },
   "ca-certificates": {
+    "category": "Library",
     "date": "2026-04-15",
     "default": false,
     "description": "Mozilla CA certificate bundle",
@@ -1319,6 +1369,7 @@
       "ninja",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-01-02",
     "default": false,
     "dependencies": [
@@ -1358,12 +1409,12 @@
     "bin": [
       "cellranger"
     ],
+    "category": "Bioinformatics",
     "date": "2025-12-11",
     "default": false,
     "description": "10x Genomics single-cell RNA-seq pipeline",
     "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
     "installer_platform": "linux",
-    "outdated": true,
     "private": true,
     "supported": {
       "linux-amd64": true,
@@ -1388,6 +1439,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Terminal",
     "date": "2026-02-16",
     "default": false,
     "description": "interactive cheatsheet tool for the command line",
@@ -1407,14 +1459,10 @@
     "bin": [
       "chezmoi"
     ],
-    "build_dependencies": {
-      "noarch": [
-        "conda"
-      ],
-      "macos-arm64": [
-        "go"
-      ]
-    },
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Dotfile",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
@@ -1431,7 +1479,8 @@
     "bin": [
       "claude"
     ],
-    "date": "2026-05-09",
+    "category": "AI",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "node"
@@ -1445,7 +1494,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.138"
+    "version": "2.1.144"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1453,23 +1502,9 @@
     "removed": true
   },
   "cloudbiolinux": {
-    "build_dependencies": [
-      "git"
-    ],
-    "date": "2023-12-22",
-    "default": false,
+    "date": "2026-05-11",
     "description": "automated bioinformatics environment setup",
-    "installer_platform": "linux",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": false
-    },
-    "type": "cli",
-    "url": [
-      "https://github.com/chapmanb/cloudbiolinux/"
-    ],
-    "version": "cd1b727402e20f3b2c98a9bd116724ebdde83181"
+    "removed": true
   },
   "cmake": {
     "bin": [
@@ -1480,20 +1515,44 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Build",
     "date": "2026-04-24",
-    "default": false,
+    "default": true,
     "description": "cross-platform build system generator",
     "installer": "conda-package",
+    "revision": 1,
     "type": "build_tool",
     "url": [
       "https://cmake.org/download/"
     ],
     "version": "4.3.2"
   },
+  "codex": {
+    "bin": [
+      "codex"
+    ],
+    "category": "AI",
+    "date": "2026-05-19",
+    "default": true,
+    "dependencies": [
+      "node"
+    ],
+    "description": "OpenAI Codex AI coding assistant CLI",
+    "installer": "node-package",
+    "installer_args": {
+      "name": "@openai/codex"
+    },
+    "type": "cli",
+    "url": [
+      "https://www.npmjs.com/package/@openai/codex"
+    ],
+    "version": "0.131.0"
+  },
   "colorls": {
     "bin": [
       "colorls"
     ],
+    "category": "Terminal",
     "date": "2024-07-12",
     "default": false,
     "dependencies": [
@@ -1513,7 +1572,8 @@
       "cz",
       "git-cz"
     ],
-    "date": "2026-05-06",
+    "category": "Python",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "python"
@@ -1526,21 +1586,17 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.15.1"
+    "version": "4.16.2"
   },
   "conda": {
     "bin": [
       "conda"
     ],
+    "category": "Python",
     "date": "2026-05-02",
     "default": true,
     "description": "cross-platform package and environment manager",
     "revision": 1,
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "build_tool",
     "url": [
       "https://repo.anaconda.com/miniconda/"
@@ -1554,6 +1610,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Core",
     "date": "2026-05-02",
     "default": true,
     "description": "converts filenames between character encodings",
@@ -1671,6 +1728,7 @@
       "gperf",
       "make"
     ],
+    "category": "Core",
     "date": "2026-05-02",
     "default": true,
     "dependencies": {
@@ -1805,6 +1863,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Terminal",
     "date": "2025-11-03",
     "default": false,
     "description": "simple CPU microarchitecture information tool",
@@ -1835,6 +1894,7 @@
       "in2csv",
       "sql2csv"
     ],
+    "category": "Text",
     "date": "2026-01-02",
     "default": false,
     "dependencies": [
@@ -1857,6 +1917,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": false,
@@ -1877,6 +1938,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Network",
     "date": "2026-05-01",
     "default": true,
     "dependencies": [
@@ -1908,6 +1970,7 @@
       "automake",
       "make"
     ],
+    "category": "Shell",
     "date": "2026-05-09",
     "default": false,
     "dependencies": [
@@ -1933,14 +1996,15 @@
     "build_dependencies": [
       "go"
     ],
-    "date": "2026-05-07",
+    "category": "Cloud",
+    "date": "2026-05-14",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "0.299.1"
+    "version": "0.299.2"
   },
   "deeptools": {
     "bin": [
@@ -1949,12 +2013,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2025-01-24",
     "default": false,
     "description": "tools for analysis of deep-sequencing data",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1975,6 +2039,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-04-15",
     "default": true,
@@ -1993,6 +2058,7 @@
     "bin": [
       "diff-so-fancy"
     ],
+    "category": "VCS",
     "date": "2026-04-15",
     "default": true,
     "description": "human-readable diff output for git",
@@ -2010,16 +2076,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "description": "structural diff tool that understands syntax",
     "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "cli",
     "url": [
       "https://github.com/Wilfred/difftastic/"
@@ -2033,6 +2095,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Dotfile",
     "conda_channel": "conda-forge",
     "date": "2025-12-02",
     "default": true,
@@ -2048,6 +2111,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Container",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": false,
@@ -2060,10 +2124,15 @@
     "version": "0.9.7"
   },
   "doom-emacs": {
+    "bin": [
+      "doom"
+    ],
     "build_dependencies": [
+      "emacs",
       "git"
     ],
-    "date": "2026-05-08",
+    "category": "Editor",
+    "date": "2026-05-19",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2073,14 +2142,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "user": true,
-    "version": "b04599f3746fbe5aa8fba572130a0257f3ecc8a6"
+    "version": "c2ff579a28ecfec90c343417bc04b2a9569d9ed7"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
-    "date": "2026-05-09",
+    "category": "Dotfile",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2090,7 +2159,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "9e83549b2fc44e6e7e49cf36956c4ef74b9fc9c9"
+    "version": "dff369f493a4bdcfbfd3b3a329dc91a26b1d1f9c"
   },
   "du-dust": {
     "bin": [
@@ -2099,6 +2168,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
@@ -2107,7 +2177,6 @@
     "installer_args": {
       "name": "dust"
     },
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/bootandy/dust/",
@@ -2122,6 +2191,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Database",
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": true,
@@ -2148,6 +2218,7 @@
       "pkg-config",
       "tar"
     ],
+    "category": "Editor",
     "date": "2026-05-02",
     "default": false,
     "description": "classic line-oriented text editor",
@@ -2175,6 +2246,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Dotfile",
     "date": "2026-04-15",
     "default": true,
     "dependencies": [
@@ -2197,10 +2269,13 @@
       "m4",
       "make"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "bzip2",
+      "gettext",
+      "libiconv",
       "xz",
       "zlib",
       "zstd"
@@ -2226,6 +2301,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Shell",
     "date": "2026-04-13",
     "default": false,
     "description": "expressive shell with structured data pipelines",
@@ -2238,43 +2314,56 @@
   },
   "emacs": {
     "bin": [
-      "ebrowse",
       "emacs",
       "emacsclient",
       "etags"
     ],
     "build_dependencies": [
-      "make"
+      "conda"
     ],
-    "date": "2025-08-18",
-    "default": false,
-    "dependencies": [
-      "gmp",
-      "gnutls",
-      "icu4c",
-      "libtasn1",
-      "libunistring",
-      "libxml2",
-      "ncurses",
-      "nettle",
-      "texinfo"
-    ],
+    "category": "Editor",
+    "conda_channel": "conda-forge",
+    "date": "2026-05-11",
+    "default": true,
     "description": "extensible, customizable GNU text editor",
-    "installer": "gnu-app",
+    "installer": "conda-package",
     "man1": [
-      "ebrowse.1.gz",
       "emacs.1.gz",
       "emacsclient.1.gz",
       "etags.1.gz"
     ],
-    "src_url": "https://ftpmirror.gnu.org/emacs/emacs-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/emacs/"
     ],
-    "version": "30.2"
+    "version": "29.4",
+    "version_pin": true
+  },
+  "emacs-prelude": {
+    "bin": [
+      "prelude"
+    ],
+    "build_dependencies": [
+      "emacs",
+      "git"
+    ],
+    "category": "Editor",
+    "date": "2026-05-09",
+    "default": false,
+    "dependencies": [
+      "emacs"
+    ],
+    "description": "community-maintained Emacs configuration",
+    "name": "Emacs Prelude",
+    "revision": 1,
+    "type": "cli",
+    "url": [
+      "https://github.com/bbatsov/prelude/"
+    ],
+    "version": "bab03706490bb5bd12e7dcc63b131132a4566015"
   },
   "ensembl-perl-api": {
+    "category": "Bioinformatics",
     "date": "2026-05-02",
     "default": false,
     "description": "Perl API for Ensembl genomics databases",
@@ -2292,6 +2381,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -2328,14 +2418,15 @@
     "build_dependencies": [
       "bash",
       "bzip2",
+      "curl",
       "gnupg",
       "gzip",
       "less",
       "patch",
       "tar",
-      "unzip",
-      "wget"
+      "unzip"
     ],
+    "category": "Multimedia",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -2349,7 +2440,6 @@
     "man1": [
       "exiftool.1"
     ],
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://exiftool.org/",
@@ -2363,7 +2453,8 @@
       "pkg-config",
       "xz"
     ],
-    "date": "2026-05-02",
+    "category": "Library",
+    "date": "2026-05-11",
     "default": false,
     "description": "fast stream-oriented XML parser library",
     "src_url": "https://github.com/libexpat/libexpat/releases/download/R_{version_underscore}/expat-{version}.tar.xz",
@@ -2371,7 +2462,7 @@
     "url": [
       "https://libexpat.github.io/"
     ],
-    "version": "2.8.0"
+    "version": "2.8.1"
   },
   "eza": {
     "bin": [
@@ -2380,12 +2471,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2025-10-08",
     "default": true,
     "description": "modern ls replacement with color, icons, and Git support",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/eza-community/eza/",
@@ -2400,6 +2491,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-1016",
     "default": false,
@@ -2424,6 +2516,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-03-19",
     "default": true,
@@ -2443,6 +2536,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Multimedia",
     "conda_channel": "conda-forge",
     "date": "2026-05-04",
     "default": false,
@@ -2466,6 +2560,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2024-12-24",
     "default": false,
@@ -2487,6 +2582,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-04-15",
     "default": false,
@@ -2509,6 +2605,7 @@
       "make",
       "xz"
     ],
+    "category": "Filesystem",
     "date": "2024-12-24",
     "default": true,
     "description": "GNU find, locate, updatedb, and xargs utilities",
@@ -2538,6 +2635,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Shell",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": false,
@@ -2561,6 +2659,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Multimedia",
     "date": "2026-05-02",
     "default": false,
     "description": "free lossless audio codec",
@@ -2578,6 +2677,7 @@
     "bin": [
       "flake8"
     ],
+    "category": "Python",
     "date": "2026-01-02",
     "default": false,
     "dependencies": [
@@ -2598,6 +2698,7 @@
       "bison",
       "make"
     ],
+    "category": "Build",
     "date": "2022-09-26",
     "default": false,
     "dependencies": [
@@ -2627,15 +2728,19 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "gperf",
       "freetype",
-      "libxml2"
+      "icu4c",
+      "libxml2",
+      "zlib"
     ],
     "description": "font configuration and customization library",
-    "src_url": "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/{version}/fontconfig-{version}.tar.xz",
+    "revision": 3,
+    "src_url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.freedesktop.org/wiki/Software/fontconfig/"
@@ -2649,6 +2754,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2025-01-03",
     "default": false,
@@ -2673,6 +2779,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2024-09-09",
     "default": false,
@@ -2695,6 +2802,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "font rendering library",
@@ -2716,6 +2824,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
@@ -2737,6 +2846,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -2745,7 +2855,6 @@
     "installer_args": {
       "name": "gatk4"
     },
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2765,6 +2874,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Text",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -2794,6 +2904,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -2828,6 +2939,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -2849,6 +2961,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2025-11-06",
     "default": false,
@@ -2866,7 +2979,8 @@
     "bin": [
       "gemini"
     ],
-    "date": "2026-05-06",
+    "category": "AI",
+    "date": "2026-05-14",
     "default": true,
     "dependencies": [
       "node"
@@ -2881,7 +2995,7 @@
       "https://geminicli.com/",
       "https://www.npmjs.com/package/@google/gemini-cli"
     ],
-    "version": "0.41.2"
+    "version": "0.42.0"
   },
   "genomepy": {
     "bin": [
@@ -2890,6 +3004,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -2906,6 +3021,7 @@
     "bin": [
       "gentropy"
     ],
+    "category": "Bioinformatics",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -2932,6 +3048,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2025-10-28",
     "default": false,
     "description": "geometry engine for geographic information systems",
@@ -2947,6 +3064,7 @@
       "make",
       "xz"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -2984,6 +3102,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -3008,12 +3127,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
     "description": "efficient querying of genomic databases",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -3033,6 +3152,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
@@ -3051,6 +3171,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Documentation",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -3086,12 +3207,14 @@
       "vim",
       "xz"
     ],
+    "category": "VCS",
     "date": "2026-04-24",
     "default": true,
     "dependencies": [
       "curl",
       "expat",
       "libiconv",
+      "libssh2",
       "openssl",
       "pcre2",
       "zlib"
@@ -3101,7 +3224,7 @@
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -3113,6 +3236,7 @@
     "bin": [
       "git-filter-repo"
     ],
+    "category": "VCS",
     "date": "2025-05-02",
     "default": false,
     "dependencies": [
@@ -3133,6 +3257,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -3152,12 +3277,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "description": "blazing fast terminal UI for Git",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/extrawurst/gitui/",
@@ -3169,6 +3294,7 @@
     "bin": [
       "glances"
     ],
+    "category": "Terminal",
     "date": "2026-04-22",
     "default": false,
     "dependencies": [
@@ -3194,6 +3320,7 @@
       "pkg-config",
       "python"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -3215,6 +3342,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2023-08-31",
     "default": false,
     "dependencies": [
@@ -3235,8 +3363,9 @@
       "pkg-config",
       "sed"
     ],
-    "date": "2026-05-02",
-    "default": true,
+    "category": "Miscellaneous",
+    "date": "2026-05-14",
+    "default": false,
     "dependencies": [
       "bzip2",
       "gnutls",
@@ -3260,13 +3389,14 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "2.5.19"
+    "version": "2.5.20"
   },
   "gnutls": {
     "build_dependencies": [
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -3287,6 +3417,7 @@
     "bin": [
       "go"
     ],
+    "category": "Language",
     "date": "2026-05-07",
     "default": false,
     "description": "Go programming language toolchain",
@@ -3304,8 +3435,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-06",
+    "date": "2026-05-14",
     "default": true,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
@@ -3314,13 +3446,14 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "567.0.0"
+    "version": "568.0.0"
   },
   "googletest": {
     "build_dependencies": [
       "cmake",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2025-05-01",
     "default": false,
     "description": "Google C++ testing and mocking framework",
@@ -3335,6 +3468,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Build",
     "date": "2026-02-07",
     "default": false,
     "description": "perfect hash function generator",
@@ -3361,6 +3495,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Text",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -3391,6 +3526,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2025-11-30",
     "default": false,
@@ -3409,6 +3545,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
@@ -3430,6 +3567,7 @@
     "build_dependencies": [
       "rust"
     ],
+    "category": "Bioinformatics",
     "date": "2026-04-29",
     "default": false,
     "dependencies": [
@@ -3452,6 +3590,7 @@
     "bin": [
       "gtop"
     ],
+    "category": "Terminal",
     "date": "2023-08-11",
     "default": false,
     "dependencies": [
@@ -3473,6 +3612,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Terminal",
     "date": "2025-10-08",
     "default": false,
     "description": "tool for building charming interactive shell scripts",
@@ -3504,6 +3644,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Compression",
     "date": "2026-05-02",
     "default": true,
     "description": "GNU file compression and decompression utility",
@@ -3545,6 +3686,7 @@
       "haskell-ghcup",
       "pkg-config"
     ],
+    "category": "Container",
     "date": "2025-10-08",
     "default": false,
     "description": "Dockerfile linter that enforces best practices",
@@ -3572,6 +3714,7 @@
     "build_dependencies": [
       "haskell-ghcup"
     ],
+    "category": "Build",
     "date": "2026-01-09",
     "default": false,
     "description": "Haskell package and build manager",
@@ -3588,6 +3731,7 @@
     "build_dependencies": [
       "curl"
     ],
+    "category": "Build",
     "date": "2025-05-22",
     "default": false,
     "description": "Haskell toolchain installer",
@@ -3602,6 +3746,7 @@
     "bin": [
       "stack"
     ],
+    "category": "Build",
     "date": "2026-02-22",
     "default": false,
     "description": "cross-platform Haskell build tool",
@@ -3635,6 +3780,7 @@
     "build_dependencies": [
       "cmake"
     ],
+    "category": "Library",
     "date": "2026-04-15",
     "default": false,
     "dependencies": [
@@ -3657,6 +3803,7 @@
     "build_dependencies": [
       "rust"
     ],
+    "category": "Terminal",
     "date": "2026-02-16",
     "default": false,
     "description": "command-line hex viewer with color output",
@@ -3677,6 +3824,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-02-02",
     "default": false,
@@ -3702,6 +3850,7 @@
       "conda",
       "ncurses"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-04-29",
     "default": true,
@@ -3725,6 +3874,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -3752,6 +3902,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Bioinformatics",
     "date": "2026-03-19",
     "default": false,
     "dependencies": [
@@ -3781,6 +3932,7 @@
       "http",
       "https"
     ],
+    "category": "Network",
     "date": "2024-11-01",
     "default": false,
     "dependencies": [
@@ -3800,6 +3952,7 @@
     "bin": [
       "httpx"
     ],
+    "category": "Network",
     "date": "2025-05-06",
     "default": false,
     "dependencies": [
@@ -3822,7 +3975,8 @@
     "bin": [
       "hf"
     ],
-    "date": "2026-05-06",
+    "category": "AI",
+    "date": "2026-05-15",
     "default": false,
     "dependencies": [
       "python"
@@ -3838,7 +3992,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "hugo": {
     "bin": [
@@ -3847,6 +4001,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Documentation",
     "date": "2026-05-02",
     "default": false,
     "description": "fast static site generator written in Go",
@@ -3867,6 +4022,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2025-11-30",
     "default": false,
@@ -3897,6 +4053,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "International Components for Unicode C and C++ libraries",
@@ -3917,7 +4074,6 @@
       "Pinning to conda-forge version.",
       "libxml2 currently doesn't support ICU 76."
     ],
-    "outdated": true,
     "src_url": "https://github.com/unicode-org/icu/releases/download/release-{version}/icu4c-{version}-sources.tgz",
     "type": "build_tool",
     "url": [
@@ -3930,6 +4086,7 @@
     "bin": [
       "icav2"
     ],
+    "category": "Cloud",
     "date": "2026-05-02",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
@@ -3954,6 +4111,7 @@
     "bin": [
       "ipython"
     ],
+    "category": "Python",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -3973,6 +4131,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -3990,6 +4149,7 @@
     "bin": [
       "isort"
     ],
+    "category": "Python",
     "date": "2026-03-19",
     "default": false,
     "dependencies": [
@@ -4013,6 +4173,7 @@
     "bin": [
       "jf"
     ],
+    "category": "Cloud",
     "date": "2026-05-02",
     "default": false,
     "description": "JFrog platform command-line interface",
@@ -4030,6 +4191,7 @@
     "build_dependencies": [
       "rust"
     ],
+    "category": "Terminal",
     "date": "2023-07-17",
     "default": false,
     "dependencies": [
@@ -4062,6 +4224,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2025-10-08",
     "default": true,
@@ -4080,6 +4243,7 @@
     "bin": [
       "julia"
     ],
+    "category": "Language",
     "date": "2026-04-15",
     "default": false,
     "description": "high-performance dynamic programming language",
@@ -4095,6 +4259,7 @@
     "bin": [
       "jupyter-lab"
     ],
+    "category": "Python",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -4116,6 +4281,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Cloud",
     "conda_channel": "conda-forge",
     "date": "2026-02-22",
     "default": false,
@@ -4135,12 +4301,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-03-21",
     "default": false,
     "description": "fast RNA-seq quantification via pseudoalignment",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://pachterlab.github.io/kallisto/",
@@ -4155,6 +4321,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -4177,6 +4344,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Shell",
     "date": "2024-08-19",
     "default": false,
     "description": "KornShell 93 POSIX-compatible shell",
@@ -4197,6 +4365,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Multimedia",
     "conda_channel": "conda-forge",
     "date": "2022-08-30",
     "default": false,
@@ -4221,7 +4390,8 @@
     "bin": [
       "latch"
     ],
-    "date": "2026-05-02",
+    "category": "Cloud",
+    "date": "2026-05-19",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -4238,7 +4408,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.71.2"
+    "version": "2.73.0"
   },
   "ldc": {
     "build_dependencies": [
@@ -4246,6 +4416,7 @@
       "libarchive",
       "xz"
     ],
+    "category": "Language",
     "date": "2026-03-19",
     "default": false,
     "description": "LLVM-based D programming language compiler",
@@ -4260,6 +4431,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -4283,7 +4455,8 @@
       "groff",
       "make"
     ],
-    "date": "2026-05-02",
+    "category": "Filesystem",
+    "date": "2026-05-14",
     "default": true,
     "dependencies": [
       "ncurses",
@@ -4300,7 +4473,7 @@
       "https://github.com/gwsw/less/",
       "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
     ],
-    "version": "700"
+    "version": "701"
   },
   "lesspipe": {
     "bin": [
@@ -4310,6 +4483,7 @@
       "bash",
       "make"
     ],
+    "category": "Filesystem",
     "date": "2026-04-29",
     "default": true,
     "description": "preprocessor for less to display non-text files",
@@ -4325,6 +4499,7 @@
       "cmake",
       "make"
     ],
+    "category": "Library",
     "date": "2026-03-19",
     "default": false,
     "description": "adaptive entropy coding library",
@@ -4341,6 +4516,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-04-15",
     "default": false,
     "dependencies": [
@@ -4365,6 +4541,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -4383,6 +4560,7 @@
       "cmake",
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "C implementation of the CBOR serialization format",
@@ -4407,6 +4585,7 @@
     "build_dependencies": [
       "cmake"
     ],
+    "category": "Library",
     "date": "2025-11-03",
     "default": false,
     "description": "fast DEFLATE, zlib, and gzip compression library",
@@ -4422,7 +4601,8 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-05-09",
+    "category": "Library",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "ncurses"
@@ -4434,7 +4614,7 @@
     "url": [
       "https://thrysoee.dk/editline/"
     ],
-    "version": "20260508-3.1"
+    "version": "20260512-3.1"
   },
   "libev": {
     "date": "2026-05-03",
@@ -4450,6 +4630,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2022-08-30",
     "default": false,
     "dependencies": [
@@ -4469,6 +4650,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2025-08-10",
     "default": false,
     "description": "foreign function interface library",
@@ -4485,10 +4667,13 @@
       "cmake",
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
-      "libcbor"
+      "libcbor",
+      "openssl",
+      "zlib"
     ],
     "description": "library for FIDO2 and WebAuthn authentication",
     "src_url": "https://github.com/Yubico/libfido2/archive/{version}.tar.gz",
@@ -4503,6 +4688,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -4531,6 +4717,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-07",
     "default": false,
     "description": "common error codes library for GnuPG components",
@@ -4550,6 +4737,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "character set conversion library",
@@ -4567,6 +4755,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "internationalized domain names library",
@@ -4583,6 +4772,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-04-15",
     "default": false,
     "description": "SIMD-accelerated JPEG encoding and decoding library",
@@ -4600,7 +4790,8 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-05-07",
+    "category": "Library",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "libgpg-error"
@@ -4611,13 +4802,14 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "1.7.0"
+    "version": "1.8.0"
   },
   "liblinear": {
     "build_dependencies": [
       "make",
       "patch"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "library for large linear classification",
@@ -4640,6 +4832,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "portable C library for network traffic capture",
@@ -4656,6 +4849,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "description": "pipeline manipulation library",
@@ -4680,6 +4874,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -4703,6 +4898,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -4722,6 +4918,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "ASN.1 parsing library",
@@ -4744,6 +4941,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -4768,6 +4966,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Build",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -4790,6 +4989,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "Unicode string processing library",
@@ -4818,6 +5018,7 @@
       "perl",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2025-11-11",
     "default": false,
     "description": "extended crypt library for password hashing",
@@ -4833,10 +5034,12 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "icu4c",
+      "libiconv",
       "readline",
       "xz",
       "zlib"
@@ -4855,11 +5058,13 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "icu4c",
       "libgcrypt",
+      "libgpg-error",
       "libxml2"
     ],
     "description": "XSLT transformation library",
@@ -4880,6 +5085,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2023-01-04",
     "default": false,
     "description": "YAML parser and emitter in C",
@@ -4920,6 +5126,7 @@
       "zlib",
       "zstd"
     ],
+    "category": "Build",
     "conda_channel": "conda-forge",
     "date": "2026-05-06",
     "default": false,
@@ -4937,7 +5144,8 @@
       "make",
       "pkg-config"
     ],
-    "date": "2026-04-15",
+    "category": "Dotfile",
+    "date": "2026-05-19",
     "default": false,
     "dependencies": [
       "lua",
@@ -4947,7 +5155,6 @@
     ],
     "description": "Lua-based environment modules system",
     "installer_platform": "linux",
-    "outdated": true,
     "src_url": "https://github.com/TACC/Lmod/archive/{version}.tar.gz",
     "supported": {
       "linux-amd64": true,
@@ -4959,7 +5166,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.2"
+    "version": "9.2.2"
   },
   "lsd": {
     "bin": [
@@ -4968,6 +5175,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -4991,6 +5199,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Language",
     "date": "2026-01-02",
     "default": false,
     "description": "lightweight embeddable scripting language",
@@ -5011,6 +5220,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Language",
     "date": "2026-05-02",
     "default": false,
     "description": "just-in-time compiler for Lua",
@@ -5030,6 +5240,7 @@
       "make",
       "unzip"
     ],
+    "category": "Build",
     "date": "2026-02-02",
     "default": false,
     "dependencies": [
@@ -5050,6 +5261,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Workflow",
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
@@ -5073,6 +5285,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-07-22",
     "default": false,
     "description": "extremely fast lossless compression algorithm",
@@ -5097,6 +5310,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Compression",
     "date": "2026-05-02",
     "default": false,
     "description": "lossless data compressor based on LZMA",
@@ -5127,6 +5341,7 @@
     "build_dependencies": [
       "xz"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "description": "GNU macro processor",
@@ -5143,6 +5358,7 @@
     "bin": [
       "gmake"
     ],
+    "category": "Build",
     "date": "2023-03-07",
     "default": true,
     "description": "GNU build automation tool",
@@ -5167,18 +5383,18 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-05-01",
+    "date": "2026-05-14",
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.6.0"
+    "version": "2.6.1"
   },
   "man-db": {
     "bin": [
@@ -5190,6 +5406,7 @@
       "pkg-config",
       "xz"
     ],
+    "category": "Terminal",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -5222,7 +5439,8 @@
     "bin": [
       "marimo"
     ],
-    "date": "2026-05-04",
+    "category": "Python",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "python"
@@ -5234,12 +5452,13 @@
       "https://marimo.io/",
       "https://pypi.org/project/marimo/"
     ],
-    "version": "0.23.5"
+    "version": "0.23.6"
   },
   "markdownlint-cli": {
     "bin": [
       "markdownlint"
     ],
+    "category": "Documentation",
     "date": "2026-03-19",
     "default": false,
     "dependencies": [
@@ -5260,6 +5479,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
     "default": true,
@@ -5278,12 +5498,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/lunaryorn/mdcat/"
@@ -5294,8 +5514,9 @@
     "bin": [
       "meson"
     ],
+    "category": "Build",
     "date": "2026-04-22",
-    "default": false,
+    "default": true,
     "dependencies": [
       "python"
     ],
@@ -5316,6 +5537,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2026-04-22",
     "default": false,
@@ -5341,6 +5563,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2025-06-17",
     "default": false,
@@ -5360,6 +5583,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-01-10",
     "default": false,
@@ -5387,6 +5611,7 @@
     "bin": [
       "mcli"
     ],
+    "category": "Cloud",
     "date": "2026-01-02",
     "default": false,
     "dependencies": [
@@ -5404,6 +5629,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -5423,6 +5649,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "C library for correct decimal floating point",
@@ -5438,6 +5665,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -5461,7 +5689,8 @@
     "bin": [
       "multiqc"
     ],
-    "date": "2026-04-22",
+    "category": "Bioinformatics",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "python"
@@ -5473,12 +5702,13 @@
       "https://pypi.org/project/multiqc/",
       "https://bioconda.github.io/recipes/multiqc/README.html"
     ],
-    "version": "1.34"
+    "version": "1.35"
   },
   "mutagen": {
     "bin": [
       "mutagen-inspect"
     ],
+    "category": "Multimedia",
     "date": "2023-09-05",
     "default": false,
     "dependencies": [
@@ -5508,7 +5738,8 @@
       "mypy",
       "mypyc"
     ],
-    "date": "2026-05-06",
+    "category": "Python",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "python"
@@ -5521,14 +5752,13 @@
         "MYPY_USE_MYPYC": "1"
       }
     },
-    "revision": 2,
     "type": "cli",
     "url": [
       "https://www.mypy-lang.org/",
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "nano": {
     "bin": [
@@ -5538,6 +5768,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Editor",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -5561,6 +5792,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2022-10-11",
     "default": false,
@@ -5587,6 +5819,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -5632,6 +5865,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-02-07",
     "default": false,
     "description": "terminal-independent text UI library",
@@ -5658,6 +5892,7 @@
     "bin": [
       "neofetch"
     ],
+    "category": "Terminal",
     "date": "2022-08-30",
     "default": false,
     "description": "fast system information display tool",
@@ -5678,6 +5913,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Editor",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
@@ -5700,6 +5936,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -5724,8 +5961,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-05-02",
+    "date": "2026-05-14",
     "default": false,
     "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
@@ -5735,7 +5973,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "26.04.0"
+    "version": "26.04.1"
   },
   "nghttp2": {
     "build_dependencies": [
@@ -5743,16 +5981,18 @@
       "pkg-config",
       "python"
     ],
+    "category": "Library",
     "date": "2026-04-22",
     "default": false,
     "dependencies": [
       "c-ares",
+      "icu4c",
       "libxml2",
       "openssl",
       "zlib"
     ],
     "description": "HTTP/2 C library",
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://github.com/nghttp2/nghttp2/releases/download/v{version}/nghttp2-{version}.tar.gz",
     "type": "library",
     "url": [
@@ -5768,6 +6008,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Language",
     "conda_channel": "conda-forge",
     "date": "2026-05-07",
     "default": false,
@@ -5786,8 +6027,9 @@
     "build_dependencies": [
       "python"
     ],
+    "category": "Build",
     "date": "2026-05-02",
-    "default": false,
+    "default": true,
     "description": "small, fast build system",
     "src_url": "https://github.com/ninja-build/ninja/archive/v{version}.tar.gz",
     "type": "build_tool",
@@ -5811,6 +6053,7 @@
       "flex",
       "make"
     ],
+    "category": "Security",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -5838,6 +6081,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Language",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -5865,6 +6109,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-24",
     "default": false,
     "description": "New GNU Portable Threads library",
@@ -5882,6 +6127,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Shell",
     "conda_channel": "conda-forge",
     "date": "2026-04-22",
     "default": false,
@@ -5902,6 +6148,7 @@
     "bin": [
       "bonito"
     ],
+    "category": "Bioinformatics",
     "date": "2026-02-22",
     "default": false,
     "dependencies": [
@@ -5925,14 +6172,10 @@
     "bin": [
       "dorado"
     ],
+    "category": "Bioinformatics",
     "date": "2026-02-22",
     "default": false,
     "description": "Oxford Nanopore high-accuracy basecaller",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": true
-    },
     "type": "cli",
     "url": [
       "https://github.com/nanoporetech/dorado/"
@@ -5943,6 +6186,7 @@
     "bin": [
       "guppy_basecaller"
     ],
+    "category": "Bioinformatics",
     "date": "2023-05-31",
     "default": false,
     "description": "Oxford Nanopore production basecaller",
@@ -5971,6 +6215,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-04-29",
     "default": false,
     "description": "optimized BLAS (Basic Linear Algebra Subprograms) library",
@@ -5992,6 +6237,7 @@
       "groff",
       "make"
     ],
+    "category": "Library",
     "date": "2026-05-04",
     "default": false,
     "dependencies": [
@@ -6018,6 +6264,7 @@
       "openssl",
       "zlib"
     ],
+    "category": "Security",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": false,
@@ -6043,6 +6290,7 @@
       "perl",
       "pkg-config"
     ],
+    "category": "Security",
     "date": "2026-04-22",
     "default": false,
     "dependencies": [
@@ -6067,8 +6315,9 @@
       "perl",
       "pkg-config"
     ],
+    "category": "Security",
     "date": "2026-04-15",
-    "default": true,
+    "default": false,
     "dependencies": [
       "ca-certificates"
     ],
@@ -6083,6 +6332,7 @@
     "version": "4.0.0"
   },
   "oracle-instant-client": {
+    "category": "Cloud",
     "date": "2026-05-02",
     "default": false,
     "description": "Oracle Database client libraries",
@@ -6108,6 +6358,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Compression",
     "date": "2023-05-31",
     "default": true,
     "description": "port of 7-zip for POSIX systems",
@@ -6130,6 +6381,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Documentation",
     "conda_channel": "conda-forge",
     "date": "2026-03-20",
     "default": false,
@@ -6149,6 +6401,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Build",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
@@ -6175,6 +6428,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Security",
     "date": "2022-08-30",
     "default": false,
     "description": "simple password manager using GPG and Git",
@@ -6196,6 +6450,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "VCS",
     "date": "2026-05-02",
     "default": true,
     "dependencies": {
@@ -6238,6 +6493,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2022-08-29",
     "default": false,
     "dependencies": [
@@ -6270,6 +6526,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -6300,13 +6557,15 @@
     "build_dependencies": [
       "make"
     ],
-    "date": "2026-05-03",
+    "category": "Language",
+    "date": "2026-05-18",
     "default": true,
     "description": "Practical Extraction and Report Language",
     "man1": [
       "cpan.1",
       "perl.1"
     ],
+    "revision": 2,
     "src_url": "https://www.cpan.org/src/{major}.0/perl-{version}.tar.gz",
     "type": "build_tool",
     "url": [
@@ -6321,6 +6580,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2025-04-15",
     "default": false,
@@ -6348,6 +6608,7 @@
       "conda",
       "zlib"
     ],
+    "category": "Compression",
     "conda_channel": "conda-forge",
     "date": "2023-08-31",
     "default": true,
@@ -6369,6 +6630,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Security",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -6389,6 +6651,7 @@
     "bin": [
       "pipx"
     ],
+    "category": "Python",
     "date": "2026-05-06",
     "default": false,
     "dependencies": [
@@ -6396,7 +6659,6 @@
     ],
     "description": "install and run Python CLI apps in isolated environments",
     "installer": "python-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/pypa/pipx/",
@@ -6410,6 +6672,7 @@
       "ninja",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "pixel manipulation library",
@@ -6429,6 +6692,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Build",
     "date": "2022-08-29",
     "default": true,
     "description": "helper tool for querying installed library info",
@@ -6449,6 +6713,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Build",
     "conda_channel": "conda-forge",
     "date": "2025-11-05",
     "default": false,
@@ -6469,6 +6734,7 @@
     "bin": [
       "poetry"
     ],
+    "category": "Python",
     "date": "2026-05-09",
     "default": true,
     "dependencies": [
@@ -6498,23 +6764,24 @@
       "perl",
       "readline"
     ],
+    "category": "Database",
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
-    "default": false,
+    "date": "2026-05-15",
+    "default": true,
     "description": "powerful open-source relational database",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "18.3"
+    "version": "18.4"
   },
   "powershell": {
     "bin": [
       "pwsh"
     ],
+    "category": "Shell",
     "date": "2026-05-02",
     "default": false,
     "description": "cross-platform task automation shell by Microsoft",
@@ -6524,24 +6791,11 @@
     ],
     "version": "7.6.1"
   },
-  "prelude-emacs": {
-    "build_dependencies": [
-      "git"
-    ],
-    "date": "2026-05-09",
-    "default": false,
-    "description": "community-maintained Emacs configuration",
-    "type": "cli",
-    "url": [
-      "https://github.com/bbatsov/prelude/"
-    ],
-    "user": true,
-    "version": "bab03706490bb5bd12e7dcc63b131132a4566015"
-  },
   "prettier": {
     "bin": [
       "prettier"
     ],
+    "category": "Text",
     "date": "2026-04-15",
     "default": false,
     "dependencies": [
@@ -6563,6 +6817,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-03-19",
     "default": false,
@@ -6585,12 +6840,15 @@
       "pkg-config",
       "python"
     ],
+    "category": "Library",
     "date": "2026-04-15",
     "default": false,
     "dependencies": [
       "curl",
       "libjpeg-turbo",
+      "libssh2",
       "libtiff",
+      "openssl",
       "sqlite",
       "zlib",
       "zstd"
@@ -6616,6 +6874,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Text",
     "date": "2023-12-22",
     "default": false,
     "description": "command-line HTML parsing tool",
@@ -6629,6 +6888,7 @@
     "bin": [
       "py-spy"
     ],
+    "category": "Python",
     "date": "2026-04-29",
     "default": false,
     "dependencies": [
@@ -6652,6 +6912,7 @@
     "bin": [
       "pycodestyle"
     ],
+    "category": "Python",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -6673,23 +6934,26 @@
     "build_dependencies": [
       "sed"
     ],
-    "date": "2026-05-08",
+    "category": "Python",
+    "date": "2026-05-11",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
       "pyenv.1"
     ],
+    "revision": 1,
     "src_url": "https://github.com/pyenv/pyenv/archive/v{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.6.30"
+    "version": "2.6.31"
   },
   "pyflakes": {
     "bin": [
       "pyflakes"
     ],
+    "category": "Python",
     "date": "2025-08-24",
     "default": true,
     "dependencies": [
@@ -6708,6 +6972,7 @@
     "bin": [
       "pygmentize"
     ],
+    "category": "Python",
     "date": "2026-04-15",
     "default": false,
     "dependencies": [
@@ -6727,6 +6992,7 @@
     "bin": [
       "pylint"
     ],
+    "category": "Python",
     "date": "2026-02-22",
     "default": false,
     "dependencies": [
@@ -6749,6 +7015,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -6772,7 +7039,8 @@
     "bin": [
       "pyrefly"
     ],
-    "date": "2026-05-08",
+    "category": "Python",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "python"
@@ -6785,7 +7053,7 @@
       "https://github.com/facebook/pyrefly/",
       "https://pypi.org/project/pyrefly/"
     ],
-    "version": "0.64.1"
+    "version": "1.0.0"
   },
   "pyright": {
     "bin": [
@@ -6794,6 +7062,7 @@
       "pyright-python",
       "pyright-python-langserver"
     ],
+    "category": "Python",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -6812,6 +7081,7 @@
     "bin": [
       "pyprinttags"
     ],
+    "category": "Python",
     "date": "2026-02-06",
     "default": false,
     "dependencies": [
@@ -6831,6 +7101,7 @@
     "bin": [
       "pytest"
     ],
+    "category": "Python",
     "date": "2026-04-15",
     "default": true,
     "dependencies": [
@@ -6873,6 +7144,7 @@
         "pkg-config"
       ]
     },
+    "category": "Language",
     "date": "2026-04-15",
     "default": false,
     "dependencies": {
@@ -6934,6 +7206,7 @@
         "pkg-config"
       ]
     },
+    "category": "Language",
     "date": "2026-04-15",
     "default": false,
     "dependencies": {
@@ -6995,8 +7268,9 @@
         "pkg-config"
       ]
     },
+    "category": "Language",
     "date": "2026-04-15",
-    "default": false,
+    "default": true,
     "dependencies": {
       "default": [],
       "firewall_linux": [
@@ -7056,6 +7330,7 @@
         "pkg-config"
       ]
     },
+    "category": "Language",
     "date": "2026-04-15",
     "default": true,
     "dependencies": {
@@ -7128,7 +7403,8 @@
         "pkg-config"
       ]
     },
-    "date": "2026-05-04",
+    "category": "Language",
+    "date": "2026-05-11",
     "default": true,
     "dependencies": {
       "default": [],
@@ -7167,18 +7443,18 @@
       "python3.1",
       "python3.14.1"
     ],
-    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.14.4"
+    "version": "3.14.5"
   },
   "quarto": {
     "bin": [
       "quarto"
     ],
+    "category": "R",
     "date": "2026-05-02",
     "default": true,
     "description": "scientific and technical publishing system",
@@ -7190,62 +7466,25 @@
     "version": "1.9.37"
   },
   "r": {
-    "build_dependencies": [
-      "make",
-      "pkg-config"
+    "bin": [
+      "R",
+      "Rscript"
     ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Language",
     "date": "2026-05-01",
     "default": false,
-    "dependencies": [
-      "autoconf",
-      "automake",
-      "bzip2",
-      "cairo",
-      "curl",
-      "fontconfig",
-      "freetype",
-      "gettext",
-      "glib",
-      "icu4c",
-      "libffi",
-      "libjpeg-turbo",
-      "libpng",
-      "libssh2",
-      "libtiff",
-      "libtool",
-      "libxml2",
-      "openblas",
-      "openssl",
-      "pcre2",
-      "pixman",
-      "readline",
-      "tar",
-      "tcl-tk",
-      "texinfo",
-      "xorg-libice",
-      "xorg-libpthread-stubs",
-      "xorg-libsm",
-      "xorg-libx11",
-      "xorg-libxau",
-      "xorg-libxcb",
-      "xorg-libxdmcp",
-      "xorg-libxext",
-      "xorg-libxrender",
-      "xorg-libxt",
-      "xorg-xcb-proto",
-      "xorg-xorgproto",
-      "xz",
-      "zip",
-      "zlib",
-      "zstd"
-    ],
     "description": "R statistical computing language and environment",
-    "installer_platform": "debian",
+    "installer": "conda-package",
+    "installer_args": {
+      "name": "r-base"
+    },
     "man1": [
       "R.1",
       "Rscript.1"
     ],
-    "src_url": "https://cloud.r-project.org/src/base/R-{major}/R-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.r-project.org/",
@@ -7260,6 +7499,7 @@
       "pkg-config",
       "subversion"
     ],
+    "category": "Language",
     "date": "2026-05-05",
     "default": false,
     "dependencies": [
@@ -7324,6 +7564,7 @@
     "version": "90000"
   },
   "r-gfortran": {
+    "category": "R",
     "date": "2025-04-12",
     "default": true,
     "description": "gfortran toolchain for building R packages on macOS",
@@ -7341,6 +7582,7 @@
     "version": "14.2"
   },
   "r-xcode-openmp": {
+    "category": "R",
     "date": "2026-05-02",
     "default": true,
     "description": "OpenMP support for R packages on macOS",
@@ -7364,6 +7606,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "R",
     "conda_channel": "conda-forge",
     "date": "2025-08-24",
     "default": true,
@@ -7383,6 +7626,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
     "default": false,
@@ -7399,6 +7643,7 @@
     "bin": [
       "rbenv"
     ],
+    "category": "Dotfile",
     "date": "2026-05-02",
     "default": false,
     "description": "Ruby version manager",
@@ -7416,6 +7661,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Cloud",
     "conda_channel": "conda-forge",
     "date": "2026-05-08",
     "default": true,
@@ -7424,7 +7670,6 @@
     "man1": [
       "rclone.1"
     ],
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://rclone.org/"
@@ -7436,6 +7681,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-02-07",
     "default": false,
     "dependencies": [
@@ -7456,14 +7702,15 @@
     "build_dependencies": [
       "bash",
       "bzip2",
+      "curl",
       "gnupg",
       "gzip",
       "less",
       "patch",
       "tar",
-      "unzip",
-      "wget"
+      "unzip"
     ],
+    "category": "Filesystem",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -7472,7 +7719,7 @@
     "description": "Perl-based file renaming tool",
     "installer": "perl-package",
     "installer_args": {
-      "cpan_path": "PEDERMDl/File-Rename"
+      "cpan_path": "RMBARKER/File-Rename"
     },
     "man1": [
       "rename.1"
@@ -7495,6 +7742,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2025-10-28",
     "default": true,
@@ -7513,6 +7761,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -7528,6 +7777,7 @@
     "bin": [
       "rmate"
     ],
+    "category": "Editor",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -7548,6 +7798,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2024-12-30",
     "default": false,
@@ -7582,6 +7833,7 @@
     "bin": [
       "ronn"
     ],
+    "category": "Documentation",
     "date": "2024-06-16",
     "default": false,
     "dependencies": [
@@ -7604,6 +7856,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
@@ -7622,6 +7875,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
+    "category": "R",
     "date": "2026-05-02",
     "default": false,
     "description": "web-based RStudio IDE server",
@@ -7645,6 +7899,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Network",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -7673,35 +7928,28 @@
       "ruby"
     ],
     "build_dependencies": [
-      "make",
-      "pkg-config"
+      "conda"
     ],
-    "date": "2026-05-02",
+    "category": "Language",
+    "date": "2026-05-19",
     "default": false,
-    "dependencies": [
-      "libffi",
-      "libyaml",
-      "openssl3",
-      "readline",
-      "zlib"
-    ],
     "description": "dynamic, open-source programming language",
+    "installer": "conda-package",
     "man1": [
       "ruby.1"
     ],
-    "outdated": true,
-    "src_url": "https://cache.ruby-lang.org/pub/ruby/{major_minor}/ruby-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
     ],
-    "version": "4.0.3"
+    "version": "4.0.2"
   },
   "ruff": {
     "bin": [
       "ruff"
     ],
-    "date": "2026-04-29",
+    "category": "Python",
+    "date": "2026-05-14",
     "default": true,
     "dependencies": [
       "python"
@@ -7712,12 +7960,13 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.15.12"
+    "version": "0.15.13"
   },
   "ruff-lsp": {
     "bin": [
       "ruff-lsp"
     ],
+    "category": "Python",
     "date": "2025-02-14",
     "default": true,
     "dependencies": [
@@ -7744,6 +7993,7 @@
       "rustdoc",
       "rustfmt"
     ],
+    "category": "Language",
     "date": "2026-04-22",
     "default": false,
     "description": "systems programming language focused on safety and speed",
@@ -7760,6 +8010,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Cloud",
     "date": "2024-12-30",
     "default": false,
     "description": "very fast S3 and object storage CLI tool",
@@ -7776,6 +8027,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-03-19",
     "default": false,
@@ -7795,12 +8047,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2024-12-30",
     "default": false,
     "description": "fast parallel tools for working with SAM/BAM files",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -7828,12 +8080,12 @@
         "conda"
       ]
     },
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-03-19",
     "default": false,
     "description": "tools for manipulating alignments in SAM and BAM format",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -7850,7 +8102,8 @@
     "bin": [
       "scalene"
     ],
-    "date": "2026-05-02",
+    "category": "Python",
+    "date": "2026-05-14",
     "default": false,
     "dependencies": [
       "python"
@@ -7862,12 +8115,13 @@
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
     ],
-    "version": "2.2.1"
+    "version": "2.3.0"
   },
   "scanpy": {
     "bin": [
       "scanpy"
     ],
+    "category": "Bioinformatics",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -7882,6 +8136,7 @@
     "version": "1.12.1"
   },
   "scons": {
+    "category": "Build",
     "date": "2026-01-02",
     "default": false,
     "dependencies": [
@@ -7906,6 +8161,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Terminal",
     "date": "2026-05-08",
     "default": false,
     "dependencies": [
@@ -7931,6 +8187,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": false,
@@ -7949,6 +8206,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Text",
     "date": "2026-05-02",
     "default": true,
     "description": "GNU stream editor for filtering and transforming text",
@@ -7974,12 +8232,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-03-19",
     "default": false,
     "description": "cross-platform and ultrafast FASTQ/FASTA toolkit",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -7997,6 +8255,7 @@
       "patch",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2023-06-12",
     "default": false,
     "dependencies": [
@@ -8021,12 +8280,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Shell",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "description": "static analysis tool for shell scripts",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/koalaman/shellcheck/"
@@ -8034,6 +8293,7 @@
     "version": "0.11.0"
   },
   "shiny-server": {
+    "category": "R",
     "date": "2025-05-08",
     "default": false,
     "description": "server for deploying R Shiny web applications",
@@ -8054,6 +8314,7 @@
     "bin": [
       "shunit2"
     ],
+    "category": "Shell",
     "date": "2022-08-30",
     "default": false,
     "description": "xUnit-based unit test framework for shell scripts",
@@ -8068,6 +8329,7 @@
     "bin": [
       "shyaml"
     ],
+    "category": "Text",
     "date": "2023-12-13",
     "default": false,
     "dependencies": [
@@ -8091,6 +8353,7 @@
     "bin": [
       "snakefmt"
     ],
+    "category": "Python",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -8113,8 +8376,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-05-02",
+    "date": "2026-05-19",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -8124,7 +8388,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.20.0"
+    "version": "9.21.0"
   },
   "sox": {
     "bin": [
@@ -8133,6 +8397,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Multimedia",
     "conda_channel": "conda-forge",
     "date": "2022-08-30",
     "default": false,
@@ -8149,10 +8414,15 @@
     "version": "14.4.2"
   },
   "spacemacs": {
+    "bin": [
+      "spacemacs"
+    ],
     "build_dependencies": [
+      "emacs",
       "git"
     ],
-    "date": "2026-05-02",
+    "category": "Editor",
+    "date": "2026-05-19",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8162,23 +8432,12 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "user": true,
-    "version": "491e17ba9cdcb253a3292a3049abb8767c91b9bb"
+    "version": "25949ce0935270b7fec779f2219bfc2c0c157e50"
   },
   "spacevim": {
-    "build_dependencies": [
-      "git"
-    ],
-    "date": "2026-05-02",
-    "default": false,
+    "date": "2026-05-10",
     "description": "modular Vim and Neovim configuration",
-    "type": "cli",
-    "url": [
-      "https://spacevim.org/",
-      "https://github.com/SpaceVim/SpaceVim"
-    ],
-    "user": true,
-    "version": "eed9d8f14951d9802665aa3429e449b71bb15a3a"
+    "removed": true
   },
   "spdlog": {
     "date": "2026-01-09",
@@ -8192,6 +8451,7 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
+    "category": "Documentation",
     "date": "2026-01-02",
     "dependencies": [
       "python"
@@ -8210,7 +8470,8 @@
     "bin": [
       "sqlfluff"
     ],
-    "date": "2026-05-02",
+    "category": "Python",
+    "date": "2026-05-15",
     "default": true,
     "dependencies": [
       "python"
@@ -8222,7 +8483,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.1.0"
+    "version": "4.2.1"
   },
   "sqlite": {
     "bin": [
@@ -8232,6 +8493,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-05",
     "default": false,
     "dependencies": [
@@ -8265,12 +8527,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2024-12-30",
     "default": false,
     "description": "ultrafast universal RNA-seq aligner",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8290,12 +8552,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
     "description": "detects gene fusions using STAR alignments",
     "installer": "conda-package",
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -8315,6 +8577,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
@@ -8335,6 +8598,7 @@
       "conda",
       "perl"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2024-12-30",
     "default": false,
@@ -8351,6 +8615,7 @@
     "bin": [
       "streamlit"
     ],
+    "category": "Python",
     "date": "2026-04-29",
     "default": false,
     "dependencies": [
@@ -8373,6 +8638,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2026-05-02",
     "default": false,
@@ -8401,6 +8667,7 @@
       "python",
       "ruby"
     ],
+    "category": "VCS",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -8429,6 +8696,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Build",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -8448,7 +8716,8 @@
       "git",
       "pkg-config"
     ],
-    "date": "2026-03-19",
+    "category": "Library",
+    "date": "2026-05-11",
     "default": false,
     "dependencies": [
       "zlib"
@@ -8459,7 +8728,7 @@
     "url": [
       "https://github.com/taglib/taglib/"
     ],
-    "version": "2.2.1"
+    "version": "2.3"
   },
   "tar": {
     "bin": [
@@ -8468,6 +8737,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Compression",
     "date": "2023-08-31",
     "default": true,
     "description": "GNU archiving utility",
@@ -8492,6 +8762,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -8500,6 +8771,8 @@
       "xorg-libxau",
       "xorg-libxcb",
       "xorg-libxdmcp",
+      "xorg-libxext",
+      "xorg-libxrender",
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
@@ -8521,12 +8794,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
     "description": "fast tldr client for concise command examples",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/dbrgn/tealdeer/"
@@ -8539,6 +8812,7 @@
       "java",
       "javac"
     ],
+    "category": "Language",
     "date": "2026-05-02",
     "default": false,
     "description": "Eclipse Temurin OpenJDK distribution",
@@ -8568,6 +8842,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Documentation",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -8607,6 +8882,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Terminal",
     "date": "2025-12-05",
     "default": true,
     "dependencies": [
@@ -8633,6 +8909,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
     "default": false,
@@ -8648,6 +8925,7 @@
     "bin": [
       "tqdm"
     ],
+    "category": "Python",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -8668,6 +8946,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
     "default": true,
@@ -8692,6 +8971,7 @@
     "bin": [
       "tryceratops"
     ],
+    "category": "Python",
     "date": "2024-11-01",
     "default": false,
     "dependencies": [
@@ -8712,6 +8992,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2025-10-08",
     "default": false,
@@ -8727,20 +9008,20 @@
     "bin": [
       "ty"
     ],
-    "date": "2026-05-02",
+    "category": "Python",
+    "date": "2026-05-19",
     "default": true,
     "dependencies": [
       "python"
     ],
     "description": "extremely fast Python type checker",
     "installer": "python-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.34"
+    "version": "0.0.37"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -8754,6 +9035,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Bioinformatics",
     "conda_channel": "bioconda",
     "date": "2023-10-16",
     "default": false,
@@ -8783,6 +9065,7 @@
     "build_dependencies": [
       "make"
     ],
+    "category": "Core",
     "date": "2026-05-02",
     "default": true,
     "dependencies": [
@@ -8816,6 +9099,7 @@
       "make",
       "patch"
     ],
+    "category": "Compression",
     "date": "2023-04-06",
     "default": false,
     "description": "extraction utility for ZIP archives",
@@ -8838,6 +9122,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-01-02",
     "default": false,
     "description": "C library for Unicode and UTF-8 processing",
@@ -8854,14 +9139,15 @@
       "uv",
       "uvx"
     ],
-    "date": "2026-05-09",
+    "category": "Python",
+    "date": "2026-05-19",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.12"
+    "version": "0.11.15"
   },
   "vim": {
     "bin": [
@@ -8877,8 +9163,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-05-07",
+    "date": "2026-05-14",
     "default": true,
     "description": "highly configurable text editor",
     "installer": "conda-package",
@@ -8896,13 +9183,14 @@
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.0397"
+    "version": "9.2.0478"
   },
   "visidata": {
     "bin": [
       "vd",
       "visidata"
     ],
+    "category": "Terminal",
     "date": "2025-10-08",
     "default": false,
     "dependencies": [
@@ -8925,6 +9213,7 @@
     "bin": [
       "vulture"
     ],
+    "category": "Python",
     "date": "2026-04-15",
     "default": false,
     "dependencies": [
@@ -8946,6 +9235,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Terminal",
     "date": "2025-02-20",
     "default": false,
     "description": "terminal file manager for navigating directories",
@@ -8965,6 +9255,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Network",
     "date": "2026-04-24",
     "default": true,
     "dependencies": [
@@ -8999,6 +9290,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Network",
     "date": "2026-04-24",
     "default": false,
     "dependencies": [
@@ -9037,8 +9329,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Core",
     "conda_channel": "conda-forge",
-    "date": "2026-05-07",
+    "date": "2026-05-19",
     "default": true,
     "description": "shows the full path of shell commands",
     "installer": "conda-package",
@@ -9049,7 +9342,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/which/?C=M;O=D"
     ],
-    "version": "2.23"
+    "version": "2.24"
   },
   "woff2": {
     "bin": [
@@ -9060,6 +9353,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Library",
     "conda_channel": "conda-forge",
     "date": "2023-05-15",
     "default": false,
@@ -9077,6 +9371,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9097,6 +9392,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2023-08-31",
     "default": false,
     "description": "pthread stubs used by X.org build system",
@@ -9113,6 +9409,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -9135,6 +9432,7 @@
       "pkg-config",
       "sed"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -9159,6 +9457,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9179,6 +9478,7 @@
       "pkg-config",
       "python"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9202,6 +9502,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9221,6 +9522,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
@@ -9250,6 +9552,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9274,6 +9577,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9301,6 +9605,7 @@
       "pkg-config",
       "python"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "description": "XCB protocol descriptions",
@@ -9320,6 +9625,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "description": "X.Org X11 protocol headers",
@@ -9336,13 +9642,13 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
       "xorg-xorgproto"
     ],
     "description": "X transport library",
-    "outdated": true,
     "src_url": "https://xorg.freedesktop.org/archive/individual/lib/xtrans-{version}.tar.xz",
     "type": "library",
     "url": [
@@ -9358,6 +9664,7 @@
     "build_dependencies": [
       "rust"
     ],
+    "category": "Bioinformatics",
     "date": "2026-05-02",
     "default": false,
     "description": "extended SRA download and processing tools",
@@ -9376,6 +9683,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Text",
     "conda_channel": "conda-forge",
     "date": "2025-01-03",
     "default": false,
@@ -9392,6 +9700,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2024-12-30",
     "default": false,
     "description": "extremely fast non-cryptographic hash algorithm library",
@@ -9432,6 +9741,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Compression",
     "date": "2026-04-15",
     "default": true,
     "description": "general-purpose lossless data compressor using LZMA",
@@ -9477,6 +9787,7 @@
     "bin": [
       "yamllint"
     ],
+    "category": "Text",
     "date": "2026-02-07",
     "default": false,
     "dependencies": [
@@ -9491,6 +9802,7 @@
     "bin": [
       "yapf"
     ],
+    "category": "Python",
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -9512,6 +9824,7 @@
     "build_dependencies": [
       "go"
     ],
+    "category": "Text",
     "date": "2026-04-22",
     "default": false,
     "description": "YAML, JSON, and XML command-line processor",
@@ -9528,6 +9841,7 @@
     "bin": [
       "yt-dlp"
     ],
+    "category": "Multimedia",
     "date": "2026-03-19",
     "default": false,
     "dependencies": [
@@ -9550,8 +9864,9 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-05-05",
+    "date": "2026-05-14",
     "default": false,
     "description": "terminal workspace with layouts and plugins",
     "installer": "conda-package",
@@ -9559,7 +9874,7 @@
     "url": [
       "https://github.com/zellij-org/zellij/"
     ],
-    "version": "0.44.2"
+    "version": "0.44.3"
   },
   "zenith": {
     "bin": [
@@ -9568,12 +9883,12 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-05-09",
     "default": false,
     "description": "graphical terminal process monitor",
     "installer": "conda-package",
-    "outdated": true,
     "type": "cli",
     "url": [
       "https://github.com/bvaisvil/zenith/"
@@ -9588,11 +9903,9 @@
       "make",
       "patch"
     ],
+    "category": "Compression",
     "date": "2023-10-09",
     "default": false,
-    "dependencies": [
-      "bzip2"
-    ],
     "description": "create and manage ZIP archives",
     "man1": [
       "zip.1"
@@ -9609,6 +9922,7 @@
       "make",
       "pkg-config"
     ],
+    "category": "Library",
     "date": "2026-04-24",
     "default": false,
     "description": "lossless data compression library",
@@ -9636,6 +9950,7 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-02-02",
     "default": true,
@@ -9654,9 +9969,10 @@
     "build_dependencies": [
       "conda"
     ],
+    "category": "Shell",
     "conda_channel": "conda-forge",
     "date": "2025-01-03",
-    "default": false,
+    "default": true,
     "description": "Z shell, extended Bourne-compatible shell",
     "installer": "conda-package",
     "man1": [
@@ -9682,6 +9998,7 @@
       "cmake",
       "pkg-config"
     ],
+    "category": "Compression",
     "date": "2025-02-20",
     "default": true,
     "dependencies": [

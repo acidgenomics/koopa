@@ -43,16 +43,8 @@ class VersionCheckResult:
         if re.match(r"^[0-9a-f]{40}$", self.latest_version):
             return self.latest_version != self.current_version
         try:
-            cur = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.current_version))
-                if x.isdigit()
-            )
-            lat = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.latest_version))
-                if x.isdigit()
-            )
+            cur = _version_key(sanitize_version(self.current_version))
+            lat = _version_key(sanitize_version(self.latest_version))
             return lat > cur
         except (ValueError, AttributeError):
             return self.current_version != self.latest_version
@@ -65,16 +57,8 @@ class VersionCheckResult:
         if re.match(r"^[0-9a-f]{40}$", self.latest_version):
             return False
         try:
-            cur = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.current_version))
-                if x.isdigit()
-            )
-            lat = tuple(
-                int(x)
-                for x in re.split(r"[.\-]", sanitize_version(self.latest_version))
-                if x.isdigit()
-            )
+            cur = _version_key(sanitize_version(self.current_version))
+            lat = _version_key(sanitize_version(self.latest_version))
             return cur > lat
         except (ValueError, AttributeError):
             return False
@@ -172,6 +156,18 @@ _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 _VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _version_key(version: str) -> tuple[int, ...]:
+    """Parse version string into a comparable int tuple, handling trailing letters."""
+    nums = []
+    for part in re.split(r"[.\-]", version):
+        m = re.match(r"(\d+)([a-zA-Z]?)", part)
+        if m:
+            nums.append(int(m.group(1)))
+            if m.group(2):
+                nums.append(ord(m.group(2).lower()))
+    return tuple(nums)
 
 
 def _http_get_json(
@@ -322,20 +318,12 @@ def _check_conda(
                     data = json.loads(result.stdout)
                     versions = [e["version"] for e in data.get(package, [])]
                     if versions:
-                        best = max(
-                            versions,
-                            key=lambda v: tuple(
-                                int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()
-                            ),
-                        )
+                        best = max(versions, key=_version_key)
                         versions_per_subdir.append(best)
                 except (json.JSONDecodeError, ValueError):
                     pass
     if versions_per_subdir:
-        return min(
-            versions_per_subdir,
-            key=lambda v: tuple(int(x) for x in re.split(r"[.\-p]", v) if x.isdigit()),
-        )
+        return min(versions_per_subdir, key=_version_key)
     try:
         data = _http_get_json(
             f"https://api.anaconda.org/package/{channel}/{package}",
@@ -361,6 +349,30 @@ class _NetworkUnavailableError(RuntimeError):
 def _raise_network_unavailable(exc: Exception | None) -> None:
     msg = f"Network unavailable: {exc}"
     raise _NetworkUnavailableError(msg) from exc
+
+
+def _friendly_network_error(exc: Exception) -> str | None:  # noqa: PLR0911
+    """Return a clean message for network exceptions, or None if not network-related."""
+    if isinstance(exc, ssl.SSLError):
+        return (
+            "check failed (network timeout)"
+            if "timed out" in str(exc).lower()
+            else "check failed (SSL error)"
+        )
+    if isinstance(exc, TimeoutError):
+        return "check failed (network timeout)"
+    if isinstance(exc, ConnectionResetError):
+        return "check failed (connection reset)"
+    if isinstance(exc, urllib.error.URLError):
+        reason = exc.reason
+        if isinstance(reason, (ssl.SSLError, TimeoutError)):
+            return "check failed (network timeout)"
+        if isinstance(reason, ConnectionResetError):
+            return "check failed (connection reset)"
+        if isinstance(reason, OSError):
+            return "check failed (network error)"
+        return "check failed (connection error)"
+    return None
 
 
 def _check_nongnu(package: str) -> str:
@@ -665,7 +677,7 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR091
         if gh_repo:
             owner, repo = gh_repo.split("/", 1)
             return _AppCheckSpec("github", _check_github, (owner, repo))
-    spec = _classify_by_known_pattern(name, info, module_path, urls)
+    spec = _classify_by_known_pattern(name, info)
     if spec:
         return spec
     return None
@@ -830,11 +842,9 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
 }
 
 
-def _classify_by_known_pattern(
+def _classify_by_known_pattern(  # noqa: PLR0911
     name: str,
     info: dict,
-    module_path: str,
-    urls: list[str],
 ) -> _AppCheckSpec | None:
     if name in _XORG_MAP:
         subdir, prefix = _XORG_MAP[name]
@@ -854,6 +864,16 @@ def _classify_by_known_pattern(
         return _AppCheckSpec(
             "dirlist",
             lambda u=url, p=prefix: _check_directory_listing(u, p),
+            (),
+        )
+    if info.get("installer") == "gnu-app":
+        args = info.get("installer_args", {})
+        pkg_name = _get_str(args, "package_name") or name
+        parent = _get_str(args, "parent_name") or ""
+        non_gnu = _get_str(args, "non_gnu_mirror") == "true"
+        return _AppCheckSpec(
+            "gnu",
+            lambda p=pkg_name, pa=parent, ng=non_gnu: _check_gnu(p, parent=pa, non_gnu_mirror=ng),
             (),
         )
     return None
@@ -1044,11 +1064,12 @@ def _check_liblinear() -> str:
     return m.group(1)
 
 
-def _check_github_head(owner: str, repo: str) -> str:
-    for branch in ("main", "master"):
+def _check_github_head(owner: str, repo: str, *, branch: str | None = None) -> str:
+    branches = (branch,) if branch else ("main", "master")
+    for b in branches:
         try:
             data = _http_get_json(
-                f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}",
+                f"https://api.github.com/repos/{owner}/{repo}/commits/{b}",
                 github=True,
             )
             return data["sha"]
@@ -1493,7 +1514,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "ruby": _AppCheckSpec("github", _check_github, ("ruby", "ruby")),
+    "ruby": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("ruby", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
     "screen": _AppCheckSpec("gnu", lambda: _check_gnu("screen"), ()),
@@ -1634,7 +1659,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
-    "prelude-emacs": _AppCheckSpec(
+    "emacs-prelude": _AppCheckSpec(
         "github",
         lambda: _check_github_head("bbatsov", "prelude"),
         (),
@@ -1646,12 +1671,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "spacemacs": _AppCheckSpec(
         "github",
-        lambda: _check_github_head("syl20bnr", "spacemacs"),
-        (),
-    ),
-    "spacevim": _AppCheckSpec(
-        "github",
-        lambda: _check_github_head("SpaceVim", "SpaceVim"),
+        lambda: _check_github_head("syl20bnr", "spacemacs", branch="develop"),
         (),
     ),
     "sqlite": _AppCheckSpec("dirlist", _check_sqlite, ()),
@@ -1849,7 +1869,7 @@ def check_app_versions(  # noqa: C901, PLR0915
         desc = f"Checking {len(uncached_names)} app(s)"
         if cached_count:
             desc += f" ({cached_count} cached)"
-        pbar = tqdm(total=total, desc=desc, unit="app")
+        pbar = tqdm(total=total, desc="Checking", unit="app")
     except ModuleNotFoundError:
         pbar = None
         msg = f"Checking {len(uncached_names)} app(s)..."
@@ -1878,8 +1898,8 @@ def check_app_versions(  # noqa: C901, PLR0915
                 msg = None
             else:
                 try:
-                    cur_p = tuple(int(x) for x in re.split(r"[.\-]", current_san) if x.isdigit())
-                    lat_p = tuple(int(x) for x in re.split(r"[.\-]", latest_san) if x.isdigit())
+                    cur_p = _version_key(current_san)
+                    lat_p = _version_key(latest_san)
                     if lat_p < cur_p:
                         msg = f"{app_name}: {current} pinned too high (latest stable: {latest})"
                     else:
@@ -1888,10 +1908,19 @@ def check_app_versions(  # noqa: C901, PLR0915
                     msg = f"{app_name}: {current} -> {latest}"
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except _NetworkUnavailableError:
-            return VersionCheckResult(app_name, current, current, spec.source, None), None
+            msg = f"{app_name}: check failed (network unavailable)"
+            return VersionCheckResult(
+                app_name, current, None, spec.source, "check failed (network unavailable)"
+            ), msg
         except Exception as exc:
-            msg = f"{app_name}: error: {exc}"
-            return VersionCheckResult(app_name, current, None, spec.source, str(exc)), msg
+            friendly = _friendly_network_error(exc)
+            if friendly:
+                msg = f"{app_name}: {friendly}"
+                error_str = friendly
+            else:
+                msg = f"{app_name}: error: {exc}"
+                error_str = str(exc)
+            return VersionCheckResult(app_name, current, None, spec.source, error_str), msg
 
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
@@ -1899,9 +1928,11 @@ def check_app_versions(  # noqa: C901, PLR0915
             for app_name, version, spec in to_check
         }
         for future in as_completed(futures):
+            app_name = futures[future]
             result, msg = future.result()
             results.append(result)
             if pbar is not None:
+                pbar.set_postfix_str(app_name)
                 if msg:
                     pbar.write(msg, file=sys.stderr)
                 pbar.update(1)
@@ -2049,10 +2080,12 @@ def _expand_src_url(template: str, version: str) -> str:
 def _mirror_src_to_s3(
     name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
-    """Download source tarball and upload to s3://koopa.acidgenomics.com/src/."""
+    """Download source tarball and upload to s3://koopa.acidgenomics.com/src/ and/or vendor."""
     import tempfile
+    import time
 
     from koopa.download import download_with_mirror
+    from koopa.vendor import vendor_config, vendor_push_src
 
     url = _expand_src_url(src_url_template, version)
     filename = url.rsplit("/", 1)[-1]
@@ -2074,25 +2107,42 @@ def _mirror_src_to_s3(
                 raise RuntimeError(f"Download failed for '{name}': {exc}") from exc
             print(f"  Mirror upload skipped for '{name}': download failed: {exc}", file=sys.stderr)
             return
-        result = subprocess.run(
-            ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode == 0:
-            if not quiet:
-                print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
+        max_attempts = 3
+        result = subprocess.CompletedProcess(args=[], returncode=1)
+        for attempt in range(1, max_attempts + 1):
+            result = subprocess.run(
+                ["aws", "s3", "cp", local, s3_key, "--profile", "acidgenomics"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode == 0:
+                if not quiet:
+                    print(f"  Uploaded '{name}' source to {s3_key}", file=sys.stderr)
+                break
+            if attempt < max_attempts:
+                time.sleep(2**attempt)
         else:
             msg = f"S3 upload failed for '{name}': {result.stderr.strip()}"
             if strict:
                 raise RuntimeError(msg)
             print(f"  {msg}", file=sys.stderr)
+            return
+        if vendor_config() is not None:
+            try:
+                vendor_push_src(local, name, filename)
+                if not quiet:
+                    print(f"  Uploaded '{name}' source to vendor mirror.", file=sys.stderr)
+            except Exception as exc:
+                msg = f"Vendor upload failed for '{name}': {exc}"
+                if strict:
+                    raise RuntimeError(msg) from exc
+                print(f"  {msg}", file=sys.stderr)
 
 
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes."""
-    outdated = [r for r in results if r.is_outdated or r.is_pinned_too_high]
+    outdated = [r for r in results if r.is_outdated]
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
         return 0
@@ -2115,8 +2165,12 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             file=sys.stderr,
         )
     update_venv_version(outdated)
-    if _has_acidgenomics_aws():
-        print("Uploading source tarballs to S3 mirror.", file=sys.stderr)
+    from koopa.vendor import vendor_can_push
+    from koopa.vendor import vendor_config as _vendor_config
+
+    _do_mirror = _has_acidgenomics_aws() or (_vendor_config() is not None and vendor_can_push())
+    if _do_mirror:
+        print("Uploading source tarballs to mirror(s).", file=sys.stderr)
         for r in outdated:
             if r.name not in data or not r.latest_version:
                 continue
@@ -2135,7 +2189,9 @@ def _bootstrap_app_map() -> dict[str, str]:
     py_ver = (Path(koopa_prefix()) / ".python-version").read_text().strip()
     return {
         "bzip2": "bzip2",
+        "libffi": "libffi",
         "openssl": "openssl3",
+        "perl": "perl",
         "python": f"python{py_ver}",
         "xz": "xz",
         "zlib": "zlib",

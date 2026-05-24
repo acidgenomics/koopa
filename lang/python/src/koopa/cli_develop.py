@@ -8,7 +8,37 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Iterator
+from typing import IO, Any, Self, cast
+
+
+class _TqdmFallback:
+    """Minimal progress-bar shim when tqdm is not installed."""
+
+    def __init__(
+        self,
+        iterable: Iterable[Any] | None = None,
+        *,
+        desc: str = "",
+        unit: str = "",
+        total: int | None = None,
+    ) -> None:
+        self._iterable: Iterable[Any] = iterable if iterable is not None else []
+        if desc:
+            print(f"{desc}...", file=sys.stderr)
+
+    def __iter__(self) -> Iterator[Any]:
+        return iter(self._iterable)
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(self, *_: object) -> None:
+        pass
+
+    @staticmethod
+    def write(msg: str, file: IO[str] = sys.stderr) -> None:
+        print(msg, file=file)
 
 
 def _handle_prune_app_binaries() -> None:
@@ -22,9 +52,8 @@ def _handle_format_app_json(args: list[str]) -> None:
     """Handle ``koopa develop format-app-json``."""
     from koopa.io import export_app_json, import_app_json
 
-    pretty = "--prettier" in args
     data = import_app_json()
-    export_app_json(data, pretty=pretty)
+    export_app_json(data)
 
 
 def _handle_view_latest_tmp_log_file() -> None:
@@ -520,6 +549,40 @@ def _handle_generate_completion() -> None:
     alert_note("Reload your shell to apply changes.")
 
 
+def _list_s3_keys(aws: str, bucket: str, prefix: str, profile: str) -> set[str]:
+    """List all object keys in bucket under prefix via paginated list-objects-v2."""
+    import json as _json
+
+    keys: set[str] = set()
+    token = None
+    while True:
+        cmd = [
+            aws,
+            "s3api",
+            "list-objects-v2",
+            "--bucket",
+            bucket,
+            "--prefix",
+            prefix,
+            "--profile",
+            profile,
+            "--output",
+            "json",
+        ]
+        if token:
+            cmd += ["--continuation-token", token]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if result.returncode != 0:
+            break
+        resp = _json.loads(result.stdout)
+        for obj in resp.get("Contents", []):
+            keys.add(obj["Key"])
+        token = resp.get("NextContinuationToken")
+        if not token:
+            break
+    return keys
+
+
 def _mirror_src_cache_path() -> str:
     from koopa.xdg import xdg_cache_home
 
@@ -549,7 +612,7 @@ def _save_mirror_src_cache(cache: dict[str, float]) -> None:
         json.dump(cache, f, indent=2)
 
 
-def _handle_mirror_src(args: list[str]) -> None:
+def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     """Handle ``koopa develop mirror-src [<name>...]``.
 
     Downloads source tarballs from upstream and uploads to the
@@ -559,29 +622,35 @@ def _handle_mirror_src(args: list[str]) -> None:
     import time
 
     from koopa.io import import_app_json
+    from koopa.vendor import vendor_can_push
+    from koopa.vendor import vendor_config as _vendor_config
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
 
     if "--help" in args or "-h" in args:
         print(
-            "usage: koopa develop mirror-src [<name>...]\n\n"
+            "usage: koopa develop mirror-src [--prune] [<name>...]\n\n"
             "Download source tarballs from upstream and upload to the\n"
-            "s3://koopa.acidgenomics.com/src/ mirror.\n\n"
-            "With no args, mirrors all apps with a 'src_url' in app.json.",
+            "s3://koopa.acidgenomics.com/src/ mirror and/or vendor backend.\n\n"
+            "With no args, mirrors all apps with a 'src_url' in app.json.\n\n"
+            "Options:\n"
+            "  --prune  Delete stale files from S3 after mirroring",
             file=sys.stderr,
         )
         return
-    print("Checking AWS credentials...", file=sys.stderr)
-    if not _has_acidgenomics_aws():
+    prune = "--prune" in args
+    args = [a for a in args if a != "--prune"]
+    _has_vendor = _vendor_config() is not None and vendor_can_push()
+    if not _has_acidgenomics_aws() and not _has_vendor:
         print(
-            "Error: 'acidgenomics' AWS profile not found in ~/.aws/credentials.",
+            "Error: no upload destination available. "
+            "Configure the 'acidgenomics' AWS profile or a vendor backend.",
             file=sys.stderr,
         )
         sys.exit(1)
     aws = shutil.which("aws")
-    if aws is None:
+    if aws is None and not _has_vendor:
         print("Error: aws CLI is not installed.", file=sys.stderr)
         sys.exit(1)
-    print("Loading app.json...", file=sys.stderr)
     data = import_app_json()
     if args:
         targets = args
@@ -593,70 +662,128 @@ def _handle_mirror_src(args: list[str]) -> None:
                 print(f"Error: '{name}' has no 'src_url' in app.json.", file=sys.stderr)
                 sys.exit(1)
     else:
-        targets = sorted(k for k, v in data.items() if v.get("src_url"))
+        targets = sorted(k for k, v in data.items() if v.get("src_url") and not v.get("removed"))
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    from tqdm import tqdm
+    try:
+        from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
+    except ModuleNotFoundError:
+        tqdm = cast(Any, _TqdmFallback)  # type: ignore[assignment]
 
     bucket = "koopa.acidgenomics.com"
     cache = _load_mirror_src_cache()
     now = time.time()
     _cache_ttl = 86400  # 24 hours
     failures: dict[str, str] = {}
-    for name in tqdm(targets, desc="Mirroring", unit="app"):
+    existing_keys: set[str] = set()
+    if aws is not None and _has_acidgenomics_aws():
+        print("Listing S3 objects...", file=sys.stderr)
+        existing_keys = _list_s3_keys(aws, bucket, "src/", "acidgenomics")
+
+    def _mirror_one(name: str) -> None:
         entry = data[name]
         version = entry.get("version", "")
         src_url = entry.get("src_url", "")
         if not version or not src_url:
-            continue
+            return
         url = _expand_src_url(src_url, version)
         filename = url.rsplit("/", 1)[-1]
         cache_key = f"{name}/{filename}"
         if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
-            continue
+            return
         key = f"src/{cache_key}"
-        head = subprocess.run(
-            [
-                aws,
-                "s3api",
-                "head-object",
-                "--bucket",
-                bucket,
-                "--key",
-                key,
-                "--profile",
-                "acidgenomics",
-            ],
-            capture_output=True,
-            check=False,
-        )
-        if head.returncode == 0:
+        if key in existing_keys:
             cache[cache_key] = now
-            _save_mirror_src_cache(cache)
-            continue
+            return
         try:
             tqdm.write(f"  Uploading: {cache_key}")
             _mirror_src_to_s3(name, version, src_url, strict=True, quiet=True)
             cache[cache_key] = now
-            _save_mirror_src_cache(cache)
         except Exception as exc:
             failures[name] = str(exc)
             tqdm.write(f"  FAILED: {name}: {exc}")
-            continue
+            return
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
             extra_filename = extra_url.rsplit("/", 1)[-1]
             extra_cache_key = f"{name}/{extra_filename}"
             if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
                 continue
+            extra_key = f"src/{extra_cache_key}"
+            if extra_key in existing_keys:
+                cache[extra_cache_key] = now
+                continue
             try:
                 _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=True)
                 cache[extra_cache_key] = now
-                _save_mirror_src_cache(cache)
             except Exception as exc:
                 failures[name] = str(exc)
                 tqdm.write(f"  FAILED (extra): {name}/{extra_filename}: {exc}")
+
+    for name in tqdm(targets, desc="Mirroring", unit="app"):
+        _mirror_one(name)
+    _save_mirror_src_cache(cache)
+
+    if not prune:
+        if failures:
+            print(
+                f"\n{len(failures)} app(s) failed to mirror:",
+                file=sys.stderr,
+            )
+            for fname, reason in sorted(failures.items()):
+                print(f"  {fname}: {reason}", file=sys.stderr)
+            sys.exit(1)
+        return
+    removed_apps = sorted(k for k, v in data.items() if v.get("src_url") and v.get("removed"))
+    stale_keys: list[str] = []
+    for name in targets:
+        entry = data[name]
+        version = entry.get("version", "")
+        src_url = entry.get("src_url", "")
+        if not version or not src_url:
+            continue
+        expected: set[str] = set()
+        url = _expand_src_url(src_url, version)
+        expected.add(url.rsplit("/", 1)[-1])
+        for extra_tmpl in entry.get("extra_src_urls", []):
+            extra_url = _expand_src_url(extra_tmpl, version)
+            expected.add(extra_url.rsplit("/", 1)[-1])
+        prefix = f"src/{name}/"
+        for key in existing_keys:
+            if not key.startswith(prefix):
+                continue
+            filename = key.rsplit("/", 1)[-1]
+            if filename not in expected:
+                stale_keys.append(key)
+    for name in removed_apps:
+        prefix = f"src/{name}/"
+        for key in existing_keys:
+            if key.startswith(prefix):
+                stale_keys.append(key)
+    if stale_keys:
+        from koopa.aws import _aws
+
+        print(f"Pruning {len(stale_keys)} stale file(s)...", file=sys.stderr)
+        for key in stale_keys:
+            print(f"  s3://{bucket}/{key}", file=sys.stderr)
+        for key in stale_keys:
+            uri = f"s3://{bucket}/{key}"
+            for attempt in range(3):
+                try:
+                    _aws("s3", "rm", uri, "--profile", "acidgenomics")
+                    print(f"  Deleted: {key}", file=sys.stderr)
+                    break
+                except subprocess.CalledProcessError as exc:
+                    if attempt < 2:
+                        time.sleep(2)
+                        continue
+                    print(f"  FAILED: {key}: {exc.stderr.strip()}", file=sys.stderr)
+                except subprocess.TimeoutExpired:
+                    if attempt < 2:
+                        time.sleep(2)
+                        continue
+                    print(f"  TIMEOUT: {key}", file=sys.stderr)
 
     if failures:
         print(
@@ -698,11 +825,14 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
                 print(f"Error: '{name}' not found in app.json.", file=sys.stderr)
                 sys.exit(1)
     else:
-        targets = sorted(k for k, v in data.items() if v.get("src_url"))
+        targets = sorted(k for k, v in data.items() if v.get("src_url") and not v.get("removed"))
         if not targets:
             print("Error: No apps with 'src_url' found in app.json.", file=sys.stderr)
             sys.exit(1)
-    from tqdm import tqdm
+    try:
+        from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
+    except ModuleNotFoundError:
+        tqdm = cast(Any, _TqdmFallback)  # type: ignore[assignment]
 
     bucket = "koopa.acidgenomics.com"
     missing: list[str] = []
@@ -905,7 +1035,7 @@ def _handle_bump_venv_version(_: list[str]) -> None:
     """
     import time
 
-    from koopa.os import koopa_prefix
+    from koopa.prefix import koopa_prefix
 
     version_file = os.path.join(koopa_prefix(), "etc", "koopa", "venv-version.txt")
     current = ""
@@ -926,7 +1056,7 @@ def _handle_bump_bootstrap(_: list[str]) -> None:
     """
     import time
 
-    from koopa.os import koopa_prefix
+    from koopa.prefix import koopa_prefix
 
     version_file = os.path.join(koopa_prefix(), "etc", "koopa", "bootstrap-version.txt")
     current = ""

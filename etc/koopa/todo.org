@@ -1,3 +1,0 @@
-* High complexity
-* Medium complexity
-* Low complexity

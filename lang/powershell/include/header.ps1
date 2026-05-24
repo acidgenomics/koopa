@@ -24,7 +24,10 @@ function __koopa_activate_koopa {
     if ($koopaMinimal -eq '1') { return }
 
     _koopa_export_env
+    _koopa_activate_ca_certificates
+    _koopa_activate_conda
     _koopa_activate_fzf
+    _koopa_activate_direnv
     _koopa_activate_zoxide
 
     # macOS-specific: Homebrew.

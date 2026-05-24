@@ -4,8 +4,8 @@ import os
 import subprocess
 import sys
 
-from koopa.build import activate_app, app_prefix
-from koopa.installers._build_helper import download_extract_cd
+from koopa.build import app_prefix
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
 
 def main(
@@ -16,11 +16,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install boost."""
-    deps = []
-    if sys.platform != "darwin":
-        deps.append("bzip2")
-    deps.extend(["icu4c", "xz", "zlib", "zstd"])
-    env = activate_app(*deps)
+    env = activate_app_deps()
     icu4c_prefix = app_prefix("icu4c")
     subprocess_env = env.to_env_dict()
     cc = os.environ.get("CC", "gcc")
