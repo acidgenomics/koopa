@@ -1,3 +1,5 @@
 * High complexity
 * Medium complexity
 * Low complexity
+** TODO Claude Code Plan review isn't popping up correctly in VS Code now. Let's review our settings to see how we can fix this.
+    Is this because we're applying a custom name to plan with YYYY-MM-DD prefix? I'm wondering if that's the issue.

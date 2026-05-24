@@ -1896,6 +1896,8 @@ def check_app_versions(  # noqa: C901, PLR0915
             latest_san = sanitize_version(latest)
             if current_san == latest_san:
                 msg = None
+            elif _SHA_RE.match(current) or _SHA_RE.match(latest):
+                msg = f"{app_name}: {current} -> {latest}"
             else:
                 try:
                     cur_p = _version_key(current_san)
