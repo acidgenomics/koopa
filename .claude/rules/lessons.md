@@ -39,3 +39,12 @@ When renaming, adding, or removing CLI commands in koopa, always run
 are generated, not hand-maintained, so they go stale if not regenerated. This
 caused `koopa app brew upgrade-brews` to appear in completions even though the
 command was renamed to `koopa app brew upgrade`.
+
+## Dotfiles Are Managed by Chezmoi — Edit the Source
+
+Home-directory dotfiles (e.g., `~/.claude/settings.json`, `~/.bashrc`,
+`~/.config/...`) are managed by chezmoi. The source of truth lives in
+`~/.config/koopa/dotfiles/chezmoi/`. When modifying a dotfile, always edit
+the corresponding chezmoi source template/file (e.g.,
+`dot_claude/settings.json`) in addition to (or instead of) the deployed copy.
+Otherwise the change will be overwritten on the next `chezmoi apply`.
