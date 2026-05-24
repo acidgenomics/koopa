@@ -318,6 +318,7 @@ def _get_glibc_version() -> str:
         if result.stdout:
             return result.stdout.splitlines()[0]
     except (FileNotFoundError, subprocess.TimeoutExpired):
+        # ldd unavailable or hangs; fall back to "unknown".
         pass
     return "unknown"
 

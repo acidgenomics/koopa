@@ -127,6 +127,7 @@ def check_platform() -> None:
                 )
                 raise RuntimeError(msg)
         except (OSError, ValueError, AttributeError):
+            # glibc version undetectable; skip enforcement.
             pass
     elif sys.platform == "darwin":
         if platform.machine() != "arm64":
