@@ -1895,7 +1895,7 @@ _koopa_grep() {
     fi
 }
 
-_koopa_has_passwordless_sudo() {
+_koopa_has_sudo() {
     local -A app
     _koopa_assert_has_no_args "$#"
     app['sudo']="$(_koopa_locate_sudo --allow-missing)"
@@ -2406,7 +2406,7 @@ _koopa_is_admin() {
     esac
     _koopa_is_root && return 0
     _koopa_is_installed 'sudo' || return 1
-    _koopa_has_passwordless_sudo && return 0
+    _koopa_has_sudo && return 0
     app['groups']="$(_koopa_locate_groups --only-system)"
     _koopa_assert_is_executable "${app[@]}"
     dict['groups']="$("${app['groups']}")"

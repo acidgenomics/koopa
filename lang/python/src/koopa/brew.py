@@ -17,6 +17,7 @@ def _brew(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, capture_output=capture, text=True, check=True)
 
 
+
 def brew_prefix() -> str:
     """Get Homebrew prefix."""
     result = _brew("--prefix")
@@ -72,6 +73,14 @@ def brew_upgrade_casks() -> None:
         casks.append(line.split()[0])
     if not casks:
         return
+    from koopa.system import has_sudo
+
+    if not has_sudo():
+        msg = (
+            "Sudo is required to upgrade casks but is not available.\n"
+            "Elevate permissions via admin portal first, then retry."
+        )
+        raise PermissionError(msg)
     print(f"{len(casks)} outdated cask(s): {', '.join(casks)}", file=sys.stderr)
     subprocess.run(
         ["brew", "reinstall", "--cask", "--force", *casks],
@@ -181,6 +190,14 @@ def brew_reset_core_repo() -> None:
 
 def brew_reset_permissions() -> None:
     """Reset Homebrew directory permissions."""
+    from koopa.system import has_sudo
+
+    if not has_sudo():
+        msg = (
+            "Sudo is required to reset Homebrew permissions but is not available.\n"
+            "Elevate permissions via admin portal first, then retry."
+        )
+        raise PermissionError(msg)
     prefix = brew_prefix()
     user = os.environ.get("USER", "")
     if user:
