@@ -17,7 +17,6 @@ def _brew(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, capture_output=capture, text=True, check=True)
 
 
-
 def brew_prefix() -> str:
     """Get Homebrew prefix."""
     result = _brew("--prefix")

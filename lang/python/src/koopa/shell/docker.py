@@ -12,9 +12,7 @@ from pathlib import Path
 
 from koopa.fs import list_subdirs
 
-_ECR_PRIVATE_RE = re.compile(
-    r"^\d+\.dkr\.ecr\.[a-z0-9-]+\.amazonaws\.com(/|$)"
-)
+_ECR_PRIVATE_RE = re.compile(r"^\d+\.dkr\.ecr\.[a-z0-9-]+\.amazonaws\.com(/|$)")
 
 
 def _docker(
