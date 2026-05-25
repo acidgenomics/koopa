@@ -6,6 +6,6 @@ export def _koopa_activate_fzf [] {
         return
     }
     if not ("FZF_DEFAULT_OPTS" in $env) {
-        $env.FZF_DEFAULT_OPTS = "--border --color bw --multi"
+        $env.FZF_DEFAULT_OPTS = $"--border --color ($env.KOOPA_COLOR_MODE) --multi"
     }
 }

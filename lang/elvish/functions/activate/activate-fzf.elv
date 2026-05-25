@@ -6,6 +6,6 @@ fn activate-fzf {
         return
     }
     if (not (has-env FZF_DEFAULT_OPTS)) {
-        set-env FZF_DEFAULT_OPTS '--border --color bw --multi'
+        set-env FZF_DEFAULT_OPTS '--border --color '(get-env KOOPA_COLOR_MODE)' --multi'
     }
 }
