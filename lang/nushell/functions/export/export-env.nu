@@ -68,7 +68,12 @@ export def _koopa_export_env [] {
 
     # Color mode.
     if not ("KOOPA_COLOR_MODE" in $env) {
-        $env.KOOPA_COLOR_MODE = "dark"
+        $env.KOOPA_COLOR_MODE = if (sys host | get name) == "Darwin" {
+            let style = (try { ^/usr/bin/defaults read -g AppleInterfaceStyle } catch { "" })
+            if $style == "Dark" { "dark" } else { "light" }
+        } else {
+            "dark"
+        }
     }
 
     # GCC colors.
