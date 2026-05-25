@@ -681,6 +681,12 @@ def main(
             "false",
         ),
         ("com.barebones.bbedit", "WarnMalformedUTF8", "-bool", "true"),
+        (
+            "com.barebones.bbedit",
+            "SelectedColorSchemeNameDarkMode",
+            "-string",
+            "Dracula",
+        ),
     ]
     for domain, key, type_flag, value in writes:
         subprocess.run(
