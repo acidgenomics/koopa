@@ -42,6 +42,16 @@ are generated, not hand-maintained, so they go stale if not regenerated. This
 caused `koopa app brew upgrade-brews` to appear in completions even though the
 command was renamed to `koopa app brew upgrade`.
 
+## Correct Command to Re-run Dotfiles Installer
+
+The command to re-run the dotfiles install script is:
+
+```
+koopa configure user dotfiles
+```
+
+NOT `koopa configure-dotfiles` (that command does not exist).
+
 ## Dotfiles Are Managed by Chezmoi — Edit the Source
 
 Home-directory dotfiles (e.g., `~/.claude/settings.json`, `~/.bashrc`,

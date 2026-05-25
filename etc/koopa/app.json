@@ -737,9 +737,10 @@
     "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2025-12-05",
-    "default": false,
+    "default": true,
     "description": "cat clone with syntax highlighting and Git integration",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/sharkdp/bat"
