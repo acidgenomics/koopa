@@ -1,49 +1,6 @@
 #!/bin/sh
 # shellcheck disable=all
 
-_koopa_activate_alacritty() {
-    _koopa_is_alacritty || return 0
-    __kvar_prefix="$(_koopa_xdg_config_home)/alacritty"
-    if [ ! -d "$__kvar_prefix" ]
-    then
-        unset -v __kvar_prefix
-        return 0
-    fi
-    __kvar_conf_file="${__kvar_prefix}/alacritty.toml"
-    if [ ! -f "$__kvar_conf_file" ]
-    then
-        unset -v __kvar_conf_file __kvar_prefix
-        return 0
-    fi
-    __kvar_color_file_bn="colors-$(_koopa_color_mode).toml"
-    __kvar_color_file="${__kvar_prefix}/${__kvar_color_file_bn}"
-    if [ ! -f "$__kvar_color_file" ]
-    then
-        unset -v \
-            __kvar_color_file \
-            __kvar_color_file_bn \
-            __kvar_conf_file \
-            __kvar_prefix
-        return 0
-    fi
-    if ! grep -q "$__kvar_color_file_bn" "$__kvar_conf_file"
-    then
-        __kvar_pattern='colors-.+\.toml'
-        __kvar_replacement="${__kvar_color_file_bn}"
-        perl -i -l -p \
-            -e "s|${__kvar_pattern}|${__kvar_replacement}|" \
-            "$__kvar_conf_file"
-    fi
-    unset -v \
-        __kvar_color_file \
-        __kvar_color_file_bn \
-        __kvar_conf_file \
-        __kvar_pattern \
-        __kvar_prefix \
-        __kvar_replacement
-    return 0
-}
-
 _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -214,7 +171,7 @@ _koopa_activate_bat() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_conf_file="${__kvar_prefix}/config-$(_koopa_color_mode)"
+    __kvar_conf_file="${__kvar_prefix}/config"
     if [ ! -f "$__kvar_conf_file" ]
     then
         unset -v \
@@ -244,49 +201,6 @@ _koopa_activate_bootstrap() {
     fi
     _koopa_add_to_path_start "${__kvar_bootstrap_prefix}/bin"
     unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
-    return 0
-}
-
-_koopa_activate_bottom() {
-    [ -x "$(_koopa_bin_prefix)/btm" ] || return 0
-    __kvar_prefix="$(_koopa_xdg_config_home)/bottom"
-    if [ ! -d "$__kvar_prefix" ]
-    then
-        unset -v __kvar_prefix
-        return 0
-    fi
-    __kvar_source_bn="bottom-$(_koopa_color_mode).toml"
-    __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
-    if [ ! -f "$__kvar_source_file" ]
-    then
-        unset -v \
-            __kvar_prefix \
-            __kvar_source_bn \
-            __kvar_source_file
-        return 0
-    fi
-    __kvar_target_file="${__kvar_prefix}/bottom.toml"
-    if [ -h "$__kvar_target_file" ] && _koopa_is_installed 'readlink'
-    then
-        __kvar_target_link_bn="$(readlink "$__kvar_target_file")"
-        if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
-        then
-            unset -v \
-                __kvar_prefix \
-                __kvar_source_bn \
-                __kvar_source_file \
-                __kvar_target_file \
-                __kvar_target_link_bn
-            return 0
-        fi
-    fi
-    ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
-    unset -v \
-        __kvar_prefix \
-        __kvar_source_bn \
-        __kvar_source_file \
-        __kvar_target_file \
-        __kvar_target_link_bn
     return 0
 }
 
@@ -437,52 +351,6 @@ _koopa_activate_coreutils_aliases() {
     return 0
 }
 
-_koopa_activate_delta() {
-    [ -x "$(_koopa_bin_prefix)/delta" ] || return 0
-    __kvar_prefix="$(_koopa_xdg_config_home)/delta"
-    if [ ! -d "$__kvar_prefix" ]
-    then
-        unset -v __kvar_prefix
-        return 0
-    fi
-    __kvar_source_bn="theme-$(_koopa_color_mode).gitconfig"
-    __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
-    if [ ! -f "$__kvar_source_file" ]
-    then
-        unset -v \
-            __kvar_prefix \
-            __kvar_source_bn \
-            __kvar_source_file
-        return 0
-    fi
-    __kvar_target_file="${__kvar_prefix}/theme.gitconfig"
-    if [ -h "$__kvar_target_file" ] && _koopa_is_installed 'readlink'
-    then
-        __kvar_target_link_bn="$(readlink "$__kvar_target_file")"
-        if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
-        then
-            unset -v \
-                __kvar_prefix \
-                __kvar_source_bn \
-                __kvar_source_file \
-                __kvar_target_file \
-                __kvar_target_link_bn
-            return 0
-        fi
-    fi
-    ln -fns \
-        "$__kvar_source_file" \
-        "$__kvar_target_file" \
-        >/dev/null 2>&1
-    unset -v \
-        __kvar_prefix \
-        __kvar_source_bn \
-        __kvar_source_file \
-        __kvar_target_file \
-        __kvar_target_link_bn
-    return 0
-}
-
 _koopa_activate_difftastic() {
     [ -x "$(_koopa_bin_prefix)/difft" ] || return 0
     DFT_BACKGROUND="$(_koopa_color_mode)"
@@ -588,49 +456,6 @@ _koopa_activate_julia() {
     JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
     JULIA_NUM_THREADS="$(_koopa_cpu_count)"
     export JULIA_DEPOT_PATH JULIA_NUM_THREADS
-    return 0
-}
-
-_koopa_activate_kitty() {
-    _koopa_is_kitty || return 0
-    __kvar_prefix="$(_koopa_xdg_config_home)/kitty"
-    if [ ! -d "$__kvar_prefix" ]
-    then
-        unset -v __kvar_prefix
-        return 0
-    fi
-    __kvar_source_bn="theme-$(_koopa_color_mode).conf"
-    __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
-    if [ ! -f "$__kvar_source_file" ]
-    then
-        unset -v \
-            __kvar_prefix \
-            __kvar_source_bn \
-            __kvar_source_file
-        return 0
-    fi
-    __kvar_target_file="${__kvar_prefix}/current-theme.conf"
-    if [ -h "$__kvar_target_file" ] && _koopa_is_installed 'readlink'
-    then
-        __kvar_target_link_bn="$(readlink "$__kvar_target_file")"
-        if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
-        then
-            unset -v \
-                __kvar_prefix \
-                __kvar_source_bn \
-                __kvar_source_file \
-                __kvar_target_file \
-                __kvar_target_link_bn
-            return 0
-        fi
-    fi
-    ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
-    unset -v \
-        __kvar_prefix \
-        __kvar_source_bn \
-        __kvar_source_file \
-        __kvar_target_file \
-        __kvar_target_link_bn
     return 0
 }
 

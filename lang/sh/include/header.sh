@@ -73,17 +73,13 @@ __koopa_activate_koopa() {
     _koopa_activate_python || return 1
     _koopa_activate_pipx || return 1
     _koopa_activate_color_mode || return 1
-    _koopa_activate_alacritty || return 1
     _koopa_activate_bat || return 1
-    _koopa_activate_bottom || return 1
-    _koopa_activate_delta || return 1
     _koopa_activate_difftastic || return 1
     _koopa_activate_dircolors || return 1
     _koopa_activate_direnv || return 1
     _koopa_activate_docker || return 1
     _koopa_activate_fzf || return 1
     _koopa_activate_gcc_colors || return 1
-    _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1
     _koopa_activate_pyright || return 1
     _koopa_activate_ripgrep || return 1
