@@ -4265,6 +4265,12 @@
     ],
     "description": "web-based interactive development environment for notebooks",
     "installer": "python-package",
+    "installer_args": {
+      "extra_packages": [
+        "JLDracula"
+      ]
+    },
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://jupyter.org/",
