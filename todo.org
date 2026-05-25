@@ -1,26 +1,8 @@
 * High complexity
 * Medium complexity
-** TODO Review consistency of light mode theme support.
-    Prioritize Dracula Pro Alucard when installed.
-    Otherwise, we need to use a public free light theme.
-    We're using Atom One Light in places. Is Nord a better option?
-    We'd consider using Nord instead of Atom One Light.
-** TODO Ensure that when we update an app with `koopa develop check-app-versions`, the revision number gets reset.
-** TODO Can we create our own Dracula Pro color theme support for missing apps?
-** TODO Improve documentation of color theme support in our dotfiles repo here. Let's consider adding this to README.md file.
-** TODO Let's also create a CHANGELOG.md for tracking changes. That is helpful.
 * Low complexity
-** TODO Let's review how we can modernize our R configuration in VS Code.
-    Let's optimize our configuration in VS Code to support R IDE.
-    https://blog.stephenturner.us/p/r-package-development-in-positron-workshop
-    https://blog.stephenturner.us/p/r-package-development-in-positron
-    radian terminal
-    https://code.visualstudio.com/docs/languages/r
-    https://medium.com/@michaozibo/configuring-the-r-development-environment-in-visual-studio-code-for-apple-silicon-m1-m2-0e9c0578fe2e
-    https://github.com/RamiKrispin/vscode-r
+** TODO Improve documentation of color theme support in our dotfiles repo here. Let's consider adding this to README.md file.
 ** TODO Let's improve our README.md file telling users how to use the dotfiles repo, and that it is managed by koopa. Explain what koopa is and how users can go and install it.
-** DONE Ensure we provide color theme support for: bash elvish fish nushell powershell sh zsh
-** DONE Evaluate Python REPL color theme support.
-** DONE Evaluate radian R terminal (IDE/REPL) color theme support.
-** DONE Review in our `lang` library that we don't have any harded coded theme colors defined in koopa. Those should all live in the dotfiles repo.
+** TODO Let's also create a CHANGELOG.md for tracking changes. That is helpful.
 ** TODO Should we move away from our symlink approach for managing dynamic color theme switching in favor of just using KOOPA_COLOR_MODE in chezmoi templates consistently in dotfiles repo?
+** TODO Ensure that when we update an app with `koopa develop check-app-versions`, the revision number gets reset.

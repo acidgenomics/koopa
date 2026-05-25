@@ -9,7 +9,7 @@ _koopa_activate_bat() {
         return 0
     fi
     local conf_file
-    conf_file="${prefix}/config-$(_koopa_color_mode)"
+    conf_file="${prefix}/config"
     if [[ ! -f "$conf_file" ]]
     then
         return 0

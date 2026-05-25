@@ -1,41 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=all
 
-_koopa_activate_alacritty() {
-    _koopa_is_alacritty || return 0
-    local prefix
-    prefix="$(_koopa_xdg_config_home)/alacritty"
-    if [[ ! -d "$prefix" ]]
-    then
-        return 0
-    fi
-    local conf_file
-    conf_file="${prefix}/alacritty.toml"
-    if [[ ! -f "$conf_file" ]]
-    then
-        return 0
-    fi
-    local color_file_bn
-    color_file_bn="colors-$(_koopa_color_mode).toml"
-    local color_file
-    color_file="${prefix}/${color_file_bn}"
-    if [[ ! -f "$color_file" ]]
-    then
-        return 0
-    fi
-    if ! grep -q "$color_file_bn" "$conf_file"
-    then
-        local pattern
-        pattern='colors-.+\.toml'
-        local replacement
-        replacement="${color_file_bn}"
-        perl -i -l -p \
-            -e "s|${pattern}|${replacement}|" \
-            "$conf_file"
-    fi
-    return 0
-}
-
 _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -288,7 +253,7 @@ _koopa_activate_bat() {
         return 0
     fi
     local conf_file
-    conf_file="${prefix}/config-$(_koopa_color_mode)"
+    conf_file="${prefix}/config"
     if [[ ! -f "$conf_file" ]]
     then
         return 0
@@ -315,37 +280,6 @@ _koopa_activate_bootstrap() {
         return 0
     fi
     _koopa_add_to_path_start "${bootstrap_prefix}/bin"
-    return 0
-}
-
-_koopa_activate_bottom() {
-    [[ -x "$(_koopa_bin_prefix)/btm" ]] || return 0
-    local prefix
-    prefix="$(_koopa_xdg_config_home)/bottom"
-    if [[ ! -d "$prefix" ]]
-    then
-        return 0
-    fi
-    local source_bn
-    source_bn="bottom-$(_koopa_color_mode).toml"
-    local source_file
-    source_file="${prefix}/${source_bn}"
-    if [[ ! -f "$source_file" ]]
-    then
-        return 0
-    fi
-    local target_file
-    target_file="${prefix}/bottom.toml"
-    if [[ -h "$target_file" ]] && _koopa_is_installed 'readlink'
-    then
-        local target_link_bn
-        target_link_bn="$(readlink "$target_file")"
-        if [[ "$target_link_bn" = "$source_bn" ]]
-        then
-            return 0
-        fi
-    fi
-    ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
 
@@ -485,40 +419,6 @@ _koopa_activate_coreutils_aliases() {
     return 0
 }
 
-_koopa_activate_delta() {
-    [[ -x "$(_koopa_bin_prefix)/delta" ]] || return 0
-    local prefix
-    prefix="$(_koopa_xdg_config_home)/delta"
-    if [[ ! -d "$prefix" ]]
-    then
-        return 0
-    fi
-    local source_bn
-    source_bn="theme-$(_koopa_color_mode).gitconfig"
-    local source_file
-    source_file="${prefix}/${source_bn}"
-    if [[ ! -f "$source_file" ]]
-    then
-        return 0
-    fi
-    local target_file
-    target_file="${prefix}/theme.gitconfig"
-    if [[ -h "$target_file" ]] && _koopa_is_installed 'readlink'
-    then
-        local target_link_bn
-        target_link_bn="$(readlink "$target_file")"
-        if [[ "$target_link_bn" = "$source_bn" ]]
-        then
-            return 0
-        fi
-    fi
-    ln -fns \
-        "$source_file" \
-        "$target_file" \
-        >/dev/null 2>&1
-    return 0
-}
-
 _koopa_activate_difftastic() {
     [[ -x "$(_koopa_bin_prefix)/difft" ]] || return 0
     DFT_BACKGROUND="$(_koopa_color_mode)"
@@ -613,37 +513,6 @@ _koopa_activate_julia() {
     JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
     JULIA_NUM_THREADS="$(_koopa_cpu_count)"
     export JULIA_DEPOT_PATH JULIA_NUM_THREADS
-    return 0
-}
-
-_koopa_activate_kitty() {
-    _koopa_is_kitty || return 0
-    local prefix
-    prefix="$(_koopa_xdg_config_home)/kitty"
-    if [[ ! -d "$prefix" ]]
-    then
-        return 0
-    fi
-    local source_bn
-    source_bn="theme-$(_koopa_color_mode).conf"
-    local source_file
-    source_file="${prefix}/${source_bn}"
-    if [[ ! -f "$source_file" ]]
-    then
-        return 0
-    fi
-    local target_file
-    target_file="${prefix}/current-theme.conf"
-    if [[ -h "$target_file" ]] && _koopa_is_installed 'readlink'
-    then
-        local target_link_bn
-        target_link_bn="$(readlink "$target_file")"
-        if [[ "$target_link_bn" = "$source_bn" ]]
-        then
-            return 0
-        fi
-    fi
-    ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }
 
