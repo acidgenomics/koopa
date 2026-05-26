@@ -502,7 +502,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-05-26",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -514,7 +514,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.52"
+    "version": "2.34.53"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1620,6 +1620,27 @@
     "url": "https://www.j3e.de/linux/convmv/?C=M;O=D",
     "version": "2.06"
   },
+  "copilot-cli": {
+    "bin": [
+      "copilot"
+    ],
+    "category": "AI",
+    "date": "2026-05-26",
+    "default": true,
+    "dependencies": [
+      "node"
+    ],
+    "description": "GitHub Copilot AI coding assistant CLI",
+    "installer": "node-package",
+    "installer_args": {
+      "name": "@github/copilot"
+    },
+    "type": "cli",
+    "url": [
+      "https://www.npmjs.com/package/@github/copilot"
+    ],
+    "version": "1.0.54"
+  },
   "coreutils": {
     "bin": [
       "g[",
@@ -2133,7 +2154,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-24",
+    "date": "2026-05-26",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2143,14 +2164,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "07de65e25abe8526c4c6e1eb24588c096e4a5497"
+    "version": "b3a119823faced6c5768bb9d749dd57d300cacb5"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-05-25",
+    "date": "2026-05-26",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2160,7 +2181,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "69933e3ec985b741d124ec8c74bb8643096fe323"
+    "version": "5ee4f82803a35b93241344d20666487b4848700e"
   },
   "du-dust": {
     "bin": [
@@ -2826,7 +2847,7 @@
     ],
     "category": "Filesystem",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-05-26",
     "default": true,
     "description": "command-line fuzzy finder",
     "installer": "conda-package",
@@ -2837,7 +2858,7 @@
     "url": [
       "https://github.com/junegunn/fzf/"
     ],
-    "version": "0.73.0"
+    "version": "0.73.1"
   },
   "gatk": {
     "bin": [
@@ -3731,7 +3752,7 @@
       "curl"
     ],
     "category": "Build",
-    "date": "2026-05-24",
+    "date": "2026-05-26",
     "default": false,
     "description": "Haskell toolchain installer",
     "type": "cli",
@@ -3739,7 +3760,7 @@
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.2.3.0"
+    "version": "0.2.5.0"
   },
   "haskell-stack": {
     "bin": [
@@ -5225,7 +5246,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-05-02",
+    "date": "2026-05-26",
     "default": false,
     "description": "just-in-time compiler for Lua",
     "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
@@ -5234,7 +5255,7 @@
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
     ],
-    "version": "e4c7d8b38040518d42599eef8ddb5e67aa967a9c"
+    "version": "c3b379bf50c8819c61daa3afd9f21d9ec5708bd5"
   },
   "luarocks": {
     "bin": [
@@ -7459,7 +7480,7 @@
       "quarto"
     ],
     "category": "R",
-    "date": "2026-05-02",
+    "date": "2026-05-26",
     "default": true,
     "description": "scientific and technical publishing system",
     "type": "cli",
@@ -7467,7 +7488,7 @@
       "https://quarto.org/",
       "https://github.com/quarto-dev/quarto-cli/"
     ],
-    "version": "1.9.37"
+    "version": "1.9.38"
   },
   "r": {
     "bin": [
@@ -8426,7 +8447,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-24",
+    "date": "2026-05-26",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8436,7 +8457,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "f3694337512c2bc86d5b8d1c21f93d7bd47efe3d"
+    "version": "a46fa81690fe3bae2198a470a8481ac091aae090"
   },
   "spacevim": {
     "date": "2026-05-10",

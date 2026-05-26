@@ -226,10 +226,11 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "units": f"{_M}._gnu",
     "wget": f"{_M}._gnu",
     "wget2": f"{_M}._gnu",
-    # -- node-package (6) ------------------------------------------------
+    # -- node-package (7) ------------------------------------------------
     "aws-azure-login": f"{_M}._node_pkg",
     "claude-code": f"{_M}._node_pkg",
     "codex": f"{_M}._node_pkg",
+    "copilot-cli": f"{_M}._node_pkg",
     "gemini-cli": f"{_M}._node_pkg",
     "gtop": f"{_M}._node_pkg",
     "markdownlint-cli": f"{_M}._node_pkg",
