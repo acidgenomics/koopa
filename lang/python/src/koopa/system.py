@@ -114,7 +114,7 @@ def check_platform() -> None:
             " Run 'koopa uninstall' to remove."
         )
         raise RuntimeError(msg)
-    if sys.platform == "linux":
+    elif sys.platform == "linux":
         try:
             ver_str = os.confstr("CS_GNU_LIBC_VERSION").split()[1]
             major, minor = (int(x) for x in ver_str.split(".")[:2])
@@ -184,14 +184,19 @@ def has_sudo() -> bool:
     """Check whether the current user has sudo access."""
     if is_root():
         return True
+    if shutil.which("sudo") is None:
+        return False
     result = subprocess.run(
-        ["sudo", "-n", "true"],
+        ["sudo", "-v", "-n"],
         capture_output=True,
         check=False,
     )
-    # returncode 0: passwordless sudo; "password is required": in sudoers but
-    # password needed — both count as having sudo access.
-    return result.returncode == 0 or b"password is required" in result.stderr
+    if result.returncode == 0:
+        return True
+    # "password is required" means user is in sudoers but needs auth.
+    # On corporate-managed macOS, "sudo -n true" gives this message even when
+    # sudo is fully revoked; "sudo -v -n" does not.
+    return b"password is required" in result.stderr
 
 
 def is_installed(name: str) -> bool:

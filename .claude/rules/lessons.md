@@ -52,6 +52,14 @@ koopa configure user dotfiles
 
 NOT `koopa configure-dotfiles` (that command does not exist).
 
+## Dev Tools Are Standalone Apps — Never Add to .venv
+
+Tools like `ruff`, `ty`, `pyright`, and `pytest` are installed as standalone
+koopa apps (under `app/` or `opt/`), NOT as dependencies in the project `.venv`.
+Never suggest adding them to `[project.optional-dependencies]` or installing
+them via `uv pip install` into the venv. They run from PATH as independent
+binaries with their own Python environments.
+
 ## Dotfiles Are Managed by Chezmoi — Edit the Source
 
 Home-directory dotfiles (e.g., `~/.claude/settings.json`, `~/.bashrc`,
