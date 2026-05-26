@@ -43,7 +43,7 @@ _koopa_is_admin() {
     _koopa_is_root && return 0
     # Return false if 'sudo' program is not installed.
     _koopa_is_installed 'sudo' || return 1
-    # Early return true if user has passwordless sudo enabled.
+    # Early return true if user has sudo access.
     _koopa_has_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.

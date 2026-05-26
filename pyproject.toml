@@ -40,6 +40,10 @@ version_pattern = "vMAJOR.MINOR.PATCH"
   'version = "{pep440_version}"',
 ]
 
+[tool.pytest.ini_options]
+pythonpath = ["lang/python/src"]
+testpaths = ["lang/python/tests"]
+
 [tool.coverage.run]
 relative_files = true
 source = ["lang/python/src"]
