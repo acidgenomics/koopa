@@ -181,7 +181,7 @@ def is_admin() -> bool:
 
 
 def has_sudo() -> bool:
-    """Check whether sudo is available without a password prompt."""
+    """Check whether the current user has sudo access."""
     if is_root():
         return True
     result = subprocess.run(
@@ -189,7 +189,9 @@ def has_sudo() -> bool:
         capture_output=True,
         check=False,
     )
-    return result.returncode == 0
+    # returncode 0: passwordless sudo; "password is required": in sudoers but
+    # password needed — both count as having sudo access.
+    return result.returncode == 0 or b"password is required" in result.stderr
 
 
 def is_installed(name: str) -> bool:
