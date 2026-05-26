@@ -1,3 +1,4 @@
 * High complexity
 * Medium complexity
 * Low complexity
+** TODO Add install support for GitHub Copilot CLI.
