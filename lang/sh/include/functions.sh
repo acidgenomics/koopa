@@ -280,7 +280,15 @@ ca-certificates"
 }
 
 _koopa_activate_color_mode() {
-    if [ -z "${KOOPA_COLOR_MODE:-}" ]
+    if _koopa_is_macos
+    then
+        if _koopa_is_light_mode
+        then
+            KOOPA_COLOR_MODE='light'
+        else
+            KOOPA_COLOR_MODE='dark'
+        fi
+    elif [ -z "${KOOPA_COLOR_MODE:-}" ]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
