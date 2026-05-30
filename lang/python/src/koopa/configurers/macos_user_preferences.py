@@ -672,15 +672,6 @@ def main(
         ),
         # iTerm.
         ("com.googlecode.iterm2", "PromptOnQuit", "-bool", "false"),
-        # BBEdit.
-        ("com.barebones.bbedit", "DisableCursorBlink", "-bool", "true"),
-        (
-            "com.barebones.bbedit",
-            "UseFlakeForPythonSyntaxChecking",
-            "-bool",
-            "false",
-        ),
-        ("com.barebones.bbedit", "WarnMalformedUTF8", "-bool", "true"),
     ]
     for domain, key, type_flag, value in writes:
         subprocess.run(
