@@ -82,13 +82,8 @@ function _koopa_export_env
 
     # Color mode.
     if not set -q KOOPA_COLOR_MODE
-        if _koopa_is_macos
-            set -l _apple_style (/usr/bin/defaults read -g AppleInterfaceStyle 2>/dev/null)
-            if test "$_apple_style" = Dark
-                set -gx KOOPA_COLOR_MODE dark
-            else
-                set -gx KOOPA_COLOR_MODE light
-            end
+        if _koopa_is_light_mode
+            set -gx KOOPA_COLOR_MODE light
         else
             set -gx KOOPA_COLOR_MODE dark
         end

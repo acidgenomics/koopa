@@ -61,6 +61,7 @@ fn activate-koopa {
 
     activate-aliases
     activate-starship
+    activate-color-mode-sync
 }
 
 if (and (has-env KOOPA_ACTIVATE) (eq $E:KOOPA_ACTIVATE '1')) {

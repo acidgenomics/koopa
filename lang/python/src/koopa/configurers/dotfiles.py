@@ -33,9 +33,10 @@ def main(
     env = os.environ.copy()
     koopa_bin = os.path.join(koopa_prefix(), "bin")
     env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
-    git_pull_safe(opt_dotfiles)
-    git_pull_safe(dotfiles_work_prefix)
-    git_pull_safe(dotfiles_private_prefix)
+    if not os.environ.get("KOOPA_DOTFILES_SKIP_PULL"):
+        git_pull_safe(opt_dotfiles)
+        git_pull_safe(dotfiles_work_prefix)
+        git_pull_safe(dotfiles_private_prefix)
     install_script = os.path.join(opt_dotfiles, "install")
     if not os.path.isfile(install_script):
         msg = f"Install script not found: {install_script}"

@@ -61,6 +61,7 @@ function __koopa_activate_koopa {
 
     _koopa_activate_aliases
     _koopa_activate_starship
+    _koopa_activate_color_mode_sync
 }
 
 if ($env:KOOPA_ACTIVATE -eq '1') {

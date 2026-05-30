@@ -5,14 +5,9 @@ _koopa_color_mode() {
     string="${KOOPA_COLOR_MODE:-}"
     if [[ -z "$string" ]]
     then
-        if _koopa_is_macos
+        if _koopa_is_interactive && _koopa_is_light_mode
         then
-            if _koopa_macos_is_dark_mode
-            then
-                string='dark'
-            else
-                string='light'
-            fi
+            string='light'
         else
             string='dark'
         fi

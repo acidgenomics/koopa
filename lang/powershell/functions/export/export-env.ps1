@@ -91,12 +91,7 @@ function _koopa_export_env {
 
     # Color mode.
     if (-not $env:KOOPA_COLOR_MODE) {
-        if ($IsMacOS) {
-            $appleStyle = (& /usr/bin/defaults read -g AppleInterfaceStyle 2>$null) -join ''
-            $env:KOOPA_COLOR_MODE = if ($appleStyle -eq 'Dark') { 'dark' } else { 'light' }
-        } else {
-            $env:KOOPA_COLOR_MODE = 'dark'
-        }
+        $env:KOOPA_COLOR_MODE = if (_koopa_is_light_mode) { 'light' } else { 'dark' }
     }
 
     # GCC colors.
