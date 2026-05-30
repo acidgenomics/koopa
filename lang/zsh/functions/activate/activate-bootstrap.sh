@@ -2,13 +2,13 @@
 
 _koopa_activate_bootstrap() {
     local bootstrap_prefix
-    bootstrap_prefix="$(_koopa_bootstrap_prefix)"
-    if [[ ! -d "$(_koopa_bootstrap_prefix)" ]]
+    bootstrap_prefix="${XDG_DATA_HOME:-${HOME:?}/.local/share}/koopa-bootstrap"
+    if [[ ! -d "$bootstrap_prefix" ]]
     then
         return 0
     fi
     local opt_prefix
-    opt_prefix="$(_koopa_opt_prefix)"
+    opt_prefix="${KOOPA_PREFIX:?}/opt"
     if [[ -d "${opt_prefix}/bash" ]] \
         && [[ -d "${opt_prefix}/coreutils" ]] \
         && [[ -d "${opt_prefix}/openssl3" ]] \

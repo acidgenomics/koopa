@@ -3,7 +3,7 @@
 _koopa_activate_bat() {
     [[ -x "$(_koopa_bin_prefix)/bat" ]] || return 0
     local prefix
-    prefix="$(_koopa_xdg_config_home)/bat"
+    prefix="${XDG_CONFIG_HOME:?}/bat"
     if [[ ! -d "$prefix" ]]
     then
         return 0

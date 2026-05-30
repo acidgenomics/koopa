@@ -6,7 +6,7 @@ _koopa_activate_aliases() {
     local bin_prefix
     bin_prefix="$(_koopa_bin_prefix)"
     local xdg_data_home
-    xdg_data_home="$(_koopa_xdg_data_home)"
+    xdg_data_home="${XDG_DATA_HOME:?}"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'

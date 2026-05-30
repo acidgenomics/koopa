@@ -108,8 +108,8 @@ __koopa_activate_koopa() {
     _koopa_add_to_path_start \
         '/usr/local/sbin' \
         '/usr/local/bin' \
-        "$(_koopa_scripts_private_prefix)/bin" \
-        "$(_koopa_xdg_local_home)/bin" \
+        "${XDG_CONFIG_HOME:?}/koopa/scripts-private/bin" \
+        "${HOME:?}/.local/bin" \
         "${HOME:?}/.bin" \
         "${HOME:?}/bin" \
         || return 1

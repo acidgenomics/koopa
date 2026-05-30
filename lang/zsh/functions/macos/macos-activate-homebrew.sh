@@ -8,7 +8,7 @@ _koopa_macos_activate_homebrew() {
         return 0
     fi
     local brewfile
-    brewfile="$(_koopa_xdg_config_home)/homebrew/Brewfile"
+    brewfile="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${prefix}/bin"
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] && [[ -f "$brewfile" ]]
     then

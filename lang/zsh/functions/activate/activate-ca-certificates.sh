@@ -2,7 +2,7 @@
 
 _koopa_activate_ca_certificates() {
     local prefix
-    prefix="$(_koopa_xdg_data_home)/ca-certificates"
+    prefix="${XDG_DATA_HOME:?}/ca-certificates"
     local file
     file="${prefix}/cacert.pem"
     if [[ ! -f "$file" ]] && _koopa_is_linux

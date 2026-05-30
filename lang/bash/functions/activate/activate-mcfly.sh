@@ -10,7 +10,7 @@ _koopa_activate_mcfly() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     case "$shell" in
         'bash' | \
         'zsh')
