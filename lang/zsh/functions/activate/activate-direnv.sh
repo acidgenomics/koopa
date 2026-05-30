@@ -8,7 +8,7 @@ _koopa_activate_direnv() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset

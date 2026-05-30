@@ -7,7 +7,7 @@ _koopa_activate_aliases() {
     local bin_prefix
     bin_prefix="$(_koopa_bin_prefix)"
     local xdg_data_home
-    xdg_data_home="$(_koopa_xdg_data_home)"
+    xdg_data_home="${XDG_DATA_HOME:?}"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
@@ -167,7 +167,7 @@ _koopa_activate_asdf() {
 _koopa_activate_bat() {
     [[ -x "$(_koopa_bin_prefix)/bat" ]] || return 0
     local prefix
-    prefix="$(_koopa_xdg_config_home)/bat"
+    prefix="${XDG_CONFIG_HOME:?}/bat"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -184,13 +184,13 @@ _koopa_activate_bat() {
 
 _koopa_activate_bootstrap() {
     local bootstrap_prefix
-    bootstrap_prefix="$(_koopa_bootstrap_prefix)"
-    if [[ ! -d "$(_koopa_bootstrap_prefix)" ]]
+    bootstrap_prefix="${XDG_DATA_HOME:-${HOME:?}/.local/share}/koopa-bootstrap"
+    if [[ ! -d "$bootstrap_prefix" ]]
     then
         return 0
     fi
     local opt_prefix
-    opt_prefix="$(_koopa_opt_prefix)"
+    opt_prefix="${KOOPA_PREFIX:?}/opt"
     if [[ -d "${opt_prefix}/bash" ]] \
         && [[ -d "${opt_prefix}/coreutils" ]] \
         && [[ -d "${opt_prefix}/openssl3" ]] \
@@ -237,7 +237,7 @@ _koopa_activate_broot() {
 
 _koopa_activate_ca_certificates() {
     local prefix
-    prefix="$(_koopa_xdg_data_home)/ca-certificates"
+    prefix="${XDG_DATA_HOME:?}/ca-certificates"
     local file
     file="${prefix}/cacert.pem"
     if [[ ! -f "$file" ]] && _koopa_is_linux
@@ -394,7 +394,7 @@ _koopa_activate_dircolors() {
         return 0
     fi
     local prefix
-    prefix="$(_koopa_xdg_config_home)/dircolors"
+    prefix="${XDG_CONFIG_HOME:?}/dircolors"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -423,7 +423,7 @@ _koopa_activate_direnv() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
@@ -501,7 +501,7 @@ _koopa_activate_mcfly() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -692,7 +692,7 @@ _koopa_activate_rbenv() {
 _koopa_activate_ripgrep() {
     [[ -x "$(_koopa_bin_prefix)/rg" ]] || return 0
     local config_file
-    config_file="$(_koopa_xdg_config_home)/ripgrep/config"
+    config_file="${XDG_CONFIG_HOME:?}/ripgrep/config"
     if [[ -f "$config_file" ]]
     then
         RIPGREP_CONFIG_PATH="$config_file"
@@ -717,7 +717,7 @@ _koopa_activate_starship() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -744,7 +744,7 @@ _koopa_activate_tealdeer() {
     [[ -x "$(_koopa_bin_prefix)/tldr" ]] || return 0
     if [[ -z "${TEALDEER_CONFIG_DIR:-}" ]]
     then
-        TEALDEER_CONFIG_DIR="$(_koopa_xdg_config_home)/tealdeer"
+        TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
     fi
     export TEALDEER_CONFIG_DIR
     return 0
@@ -788,30 +788,12 @@ _koopa_activate_today_bucket() {
 }
 
 _koopa_activate_xdg() {
-    if [[ -z "${XDG_CACHE_HOME:-}" ]]
-    then
-        XDG_CACHE_HOME="$(_koopa_xdg_cache_home)"
-    fi
-    if [[ -z "${XDG_CONFIG_DIRS:-}" ]]
-    then
-        XDG_CONFIG_DIRS="$(_koopa_xdg_config_dirs)"
-    fi
-    if [[ -z "${XDG_CONFIG_HOME:-}" ]]
-    then
-        XDG_CONFIG_HOME="$(_koopa_xdg_config_home)"
-    fi
-    if [[ -z "${XDG_DATA_DIRS:-}" ]]
-    then
-        XDG_DATA_DIRS="$(_koopa_xdg_data_dirs)"
-    fi
-    if [[ -z "${XDG_DATA_HOME:-}" ]]
-    then
-        XDG_DATA_HOME="$(_koopa_xdg_data_home)"
-    fi
-    if [[ -z "${XDG_STATE_HOME:-}" ]]
-    then
-        XDG_STATE_HOME="$(_koopa_xdg_state_home)"
-    fi
+    [[ -z "${XDG_CACHE_HOME:-}" ]] && XDG_CACHE_HOME="${HOME:?}/.cache"
+    [[ -z "${XDG_CONFIG_DIRS:-}" ]] && XDG_CONFIG_DIRS='/etc/xdg'
+    [[ -z "${XDG_CONFIG_HOME:-}" ]] && XDG_CONFIG_HOME="${HOME:?}/.config"
+    [[ -z "${XDG_DATA_DIRS:-}" ]] && XDG_DATA_DIRS='/usr/local/share:/usr/share'
+    [[ -z "${XDG_DATA_HOME:-}" ]] && XDG_DATA_HOME="${HOME:?}/.local/share"
+    [[ -z "${XDG_STATE_HOME:-}" ]] && XDG_STATE_HOME="${HOME:?}/.local/state"
     export \
         XDG_CACHE_HOME \
         XDG_CONFIG_DIRS \
@@ -926,20 +908,13 @@ _koopa_activate_zsh_fpath() {
 }
 
 _koopa_activate_zsh_plugins() {
-    local plugin plugins zsh_plugins_dir
-    zsh_plugins_dir="$(_koopa_xdg_data_home)/zsh/plugins"
+    local zsh_plugins_dir
+    zsh_plugins_dir="${XDG_DATA_HOME:?}/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
-    plugins=("${(@f)$( \
-        find "$zsh_plugins_dir" \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -type 'd' \
-        | sort \
-        | xargs -n1 basename \
-    )}")
-    for plugin in "${plugins[@]}"
+    local plugin plugin_file
+    for plugin in "${zsh_plugins_dir}"/*(/N:t)
     do
-        local plugin_file="${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
+        plugin_file="${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
         [[ -f "$plugin_file" ]] || continue
         source "$plugin_file"
     done
@@ -1542,26 +1517,14 @@ _koopa_realpath() {
 }
 
 _koopa_remove_from_path_string() {
-    local str1="${1:?}"
+    local str="${1:?}"
     local dir="${2:?}"
-    local str2
-    str2="$( \
-        _koopa_print "$str1" \
-            | awk -v d="$dir" \
-                'BEGIN { FS=":"; OFS=":" }
-                {
-                    n=0
-                    for (i=1; i<=NF; i++) {
-                        if ($i != d) {
-                            if (n++) printf "%s", OFS
-                            printf "%s", $i
-                        }
-                    }
-                    printf "\n"
-                }' \
-        )"
-    [[ -n "$str2" ]] || return 1
-    _koopa_print "$str2"
+    local -a parts
+    parts=("${(@s/:/)str}")
+    parts=("${(@)parts:#${dir}}")
+    local result="${(j/:/)parts}"
+    [[ -n "$result" ]] || return 1
+    _koopa_print "$result"
     return 0
 }
 
@@ -1576,6 +1539,36 @@ _koopa_shell_name() {
 
 _koopa_str_detect_posix() {
     [[ "${1#*"$2"}" != "$1" ]]
+}
+
+_koopa_terminal_is_light_background() {
+    [[ -t 0 ]] || return 1
+    local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
+    __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
+    stty raw -echo min 0 time 2 2>/dev/null
+    printf '\033]11;?\033\\' > /dev/tty
+    __kvar_response="$(dd bs=64 count=1 2>/dev/null < /dev/tty)"
+    stty "$__kvar_old_settings" 2>/dev/null
+    case "$__kvar_response" in
+        *'rgb:'*) ;;
+        *) unset -v __kvar_old_settings __kvar_response; return 1 ;;
+    esac
+    __kvar_rgb="${__kvar_response#*rgb:}"
+    __kvar_rgb="${__kvar_rgb%%\\*}"
+    __kvar_rgb="${__kvar_rgb%%$'\033'*}"
+    __kvar_r="$(printf '%d' "0x${__kvar_rgb%%/*}" 2>/dev/null)" || return 1
+    __kvar_rgb="${__kvar_rgb#*/}"
+    __kvar_g="$(printf '%d' "0x${__kvar_rgb%%/*}" 2>/dev/null)" || return 1
+    __kvar_b="$(printf '%d' "0x${__kvar_rgb#*/}" 2>/dev/null)" || return 1
+    [[ "$__kvar_r" -gt 255 ]] && __kvar_r=$((__kvar_r / 256))
+    [[ "$__kvar_g" -gt 255 ]] && __kvar_g=$((__kvar_g / 256))
+    [[ "$__kvar_b" -gt 255 ]] && __kvar_b=$((__kvar_b / 256))
+    __kvar_luma=$(( (__kvar_r * 299 + __kvar_g * 587 + __kvar_b * 114) / 1000 ))
+    unset -v __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b
+    [[ "$__kvar_luma" -gt 128 ]]
+    local __kvar_result=$?
+    unset -v __kvar_luma
+    return $__kvar_result
 }
 
 _koopa_user_id() {
@@ -1669,8 +1662,10 @@ _koopa_export_koopa_cpu_count() {
 }
 
 _koopa_export_koopa_shell() {
-    unset -v KOOPA_SHELL
-    KOOPA_SHELL="$(_koopa_locate_shell)"
+    if [[ -z "${KOOPA_SHELL:-}" ]]
+    then
+        KOOPA_SHELL="$(_koopa_locate_shell)"
+    fi
     [[ -z "${SHELL:-}" ]] && SHELL="$KOOPA_SHELL"
     export KOOPA_SHELL SHELL
     return 0
@@ -1755,11 +1750,11 @@ _koopa_is_kitty() {
 }
 
 _koopa_is_linux() {
-    [[ "$(uname -s)" == 'Linux' ]]
+    [[ "$OSTYPE" == linux* ]]
 }
 
 _koopa_is_macos() {
-    [[ "$(uname -s)" == 'Darwin' ]]
+    [[ "$OSTYPE" == darwin* ]]
 }
 
 _koopa_is_root() {
@@ -1767,7 +1762,7 @@ _koopa_is_root() {
 }
 
 _koopa_is_set_nounset() {
-    _koopa_str_detect_posix "$(set +o)" 'set -o nounset'
+    [[ -o nounset ]]
 }
 
 _koopa_is_subshell() {
@@ -1797,7 +1792,7 @@ _koopa_macos_activate_homebrew() {
         return 0
     fi
     local brewfile
-    brewfile="$(_koopa_xdg_config_home)/homebrew/Brewfile"
+    brewfile="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${prefix}/bin"
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] && [[ -f "$brewfile" ]]
     then
@@ -1824,7 +1819,7 @@ _koopa_asdf_prefix() {
 }
 
 _koopa_bin_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/bin"
+    _koopa_print "${KOOPA_PREFIX:?}/bin"
     return 0
 }
 
@@ -1881,7 +1876,7 @@ _koopa_koopa_prefix() {
 }
 
 _koopa_opt_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/opt"
+    _koopa_print "${KOOPA_PREFIX:?}/opt"
     return 0
 }
 

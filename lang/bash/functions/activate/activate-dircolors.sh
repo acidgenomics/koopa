@@ -9,7 +9,7 @@ _koopa_activate_dircolors() {
         return 0
     fi
     local prefix
-    prefix="$(_koopa_xdg_config_home)/dircolors"
+    prefix="${XDG_CONFIG_HOME:?}/dircolors"
     if [[ ! -d "$prefix" ]]
     then
         return 0
