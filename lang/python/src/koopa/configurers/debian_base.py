@@ -86,13 +86,6 @@ def _configure_locale() -> None:
         )
 
 
-def _configure_sshd() -> None:
-    """Configure system sshd."""
-    from koopa.configurers.sshd import main as configure_sshd
-
-    configure_sshd(name="sshd", platform="linux", mode="system")
-
-
 def _disable_motd_spam() -> None:
     """Disable Ubuntu apt/MOTD news spam."""
     # Disable pro/apt news fetched by update-motd.
@@ -130,6 +123,5 @@ def main(
     if is_init_systemd():
         _configure_timezone()
     _configure_locale()
-    _configure_sshd()
     _disable_motd_spam()
     alert_success("Configuration of system defaults was successful.")

@@ -21,7 +21,6 @@ PYTHON_CONFIGURERS: dict[tuple[str, str, str], str] = {
     ("r", "macos", "system"): f"{_M}.r",
     ("r", "debian", "system"): f"{_M}.r",
     ("rstudio-server", "linux", "system"): f"{_M}.rstudio_server",
-    ("sshd", "linux", "system"): f"{_M}.sshd",
     ("base", "debian", "system"): f"{_M}.debian_base",
     ("preferences", "macos", "system"): f"{_M}.macos_system_preferences",
     ("preferences", "macos", "user"): f"{_M}.macos_user_preferences",
