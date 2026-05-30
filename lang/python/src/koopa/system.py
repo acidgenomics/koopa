@@ -362,22 +362,6 @@ def check_multiple_users() -> bool:
     return len(logged_in_users()) > 1
 
 
-def macos_is_dark_mode() -> bool:
-    """Check if macOS is in dark mode."""
-    if not is_macos():
-        return False
-    try:
-        result = subprocess.run(
-            ["defaults", "read", "-g", "AppleInterfaceStyle"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        return result.stdout.strip().lower() == "dark"
-    except FileNotFoundError:
-        return False
-
-
 def macos_os_version() -> str:
     """Get macOS version string."""
     if not is_macos():

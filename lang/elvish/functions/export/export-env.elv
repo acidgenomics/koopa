@@ -82,18 +82,7 @@ fn export-env {
 
     # Color mode.
     if (not (has-env KOOPA_COLOR_MODE)) {
-        var color-mode = dark
-        if (eq $platform:os darwin) {
-            var apple-style = ''
-            try {
-                set apple-style = (str:trim-space (/usr/bin/defaults read -g AppleInterfaceStyle 2>/dev/null))
-            } catch { }
-            if (eq $apple-style Dark) {
-                set color-mode = dark
-            } else {
-                set color-mode = light
-            }
-        }
+        var color-mode = (if (is-light-mode) { put 'light' } else { put 'dark' })
         set-env KOOPA_COLOR_MODE $color-mode
     }
 

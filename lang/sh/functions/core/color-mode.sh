@@ -8,14 +8,9 @@ _koopa_color_mode() {
     __kvar_string="${KOOPA_COLOR_MODE:-}"
     if [ -z "$__kvar_string" ]
     then
-        if _koopa_is_macos
+        if _koopa_is_interactive && _koopa_is_light_mode
         then
-            if _koopa_macos_is_dark_mode
-            then
-                __kvar_string='dark'
-            else
-                __kvar_string='light'
-            fi
+            __kvar_string='light'
         else
             __kvar_string='dark'
         fi

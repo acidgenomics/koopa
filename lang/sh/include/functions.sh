@@ -1031,14 +1031,9 @@ _koopa_color_mode() {
     __kvar_string="${KOOPA_COLOR_MODE:-}"
     if [ -z "$__kvar_string" ]
     then
-        if _koopa_is_macos
+        if _koopa_is_interactive && _koopa_is_light_mode
         then
-            if _koopa_macos_is_dark_mode
-            then
-                __kvar_string='dark'
-            else
-                __kvar_string='light'
-            fi
+            __kvar_string='light'
         else
             __kvar_string='dark'
         fi
@@ -1154,6 +1149,15 @@ _koopa_duration_stop() {
         __kvar_start \
         __kvar_stop
     return 0
+}
+
+_koopa_is_light_mode() {
+    if _koopa_is_macos
+    then
+        [ "$(/usr/bin/defaults read -g 'AppleInterfaceStyle' 2>/dev/null)" != 'Dark' ]
+    else
+        _koopa_terminal_is_light_background
+    fi
 }
 
 _koopa_locate_shell() {
@@ -1317,6 +1321,36 @@ _koopa_shell_name() {
 _koopa_str_detect_posix() {
     unset test
     test "${1#*"$2"}" != "$1"
+}
+
+_koopa_terminal_is_light_background() {
+    [ -t 0 ] || return 1
+    local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
+    __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
+    stty raw -echo min 0 time 2 2>/dev/null
+    printf '\033]11;?\033\\' > /dev/tty
+    __kvar_response="$(dd bs=64 count=1 2>/dev/null < /dev/tty)"
+    stty "$__kvar_old_settings" 2>/dev/null
+    case "$__kvar_response" in
+        *'rgb:'*) ;;
+        *) unset -v __kvar_old_settings __kvar_response; return 1 ;;
+    esac
+    __kvar_rgb="${__kvar_response#*rgb:}"
+    __kvar_rgb="${__kvar_rgb%%\\*}"
+    __kvar_rgb="${__kvar_rgb%%$(printf '\033')*}"
+    __kvar_r="$(printf '%d' "0x${__kvar_rgb%%/*}" 2>/dev/null)" || return 1
+    __kvar_rgb="${__kvar_rgb#*/}"
+    __kvar_g="$(printf '%d' "0x${__kvar_rgb%%/*}" 2>/dev/null)" || return 1
+    __kvar_b="$(printf '%d' "0x${__kvar_rgb#*/}" 2>/dev/null)" || return 1
+    [ "$__kvar_r" -gt 255 ] && __kvar_r=$((__kvar_r / 256))
+    [ "$__kvar_g" -gt 255 ] && __kvar_g=$((__kvar_g / 256))
+    [ "$__kvar_b" -gt 255 ] && __kvar_b=$((__kvar_b / 256))
+    __kvar_luma=$(( (__kvar_r * 299 + __kvar_g * 587 + __kvar_b * 114) / 1000 ))
+    unset -v __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b
+    [ "$__kvar_luma" -gt 128 ]
+    local __kvar_result=$?
+    unset -v __kvar_luma
+    return $__kvar_result
 }
 
 _koopa_walk() {
@@ -1559,15 +1593,6 @@ _koopa_macos_activate_homebrew() {
     fi
     unset -v __kvar_brewfile __kvar_prefix
     return 0
-}
-
-_koopa_macos_is_dark_mode() {
-    [ \
-        "$( \
-            /usr/bin/defaults read -g 'AppleInterfaceStyle' \
-            2>/dev/null \
-        )" = 'Dark' \
-    ]
 }
 
 _koopa_asdf_prefix() {

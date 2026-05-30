@@ -192,6 +192,7 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
+    _koopa_activate_color_mode_sync
     return 0
 }
 
@@ -345,6 +346,34 @@ ca-certificates"
     if _koopa_is_linux && [[ -d '/etc/ssl/certs' ]]
     then
         export SSL_CERT_DIR='/etc/ssl/certs'
+    fi
+    return 0
+}
+
+_koopa_activate_color_mode_sync() {
+    _koopa_is_interactive || return 0
+    _koopa_bash_color_mode_sync() {
+        local new_mode
+        if _koopa_is_light_mode
+        then
+            new_mode='light'
+        else
+            new_mode='dark'
+        fi
+        [[ "${KOOPA_COLOR_MODE:-}" != "$new_mode" ]] || return 0
+        export KOOPA_COLOR_MODE="$new_mode"
+        __koopa_warn "Terminal appearance changed to ${new_mode} mode. Updating shell colors."
+        unset -v FZF_DEFAULT_OPTS
+        _koopa_activate_fzf
+        _koopa_activate_dircolors
+        _koopa_activate_difftastic
+        return 0
+    }
+    if [[ -n "${PROMPT_COMMAND:-}" ]]
+    then
+        PROMPT_COMMAND="${PROMPT_COMMAND};_koopa_bash_color_mode_sync"
+    else
+        PROMPT_COMMAND='_koopa_bash_color_mode_sync'
     fi
     return 0
 }
@@ -1423,14 +1452,9 @@ _koopa_color_mode() {
     string="${KOOPA_COLOR_MODE:-}"
     if [[ -z "$string" ]]
     then
-        if _koopa_is_macos
+        if _koopa_is_interactive && _koopa_is_light_mode
         then
-            if _koopa_macos_is_dark_mode
-            then
-                string='dark'
-            else
-                string='light'
-            fi
+            string='light'
         else
             string='dark'
         fi
@@ -1804,6 +1828,15 @@ _koopa_invalid_arg() {
         str='Invalid argument.'
     fi
     _koopa_stop "$str"
+}
+
+_koopa_is_light_mode() {
+    if [[ "$OSTYPE" == darwin* ]]
+    then
+        [[ "$(/usr/bin/defaults read -g 'AppleInterfaceStyle' 2>/dev/null)" != 'Dark' ]]
+    else
+        _koopa_terminal_is_light_background
+    fi
 }
 
 _koopa_locate_shell() {
@@ -2633,13 +2666,6 @@ _koopa_macos_activate_homebrew() {
         export HOMEBREW_NO_ENV_HINTS=1
     fi
     return 0
-}
-
-_koopa_macos_is_dark_mode() {
-    [[ "$( \
-        /usr/bin/defaults read -g 'AppleInterfaceStyle' \
-        2>/dev/null \
-    )" == 'Dark' ]]
 }
 
 _koopa_asdf_prefix() {

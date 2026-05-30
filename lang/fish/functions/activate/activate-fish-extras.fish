@@ -13,4 +13,5 @@ function _koopa_activate_fish_extras
                 "$KOOPA_PREFIX/share/fish/vendor_completions.d"
         end
     end
+    _koopa_activate_color_mode_sync
 end
