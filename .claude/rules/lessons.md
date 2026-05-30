@@ -60,6 +60,35 @@ Never suggest adding them to `[project.optional-dependencies]` or installing
 them via `uv pip install` into the venv. They run from PATH as independent
 binaries with their own Python environments.
 
+## macOS Sandboxed App Preferences Require the Full Container Path
+
+Sandboxed macOS apps (App Store and notarized apps with sandbox entitlements, e.g. BBEdit) store preferences inside a container, not at the standard bundle ID location. Using the bundle ID shorthand fails:
+
+```sh
+# WRONG — fails with "Could not write domain com.barebones.bbedit"
+defaults write com.barebones.bbedit SelectedColorSchemeNameDarkMode -string "Dracula"
+
+# CORRECT — write to the full sandboxed container path
+defaults write ~/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit \
+    SelectedColorSchemeNameDarkMode -string "Dracula"
+```
+
+In Python install scripts, build the path explicitly:
+
+```python
+bbedit_prefs = os.path.join(
+    home,
+    "Library", "Containers", "com.barebones.bbedit",
+    "Data", "Library", "Preferences", "com.barebones.bbedit",
+)
+subprocess.run(["/usr/bin/defaults", "write", bbedit_prefs, key, "-string", value], check=True)
+```
+
+The container path pattern is always:
+`~/Library/Containers/<bundle-id>/Data/Library/Preferences/<bundle-id>`
+
+Guard the call with `os.path.isdir(os.path.dirname(bbedit_prefs))` if the app may not be installed, since the container only exists after the app has been launched at least once.
+
 ## Dotfiles Are Managed by Chezmoi — Edit the Source
 
 Home-directory dotfiles (e.g., `~/.claude/settings.json`, `~/.bashrc`,

@@ -55,7 +55,6 @@ _ADMIN_COMMANDS: list[tuple[str, str | None]] = [
     ("apt-update", "linux"),
     ("apt-upgrade", "linux"),
     ("configure-lmod", "linux"),
-    ("configure-sshd", "linux"),
     ("delete-cache", "linux"),
     ("delete-user", "linux"),
     ("dnf-install", "linux"),
