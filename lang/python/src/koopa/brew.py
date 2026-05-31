@@ -92,8 +92,11 @@ def brew_upgrade_casks() -> None:
 
                 configure_r_environ()
                 configure_r_makevars()
-            except Exception:
-                pass
+            except Exception as exc:
+                print(
+                    f"Warning: failed to configure R environment after cask upgrade: {exc}",
+                    file=sys.stderr,
+                )
         elif cask.startswith("gpg-suite"):
             plist = os.path.expanduser(
                 "~/Library/LaunchAgents/org.gpgtools.updater.plist",
