@@ -54,8 +54,14 @@ if [ -z "$_python" ]; then
     elif [ -x "$_bootstrap_python" ]; then
         if [ "${1:-}" = "uninstall" ]; then
             _sys_python="/usr/bin/python3"
-            if [ -x "$_sys_python" ]; then
+            if [ -x "$_sys_python" ] && \
+                "$_sys_python" -c \
+                    "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" \
+                    2>/dev/null
+            then
                 _python="$_sys_python"
+            else
+                exec sh "${_koopa_prefix}/uninstall.sh"
             fi
         fi
         if [ -z "$_python" ]; then
