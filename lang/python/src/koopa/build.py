@@ -457,6 +457,7 @@ def cmake_build(
             ninja_path = locate("ninja")
             generator = "Ninja"
         except FileNotFoundError:
+            # `ninja` is optional; fall back to Unix Makefiles when not found.
             pass
     auto_build_dir = False
     if build_dir is None:
