@@ -1,0 +1,4 @@
+** TODO Our Dracula Pro configuration keeps spamming this message:
+ℹ Running '/opt/koopa/opt/dotfiles/install'.
+Upgrading Dracula Pro VS Code extension: 1.1.0 → 2.2.2
+Need to fix on other machine that we're working on upgrade path
