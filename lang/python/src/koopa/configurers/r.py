@@ -8,6 +8,7 @@ import sys
 
 from koopa.r import (
     configure_r_environ,
+    install_packages_in_site_library,
     r_configure_ldpaths,
     r_copy_files_into_etc,
     r_prefix,
@@ -79,3 +80,11 @@ def main(
             ["sudo", "chmod", "-R", "g+rw", site_library],
             check=True,
         )
+        try:
+            install_packages_in_site_library(["AcidDevTools"])
+        except subprocess.CalledProcessError:
+            print(
+                "Warning: Failed to install AcidDevTools. "
+                "Run 'koopa app r install-packages-in-site-library AcidDevTools' manually.",
+                file=sys.stderr,
+            )
