@@ -7,32 +7,6 @@
     The Ghostty config itself isn't wrong. The issue is that the caching code was using $BASH to detect the shell name — a variable that's writable/inheritable. The fix (hardcoding "bash" in all bash-specific activation files) is the correct solution. No changes needed to the Ghostty dotfiles config.
 * Medium complexity
 * Low complexity
-** STARTED We want to clean up the mcfly color activation handling code as a separate function:
-    ──────────────────────────────────────────┐
-    • 17: _koopa_activate_color_mode_sync() { │
-    ──────────────────────────────────────────┘
-    17 ⋮ 17 │        _koopa_activate_fzf
-    18 ⋮ 18 │        _koopa_activate_dircolors
-    19 ⋮ 19 │        _koopa_activate_difftastic
-        ⋮ 20 │        if [[ "$new_mode" == 'light' ]]
-        ⋮ 21 │        then
-        ⋮ 22 │            export MCFLY_LIGHT=true
-        ⋮ 23 │        else
-        ⋮ 24 │            unset -v MCFLY_LIGHT
-        ⋮ 25 │        fi
-    20 ⋮ 26 │        return 0
-** DONE We need to fix this spurious warning that keeps popping up during Zsh shell coding:
-The diagnostics are all pre-existing: the zsh ShellCheck warning is just ShellCheck saying it doesn't support zsh syntax (expected), and the two sh informational notes are on lines in the original code, not my additions.
-    The ShellCheck diagnostics on zsh files are pre-existing false positives
-    Is there a lingering issue with shellcheck trying to run on zsh scripts that we need to fix?
-** DONE Learn lesson that deep-reserach and ultrathink are useful for deeper reasoning about difficult problems, especially for potential solutions that may require newer context from a web search. The deep-research skill is very helpful for this use case.
-** DONE Learn the lesson that we don't want situations like this with nounset to happen again:
-    This returns early and skips starship entirely when nounset is active. That's the bug. The old starship code used _koopa_boolean_nounset to save/restore nounset around the eval. After the commit, starship just bails out if nounset is on. If nounset is set during activation, starship never gets initialized — PROMPT_COMMAND stays as _direnv_hook (set by direnv), and then VS Code's shell integration captures it raw.
-** DONE Enable WebFetch without prompting for this project, to better facilitate deep-research queries for modern code best practices.
-** DONE Why does this keep popping up spuriously?
-    All ShellCheck warnings are just "zsh not supported" — ignore them. Now verify there are no remaining broken patterns and regenerate
 ** STARTED mcfly light color mode text is unreadable currently in the terminal. I think previously we may have customized the light theme (black and white mode potentially?) to deal with this situation. But currently the suggested autocompletion commands are the same color as the terminal background, making it impossible to use.
     Need to confirm that the working fix is in before marking completed.
-** TODO _koopa_koopa_shell patching to use "BASH" I think looks hacky to me at first glance. Do we still need this function?
-** TODO Add a new CLI function, potentially under `koopa run` that helps us better organize Claude plans in `.claude/plans` of current project. Potentially we can keep using YYYY-MM-DD prefix. Does it make more sense to organize them into YYYY/MM/DD subdirectories, or will Claude Code not then see those plans if they are in nested directories? I'm guessing flat YYYY-MM-DD-slug.md style at the top of `.claude/plans` is more optimal but I'm not sure.
 ** TODO Evaluate whether we now have any potential unused functions and dead code after our changes to shell activation.
