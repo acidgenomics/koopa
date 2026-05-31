@@ -59,6 +59,7 @@ fn activate-koopa {
         $E:HOME'/.bin' ^
         $E:HOME'/bin'
 
+    activate-difftastic
     activate-aliases
     activate-starship
     activate-color-mode-sync

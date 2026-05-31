@@ -93,6 +93,11 @@ function _koopa_export_env {
     if (-not $env:KOOPA_COLOR_MODE) {
         $env:KOOPA_COLOR_MODE = if (_koopa_is_light_mode) { 'light' } else { 'dark' }
     }
+    $colorCache = Join-Path $HOME '.cache/koopa/color-mode'
+    if ((-not (Test-Path $colorCache)) -or ((Get-Content $colorCache -Raw).Trim() -ne $env:KOOPA_COLOR_MODE)) {
+        New-Item -ItemType Directory -Path (Split-Path $colorCache) -Force | Out-Null
+        Set-Content $colorCache $env:KOOPA_COLOR_MODE
+    }
 
     # GCC colors.
     if (-not $env:GCC_COLORS) {

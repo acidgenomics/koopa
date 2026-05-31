@@ -144,6 +144,26 @@ more. `koopa develop shellcheck` already excludes zsh files intentionally.
 - The only shell linting for zsh files is the custom regex-based illegal-string
   checks inside `_handle_shellcheck()` in `cli_develop.py`.
 
+## Fish Shell Variable Style: Never Use `${VAR}` — Use `$VAR`
+
+`${VAR}` is a bash-ism. Fish's parser already unambiguously delimits variable
+names without braces, so curly braces add noise with no benefit. Always use
+plain `$VAR` in fish scripts:
+
+```fish
+# Correct
+set -l starship "$KOOPA_PREFIX/bin/starship"
+test -x "$KOOPA_PREFIX/bin/fzf"
+set -l cache_file "$XDG_CACHE_HOME/koopa/shell-init/starship-fish.fish"
+
+# Wrong (bash-ism — do not use)
+set -l starship "${KOOPA_PREFIX}/bin/starship"
+test -x "${KOOPA_PREFIX}/bin/fzf"
+```
+
+This applies to all environment variables referenced in activation functions
+(`KOOPA_PREFIX`, `XDG_CACHE_HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `HOME`, etc.).
+
 ## Plans and TODOs Use `todo.org` (Org Mode)
 
 When preparing future plans or TODO list items for this project, write them to

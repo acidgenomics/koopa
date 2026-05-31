@@ -2,8 +2,8 @@ function _koopa_activate_aliases
     # Activate aliases for fish shell.
     # @note Updated 2026-05-01.
     _koopa_is_interactive; or return 0
-    set -l bin_prefix (_koopa_bin_prefix)
-    set -l xdg_data_home (_koopa_xdg_data_home)
+    set -l bin_prefix "$KOOPA_PREFIX/bin"
+    set -l xdg_data_home "$XDG_DATA_HOME"
     # Navigation.
     alias ..='cd ..'
     alias ...='cd ../..'

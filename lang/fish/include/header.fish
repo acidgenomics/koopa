@@ -42,6 +42,7 @@ function __koopa_activate_koopa
     end
     _koopa_export_env
     _koopa_activate_ca_certificates
+    _koopa_activate_difftastic
     _koopa_activate_fzf
     _koopa_activate_direnv
     _koopa_activate_zoxide
@@ -59,8 +60,8 @@ function __koopa_activate_koopa
     _koopa_add_to_path_start \
         /usr/local/sbin \
         /usr/local/bin \
-        (_koopa_scripts_private_prefix)/bin \
-        (_koopa_xdg_local_home)/bin \
+        "$XDG_CONFIG_HOME/koopa/scripts-private/bin" \
+        "$HOME/.local/bin" \
         "$HOME/.bin" \
         "$HOME/bin"
     if not _koopa_is_subshell
