@@ -495,8 +495,10 @@ def _handle_check_app_versions(args: list[str]) -> None:
                 f"'{lock_path}' if the process is stale."
             )
             sys.exit(1)
-        except (ValueError, ProcessLookupError, OSError):
-            pass
+        except (ValueError, ProcessLookupError, OSError) as exc:
+            alert_note(
+                f"Ignoring stale/unreadable install lock '{lock_path}': {exc}"
+            )
     results = check_app_versions(
         source_filter=parsed.source,
         name_filter=parsed.apps or None,
