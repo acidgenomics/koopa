@@ -133,7 +133,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "zellij": f"{_M}._conda",
     "zenith": f"{_M}._conda",
     "zoxide": f"{_M}._conda",
-    "zsh": f"{_M}._conda",
+    "zsh": f"{_M}.zsh_app",
     # -- python-package (55) ---------------------------------------------
     "apache-airflow": f"{_M}._python_pkg",
     "autoflake": f"{_M}._python_pkg",

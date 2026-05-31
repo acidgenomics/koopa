@@ -9990,20 +9990,30 @@
       "zsh"
     ],
     "build_dependencies": [
-      "conda"
+      "autoconf",
+      "make",
+      "pkg-config",
+      "texinfo"
     ],
     "category": "Shell",
-    "conda_channel": "conda-forge",
     "date": "2025-01-03",
     "default": true,
+    "dependencies": [
+      "ncurses",
+      "pcre2"
+    ],
     "description": "Z shell, extended Bourne-compatible shell",
-    "installer": "conda-package",
+    "extra_src_urls": [
+      "https://downloads.sourceforge.net/project/zsh/zsh/{version}/zsh-{version}.tar.xz"
+    ],
     "man1": [
       "zsh.1"
     ],
+    "revision": 1,
+    "src_url": "https://www.zsh.org/pub/zsh-{version}.tar.xz",
     "type": "cli",
     "url": [
-      "http://zsh.sourceforge.net/Arc/source.html"
+      "https://www.zsh.org/pub/"
     ],
     "version": "5.9"
   },
