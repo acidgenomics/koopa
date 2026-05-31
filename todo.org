@@ -1,0 +1,23 @@
+** TODO Now we're hitting this Dracula Pro configuration error:
+$ koopa configure user dotfiles
+Configuring dotfiles.
+** Pulling 'dotfiles-private'.
+ℹ Running '/opt/koopa/opt/dotfiles/install'.
+Traceback (most recent call last):
+  File "/opt/koopa/opt/dotfiles/install", line 1170, in <module>
+    main()
+    ~~~~^^
+  File "/opt/koopa/opt/dotfiles/install", line 1074, in main
+    _configure_dracula_pro(home, xdg_data)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/koopa/opt/dotfiles/install", line 57, in _configure_dracula_pro
+    ln(vim_src, os.path.join(vim_themes, "dracula_pro"))
+    ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/koopa/lang/python/src/koopa/file_ops.py", line 97, in ln
+    target_path.unlink()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/koopa/app/python3.14/3.14.5/lib/python3.14/pathlib/__init__.py", line 1042, in unlink
+    os.unlink(self)
+    ~~~~~~~~~^^^^^^
+PermissionError: [Errno 1] Operation not permitted: '/Users/mike/.vim/pack/theme/start/dracula_pro'
+Error: Command '['/opt/koopa/opt/dotfiles/install']' returned non-zero exit status 1.
