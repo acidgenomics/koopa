@@ -16,6 +16,14 @@ _xdg_config="${XDG_CONFIG_HOME:-${HOME}/.config}/koopa"
 _xdg_data="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
 
 printf 'Uninstalling koopa from: %s\n' "$_koopa_prefix" >&2
+if [ -t 0 ]; then
+    printf 'This will permanently remove koopa and all associated data. Proceed? [y/N] ' >&2
+    read -r _answer
+    case "$_answer" in
+        y|Y|yes|YES) ;;
+        *) printf 'Aborted.\n' >&2; exit 1 ;;
+    esac
+fi
 
 if [ -d "$_bootstrap" ]; then
     printf 'Removing bootstrap prefix.\n' >&2
