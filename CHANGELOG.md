@@ -1,5 +1,51 @@
 # Changelog
 
+## koopa 0.18.0 (2026-05-31)
+
+Major changes:
+
+- Overhauled color mode handling across all supported shells (Bash, Zsh, Fish,
+  Elvish, Nushell, PowerShell, POSIX sh). Color mode detection now uses
+  `COLORFGBG` and terminal-query approaches with a new
+  `terminal-is-light-background` helper, and the `is-light-mode` function is
+  available in all shell languages. Added `activate-color-mode-sync` for
+  reactive color updates and `activate-mcfly-colors` for mcfly theme
+  synchronization.
+- Optimized shell activation speed by eliminating subshell forks from the
+  activation path. Replaced `_koopa_boolean_nounset` with inline `[[ -o
+  nounset ]]`, inlined `add-to-path-start` deduplication logic fork-free,
+  replaced `_koopa_bin_prefix`/`_koopa_opt_prefix` calls with direct variable
+  expansion, and optimized `duration-start`/`duration-stop` functions.
+- Reworked Homebrew code: consolidated brew helper functions into `brew.py`,
+  simplified the Homebrew installer, and improved sudo handling for brew
+  operations.
+- Hardened bash and zsh activation for Ghostty terminal, adding proper
+  `TERM_PROGRAM` detection in shell headers.
+
+Minor changes:
+
+- Improved consistency of `has_sudo` checks across the codebase; consolidated
+  admin detection logic in `system.py`.
+- Improved Dracula color theme configuration for macOS user preferences.
+- Removed broken BBEdit preference writing for BBEdit 16+ (macOS sandboxing
+  prevents external writes to app containers).
+- Fixed `bumpver` version bump logic.
+- Improved version checks and run updates.
+- Modernized R configuration handling.
+- Resolved RStudio configuration issues.
+- Updated JupyterLab app version.
+- Updated GitHub Copilot CLI instructions.
+- Added `koopa app claude archive-plans` subcommand for archiving claude plan
+  files by date.
+- Added `activation-fork-audit` and `activation-speed-test` developer commands
+  with pytest integration.
+- Added `sshd` configurer.
+
+New apps:
+
+- `bat` (now installed by default).
+- `github-copilot-cli`.
+
 ## koopa 0.17.0 (2026-05-23)
 
 Major changes:

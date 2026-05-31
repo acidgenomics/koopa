@@ -1777,44 +1777,11 @@ _koopa_scripts_private_prefix() {
     return 0
 }
 
-_koopa_xdg_cache_home() {
-    __kvar_string="${XDG_CACHE_HOME:-}"
-    if [ -z "$__kvar_string" ]
-    then
-        __kvar_string="${HOME:?}/.cache"
-    fi
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_xdg_config_dirs() {
-    __kvar_string="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$__kvar_string" ] 
-    then
-        __kvar_string='/etc/xdg'
-    fi
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
 _koopa_xdg_config_home() {
     __kvar_string="${XDG_CONFIG_HOME:-}"
     if [ -z "$__kvar_string" ]
     then
         __kvar_string="${HOME:?}/.config"
-    fi
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_xdg_data_dirs() {
-    __kvar_string="${XDG_DATA_DIRS:-}"
-    if [ -z "$__kvar_string" ]
-    then
-        __kvar_string='/usr/local/share:/usr/share'
     fi
     _koopa_print "$__kvar_string"
     unset -v __kvar_string
@@ -1834,16 +1801,5 @@ _koopa_xdg_data_home() {
 
 _koopa_xdg_local_home() {
     _koopa_print "${HOME:?}/.local"
-    return 0
-}
-
-_koopa_xdg_state_home() {
-    __kvar_string="${XDG_STATE_HOME:-}"
-    if [ -z "$__kvar_string" ]
-    then
-        __kvar_string="$(_koopa_xdg_local_home)/state"
-    fi
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
     return 0
 }
