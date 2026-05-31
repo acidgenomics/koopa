@@ -2181,7 +2181,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "eb23fae151c2ec3b9fa7be2ddf940095acb6a704"
+    "version": "73c16fda96a662481d9abac8675423e5247d1791"
   },
   "du-dust": {
     "bin": [
@@ -4120,7 +4120,7 @@
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
-    "version": "2.46.1"
+    "version": "2.46.0"
   },
   "imagemagick": {
     "date": "2026-05-02",
