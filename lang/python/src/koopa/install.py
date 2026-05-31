@@ -2092,6 +2092,7 @@ def update_koopa(*, verbose: bool = False) -> bool:
         git_branch,
         git_fetch,
         git_last_commit_local,
+        git_merge_abort,
         git_pull,
         git_rebase_abort,
         git_reset,
@@ -2126,6 +2127,8 @@ def update_koopa(*, verbose: bool = False) -> bool:
     if branch == "HEAD":
         alert_note(f"Pinned release detected (detached HEAD) at '{prefix}'.")
         return False
+    git_merge_abort(prefix)
+    git_rebase_abort(prefix)
     commit_before = git_last_commit_local(prefix)
     green = ansi_escape("32")
     reset = ansi_escape("0")

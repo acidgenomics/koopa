@@ -179,6 +179,13 @@ def git_submodule_init(path: str = ".") -> None:
     _git("submodule", "update", "--init", "--recursive", cwd=path, capture=False)
 
 
+def git_merge_abort(path: str = ".") -> None:
+    """Abort an in-progress merge if one exists."""
+    merge_head = os.path.join(path, ".git", "MERGE_HEAD")
+    if os.path.isfile(merge_head):
+        _git("merge", "--abort", cwd=path, capture=False)
+
+
 def git_rebase_abort(path: str = ".") -> None:
     """Abort an in-progress rebase if one exists."""
     git_dir = os.path.join(path, ".git")
