@@ -86,7 +86,9 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     with open(rev_file) as f:
                         installed_rev = int(f.read().strip() or "0")
                 except (ValueError, OSError):
-                    pass
+                    # Treat unreadable/invalid revision metadata as unknown (0).
+                    # The mismatch check below will flag this app as actionable.
+                    installed_rev = 0
             if installed_rev != expected_rev:
                 issues.append(
                     (name, f"{name} revision {installed_rev} != {expected_rev}", True),
