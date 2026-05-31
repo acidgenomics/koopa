@@ -64,12 +64,10 @@ def find_large_files(
     for root, _dirs, files in os.walk(dir_path):
         for f in files:
             full = os.path.join(root, f)
-            try:
+            with contextlib.suppress(OSError):
                 size = os.path.getsize(full)
                 if size >= min_bytes:
                     large.append((full, size / (1024 * 1024)))
-            except OSError:
-                pass
     large.sort(key=lambda x: x[1], reverse=True)
     return large[:max_results]
 
