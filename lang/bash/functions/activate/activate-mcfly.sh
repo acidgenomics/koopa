@@ -9,7 +9,7 @@ _koopa_activate_mcfly() {
     then
         return 0
     fi
-    [[ "${KOOPA_COLOR_MODE:-}" = 'light' ]] && export MCFLY_LIGHT=true
+    _koopa_activate_mcfly_colors
     case "${EDITOR:-}" in
         'nvim' | *'/nvim' | \
         'vim' | *'/vim')

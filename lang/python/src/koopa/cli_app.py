@@ -55,6 +55,9 @@ _APP_TREE: dict[str, Any] = {
         "upgrade": "brew-upgrade",
         "version": "brew-version",
     },
+    "claude": {
+        "archive-plans": "claude-archive-plans",
+    },
     "conda": {
         "clean-cache": "conda-clean-cache",
         "create-env": "conda-create-env",
@@ -1025,6 +1028,108 @@ def _handle_brew_version(args: list[str]) -> None:
     print(brew_version())
 
 
+# -- claude handlers ---------------------------------------------------------
+
+
+def _handle_claude_archive_plans(args: list[str]) -> None:
+    """Handle ``koopa app claude archive-plans``."""
+    import argparse
+    import re
+    from collections import defaultdict
+    from datetime import date, timedelta
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app claude archive-plans",
+        description="Archive old Claude Code plan files into date-based subdirectories.",
+    )
+    parser.add_argument(
+        "--days",
+        type=int,
+        default=14,
+        metavar="N",
+        help="archive plans older than N days (default: 14)",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="preview what would be moved without moving",
+    )
+    parsed = parser.parse_args(args)
+
+    result = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+    )
+    root = result.stdout.strip() if result.returncode == 0 else os.getcwd()
+
+    plans_dir = os.path.join(root, ".claude", "plans")
+    if not os.path.isdir(plans_dir):
+        print(
+            f"Error: Plans directory not found: '{plans_dir}'.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    cutoff = date.today() - timedelta(days=parsed.days)
+    date_prefix_re = re.compile(r"^(\d{4})-(\d{2})-(\d{2})-(.+)$")
+
+    to_move: list[tuple[str, str, str]] = []  # (src_path, dest_dir, dest_name)
+    for entry in sorted(os.listdir(plans_dir)):
+        if not entry.endswith(".md"):
+            continue
+        src = os.path.join(plans_dir, entry)
+        if not os.path.isfile(src):
+            continue
+        m = date_prefix_re.match(entry)
+        if m:
+            try:
+                file_date = date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+            except ValueError:
+                file_date = date.fromtimestamp(os.path.getmtime(src))
+            dest_name = m.group(4)
+        else:
+            file_date = date.fromtimestamp(os.path.getmtime(src))
+            dest_name = entry
+        if file_date >= cutoff:
+            continue
+        dest_dir = os.path.join(
+            plans_dir,
+            "archive",
+            f"{file_date.year:04d}",
+            f"{file_date.month:02d}",
+            f"{file_date.day:02d}",
+        )
+        to_move.append((src, dest_dir, dest_name))
+
+    if not to_move:
+        from koopa.alert import alert_note
+
+        alert_note(f"No plans older than {parsed.days} days to archive.")
+        return
+
+    from koopa.alert import alert, alert_note, alert_success
+
+    verb = "Would archive" if parsed.dry_run else "Archiving"
+    alert(f"{verb} {len(to_move)} plan file(s).")
+
+    dest_counts: dict[str, int] = defaultdict(int)
+    for src, dest_dir, dest_name in to_move:
+        dest_counts[dest_dir] += 1
+        if not parsed.dry_run:
+            os.makedirs(dest_dir, exist_ok=True)
+            shutil.move(src, os.path.join(dest_dir, dest_name))
+
+    for dest_dir, count in sorted(dest_counts.items()):
+        rel = os.path.relpath(dest_dir, plans_dir)
+        print(f"  {count:3d} file(s) -> {rel}")
+
+    if parsed.dry_run:
+        alert_note("Dry run -- no files were moved.")
+    else:
+        alert_success(f"Archived {len(to_move)} plan file(s).")
+
+
 # -- conda handlers ----------------------------------------------------------
 
 
@@ -1961,6 +2066,8 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "brew-uninstall-all-brews": _handle_brew_uninstall_all_brews,
     "brew-upgrade": _handle_brew_upgrade,
     "brew-version": _handle_brew_version,
+    # claude
+    "claude-archive-plans": _handle_claude_archive_plans,
     # conda
     "conda-clean-cache": _handle_conda_clean_cache,
     "conda-create-env": _handle_conda_create_env,

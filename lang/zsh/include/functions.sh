@@ -288,12 +288,7 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
-        if [[ "$new_mode" == 'light' ]]
-        then
-            export MCFLY_LIGHT=true
-        else
-            unset -v MCFLY_LIGHT
-        fi
+        _koopa_activate_mcfly_colors
         return 0
     }
     autoload -Uz add-zsh-hook
@@ -506,6 +501,16 @@ _koopa_activate_lesspipe() {
     return 0
 }
 
+_koopa_activate_mcfly_colors() {
+    if [[ "${KOOPA_COLOR_MODE:-}" == 'light' ]]
+    then
+        export MCFLY_LIGHT=true
+    else
+        unset -v MCFLY_LIGHT
+    fi
+    return 0
+}
+
 _koopa_activate_mcfly() {
     [[ "${__MCFLY_LOADED:-}" = 'loaded' ]] && return 0
     _koopa_is_root && return 0
@@ -525,7 +530,7 @@ _koopa_activate_mcfly() {
             return 0
             ;;
     esac
-    [[ "${KOOPA_COLOR_MODE:-}" = 'light' ]] && export MCFLY_LIGHT=true
+    _koopa_activate_mcfly_colors
     case "${EDITOR:-}" in
         'nvim' | *'/nvim' | \
         'vim' | *'/vim')
