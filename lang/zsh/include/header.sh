@@ -146,6 +146,8 @@ __koopa_zsh_header() {
             return 0
             ;;
     esac
+    KOOPA_SHELL="${ZSH_ARGZERO}"
+    export KOOPA_SHELL
     local -A bool
     bool['activate']=0
     bool['checks']=1
