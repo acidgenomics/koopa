@@ -183,6 +183,17 @@ makes debugging harder.
 The ruff linter warns `PLW1510` when `check` is omitted. The correct fix is
 always `check=True`, not `check=False`.
 
+## New App Entries Require Completion Regeneration
+
+When adding a **new** app to `app.json` (i.e., a brand new entry that didn't
+exist before), always run `koopa develop generate-completions` afterward. The
+completions are generated from the app registry, so a new app name won't appear
+in tab-completion until regenerated.
+
+Toggling `"default": true/false` or updating `"version"`/`"date"` on an
+**existing** entry does NOT require regeneration — the app name is already in
+the completion lists.
+
 ## Plans and TODOs Use `todo.org` (Org Mode)
 
 When preparing future plans or TODO list items for this project, write them to

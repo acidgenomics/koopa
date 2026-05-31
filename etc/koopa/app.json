@@ -3257,8 +3257,8 @@
       "git-filter-repo"
     ],
     "category": "VCS",
-    "date": "2025-05-02",
-    "default": false,
+    "date": "2026-05-31",
+    "default": true,
     "dependencies": [
       "python"
     ],
