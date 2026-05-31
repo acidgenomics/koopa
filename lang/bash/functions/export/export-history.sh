@@ -3,7 +3,7 @@
 _koopa_export_history() {
     if [[ -z "${HISTFILE:-}" ]]
     then
-        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
+        HISTFILE="${HOME:?}/.${KOOPA_SHELL##*/}_history"
     fi
     export HISTFILE
     if [[ ! -f "$HISTFILE" ]] \

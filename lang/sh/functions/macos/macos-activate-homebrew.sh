@@ -11,7 +11,8 @@ _koopa_macos_activate_homebrew() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_brewfile="$(_koopa_xdg_config_home)/homebrew/Brewfile"
+    export HOMEBREW_PREFIX="$__kvar_prefix"
+    __kvar_brewfile="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${__kvar_prefix}/bin"
     if [ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ] && [ -f "$__kvar_brewfile" ]
     then

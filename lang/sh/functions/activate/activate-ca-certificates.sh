@@ -11,7 +11,7 @@ _koopa_activate_ca_certificates() {
     # - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
     #   download.file.html
     # """
-    __kvar_prefix="$(_koopa_xdg_data_home)/ca-certificates"
+    __kvar_prefix="${XDG_DATA_HOME:?}/ca-certificates"
     __kvar_file="${__kvar_prefix}/cacert.pem"
     if [ ! -f "$__kvar_file" ] && _koopa_is_linux
     then

@@ -4,24 +4,12 @@ _koopa_activate_mcfly() {
     [[ "${__MCFLY_LOADED:-}" = 'loaded' ]] && return 0
     _koopa_is_root && return 0
     local mcfly
-    mcfly="$(_koopa_bin_prefix)/mcfly"
+    mcfly="${KOOPA_PREFIX:?}/bin/mcfly"
     if [[ ! -x "$mcfly" ]]
     then
         return 0
     fi
-    local shell
-    shell="${KOOPA_SHELL##*/}"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    local color_mode
-    color_mode="$(_koopa_color_mode)"
-    [[ "$color_mode" = 'light' ]] && export MCFLY_LIGHT=true
+    [[ "${KOOPA_COLOR_MODE:-}" = 'light' ]] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'nvim' | *'/nvim' | \
         'vim' | *'/vim')
@@ -37,10 +25,15 @@ _koopa_activate_mcfly() {
     export MCFLY_INTERFACE_VIEW='TOP'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK'
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    eval "$("$mcfly" init "$shell")"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/mcfly-bash.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$mcfly" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$mcfly" init bash > "$cache_file"
+    fi
+    source "$cache_file"
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }

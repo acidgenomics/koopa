@@ -88,6 +88,13 @@ function _koopa_export_env
             set -gx KOOPA_COLOR_MODE dark
         end
     end
+    set -l __koopa_color_cache "$HOME/.cache/koopa/color-mode"
+    if not test -f "$__koopa_color_cache"
+        or test (string trim < "$__koopa_color_cache") != "$KOOPA_COLOR_MODE"
+        mkdir -p (path dirname "$__koopa_color_cache")
+        printf '%s\n' "$KOOPA_COLOR_MODE" > "$__koopa_color_cache"
+    end
+    set -e __koopa_color_cache
 
     # GCC colors.
     if not set -q GCC_COLORS

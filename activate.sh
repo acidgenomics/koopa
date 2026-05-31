@@ -95,6 +95,10 @@ __koopa_export_koopa_prefix() {
     # Export 'KOOPA_PREFIX' variable.
     # @note Updated 2023-03-09.
     # """
+    if [ -n "${KOOPA_PREFIX:-}" ] && [ -d "${KOOPA_PREFIX}" ]
+    then
+        return 0
+    fi
     __kvar_shell="$(__koopa_shell_name)"
     __kvar_script="$("__koopa_${__kvar_shell}_source")"
     if [ ! -e "$__kvar_script" ]

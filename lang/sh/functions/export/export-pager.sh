@@ -10,7 +10,7 @@ _koopa_export_pager() {
     #   otherwise will return without proper escape code handling.
     # """
     [ -n "${PAGER:-}" ] && return 0
-    __kvar_less="$(_koopa_bin_prefix)/less"
+    __kvar_less="${KOOPA_PREFIX:?}/bin/less"
     if [ -x "$__kvar_less" ]
     then
         export PAGER="${__kvar_less} -R"

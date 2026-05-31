@@ -4,8 +4,8 @@
 _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    __kvar_xdg_data_home="$(_koopa_xdg_data_home)"
+    __kvar_bin_prefix="${KOOPA_PREFIX:?}/bin"
+    __kvar_xdg_data_home="${XDG_DATA_HOME:?}"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
@@ -155,17 +155,18 @@ _koopa_activate_asdf() {
         unset -v __kvar_prefix __kvar_script
         return 0
     fi
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     . "$__kvar_script"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v __kvar_nounset __kvar_prefix __kvar_script
     return 0
 }
 
 _koopa_activate_bat() {
-    [ -x "$(_koopa_bin_prefix)/bat" ] || return 0
-    __kvar_prefix="$(_koopa_xdg_config_home)/bat"
+    [ -x "${KOOPA_PREFIX:?}/bin/bat" ] || return 0
+    __kvar_prefix="${XDG_CONFIG_HOME:?}/bat"
     if [ ! -d "$__kvar_prefix" ]
     then
         unset -v __kvar_prefix
@@ -233,10 +234,11 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     . "$__kvar_script"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_config_dir \
         __kvar_nounset \
@@ -246,7 +248,7 @@ _koopa_activate_broot() {
 }
 
 _koopa_activate_ca_certificates() {
-    __kvar_prefix="$(_koopa_xdg_data_home)/ca-certificates"
+    __kvar_prefix="${XDG_DATA_HOME:?}/ca-certificates"
     __kvar_file="${__kvar_prefix}/cacert.pem"
     if [ ! -f "$__kvar_file" ] && _koopa_is_linux
     then
@@ -288,13 +290,6 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-        __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
-        if [ ! -f "$__kvar_cache_file" ]
-        then
-            mkdir -p "${__kvar_cache_file%/*}"
-            printf '%s\n' "$KOOPA_COLOR_MODE" > "$__kvar_cache_file"
-        fi
-        unset -v __kvar_cache_file
     elif [ -z "${KOOPA_COLOR_MODE:-}" ]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
@@ -302,6 +297,17 @@ _koopa_activate_color_mode() {
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
     then
         export KOOPA_COLOR_MODE
+        __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
+        __kvar_cached=''
+        [ -f "$__kvar_cache_file" ] && \
+            read -r __kvar_cached < "$__kvar_cache_file" 2>/dev/null || true
+        if [ ! -f "$__kvar_cache_file" ] || \
+            [ "$__kvar_cached" != "$KOOPA_COLOR_MODE" ]
+        then
+            mkdir -p "${__kvar_cache_file%/*}"
+            printf '%s\n' "$KOOPA_COLOR_MODE" > "$__kvar_cache_file"
+        fi
+        unset -v __kvar_cache_file __kvar_cached
     else
         unset -v KOOPA_COLOR_MODE
     fi
@@ -321,7 +327,7 @@ _koopa_activate_conda() {
         unset -v __kvar_conda __kvar_prefix
         return 0
     fi
-    __kvar_shell="$(_koopa_shell_name)"
+    __kvar_shell="${KOOPA_SHELL##*/}"
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
@@ -341,7 +347,7 @@ _koopa_activate_conda() {
 }
 
 _koopa_activate_coreutils_aliases() {
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_bin_prefix="${KOOPA_PREFIX:?}/bin"
     if [ -x "${__kvar_bin_prefix}/gcp" ]
     then
         alias gcp='gcp --interactive --recursive --verbose'
@@ -367,7 +373,7 @@ _koopa_activate_coreutils_aliases() {
 }
 
 _koopa_activate_difftastic() {
-    [ -x "$(_koopa_bin_prefix)/difft" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/difft" ] || return 0
     DFT_BACKGROUND="$(_koopa_color_mode)"
     DFT_DISPLAY='side-by-side'
     export DFT_BACKGROUND DFT_DISPLAY
@@ -376,13 +382,13 @@ _koopa_activate_difftastic() {
 
 _koopa_activate_dircolors() {
     [ -n "${SHELL:-}" ] || return 0
-    __kvar_dircolors="$(_koopa_bin_prefix)/gdircolors"
+    __kvar_dircolors="${KOOPA_PREFIX:?}/bin/gdircolors"
     if [ ! -x "$__kvar_dircolors" ]
     then
         unset -v __kvar_dircolors
         return 0
     fi
-    __kvar_prefix="$(_koopa_xdg_config_home)/dircolors"
+    __kvar_prefix="${XDG_CONFIG_HOME:?}/dircolors"
     if [ ! -d "$__kvar_prefix" ]
     then
         unset -v \
@@ -414,15 +420,16 @@ _koopa_activate_dircolors() {
 }
 
 _koopa_activate_direnv() {
-    __kvar_direnv="$(_koopa_bin_prefix)/direnv"
+    __kvar_direnv="${KOOPA_PREFIX:?}/bin/direnv"
     if [ ! -x "$__kvar_direnv" ]
     then
         unset -v __kvar_direnv
         return 0
     fi
-    __kvar_shell="$(_koopa_shell_name)"
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_shell="${KOOPA_SHELL##*/}"
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     unset -v \
         DIRENV_DIFF \
         DIRENV_DIR \
@@ -435,7 +442,7 @@ _koopa_activate_direnv() {
             eval "$("$__kvar_direnv" export "$__kvar_shell")"
             ;;
     esac
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_direnv \
         __kvar_nounset \
@@ -449,7 +456,7 @@ _koopa_activate_docker() {
 }
 
 _koopa_activate_fzf() {
-    [ -x "$(_koopa_bin_prefix)/fzf" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
     then
         _fzf_color="$(_koopa_color_mode)"
@@ -467,7 +474,7 @@ quote=01:warning=01;35"
 }
 
 _koopa_activate_julia() {
-    [ -x "$(_koopa_bin_prefix)/julia" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/julia" ] || return 0
     JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
     JULIA_NUM_THREADS="$(_koopa_cpu_count)"
     export JULIA_DEPOT_PATH JULIA_NUM_THREADS
@@ -475,7 +482,7 @@ _koopa_activate_julia() {
 }
 
 _koopa_activate_lesspipe() {
-    __kvar_lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
+    __kvar_lesspipe="${KOOPA_PREFIX:?}/bin/lesspipe.sh"
     if [ ! -x "$__kvar_lesspipe" ]
     then
         unset -v __kvar_lesspipe
@@ -507,10 +514,11 @@ _koopa_activate_path_helper() {
         unset -v __kvar_path_helper
         return 0
     fi
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     eval "$("$__kvar_path_helper" -s)"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_path_helper
@@ -518,7 +526,7 @@ _koopa_activate_path_helper() {
 }
 
 _koopa_activate_pipx() {
-    [ -x "$(_koopa_bin_prefix)/pipx" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/pipx" ] || return 0
     __kvar_prefix="$(_koopa_pipx_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -583,10 +591,11 @@ _koopa_activate_pyenv() {
         mkdir -p "$PYENV_LOCAL_SHIM"
     fi
     _koopa_add_to_path_start "$PYENV_LOCAL_SHIM"
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     eval "$("$__kvar_pyenv" virtualenv-init -)"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_prefix \
@@ -595,7 +604,7 @@ _koopa_activate_pyenv() {
 }
 
 _koopa_activate_pyright() {
-    [ -x "$(_koopa_bin_prefix)/pyright" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/pyright" ] || return 0
     export PYRIGHT_PYTHON_FORCE_VERSION='latest'
     return 0
 }
@@ -646,10 +655,11 @@ _koopa_activate_rbenv() {
         return 0
     fi
     export RBENV_ROOT="$__kvar_prefix"
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     eval "$("$__kvar_rbenv" init -)"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_prefix \
@@ -658,8 +668,8 @@ _koopa_activate_rbenv() {
 }
 
 _koopa_activate_ripgrep() {
-    [ -x "$(_koopa_bin_prefix)/rg" ] || return 0
-    __kvar_config_file="$(_koopa_xdg_config_home)/ripgrep/config"
+    [ -x "${KOOPA_PREFIX:?}/bin/rg" ] || return 0
+    __kvar_config_file="${XDG_CONFIG_HOME:?}/ripgrep/config"
     if [ -f "$__kvar_config_file" ]
     then
         RIPGREP_CONFIG_PATH="$__kvar_config_file"
@@ -678,10 +688,10 @@ _koopa_activate_ruby() {
 }
 
 _koopa_activate_tealdeer() {
-    [ -x "$(_koopa_bin_prefix)/tldr" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/tldr" ] || return 0
     if [ -z "${TEALDEER_CONFIG_DIR:-}" ]
     then
-        TEALDEER_CONFIG_DIR="$(_koopa_xdg_config_home)/tealdeer"
+        TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
     fi
     export TEALDEER_CONFIG_DIR
     return 0
@@ -732,30 +742,12 @@ _koopa_activate_today_bucket() {
 }
 
 _koopa_activate_xdg() {
-    if [ -z "${XDG_CACHE_HOME:-}" ]
-    then
-        XDG_CACHE_HOME="$(_koopa_xdg_cache_home)"
-    fi
-    if [ -z "${XDG_CONFIG_DIRS:-}" ]
-    then
-        XDG_CONFIG_DIRS="$(_koopa_xdg_config_dirs)"
-    fi
-    if [ -z "${XDG_CONFIG_HOME:-}" ]
-    then
-        XDG_CONFIG_HOME="$(_koopa_xdg_config_home)"
-    fi
-    if [ -z "${XDG_DATA_DIRS:-}" ]
-    then
-        XDG_DATA_DIRS="$(_koopa_xdg_data_dirs)"
-    fi
-    if [ -z "${XDG_DATA_HOME:-}" ]
-    then
-        XDG_DATA_HOME="$(_koopa_xdg_data_home)"
-    fi
-    if [ -z "${XDG_STATE_HOME:-}" ]
-    then
-        XDG_STATE_HOME="$(_koopa_xdg_state_home)"
-    fi
+    [ -z "${XDG_CACHE_HOME:-}" ] && XDG_CACHE_HOME="${HOME:?}/.cache"
+    [ -z "${XDG_CONFIG_DIRS:-}" ] && XDG_CONFIG_DIRS='/etc/xdg'
+    [ -z "${XDG_CONFIG_HOME:-}" ] && XDG_CONFIG_HOME="${HOME:?}/.config"
+    [ -z "${XDG_DATA_DIRS:-}" ] && XDG_DATA_DIRS='/usr/local/share:/usr/share'
+    [ -z "${XDG_DATA_HOME:-}" ] && XDG_DATA_HOME="${HOME:?}/.local/share"
+    [ -z "${XDG_STATE_HOME:-}" ] && XDG_STATE_HOME="${HOME:?}/.local/state"
     export \
         XDG_CACHE_HOME \
         XDG_CONFIG_DIRS \
@@ -773,9 +765,10 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
-    __kvar_shell="$(_koopa_shell_name)"
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_shell="${KOOPA_SHELL##*/}"
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
@@ -785,7 +778,7 @@ _koopa_activate_zoxide() {
             eval "$("$__kvar_zoxide" init 'posix' --hook 'prompt')"
             ;;
     esac
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_shell \
@@ -918,7 +911,25 @@ _koopa_add_to_manpath_end() {
     for __kvar_dir in "$@"
     do
         [ -d "$__kvar_dir" ] || continue
-        MANPATH="$(_koopa_add_to_path_string_end "$MANPATH" "$__kvar_dir")"
+        case ":${MANPATH}:" in
+            *":${__kvar_dir}:"*)
+                __kvar_new=''
+                __kvar_ifs="$IFS"
+                IFS=':'
+                set -- ${MANPATH}
+                IFS="$__kvar_ifs"
+                for __kvar_d in "$@"
+                do
+                    [ "$__kvar_d" = "$__kvar_dir" ] && continue
+                    __kvar_new="${__kvar_new:+${__kvar_new}:}${__kvar_d}"
+                done
+                MANPATH="${__kvar_new}:${__kvar_dir}"
+                unset -v __kvar_d __kvar_ifs __kvar_new
+                ;;
+            *)
+                MANPATH="${MANPATH}:${__kvar_dir}"
+                ;;
+        esac
     done
     export MANPATH
     unset -v __kvar_dir
@@ -930,7 +941,25 @@ _koopa_add_to_manpath_start() {
     for __kvar_dir in "$@"
     do
         [ -d "$__kvar_dir" ] || continue
-        MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$__kvar_dir")"
+        case ":${MANPATH}:" in
+            *":${__kvar_dir}:"*)
+                __kvar_new=''
+                __kvar_ifs="$IFS"
+                IFS=':'
+                set -- ${MANPATH}
+                IFS="$__kvar_ifs"
+                for __kvar_d in "$@"
+                do
+                    [ "$__kvar_d" = "$__kvar_dir" ] && continue
+                    __kvar_new="${__kvar_new:+${__kvar_new}:}${__kvar_d}"
+                done
+                MANPATH="${__kvar_dir}:${__kvar_new}"
+                unset -v __kvar_d __kvar_ifs __kvar_new
+                ;;
+            *)
+                MANPATH="${__kvar_dir}:${MANPATH}"
+                ;;
+        esac
     done
     export MANPATH
     unset -v __kvar_dir
@@ -942,7 +971,25 @@ _koopa_add_to_path_end() {
     for __kvar_dir in "$@"
     do
         [ -d "$__kvar_dir" ] || continue
-        PATH="$(_koopa_add_to_path_string_end "$PATH" "$__kvar_dir")"
+        case ":${PATH}:" in
+            *":${__kvar_dir}:"*)
+                __kvar_new=''
+                __kvar_ifs="$IFS"
+                IFS=':'
+                set -- ${PATH}
+                IFS="$__kvar_ifs"
+                for __kvar_d in "$@"
+                do
+                    [ "$__kvar_d" = "$__kvar_dir" ] && continue
+                    __kvar_new="${__kvar_new:+${__kvar_new}:}${__kvar_d}"
+                done
+                PATH="${__kvar_new}:${__kvar_dir}"
+                unset -v __kvar_d __kvar_ifs __kvar_new
+                ;;
+            *)
+                PATH="${PATH}:${__kvar_dir}"
+                ;;
+        esac
     done
     export PATH
     unset -v __kvar_dir
@@ -954,7 +1001,25 @@ _koopa_add_to_path_start() {
     for __kvar_dir in "$@"
     do
         [ -d "$__kvar_dir" ] || continue
-        PATH="$(_koopa_add_to_path_string_start "$PATH" "$__kvar_dir")"
+        case ":${PATH}:" in
+            *":${__kvar_dir}:"*)
+                __kvar_new=''
+                __kvar_ifs="$IFS"
+                IFS=':'
+                set -- ${PATH}
+                IFS="$__kvar_ifs"
+                for __kvar_d in "$@"
+                do
+                    [ "$__kvar_d" = "$__kvar_dir" ] && continue
+                    __kvar_new="${__kvar_new:+${__kvar_new}:}${__kvar_d}"
+                done
+                PATH="${__kvar_dir}:${__kvar_new}"
+                unset -v __kvar_d __kvar_ifs __kvar_new
+                ;;
+            *)
+                PATH="${__kvar_dir}:${PATH}"
+                ;;
+        esac
     done
     export PATH
     unset -v __kvar_dir
@@ -1011,18 +1076,6 @@ _koopa_arch() {
     __kvar_string="$(uname -m)"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
-    return 0
-}
-
-_koopa_boolean_nounset() {
-    if _koopa_is_set_nounset
-    then
-        __kvar_bool=1
-    else
-        __kvar_bool=0
-    fi
-    _koopa_print "$__kvar_bool"
-    unset -v __kvar_bool
     return 0
 }
 
@@ -1119,7 +1172,7 @@ _koopa_cpu_count() {
 }
 
 _koopa_duration_start() {
-    __kvar_date="$(_koopa_bin_prefix)/gdate"
+    __kvar_date="${KOOPA_PREFIX:?}/bin/gdate"
     if [ ! -x "$__kvar_date" ]
     then
         unset -v __kvar_date
@@ -1132,10 +1185,8 @@ _koopa_duration_start() {
 }
 
 _koopa_duration_stop() {
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    __kvar_bc="${__kvar_bin_prefix}/gbc"
-    __kvar_date="${__kvar_bin_prefix}/gdate"
-    unset -v __kvar_bin_prefix
+    __kvar_bc="${KOOPA_PREFIX:?}/bin/gbc"
+    __kvar_date="${KOOPA_PREFIX:?}/bin/gdate"
     if [ ! -x "$__kvar_bc" ] || [ ! -x "$__kvar_date" ]
     then
         unset -v __kvar_bc __kvar_date
@@ -1181,6 +1232,26 @@ _koopa_is_light_mode() {
         unset -v __kvar_cache_file
         [ "$(/usr/bin/defaults read -g 'AppleInterfaceStyle' 2>/dev/null)" != 'Dark' ]
     else
+        __kvar_in_multiplexer=0
+        case "${TERM:-}" in screen*|tmux*) __kvar_in_multiplexer=1 ;; esac
+        [ -n "${TMUX:-}" ] && __kvar_in_multiplexer=1
+        if [ "$__kvar_in_multiplexer" -eq 1 ]
+        then
+            unset -v __kvar_in_multiplexer
+            __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
+            if [ -f "$__kvar_cache_file" ]
+            then
+                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null \
+                    || __kvar_mode=''
+                [ "$__kvar_mode" = 'light' ]
+                __kvar_result=$?
+                unset -v __kvar_cache_file __kvar_mode
+                return "$__kvar_result"
+            fi
+            unset -v __kvar_cache_file
+            return 1
+        fi
+        unset -v __kvar_in_multiplexer
         _koopa_terminal_is_light_background
     fi
 }
@@ -1350,6 +1421,8 @@ _koopa_str_detect_posix() {
 
 _koopa_terminal_is_light_background() {
     [ -t 0 ] || return 1
+    case "${TERM:-}" in screen*|tmux*) return 1 ;; esac
+    [ -n "${TMUX:-}" ] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
     stty raw -echo min 0 time 2 2>/dev/null
@@ -1389,7 +1462,7 @@ _koopa_walk() {
 _koopa_export_editor() {
     if [ -z "${EDITOR:-}" ]
     then
-        __kvar_editor="$(_koopa_bin_prefix)/nvim"
+        __kvar_editor="${KOOPA_PREFIX:?}/bin/nvim"
         [ -x "$__kvar_editor" ] || __kvar_editor='vim'
         EDITOR="$__kvar_editor"
         unset -v __kvar_editor
@@ -1411,7 +1484,7 @@ _koopa_export_gnupg() {
 _koopa_export_history() {
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
+        HISTFILE="${HOME:?}/.${KOOPA_SHELL##*/}_history"
     fi
     export HISTFILE
     if [ ! -f "$HISTFILE" ] \
@@ -1470,7 +1543,7 @@ _koopa_export_koopa_shell() {
 
 _koopa_export_manpager() {
     [ -n "${MANPAGER:-}" ] && return 0
-    __kvar_nvim="$(_koopa_bin_prefix)/nvim"
+    __kvar_nvim="${KOOPA_PREFIX:?}/bin/nvim"
     if [ -x "$__kvar_nvim" ]
     then
         export MANPAGER="${__kvar_nvim} +Man!"
@@ -1481,7 +1554,7 @@ _koopa_export_manpager() {
 
 _koopa_export_pager() {
     [ -n "${PAGER:-}" ] && return 0
-    __kvar_less="$(_koopa_bin_prefix)/less"
+    __kvar_less="${KOOPA_PREFIX:?}/bin/less"
     if [ -x "$__kvar_less" ]
     then
         export PAGER="${__kvar_less} -R"
@@ -1567,10 +1640,6 @@ _koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-_koopa_is_set_nounset() {
-    _koopa_str_detect_posix "$(set +o)" 'set -o nounset'
-}
-
 _koopa_is_subshell() {
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
 }
@@ -1598,7 +1667,8 @@ _koopa_macos_activate_homebrew() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_brewfile="$(_koopa_xdg_config_home)/homebrew/Brewfile"
+    export HOMEBREW_PREFIX="$__kvar_prefix"
+    __kvar_brewfile="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${__kvar_prefix}/bin"
     if [ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ] && [ -f "$__kvar_brewfile" ]
     then

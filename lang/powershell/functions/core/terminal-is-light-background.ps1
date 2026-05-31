@@ -2,6 +2,7 @@
 # @note Updated 2026-05-30.
 function _koopa_terminal_is_light_background {
     if (-not [Console]::IsInputRedirected) { return $false }
+    if ($env:TMUX -or $env:TERM -like 'screen*' -or $env:TERM -like 'tmux*') { return $false }
     try {
         $oldMode = [Console]::TreatControlCAsInput
         [Console]::TreatControlCAsInput = $true

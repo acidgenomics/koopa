@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 _koopa_activate_bat() {
-    [[ -x "$(_koopa_bin_prefix)/bat" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/bat" ]] || return 0
     local prefix
     prefix="${XDG_CONFIG_HOME:?}/bat"
     if [[ ! -d "$prefix" ]]

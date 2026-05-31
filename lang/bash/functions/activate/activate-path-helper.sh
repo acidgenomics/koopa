@@ -7,8 +7,8 @@ _koopa_activate_path_helper() {
     then
         return 0
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     eval "$("$path_helper" -s)"
     [[ "$nounset" -eq 1 ]] && set -o nounset

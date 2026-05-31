@@ -2,6 +2,9 @@
 # @note Updated 2026-05-30.
 export def _koopa_terminal_is_light_background [] {
     try {
+        if ($env.TMUX? != null) or ($env.TERM? | default "" | str starts-with "screen") or ($env.TERM? | default "" | str starts-with "tmux") {
+            return false
+        }
         let response = (
             do {
                 print -n "\x1b]11;?\x1b\\"

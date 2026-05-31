@@ -1,7 +1,7 @@
 #!/bin/sh
 
 _koopa_activate_fzf() {
-    [ -x "$(_koopa_bin_prefix)/fzf" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
     then
         _fzf_color="$(_koopa_color_mode)"

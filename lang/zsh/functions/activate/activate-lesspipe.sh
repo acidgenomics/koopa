@@ -2,7 +2,7 @@
 
 _koopa_activate_lesspipe() {
     local lesspipe
-    lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
+    lesspipe="${KOOPA_PREFIX:?}/bin/lesspipe.sh"
     if [[ ! -x "$lesspipe" ]]
     then
         return 0

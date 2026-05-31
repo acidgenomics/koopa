@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 _koopa_activate_pipx() {
-    [[ -x "$(_koopa_bin_prefix)/pipx" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/pipx" ]] || return 0
     local prefix
-    prefix="$(_koopa_pipx_prefix)"
+    prefix="${XDG_DATA_HOME:?}/pipx"
     if [[ ! -d "$prefix" ]]
     then
         mkdir -p "$prefix" >/dev/null

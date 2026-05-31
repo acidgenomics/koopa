@@ -6,7 +6,18 @@ _koopa_add_to_manpath_end() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        MANPATH="$(_koopa_add_to_path_string_end "$MANPATH" "$dir")"
+        if [[ ":${MANPATH}:" == *":${dir}:"* ]]
+        then
+            MANPATH="${MANPATH//:${dir}:/:}"
+            MANPATH="${MANPATH/#${dir}:/}"
+            MANPATH="${MANPATH/%:${dir}/}"
+        fi
+        if [[ -z "$MANPATH" ]]
+        then
+            MANPATH="$dir"
+        else
+            MANPATH="${MANPATH}:${dir}"
+        fi
     done
     export MANPATH
     return 0

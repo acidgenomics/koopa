@@ -5,7 +5,7 @@ _koopa_activate_asdf() {
     prefix="${1:-}"
     if [[ -z "$prefix" ]]
     then
-        prefix="$(_koopa_asdf_prefix)"
+        prefix="${KOOPA_PREFIX:?}/opt/asdf"
     fi
     if [[ ! -d "$prefix" ]]
     then
@@ -17,10 +17,11 @@ _koopa_activate_asdf() {
     then
         return 0
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     source "$script"
+    unalias asdf 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }

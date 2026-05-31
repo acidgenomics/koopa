@@ -16,9 +16,10 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
-    __kvar_shell="$(_koopa_shell_name)"
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_shell="${KOOPA_SHELL##*/}"
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
@@ -28,7 +29,7 @@ _koopa_activate_zoxide() {
             eval "$("$__kvar_zoxide" init 'posix' --hook 'prompt')"
             ;;
     esac
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_shell \

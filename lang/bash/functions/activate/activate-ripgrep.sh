@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _koopa_activate_ripgrep() {
-    [[ -x "$(_koopa_bin_prefix)/rg" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/rg" ]] || return 0
     local config_file
     config_file="${XDG_CONFIG_HOME:?}/ripgrep/config"
     if [[ -f "$config_file" ]]

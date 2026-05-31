@@ -13,10 +13,11 @@ _koopa_activate_path_helper() {
         unset -v __kvar_path_helper
         return 0
     fi
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     eval "$("$__kvar_path_helper" -s)"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_path_helper

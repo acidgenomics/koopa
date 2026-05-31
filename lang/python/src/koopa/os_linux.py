@@ -236,7 +236,7 @@ ChallengeResponseAuthentication no
 UsePAM yes
 X11Forwarding no
 PrintMotd no
-AcceptEnv LANG LC_*
+AcceptEnv LANG LC_* KOOPA_COLOR_MODE
 Subsystem sftp /usr/lib/openssh/sftp-server
 """
     Path("/etc/ssh/sshd_config.d/99-koopa.conf").write_text(config)

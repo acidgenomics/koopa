@@ -25,7 +25,7 @@ _koopa_activate_conda() {
         unset -v __kvar_conda __kvar_prefix
         return 0
     fi
-    __kvar_shell="$(_koopa_shell_name)"
+    __kvar_shell="${KOOPA_SHELL##*/}"
     case "$__kvar_shell" in
         'bash' | \
         'zsh')

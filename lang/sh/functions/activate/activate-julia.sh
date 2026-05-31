@@ -13,7 +13,7 @@ _koopa_activate_julia() {
     # - https://docs.julialang.org/en/v1/manual/multi-threading/
     # - https://github.com/JuliaLang/julia/issues/43949
     # """
-    [ -x "$(_koopa_bin_prefix)/julia" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/julia" ] || return 0
     JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
     JULIA_NUM_THREADS="$(_koopa_cpu_count)"
     export JULIA_DEPOT_PATH JULIA_NUM_THREADS

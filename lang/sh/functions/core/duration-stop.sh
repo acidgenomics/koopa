@@ -5,10 +5,8 @@ _koopa_duration_stop() {
     # Stop activation duration timer.
     # @note Updated 2023-03-11.
     # """
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    __kvar_bc="${__kvar_bin_prefix}/gbc"
-    __kvar_date="${__kvar_bin_prefix}/gdate"
-    unset -v __kvar_bin_prefix
+    __kvar_bc="${KOOPA_PREFIX:?}/bin/gbc"
+    __kvar_date="${KOOPA_PREFIX:?}/bin/gdate"
     if [ ! -x "$__kvar_bc" ] || [ ! -x "$__kvar_date" ]
     then
         unset -v __kvar_bc __kvar_date

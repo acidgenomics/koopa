@@ -11,6 +11,8 @@ _koopa_terminal_is_light_background() {
     # Not supported: tmux/screen (intercept escape sequences).
     # """
     [ -t 0 ] || return 1
+    case "${TERM:-}" in screen*|tmux*) return 1 ;; esac
+    [ -n "${TMUX:-}" ] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
     stty raw -echo min 0 time 2 2>/dev/null

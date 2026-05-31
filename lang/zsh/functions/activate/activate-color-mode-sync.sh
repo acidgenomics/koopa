@@ -17,6 +17,12 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
+        if [[ "$new_mode" == 'light' ]]
+        then
+            export MCFLY_LIGHT=true
+        else
+            unset -v MCFLY_LIGHT
+        fi
         return 0
     }
     autoload -Uz add-zsh-hook

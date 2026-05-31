@@ -2,7 +2,7 @@
 
 _koopa_activate_starship() {
     local starship
-    starship="$(_koopa_bin_prefix)/starship"
+    starship="${KOOPA_PREFIX:?}/bin/starship"
     if [[ ! -x "$starship" ]]
     then
         return 0
@@ -21,12 +21,15 @@ _koopa_activate_starship() {
     then
         unset -v STARSHIP_SHELL
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
-    if [[ "$nounset" -eq 1 ]]
-    then
-        return 0
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/starship-${shell}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$starship" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$starship" init "$shell" > "$cache_file"
     fi
-    eval "$("$starship" init "$shell")"
+    source "$cache_file"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
