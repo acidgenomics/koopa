@@ -31,6 +31,7 @@ _koopa_complete() {
         ['app/aws/s3/sync-git-repo']='--help --delete --dryrun --profile'
         ['app/bowtie2/align/paired-end']='--help --index-dir --fastq-dir --output-dir --output-format --reference-fasta'
         ['app/bowtie2/index']='--help --genome-fasta-file --output-dir'
+        ['app/claude/archive-plans']='--help --days --dry-run'
         ['app/conda/create-env']='--help --file --prefix --force --latest'
         ['app/docker/build']='--help --local --remote --memory --no-push'
         ['app/docker/build-all-tags']='--help --local --remote'
@@ -66,7 +67,7 @@ _koopa_complete() {
         ['configure']='--help --verbose'
         ['develop']='--help'
         ['develop/activation-fork-audit']='--help --threshold-bash --threshold-zsh --verbose'
-        ['develop/activation-speed-test']='--help --runs --shells --threshold-bash --threshold-zsh --verbose'
+        ['develop/activation-speed-test']='--help --runs --shells --threshold-bash --threshold-fish --threshold-zsh --verbose'
         ['develop/app-revdeps']='--help --all'
         ['develop/check-app-versions']='--help --json --source --no-update --s3-upload --reset-cache'
         ['develop/conda-candidates']='--help --verify'
@@ -107,6 +108,7 @@ _koopa_complete() {
                         'bioconda'
                         'bowtie2'
                         'brew'
+                        'claude'
                         'conda'
                         'current'
                         'docker'
@@ -962,6 +964,9 @@ _koopa_complete() {
                                 'upgrade'
                                 'version'
                             )
+                            ;;
+                        'claude')
+                            args+=('archive-plans')
                             ;;
                         'conda')
                             args+=(
