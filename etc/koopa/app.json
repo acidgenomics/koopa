@@ -10010,7 +10010,7 @@
       "zsh.1"
     ],
     "revision": 1,
-    "src_url": "https://www.zsh.org/pub/zsh-{version}.tar.xz",
+    "src_url": "https://www.zsh.org/pub/old/zsh-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.zsh.org/pub/"
