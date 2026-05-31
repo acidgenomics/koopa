@@ -1,11 +1,29 @@
 """Install metadata functions."""
 
 import os
+import re
 from datetime import UTC, datetime
 from json import dumps
 
 from koopa.io import import_app_json
 from koopa.system import os_id
+
+_SENSITIVE_KEY_RE = re.compile(
+    r"(_KEY|_TOKEN|_SECRET|_PASSWORD|_CREDENTIAL|_AUTH|_PAT)$"
+    r"|(_KEY_|_TOKEN_|_SECRET_|_PASSWORD_|_CREDENTIAL_|_AUTH_|_PAT_)"
+    r"|(API_KEY|API_TOKEN|API_SECRET|API_PAT|ACCESS_TOKEN|REFRESH_TOKEN)"
+    r"|(AUTH_SOCK|AUTH_BASE64)",
+    re.IGNORECASE,
+)
+
+
+def _filter_environ() -> dict[str, str]:
+    """Filter sensitive variables from environment before serialization."""
+    return {
+        k: v
+        for k, v in sorted(os.environ.items())
+        if not _SENSITIVE_KEY_RE.search(k)
+    }
 
 
 def write_install_info(output_file: str, name: str, version: str) -> None:
@@ -54,7 +72,7 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
         "dependencies": deps,
         "dep_revisions": dep_revisions,
         "dep_versions": dep_versions,
-        "environ": dict(sorted(os.environ.items())),
+        "environ": _filter_environ(),
     }
     with open(output_file, "w") as fh:
         fh.write(dumps(info, indent=2, sort_keys=False))
