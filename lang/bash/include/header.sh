@@ -241,6 +241,8 @@ __koopa_bash_header() {
             return 0
             ;;
     esac
+    KOOPA_SHELL="${BASH}"
+    export KOOPA_SHELL
     local -A app bool dict
     bool['activate']=0
     bool['checks']=1
