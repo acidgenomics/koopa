@@ -118,14 +118,24 @@ with open(os.path.join(schemes_dir, "MyTheme.bbColorScheme"), "w") as fh:
 # Instead, tell the user:
 print("⚠ BBEdit: set the active color scheme in BBEdit > Preferences > Appearance.")
 
-## Dotfiles Are Managed by Chezmoi — Edit the Source
+## Dotfiles Are Managed by Chezmoi — Always Edit the Source First
 
-Home-directory dotfiles (e.g., `~/.claude/settings.json`, `~/.bashrc`,
-`~/.config/...`) are managed by chezmoi. The source of truth lives in
-`~/.config/koopa/dotfiles/chezmoi/`. When modifying a dotfile, always edit
-the corresponding chezmoi source template/file (e.g.,
-`dot_claude/settings.json`) in addition to (or instead of) the deployed copy.
-Otherwise the change will be overwritten on the next `chezmoi apply`.
+Home-directory dotfiles (e.g., `~/.config/nvim/`, `~/.claude/settings.json`,
+`~/.bashrc`) are managed by chezmoi. The source of truth is:
+
+```
+~/.local/share/koopa/opt/dotfiles/chezmoi/
+```
+
+**Always edit the chezmoi source file first.** Never edit only the deployed
+copy — it will be overwritten on the next `chezmoi apply`.
+
+When a task involves modifying a deployed dotfile (e.g.,
+`~/.config/nvim/lua/plugins/treesitter.lua`), immediately locate and edit the
+corresponding source file (e.g.,
+`~/.local/share/koopa/opt/dotfiles/chezmoi/dot_config/nvim/lua/plugins/treesitter.lua`)
+in the same operation. Do not treat the deployed copy and the source as two
+separate steps — edit the source, and let chezmoi deploy it.
 
 ## ShellCheck Does Not Support Zsh — Never Suggest It for `lang/zsh/`
 
