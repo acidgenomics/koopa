@@ -1,10 +1,15 @@
+.env
 .koopa-binary
 .koopa-install.log
 .vscode/
+/.claude/settings.local.json
 /app/
 /bin/
 /bootstrap/
 /coverage/
+/etc/koopa/build-times.json
+/etc/koopa/vendor.json
 /libexec/
 /opt/
-/share/man/man1/
+/share/
+__pycache__/

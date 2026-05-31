@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+_koopa_assert_has_args_eq() {
+    # """
+    # Assert that an expected number of arguments have been passed.
+    # @note Updated 2020-07-03.
+    # """
+    if [[ "$#" -ne 2 ]]
+    then
+        _koopa_stop '"_koopa_assert_has_args_eq" requires 2 args.'
+    fi
+    if [[ "${1:?}" -ne "${2:?}" ]]
+    then
+        _koopa_stop 'Invalid number of arguments.'
+    fi
+    return 0
+}

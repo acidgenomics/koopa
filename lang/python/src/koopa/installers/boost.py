@@ -1,0 +1,61 @@
+"""Install boost."""
+
+import os
+import subprocess
+import sys
+
+from koopa.build import app_prefix
+from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+
+
+def main(
+    *,
+    name: str,
+    version: str,
+    prefix: str,
+    passthrough_args: list[str] | None = None,
+) -> None:
+    """Install boost."""
+    env = activate_app_deps()
+    icu4c_prefix = app_prefix("icu4c")
+    subprocess_env = env.to_env_dict()
+    cc = os.environ.get("CC", "gcc")
+    toolset = os.path.basename(cc)
+    if sys.platform == "darwin" and toolset == "gcc":
+        toolset = "clang"
+    download_extract_cd()
+    jobs = os.cpu_count() or 1
+    bootstrap_args = [
+        f"--libdir={prefix}/lib",
+        f"--prefix={prefix}",
+        f"--with-icu={icu4c_prefix}",
+        f"--with-toolset={toolset}",
+        "--without-libraries=log,mpi,python",
+    ]
+    cppflags = subprocess_env.get("CPPFLAGS", "")
+    ldflags = subprocess_env.get("LDFLAGS", "")
+    b2_args = [
+        "-q",
+        "-d+2",
+        f"-j{jobs}",
+        f"--libdir={prefix}/lib",
+        f"--prefix={prefix}",
+        f"cxxflags={cppflags}",
+        "link=shared",
+        f"linkflags={ldflags}",
+        "runtime-link=shared",
+        f"toolset={toolset}",
+        "threading=multi",
+        "variant=release",
+        "install",
+    ]
+    subprocess.run(
+        ["./bootstrap.sh", *bootstrap_args],
+        env=subprocess_env,
+        check=True,
+    )
+    subprocess.run(
+        ["./b2", *b2_args],
+        env=subprocess_env,
+        check=True,
+    )

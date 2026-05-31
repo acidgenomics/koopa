@@ -1,3 +1,0 @@
-"""
-Koopa modules.
-"""
