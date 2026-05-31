@@ -1,7 +1,0 @@
-** TODO Add notes on how to fix a failed merge state:
-    The machine is stuck in a failed merge (not rebase — git used merge strategy here). Run these three commands on that machine:
-
-    git merge --abort
-    git fetch origin
-    git reset --hard origin/develop
-    merge --abort clears the MERGING state, then the fetch + hard reset lands you on the current remote HEAD, discarding the diverged local history.
