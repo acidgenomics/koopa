@@ -179,11 +179,23 @@ def git_submodule_init(path: str = ".") -> None:
     _git("submodule", "update", "--init", "--recursive", cwd=path, capture=False)
 
 
-def git_reset(path: str = ".", *, hard: bool = False) -> None:
+def git_rebase_abort(path: str = ".") -> None:
+    """Abort an in-progress rebase if one exists."""
+    git_dir = os.path.join(path, ".git")
+    rebase_in_progress = os.path.isdir(
+        os.path.join(git_dir, "rebase-merge")
+    ) or os.path.isdir(os.path.join(git_dir, "rebase-apply"))
+    if rebase_in_progress:
+        _git("rebase", "--abort", cwd=path, capture=False)
+
+
+def git_reset(path: str = ".", *, ref: str | None = None, hard: bool = False) -> None:
     """Reset git repository."""
     args = ["reset"]
     if hard:
         args.append("--hard")
+    if ref:
+        args.append(ref)
     _git(*args, cwd=path, capture=False)
 
 

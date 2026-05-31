@@ -2088,7 +2088,15 @@ def update_koopa(*, verbose: bool = False) -> bool:
         ansi_escape,
         styled_name,
     )
-    from koopa.git import git_branch, git_last_commit_local, git_pull, is_git_repo
+    from koopa.git import (
+        git_branch,
+        git_fetch,
+        git_last_commit_local,
+        git_pull,
+        git_rebase_abort,
+        git_reset,
+        is_git_repo,
+    )
 
     if os.environ.pop("_KOOPA_UPDATE_PULLED", ""):
         _zsh_compaudit_set_permissions()
@@ -2137,11 +2145,21 @@ def update_koopa(*, verbose: bool = False) -> bool:
                 text=True,
                 check=True,
             )
-        except Exception as e:
-            from koopa.alert import warn
+        except Exception:
+            alert_note(
+                "Pull failed (remote may have been force-pushed)."
+                " Resetting to remote."
+            )
+            try:
+                git_rebase_abort(prefix)
+                git_fetch(prefix)
+                git_reset(prefix, ref=f"origin/{branch}", hard=True)
+                result = None
+            except Exception as recovery_err:
+                from koopa.alert import warn
 
-            warn(f"Failed to update koopa source code: {e}")
-            return False
+                warn(f"Failed to update koopa source code: {recovery_err}")
+                return False
     commit_after = git_last_commit_local(prefix)
     python_changed = False
     if commit_before != commit_after:
