@@ -3258,7 +3258,7 @@
     ],
     "category": "VCS",
     "date": "2026-05-31",
-    "default": true,
+    "default": false,
     "dependencies": [
       "python"
     ],
