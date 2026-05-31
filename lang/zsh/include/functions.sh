@@ -1271,50 +1271,6 @@ _koopa_add_to_path_start() {
     return 0
 }
 
-_koopa_add_to_path_string_end() {
-    local string
-    string="${1:-}"
-    local dir
-    dir="${2:?}"
-    if _koopa_str_detect_posix "$string" ":${dir}"
-    then
-        string="$( \
-            _koopa_remove_from_path_string \
-                "$string" ":${dir}" \
-        )"
-    fi
-    if [[ -z "$string" ]]
-    then
-        string="$dir"
-    else
-        string="${string}:${dir}"
-    fi
-    _koopa_print "$string"
-    return 0
-}
-
-_koopa_add_to_path_string_start() {
-    local string
-    string="${1:-}"
-    local dir
-    dir="${2:?}"
-    if _koopa_str_detect_posix "$string" "${dir}:"
-    then
-        string="$( \
-            _koopa_remove_from_path_string \
-                "$string" "${dir}" \
-        )"
-    fi
-    if [[ -z "$string" ]]
-    then
-        string="$dir"
-    else
-        string="${dir}:${string}"
-    fi
-    _koopa_print "$string"
-    return 0
-}
-
 _koopa_arch() {
     local string
     string="$(uname -m)"
@@ -1470,53 +1426,6 @@ _koopa_is_light_mode() {
     fi
 }
 
-_koopa_locate_shell() {
-    local shell
-    shell="${KOOPA_SHELL:-}"
-    if [[ -n "$shell" ]]
-    then
-        _koopa_print "$shell"
-        return 0
-    fi
-    local pid
-    pid="${$}"
-    if _koopa_is_installed 'ps'
-    then
-        shell="$( \
-            ps -p "$pid" -o 'comm=' \
-            | sed 's/^-//' \
-        )"
-    elif _koopa_is_linux
-    then
-        local proc_file
-        proc_file="/proc/${pid}/exe"
-        [[ -f "$proc_file" ]] || return 1
-        shell="$(_koopa_realpath "$proc_file")"
-        shell="$(basename "$shell")"
-    else
-        if [[ -n "${BASH_VERSION:-}" ]]
-        then
-            shell='bash'
-        elif [[ -n "${KSH_VERSION:-}" ]]
-        then
-            shell='ksh'
-        elif [[ -n "${ZSH_VERSION:-}" ]]
-        then
-            shell='zsh'
-        else
-            shell='sh'
-        fi
-    fi
-    [[ -n "$shell" ]] || return 1
-    case "$shell" in
-        '/bin/sh' | 'sh')
-            shell="$(_koopa_realpath '/bin/sh')"
-            ;;
-    esac
-    _koopa_print "$shell"
-    return 0
-}
-
 _koopa_logged_in_user_count() {
     local string
     string="$(_koopa_logged_in_users | wc -l)"
@@ -1600,15 +1509,6 @@ _koopa_remove_from_path_string() {
     local result="${(j/:/)parts}"
     [[ -n "$result" ]] || return 1
     _koopa_print "$result"
-    return 0
-}
-
-_koopa_shell_name() {
-    local shell
-    shell="$(_koopa_locate_shell)"
-    shell="$(basename "$shell")"
-    [[ -n "$shell" ]] || return 1
-    _koopa_print "$shell"
     return 0
 }
 
@@ -1883,11 +1783,6 @@ _koopa_macos_activate_homebrew() {
     return 0
 }
 
-_koopa_asdf_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/asdf"
-    return 0
-}
-
 _koopa_bin_prefix() {
     _koopa_print "${KOOPA_PREFIX:?}/bin"
     return 0
@@ -1895,11 +1790,6 @@ _koopa_bin_prefix() {
 
 _koopa_bootstrap_prefix() {
     _koopa_print "$(_koopa_xdg_data_home)/koopa-bootstrap"
-    return 0
-}
-
-_koopa_conda_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/conda"
     return 0
 }
 
@@ -1936,10 +1826,6 @@ _koopa_homebrew_prefix() {
     return 0
 }
 
-_koopa_julia_packages_prefix() {
-    _koopa_print "${HOME:?}/.julia"
-}
-
 _koopa_koopa_prefix() {
     _koopa_print "${KOOPA_PREFIX:?}"
     return 0
@@ -1950,65 +1836,12 @@ _koopa_opt_prefix() {
     return 0
 }
 
-_koopa_pipx_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)/pipx"
-    return 0
-}
-
-_koopa_pyenv_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/pyenv"
-    return 0
-}
-
-_koopa_rbenv_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/rbenv"
-    return 0
-}
-
-_koopa_scripts_private_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/scripts-private"
-    return 0
-}
-
-_koopa_xdg_cache_home() {
-    local string
-    string="${XDG_CACHE_HOME:-}"
-    if [[ -z "$string" ]]
-    then
-        string="${HOME:?}/.cache"
-    fi
-    _koopa_print "$string"
-    return 0
-}
-
-_koopa_xdg_config_dirs() {
-    local string
-    string="${XDG_CONFIG_DIRS:-}"
-    if [[ -z "$string" ]]
-    then
-        string='/etc/xdg'
-    fi
-    _koopa_print "$string"
-    return 0
-}
-
 _koopa_xdg_config_home() {
     local string
     string="${XDG_CONFIG_HOME:-}"
     if [[ -z "$string" ]]
     then
         string="${HOME:?}/.config"
-    fi
-    _koopa_print "$string"
-    return 0
-}
-
-_koopa_xdg_data_dirs() {
-    local string
-    string="${XDG_DATA_DIRS:-}"
-    if [[ -z "$string" ]]
-    then
-        string='/usr/local/share:/usr/share'
     fi
     _koopa_print "$string"
     return 0
@@ -2027,16 +1860,5 @@ _koopa_xdg_data_home() {
 
 _koopa_xdg_local_home() {
     _koopa_print "${HOME:?}/.local"
-    return 0
-}
-
-_koopa_xdg_state_home() {
-    local string
-    string="${XDG_STATE_HOME:-}"
-    if [[ -z "$string" ]]
-    then
-        string="$(_koopa_xdg_local_home)/state"
-    fi
-    _koopa_print "$string"
     return 0
 }
