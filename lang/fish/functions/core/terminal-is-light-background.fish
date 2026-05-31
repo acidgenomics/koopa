@@ -2,6 +2,9 @@ function _koopa_terminal_is_light_background
     # Query terminal background color via OSC 11.
     # @note Updated 2026-05-30.
     isatty stdin; or return 1
+    if set -q TMUX; or string match -q 'screen*' -- "$TERM"; or string match -q 'tmux*' -- "$TERM"
+        return 1
+    end
     set -l old_settings (stty -g 2>/dev/null); or return 1
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty

@@ -1,14 +1,10 @@
 * High complexity
-** DONE Let's be as ruthless as possible with bash, zsh, and sh shell activation, removing as many unnecessary forks as possible during activation. Critically evaluate functions like _koopa_bin_prefix to see if they are basically dead code. Also evaluate whether we can remove legacy code like _koopa_boolean_nounset that slow down shell activation and we may be able to deprecate/remove.
-** DONE The deep research workflow is running in the background. I'll update you with the findings once it completes. This will investigate OSC 11 through tmux passthrough, newer protocols like mode 2031, and push-based mechanisms for terminal dark/light mode detection over SSH.
-    What is mode 2031?
-** TODO Confirm that we're using the right approach for dark/light mode switching.
-    For dynamic dark/light mode switching: Mode 2031 is the right answer?
-    Since both local and remote run tmux 3.6b, and Ghostty supports mode 2031, we can leverage tmux's native hooks:
-    client-dark-theme hook fires when the terminal reports dark mode
-    client-light-theme hook fires when the terminal reports light mode
-** STARTED Use ultrathink mode to critically evaluate whether we need to look for similar fork optimizations for other shells like fish, elvish, powershell, nushell in addition to our recently finished evaluation of bash, zsh, and sh (POSIX) shell.
-** TODO Should we remove OSC 11 support in favor of Mode 2031 approach instead?
+** TODO Confirm that we don't have Zsh passthrough weirdness with Ghostty terminal.
+    The real cause: macOS's default shell is /bin/zsh. When you configure Ghostty with command = /koopa/bin/bash -il, Ghostty still auto-injects its shell integration using the POSIX injection mechanism — it starts bash in --posix mode with ENV=ghostty.bash. In that startup sequence, bash inherits the full macOS GUI environment.
+
+    The key: macOS's BASH environment variable. macOS sets BASH=/bin/bash as a system environment variable. When the user's zsh session runs, zsh also sets BASH to its own path (/bin/zsh) as a compatibility variable — and exports it. When Ghostty's bash subprocess inherits this, BASH=/bin/zsh, so ${BASH##*/} = "zsh", causing all the zsh caches to load.
+
+    The Ghostty config itself isn't wrong. The issue is that the caching code was using $BASH to detect the shell name — a variable that's writable/inheritable. The fix (hardcoding "bash" in all bash-specific activation files) is the correct solution. No changes needed to the Ghostty dotfiles config.
 * Medium complexity
 ** DONE The architectural options to get below ~70ms would be: cache direnv hook zsh, starship init zsh, and mcfly init zsh output to ~/.cache/koopa/ invalidated by binary mtime — saves ~30ms but meaningfully increases complexity. I'd only recommend that if the current ~165ms is still bothering you after this next phase.
 ** TODO Check and see if we can properly wire is light mode support from local macOS laptop to EC2 instance connected over SSH through tmux.
@@ -24,7 +20,8 @@
 The diagnostics are all pre-existing: the zsh ShellCheck warning is just ShellCheck saying it doesn't support zsh syntax (expected), and the two sh informational notes are on lines in the original code, not my additions.
     The ShellCheck diagnostics on zsh files are pre-existing false positives
     Is there a lingering issue with shellcheck trying to run on zsh scripts that we need to fix?
-** TODO mcfly light color mode text is unreadable currently in the terminal. I think previously we may have customized the light theme (black and white mode potentially?) to deal with this situation. But currently the suggested autocompletion commands are the same color as the terminal background, making it impossible to use.
+** STARTED mcfly light color mode text is unreadable currently in the terminal. I think previously we may have customized the light theme (black and white mode potentially?) to deal with this situation. But currently the suggested autocompletion commands are the same color as the terminal background, making it impossible to use.
+    Need to confirm that the working fix is in before marking completed.
 ** TODO Learn lesson that deep-reserach and ultrathink are useful for deeper reasoning about difficult problems, especially for potential solutions that may require newer context from a web search. The deep-research skill is very helpful for this use case.
 ** DONE Learn the lesson that we don't want situations like this with nounset to happen again:
     This returns early and skips starship entirely when nounset is active. That's the bug. The old starship code used _koopa_boolean_nounset to save/restore nounset around the eval. After the commit, starship just bails out if nounset is on. If nounset is set during activation, starship never gets initialized — PROMPT_COMMAND stays as _direnv_hook (set by direnv), and then VS Code's shell integration captures it raw.
@@ -39,3 +36,17 @@ The diagnostics are all pre-existing: the zsh ShellCheck warning is just ShellCh
     All ShellCheck warnings are just "zsh not supported" — ignore them. Now verify there are no remaining broken patterns and regenerate
 ** TODO Add a new CLI function, potentially under `koopa run` that helps us better organize Claude plans in `.claude/plans` of current project. Potentially we can keep using YYYY-MM-DD prefix. Does it make more sense to organize them into YYYY/MM/DD subdirectories, or will Claude Code not then see those plans if they are in nested directories? I'm guessing flat YYYY-MM-DD-slug.md style at the top of `.claude/plans` is more optimal but I'm not sure.
 ** TODO Evaluate whether we now have any potential unused functions and dead code after our changes to shell activation.
+** TODO We want to clean up the mcfly color activation handling code as a separate function:
+    ──────────────────────────────────────────┐
+    • 17: _koopa_activate_color_mode_sync() { │
+    ──────────────────────────────────────────┘
+    17 ⋮ 17 │        _koopa_activate_fzf
+    18 ⋮ 18 │        _koopa_activate_dircolors
+    19 ⋮ 19 │        _koopa_activate_difftastic
+        ⋮ 20 │        if [[ "$new_mode" == 'light' ]]
+        ⋮ 21 │        then
+        ⋮ 22 │            export MCFLY_LIGHT=true
+        ⋮ 23 │        else
+        ⋮ 24 │            unset -v MCFLY_LIGHT
+        ⋮ 25 │        fi
+    20 ⋮ 26 │        return 0

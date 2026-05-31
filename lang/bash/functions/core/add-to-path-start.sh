@@ -6,7 +6,19 @@ _koopa_add_to_path_start() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        PATH="$(_koopa_add_to_path_string_start "$PATH" "$dir")"
+        # Remove existing occurrence then prepend — no subshell needed.
+        if [[ ":${PATH}:" == *":${dir}:"* ]]
+        then
+            PATH="${PATH//:${dir}:/:}"
+            PATH="${PATH/#${dir}:/}"
+            PATH="${PATH/%:${dir}/}"
+        fi
+        if [[ -z "$PATH" ]]
+        then
+            PATH="$dir"
+        else
+            PATH="${dir}:${PATH}"
+        fi
     done
     export PATH
     return 0

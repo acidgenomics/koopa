@@ -1268,7 +1268,263 @@ def _handle_conda_candidates(args: list[str]) -> None:
         print(f"  {name}: {current} -> {conda} ({channel})")
 
 
+def _handle_activation_speed_test(args: list[str]) -> None:
+    """Handle ``koopa develop activation-speed-test``.
+
+    Measures shell activation time for all supported shells and reports
+    whether each shell meets its threshold. Exits non-zero if any shell
+    exceeds its threshold.
+    """
+    import argparse
+    import statistics
+    import time
+
+    from koopa.alert import alert, alert_success
+    from koopa.prefix import koopa_prefix
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop activation-speed-test",
+        description="Measure shell activation time and enforce speed thresholds.",
+    )
+    parser.add_argument(
+        "--runs",
+        type=int,
+        default=10,
+        metavar="N",
+        help="number of timed runs per shell (default: 10)",
+    )
+    parser.add_argument(
+        "--shells",
+        nargs="+",
+        default=["bash", "zsh", "fish"],
+        metavar="SHELL",
+        help="shells to test (default: bash zsh fish)",
+    )
+    parser.add_argument(
+        "--threshold-bash",
+        type=int,
+        default=150,
+        metavar="MS",
+        help="fail if bash mean exceeds this ms (default: 150)",
+    )
+    parser.add_argument(
+        "--threshold-fish",
+        type=int,
+        default=200,
+        metavar="MS",
+        help="fail if fish mean exceeds this ms (default: 200)",
+    )
+    parser.add_argument(
+        "--threshold-zsh",
+        type=int,
+        default=400,
+        metavar="MS",
+        help="fail if zsh mean exceeds this ms (default: 400)",
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="print every run time, not just the summary",
+    )
+    parsed = parser.parse_args(args)
+
+    thresholds: dict[str, int] = {
+        "bash": parsed.threshold_bash,
+        "fish": parsed.threshold_fish,
+        "zsh": parsed.threshold_zsh,
+    }
+    prefix = koopa_prefix()
+    failures: list[str] = []
+
+    for shell in parsed.shells:
+        shell_bin = shutil.which(shell)
+        if shell_bin is None:
+            print(f"  {shell}: not found, skipping.")
+            continue
+        alert(f"Timing {shell} activation ({parsed.runs} runs).")
+        times_ms: list[float] = []
+        # Determine the activation flag — bash needs --login, zsh does not.
+        if shell == "bash":
+            cmd = [shell_bin, "--login", "-i", "-c", "exit"]
+        else:
+            cmd = [shell_bin, "-i", "-c", "exit"]
+        for _ in range(parsed.runs):
+            t0 = time.monotonic()
+            subprocess.run(
+                cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            elapsed_ms = (time.monotonic() - t0) * 1000
+            times_ms.append(elapsed_ms)
+            if parsed.verbose:
+                print(f"    {elapsed_ms:.0f}ms")
+        # Drop the slowest outlier (first run is often cold-cache).
+        times_sorted = sorted(times_ms)
+        trimmed = times_sorted[1:] if len(times_sorted) > 2 else times_sorted
+        mean_ms = statistics.mean(trimmed)
+        median_ms = statistics.median(trimmed)
+        min_ms = min(trimmed)
+        max_ms = max(trimmed)
+        threshold = thresholds.get(shell)
+        status = ""
+        if threshold is not None:
+            if mean_ms > threshold:
+                status = f"  FAIL (threshold: {threshold}ms)"
+                failures.append(
+                    f"{shell}: mean {mean_ms:.0f}ms exceeds threshold {threshold}ms"
+                )
+            else:
+                status = f"  PASS (threshold: {threshold}ms)"
+        print(
+            f"  {shell}: "
+            f"mean={mean_ms:.0f}ms  "
+            f"median={median_ms:.0f}ms  "
+            f"min={min_ms:.0f}ms  "
+            f"max={max_ms:.0f}ms"
+            f"{status}"
+        )
+        # Emit the koopa prefix so the user knows which installation was timed.
+        print(f"    prefix: {prefix}")
+
+    if failures:
+        print("\nActivation speed regressions detected:", file=sys.stderr)
+        for msg in failures:
+            print(f"  {msg}", file=sys.stderr)
+        sys.exit(1)
+    alert_success("All shells meet their activation speed thresholds.")
+
+
+def _handle_activation_fork_audit(args: list[str]) -> None:
+    """Handle ``koopa develop activation-fork-audit``.
+
+    Counts subprocess forks (``$(...)``) in the shell activation path and
+    compares against thresholds. Exits non-zero if any threshold is exceeded.
+    This is a static analysis check — no shell is spawned.
+    """
+    import argparse
+    import re
+
+    from koopa.alert import alert, alert_success
+    from koopa.prefix import koopa_prefix
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop activation-fork-audit",
+        description=(
+            "Count $(...) subprocess forks in activation-path shell files "
+            "and enforce upper bounds."
+        ),
+    )
+    parser.add_argument(
+        "--threshold-bash",
+        type=int,
+        default=43,
+        metavar="N",
+        help="fail if bash fork count exceeds this (default: 43)",
+    )
+    parser.add_argument(
+        "--threshold-zsh",
+        type=int,
+        default=39,
+        metavar="N",
+        help="fail if zsh fork count exceeds this (default: 39)",
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="print every file that contains forks",
+    )
+    parsed = parser.parse_args(args)
+
+    prefix = koopa_prefix()
+
+    # Activation-path directories: activate/, export/, macos/ function dirs
+    # plus the shell-specific header (which contains __koopa_activate_koopa).
+    activation_dirs: dict[str, list[str]] = {
+        "bash": [
+            os.path.join(prefix, "lang", "bash", "functions", "activate"),
+            os.path.join(prefix, "lang", "bash", "functions", "export"),
+            os.path.join(prefix, "lang", "bash", "functions", "macos"),
+        ],
+        "zsh": [
+            os.path.join(prefix, "lang", "zsh", "functions", "activate"),
+            os.path.join(prefix, "lang", "zsh", "functions", "export"),
+            os.path.join(prefix, "lang", "zsh", "functions", "macos"),
+        ],
+    }
+    activation_headers: dict[str, str] = {
+        "bash": os.path.join(prefix, "lang", "bash", "include", "header.sh"),
+        "zsh": os.path.join(prefix, "lang", "zsh", "include", "header.sh"),
+    }
+    # Match $(...) that aren't in comments.
+    fork_re = re.compile(r"\$\(")
+    comment_re = re.compile(r"^\s*#")
+
+    failures: list[str] = []
+
+    for shell in ("bash", "zsh"):
+        alert(f"Auditing {shell} activation-path fork count.")
+        total_forks = 0
+        fork_details: list[tuple[str, int, str]] = []
+
+        # Collect all .sh files from the activation directories.
+        sh_files: list[str] = []
+        for d in activation_dirs[shell]:
+            if not os.path.isdir(d):
+                continue
+            for root, _dirs, files in os.walk(d):
+                for f in sorted(files):
+                    if f.endswith(".sh"):
+                        sh_files.append(os.path.join(root, f))
+        # Add the header.
+        header = activation_headers[shell]
+        if os.path.isfile(header):
+            sh_files.append(header)
+
+        for sh_file in sorted(sh_files):
+            file_forks = 0
+            try:
+                with open(sh_file) as fh:
+                    for line in fh:
+                        if comment_re.match(line):
+                            continue
+                        file_forks += len(fork_re.findall(line))
+            except OSError:
+                continue
+            if file_forks > 0:
+                rel = os.path.relpath(sh_file, prefix)
+                fork_details.append((rel, file_forks, sh_file))
+                total_forks += file_forks
+
+        threshold = (
+            parsed.threshold_bash if shell == "bash" else parsed.threshold_zsh
+        )
+        status = "PASS" if total_forks <= threshold else "FAIL"
+        print(
+            f"  {shell}: {total_forks} forks  "
+            f"(threshold: {threshold})  {status}"
+        )
+        if parsed.verbose:
+            for rel, count, _ in sorted(fork_details, key=lambda x: -x[1]):
+                print(f"    {count:3d}  {rel}")
+
+        if total_forks > threshold:
+            failures.append(
+                f"{shell}: {total_forks} forks exceeds threshold {threshold}"
+            )
+
+    if failures:
+        print("\nActivation fork count regressions detected:", file=sys.stderr)
+        for msg in failures:
+            print(f"  {msg}", file=sys.stderr)
+        sys.exit(1)
+    alert_success("All shells meet their activation fork count thresholds.")
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
+    "activation-speed-test": _handle_activation_speed_test,
+    "activation-fork-audit": _handle_activation_fork_audit,
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
     "update-docs": _handle_update_docs,

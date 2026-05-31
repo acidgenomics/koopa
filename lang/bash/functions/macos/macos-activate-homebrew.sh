@@ -7,6 +7,7 @@ _koopa_macos_activate_homebrew() {
     then
         return 0
     fi
+    export HOMEBREW_PREFIX="${dict['prefix']}"
     dict['brewfile']="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${dict['prefix']}/bin"
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] \

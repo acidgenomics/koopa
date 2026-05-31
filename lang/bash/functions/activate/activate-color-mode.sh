@@ -9,12 +9,6 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-        local cache_file="${HOME:?}/.cache/koopa/color-mode"
-        if [[ ! -f "$cache_file" ]]
-        then
-            mkdir -p "${cache_file%/*}"
-            printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
-        fi
     elif [[ -z "${KOOPA_COLOR_MODE:-}" ]]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
@@ -22,6 +16,13 @@ _koopa_activate_color_mode() {
     if [[ -n "${KOOPA_COLOR_MODE:-}" ]]
     then
         export KOOPA_COLOR_MODE
+        local cache_file="${HOME:?}/.cache/koopa/color-mode"
+        if [[ ! -f "$cache_file" ]] || \
+            [[ "$(<"$cache_file")" != "$KOOPA_COLOR_MODE" ]]
+        then
+            mkdir -p "${cache_file%/*}"
+            printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
+        fi
     else
         unset -v KOOPA_COLOR_MODE
     fi

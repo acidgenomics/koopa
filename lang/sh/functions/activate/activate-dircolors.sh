@@ -10,13 +10,13 @@ _koopa_activate_dircolors() {
     # Ensure this follows '_koopa_activate_color_mode'.
     # """
     [ -n "${SHELL:-}" ] || return 0
-    __kvar_dircolors="$(_koopa_bin_prefix)/gdircolors"
+    __kvar_dircolors="${KOOPA_PREFIX:?}/bin/gdircolors"
     if [ ! -x "$__kvar_dircolors" ]
     then
         unset -v __kvar_dircolors
         return 0
     fi
-    __kvar_prefix="$(_koopa_xdg_config_home)/dircolors"
+    __kvar_prefix="${XDG_CONFIG_HOME:?}/dircolors"
     if [ ! -d "$__kvar_prefix" ]
     then
         unset -v \

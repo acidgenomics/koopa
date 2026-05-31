@@ -5,7 +5,7 @@ _koopa_duration_start() {
     # Start activation duration timer.
     # @note Updated 2023-03-11.
     # """
-    __kvar_date="$(_koopa_bin_prefix)/gdate"
+    __kvar_date="${KOOPA_PREFIX:?}/bin/gdate"
     if [ ! -x "$__kvar_date" ]
     then
         unset -v __kvar_date

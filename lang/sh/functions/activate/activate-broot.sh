@@ -46,11 +46,12 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$__kvar_script"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_config_dir \
         __kvar_nounset \

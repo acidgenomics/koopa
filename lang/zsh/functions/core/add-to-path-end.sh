@@ -6,7 +6,16 @@ _koopa_add_to_path_end() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        PATH="$(_koopa_add_to_path_string_end "$PATH" "$dir")"
+        local -a _parts
+        _parts=("${(@s/:/)PATH}")
+        _parts=("${(@)_parts:#${dir}}")
+        PATH="${(j/:/)_parts}"
+        if [[ -z "$PATH" ]]
+        then
+            PATH="$dir"
+        else
+            PATH="${PATH}:${dir}"
+        fi
     done
     export PATH
     return 0

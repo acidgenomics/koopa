@@ -2,7 +2,7 @@
 
 _koopa_duration_start() {
     local date
-    date="$(_koopa_bin_prefix)/gdate"
+    date="${KOOPA_PREFIX:?}/bin/gdate"
     if [[ ! -x "$date" ]]
     then
         return 0

@@ -12,7 +12,7 @@ _koopa_export_manpager() {
     #     use_neovim_as_the_default_man_page_viewer/
     # """
     [ -n "${MANPAGER:-}" ] && return 0
-    __kvar_nvim="$(_koopa_bin_prefix)/nvim"
+    __kvar_nvim="${KOOPA_PREFIX:?}/bin/nvim"
     if [ -x "$__kvar_nvim" ]
     then
         export MANPAGER="${__kvar_nvim} +Man!"

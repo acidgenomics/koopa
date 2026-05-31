@@ -3,7 +3,7 @@
 _koopa_activate_pyenv() {
     [[ -n "${PYENV_ROOT:-}" ]] && return 0
     local prefix
-    prefix="$(_koopa_pyenv_prefix)"
+    prefix="${KOOPA_PREFIX:?}/opt/pyenv"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -21,10 +21,16 @@ _koopa_activate_pyenv() {
         mkdir -p "$PYENV_LOCAL_SHIM"
     fi
     _koopa_add_to_path_start "$PYENV_LOCAL_SHIM"
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    eval "$("$pyenv" virtualenv-init -)"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/pyenv-${KOOPA_SHELL##*/}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$pyenv" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$pyenv" virtualenv-init - > "$cache_file"
+    fi
+    source "$cache_file"
+    unalias pyenv 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }

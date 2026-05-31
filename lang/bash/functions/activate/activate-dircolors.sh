@@ -3,7 +3,7 @@
 _koopa_activate_dircolors() {
     [[ -n "${SHELL:-}" ]] || return 0
     local dircolors
-    dircolors="$(_koopa_bin_prefix)/gdircolors"
+    dircolors="${KOOPA_PREFIX:?}/bin/gdircolors"
     if [[ ! -x "$dircolors" ]]
     then
         return 0
@@ -15,7 +15,7 @@ _koopa_activate_dircolors() {
         return 0
     fi
     local conf_file
-    conf_file="${prefix}/dircolors-$(_koopa_color_mode)"
+    conf_file="${prefix}/dircolors-${KOOPA_COLOR_MODE:?}"
     if [[ ! -f "$conf_file" ]]
     then
         return 0

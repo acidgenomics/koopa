@@ -9,7 +9,26 @@ _koopa_add_to_path_end() {
     for __kvar_dir in "$@"
     do
         [ -d "$__kvar_dir" ] || continue
-        PATH="$(_koopa_add_to_path_string_end "$PATH" "$__kvar_dir")"
+        case ":${PATH}:" in
+            *":${__kvar_dir}:"*)
+                __kvar_new=''
+                __kvar_ifs="$IFS"
+                IFS=':'
+                # shellcheck disable=SC2086
+                set -- ${PATH}
+                IFS="$__kvar_ifs"
+                for __kvar_d in "$@"
+                do
+                    [ "$__kvar_d" = "$__kvar_dir" ] && continue
+                    __kvar_new="${__kvar_new:+${__kvar_new}:}${__kvar_d}"
+                done
+                PATH="${__kvar_new}:${__kvar_dir}"
+                unset -v __kvar_d __kvar_ifs __kvar_new
+                ;;
+            *)
+                PATH="${PATH}:${__kvar_dir}"
+                ;;
+        esac
     done
     export PATH
     unset -v __kvar_dir

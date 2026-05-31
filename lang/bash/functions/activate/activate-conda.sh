@@ -2,7 +2,7 @@
 
 _koopa_activate_conda() {
     local prefix
-    prefix="$(_koopa_conda_prefix)"
+    prefix="${KOOPA_PREFIX:?}/opt/conda"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -14,7 +14,7 @@ _koopa_activate_conda() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -24,8 +24,11 @@ _koopa_activate_conda() {
             ;;
     esac
     [[ "$(type -t conda)" == 'alias' ]] && unalias conda
-    local conda_setup
-    conda_setup="$("$conda" "shell.${shell}" 'hook')"
-    eval "$conda_setup"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/conda-${shell}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$conda" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$conda" "shell.${shell}" 'hook' > "$cache_file"
+    fi
+    source "$cache_file"
     return 0
 }

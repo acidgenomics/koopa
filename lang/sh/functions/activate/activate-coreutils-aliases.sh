@@ -13,7 +13,7 @@ _koopa_activate_coreutils_aliases() {
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # gmv on macOS can run into issues on NFS shares.
     # """
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_bin_prefix="${KOOPA_PREFIX:?}/bin"
     if [ -x "${__kvar_bin_prefix}/gcp" ]
     then
         alias gcp='gcp --interactive --recursive --verbose'

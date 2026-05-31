@@ -9,7 +9,7 @@ _koopa_activate_pipx() {
     # - https://pypa.github.io/pipx/docs/
     # - https://pipxproject.github.io/pipx/installation/
     # """
-    [ -x "$(_koopa_bin_prefix)/pipx" ] || return 0
+    [ -x "${KOOPA_PREFIX:?}/bin/pipx" ] || return 0
     __kvar_prefix="$(_koopa_pipx_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then

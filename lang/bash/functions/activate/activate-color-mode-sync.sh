@@ -17,9 +17,18 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
+        if [[ "$new_mode" == 'light' ]]
+        then
+            export MCFLY_LIGHT=true
+        else
+            unset -v MCFLY_LIGHT
+        fi
         return 0
     }
-    if [[ -n "${PROMPT_COMMAND:-}" ]]
+    if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]
+    then
+        PROMPT_COMMAND+=('_koopa_bash_color_mode_sync')
+    elif [[ -n "${PROMPT_COMMAND:-}" ]]
     then
         PROMPT_COMMAND="${PROMPT_COMMAND};_koopa_bash_color_mode_sync"
     else

@@ -2,7 +2,7 @@
 
 _koopa_activate_coreutils_aliases() {
     local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
+    bin_prefix="${KOOPA_PREFIX:?}/bin"
     if [[ -x "${bin_prefix}/gcp" ]]
     then
         alias gcp='gcp --interactive --recursive --verbose'

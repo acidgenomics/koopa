@@ -1,12 +1,10 @@
 #!/usr/bin/env zsh
 
 _koopa_duration_stop() {
-    local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
     local bc
-    bc="${bin_prefix}/gbc"
+    bc="${KOOPA_PREFIX:?}/bin/gbc"
     local date
-    date="${bin_prefix}/gdate"
+    date="${KOOPA_PREFIX:?}/bin/gdate"
     if [[ ! -x "$bc" ]] || [[ ! -x "$date" ]]
     then
         return 0

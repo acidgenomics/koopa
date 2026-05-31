@@ -4,7 +4,7 @@ _koopa_export_editor() {
     if [[ -z "${EDITOR:-}" ]]
     then
         local editor
-        editor="$(_koopa_bin_prefix)/nvim"
+        editor="${KOOPA_PREFIX:?}/bin/nvim"
         [[ -x "$editor" ]] || editor='vim'
         EDITOR="$editor"
     fi

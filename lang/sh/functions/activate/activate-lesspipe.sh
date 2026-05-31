@@ -18,7 +18,7 @@ _koopa_activate_lesspipe() {
     # - Use extended ANSI codes, for Markdown rendering in iTerm2.
     #   https://github.com/wofr06/lesspipe/issues/48
     # """
-    __kvar_lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
+    __kvar_lesspipe="${KOOPA_PREFIX:?}/bin/lesspipe.sh"
     if [ ! -x "$__kvar_lesspipe" ]
     then
         unset -v __kvar_lesspipe

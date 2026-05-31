@@ -11,6 +11,13 @@ fn is-light-mode {
             } catch { }
             not (eq $style 'Dark')
         }
+    } elif (or (has-env TMUX) (str:has-prefix (get-env TERM) 'screen') (str:has-prefix (get-env TERM) 'tmux')) {
+        var cache-file = $E:HOME'/.cache/koopa/color-mode'
+        if (path:is-regular $cache-file) {
+            eq (str:trim-space (slurp < $cache-file)) 'light'
+        } else {
+            put $false
+        }
     } else {
         terminal-is-light-background
     }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _koopa_activate_tealdeer() {
-    [[ -x "$(_koopa_bin_prefix)/tldr" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/tldr" ]] || return 0
     if [[ -z "${TEALDEER_CONFIG_DIR:-}" ]]
     then
         TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"

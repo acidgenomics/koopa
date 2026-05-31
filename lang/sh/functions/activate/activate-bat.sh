@@ -7,8 +7,8 @@ _koopa_activate_bat() {
     #
     # Ensure this follows '_koopa_activate_color_mode'.
     # """
-    [ -x "$(_koopa_bin_prefix)/bat" ] || return 0
-    __kvar_prefix="$(_koopa_xdg_config_home)/bat"
+    [ -x "${KOOPA_PREFIX:?}/bin/bat" ] || return 0
+    __kvar_prefix="${XDG_CONFIG_HOME:?}/bat"
     if [ ! -d "$__kvar_prefix" ]
     then
         unset -v __kvar_prefix

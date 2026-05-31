@@ -21,10 +21,11 @@ _koopa_activate_rbenv() {
         return 0
     fi
     export RBENV_ROOT="$__kvar_prefix"
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
     eval "$("$__kvar_rbenv" init -)"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_nounset \
         __kvar_prefix \

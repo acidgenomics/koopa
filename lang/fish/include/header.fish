@@ -10,6 +10,9 @@ if test "$fish_major" -lt 3
     return 0
 end
 
+# Cache OS name once to avoid repeated uname forks.
+set -g __koopa_os (uname -s)
+
 # Source function files.
 for __kvar_file in $KOOPA_PREFIX/lang/fish/functions/*/*.fish
     source "$__kvar_file"

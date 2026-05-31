@@ -21,7 +21,7 @@ _koopa_activate_zsh_completion() {
     #   installer creates.
     # """
     local opt_prefix
-    opt_prefix="$(_koopa_opt_prefix)"
+    opt_prefix="${KOOPA_PREFIX:?}/opt"
     # aws-cli zsh completion.
     local aws_zsh
     aws_zsh="${opt_prefix}/aws-cli/share/zsh/site-functions/aws_zsh_completer.sh"

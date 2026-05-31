@@ -7,8 +7,8 @@ _koopa_activate_aliases() {
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    __kvar_xdg_data_home="$(_koopa_xdg_data_home)"
+    __kvar_bin_prefix="${KOOPA_PREFIX:?}/bin"
+    __kvar_xdg_data_home="${XDG_DATA_HOME:?}"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'

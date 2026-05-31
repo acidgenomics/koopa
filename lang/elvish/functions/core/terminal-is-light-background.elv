@@ -2,6 +2,10 @@
 # @note Updated 2026-05-30.
 fn terminal-is-light-background {
     try {
+        if (or (has-env TMUX) (str:has-prefix (get-env TERM) 'screen') (str:has-prefix (get-env TERM) 'tmux')) {
+            put $false
+            return
+        }
         var old-settings = (stty -g)
         stty raw -echo min 0 time 2
         print "\x1b]11;?\x1b\\" > /dev/tty

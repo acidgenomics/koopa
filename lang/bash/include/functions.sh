@@ -5,7 +5,7 @@ _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
     local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
+    bin_prefix="${KOOPA_PREFIX:?}/bin"
     local xdg_data_home
     xdg_data_home="${XDG_DATA_HOME:?}"
     alias ......='cd ../../../../../'
@@ -144,7 +144,7 @@ _koopa_activate_asdf() {
     prefix="${1:-}"
     if [[ -z "$prefix" ]]
     then
-        prefix="$(_koopa_asdf_prefix)"
+        prefix="${KOOPA_PREFIX:?}/opt/asdf"
     fi
     if [[ ! -d "$prefix" ]]
     then
@@ -156,10 +156,11 @@ _koopa_activate_asdf() {
     then
         return 0
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     source "$script"
+    unalias asdf 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
@@ -246,7 +247,7 @@ _koopa_activate_bashrc_files() {
 }
 
 _koopa_activate_bat() {
-    [[ -x "$(_koopa_bin_prefix)/bat" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/bat" ]] || return 0
     local prefix
     prefix="${XDG_CONFIG_HOME:?}/bat"
     if [[ ! -d "$prefix" ]]
@@ -285,15 +286,15 @@ _koopa_activate_bootstrap() {
 }
 
 _koopa_activate_broot() {
-    [[ -x "$(_koopa_bin_prefix)/broot" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/broot" ]] || return 0
     local config_dir
-    config_dir="$(_koopa_xdg_config_home)/broot"
+    config_dir="${XDG_CONFIG_HOME:?}/broot"
     if [[ ! -d "$config_dir" ]]
     then
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -308,10 +309,11 @@ _koopa_activate_broot() {
     then
         return 0
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     source "$script"
+    unalias br 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
@@ -367,9 +369,18 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
+        if [[ "$new_mode" == 'light' ]]
+        then
+            export MCFLY_LIGHT=true
+        else
+            unset -v MCFLY_LIGHT
+        fi
         return 0
     }
-    if [[ -n "${PROMPT_COMMAND:-}" ]]
+    if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]
+    then
+        PROMPT_COMMAND+=('_koopa_bash_color_mode_sync')
+    elif [[ -n "${PROMPT_COMMAND:-}" ]]
     then
         PROMPT_COMMAND="${PROMPT_COMMAND};_koopa_bash_color_mode_sync"
     else
@@ -387,12 +398,6 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-        local cache_file="${HOME:?}/.cache/koopa/color-mode"
-        if [[ ! -f "$cache_file" ]]
-        then
-            mkdir -p "${cache_file%/*}"
-            printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
-        fi
     elif [[ -z "${KOOPA_COLOR_MODE:-}" ]]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
@@ -400,6 +405,13 @@ _koopa_activate_color_mode() {
     if [[ -n "${KOOPA_COLOR_MODE:-}" ]]
     then
         export KOOPA_COLOR_MODE
+        local cache_file="${HOME:?}/.cache/koopa/color-mode"
+        if [[ ! -f "$cache_file" ]] || \
+            [[ "$(<"$cache_file")" != "$KOOPA_COLOR_MODE" ]]
+        then
+            mkdir -p "${cache_file%/*}"
+            printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
+        fi
     else
         unset -v KOOPA_COLOR_MODE
     fi
@@ -408,7 +420,7 @@ _koopa_activate_color_mode() {
 
 _koopa_activate_conda() {
     local prefix
-    prefix="$(_koopa_conda_prefix)"
+    prefix="${KOOPA_PREFIX:?}/opt/conda"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -420,7 +432,7 @@ _koopa_activate_conda() {
         return 0
     fi
     local shell
-    shell="$(_koopa_shell_name)"
+    shell="${KOOPA_SHELL##*/}"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -430,15 +442,18 @@ _koopa_activate_conda() {
             ;;
     esac
     [[ "$(type -t conda)" == 'alias' ]] && unalias conda
-    local conda_setup
-    conda_setup="$("$conda" "shell.${shell}" 'hook')"
-    eval "$conda_setup"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/conda-${shell}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$conda" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$conda" "shell.${shell}" 'hook' > "$cache_file"
+    fi
+    source "$cache_file"
     return 0
 }
 
 _koopa_activate_coreutils_aliases() {
     local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
+    bin_prefix="${KOOPA_PREFIX:?}/bin"
     if [[ -x "${bin_prefix}/gcp" ]]
     then
         alias gcp='gcp --interactive --recursive --verbose'
@@ -463,8 +478,8 @@ _koopa_activate_coreutils_aliases() {
 }
 
 _koopa_activate_difftastic() {
-    [[ -x "$(_koopa_bin_prefix)/difft" ]] || return 0
-    DFT_BACKGROUND="$(_koopa_color_mode)"
+    [[ -x "${KOOPA_PREFIX:?}/bin/difft" ]] || return 0
+    DFT_BACKGROUND="${KOOPA_COLOR_MODE:?}"
     DFT_DISPLAY='side-by-side'
     export DFT_BACKGROUND DFT_DISPLAY
     return 0
@@ -473,7 +488,7 @@ _koopa_activate_difftastic() {
 _koopa_activate_dircolors() {
     [[ -n "${SHELL:-}" ]] || return 0
     local dircolors
-    dircolors="$(_koopa_bin_prefix)/gdircolors"
+    dircolors="${KOOPA_PREFIX:?}/bin/gdircolors"
     if [[ ! -x "$dircolors" ]]
     then
         return 0
@@ -485,7 +500,7 @@ _koopa_activate_dircolors() {
         return 0
     fi
     local conf_file
-    conf_file="${prefix}/dircolors-$(_koopa_color_mode)"
+    conf_file="${prefix}/dircolors-${KOOPA_COLOR_MODE:?}"
     if [[ ! -f "$conf_file" ]]
     then
         return 0
@@ -502,28 +517,26 @@ _koopa_activate_dircolors() {
 
 _koopa_activate_direnv() {
     local direnv
-    direnv="$(_koopa_bin_prefix)/direnv"
+    direnv="${KOOPA_PREFIX:?}/bin/direnv"
     if [[ ! -x "$direnv" ]]
     then
         return 0
     fi
-    local shell
-    shell="${KOOPA_SHELL##*/}"
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     unset -v \
         DIRENV_DIFF \
         DIRENV_DIR \
         DIRENV_FILE \
         DIRENV_WATCHES
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            eval "$("$direnv" hook "$shell")"
-            eval "$("$direnv" export "$shell")"
-            ;;
-    esac
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/direnv-hook-bash.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$direnv" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$direnv" hook bash > "$cache_file"
+    fi
+    source "$cache_file"
+    eval "$("$direnv" export bash)"
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
@@ -534,12 +547,10 @@ _koopa_activate_docker() {
 }
 
 _koopa_activate_fzf() {
-    [[ -x "$(_koopa_bin_prefix)/fzf" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/fzf" ]] || return 0
     if [[ -z "${FZF_DEFAULT_OPTS:-}" ]]
     then
-        local _fzf_color
-        _fzf_color="$(_koopa_color_mode)"
-        export FZF_DEFAULT_OPTS="--border --color ${_fzf_color} --multi"
+        export FZF_DEFAULT_OPTS="--border --color ${KOOPA_COLOR_MODE:?} --multi"
     fi
     return 0
 }
@@ -552,16 +563,16 @@ quote=01:warning=01;35"
 }
 
 _koopa_activate_julia() {
-    [[ -x "$(_koopa_bin_prefix)/julia" ]] || return 0
-    JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
-    JULIA_NUM_THREADS="$(_koopa_cpu_count)"
+    [[ -x "${KOOPA_PREFIX:?}/bin/julia" ]] || return 0
+    JULIA_DEPOT_PATH="${HOME:?}/.julia"
+    JULIA_NUM_THREADS="${KOOPA_CPU_COUNT:?}"
     export JULIA_DEPOT_PATH JULIA_NUM_THREADS
     return 0
 }
 
 _koopa_activate_lesspipe() {
     local lesspipe
-    lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
+    lesspipe="${KOOPA_PREFIX:?}/bin/lesspipe.sh"
     if [[ ! -x "$lesspipe" ]]
     then
         return 0
@@ -580,24 +591,12 @@ _koopa_activate_mcfly() {
     [[ "${__MCFLY_LOADED:-}" = 'loaded' ]] && return 0
     _koopa_is_root && return 0
     local mcfly
-    mcfly="$(_koopa_bin_prefix)/mcfly"
+    mcfly="${KOOPA_PREFIX:?}/bin/mcfly"
     if [[ ! -x "$mcfly" ]]
     then
         return 0
     fi
-    local shell
-    shell="${KOOPA_SHELL##*/}"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    local color_mode
-    color_mode="$(_koopa_color_mode)"
-    [[ "$color_mode" = 'light' ]] && export MCFLY_LIGHT=true
+    [[ "${KOOPA_COLOR_MODE:-}" = 'light' ]] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'nvim' | *'/nvim' | \
         'vim' | *'/vim')
@@ -613,10 +612,15 @@ _koopa_activate_mcfly() {
     export MCFLY_INTERFACE_VIEW='TOP'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK'
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    eval "$("$mcfly" init "$shell")"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/mcfly-bash.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$mcfly" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$mcfly" init bash > "$cache_file"
+    fi
+    source "$cache_file"
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
@@ -636,8 +640,8 @@ _koopa_activate_path_helper() {
     then
         return 0
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     eval "$("$path_helper" -s)"
     [[ "$nounset" -eq 1 ]] && set -o nounset
@@ -645,9 +649,9 @@ _koopa_activate_path_helper() {
 }
 
 _koopa_activate_pipx() {
-    [[ -x "$(_koopa_bin_prefix)/pipx" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/pipx" ]] || return 0
     local prefix
-    prefix="$(_koopa_pipx_prefix)"
+    prefix="${XDG_DATA_HOME:?}/pipx"
     if [[ ! -d "$prefix" ]]
     then
         mkdir -p "$prefix" >/dev/null
@@ -690,7 +694,7 @@ _koopa_activate_profile_files() {
 _koopa_activate_pyenv() {
     [[ -n "${PYENV_ROOT:-}" ]] && return 0
     local prefix
-    prefix="$(_koopa_pyenv_prefix)"
+    prefix="${KOOPA_PREFIX:?}/opt/pyenv"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -708,16 +712,22 @@ _koopa_activate_pyenv() {
         mkdir -p "$PYENV_LOCAL_SHIM"
     fi
     _koopa_add_to_path_start "$PYENV_LOCAL_SHIM"
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    eval "$("$pyenv" virtualenv-init -)"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/pyenv-${KOOPA_SHELL##*/}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$pyenv" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$pyenv" virtualenv-init - > "$cache_file"
+    fi
+    source "$cache_file"
+    unalias pyenv 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 
 _koopa_activate_pyright() {
-    [[ -x "$(_koopa_bin_prefix)/pyright" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/pyright" ]] || return 0
     export PYRIGHT_PYTHON_FORCE_VERSION='latest'
     return 0
 }
@@ -754,7 +764,7 @@ _koopa_activate_python() {
 _koopa_activate_rbenv() {
     [[ -n "${RBENV_ROOT:-}" ]] && return 0
     local prefix
-    prefix="$(_koopa_rbenv_prefix)"
+    prefix="${KOOPA_PREFIX:?}/opt/rbenv"
     if [[ ! -d "$prefix" ]]
     then
         return 0
@@ -766,16 +776,22 @@ _koopa_activate_rbenv() {
         return 0
     fi
     export RBENV_ROOT="$prefix"
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    eval "$("$rbenv" init -)"
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/rbenv-${KOOPA_SHELL##*/}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$rbenv" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$rbenv" init - > "$cache_file"
+    fi
+    source "$cache_file"
+    unalias rbenv 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 
 _koopa_activate_ripgrep() {
-    [[ -x "$(_koopa_bin_prefix)/rg" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/rg" ]] || return 0
     local config_file
     config_file="${XDG_CONFIG_HOME:?}/ripgrep/config"
     if [[ -f "$config_file" ]]
@@ -796,37 +812,30 @@ _koopa_activate_ruby() {
 
 _koopa_activate_starship() {
     local starship
-    starship="$(_koopa_bin_prefix)/starship"
+    starship="${KOOPA_PREFIX:?}/bin/starship"
     if [[ ! -x "$starship" ]]
     then
         return 0
     fi
-    local shell
-    shell="${KOOPA_SHELL##*/}"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    if [[ -n "${STARSHIP_SHELL:-}" ]] && [[ "$STARSHIP_SHELL" != "$shell" ]]
+    if [[ -n "${STARSHIP_SHELL:-}" ]] && [[ "$STARSHIP_SHELL" != 'bash' ]]
     then
         unset -v STARSHIP_SHELL
     fi
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
-    if [[ "$nounset" -eq 1 ]]
-    then
-        return 0
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/starship-bash.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$starship" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$starship" init bash > "$cache_file"
     fi
-    eval "$("$starship" init "$shell")"
+    source "$cache_file"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 
 _koopa_activate_tealdeer() {
-    [[ -x "$(_koopa_bin_prefix)/tldr" ]] || return 0
+    [[ -x "${KOOPA_PREFIX:?}/bin/tldr" ]] || return 0
     if [[ -z "${TEALDEER_CONFIG_DIR:-}" ]]
     then
         TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
@@ -892,25 +901,21 @@ _koopa_activate_xdg() {
 
 _koopa_activate_zoxide() {
     local zoxide
-    zoxide="$(_koopa_bin_prefix)/zoxide"
+    zoxide="${KOOPA_PREFIX:?}/bin/zoxide"
     if [[ ! -x "$zoxide" ]]
     then
         return 0
     fi
-    local shell
-    shell="$(_koopa_shell_name)"
-    local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            eval "$("$zoxide" init "$shell")"
-            ;;
-        *)
-            eval "$("$zoxide" init 'posix' --hook 'prompt')"
-            ;;
-    esac
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/zoxide-bash.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$zoxide" init bash > "$cache_file"
+    fi
+    source "$cache_file"
+    unalias z 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
@@ -1226,7 +1231,18 @@ _koopa_add_to_manpath_end() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        MANPATH="$(_koopa_add_to_path_string_end "$MANPATH" "$dir")"
+        if [[ ":${MANPATH}:" == *":${dir}:"* ]]
+        then
+            MANPATH="${MANPATH//:${dir}:/:}"
+            MANPATH="${MANPATH/#${dir}:/}"
+            MANPATH="${MANPATH/%:${dir}/}"
+        fi
+        if [[ -z "$MANPATH" ]]
+        then
+            MANPATH="$dir"
+        else
+            MANPATH="${MANPATH}:${dir}"
+        fi
     done
     export MANPATH
     return 0
@@ -1238,7 +1254,18 @@ _koopa_add_to_manpath_start() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$dir")"
+        if [[ ":${MANPATH}:" == *":${dir}:"* ]]
+        then
+            MANPATH="${MANPATH//:${dir}:/:}"
+            MANPATH="${MANPATH/#${dir}:/}"
+            MANPATH="${MANPATH/%:${dir}/}"
+        fi
+        if [[ -z "$MANPATH" ]]
+        then
+            MANPATH="$dir"
+        else
+            MANPATH="${dir}:${MANPATH}"
+        fi
     done
     export MANPATH
     return 0
@@ -1250,7 +1277,18 @@ _koopa_add_to_path_end() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        PATH="$(_koopa_add_to_path_string_end "$PATH" "$dir")"
+        if [[ ":${PATH}:" == *":${dir}:"* ]]
+        then
+            PATH="${PATH//:${dir}:/:}"
+            PATH="${PATH/#${dir}:/}"
+            PATH="${PATH/%:${dir}/}"
+        fi
+        if [[ -z "$PATH" ]]
+        then
+            PATH="$dir"
+        else
+            PATH="${PATH}:${dir}"
+        fi
     done
     export PATH
     return 0
@@ -1262,7 +1300,18 @@ _koopa_add_to_path_start() {
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        PATH="$(_koopa_add_to_path_string_start "$PATH" "$dir")"
+        if [[ ":${PATH}:" == *":${dir}:"* ]]
+        then
+            PATH="${PATH//:${dir}:/:}"
+            PATH="${PATH/#${dir}:/}"
+            PATH="${PATH/%:${dir}/}"
+        fi
+        if [[ -z "$PATH" ]]
+        then
+            PATH="$dir"
+        else
+            PATH="${dir}:${PATH}"
+        fi
     done
     export PATH
     return 0
@@ -1407,18 +1456,6 @@ _koopa_bash_prompt_string() {
     return 0
 }
 
-_koopa_boolean_nounset() {
-    local bool
-    if _koopa_is_set_nounset
-    then
-        bool=1
-    else
-        bool=0
-    fi
-    _koopa_print "$bool"
-    return 0
-}
-
 _koopa_cd() {
     local prefix
     _koopa_assert_has_args_eq "$#" 1
@@ -1546,7 +1583,7 @@ _koopa_dirname() {
 
 _koopa_duration_start() {
     local date
-    date="$(_koopa_bin_prefix)/gdate"
+    date="${KOOPA_PREFIX:?}/bin/gdate"
     if [[ ! -x "$date" ]]
     then
         return 0
@@ -1557,12 +1594,10 @@ _koopa_duration_start() {
 }
 
 _koopa_duration_stop() {
-    local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
     local bc
-    bc="${bin_prefix}/gbc"
+    bc="${KOOPA_PREFIX:?}/bin/gbc"
     local date
-    date="${bin_prefix}/gdate"
+    date="${KOOPA_PREFIX:?}/bin/gdate"
     if [[ ! -x "$bc" ]] || [[ ! -x "$date" ]]
     then
         return 0
@@ -1829,13 +1864,11 @@ _koopa_invalid_arg() {
 _koopa_is_light_mode() {
     if [[ "$OSTYPE" == darwin* ]]
     then
+        [[ "$(/usr/bin/defaults read -g 'AppleInterfaceStyle' 2>/dev/null)" != 'Dark' ]]
+    elif [[ -n "${TMUX:-}" || "${TERM:-}" == screen* || "${TERM:-}" == tmux* ]]
+    then
         local cache_file="${HOME:?}/.cache/koopa/color-mode"
-        if [[ -f "$cache_file" ]]
-        then
-            [[ "$(<"$cache_file")" == 'light' ]]
-        else
-            [[ "$(/usr/bin/defaults read -g 'AppleInterfaceStyle' 2>/dev/null)" != 'Dark' ]]
-        fi
+        [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
     else
         _koopa_terminal_is_light_background
     fi
@@ -2157,6 +2190,7 @@ _koopa_sudo() {
 
 _koopa_terminal_is_light_background() {
     [[ -t 0 ]] || return 1
+    [[ -n "${TMUX:-}" || "${TERM:-}" == screen* || "${TERM:-}" == tmux* ]] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
     stty raw -echo min 0 time 2 2>/dev/null
@@ -2224,7 +2258,7 @@ _koopa_export_editor() {
     if [[ -z "${EDITOR:-}" ]]
     then
         local editor
-        editor="$(_koopa_bin_prefix)/nvim"
+        editor="${KOOPA_PREFIX:?}/bin/nvim"
         [[ -x "$editor" ]] || editor='vim'
         EDITOR="$editor"
     fi
@@ -2245,7 +2279,7 @@ _koopa_export_gnupg() {
 _koopa_export_history() {
     if [[ -z "${HISTFILE:-}" ]]
     then
-        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
+        HISTFILE="${HOME:?}/.${KOOPA_SHELL##*/}_history"
     fi
     export HISTFILE
     if [[ ! -f "$HISTFILE" ]] \
@@ -2295,10 +2329,7 @@ _koopa_export_koopa_cpu_count() {
 }
 
 _koopa_export_koopa_shell() {
-    if [[ -z "${KOOPA_SHELL:-}" ]]
-    then
-        KOOPA_SHELL="$(_koopa_locate_shell)"
-    fi
+    KOOPA_SHELL="${BASH}"
     [[ -z "${SHELL:-}" ]] && SHELL="$KOOPA_SHELL"
     export KOOPA_SHELL SHELL
     return 0
@@ -2307,7 +2338,7 @@ _koopa_export_koopa_shell() {
 _koopa_export_manpager() {
     [[ -n "${MANPAGER:-}" ]] && return 0
     local nvim
-    nvim="$(_koopa_bin_prefix)/nvim"
+    nvim="${KOOPA_PREFIX:?}/bin/nvim"
     if [[ -x "$nvim" ]]
     then
         export MANPAGER="${nvim} +Man!"
@@ -2318,7 +2349,7 @@ _koopa_export_manpager() {
 _koopa_export_pager() {
     [[ -n "${PAGER:-}" ]] && return 0
     local less
-    less="$(_koopa_bin_prefix)/less"
+    less="${KOOPA_PREFIX:?}/bin/less"
     if [[ -x "$less" ]]
     then
         export PAGER="${less} -R"
@@ -2442,10 +2473,6 @@ _koopa_is_macos() {
 
 _koopa_is_root() {
     [[ "$(_koopa_user_id)" -eq 0 ]]
-}
-
-_koopa_is_set_nounset() {
-    [[ -o nounset ]]
 }
 
 _koopa_is_subshell() {
@@ -2672,6 +2699,7 @@ _koopa_macos_activate_homebrew() {
     then
         return 0
     fi
+    export HOMEBREW_PREFIX="${dict['prefix']}"
     dict['brewfile']="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${dict['prefix']}/bin"
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] \

@@ -12,7 +12,7 @@ _koopa_export_history() {
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
+        HISTFILE="${HOME:?}/.${KOOPA_SHELL##*/}_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
