@@ -1,0 +1,28 @@
+** TODO Machine with broken code after `git pull` is still stuck. How do we fix this?
+/opt/koopa develop (MERGING) [=⇕] 📦 0.18.0 <python 3.12.13: .venv>
+❌1 $ git status
+On branch develop
+Your branch and 'origin/develop' have diverged,
+and have 23967 and 23996 different commits each, respectively.
+  (use "git pull" if you want to integrate the remote branch with yours)
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+        both added:      .claude/rules/lessons.md
+        both added:      bin/koopa
+        both added:      etc/koopa/app.json
+        both added:      lang/python/src/koopa/install_info.py
+        both added:      uninstall.sh
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+/opt/koopa develop (MERGING) [=⇕] 📦 0.18.0 <python 3.12.13: .venv>
+$ git pull
+error: Pulling is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
