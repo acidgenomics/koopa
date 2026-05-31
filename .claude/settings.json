@@ -3,9 +3,11 @@
     "allow": [
       "Bash(*)",
       "Edit",
+      "Edit(.claude/rules/lessons.md)",
       "Grep",
       "Python(*)",
-      "Read"
+      "Read",
+      "WebFetch"
     ],
     "defaultMode": "plan",
     "deny": [
@@ -15,7 +17,9 @@
       "Bash(git push*)",
       "Bash(git rebase*)",
       "Bash(git reset*)",
-      "Read(.env)"
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(.envrc)"
     ]
   }
 }

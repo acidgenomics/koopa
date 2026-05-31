@@ -1,5 +1,38 @@
 # Lessons
 
+## Shell Plugin Activation: Prefer Lazy Loading Over Eager Init
+
+When evaluating whether to cache or optimize a shell plugin's init output, first check whether the plugin is already lazy-loaded (i.e., the real init runs on first use via an alias or wrapper, not at shell startup). Caching the init output of a lazy-loaded plugin adds complexity with no warm-startup benefit — the fork doesn't happen at startup regardless.
+
+**Known lazy-loaded plugins in koopa:**
+- `zoxide` — activated via the `z` alias (`_koopa_activate_zoxide; __zoxide_z`)
+- `conda` — activated via the `conda` alias (`_koopa_activate_conda; conda`)
+
+For plugins that ARE eagerly activated at startup (direnv, starship, mcfly, pyenv, rbenv), mtime-based caching of init output in `~/.cache/koopa/shell-init/` is appropriate.
+
+**Rule:** Before proposing init-output caching for a plugin, check whether it is already lazy-loaded. If it is, focus on ensuring the lazy wrapper is fork-free, not on caching the eager path.
+
+## Shell Activation Performance: Keep Forks Out of the Activation Path
+
+Shell activation speed matters. Every `$(...)` subshell in the activation path
+costs ~3-5ms on macOS. The current thresholds are bash ≤43 forks, zsh ≤39 forks
+across the activate/, export/, and macos/ function directories plus the header.
+
+**Rules:**
+- Never use `$(_koopa_bin_prefix)` in activation-path functions — use `${KOOPA_PREFIX:?}/bin` directly.
+- Never use `$(_koopa_is_macos)` or `$(_koopa_is_linux)` in bash/zsh — use `[[ "$OSTYPE" == darwin* ]]`.
+- Never use `$(_koopa_xdg_config_home)` or `$(_koopa_xdg_data_home)` after `_koopa_activate_xdg` has run — use `${XDG_CONFIG_HOME:?}` / `${XDG_DATA_HOME:?}` directly.
+- Never use `$(_koopa_shell_name)` in activation functions — use `${KOOPA_SHELL##*/}`.
+- Never use `$(_koopa_boolean_nounset)` / `nounset="$(...)"` — use `[[ -o nounset ]]` inline.
+- Never use `$(_koopa_add_to_path_string_start)` — path prepend/dedup is inlined fork-free in `_koopa_add_to_path_start`.
+
+**To verify before merging shell changes:**
+```
+koopa develop activation-fork-audit --verbose
+koopa develop activation-speed-test
+koopa develop pytest lang/python/tests/test_cli_develop.py::test_activation_fork_audit_passes
+```
+
 ## Plan Files: System-Generated Names Must Be Used As-Is
 
 When the system specifies a plan filename (in the plan mode system message), use that exact path — do NOT rename it with a `YYYY-MM-DD-` prefix. VS Code's plan review UI looks for the exact filename the system specified; renaming breaks the UI.
@@ -93,3 +126,26 @@ Home-directory dotfiles (e.g., `~/.claude/settings.json`, `~/.bashrc`,
 the corresponding chezmoi source template/file (e.g.,
 `dot_claude/settings.json`) in addition to (or instead of) the deployed copy.
 Otherwise the change will be overwritten on the next `chezmoi apply`.
+
+## ShellCheck Does Not Support Zsh — Never Suggest It for `lang/zsh/`
+
+ShellCheck cannot analyze zsh. All ShellCheck warnings from files under
+`lang/zsh/` are false positives — they say "zsh not supported" and nothing
+more. `koopa develop shellcheck` already excludes zsh files intentionally.
+
+**Rules:**
+- Never suggest running ShellCheck on files under `lang/zsh/`.
+- Never suggest adding `# shellcheck` directives to zsh files to suppress
+  "SC" warnings — the warnings are meaningless because the tool doesn't parse
+  zsh.
+- Files under `lang/zsh/functions/` use `#!/usr/bin/env zsh` shebangs with a
+  `.sh` extension — this is intentional. Do not suggest renaming to `.zsh`
+  unless the user asks.
+- The only shell linting for zsh files is the custom regex-based illegal-string
+  checks inside `_handle_shellcheck()` in `cli_develop.py`.
+
+## Plans and TODOs Use `todo.org` (Org Mode)
+
+When preparing future plans or TODO list items for this project, write them to
+`todo.org` at the project root. This file is formatted as an Org mode document.
+Do not use `.claude/todo.md` or other formats for project task tracking.
