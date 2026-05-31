@@ -1,5 +1,5 @@
 # Activate color mode sync hook.
-# @note Updated 2026-05-30.
+# @note Updated 2026-05-31.
 function _koopa_activate_color_mode_sync {
     $origPrompt = $function:prompt
     $function:prompt = {
@@ -11,6 +11,7 @@ function _koopa_activate_color_mode_sync {
             )
             Remove-Item Env:FZF_DEFAULT_OPTS -ErrorAction SilentlyContinue
             _koopa_activate_fzf
+            _koopa_activate_difftastic
         }
         & $origPrompt
     }

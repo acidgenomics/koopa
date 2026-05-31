@@ -1,14 +1,14 @@
 function _koopa_activate_ca_certificates
     # Activate CA certificates for OpenSSL.
-    # @note Updated 2026-05-12.
-    set -l prefix (_koopa_xdg_data_home)/ca-certificates
+    # @note Updated 2026-05-31.
+    set -l prefix "$XDG_DATA_HOME/ca-certificates"
     set -l file "$prefix/cacert.pem"
     if not test -f "$file"; and not _koopa_is_macos
         set prefix /etc/ssl/certs
         set file "$prefix/ca-certificates.crt"
     end
     if not test -f "$file"
-        set prefix (_koopa_opt_prefix)/ca-certificates/share/ca-certificates
+        set prefix "$KOOPA_PREFIX/opt/ca-certificates/share/ca-certificates"
         set file "$prefix/cacert.pem"
     end
     if not test -f "$file"

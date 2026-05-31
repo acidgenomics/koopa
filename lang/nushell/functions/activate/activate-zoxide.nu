@@ -20,5 +20,14 @@ export def _koopa_activate_zoxide [] {
     if not ($cache_dir | path exists) {
         mkdir $cache_dir
     }
-    ^$zoxide init nushell | save -f $cache_file
+    let needs_regen = if not ($cache_file | path exists) {
+        true
+    } else {
+        let bin_mtime = (ls $zoxide | get 0.modified)
+        let cache_mtime = (ls $cache_file | get 0.modified)
+        $bin_mtime > $cache_mtime
+    }
+    if $needs_regen {
+        ^$zoxide init nushell | save -f $cache_file
+    }
 }

@@ -1,11 +1,11 @@
 function _koopa_activate_bootstrap
     # Conditionally activate koopa bootstrap in current path.
-    # @note Updated 2026-05-01.
-    set -l bootstrap_prefix (_koopa_bootstrap_prefix)
+    # @note Updated 2026-05-31.
+    set -l bootstrap_prefix "$XDG_DATA_HOME/koopa-bootstrap"
     if not test -d "$bootstrap_prefix"
         return 0
     end
-    set -l opt_prefix (_koopa_opt_prefix)
+    set -l opt_prefix "$KOOPA_PREFIX/opt"
     if test -d "$opt_prefix/bash" \
         -a -d "$opt_prefix/coreutils" \
         -a -d "$opt_prefix/openssl3" \

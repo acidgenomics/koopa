@@ -85,6 +85,11 @@ fn export-env {
         var color-mode = (if (is-light-mode) { put 'light' } else { put 'dark' })
         set-env KOOPA_COLOR_MODE $color-mode
     }
+    var color-cache = $E:HOME'/.cache/koopa/color-mode'
+    if (or (not (path:is-regular $color-cache)) (not (eq (str:trim-space (slurp < $color-cache)) $E:KOOPA_COLOR_MODE))) {
+        mkdir -p (path:dir $color-cache)
+        printf '%s\n' $E:KOOPA_COLOR_MODE > $color-cache
+    }
 
     # GCC colors.
     if (not (has-env GCC_COLORS)) {

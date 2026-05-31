@@ -40,6 +40,8 @@ export use ../functions/activate/activate-fzf.nu *
 export use ../functions/activate/activate-direnv.nu *
 export use ../functions/activate/activate-zoxide.nu *
 export use ../functions/activate/activate-starship.nu *
+export use ../functions/activate/activate-difftastic.nu *
+export use ../functions/activate/activate-color-mode-sync.nu *
 export use ../functions/activate/activate-aliases.nu *
 
 # Main activation function.
@@ -57,10 +59,12 @@ export def _koopa_activate_koopa [] {
     _koopa_export_env
     _koopa_activate_ca_certificates
     _koopa_activate_conda
+    _koopa_activate_difftastic
     _koopa_activate_fzf
     _koopa_activate_direnv
     _koopa_activate_zoxide
     _koopa_activate_starship
+    _koopa_activate_color_mode_sync
 
     # macOS-specific: Homebrew.
     if (_koopa_is_macos) {

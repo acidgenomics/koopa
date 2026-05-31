@@ -70,14 +70,14 @@ export def _koopa_export_env [] {
     if not ("KOOPA_COLOR_MODE" in $env) {
         $env.KOOPA_COLOR_MODE = if (_koopa_is_light_mode) { "light" } else { "dark" }
     }
+    let color_cache = ($env.HOME | path join ".cache" "koopa" "color-mode")
+    if (not ($color_cache | path exists)) or ((open $color_cache | str trim) != $env.KOOPA_COLOR_MODE) {
+        mkdir ($color_cache | path dirname)
+        $env.KOOPA_COLOR_MODE | save -f $color_cache
+    }
 
     # GCC colors.
     if not ("GCC_COLORS" in $env) {
         $env.GCC_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
-    }
-
-    # FZF.
-    if not ("FZF_DEFAULT_OPTS" in $env) {
-        $env.FZF_DEFAULT_OPTS = "--border --color bw --multi"
     }
 }

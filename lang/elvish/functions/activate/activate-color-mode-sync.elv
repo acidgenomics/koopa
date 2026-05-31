@@ -1,5 +1,5 @@
 # Activate color mode sync hook.
-# @note Updated 2026-05-30.
+# @note Updated 2026-05-31.
 fn activate-color-mode-sync {
     set edit:before-readline = (conj $edit:before-readline {
         var new-mode = (if (is-light-mode) { put 'light' } else { put 'dark' })
@@ -8,6 +8,7 @@ fn activate-color-mode-sync {
             printf "%b\n" "Terminal appearance changed to "$new-mode" mode. Updating shell colors." >&2
             unset-env FZF_DEFAULT_OPTS
             activate-fzf
+            activate-difftastic
         }
     })
 }
