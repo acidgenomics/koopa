@@ -93,7 +93,11 @@ def ln(source: str, target: str, *, sudo: bool = False) -> None:
         run("ln", "-sfn", source, target, sudo=True, capture=True)
     else:
         target_path = Path(target)
-        if target_path.is_symlink() or target_path.exists():
+        if target_path.is_symlink():
+            target_path.unlink()
+        elif target_path.is_dir():
+            shutil.rmtree(target_path)
+        elif target_path.exists():
             target_path.unlink()
         target_path.symlink_to(source)
 
