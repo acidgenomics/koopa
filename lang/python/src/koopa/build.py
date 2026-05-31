@@ -378,8 +378,8 @@ def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
             ).stdout.strip()
             if cflags:
                 env.cppflags.extend(cflags.split())
-        except subprocess.CalledProcessError:
-            pass
+        except subprocess.CalledProcessError as exc:
+            print(f"pkg-config --cflags failed for '{pkg}': {exc}", file=sys.stderr)
         try:
             ldflags = subprocess.run(
                 [pkg_config, "--libs-only-L", pkg],
@@ -390,8 +390,11 @@ def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
             ).stdout.strip()
             if ldflags:
                 env.ldflags.extend(ldflags.split())
-        except subprocess.CalledProcessError:
-            pass
+        except subprocess.CalledProcessError as exc:
+            print(
+                f"pkg-config --libs-only-L failed for '{pkg}': {exc}",
+                file=sys.stderr,
+            )
         try:
             ldlibs = subprocess.run(
                 [pkg_config, "--libs-only-l", pkg],
@@ -402,8 +405,11 @@ def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
             ).stdout.strip()
             if ldlibs:
                 env.ldlibs.extend(ldlibs.split())
-        except subprocess.CalledProcessError:
-            pass
+        except subprocess.CalledProcessError as exc:
+            print(
+                f"pkg-config --libs-only-l failed for '{pkg}': {exc}",
+                file=sys.stderr,
+            )
 
 
 # -- cmake_build --------------------------------------------------------------
