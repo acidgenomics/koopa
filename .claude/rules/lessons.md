@@ -1,5 +1,15 @@
 # Lessons
 
+## Git Recovery: Handle Both MERGING and Rebasing States
+
+When recovering from a failed `git pull` in `update_koopa()`, handle both interrupted merge state (`.git/MERGE_HEAD`) and interrupted rebase state (`.git/rebase-merge` or `.git/rebase-apply`). `git pull` may use either merge or rebase strategy depending on config and git version.
+
+The fix has two layers:
+1. **Proactive**: abort any stuck merge/rebase before attempting to pull (clears MERGING state so the pull can even run).
+2. **Reactive**: if the pull still fails (diverged history), fetch + hard reset to `origin/<branch>`.
+
+`git_merge_abort()` and `git_rebase_abort()` are both no-ops when no such operation is in progress, so calling them unconditionally before every pull is safe.
+
 ## Shell Plugin Activation: Prefer Lazy Loading Over Eager Init
 
 When evaluating whether to cache or optimize a shell plugin's init output, first check whether the plugin is already lazy-loaded (i.e., the real init runs on first use via an alias or wrapper, not at shell startup). Caching the init output of a lazy-loaded plugin adds complexity with no warm-startup benefit — the fork doesn't happen at startup regardless.
