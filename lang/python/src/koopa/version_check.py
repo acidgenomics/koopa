@@ -1235,7 +1235,7 @@ def _check_rstudio_server() -> str:
         raise RuntimeError(msg)
     tag = data[0]["name"]
     tag = tag.lstrip("vV")
-    return tag.replace("+", "-")
+    return tag
 
 
 def _check_r_gfortran() -> str:

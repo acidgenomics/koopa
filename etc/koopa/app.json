@@ -7914,7 +7914,7 @@
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
-    "version": "2026.05.0-218"
+    "version": "2026.05.0+218"
   },
   "rsync": {
     "bin": [
