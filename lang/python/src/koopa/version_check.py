@@ -227,6 +227,16 @@ def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
     raise last_exc
 
 
+def _http_url_exists(url: str, *, timeout: int = 10) -> bool:
+    req = urllib.request.Request(url, method="HEAD")
+    req.add_header("User-Agent", "koopa-version-checker")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
+            return resp.status == 200
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError):
+        return False
+
+
 # ── Individual checkers ───────────────────────────────────────────────
 
 
@@ -1302,10 +1312,20 @@ def _check_illumina_ica_cli() -> str:
     if not versions:
         msg = "No Illumina ICA CLI versions found"
         raise RuntimeError(msg)
-    return max(
+    sorted_versions = sorted(
         set(versions),
         key=lambda v: tuple(int(x) for x in v.split(".")),
+        reverse=True,
     )
+    for version in sorted_versions:
+        url = (
+            "https://stratus-documentation-us-east-1-public.s3.amazonaws.com"
+            f"/cli/{version}/ica-linux-amd64.zip"
+        )
+        if _http_url_exists(url):
+            return version
+    msg = "No downloadable Illumina ICA CLI version found"
+    raise RuntimeError(msg)
 
 
 def _check_miniconda() -> str:

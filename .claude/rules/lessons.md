@@ -164,6 +164,15 @@ test -x "${KOOPA_PREFIX}/bin/fzf"
 This applies to all environment variables referenced in activation functions
 (`KOOPA_PREFIX`, `XDG_CACHE_HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `HOME`, etc.).
 
+## subprocess.run: Always Use `check=True` — Never `check=False`
+
+Always pass `check=True` to `subprocess.run`. Fail fast on subprocess errors.
+Never suppress failures with `check=False` — that silently swallows errors and
+makes debugging harder.
+
+The ruff linter warns `PLW1510` when `check` is omitted. The correct fix is
+always `check=True`, not `check=False`.
+
 ## Plans and TODOs Use `todo.org` (Org Mode)
 
 When preparing future plans or TODO list items for this project, write them to
