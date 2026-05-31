@@ -60,6 +60,8 @@ set edit:completion:arg-completer[koopa] = {|@args|
             put --fastq-dir --help --index-dir --output-dir --output-format --reference-fasta
         } elif (eq $path 'app/bowtie2/index') {
             put --genome-fasta-file --help --output-dir
+        } elif (eq $path 'app/claude/archive-plans') {
+            put --days --dry-run --help
         } elif (eq $path 'app/conda/create-env') {
             put --file --force --help --latest --prefix
         } elif (eq $path 'app/docker/build') {
@@ -131,7 +133,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
         } elif (eq $path 'develop/activation-fork-audit') {
             put --help --threshold-bash --threshold-zsh --verbose
         } elif (eq $path 'develop/activation-speed-test') {
-            put --help --runs --shells --threshold-bash --threshold-zsh --verbose
+            put --help --runs --shells --threshold-bash --threshold-fish --threshold-zsh --verbose
         } elif (eq $path 'develop/app-revdeps') {
             put --all --help
         } elif (eq $path 'develop/check-app-versions') {
@@ -165,7 +167,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
     } elif (== $n 3) {
         # Depth 1: subcommands of top-level.
         if (eq $args[1] 'app') {
-            put aws bioconda bowtie2 brew conda current docker file ftp git gpg hisat2 jekyll kallisto md5sum miso photos r rnaeditingindexer rsem salmon sra ssh star sys wget
+            put aws bioconda bowtie2 brew claude conda current docker file ftp git gpg hisat2 jekyll kallisto md5sum miso photos r rnaeditingindexer rsem salmon sra ssh star sys wget
         } elif (eq $args[1] 'develop') {
             put activation-fork-audit activation-speed-test app-deps app-revdeps audit-src-mirror bump-bootstrap bump-revision bump-venv-version cache-functions check-app-versions circular-dependencies conda-candidates edit-app-json find-ignored-bin-files format-app-json generate-completion generate-man log mirror-src orphan-apps prune-app-binaries push-all-app-builds push-app-build push-app-builds pyright pytest remove-app reset-revisions shellcheck update-docs
         } elif (eq $args[1] 'run') {
@@ -196,6 +198,8 @@ set edit:completion:arg-completer[koopa] = {|@args|
                 put align index
             } elif (eq $args[2] 'brew') {
                 put cleanup dump-brewfile install-bundle outdated reset-core-repo reset-permissions uninstall-all-brews upgrade version
+            } elif (eq $args[2] 'claude') {
+                put archive-plans
             } elif (eq $args[2] 'conda') {
                 put clean-cache create-env remove-env
             } elif (eq $args[2] 'current') {

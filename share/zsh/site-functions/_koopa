@@ -57,6 +57,7 @@ _koopa_app() {
         bioconda) _koopa_app_bioconda ;;
         bowtie2) _koopa_app_bowtie2 ;;
         brew) _koopa_app_brew ;;
+        claude) _koopa_app_claude ;;
         conda) _koopa_app_conda ;;
         current) _koopa_app_current ;;
         docker) _koopa_app_docker ;;
@@ -89,6 +90,7 @@ _koopa_app_cmds() {
         'bioconda'
         'bowtie2'
         'brew'
+        'claude'
         'conda'
         'current'
         'docker'
@@ -238,6 +240,14 @@ _koopa_app_brew() {
         'version'
     )
     _describe -t commands 'brew command' cmds
+}
+
+_koopa_app_claude() {
+    local -a cmds
+    cmds=(
+        'archive-plans'
+    )
+    _describe -t commands 'claude command' cmds
 }
 
 _koopa_app_conda() {
@@ -585,7 +595,7 @@ _koopa_develop() {
     [[ $state == subcmd ]] || return 0
     case $words[1] in
         activation-fork-audit) _arguments '*--help[--help]' '*--threshold-bash[--threshold-bash]' '*--threshold-zsh[--threshold-zsh]' '*--verbose[--verbose]' ;;
-        activation-speed-test) _arguments '*--help[--help]' '*--runs[--runs]' '*--shells[--shells]' '*--threshold-bash[--threshold-bash]' '*--threshold-zsh[--threshold-zsh]' '*--verbose[--verbose]' ;;
+        activation-speed-test) _arguments '*--help[--help]' '*--runs[--runs]' '*--shells[--shells]' '*--threshold-bash[--threshold-bash]' '*--threshold-fish[--threshold-fish]' '*--threshold-zsh[--threshold-zsh]' '*--verbose[--verbose]' ;;
         app-revdeps) _arguments '*--all[--all]' '*--help[--help]' ;;
         check-app-versions) _arguments '*--help[--help]' '*--json[--json]' '*--no-update[--no-update]' '*--reset-cache[--reset-cache]' '*--s3-upload[--s3-upload]' '*--source[--source]' ;;
         conda-candidates) _arguments '*--help[--help]' '*--verify[--verify]' ;;
