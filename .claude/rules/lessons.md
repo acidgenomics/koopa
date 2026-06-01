@@ -218,6 +218,29 @@ Chezmoi's default source path is `~/.local/share/chezmoi`. In this project, chez
 - If `~/.local/share/chezmoi` exists, warn the user and remove it (after confirming it's just a stale symlink, not actual user data).
 - The correct chezmoi source path is: `~/.local/share/koopa/opt/dotfiles/chezmoi/`
 
+## McFly Colors Through SSH+tmux: Named ANSI Colors Are Palette-Dependent
+
+McFly's config.toml only supports the 16 named ANSI colors (e.g., `"grey"`, `"black"`, `"blue"`). It does **not** support hex values — they silently fall back to white.
+
+The problem: named ANSI colors render differently depending on the **local terminal emulator's** palette, not anything on the remote. The ANSI palette passes through SSH unchanged, but tmux intercepts and re-renders colors using its internal state — so the effective rendering depends on which terminal is used to attach to the tmux session.
+
+**Ghostty + Dracula Pro Alucard ANSI palette** (the relevant mapping):
+- ANSI 0 (`black`) = `#fafafa` — near-white, **washed out as foreground**
+- ANSI 7 (`grey`) = `#383a42` — near-black, **legible as foreground**
+- ANSI 8 (`dark_grey`) = `#FFFFFF` — pure white, **washed out as foreground**
+- ANSI 15 (`white`) = `#383a42` — very dark, **legible as foreground**
+- ANSI 4 (`dark_blue`) = `#a626a4` (purple)
+- ANSI 12 (`blue`) = `#7c6f9e` (lighter purple)
+
+VS Code and macOS Terminal.app use different palettes where ANSI 0 is dark, so the same config appears fine there but broken in Ghostty.
+
+**The Alacritty issue** (`https://github.com/cantino/mcfly/issues/316`) is the same class of problem — terminal emulators with non-standard ANSI palette mappings break mcfly's named color assumptions.
+
+**Rules for mcfly color config:**
+- For light mode with Dracula Pro Alucard (Ghostty): `results_fg = "grey"` (ANSI 7 = dark) works; `results_fg = "black"` or `"dark_grey"` do NOT.
+- Always test mcfly colors from the specific terminal emulator that will be used — VS Code and Ghostty can give opposite results for the same config.
+- The chezmoi template `config.toml.tmpl` conditions on `stat ~/.local/share/dracula-pro` to detect whether the Alucard palette is in play.
+
 ## Plans and TODOs Use `todo.org` (Org Mode)
 
 When preparing future plans or TODO list items for this project, write them to
