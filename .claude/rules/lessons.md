@@ -241,6 +241,19 @@ VS Code and macOS Terminal.app use different palettes where ANSI 0 is dark, so t
 - Always test mcfly colors from the specific terminal emulator that will be used — VS Code and Ghostty can give opposite results for the same config.
 - The chezmoi template `config.toml.tmpl` conditions on `stat ~/.local/share/dracula-pro` to detect whether the Alucard palette is in play.
 
+## Atuin Import: Use Explicit Shell Name, Never `auto` on macOS
+
+`atuin import auto` detects the shell from `$SHELL`, which on macOS is `/bin/zsh` (the system default) regardless of what shell is actually running. If you're running bash on macOS, `atuin import auto` will incorrectly import from zsh history.
+
+Always import with the explicit shell name:
+
+```bash
+atuin import bash   # when running bash
+atuin import zsh    # when running zsh
+```
+
+Never use `atuin import auto` on macOS.
+
 ## koopa Install Command Is `koopa install <app>` Not `koopa app install <app>`
 
 The correct command to install a koopa app is:
