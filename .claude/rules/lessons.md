@@ -206,6 +206,18 @@ Toggling `"default": true/false` or updating `"version"`/`"date"` on an
 **existing** entry does NOT require regeneration — the app name is already in
 the completion lists.
 
+## `~/.local/share/chezmoi` Must Not Exist — Chezmoi Source Is `opt/dotfiles/chezmoi/`
+
+Chezmoi's default source path is `~/.local/share/chezmoi`. In this project, chezmoi is always invoked with an explicit `--source=<opt/dotfiles>/chezmoi` flag (see the `main()` function in `opt/dotfiles/install`). The `opt/dotfiles/` directory (the full dotfiles repo clone) is NOT the chezmoi source root — only its `chezmoi/` subdirectory is.
+
+**`~/.local/share/chezmoi` must not exist.** If it does, it was created accidentally (e.g., a symlink to `opt/dotfiles`). A bare `chezmoi apply` without `--source` would then deploy `dot_*` files into `~/chezmoi/` instead of `~/`, which is wrong and confusing.
+
+**Rules:**
+- Never create `~/.local/share/chezmoi` or any symlink pointing there.
+- Never run `chezmoi apply` without `--source=...` pointing at `opt/dotfiles/chezmoi/`.
+- If `~/.local/share/chezmoi` exists, warn the user and remove it (after confirming it's just a stale symlink, not actual user data).
+- The correct chezmoi source path is: `~/.local/share/koopa/opt/dotfiles/chezmoi/`
+
 ## Plans and TODOs Use `todo.org` (Org Mode)
 
 When preparing future plans or TODO list items for this project, write them to

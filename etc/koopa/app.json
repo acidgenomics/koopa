@@ -502,7 +502,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-31",
+    "date": "2026-06-01",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -514,7 +514,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.56"
+    "version": "2.34.57"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1482,7 +1482,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-05-31",
+    "date": "2026-06-01",
     "default": true,
     "dependencies": [
       "node"
@@ -1496,7 +1496,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.158"
+    "version": "2.1.159"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1533,7 +1533,7 @@
       "codex"
     ],
     "category": "AI",
-    "date": "2026-05-31",
+    "date": "2026-06-01",
     "default": true,
     "dependencies": [
       "node"
@@ -1547,7 +1547,7 @@
     "url": [
       "https://www.npmjs.com/package/@openai/codex"
     ],
-    "version": "0.135.0"
+    "version": "0.136.0"
   },
   "colorls": {
     "bin": [
@@ -1625,7 +1625,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-05-31",
+    "date": "2026-06-01",
     "default": true,
     "dependencies": [
       "node"
@@ -1639,7 +1639,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.56"
+    "version": "1.0.57"
   },
   "coreutils": {
     "bin": [
@@ -2154,7 +2154,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-26",
+    "date": "2026-06-01",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2164,7 +2164,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "b3a119823faced6c5768bb9d749dd57d300cacb5"
+    "version": "1d7a94b96b4410a3747ec579c728a79413379e64"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -7087,7 +7087,7 @@
       "pyright-python-langserver"
     ],
     "category": "Python",
-    "date": "2026-05-02",
+    "date": "2026-06-01",
     "default": true,
     "dependencies": [
       "python"
@@ -7099,7 +7099,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.409"
+    "version": "1.1.410"
   },
   "pytaglib": {
     "bin": [
@@ -8446,7 +8446,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-05-26",
+    "date": "2026-06-01",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8456,7 +8456,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "a46fa81690fe3bae2198a470a8481ac091aae090"
+    "version": "529c7fc3a33682770ac1ef2941eb33df012733eb"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9032,7 +9032,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-01",
     "default": true,
     "dependencies": [
       "python"
@@ -9044,7 +9044,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.40"
+    "version": "0.0.42"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9163,14 +9163,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-01",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.17"
+    "version": "0.11.18"
   },
   "vim": {
     "bin": [
@@ -9996,7 +9996,7 @@
       "texinfo"
     ],
     "category": "Shell",
-    "date": "2025-01-03",
+    "date": "2026-06-01",
     "default": true,
     "dependencies": [
       "ncurses",
@@ -10009,13 +10009,12 @@
     "man1": [
       "zsh.1"
     ],
-    "revision": 1,
     "src_url": "https://www.zsh.org/pub/old/zsh-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.zsh.org/pub/"
     ],
-    "version": "5.9"
+    "version": "26"
   },
   "zstd": {
     "bin": [
