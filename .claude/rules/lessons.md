@@ -218,6 +218,23 @@ Chezmoi's default source path is `~/.local/share/chezmoi`. In this project, chez
 - If `~/.local/share/chezmoi` exists, warn the user and remove it (after confirming it's just a stale symlink, not actual user data).
 - The correct chezmoi source path is: `~/.local/share/koopa/opt/dotfiles/chezmoi/`
 
+## Atuin Theme Files Require a `[theme]` Section with `name`
+
+Atuin custom theme files (`~/.config/atuin/themes/NAME.toml`) must contain a `[theme]` section with a `name` field in addition to `[colors]`. Without it, the theme silently fails to load and atuin renders in monochrome black and white using built-in defaults.
+
+Correct format:
+
+```toml
+[theme]
+name = "my-theme-name"
+
+[colors]
+Important = "#383a42"
+...
+```
+
+The `name` must match the filename stem (e.g., `dracula-pro-alucard.toml` → `name = "dracula-pro-alucard"`).
+
 ## McFly Colors Through SSH+tmux: Named ANSI Colors Are Palette-Dependent
 
 McFly's config.toml only supports the 16 named ANSI colors (e.g., `"grey"`, `"black"`, `"blue"`). It does **not** support hex values — they silently fall back to white.
