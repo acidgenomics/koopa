@@ -10009,12 +10009,12 @@
     "man1": [
       "zsh.1"
     ],
-    "src_url": "https://www.zsh.org/pub/old/zsh-{version}.tar.xz",
+    "src_url": "https://www.zsh.org/pub/zsh-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.zsh.org/pub/"
     ],
-    "version": "26"
+    "version": "5.9.1"
   },
   "zstd": {
     "bin": [
