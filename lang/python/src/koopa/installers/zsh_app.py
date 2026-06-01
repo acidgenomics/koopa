@@ -31,9 +31,10 @@ def main(
     """Install zsh."""
     env = activate_app_deps()
     download_extract_cd()
-    for url in _PATCHES:
-        patch_file = download(url)
-        subprocess.run(["patch", "-p1", "-i", patch_file], check=True)
+    if version < "5.9.1":
+        for url in _PATCHES:
+            patch_file = download(url)
+            subprocess.run(["patch", "-p1", "-i", patch_file], check=True)
     # mathfunc is dynamic-only (link=dynamic in .mdd) and disabled by default
     # (load=no). Setting load=yes ensures it's built and installed as a .bundle.
     _set_mdd_load("Src/Modules/mathfunc.mdd", "yes")
