@@ -89,6 +89,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "lsd": f"{_M}._conda",
     "luigi": f"{_M}._conda",
     "mamba": f"{_M}._conda",
+    "atuin": f"{_M}._conda",
     "mcfly": f"{_M}._conda",
     "mdcat": f"{_M}._conda",
     "minimap2": f"{_M}._conda",

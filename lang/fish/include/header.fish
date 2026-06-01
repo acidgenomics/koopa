@@ -48,7 +48,7 @@ function __koopa_activate_koopa
     _koopa_activate_zoxide
     _koopa_activate_conda
     _koopa_activate_broot
-    _koopa_activate_mcfly
+    _koopa_activate_atuin
     if _koopa_is_macos
         # macOS-specific: Homebrew.
         if test -x /opt/homebrew/bin/brew

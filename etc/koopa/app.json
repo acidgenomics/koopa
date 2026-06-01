@@ -330,6 +330,25 @@
     ],
     "version": "2.5.2"
   },
+  "atuin": {
+    "bin": [
+      "atuin"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Shell",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-01",
+    "default": true,
+    "description": "magical shell history with sync and search",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/atuinsh/atuin/"
+    ],
+    "version": "18.16.1"
+  },
   "autoconf": {
     "bin": [
       "autoconf",
@@ -5507,7 +5526,7 @@
     "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-01-02",
-    "default": true,
+    "default": false,
     "description": "smart shell history search with neural networks",
     "installer": "conda-package",
     "type": "cli",

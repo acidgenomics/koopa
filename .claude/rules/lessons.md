@@ -241,6 +241,16 @@ VS Code and macOS Terminal.app use different palettes where ANSI 0 is dark, so t
 - Always test mcfly colors from the specific terminal emulator that will be used — VS Code and Ghostty can give opposite results for the same config.
 - The chezmoi template `config.toml.tmpl` conditions on `stat ~/.local/share/dracula-pro` to detect whether the Alucard palette is in play.
 
+## koopa Install Command Is `koopa install <app>` Not `koopa app install <app>`
+
+The correct command to install a koopa app is:
+
+```
+koopa install atuin
+```
+
+NOT `koopa app install atuin`. The `app` subcommand does not exist for installation.
+
 ## Plans and TODOs Use `todo.org` (Org Mode)
 
 When preparing future plans or TODO list items for this project, write them to
