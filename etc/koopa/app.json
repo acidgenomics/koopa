@@ -9997,7 +9997,7 @@
     ],
     "category": "Shell",
     "date": "2026-06-01",
-    "default": true,
+    "default": false,
     "dependencies": [
       "ncurses",
       "pcre2"
