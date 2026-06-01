@@ -103,30 +103,32 @@ Never suggest adding them to `[project.optional-dependencies]` or installing
 them via `uv pip install` into the venv. They run from PATH as independent
 binaries with their own Python environments.
 
-## macOS Sandboxed App Preferences Cannot Be Written From External Processes
+## macOS Sandboxed App Containers Cannot Be Written From External Processes
 
 macOS TCC (Transparency, Consent, and Control) blocks ALL external process I/O
 to sandboxed app containers on modern macOS — including `defaults write`,
-`PlistBuddy`, and direct `plistlib` file writes. This is a kernel-level
-restriction, not a Python or API issue.
+`PlistBuddy`, `plistlib` file writes, and direct file writes into
+`~/Library/Application Support/<App>/`. This is a kernel-level restriction, not
+a Python or API issue.
 
-**Do not attempt to write sandboxed app preferences from install scripts.**
-Instead:
-- Write only to non-sandboxed paths the app reads (e.g., `~/Library/Application
-  Support/<App>/` for theme files, config files, etc.)
-- Print a one-time human-readable notice telling the user to set the preference
-  manually inside the app
+**BBEdit 16 is fully sandboxed.** `~/Library/Application Support/BBEdit/Color Schemes/`
+is inside the container and cannot be written to from install scripts. Do not
+check `os.path.isdir(bbedit_schemes)` and write there — it will silently fail.
 
-Example pattern:
+**Pattern for sandboxed app theme/config files:**
+- Write generated files to a non-sandboxed source directory (e.g.,
+  `~/.local/share/dracula-pro/themes/bbedit/`)
+- Print a notice telling the user to open/import the files from within the app
 
 ```python
-# Install the theme file (non-sandboxed path — this works fine)
-with open(os.path.join(schemes_dir, "MyTheme.bbColorScheme"), "w") as fh:
+# Write to non-sandboxed source dir
+os.makedirs(out_dir, exist_ok=True)
+with open(os.path.join(out_dir, "MyTheme.bbColorScheme"), "w") as fh:
     fh.write(scheme_content)
 
-# Do NOT attempt: defaults write, plistlib, PlistBuddy to the container
-# Instead, tell the user:
-print("⚠ BBEdit: set the active color scheme in BBEdit > Preferences > Appearance.")
+# Tell the user — do NOT attempt writes into ~/Library/Application Support/BBEdit/
+print(f"BBEdit: open .bbColorScheme files from {out_dir} in BBEdit to install.")
+```
 
 ## Dotfiles Are Managed by Chezmoi — Always Edit the Source First
 
