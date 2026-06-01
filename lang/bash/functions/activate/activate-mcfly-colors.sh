@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 _koopa_activate_mcfly_colors() {
-    if [[ "${KOOPA_COLOR_MODE:-}" == 'light' ]]
+    if [[ "${KOOPA_COLOR_MODE:-}" == 'light' ]] && \
+        ! [[ -n "${TMUX:-}" && "$OSTYPE" != darwin* ]]
     then
         export MCFLY_LIGHT=true
     else
