@@ -150,6 +150,13 @@ def _build_install_config(
     note = app_meta.get("install_note", "")
     if note and not reinstall:
         print(f"Note: {note}", file=sys.stderr)
+    successor = app_meta.get("successor", "")
+    if successor and not reinstall:
+        print(
+            f"Note: '{name}' has a recommended successor: '{successor}'.\n"
+            f"      Consider installing '{successor}' instead.",
+            file=sys.stderr,
+        )
     return InstallConfig(
         name=name,
         mode=mode,

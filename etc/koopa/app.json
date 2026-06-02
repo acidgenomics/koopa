@@ -804,38 +804,34 @@
       "https://github.com/bcbio/bcbio-nextgen/"
     ]
   },
-  "bcl2fastq": {
+  "bcl-convert": {
     "bin": [
-      "bcl2fastq"
-    ],
-    "build_dependencies": [
-      "cmake",
-      "make"
+      "bcl-convert"
     ],
     "category": "Bioinformatics",
-    "date": "2023-05-24",
+    "date": "2026-05-12",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "icu4c",
-      "xz",
-      "zlib",
-      "zstd"
-    ],
     "description": "Illumina BCL to FASTQ conversion software",
-    "install_note": "Installation requires agreement to terms of service at: https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html",
+    "install_note": "Installation requires agreement to terms of service at: https://support.illumina.com/sequencing/sequencing_software/bcl-convert/downloads.html",
     "installer_platform": "linux",
     "private": true,
     "supported": {
       "linux-amd64": true,
-      "linux-arm64": false,
+      "linux-arm64": true,
       "macos-arm64": false
     },
     "type": "cli",
     "url": [
-      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
+      "https://support.illumina.com/sequencing/sequencing_software/bcl-convert.html",
+      "https://www.illumina.com/products/by-type/informatics-products/basespace-sequence-hub/apps/bcl-convert.html"
     ],
-    "version": "2.20"
+    "version": "4.5.4"
+  },
+  "bcl2fastq": {
+    "date": "2023-05-24",
+    "description": "Illumina BCL to FASTQ conversion software",
+    "removed": true,
+    "successor": "bcl-convert"
   },
   "bedtk": {
     "bin": [
@@ -932,29 +928,9 @@
     "version": "2.46.0"
   },
   "bioawk": {
-    "bin": [
-      "bioawk"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
     "date": "2023-10-16",
-    "default": false,
     "description": "awk extended with bioinformatics-aware field parsing",
-    "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": true
-    },
-    "type": "cli",
-    "url": [
-      "https://bioconda.github.io/recipes/bioawk/README.html",
-      "https://github.com/lh3/bioawk"
-    ],
-    "version": "1.0"
+    "removed": true
   },
   "bioconda-utils": {
     "build_dependencies": [
@@ -1119,23 +1095,10 @@
     "version": "2.5.5"
   },
   "bpytop": {
-    "bin": [
-      "bpytop"
-    ],
-    "category": "Terminal",
     "date": "2022-09-26",
-    "default": false,
-    "dependencies": [
-      "python"
-    ],
     "description": "resource monitor with a stylish terminal UI",
-    "installer": "python-package",
-    "type": "cli",
-    "url": [
-      "https://pypi.org/project/bpytop/",
-      "https://github.com/aristocratos/bpytop/"
-    ],
-    "version": "1.0.68"
+    "removed": true,
+    "successor": "btop"
   },
   "broot": {
     "bin": [
@@ -1522,6 +1485,21 @@
     "description": "command-line argument parser library for C++11",
     "removed": true
   },
+  "clickhouse": {
+    "bin": [
+      "clickhouse"
+    ],
+    "category": "Database",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "fast columnar OLAP database with local query engine",
+    "type": "cli",
+    "url": [
+      "https://clickhouse.com/",
+      "https://github.com/ClickHouse/ClickHouse/"
+    ],
+    "version": "26.3.12.3"
+  },
   "cloudbiolinux": {
     "date": "2026-05-11",
     "description": "automated bioinformatics environment setup",
@@ -1569,23 +1547,10 @@
     "version": "0.136.0"
   },
   "colorls": {
-    "bin": [
-      "colorls"
-    ],
-    "category": "Terminal",
     "date": "2024-07-12",
-    "default": false,
-    "dependencies": [
-      "ruby"
-    ],
     "description": "colorized ls replacement written in Ruby",
-    "installer": "ruby-package",
-    "type": "cli",
-    "url": [
-      "https://github.com/athityakumar/colorls/",
-      "https://rubygems.org/gems/colorls/"
-    ],
-    "version": "1.5.0"
+    "removed": true,
+    "successor": "eza"
   },
   "commitizen": {
     "bin": [
@@ -2046,6 +2011,125 @@
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
     "version": "1.1.0"
+  },
+  "dbt": {
+    "bin": [
+      "dbt"
+    ],
+    "category": "Workflow",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "python3.13"
+    ],
+    "description": "data build tool for analytics engineering",
+    "installer": "python-package",
+    "installer_args": {
+      "pip_name": "dbt-core",
+      "python_version": "3.13"
+    },
+    "python_version_pin": true,
+    "type": "cli",
+    "url": [
+      "https://docs.getdbt.com",
+      "https://github.com/dbt-labs/dbt-core"
+    ],
+    "version": "1.11.11"
+  },
+  "dbt-bigquery": {
+    "category": "Workflow",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "dbt"
+    ],
+    "description": "dbt adapter for BigQuery",
+    "installer": "python-plugin",
+    "installer_args": {
+      "parent_app": "dbt"
+    },
+    "type": "cli",
+    "url": [
+      "https://docs.getdbt.com",
+      "https://github.com/dbt-labs/dbt-adapters"
+    ],
+    "version": "1.11.1"
+  },
+  "dbt-databricks": {
+    "category": "Workflow",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "dbt"
+    ],
+    "description": "dbt adapter for Databricks",
+    "installer": "python-plugin",
+    "installer_args": {
+      "parent_app": "dbt"
+    },
+    "type": "cli",
+    "url": [
+      "https://docs.getdbt.com",
+      "https://github.com/databricks/dbt-databricks"
+    ],
+    "version": "1.12.0"
+  },
+  "dbt-postgres": {
+    "category": "Workflow",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "dbt"
+    ],
+    "description": "dbt adapter for PostgreSQL",
+    "installer": "python-plugin",
+    "installer_args": {
+      "parent_app": "dbt"
+    },
+    "type": "cli",
+    "url": [
+      "https://docs.getdbt.com",
+      "https://github.com/dbt-labs/dbt-adapters"
+    ],
+    "version": "1.10.0"
+  },
+  "dbt-redshift": {
+    "category": "Workflow",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "dbt"
+    ],
+    "description": "dbt adapter for Amazon Redshift",
+    "installer": "python-plugin",
+    "installer_args": {
+      "parent_app": "dbt"
+    },
+    "type": "cli",
+    "url": [
+      "https://docs.getdbt.com",
+      "https://github.com/dbt-labs/dbt-adapters"
+    ],
+    "version": "1.10.1"
+  },
+  "dbt-snowflake": {
+    "category": "Workflow",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "dbt"
+    ],
+    "description": "dbt adapter for Snowflake",
+    "installer": "python-plugin",
+    "installer_args": {
+      "parent_app": "dbt"
+    },
+    "type": "cli",
+    "url": [
+      "https://docs.getdbt.com",
+      "https://github.com/dbt-labs/dbt-adapters"
+    ],
+    "version": "1.11.5"
   },
   "deeptools": {
     "bin": [
@@ -2523,6 +2607,25 @@
       "https://crates.io/crates/eza/"
     ],
     "version": "0.23.4"
+  },
+  "fastfetch": {
+    "bin": [
+      "fastfetch"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "fast system information display tool",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/fastfetch-cli/fastfetch/"
+    ],
+    "version": "2.45.0"
   },
   "fastqc": {
     "bin": [
@@ -3626,23 +3729,10 @@
     "removed": true
   },
   "gtop": {
-    "bin": [
-      "gtop"
-    ],
-    "category": "Terminal",
     "date": "2023-08-11",
-    "default": false,
-    "dependencies": [
-      "node"
-    ],
     "description": "graphical process viewer in the terminal",
-    "installer": "node-package",
-    "type": "cli",
-    "url": [
-      "https://github.com/aksakalli/gtop/",
-      "https://www.npmjs.com/package/gtop/"
-    ],
-    "version": "1.1.5"
+    "removed": true,
+    "successor": "btop"
   },
   "gum": {
     "bin": [
@@ -4319,6 +4409,26 @@
     ],
     "version": "4.5.7"
   },
+  "just": {
+    "bin": [
+      "just"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "handy way to save and run project-specific commands",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/casey/just/",
+      "https://crates.io/crates/just"
+    ],
+    "version": "1.51.0"
+  },
   "k9s": {
     "bin": [
       "k9s"
@@ -4869,6 +4979,30 @@
     "date": "2026-05-06",
     "description": "async I/O bindings for Lua used by Neovim",
     "removed": true
+  },
+  "libnetcdf": {
+    "bin": [
+      "nc-config",
+      "nccopy",
+      "ncdump",
+      "ncgen",
+      "ncgen3"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Library",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "C library for array-oriented scientific data (NetCDF)",
+    "installer": "conda-package",
+    "type": "library",
+    "url": [
+      "https://www.unidata.ucar.edu/software/netcdf/",
+      "https://github.com/Unidata/netcdf-c/"
+    ],
+    "version": "4.10.0"
   },
   "libpcap": {
     "build_dependencies": [
@@ -5517,23 +5651,10 @@
     "version": "0.48.0"
   },
   "mcfly": {
-    "bin": [
-      "mcfly"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Filesystem",
-    "conda_channel": "conda-forge",
     "date": "2026-01-02",
-    "default": false,
     "description": "smart shell history search with neural networks",
-    "installer": "conda-package",
-    "type": "cli",
-    "url": [
-      "https://github.com/cantino/mcfly/"
-    ],
-    "version": "0.9.4"
+    "removed": true,
+    "successor": "atuin"
   },
   "mdcat": {
     "bin": [
@@ -5620,31 +5741,32 @@
     ],
     "version": "2.31"
   },
-  "misopy": {
+  "mise": {
     "bin": [
-      "miso"
+      "mise"
     ],
     "build_dependencies": [
       "conda"
     ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
-    "date": "2023-01-10",
+    "category": "Shell",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
     "default": false,
-    "description": "mixture-of-isoforms model for alternative splicing analysis",
+    "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": false
-    },
     "type": "cli",
     "url": [
-      "http://hollywood.mit.edu/burgelab/miso/",
-      "https://github.com/yarden/MISO/",
-      "https://bioconda.github.io/recipes/misopy/README.html"
+      "https://mise.jdx.dev/",
+      "https://github.com/jdx/mise/",
+      "https://crates.io/crates/mise"
     ],
-    "version": "0.5.4"
+    "version": "2026.5.9"
+  },
+  "misopy": {
+    "date": "2023-01-10",
+    "description": "mixture-of-isoforms model for alternative splicing analysis",
+    "removed": true,
+    "successor": "rmats"
   },
   "mold": {
     "date": "2026-04-15",
@@ -5830,28 +5952,10 @@
     "version": "9.0"
   },
   "nanopolish": {
-    "bin": [
-      "nanopolish"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
     "date": "2022-10-11",
-    "default": false,
     "description": "signal-level analysis of Oxford Nanopore sequencing data",
-    "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": true
-    },
-    "type": "cli",
-    "url": [
-      "https://bioconda.github.io/recipes/nanopolish/README.html"
-    ],
-    "version": "0.14.0"
+    "removed": true,
+    "successor": "ont-dorado"
   },
   "ncbi-sra-tools": {
     "bin": [
@@ -5933,22 +6037,10 @@
     "version": "6.6"
   },
   "neofetch": {
-    "bin": [
-      "neofetch"
-    ],
-    "category": "Terminal",
     "date": "2022-08-30",
-    "default": false,
     "description": "fast system information display tool",
-    "man1": [
-      "neofetch.1"
-    ],
-    "src_url": "https://github.com/dylanaraps/neofetch/archive/{version}.tar.gz",
-    "type": "cli",
-    "url": [
-      "https://github.com/dylanaraps/neofetch/"
-    ],
-    "version": "7.1.0"
+    "removed": true,
+    "successor": "fastfetch"
   },
   "neovim": {
     "bin": [
@@ -6189,28 +6281,10 @@
     "removed": true
   },
   "ont-bonito": {
-    "bin": [
-      "bonito"
-    ],
-    "category": "Bioinformatics",
     "date": "2026-02-22",
-    "default": false,
-    "dependencies": [
-      "python",
-      "zlib"
-    ],
     "description": "Oxford Nanopore basecaller",
-    "installer_platform": "linux",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-arm64": false
-    },
-    "type": "cli",
-    "url": [
-      "https://github.com/nanoporetech/bonito/"
-    ],
-    "version": "1.1.0"
+    "removed": true,
+    "successor": "ont-dorado"
   },
   "ont-dorado": {
     "bin": [
@@ -6227,21 +6301,10 @@
     "version": "2.0.0"
   },
   "ont-guppy": {
-    "bin": [
-      "guppy_basecaller"
-    ],
-    "category": "Bioinformatics",
     "date": "2023-05-31",
-    "default": false,
     "description": "Oxford Nanopore production basecaller",
-    "install_note": "Installation requires agreement to terms of service at: https://nanoporetech.com/support/nanopore-sequencing-data-analysis",
-    "private": true,
-    "type": "cli",
-    "url": [
-      "https://community.nanoporetech.com/",
-      "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
-    ],
-    "version": "6.5.7"
+    "removed": true,
+    "successor": "ont-dorado"
   },
   "ont-vbz-compression": {
     "date": "2026-05-02",
@@ -7675,6 +7738,7 @@
     "default": false,
     "description": "vim-inspired terminal file manager",
     "installer": "conda-package",
+    "successor": "yazi",
     "type": "cli",
     "url": [
       "https://pypi.org/project/ranger-fm/",
@@ -8084,29 +8148,10 @@
     "version": "1.11.4"
   },
   "sambamba": {
-    "bin": [
-      "sambamba"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
     "date": "2024-12-30",
-    "default": false,
     "description": "fast parallel tools for working with SAM/BAM files",
-    "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": true
-    },
-    "type": "cli",
-    "url": [
-      "https://github.com/biod/sambamba/",
-      "https://bioconda.github.io/recipes/sambamba/README.html"
-    ],
-    "version": "1.0.1"
+    "removed": true,
+    "successor": "samtools"
   },
   "samtools": {
     "bin": [
@@ -8433,6 +8478,29 @@
     ],
     "version": "9.21.1"
   },
+  "snowflake-cli": {
+    "bin": [
+      "snow"
+    ],
+    "category": "Cloud",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "python3.13"
+    ],
+    "description": "official command-line interface for Snowflake",
+    "installer": "python-package",
+    "installer_args": {
+      "python_version": "3.13"
+    },
+    "python_version_pin": true,
+    "type": "cli",
+    "url": [
+      "https://docs.snowflake.com/en/developer-guide/snowflake-cli/index",
+      "https://github.com/snowflakedb/snowflake-cli"
+    ],
+    "version": "3.19.0"
+  },
   "sox": {
     "bin": [
       "sox"
@@ -8732,6 +8800,21 @@
     ],
     "version": "1.14.5"
   },
+  "surrealdb": {
+    "bin": [
+      "surreal"
+    ],
+    "category": "Database",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "multi-model database with SurrealQL query language",
+    "type": "cli",
+    "url": [
+      "https://surrealdb.com/",
+      "https://github.com/surrealdb/surrealdb/"
+    ],
+    "version": "3.0.5"
+  },
   "swig": {
     "bin": [
       "swig"
@@ -8752,6 +8835,29 @@
       "http://www.swig.org/"
     ],
     "version": "4.4.1"
+  },
+  "tabcmd": {
+    "bin": [
+      "tabcmd"
+    ],
+    "category": "Cloud",
+    "date": "2026-06-02",
+    "default": false,
+    "dependencies": [
+      "python3.13"
+    ],
+    "description": "command-line interface for Tableau Server and Cloud",
+    "installer": "python-package",
+    "installer_args": {
+      "python_version": "3.13"
+    },
+    "python_version_pin": true,
+    "type": "cli",
+    "url": [
+      "https://tableau.github.io/tabcmd/",
+      "https://github.com/tableau/tabcmd/"
+    ],
+    "version": "2.0.18"
   },
   "taglib": {
     "build_dependencies": [
@@ -8848,6 +8954,26 @@
       "https://github.com/dbrgn/tealdeer/"
     ],
     "version": "1.8.1"
+  },
+  "television": {
+    "bin": [
+      "tv"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "blazing fast general-purpose fuzzy finder for the terminal",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/alexpasmantier/television/",
+      "https://crates.io/crates/television"
+    ],
+    "version": "0.15.5"
   },
   "temurin": {
     "bin": [
@@ -9191,6 +9317,30 @@
     ],
     "version": "0.11.18"
   },
+  "valkey": {
+    "bin": [
+      "valkey-cli",
+      "valkey-server"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Database",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "open-source in-memory data store (Redis fork, BSD-licensed)",
+    "installer": "conda-package",
+    "installer_args": {
+      "name": "valkey-server"
+    },
+    "type": "cli",
+    "url": [
+      "https://valkey.io/",
+      "https://github.com/valkey-io/valkey/"
+    ],
+    "version": "9.1.0"
+  },
   "vim": {
     "bin": [
       "ex",
@@ -9407,6 +9557,26 @@
       "https://github.com/google/woff2/"
     ],
     "version": "1.0.2"
+  },
+  "xh": {
+    "bin": [
+      "xh"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Network",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "friendly and fast HTTP client",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/ducaale/xh/",
+      "https://crates.io/crates/xh"
+    ],
+    "version": "0.25.3"
   },
   "xorg-libice": {
     "build_dependencies": [
@@ -9858,6 +10028,28 @@
       "https://github.com/google/yapf/"
     ],
     "version": "0.43.0"
+  },
+  "yazi": {
+    "bin": [
+      "ya",
+      "yazi"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Filesystem",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "blazing fast async terminal file manager",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://yazi-rs.github.io/",
+      "https://github.com/sxyazi/yazi/",
+      "https://crates.io/crates/yazi-fm"
+    ],
+    "version": "26.5.6"
   },
   "yq": {
     "bin": [

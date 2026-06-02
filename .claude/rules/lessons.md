@@ -286,3 +286,10 @@ NOT `koopa app install atuin`. The `app` subcommand does not exist for installat
 When preparing future plans or TODO list items for this project, write them to
 `todo.org` at the project root. This file is formatted as an Org mode document.
 Do not use `.claude/todo.md` or other formats for project task tracking.
+
+## Apps with `successor` Must Have `default: false`
+
+If an app entry in `app.json` has a `"successor"` field defined, it must also
+have `"default": false`. It makes no sense to install an app by default when a
+known better alternative exists. Treat this as an invariant — enforce it in any
+code that validates or processes the `successor` field.
