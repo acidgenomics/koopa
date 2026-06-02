@@ -1087,6 +1087,7 @@ _koopa_install() {
         'ruff'
         'ruff-lsp'
         'rust'
+        'rustqc'
         's5cmd'
         'salmon'
         'sambamba'

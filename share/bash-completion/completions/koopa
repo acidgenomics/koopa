@@ -603,6 +603,7 @@ _koopa_complete() {
                         'ruff'
                         'ruff-lsp'
                         'rust'
+                        'rustqc'
                         's5cmd'
                         'salmon'
                         'sambamba'

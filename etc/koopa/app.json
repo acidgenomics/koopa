@@ -8241,6 +8241,25 @@
     ],
     "version": "1.96.0"
   },
+  "rustqc": {
+    "bin": [
+      "rustqc"
+    ],
+    "build_dependencies": [
+      "rust"
+    ],
+    "category": "Bioinformatics",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "fast QC report aggregation for bioinformatics tools",
+    "installer": "rust-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/seqeralabs/RustQC",
+      "https://crates.io/crates/rustqc"
+    ],
+    "version": "0.1.0"
+  },
   "s5cmd": {
     "bin": [
       "s5cmd"
