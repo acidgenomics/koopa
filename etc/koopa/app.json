@@ -1459,6 +1459,29 @@
     ],
     "version": "2.70.4"
   },
+  "choose": {
+    "bin": [
+      "choose"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Text",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "human-friendly alternative to cut and awk for field selection",
+    "installer": "conda-package",
+    "installer_args": {
+      "name": "choose-rust"
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/theryangeary/choose/",
+      "https://crates.io/crates/choose"
+    ],
+    "version": "1.3.7"
+  },
   "claude-code": {
     "bin": [
       "claude"
@@ -3623,6 +3646,25 @@
     ],
     "version": "3.3"
   },
+  "gping": {
+    "bin": [
+      "gping"
+    ],
+    "build_dependencies": [
+      "rust"
+    ],
+    "category": "Network",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "ping with a graph in the terminal",
+    "installer": "rust-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/orf/gping/",
+      "https://crates.io/crates/gping"
+    ],
+    "version": "1.20.1"
+  },
   "graphviz": {
     "date": "2026-05-02",
     "description": "graph visualization software",
@@ -3924,6 +3966,26 @@
       "https://support.hdfgroup.org/downloads/index.html"
     ],
     "version": "2.1.1"
+  },
+  "helix": {
+    "bin": [
+      "hx"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "post-modern modal text editor with built-in LSP support",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://helix-editor.com/",
+      "https://github.com/helix-editor/helix/"
+    ],
+    "version": "25.07.1"
   },
   "hexyl": {
     "bin": [
@@ -4313,6 +4375,26 @@
     ],
     "version": "2.105.0"
   },
+  "jj": {
+    "bin": [
+      "jj"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "VCS",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "Git-compatible version control system with conflict resolution",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://jj-vcs.github.io/jj/",
+      "https://github.com/jj-vcs/jj/"
+    ],
+    "version": "0.41.0"
+  },
   "jless": {
     "bin": [
       "jless"
@@ -4419,7 +4501,7 @@
     "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-06-02",
-    "default": false,
+    "default": true,
     "description": "handy way to save and run project-specific commands",
     "installer": "conda-package",
     "type": "cli",
@@ -6275,6 +6357,26 @@
     ],
     "version": "0.113.1"
   },
+  "onefetch": {
+    "bin": [
+      "onefetch"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "VCS",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "Git repository summary in the terminal",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://onefetch.dev/",
+      "https://github.com/o2sh/onefetch/"
+    ],
+    "version": "2.27.1"
+  },
   "oniguruma": {
     "date": "2025-01-02",
     "description": "regular expressions library",
@@ -6455,6 +6557,26 @@
       "https://www.oracle.com/database/technologies/instant-client.html"
     ],
     "version": "21.21.0.0.0-1"
+  },
+  "ouch": {
+    "bin": [
+      "ouch"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Filesystem",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "painless compression and decompression in the terminal",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/ouch-org/ouch/",
+      "https://crates.io/crates/ouch"
+    ],
+    "version": "0.7.1"
   },
   "p7zip": {
     "bin": [
@@ -9089,6 +9211,25 @@
     ],
     "version": "14.0.0"
   },
+  "topgrade": {
+    "bin": [
+      "topgrade"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "upgrade all your tools with one command",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/topgrade-rs/topgrade/"
+    ],
+    "version": "17.5.1"
+  },
   "tqdm": {
     "bin": [
       "tqdm"
@@ -9401,6 +9542,26 @@
     ],
     "version": "3.3"
   },
+  "vivid": {
+    "bin": [
+      "vivid"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "themeable LS_COLORS generator with a rich filetype database",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/sharkdp/vivid/",
+      "https://crates.io/crates/vivid"
+    ],
+    "version": "0.11.1"
+  },
   "vulture": {
     "bin": [
       "vulture"
@@ -9436,6 +9597,26 @@
       "https://github.com/antonmedv/walk/"
     ],
     "version": "1.13.0"
+  },
+  "watchexec": {
+    "bin": [
+      "watchexec"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Terminal",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "execute commands when watched files change",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://watchexec.github.io/",
+      "https://github.com/watchexec/watchexec/"
+    ],
+    "version": "2.5.1"
   },
   "wget": {
     "bin": [
@@ -10040,7 +10221,7 @@
     "category": "Filesystem",
     "conda_channel": "conda-forge",
     "date": "2026-06-02",
-    "default": false,
+    "default": true,
     "description": "blazing fast async terminal file manager",
     "installer": "conda-package",
     "type": "cli",

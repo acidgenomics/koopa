@@ -599,6 +599,36 @@ _koopa_activate_micromamba() {
     return 0
 }
 
+_koopa_activate_mise() {
+    local mise
+    mise="${KOOPA_PREFIX:?}/bin/mise"
+    if [[ ! -x "$mise" ]]
+    then
+        return 0
+    fi
+    local shell
+    shell="${KOOPA_SHELL##*/}"
+    case "$shell" in
+        'bash' | \
+        'zsh')
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/mise-${shell}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$mise" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$mise" activate "$shell" > "$cache_file"
+    fi
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    source "$cache_file"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
+    return 0
+}
+
 _koopa_activate_path_helper() {
     local path_helper
     path_helper='/usr/libexec/path_helper'
@@ -817,6 +847,36 @@ _koopa_activate_tealdeer() {
         TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
     fi
     export TEALDEER_CONFIG_DIR
+    return 0
+}
+
+_koopa_activate_television() {
+    local tv
+    tv="${KOOPA_PREFIX:?}/bin/tv"
+    if [[ ! -x "$tv" ]]
+    then
+        return 0
+    fi
+    local shell
+    shell="${KOOPA_SHELL##*/}"
+    case "$shell" in
+        'bash' | \
+        'zsh')
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/television-${shell}.sh"
+    if [[ ! -f "$cache_file" ]] || [[ "$tv" -nt "$cache_file" ]]; then
+        mkdir -p "${cache_file%/*}"
+        "$tv" init "$shell" > "$cache_file"
+    fi
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    source "$cache_file"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 

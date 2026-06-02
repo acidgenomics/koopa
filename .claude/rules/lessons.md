@@ -297,3 +297,11 @@ code that validates or processes the `successor` field.
 ## AI Tool Scope: Major Vendors Only
 
 When evaluating AI agentic coding tools for inclusion in koopa, only include tools from major vendors: Anthropic, Google, OpenAI, Microsoft (GitHub), and Amazon. Do not suggest OSS community tools (aider, goose, OpenHands, etc.) regardless of popularity — the scope is intentionally narrow to vendor-backed products.
+
+## `etc/koopa/app.json` Is a Freely Editable File
+
+`etc/koopa/app.json` is the central app registry and is edited frequently (adding
+tools, bumping versions, toggling defaults). Never prompt for confirmation when
+editing this file — treat it like any other routine edit. The `Edit` permission
+already covers it; if plan mode is blocking edits, exit plan mode first rather
+than asking for per-edit approval.
