@@ -786,6 +786,7 @@ _koopa_install() {
         'csvtk'
         'curl'
         'dash'
+        'dask'
         'databricks-cli'
         'datafusion'
         'dbt'

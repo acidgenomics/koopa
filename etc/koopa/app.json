@@ -2022,6 +2022,24 @@
     ],
     "version": "0.5.13.4"
   },
+  "dask": {
+    "bin": [
+      "dask"
+    ],
+    "category": "Data Science",
+    "date": "2026-03-18",
+    "default": false,
+    "dependencies": [
+      "python"
+    ],
+    "description": "parallel analytics in Python",
+    "installer": "python-package",
+    "type": "cli",
+    "url": [
+      "https://www.dask.org/"
+    ],
+    "version": "2026.3.0"
+  },
   "databricks-cli": {
     "bin": [
       "databricks"
