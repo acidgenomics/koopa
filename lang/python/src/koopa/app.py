@@ -130,7 +130,12 @@ def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
     return list(dep_dict.get("noarch", []))
 
 
-def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True) -> list:
+def extract_app_deps(
+    name: str,
+    json_data: dict,
+    include_build_deps: bool = True,
+    include_soft_deps: bool = True,
+) -> list:
     """Extract unique build dependencies and dependencies in an ordered list.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
@@ -141,6 +146,7 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True
     sys_dict = {"os_id": os_id()}
     build_deps = []
     deps = []
+    soft_deps = []
     if include_build_deps and "build_dependencies" in json_data[name]:
         build_deps = json_data[name]["build_dependencies"]
         if isinstance(build_deps, dict):
@@ -149,7 +155,11 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True
         deps = json_data[name]["dependencies"]
         if isinstance(deps, dict):
             deps = _resolve_dep_dict(deps, sys_dict)
-    all_deps = build_deps + deps
+    if include_soft_deps and "soft_dependencies" in json_data[name]:
+        soft_deps = json_data[name]["soft_dependencies"]
+        if isinstance(soft_deps, dict):
+            soft_deps = _resolve_dep_dict(soft_deps, sys_dict)
+    all_deps = build_deps + deps + soft_deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
 

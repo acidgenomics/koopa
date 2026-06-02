@@ -32,6 +32,7 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
     sys_dict = {"os_id": os_id()}
     build_deps = []
     deps = []
+    soft_deps = []
     if name in json_data:
         entry = json_data[name]
         if "build_dependencies" in entry:
@@ -48,6 +49,13 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
 
                 d = _resolve_dep_dict(d, sys_dict)
             deps = list(d)
+        if "soft_dependencies" in entry:
+            sd = entry["soft_dependencies"]
+            if isinstance(sd, dict):
+                from koopa.app import _resolve_dep_dict
+
+                sd = _resolve_dep_dict(sd, sys_dict)
+            soft_deps = list(sd)
     dep_revisions: dict[str, int] = {}
     dep_versions: dict[str, str] = {}
     for d in deps:
@@ -70,6 +78,7 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
         "os_id": sys_dict["os_id"],
         "build_dependencies": build_deps,
         "dependencies": deps,
+        "soft_dependencies": soft_deps,
         "dep_revisions": dep_revisions,
         "dep_versions": dep_versions,
         "environ": _filter_environ(),

@@ -141,11 +141,13 @@
     "date": "2026-05-02",
     "default": false,
     "dependencies": [
-      "python",
-      "r",
       "temurin"
     ],
     "description": "distributed large-scale data processing engine",
+    "soft_dependencies": [
+      "python",
+      "r"
+    ],
     "type": "cli",
     "url": [
       "https://spark.apache.org/"
@@ -500,11 +502,13 @@
     "date": "2024-11-16",
     "default": false,
     "dependencies": [
-      "aws-cli",
       "node"
     ],
     "description": "authenticates to AWS via Azure Active Directory",
     "installer": "node-package",
+    "soft_dependencies": [
+      "aws-cli"
+    ],
     "type": "cli",
     "url": [
       "https://www.npmjs.com/package/aws-azure-login"
@@ -777,13 +781,13 @@
     "category": "Core",
     "date": "2026-05-02",
     "default": true,
-    "dependencies": [
-      "ed"
-    ],
     "description": "arbitrary-precision numeric processing language",
     "installer": "gnu-app",
     "man1": [
       "bc.1"
+    ],
+    "soft_dependencies": [
+      "ed"
     ],
     "src_url": "https://ftpmirror.gnu.org/bc/bc-{version}.tar.gz",
     "type": "cli",
@@ -3409,6 +3413,9 @@
     ],
     "description": "fast and flexible rewriting of Git history",
     "installer": "python-package",
+    "soft_dependencies": [
+      "git"
+    ],
     "type": "cli",
     "url": [
       "https://pypi.org/project/git-filter-repo/"
@@ -7731,8 +7738,6 @@
     "date": "2026-05-05",
     "default": false,
     "dependencies": [
-      "autoconf",
-      "automake",
       "bzip2",
       "cairo",
       "curl",
@@ -7746,16 +7751,13 @@
       "libpng",
       "libssh2",
       "libtiff",
-      "libtool",
       "libxml2",
       "openblas",
       "openssl",
       "pcre2",
       "pixman",
       "readline",
-      "tar",
       "tcl-tk",
-      "texinfo",
       "xorg-libice",
       "xorg-libpthread-stubs",
       "xorg-libsm",
@@ -7769,12 +7771,19 @@
       "xorg-xcb-proto",
       "xorg-xorgproto",
       "xz",
-      "zip",
       "zlib",
       "zstd"
     ],
     "description": "R development version (SVN build)",
     "installer": "r",
+    "soft_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "tar",
+      "texinfo",
+      "zip"
+    ],
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
@@ -10260,11 +10269,13 @@
     "date": "2026-03-19",
     "default": false,
     "dependencies": [
-      "ffmpeg",
       "python"
     ],
     "description": "download videos from YouTube and many other sites",
     "installer": "python-package",
+    "soft_dependencies": [
+      "ffmpeg"
+    ],
     "type": "cli",
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",

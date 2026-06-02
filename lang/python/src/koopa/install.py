@@ -139,6 +139,24 @@ def _app_build_dependencies(name: str) -> list[str]:
     return []
 
 
+def _app_soft_dependencies(name: str) -> list[str]:
+    """Get application soft dependencies from app.json."""
+    from koopa.app import _resolve_dep_dict
+    from koopa.system import os_id
+
+    data = import_app_json()
+    entry = data.get(name, {})
+    if isinstance(entry, dict):
+        deps = entry.get("soft_dependencies", [])
+        if isinstance(deps, str):
+            return [deps]
+        if isinstance(deps, dict):
+            return _resolve_dep_dict(deps, {"os_id": os_id()})
+        if isinstance(deps, list):
+            return deps
+    return []
+
+
 def _app_json_revision(name: str) -> int:
     """Get recipe revision from app.json (default 0)."""
     data = import_app_json()
@@ -668,7 +686,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if config.deps:
         build_deps = _app_build_dependencies(config.name)
         deps = _app_dependencies(config.name)
-        all_deps = list(dict.fromkeys(build_deps + deps))
+        soft_deps = _app_soft_dependencies(config.name)
+        all_deps = list(dict.fromkeys(build_deps + deps + soft_deps))
         if all_deps:
             if config.verbose:
                 from koopa.alert import alert_note, styled_name, styled_reason, styled_version
