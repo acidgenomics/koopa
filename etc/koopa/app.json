@@ -306,6 +306,26 @@
     ],
     "version": "4.2.19.956"
   },
+  "ast-grep": {
+    "bin": [
+      "sg"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Text",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "AST-aware structural code search and replace tool",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://ast-grep.github.io/",
+      "https://github.com/ast-grep/ast-grep/"
+    ],
+    "version": "0.43.0"
+  },
   "attr": {
     "build_dependencies": [
       "make",
@@ -381,45 +401,16 @@
     "version": "2.73"
   },
   "autodock": {
-    "bin": [
-      "autodock4"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
-    "date": "2023-10-16",
-    "default": false,
+    "date": "2026-06-02",
     "description": "molecular docking software",
-    "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": false
-    },
-    "type": "cli",
-    "url": [
-      "https://autodock.scripps.edu/",
-      "https://bioconda.github.io/recipes/autodock/README.html"
-    ],
-    "version": "4.2.6"
+    "removed": true,
+    "successor": "autodock-vina"
   },
   "autodock-adfr": {
-    "category": "Bioinformatics",
-    "date": "2023-10-16",
-    "default": false,
+    "date": "2026-06-02",
     "description": "AutoDock Flexible Receptor docking suite",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": false
-    },
-    "type": "cli",
-    "url": [
-      "https://ccsb.scripps.edu/adfr/"
-    ],
-    "version": "1.0"
+    "removed": true,
+    "successor": "autodock-vina"
   },
   "autodock-vina": {
     "bin": [
@@ -1421,21 +1412,10 @@
     "removed": true
   },
   "cheat": {
-    "bin": [
-      "cheat"
-    ],
-    "build_dependencies": [
-      "go"
-    ],
-    "category": "Terminal",
-    "date": "2026-02-16",
-    "default": false,
+    "date": "2026-06-02",
     "description": "interactive cheatsheet tool for the command line",
-    "type": "cli",
-    "url": [
-      "https://github.com/cheat/cheat/"
-    ],
-    "version": "5.1.0"
+    "removed": true,
+    "successor": "tealdeer"
   },
   "chemacs": {
     "date": "2023-09-13",
@@ -1526,6 +1506,26 @@
       "https://github.com/ClickHouse/ClickHouse/"
     ],
     "version": "26.3.12.3"
+  },
+  "cloud-sql-proxy": {
+    "bin": [
+      "cloud-sql-proxy"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Cloud",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "proxy for secure connections to Google Cloud SQL instances",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://cloud.google.com/sql/docs/postgres/sql-proxy",
+      "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
+    ],
+    "version": "2.22.0"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -2039,6 +2039,26 @@
     ],
     "version": "1.1.0"
   },
+  "datafusion": {
+    "bin": [
+      "datafusion-cli"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Database",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "Apache Arrow-native SQL query engine with CLI",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://datafusion.apache.org/",
+      "https://github.com/apache/datafusion/"
+    ],
+    "version": "50.1.0"
+  },
   "dbt": {
     "bin": [
       "dbt"
@@ -2207,19 +2227,10 @@
     "version": "0.19.2"
   },
   "diff-so-fancy": {
-    "bin": [
-      "diff-so-fancy"
-    ],
-    "category": "VCS",
-    "date": "2026-04-15",
-    "default": true,
+    "date": "2026-06-02",
     "description": "human-readable diff output for git",
-    "src_url": "https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v{version}.tar.gz",
-    "type": "cli",
-    "url": [
-      "https://github.com/so-fancy/diff-so-fancy/"
-    ],
-    "version": "1.4.10"
+    "removed": true,
+    "successor": "delta"
   },
   "difftastic": {
     "bin": [
@@ -2724,29 +2735,10 @@
     "version": "8.1.1"
   },
   "ffq": {
-    "bin": [
-      "ffq"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
-    "date": "2024-12-24",
-    "default": false,
+    "date": "2026-06-02",
     "description": "retrieve metadata from sequencing data repositories",
-    "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": true
-    },
-    "type": "cli",
-    "url": [
-      "https://github.com/pachterlab/ffq/",
-      "https://bioconda.github.io/recipes/ffq/README.html"
-    ],
-    "version": "0.3.1"
+    "removed": true,
+    "successor": "gget"
   },
   "fgbio": {
     "build_dependencies": [
@@ -4213,6 +4205,27 @@
     ],
     "version": "0.162.1"
   },
+  "hurl": {
+    "bin": [
+      "hurl",
+      "hurlfmt"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Network",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "HTTP testing tool using plain-text test files",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://hurl.dev/",
+      "https://github.com/Orange-OpenSource/hurl/"
+    ],
+    "version": "8.0.1"
+  },
   "hyperfine": {
     "bin": [
       "hyperfine"
@@ -4403,32 +4416,29 @@
     "version": "0.41.0"
   },
   "jless": {
+    "date": "2026-06-02",
+    "description": "command-line JSON viewer and pager",
+    "removed": true,
+    "successor": "jnv"
+  },
+  "jnv": {
     "bin": [
-      "jless"
+      "jnv"
     ],
     "build_dependencies": [
-      "rust"
+      "conda"
     ],
     "category": "Terminal",
-    "date": "2023-07-17",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
     "default": false,
-    "dependencies": [
-      "xorg-libxau",
-      "xorg-libxcb",
-      "xorg-libxdmcp",
-      "xorg-xorgproto"
-    ],
-    "description": "command-line JSON viewer and pager",
-    "installer": "rust-package",
-    "notes": [
-      "Available on conda only for amd64."
-    ],
+    "description": "interactive JSON navigator with live jq filter support",
+    "installer": "conda-package",
     "type": "cli",
     "url": [
-      "https://jless.io/",
-      "https://github.com/PaulJuliusMartinez/jless/"
+      "https://github.com/ynqa/jnv/"
     ],
-    "version": "0.9.0"
+    "version": "0.7.0"
   },
   "jpeg": {
     "date": "2024-12-30",
@@ -4653,6 +4663,25 @@
       "https://docs.latch.bio/"
     ],
     "version": "2.74.0"
+  },
+  "lazygit": {
+    "bin": [
+      "lazygit"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "VCS",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-02",
+    "default": false,
+    "description": "terminal UI for git with a simple and intuitive interface",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/jesseduffield/lazygit/"
+    ],
+    "version": "0.62.1"
   },
   "ldc": {
     "build_dependencies": [
@@ -8393,30 +8422,10 @@
     "version": "4.10.1"
   },
   "screen": {
-    "bin": [
-      "screen"
-    ],
-    "build_dependencies": [
-      "make"
-    ],
-    "category": "Terminal",
-    "date": "2026-05-08",
-    "default": false,
-    "dependencies": [
-      "libxcrypt",
-      "ncurses"
-    ],
+    "date": "2026-06-02",
     "description": "terminal multiplexer with detachable sessions",
-    "man1": [
-      "screen.1"
-    ],
-    "src_url": "https://mirrors.kernel.org/gnu/screen/screen-{version}.tar.gz",
-    "type": "cli",
-    "url": [
-      "https://www.gnu.org/software/screen",
-      "https://mirrors.kernel.org/gnu/screen/?C=M;O=D"
-    ],
-    "version": "5.0.1"
+    "removed": true,
+    "successor": "tmux"
   },
   "sd": {
     "bin": [
@@ -8852,25 +8861,10 @@
     "version": "1.25.1"
   },
   "stow": {
-    "bin": [
-      "stow"
-    ],
-    "build_dependencies": [
-      "conda",
-      "perl"
-    ],
-    "category": "Filesystem",
-    "conda_channel": "conda-forge",
-    "date": "2024-12-30",
-    "default": false,
+    "date": "2026-06-02",
     "description": "symlink farm manager for managing dotfiles",
-    "installer": "conda-package",
-    "revision": 1,
-    "type": "cli",
-    "url": [
-      "https://www.gnu.org/software/stow/"
-    ],
-    "version": "2.4.1"
+    "removed": true,
+    "successor": "chezmoi"
   },
   "streamlit": {
     "bin": [
@@ -9366,29 +9360,10 @@
     "removed": true
   },
   "umis": {
-    "bin": [
-      "umis"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Bioinformatics",
-    "conda_channel": "bioconda",
-    "date": "2023-10-16",
-    "default": false,
+    "date": "2026-06-02",
     "description": "tools for processing reads with UMI barcodes",
-    "installer": "conda-package",
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-arm64": true
-    },
-    "type": "cli",
-    "url": [
-      "https://github.com/vals/umis/",
-      "https://bioconda.github.io/recipes/umis/README.html"
-    ],
-    "version": "1.0.9"
+    "removed": true,
+    "successor": "salmon"
   },
   "unibilium": {
     "date": "2024-12-30",
@@ -10322,23 +10297,10 @@
     "version": "0.44.3"
   },
   "zenith": {
-    "bin": [
-      "zenith"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Terminal",
-    "conda_channel": "conda-forge",
-    "date": "2026-05-09",
-    "default": false,
+    "date": "2026-06-02",
     "description": "graphical terminal process monitor",
-    "installer": "conda-package",
-    "type": "cli",
-    "url": [
-      "https://github.com/bvaisvil/zenith/"
-    ],
-    "version": "0.15.0"
+    "removed": true,
+    "successor": "btop"
   },
   "zip": {
     "bin": [
