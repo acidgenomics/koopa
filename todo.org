@@ -1,0 +1,9 @@
+** TODO Review next generation shell tools written in Rust to see if we're missing anything. Focus on popular new tools like ripgrep, fd-find, git plugins like git-delta, difftastic. We just added atuin instead of mcfly which is a great example. Activate deep-research and look for new shell tools that are newly popular on GitHub. Also review blog posts like this for new recommendations:
+- https://medium.com/the-software-journal/5-rust-based-cli-tools-that-are-stupidly-fast-4cfcc9c5ce7c
+- https://www.repotoire.com/blog/rust-cli-tools-2026
+- https://dashen-tech.com/en/dev-tools/10-rust-cli-tools-2026/
+- https://www.linuxteck.com/modern-linux-tools/
+- https://dev.to/dev_tips/15-rust-tools-to-level-up-your-linux-terminal-2ecf
+
+What are some newly released shell tools that are gaining popularity on Homebrew?
+Can we identify any additional useful shell tools that are also newly popular on conda (conda-forge)?
