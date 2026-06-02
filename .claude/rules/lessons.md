@@ -293,3 +293,7 @@ If an app entry in `app.json` has a `"successor"` field defined, it must also
 have `"default": false`. It makes no sense to install an app by default when a
 known better alternative exists. Treat this as an invariant — enforce it in any
 code that validates or processes the `successor` field.
+
+## AI Tool Scope: Major Vendors Only
+
+When evaluating AI agentic coding tools for inclusion in koopa, only include tools from major vendors: Anthropic, Google, OpenAI, Microsoft (GitHub), and Amazon. Do not suggest OSS community tools (aider, goose, OpenHands, etc.) regardless of popularity — the scope is intentionally narrow to vendor-backed products.
