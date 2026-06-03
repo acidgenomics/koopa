@@ -29,3 +29,4 @@
     Unsupported (2):
       bcl-convert: 4.5.4
       dask: 2026.3.0
+** STARTED During dotfiles config, we need to inform the user more clearly on macOS that a color mode switching launch agent gets installed and where it gets installed. Only alert the user when this file is initially created. macOS pops up a cryptic UI notification that basically just says "sh" is running in background, which doesn't instill confidence and security in users.
