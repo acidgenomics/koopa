@@ -1,0 +1,3 @@
+** TODO Need to add support for pdflatex for R vignettes
+pdflatex not found! Not building PDF manual.
+** TODO Dracula Pro theme background color and text highlight color still aren't distinct enough. Need to fix this.
