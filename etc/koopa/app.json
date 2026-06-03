@@ -2313,7 +2313,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-02",
+    "date": "2026-06-03",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2323,7 +2323,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "aff4238fc8d7d0a331e26ac0612775048b6eba11"
+    "version": "e2704b79295bbe13ea83b00b8469c3825a441608"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -3160,7 +3160,7 @@
       "gemini"
     ],
     "category": "AI",
-    "date": "2026-05-31",
+    "date": "2026-06-03",
     "default": true,
     "dependencies": [
       "node"
@@ -3175,7 +3175,7 @@
       "https://geminicli.com/",
       "https://www.npmjs.com/package/@google/gemini-cli"
     ],
-    "version": "0.44.1"
+    "version": "0.45.0"
   },
   "genomepy": {
     "bin": [
@@ -5443,7 +5443,7 @@
     ],
     "category": "Build",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-06-03",
     "default": false,
     "description": "LLVM compiler infrastructure",
     "installer": "conda-package",
@@ -5451,7 +5451,7 @@
     "url": [
       "https://llvm.org/"
     ],
-    "version": "22.1.6"
+    "version": "22.1.7"
   },
   "lmod": {
     "build_dependencies": [
@@ -7218,7 +7218,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-03",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7229,7 +7229,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.6.32"
+    "version": "2.7.1"
   },
   "pyflakes": {
     "bin": [
