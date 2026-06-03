@@ -10416,7 +10416,7 @@
     "url": [
       "https://www.zsh.org/pub/"
     ],
-    "version": "26"
+    "version": "5.9.1"
   },
   "zstd": {
     "bin": [

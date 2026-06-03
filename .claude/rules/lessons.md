@@ -1,5 +1,13 @@
 # Lessons
 
+## Zsh Uses Semantic Versioning — Never Set Version to a Bare Integer
+
+Zsh's release numbering is `5.x.y` (e.g., `5.9.1`). The integer `26` is **not** a valid zsh version — it is the GNU project major release number of the *zsh project itself*, not the tarball version. Setting `"version": "26"` in `app.json` causes URLs like `zsh-26.tar.xz` to 404.
+
+Always verify the tarball URL at `https://www.zsh.org/pub/` before updating the zsh version. The correct format is always `zsh-{major}.{minor}.{patch}.tar.xz`.
+
+The root cause of the bad version in commit `9662caa0efcd` was a version-check fix that blindly wrote the release number rather than verifying against the actual download URL. Before changing any app version in `app.json`, confirm the tarball exists at the resolved `src_url`.
+
 ## Git Recovery: Handle Both MERGING and Rebasing States
 
 When recovering from a failed `git pull` in `update_koopa()`, handle both interrupted merge state (`.git/MERGE_HEAD`) and interrupted rebase state (`.git/rebase-merge` or `.git/rebase-apply`). `git pull` may use either merge or rebase strategy depending on config and git version.

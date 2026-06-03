@@ -540,6 +540,21 @@ def _check_pkg_config() -> str:
         raise _NetworkUnavailableError(msg) from exc
 
 
+def _check_bcl_convert() -> str:
+    url = "https://support.illumina.com/sequencing/sequencing_software/bcl-convert.html"
+    html = _http_get_text(url)
+    pattern = re.compile(r"bcl-convert-v([\d]+(?:-[\d]+)+)-installers")
+    versions: list[str] = pattern.findall(html)
+    if not versions:
+        msg = f"No bcl-convert version found at {url}"
+        raise RuntimeError(msg)
+    best = max(
+        set(versions),
+        key=lambda v: tuple(int(x) for x in v.split("-")),
+    )
+    return best.replace("-", ".")
+
+
 def _check_gnupg(package: str) -> str:
     url = f"https://gnupg.org/ftp/gcrypt/{package}/"
     return _check_directory_listing(url, package)
@@ -1727,6 +1742,25 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "zip": _AppCheckSpec(
         "dirlist",
         lambda: _check_sourceforge_versions("infozip/files/Zip%203.x%20%28latest%29/"),
+        (),
+    ),
+    "bcl-convert": _AppCheckSpec("dirlist", _check_bcl_convert, ()),
+    "cloud-sql-proxy": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("cloud-sql-proxy", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
+    "dask": _AppCheckSpec("pypi", _check_pypi, ("dask",)),
+    "datafusion": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda("datafusion", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
+    "dbt-bigquery": _AppCheckSpec("pypi", _check_pypi, ("dbt-bigquery",)),
+    "dbt-snowflake": _AppCheckSpec("pypi", _check_pypi, ("dbt-snowflake",)),
+    "zsh": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing("https://www.zsh.org/pub/", "zsh"),
         (),
     ),
 }
