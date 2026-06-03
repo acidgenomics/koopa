@@ -1,0 +1,31 @@
+** TODO Need to fix zsh source mirroring
+    Uploading source tarballs to mirror(s).
+    Downloading 'https://www.zsh.org/pub/zsh-26.tar.xz' to '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmpzimy_o5_/zsh-26.tar.xz'.
+      % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                     Dload  Upload  Total   Spent   Left   Speed
+      0      0   0      0   0      0      0      0                              0
+    curl: (22) The requested URL returned error: 404
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+      0   153    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+    curl: (56) The requested URL returned error: 404
+      Mirror upload skipped for 'zsh': download failed: HTTP Error 404: Not Found
+    Downloading 'https://downloads.sourceforge.net/project/zsh/zsh/26/zsh-26.tar.xz' to '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmp6iuh_j4t/zsh-26.tar.xz'.
+      % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                     Dload  Upload  Total   Spent   Left   Speed
+    100    298 100    298   0      0   1720      0                              0
+    100 826.6k 100 826.6k   0      0  1.60M      0                              0
+      Mirror upload skipped for 'zsh': download failed: invalid archive
+** TODO Need to fix version check failures
+    Pinned too high (3):
+      cloud-sql-proxy  2.22.0  (latest stable: 1.38.0)  (github)
+      dbt-bigquery     1.11.1  (latest stable: 1.10.4)  (github)
+      dbt-snowflake    1.11.5  (latest stable: 1.10.4)  (github)
+
+    Failed (2):
+      bedtk: check failed (network unavailable)
+      datafusion: Invalid version string for datafusion: 'python-0.4.0'
+
+    Unsupported (2):
+      bcl-convert: 4.5.4
+      dask: 2026.3.0

@@ -516,7 +516,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -528,7 +528,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.57"
+    "version": "2.34.58"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -578,7 +578,7 @@
       "az"
     ],
     "category": "Cloud",
-    "date": "2026-05-05",
+    "date": "2026-06-02",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -593,7 +593,7 @@
     "url": [
       "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
     ],
-    "version": "2.86.0"
+    "version": "2.87.0"
   },
   "bamtools": {
     "bin": [
@@ -1104,7 +1104,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-05-31",
+    "date": "2026-06-02",
     "default": false,
     "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
@@ -1113,7 +1113,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.56.4"
+    "version": "1.57.0"
   },
   "brotli": {
     "bin": [
@@ -1471,7 +1471,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": true,
     "dependencies": [
       "node"
@@ -1485,7 +1485,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.159"
+    "version": "2.1.161"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1636,7 +1636,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": true,
     "dependencies": [
       "node"
@@ -1650,7 +1650,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.57"
+    "version": "1.0.59"
   },
   "coreutils": {
     "bin": [
@@ -2156,7 +2156,7 @@
       "https://docs.getdbt.com",
       "https://github.com/dbt-labs/dbt-adapters"
     ],
-    "version": "1.10.0"
+    "version": "1.10.4"
   },
   "dbt-redshift": {
     "category": "Workflow",
@@ -2175,7 +2175,7 @@
       "https://docs.getdbt.com",
       "https://github.com/dbt-labs/dbt-adapters"
     ],
-    "version": "1.10.1"
+    "version": "1.10.4"
   },
   "dbt-snowflake": {
     "category": "Workflow",
@@ -2313,7 +2313,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2323,14 +2323,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "1d7a94b96b4410a3747ec579c728a79413379e64"
+    "version": "aff4238fc8d7d0a331e26ac0612775048b6eba11"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2340,7 +2340,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "18f887d32da7a3fe62913b7ec7d509f854a68d7e"
+    "version": "6c53d5bcdcf9e58b15cd40622f5af26676ec6ead"
   },
   "du-dust": {
     "bin": [
@@ -2681,7 +2681,7 @@
     "url": [
       "https://github.com/fastfetch-cli/fastfetch/"
     ],
-    "version": "2.45.0"
+    "version": "2.49.0"
   },
   "fastqc": {
     "bin": [
@@ -3600,14 +3600,14 @@
       "go"
     ],
     "category": "Language",
-    "date": "2026-05-07",
+    "date": "2026-06-02",
     "default": false,
     "description": "Go programming language toolchain",
     "type": "cli",
     "url": [
       "https://golang.org/dl/"
     ],
-    "version": "1.26.3"
+    "version": "1.26.4"
   },
   "google-cloud-sdk": {
     "bin": [
@@ -3619,7 +3619,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-05-31",
+    "date": "2026-06-02",
     "default": true,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
@@ -3628,7 +3628,7 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "570.0.0"
+    "version": "571.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -4403,7 +4403,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-05-31",
+    "date": "2026-06-02",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4411,7 +4411,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.105.0"
+    "version": "2.106.0"
   },
   "jj": {
     "bin": [
@@ -4456,7 +4456,7 @@
     "url": [
       "https://github.com/ynqa/jnv/"
     ],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "jpeg": {
     "date": "2024-12-30",
@@ -5699,7 +5699,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-06-02",
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
@@ -5708,7 +5708,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.6.2"
+    "version": "2.7.0"
   },
   "man-db": {
     "bin": [
@@ -5896,7 +5896,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.5.9"
+    "version": "2026.5.18"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6355,7 +6355,7 @@
     ],
     "category": "Language",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-06-02",
     "default": false,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
@@ -6374,7 +6374,7 @@
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.2.0"
+    "version": "26.3.0"
   },
   "npth": {
     "build_dependencies": [
@@ -8305,7 +8305,7 @@
       "https://github.com/seqeralabs/RustQC",
       "https://crates.io/crates/rustqc"
     ],
-    "version": "0.1.0"
+    "version": "0.2.1"
   },
   "s5cmd": {
     "bin": [
@@ -8643,7 +8643,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-05-31",
+    "date": "2026-06-02",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -8653,7 +8653,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.21.1"
+    "version": "9.22.0"
   },
   "snowflake-cli": {
     "bin": [
@@ -8710,7 +8710,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8720,7 +8720,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "529c7fc3a33682770ac1ef2941eb33df012733eb"
+    "version": "a1b98eb7d303226be60a0afe3025fc87d67be23b"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -10398,7 +10398,7 @@
       "texinfo"
     ],
     "category": "Shell",
-    "date": "2026-06-01",
+    "date": "2026-06-02",
     "default": false,
     "dependencies": [
       "ncurses",
@@ -10416,7 +10416,7 @@
     "url": [
       "https://www.zsh.org/pub/"
     ],
-    "version": "5.9.1"
+    "version": "26"
   },
   "zstd": {
     "bin": [
