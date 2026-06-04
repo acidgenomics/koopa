@@ -56,24 +56,6 @@
     ],
     "version": "1.7.0"
   },
-  "air": {
-    "bin": [
-      "air"
-    ],
-    "build_dependencies": [
-      "rust"
-    ],
-    "category": "R",
-    "date": "2026-05-02",
-    "default": false,
-    "description": "R code formatter",
-    "type": "cli",
-    "url": [
-      "https://posit-dev.github.io/air/",
-      "https://github.com/posit-dev/air"
-    ],
-    "version": "0.9.0"
-  },
   "age": {
     "bin": [
       "age",
@@ -94,6 +76,24 @@
       "https://github.com/FiloSottile/age"
     ],
     "version": "1.3.1"
+  },
+  "air": {
+    "bin": [
+      "air"
+    ],
+    "build_dependencies": [
+      "rust"
+    ],
+    "category": "R",
+    "date": "2026-05-02",
+    "default": false,
+    "description": "R code formatter",
+    "type": "cli",
+    "url": [
+      "https://posit-dev.github.io/air/",
+      "https://github.com/posit-dev/air"
+    ],
+    "version": "0.9.0"
   },
   "anaconda": {
     "category": "Python",
@@ -9247,6 +9247,30 @@
       "https://mirrors.kernel.org/gnu/texinfo/?C=M;O=D"
     ],
     "version": "7.3"
+  },
+  "texlive-core": {
+    "bin": [
+      "bibtex",
+      "latex",
+      "pdflatex",
+      "tlmgr",
+      "xelatex"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Documentation",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-04",
+    "default": false,
+    "description": "TeX Live core distribution providing pdflatex and tlmgr",
+    "installer": "conda-package",
+    "type": "build_tool",
+    "url": [
+      "https://tug.org/texlive/",
+      "https://anaconda.org/conda-forge/texlive-core"
+    ],
+    "version": "20230313"
   },
   "tl-expected": {
     "date": "2025-10-08",

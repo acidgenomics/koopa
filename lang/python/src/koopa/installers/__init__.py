@@ -134,6 +134,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "subread": f"{_M}._conda",
     "tealdeer": f"{_M}._conda",
     "television": f"{_M}._conda",
+    "texlive-core": f"{_M}._conda",
     "tokei": f"{_M}._conda",
     "topgrade": f"{_M}._conda",
     "tuc": f"{_M}._conda",
