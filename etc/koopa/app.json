@@ -74,6 +74,27 @@
     ],
     "version": "0.9.0"
   },
+  "age": {
+    "bin": [
+      "age",
+      "age-keygen"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Security",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-03",
+    "default": true,
+    "description": "simple modern file encryption tool",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://age-encryption.org/",
+      "https://github.com/FiloSottile/age"
+    ],
+    "version": "1.3.1"
+  },
   "anaconda": {
     "category": "Python",
     "date": "2026-02-22",
@@ -85,6 +106,34 @@
       "https://repo.anaconda.com/archive/"
     ],
     "version": "2025.12-2"
+  },
+  "ansible-core": {
+    "bin": [
+      "ansible",
+      "ansible-config",
+      "ansible-connection",
+      "ansible-console",
+      "ansible-doc",
+      "ansible-galaxy",
+      "ansible-inventory",
+      "ansible-playbook",
+      "ansible-pull",
+      "ansible-vault"
+    ],
+    "category": "DevOps",
+    "date": "2026-06-03",
+    "default": false,
+    "dependencies": [
+      "python"
+    ],
+    "description": "minimal Ansible automation engine with vault encryption",
+    "installer": "python-package",
+    "type": "cli",
+    "url": [
+      "https://docs.ansible.com/",
+      "https://github.com/ansible/ansible"
+    ],
+    "version": "2.21.0"
   },
   "apache-airflow": {
     "bin": [

@@ -1,3 +1,5 @@
 ** TODO Need to add support for pdflatex for R vignettes
 pdflatex not found! Not building PDF manual.
 ** TODO Dracula Pro theme background color and text highlight color still aren't distinct enough. Need to fix this.
+** TODO Ensure we support age and anisibile for dotfile encryption.
+** TODO I'm hitting a weird vs code bug where sometimes typing in insert mode the code I'm typing accidentally (incorrectly?) pastes multiple times. Is there a weird autocompletion support that is broken?
