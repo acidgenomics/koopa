@@ -210,7 +210,7 @@
       "pkg-config"
     ],
     "category": "Container",
-    "date": "2026-05-07",
+    "date": "2026-06-05",
     "default": false,
     "description": "container runtime for HPC environments",
     "installer_platform": "linux",
@@ -223,7 +223,7 @@
     "url": [
       "https://github.com/apptainer/apptainer/"
     ],
-    "version": "1.5.0"
+    "version": "1.5.1"
   },
   "apr": {
     "build_dependencies": [
@@ -565,7 +565,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -577,7 +577,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.58"
+    "version": "2.34.61"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1481,7 +1481,7 @@
     ],
     "category": "Dotfile",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-06-05",
     "default": true,
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
@@ -1490,7 +1490,7 @@
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
     ],
-    "version": "2.70.4"
+    "version": "2.70.5"
   },
   "choose": {
     "bin": [
@@ -1520,7 +1520,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "node"
@@ -1534,7 +1534,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.161"
+    "version": "2.1.165"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1606,7 +1606,7 @@
       "codex"
     ],
     "category": "AI",
-    "date": "2026-06-01",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "node"
@@ -1620,7 +1620,7 @@
     "url": [
       "https://www.npmjs.com/package/@openai/codex"
     ],
-    "version": "0.136.0"
+    "version": "0.137.0"
   },
   "colorls": {
     "date": "2024-07-12",
@@ -2097,14 +2097,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-05-31",
+    "date": "2026-06-05",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.1.0"
+    "version": "1.2.1"
   },
   "datafusion": {
     "bin": [
@@ -2362,7 +2362,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-03",
+    "date": "2026-06-05",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2372,14 +2372,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "e2704b79295bbe13ea83b00b8469c3825a441608"
+    "version": "1a9ae8415029c75ead7c6b41449781ec84d5fd9d"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2389,7 +2389,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "6c53d5bcdcf9e58b15cd40622f5af26676ec6ead"
+    "version": "2ecd4d452d16a2045f306b3e6bf869c73e7770c1"
   },
   "du-dust": {
     "bin": [
@@ -3209,7 +3209,7 @@
       "gemini"
     ],
     "category": "AI",
-    "date": "2026-06-03",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "node"
@@ -3224,7 +3224,7 @@
       "https://geminicli.com/",
       "https://www.npmjs.com/package/@google/gemini-cli"
     ],
-    "version": "0.45.0"
+    "version": "0.45.1"
   },
   "genomepy": {
     "bin": [
@@ -4233,7 +4233,7 @@
       "hf"
     ],
     "category": "AI",
-    "date": "2026-05-31",
+    "date": "2026-06-05",
     "default": false,
     "dependencies": [
       "python"
@@ -4249,7 +4249,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "1.17.0"
+    "version": "1.18.0"
   },
   "hugo": {
     "bin": [
@@ -4390,7 +4390,7 @@
       "ipython"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "python"
@@ -4402,7 +4402,7 @@
       "https://ipython.org/",
       "https://pypi.org/project/ipython/"
     ],
-    "version": "9.14.0"
+    "version": "9.14.1"
   },
   "isl": {
     "build_dependencies": [
@@ -4452,7 +4452,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4460,7 +4460,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.106.0"
+    "version": "2.107.0"
   },
   "jj": {
     "bin": [
@@ -4555,7 +4555,7 @@
       "jupyter-lab"
     ],
     "category": "Python",
-    "date": "2026-05-02",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "python"
@@ -4567,13 +4567,12 @@
         "JLDracula"
       ]
     },
-    "revision": 2,
     "type": "cli",
     "url": [
       "https://jupyter.org/",
       "https://pypi.org/project/jupyterlab/"
     ],
-    "version": "4.5.7"
+    "version": "4.5.8"
   },
   "just": {
     "bin": [
@@ -4740,7 +4739,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": false,
     "description": "terminal UI for git with a simple and intuitive interface",
     "installer": "conda-package",
@@ -4748,7 +4747,7 @@
     "url": [
       "https://github.com/jesseduffield/lazygit/"
     ],
-    "version": "0.62.1"
+    "version": "0.62.2"
   },
   "ldc": {
     "build_dependencies": [
@@ -5748,7 +5747,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
@@ -5757,7 +5756,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.7.0"
+    "version": "2.8.0"
   },
   "man-db": {
     "bin": [
@@ -5803,7 +5802,7 @@
       "marimo"
     ],
     "category": "Python",
-    "date": "2026-05-24",
+    "date": "2026-06-05",
     "default": false,
     "dependencies": [
       "python"
@@ -5815,7 +5814,7 @@
       "https://marimo.io/",
       "https://pypi.org/project/marimo/"
     ],
-    "version": "0.23.8"
+    "version": "0.23.9"
   },
   "markdownlint-cli": {
     "bin": [
@@ -5935,7 +5934,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-06-05",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -5945,7 +5944,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.5.18"
+    "version": "2026.6.0"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6715,7 +6714,7 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-03-20",
+    "date": "2026-06-05",
     "default": false,
     "description": "universal document format converter",
     "installer": "conda-package",
@@ -6724,7 +6723,7 @@
       "https://pandoc.org/",
       "https://github.com/jgm/pandoc/"
     ],
-    "version": "3.9.0.2"
+    "version": "3.10"
   },
   "parallel": {
     "bin": [
@@ -6984,7 +6983,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-05",
     "default": false,
     "dependencies": [
       "python"
@@ -6996,7 +6995,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.13.0"
+    "version": "1.14.0"
   },
   "pixman": {
     "build_dependencies": [
@@ -7831,7 +7830,7 @@
       "subversion"
     ],
     "category": "Language",
-    "date": "2026-05-05",
+    "date": "2026-06-05",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -7894,7 +7893,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "90000"
+    "version": "90100"
   },
   "r-gfortran": {
     "category": "R",
@@ -8283,7 +8282,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "python"
@@ -8294,7 +8293,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.15.15"
+    "version": "0.15.16"
   },
   "ruff-lsp": {
     "bin": [
@@ -8808,7 +8807,7 @@
       "sqlfluff"
     ],
     "category": "Python",
-    "date": "2026-05-15",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "python"
@@ -8820,7 +8819,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.2.1"
+    "version": "4.2.2"
   },
   "sqlite": {
     "bin": [
@@ -8831,7 +8830,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-05-05",
+    "date": "2026-06-05",
     "default": false,
     "dependencies": [
       "readline",
@@ -8844,13 +8843,12 @@
     "notes": [
       "Need to update install script for minor version bumps."
     ],
-    "revision": 1,
     "src_url": "https://www.sqlite.org/{year}/sqlite-autoconf-{file_version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.sqlite.org/download.html"
     ],
-    "version": "3.53.1"
+    "version": "3.53.2"
   },
   "staden-io-lib": {
     "date": "2026-05-06",
@@ -9431,7 +9429,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-06-01",
+    "date": "2026-06-05",
     "default": true,
     "dependencies": [
       "python"
@@ -9443,7 +9441,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.42"
+    "version": "0.0.44"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9543,14 +9541,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-06-01",
+    "date": "2026-06-05",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.18"
+    "version": "0.11.19"
   },
   "valkey": {
     "bin": [
