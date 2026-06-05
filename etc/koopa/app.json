@@ -1,4 +1,19 @@
 {
+  "1password-cli": {
+    "bin": [
+      "op"
+    ],
+    "category": "Security",
+    "date": "2026-06-05",
+    "default": true,
+    "description": "1Password command-line interface for secrets management",
+    "type": "cli",
+    "url": [
+      "https://developer.1password.com/docs/cli/",
+      "https://app-updates.agilebits.com/product_history/CLI2"
+    ],
+    "version": "2.34.0"
+  },
   "ack": {
     "bin": [
       "ack"

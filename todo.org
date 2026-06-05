@@ -1,0 +1,1 @@
+** TODO Evaluate 1Password CLI install support for enabling `op`.
