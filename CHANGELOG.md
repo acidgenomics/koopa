@@ -1,5 +1,59 @@
 # Changelog
 
+## koopa 0.19.0 (2026-06-06)
+
+Major changes:
+
+- Built zsh from source (5.9.1) for reproducible, version-pinned installs.
+  Zsh is no longer installed by default; use `koopa install zsh` if needed.
+- Introduced `soft_dependencies` field in `app.json` to distinguish optional
+  from required dependencies, allowing flexible app configurations without
+  forcing transitive installs.
+- Improved dark/light color mode detection for VS Code, Posit Workbench, and
+  Positron. Added a `TERM_PROGRAM=vscode` guard to skip the OSC 11 terminal
+  background query in xterm.js-based terminals, where the response leaks
+  `^[\` (the String Terminator) into terminal output. Falls back to the
+  cached `~/.cache/koopa/color-mode` value, consistent with the tmux path.
+- Migrated binary package hosting to `artifacts.acidgenomics.com`.
+- Added `atuin` as the recommended shell history tool, bound to Ctrl+R.
+  `mcfly` is now deprecated with `atuin` as its successor.
+
+Minor changes:
+
+- Improved progress bar display for `koopa develop check-app-versions`.
+- Fixed `dotfiles` installer handling and configuration.
+- Improved version checks across managed apps.
+- Updated app installers.
+- Scoped AI agentic coding tools to major vendors only (Anthropic, Google,
+  OpenAI, Microsoft, Amazon). Community OSS tools are out of scope.
+- Updated Claude Code configuration, primarily in `dotfiles`.
+
+New apps:
+
+- `1password-cli`.
+- `age`.
+- `ansible-core`.
+- `ast-grep`.
+- `atuin`.
+- `bcl-convert` (replaces `bcl2fastq`).
+- `choose`.
+- `clickhouse`.
+- `dask`.
+- `datafusion`.
+- `dbt` (plus adapters: `dbt-bigquery`, `dbt-databricks`, `dbt-postgres`,
+  `dbt-redshift`, `dbt-snowflake`).
+- `fastfetch` (replaces `neofetch`).
+- `helix`.
+- `jj`.
+- `just`.
+- `lazygit`.
+- `mise`.
+- `rustqc`.
+- `television`.
+- `topgrade`.
+- `valkey`.
+- `yazi`.
+
 ## koopa 0.18.0 (2026-05-31)
 
 Major changes:
