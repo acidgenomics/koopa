@@ -346,6 +346,33 @@ defense-in-depth, across all three shell variants (bash, sh, zsh).
 After editing any of these files, run `koopa develop cache-functions` to
 regenerate the `include/functions.sh` bundle files.
 
+## launchd/systemd Jobs Must Never Re-Bootstrap Their Own Agent
+
+A background sync job that calls the full dotfiles installer will trigger
+`_sync_launchd_agent()` → `launchctl bootout <self>` → SIGTERM mid-run. The
+process dies before writing any state marker, leaving a permanent wedge: files
+rendered to mode X, marker stuck at mode Y, watcher early-exits forever.
+
+**Rule:** color-mode sync jobs (and any background watcher) must do *only* the
+targeted work — never invoke `opt/dotfiles/install` or any path that calls
+`_sync_launchd_agent`/`_sync_systemd_user_agent`. Use `chezmoi apply <targets>`
+directly; leave agent lifecycle to the full `koopa configure user dotfiles`.
+
+## Color-Mode Switch: Apply Only the Color-Mode Templates (Targeted chezmoi apply)
+
+A color-mode flip must re-render **only** the ~32 templates that branch on
+`KOOPA_COLOR_MODE`, via `chezmoi apply <target>...` against the main tree.
+Never route a theme switch through the heavy installer or the work/private trees.
+
+**Discovery pattern:** walk the main chezmoi source for `*.tmpl` files containing
+`KOOPA_COLOR_MODE`; derive target paths using chezmoi naming conventions
+(`dot_` → `.`, strip `.tmpl`, strip attribute prefixes); filter to targets that
+exist on disk (skips unmanaged/undeployed templates automatically).
+
+Work/private trees contain zero `KOOPA_COLOR_MODE` logic — re-running them on a
+color flip adds age/git/network dependency in a background context and churns
+`.claude/settings.json`, `.npmrc`, `.aws/config` needlessly.
+
 ## Dotfiles Color-Mode: Render from OS, Never from Inherited Env
 
 Any `chezmoi apply` path that branches on `KOOPA_COLOR_MODE` must derive the

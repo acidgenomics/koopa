@@ -9,6 +9,23 @@ Major changes:
 - Introduced `soft_dependencies` field in `app.json` to distinguish optional
   from required dependencies, allowing flexible app configurations without
   forcing transitive installs.
+- Overhauled automatic dark/light color-mode switching. Added a new
+  `koopa configure user color-mode` command that detects the OS appearance at
+  call time (never trusts inherited environment), then runs the full
+  main → work → private dotfiles apply sequence (with `KOOPA_DOTFILES_SKIP_PULL`
+  set) and hot-reloads any running tmux server. Fixed a shared-cache race in the
+  macOS launchd watcher where new shells writing `~/.cache/koopa/color-mode`
+  before the agent fired caused it to exit early without re-rendering templates;
+  the watcher now guards on a separate `color-mode-applied` marker. Hardened
+  `configure user dotfiles` and `opt/dotfiles/install` to always derive
+  `KOOPA_COLOR_MODE` from the OS before every `chezmoi apply`, so stale
+  long-running processes can no longer clobber rendered files. Extended the zsh
+  `precmd` hook to re-source the Dracula Pro palette on appearance changes so
+  already-open shells get live syntax-highlight and autosuggestion color updates.
+  Added a Linux systemd user service (`koopa-color-mode-sync.service`) that
+  subscribes to the XDG portal `SettingChanged` signal (with a `gsettings
+  monitor` fallback) and invokes `koopa configure user color-mode` on appearance
+  changes.
 - Improved dark/light color mode detection for VS Code, Posit Workbench, and
   Positron. Added a `TERM_PROGRAM=vscode` guard to skip the OSC 11 terminal
   background query in xterm.js-based terminals, where the response leaks

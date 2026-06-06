@@ -308,6 +308,17 @@ _koopa_activate_color_mode() {
             printf '%s\n' "$KOOPA_COLOR_MODE" > "$__kvar_cache_file"
         fi
         unset -v __kvar_cache_file __kvar_cached
+        __kvar_applied="${HOME:?}/.cache/koopa/color-mode-applied"
+        __kvar_applied_cached=''
+        [ -f "$__kvar_applied" ] && \
+            read -r __kvar_applied_cached < "$__kvar_applied" 2>/dev/null || true
+        if [ ! -f "$__kvar_applied" ] || \
+            [ "$__kvar_applied_cached" != "$KOOPA_COLOR_MODE" ]
+        then
+            "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                >>/dev/null 2>&1 &
+        fi
+        unset -v __kvar_applied __kvar_applied_cached
     else
         unset -v KOOPA_COLOR_MODE
     fi

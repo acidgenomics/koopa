@@ -428,6 +428,14 @@ _koopa_activate_color_mode() {
             mkdir -p "${cache_file%/*}"
             printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
         fi
+        local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+        if [[ ! -f "$applied_file" ]] || \
+            [[ "$(<"$applied_file")" != "$KOOPA_COLOR_MODE" ]]
+        then
+            "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                >>/dev/null 2>&1 &
+            disown
+        fi
     else
         unset -v KOOPA_COLOR_MODE
     fi
