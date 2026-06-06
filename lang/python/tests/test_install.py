@@ -268,7 +268,7 @@ def test_run_install_plan_io_parallel() -> None:
     current: list[int] = [0]
     lock = threading.Lock()
 
-    def _make(app: str, reason: str) -> InstallConfig:
+    def _make(app: str, _reason: str) -> InstallConfig:
         return InstallConfig(name=app, binary=True, deps=False)
 
     def _worker(config):  # noqa: ANN001, ANN202
