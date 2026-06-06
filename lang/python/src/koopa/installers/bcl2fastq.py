@@ -36,7 +36,7 @@ def main(
         raise RuntimeError(msg)
     libexec = os.path.join(prefix, "libexec")
     init_dir(libexec)
-    s3_base = "s3://private.koopa.acidgenomics.com/installers"
+    s3_base = "s3://artifacts.acidgenomics.com/installers"
     s3_url = f"{s3_base}/bcl2fastq/src/{version}.tar.zip"
     local_file = f"{version}.tar.zip"
     subprocess.run(

@@ -399,7 +399,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     binary_prefix = "/opt/koopa"
     kp = koopa_prefix()
     os_str = os_slug()
-    s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
+    s3_bucket = "s3://artifacts.acidgenomics.com/binaries"
     if kp != binary_prefix:
         msg = (
             f"Binary package installation not supported for koopa install "
@@ -458,7 +458,7 @@ def push_app_build(name: str) -> None:
 
     arch = arch2()
     os_str = os_slug()
-    s3_bucket = "s3://private.koopa.acidgenomics.com/binaries"
+    s3_bucket = "s3://artifacts.acidgenomics.com/binaries"
     app_dir = os.path.join(app_prefix(), name)
     if not os.path.isdir(app_dir):
         msg = f"App directory does not exist: {app_dir}"
@@ -495,7 +495,7 @@ def push_missing_app_builds() -> None:
     """Push any installed app builds that are missing from S3.
 
     Iterates all symlinks in opt/, checks whether the corresponding binary
-    tarball exists in s3://private.koopa.acidgenomics.com/binaries via a
+    tarball exists in s3://artifacts.acidgenomics.com/binaries via a
     lightweight head-object call, and pushes any that are absent.
 
     Intended as a post-update sweep to catch apps (e.g. conda, aws-cli) that
@@ -507,7 +507,7 @@ def push_missing_app_builds() -> None:
 
     arch = arch2()
     os_str = os_slug()
-    s3_bucket_bare = "private.koopa.acidgenomics.com"
+    s3_bucket_bare = "artifacts.acidgenomics.com"
     opt = opt_prefix()
     app_dir = app_prefix()
     aws = shutil.which("aws")

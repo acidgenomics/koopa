@@ -314,7 +314,7 @@ def prune_app_binaries(dry_run: bool = False) -> None:
     - https://stackoverflow.com/questions/27274996/
     """
     dict = {
-        "bucket": "private.koopa.acidgenomics.com",
+        "bucket": "artifacts.acidgenomics.com",
         "profile": "acidgenomics",
         "subdir": "binaries",
     }
