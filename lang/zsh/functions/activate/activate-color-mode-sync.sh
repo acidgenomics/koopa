@@ -18,6 +18,19 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_dircolors
         _koopa_activate_difftastic
         _koopa_activate_mcfly_colors
+        local _palette
+        if [[ "$new_mode" == 'light' ]]
+        then
+            _palette="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/dracula-pro-alucard-colors.zsh"
+        else
+            _palette="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/dracula-pro-colors.zsh"
+        fi
+        # Re-source the palette to update ZSH_HIGHLIGHT_STYLES and
+        # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE in the live shell.  Both plugins pick
+        # up the new values on the next line edit / suggestion.  This is a fork-
+        # free local source; the free-Dracula inline fallback (Pro not installed)
+        # requires a new shell — acceptable since Pro is the target environment.
+        [[ -f "$_palette" ]] && source "$_palette"
         return 0
     }
     autoload -Uz add-zsh-hook

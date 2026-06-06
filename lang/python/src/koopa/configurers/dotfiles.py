@@ -6,6 +6,7 @@ import subprocess
 from koopa.alert import alert_info
 from koopa.git import git_pull_safe
 from koopa.prefix import koopa_prefix, opt_prefix
+from koopa.system import os_appearance_mode
 
 
 def main(
@@ -33,6 +34,10 @@ def main(
     env = os.environ.copy()
     koopa_bin = os.path.join(koopa_prefix(), "bin")
     env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
+    # Always derive color mode from the OS — never trust inherited env.
+    # Long-running processes (agent sessions, old tmux servers) carry stale
+    # values that would silently render the wrong palette across all three trees.
+    env["KOOPA_COLOR_MODE"] = os_appearance_mode()
     if not os.environ.get("KOOPA_DOTFILES_SKIP_PULL"):
         git_pull_safe(opt_dotfiles)
         git_pull_safe(dotfiles_work_prefix)

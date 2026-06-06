@@ -12,6 +12,7 @@ _M = "koopa.configurers"
 
 PYTHON_CONFIGURERS: dict[tuple[str, str, str], str] = {
     # (name, platform, mode)
+    ("color-mode", "common", "user"): f"{_M}.color_mode",
     ("doom-emacs", "common", "user"): f"{_M}.doom_emacs",
     ("dotfiles", "common", "user"): f"{_M}.dotfiles",
     ("emacs-prelude", "common", "user"): f"{_M}.emacs_prelude",

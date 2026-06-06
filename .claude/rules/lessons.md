@@ -346,6 +346,47 @@ defense-in-depth, across all three shell variants (bash, sh, zsh).
 After editing any of these files, run `koopa develop cache-functions` to
 regenerate the `include/functions.sh` bundle files.
 
+## Dotfiles Color-Mode: Render from OS, Never from Inherited Env
+
+Any `chezmoi apply` path that branches on `KOOPA_COLOR_MODE` must derive the
+value from the OS at apply time — never trust `os.environ` as inherited from the
+calling process. Long-running processes (agent sessions, days-old tmux servers,
+stale launchd plists) carry the mode from when they started, not the current OS
+state, and will silently render the wrong palette across every template.
+
+**The fix:** call `os_appearance_mode()` (from `koopa.system`) and assign it to
+`env["KOOPA_COLOR_MODE"]` (or `os.environ["KOOPA_COLOR_MODE"]`) immediately
+before every `chezmoi apply` call, in both `configurers/dotfiles.py` and
+`opt/dotfiles/install`'s `main()`.
+
+**The proof this matters:** a `koopa configure user dotfiles` run from a Claude
+Code session that started in dark mode clobbered the user's files to dark even
+though the OS had been switched to light. The session env carried `dark`; the
+OS said `light`; the session won — wrongly.
+
+## Dotfiles Color-Mode Switch: Re-Apply All Trees in Order (Never Main-Only)
+
+A color-mode switch must re-apply main → work → private dotfiles, in that order,
+every time — not just the main tree. Applying only the main tree can re-assert a
+main-tree file over a work override (e.g. npm, pip, claude configs), leaving work
+config silently clobbered until the next full `configure user dotfiles`.
+
+**The fix:** `configurers/color_mode.py` (the lightweight watcher path) delegates
+to `dotfiles.py`'s `main()` with `KOOPA_DOTFILES_SKIP_PULL=1` rather than running
+its own standalone `chezmoi apply`. This ensures both paths share the same ordered
+apply logic and can't diverge.
+
+## Never Run `koopa configure user dotfiles` from an Agent Session to Verify
+
+When verifying dotfile rendering from inside a long-running agent session, do NOT
+run `koopa configure user dotfiles` — the session's `KOOPA_COLOR_MODE` is frozen
+at the value it had when the session started and will render the wrong palette,
+clobbering the user's files. The hostile-env bug above was introduced exactly this
+way during a "verification" step.
+
+To verify rendering without risk: check the rendered files' content with `grep`
+or `cat` — don't trigger a re-render from a stale env.
+
 ## Dracula Pro Colors Must NEVER Be Hardcoded in Tracked Dotfiles
 
 Dracula Pro is a proprietary paid theme. Its specific hex color values are derived

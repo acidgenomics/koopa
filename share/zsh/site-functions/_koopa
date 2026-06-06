@@ -632,6 +632,8 @@ _koopa_develop_cmds() {
         'push-all-app-builds'
         'push-app-build'
         'push-app-builds'
+        'pypi-publish'
+        'pypi-reindex'
         'pyright'
         'pytest'
         'remove-app'

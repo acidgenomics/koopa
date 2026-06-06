@@ -97,6 +97,71 @@ def is_windows() -> bool:
     return platform.system() == "Windows"
 
 
+def os_appearance_mode() -> str:
+    """Return the current OS appearance as 'dark' or 'light'.
+
+    Distinct from ``color_mode()`` which returns terminal color depth.
+    Reads directly from the OS at call time — never trusts inherited env.
+    """
+    if platform.system() == "Darwin":
+        # `defaults read` exits non-zero when the key is absent (light mode).
+        # Absence-of-key *is* the light signal — intentional check=False.
+        result = subprocess.run(
+            ["/usr/bin/defaults", "read", "-g", "AppleInterfaceStyle"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return "dark" if result.stdout.strip() == "Dark" else "light"
+    if platform.system() == "Linux":
+        return _os_appearance_mode_linux()
+    return "dark"
+
+
+def _os_appearance_mode_linux() -> str:
+    """Return 'dark' or 'light' on Linux via XDG portal or gsettings fallback."""
+    # Primary: XDG desktop portal (freedesktop standard; works on GNOME and KDE).
+    # color-scheme: 0 = no-preference, 1 = prefer-dark, 2 = prefer-light.
+    gdbus = shutil.which("gdbus")
+    if gdbus:
+        result = subprocess.run(
+            [
+                gdbus,
+                "call",
+                "--session",
+                "--dest",
+                "org.freedesktop.portal.Desktop",
+                "--object-path",
+                "/org/freedesktop/portal/desktop",
+                "--method",
+                "org.freedesktop.portal.Settings.Read",
+                "org.freedesktop.appearance",
+                "color-scheme",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode == 0:
+            stdout = result.stdout.strip()
+            if "2" in stdout:
+                return "light"
+            if "1" in stdout:
+                return "dark"
+    # Fallback: gsettings (GNOME-only, but common).
+    gsettings = shutil.which("gsettings")
+    if gsettings:
+        result = subprocess.run(
+            [gsettings, "get", "org.gnome.desktop.interface", "color-scheme"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode == 0 and "prefer-light" in result.stdout:
+            return "light"
+    return "dark"
+
+
 def check_platform() -> None:
     """Raise RuntimeError if running on an unsupported platform.
 

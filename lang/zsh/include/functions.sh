@@ -320,6 +320,14 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_dircolors
         _koopa_activate_difftastic
         _koopa_activate_mcfly_colors
+        local _palette
+        if [[ "$new_mode" == 'light' ]]
+        then
+            _palette="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/dracula-pro-alucard-colors.zsh"
+        else
+            _palette="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/dracula-pro-colors.zsh"
+        fi
+        [[ -f "$_palette" ]] && source "$_palette"
         return 0
     }
     autoload -Uz add-zsh-hook
