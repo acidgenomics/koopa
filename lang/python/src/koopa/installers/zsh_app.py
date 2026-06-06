@@ -61,12 +61,14 @@ def main(
         # which also prevents autoconf's AC_PROG_CC from auto-selecting gnu23.
         cc = re.sub(r"\s*-std=\S+", "", os.environ.get("CC", "gcc")).strip()
         os.environ["CC"] = cc
-        conf_args.extend([
-            f"CC={cc} -std=gnu11",
-            # Prevent autoconf from upgrading to C23 (ac_cv_prog_cc_c23=):
-            # when the blank/empty string is cached, autoconf won't add -std=gnu23.
-            "ac_cv_prog_cc_c23=",
-        ])
+        conf_args.extend(
+            [
+                f"CC={cc} -std=gnu11",
+                # Prevent autoconf from upgrading to C23 (ac_cv_prog_cc_c23=):
+                # when the blank/empty string is cached, autoconf won't add -std=gnu23.
+                "ac_cv_prog_cc_c23=",
+            ]
+        )
         # Several configure tests use old-style `main()` without a return type,
         # which fails to compile with gcc -std=gnu23. Override cached results:
         #
@@ -82,11 +84,13 @@ def main(
         #   (e.g. inside command substitution). Caching yes here is correct for
         #   macOS where tcsetpgrp works, and lets zsh use it only when it has a
         #   controlling terminal (normal interactive use).
-        conf_args.extend([
-            "zsh_cv_shared_environ=yes",
-            "zsh_cv_sys_dynamic_execsyms=yes",
-            "zsh_cv_sys_tcsetpgrp=yes",
-        ])
+        conf_args.extend(
+            [
+                "zsh_cv_shared_environ=yes",
+                "zsh_cv_sys_dynamic_execsyms=yes",
+                "zsh_cv_sys_tcsetpgrp=yes",
+            ]
+        )
     subprocess_env = env.to_env_dict()
     subprocess.run(["./configure", *conf_args], env=subprocess_env, check=True)
     make = locate("make")

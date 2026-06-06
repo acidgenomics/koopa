@@ -2194,10 +2194,7 @@ def update_koopa(*, verbose: bool = False) -> bool:
                 check=True,
             )
         except Exception:
-            alert_note(
-                "Pull failed (remote may have been force-pushed)."
-                " Resetting to remote."
-            )
+            alert_note("Pull failed (remote may have been force-pushed). Resetting to remote.")
             try:
                 git_rebase_abort(prefix)
                 git_fetch(prefix)
@@ -2733,9 +2730,7 @@ def _run_install_plan(
             cpu_bound[app] = is_cpu_bound_app(app, json_data)
 
     # remaining_deps[app] = set of in-plan deps not yet done.
-    remaining_deps: dict[str, set[str]] = {
-        app: set(dep_map.get(app, set())) for app, _ in plan
-    }
+    remaining_deps: dict[str, set[str]] = {app: set(dep_map.get(app, set())) for app, _ in plan}
     plan_order = [app for app, _ in plan]
     started: set[str] = set()
     done: set[str] = set()
@@ -2766,9 +2761,8 @@ def _run_install_plan(
                 if is_cpu:
                     if cpu_busy:
                         continue
-                else:
-                    if io_running >= cap:
-                        continue
+                elif io_running >= cap:
+                    continue
                 config = make_config(app, next(r for a, r in plan if a == app))
                 fut = pool.submit(_install_app_worker, config)
                 running[fut] = (app, is_cpu, time.monotonic())

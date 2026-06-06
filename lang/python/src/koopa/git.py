@@ -189,9 +189,9 @@ def git_merge_abort(path: str = ".") -> None:
 def git_rebase_abort(path: str = ".") -> None:
     """Abort an in-progress rebase if one exists."""
     git_dir = os.path.join(path, ".git")
-    rebase_in_progress = os.path.isdir(
-        os.path.join(git_dir, "rebase-merge")
-    ) or os.path.isdir(os.path.join(git_dir, "rebase-apply"))
+    rebase_in_progress = os.path.isdir(os.path.join(git_dir, "rebase-merge")) or os.path.isdir(
+        os.path.join(git_dir, "rebase-apply")
+    )
     if rebase_in_progress:
         _git("rebase", "--abort", cwd=path, capture=False)
 

@@ -496,9 +496,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
             )
             sys.exit(1)
         except (ValueError, ProcessLookupError, OSError) as exc:
-            alert_note(
-                f"Ignoring stale/unreadable install lock '{lock_path}': {exc}"
-            )
+            alert_note(f"Ignoring stale/unreadable install lock '{lock_path}': {exc}")
     results = check_app_versions(
         source_filter=parsed.source,
         name_filter=parsed.apps or None,
@@ -1374,9 +1372,7 @@ def _handle_activation_speed_test(args: list[str]) -> None:
         if threshold is not None:
             if mean_ms > threshold:
                 status = f"  FAIL (threshold: {threshold}ms)"
-                failures.append(
-                    f"{shell}: mean {mean_ms:.0f}ms exceeds threshold {threshold}ms"
-                )
+                failures.append(f"{shell}: mean {mean_ms:.0f}ms exceeds threshold {threshold}ms")
             else:
                 status = f"  PASS (threshold: {threshold}ms)"
         print(
@@ -1414,8 +1410,7 @@ def _handle_activation_fork_audit(args: list[str]) -> None:
     parser = argparse.ArgumentParser(
         prog="koopa develop activation-fork-audit",
         description=(
-            "Count $(...) subprocess forks in activation-path shell files "
-            "and enforce upper bounds."
+            "Count $(...) subprocess forks in activation-path shell files and enforce upper bounds."
         ),
     )
     parser.add_argument(
@@ -1499,22 +1494,15 @@ def _handle_activation_fork_audit(args: list[str]) -> None:
                 fork_details.append((rel, file_forks, sh_file))
                 total_forks += file_forks
 
-        threshold = (
-            parsed.threshold_bash if shell == "bash" else parsed.threshold_zsh
-        )
+        threshold = parsed.threshold_bash if shell == "bash" else parsed.threshold_zsh
         status = "PASS" if total_forks <= threshold else "FAIL"
-        print(
-            f"  {shell}: {total_forks} forks  "
-            f"(threshold: {threshold})  {status}"
-        )
+        print(f"  {shell}: {total_forks} forks  (threshold: {threshold})  {status}")
         if parsed.verbose:
             for rel, count, _ in sorted(fork_details, key=lambda x: -x[1]):
                 print(f"    {count:3d}  {rel}")
 
         if total_forks > threshold:
-            failures.append(
-                f"{shell}: {total_forks} forks exceeds threshold {threshold}"
-            )
+            failures.append(f"{shell}: {total_forks} forks exceeds threshold {threshold}")
 
     if failures:
         print("\nActivation fork count regressions detected:", file=sys.stderr)

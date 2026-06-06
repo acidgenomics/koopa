@@ -413,7 +413,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "walk": f"{_M}.walk",
     "yq": f"{_M}.yq",
     # -- additional make_build / cmake_build / custom ----------------------------
-    "1password-cli": f"{_M}.1password_cli",
+    "1password-cli": f"{_M}._1password_cli",
     "anaconda": f"{_M}.anaconda",
     "apache-arrow": f"{_M}.apache_arrow",
     "apache-spark": f"{_M}.apache_spark",

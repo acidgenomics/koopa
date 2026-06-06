@@ -19,11 +19,7 @@ _SENSITIVE_KEY_RE = re.compile(
 
 def _filter_environ() -> dict[str, str]:
     """Filter sensitive variables from environment before serialization."""
-    return {
-        k: v
-        for k, v in sorted(os.environ.items())
-        if not _SENSITIVE_KEY_RE.search(k)
-    }
+    return {k: v for k, v in sorted(os.environ.items()) if not _SENSITIVE_KEY_RE.search(k)}
 
 
 def write_install_info(output_file: str, name: str, version: str) -> None:

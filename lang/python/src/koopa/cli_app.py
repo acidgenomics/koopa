@@ -1060,6 +1060,7 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
         ["git", "rev-parse", "--show-toplevel"],
         capture_output=True,
         text=True,
+        check=False,
     )
     root = result.stdout.strip() if result.returncode == 0 else os.getcwd()
 

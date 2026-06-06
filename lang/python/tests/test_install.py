@@ -1,8 +1,18 @@
 """Install module unit tests."""
 
+from __future__ import annotations
+
 import threading
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from types import TracebackType
+from typing import TYPE_CHECKING
+from unittest.mock import patch
+
+if TYPE_CHECKING:
+    import concurrent.futures
+    from collections.abc import Callable
+
+    from koopa.install import InstallConfig
 
 
 def _make_app_json(installed_name: str, dep_name: str) -> dict:
@@ -128,41 +138,53 @@ def test_apps_with_missing_runtime_deps_alias_resolved(tmp_path: Path) -> None:
 class _FakePoolExecutor:
     """Fake ProcessPoolExecutor that runs work on a thread pool instead of processes."""
 
-    def __init__(self, *, mp_context=None, max_workers=1):  # noqa: ANN001
+    def __init__(self, *, mp_context: object = None, max_workers: int = 1) -> None:
         import concurrent.futures
 
         _ = mp_context
         self._pool = concurrent.futures.ThreadPoolExecutor(max_workers=max_workers)
 
-    def submit(self, fn, *args, **kwargs):  # noqa: ANN001
+    def submit(self, fn: Callable, *args: object, **kwargs: object) -> concurrent.futures.Future:
+        """Submit a callable to the underlying thread pool."""
         return self._pool.submit(fn, *args, **kwargs)
 
-    def __enter__(self):  # noqa: ANN204
+    def __enter__(self) -> _FakePoolExecutor:
         self._pool.__enter__()
         return self
 
-    def __exit__(self, *args):  # noqa: ANN002
-        self._pool.__exit__(*args)
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        """Delegate to the underlying thread pool."""
+        self._pool.__exit__(exc_type, exc_val, exc_tb)
 
 
-def _make_scheduler_config(app: str, _reason: str, *, is_binary: bool = True):  # noqa: ANN201
+def _make_scheduler_config(
+    app: str,
+    _reason: str,
+    *,
+    is_binary: bool = True,
+) -> InstallConfig:
     """Build a mock InstallConfig for scheduler tests."""
     from koopa.install import InstallConfig
 
     return InstallConfig(name=app, binary=is_binary, deps=False)
 
 
-def _noop_worker(config):  # noqa: ANN001, ANN201
+def _noop_worker(config: InstallConfig) -> tuple[str, float, None]:
     """Worker that succeeds immediately."""
     return config.name, 0.0, None
 
 
-def _fail_worker(config):  # noqa: ANN001
+def _fail_worker(config: InstallConfig) -> tuple[str, float, None]:
     """Worker that always raises."""
     raise RuntimeError(f"injected failure: {config.name}")
 
 
-def test_run_install_plan_single_app(_tmp_path: Path) -> None:
+def test_run_install_plan_single_app() -> None:
     """A single-app plan completes successfully."""
     from koopa.install import _run_install_plan
 
@@ -175,9 +197,9 @@ def test_run_install_plan_single_app(_tmp_path: Path) -> None:
         return config.name, 0.0, None
 
     with (
-        patch("koopa.install.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
         patch("koopa.install._install_app_worker", _worker),
-        patch("koopa.install.import_app_json", return_value={"myapp": {}}),
+        patch("koopa.io.import_app_json", return_value={"myapp": {}}),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
     ):
@@ -186,7 +208,7 @@ def test_run_install_plan_single_app(_tmp_path: Path) -> None:
     assert calls == ["myapp"]
 
 
-def test_run_install_plan_dep_order(_tmp_path: Path) -> None:
+def test_run_install_plan_dep_order() -> None:
     """A dependent app is not dispatched until its dep completes."""
     from koopa.install import _run_install_plan
 
@@ -205,9 +227,9 @@ def test_run_install_plan_dep_order(_tmp_path: Path) -> None:
         return config.name, 0.0, None
 
     with (
-        patch("koopa.install.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
         patch("koopa.install._install_app_worker", _worker),
-        patch("koopa.install.import_app_json", return_value={"dep": {}, "app": {}}),
+        patch("koopa.io.import_app_json", return_value={"dep": {}, "app": {}}),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
     ):
@@ -244,9 +266,9 @@ def test_run_install_plan_cpu_serialized() -> None:
     json_data = {"gcc": {"installer": "gnu-app"}, "llvm": {"installer": "gnu-app"}}
 
     with (
-        patch("koopa.install.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
         patch("koopa.install._install_app_worker", _worker),
-        patch("koopa.install.import_app_json", return_value=json_data),
+        patch("koopa.io.import_app_json", return_value=json_data),
         patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
@@ -286,9 +308,9 @@ def test_run_install_plan_io_parallel() -> None:
 
     with (
         patch.dict(os.environ, {"KOOPA_INSTALL_JOBS": "4"}),
-        patch("koopa.install.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
         patch("koopa.install._install_app_worker", _worker),
-        patch("koopa.install.import_app_json", return_value=json_data),
+        patch("koopa.io.import_app_json", return_value=json_data),
         patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
@@ -301,7 +323,6 @@ def test_run_install_plan_io_parallel() -> None:
 def test_run_install_plan_failure_aborts() -> None:
     """A failing app stops dispatch and raises RuntimeError."""
     import pytest
-
     from koopa.install import _run_install_plan
 
     plan = [("bad", ""), ("good", "")]
@@ -313,12 +334,12 @@ def test_run_install_plan_failure_aborts() -> None:
         return config.name, 0.0, None
 
     with (
-        patch("koopa.install.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
         patch("koopa.install._install_app_worker", _worker),
-        patch("koopa.install.import_app_json", return_value={"bad": {}, "good": {}}),
+        patch("koopa.io.import_app_json", return_value={"bad": {}, "good": {}}),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
-        patch("koopa.install.alert"),
+        patch("koopa.alert.alert"),
+        pytest.raises(RuntimeError, match=r"app.*failed"),
     ):
-        with pytest.raises(RuntimeError, match="app.*failed"):
-            _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)
+        _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)
