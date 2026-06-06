@@ -239,7 +239,7 @@ Correct format:
 name = "my-theme-name"
 
 [colors]
-Important = "#383a42"
+Important = "#HEX_COLOR"
 ...
 ```
 
@@ -252,12 +252,12 @@ McFly's config.toml only supports the 16 named ANSI colors (e.g., `"grey"`, `"bl
 The problem: named ANSI colors render differently depending on the **local terminal emulator's** palette, not anything on the remote. The ANSI palette passes through SSH unchanged, but tmux intercepts and re-renders colors using its internal state — so the effective rendering depends on which terminal is used to attach to the tmux session.
 
 **Ghostty + Dracula Pro Alucard ANSI palette** (the relevant mapping):
-- ANSI 0 (`black`) = `#fafafa` — near-white, **washed out as foreground**
-- ANSI 7 (`grey`) = `#383a42` — near-black, **legible as foreground**
-- ANSI 8 (`dark_grey`) = `#FFFFFF` — pure white, **washed out as foreground**
-- ANSI 15 (`white`) = `#383a42` — very dark, **legible as foreground**
-- ANSI 4 (`dark_blue`) = `#a626a4` (purple)
-- ANSI 12 (`blue`) = `#7c6f9e` (lighter purple)
+- ANSI 0 (`black`) = near-white — **washed out as foreground**
+- ANSI 7 (`grey`) = near-black — **legible as foreground**
+- ANSI 8 (`dark_grey`) = pure white — **washed out as foreground**
+- ANSI 15 (`white`) = very dark — **legible as foreground**
+- ANSI 4 (`dark_blue`) = purple variant
+- ANSI 12 (`blue`) = lighter purple variant
 
 VS Code and macOS Terminal.app use different palettes where ANSI 0 is dark, so the same config appears fine there but broken in Ghostty.
 
@@ -345,3 +345,50 @@ defense-in-depth, across all three shell variants (bash, sh, zsh).
 
 After editing any of these files, run `koopa develop cache-functions` to
 regenerate the `include/functions.sh` bundle files.
+
+## Dracula Pro Colors Must NEVER Be Hardcoded in Tracked Dotfiles
+
+Dracula Pro is a proprietary paid theme. Its specific hex color values are derived
+from the locally installed Pro source (`~/.local/share/dracula-pro/`) and are NOT
+to be committed to the dotfiles repo, even indirectly.
+
+**Rule:** No Dracula Pro or Dracula Pro Alucard hex values may appear in any
+chezmoi template or other tracked file in the dotfiles repo.
+
+**Correct architecture:**
+1. `opt/dotfiles/install` (install script) reads colors from the local Pro source
+   via `_parse_ghostty_palette(dp_dir, variant)`.
+2. Install script generates palette files outside the chezmoi tree, e.g.:
+   - `~/.config/zsh/dracula-pro-colors.zsh` (already done)
+   - `~/.config/fish/dracula-pro-colors.fish` (needs to be done)
+   - `~/.config/starship/dracula-pro.toml` (include fragment)
+   - etc.
+3. Chezmoi templates source/include those generated files at runtime — they
+   conditionally include the generated file if it exists, with a fallback to
+   free Dracula OSS colors if it doesn't.
+
+**Never do this in a template:**
+```toml
+# BAD — Pro colors hardcoded in tracked file
+purple = "#PROPRIETARY_HEX"
+```
+
+**Do this instead:**
+```toml
+# GOOD — chezmoi template with conditional include
+{{- if stat (joinPath .chezmoi.homeDir ".config/starship/dracula-pro.toml") }}
+{{- include (joinPath .chezmoi.homeDir ".config/starship/dracula-pro.toml") }}
+{{- else }}
+purple = "#bd93f9"
+{{- end }}
+```
+
+**Pre-existing violations found in the repo (need cleanup):**
+- `chezmoi/dot_bashrc.tmpl` — Alucard fzf colors inline
+- `chezmoi/dot_config/bottom/bottom.toml.tmpl` — Alucard colors inline
+- `chezmoi/dot_config/fish/conf.d/koopa.fish.tmpl` — Alucard fzf colors inline
+- `chezmoi/dot_config/fish/fish_variables.tmpl` — Alucard fish colors inline
+- `chezmoi/dot_config/kak/colors/alucard.kak` — full Alucard kakoune theme
+- `chezmoi/dot_config/nushell/config.nu.tmpl` — Alucard nushell theme inline
+- `chezmoi/dot_config/powershell/Microsoft.PowerShell_profile.ps1.tmpl` — Alucard fzf/PSReadLine inline
+- `chezmoi/dot_config/starship.toml.tmpl` — Alucard palette inline

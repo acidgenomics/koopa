@@ -13,9 +13,16 @@ requires-python = "==3.12.*"
 
 [project.optional-dependencies]
 extra = [
-  "syntactic @ git+https://github.com/acidgenomics/py-syntactic@359e9defca70f562da3f918b16f18c42d0c8114e",
+  "syntactic>=0.1.0",
   "tqdm",
 ]
+
+[[tool.uv.index]]
+name = "acidgenomics"
+url = "https://python.acidgenomics.com/simple/"
+
+[tool.uv.sources]
+syntactic = { index = "acidgenomics" }
 
 [project.scripts]
 koopa = "koopa.cli_main:main"
