@@ -867,9 +867,15 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                         link_in_man1(name=m, source=mf1)
                     elif os.path.isfile(mf2):
                         link_in_man1(name=m, source=mf2)
-            link_in_bash_completions(config.prefix)
-            link_in_fish_completions(config.prefix)
-            link_in_zsh_completions(config.prefix)
+            import fcntl
+
+            _clock_path = _completions_lock_path()
+            os.makedirs(os.path.dirname(_clock_path), exist_ok=True)
+            with open(_clock_path, "w") as _clock_fh:
+                fcntl.flock(_clock_fh, fcntl.LOCK_EX)
+                link_in_bash_completions(config.prefix)
+                link_in_fish_completions(config.prefix)
+                link_in_zsh_completions(config.prefix)
         elif config.mode == "system":
             if config.update_ldconfig:
                 run("ldconfig", sudo=True, check=False)
@@ -1500,6 +1506,18 @@ def _install_lock_path() -> str:
     return os.path.join(cache_dir, "install.lock")
 
 
+def _completions_lock_path() -> str:
+    """Lock file to serialise completion-dir symlink operations across processes."""
+    cache_dir = os.path.join(
+        os.environ.get(
+            "XDG_CACHE_HOME",
+            os.path.join(os.path.expanduser("~"), ".cache"),
+        ),
+        "koopa",
+    )
+    return os.path.join(cache_dir, "completions.lock")
+
+
 def _acquire_install_lock() -> bool:
     """Acquire the install lock. Returns True if newly acquired, False if already held."""
     path = _install_lock_path()
@@ -1813,24 +1831,28 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     if not missing:
         return
     apps_with_reasons = [(a, "missing") for a in missing]
-    plan, _ = _compute_install_plan(apps_with_reasons)
+    plan, dep_map = _compute_install_plan(apps_with_reasons)
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
     display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} missing default {label}: {display}.")
     acquired = _acquire_install_lock()
+    _binary = _can_install_binary()
+    _push = _can_push_binary()
     try:
-        for app, _ in plan:
-            config = InstallConfig(
+        _run_install_plan(
+            plan,
+            dep_map,
+            make_config=lambda app, _reason: InstallConfig(
                 name=app,
                 deps=False,
                 verbose=verbose,
-                binary=_can_install_binary(),
-                push=_can_push_binary(),
+                binary=_binary,
+                push=_push,
                 passthrough_args=_build_passthrough_args(app),
-            )
-            install_app(config)
+            ),
+        )
     finally:
         if acquired:
             _release_install_lock()
@@ -1879,23 +1901,27 @@ def install_shared_apps(mode: str = "default") -> None:
         alert_success("All shared apps are already installed.")
         return
     apps_with_reasons = [(a, "") for a in missing]
-    plan, _ = _compute_install_plan(apps_with_reasons)
+    plan, dep_map = _compute_install_plan(apps_with_reasons)
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
     display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
     acquired = _acquire_install_lock()
+    _binary = _can_install_binary()
+    _push = _can_push_binary()
     try:
-        for app, _ in plan:
-            config = InstallConfig(
+        _run_install_plan(
+            plan,
+            dep_map,
+            make_config=lambda app, _reason: InstallConfig(
                 name=app,
                 deps=False,
-                binary=_can_install_binary(),
-                push=_can_push_binary(),
+                binary=_binary,
+                push=_push,
                 passthrough_args=_build_passthrough_args(app),
-            )
-            install_app(config)
+            ),
+        )
     finally:
         if acquired:
             _release_install_lock()
@@ -2638,6 +2664,158 @@ def _remove_from_pending_plan(app: str) -> None:
             json.dump(data, f, indent=2)
 
 
+def _install_app_worker(
+    config: "InstallConfig",
+) -> tuple[str, float, str | None]:
+    """Run install_app in a child process and return (name, elapsed, log_tail).
+
+    Must be a module-level function so multiprocessing.spawn can pickle it.
+    Sets quiet=True so the child does no terminal rendering; the parent owns
+    all progress output.  On failure, raises with the log tail embedded in the
+    exception message so the parent can surface it.
+    """
+    import time
+
+    config.quiet = True
+    t0 = time.monotonic()
+    try:
+        install_app(config)
+    except Exception as exc:
+        raise RuntimeError(f"{config.name}: {exc}") from exc
+    return config.name, time.monotonic() - t0, None
+
+
+def _io_cap() -> int:
+    """Return the max number of concurrent IO-bound installs (KOOPA_INSTALL_JOBS)."""
+    try:
+        val = int(os.environ.get("KOOPA_INSTALL_JOBS", "4"))
+        return max(1, val)
+    except ValueError:
+        return 4
+
+
+def _run_install_plan(
+    plan: list[tuple[str, str]],
+    dep_map: dict[str, set[str]],
+    *,
+    make_config: Callable[[str, str], InstallConfig],
+    source: str = "",
+) -> None:
+    """Execute an install plan in parallel using a DAG-aware scheduler.
+
+    IO-bound apps (conda/pip/npm/binary downloads) run up to KOOPA_INSTALL_JOBS
+    (default 4) at a time.  CPU-bound apps (source builds) run at most one at a
+    time.  A download may overlap the single running source build.
+
+    On the first failure, no new installs are dispatched; in-flight installs
+    drain before the error is raised (matches serial break-on-first-failure).
+    """
+    import concurrent.futures
+    import multiprocessing
+    import time
+
+    from koopa.alert import alert
+    from koopa.app import is_cpu_bound_app
+    from koopa.io import import_app_json
+
+    json_data = import_app_json()
+    cap = _io_cap()
+
+    # Pre-classify every app in the plan.
+    # binary flag from the first config call (same for all apps in a batch).
+    sample_config = make_config(plan[0][0], plan[0][1])
+    use_binary = sample_config.binary
+    cpu_bound: dict[str, bool] = {}
+    for app, _ in plan:
+        if use_binary:
+            cpu_bound[app] = False
+        else:
+            cpu_bound[app] = is_cpu_bound_app(app, json_data)
+
+    # remaining_deps[app] = set of in-plan deps not yet done.
+    remaining_deps: dict[str, set[str]] = {
+        app: set(dep_map.get(app, set())) for app, _ in plan
+    }
+    plan_order = [app for app, _ in plan]
+    started: set[str] = set()
+    done: set[str] = set()
+    failed: set[str] = set()
+    fail_msgs: dict[str, str] = {}
+
+    cpu_busy = False
+    io_running = 0
+    aborting = False
+
+    ctx = multiprocessing.get_context("spawn")
+    with concurrent.futures.ProcessPoolExecutor(
+        mp_context=ctx,
+        max_workers=cap + 1,  # +1 for the potential single CPU build
+    ) as pool:
+        running: dict[concurrent.futures.Future, tuple[str, bool, float]] = {}
+
+        def _dispatch() -> None:
+            nonlocal cpu_busy, io_running, aborting
+            if aborting:
+                return
+            for app in plan_order:
+                if app in started or app in done or app in failed:
+                    continue
+                if remaining_deps[app] - done:
+                    continue  # deps not yet done
+                is_cpu = cpu_bound[app]
+                if is_cpu:
+                    if cpu_busy:
+                        continue
+                else:
+                    if io_running >= cap:
+                        continue
+                config = make_config(app, next(r for a, r in plan if a == app))
+                fut = pool.submit(_install_app_worker, config)
+                running[fut] = (app, is_cpu, time.monotonic())
+                started.add(app)
+                if is_cpu:
+                    cpu_busy = True
+                else:
+                    io_running += 1
+
+        _dispatch()
+
+        while running or (len(done) + len(failed) < len(plan)):
+            if not running:
+                # Nothing in flight but plan not complete — remaining apps all
+                # have failed deps.  Mark them failed and exit.
+                for app in plan_order:
+                    if app not in started and app not in done and app not in failed:
+                        failed.add(app)
+                break
+
+            finished, _ = concurrent.futures.wait(
+                running, return_when=concurrent.futures.FIRST_COMPLETED
+            )
+            for fut in finished:
+                app, is_cpu, _t0 = running.pop(fut)
+                if is_cpu:
+                    cpu_busy = False
+                else:
+                    io_running -= 1
+                try:
+                    _app, _elapsed, _ = fut.result()
+                    done.add(app)
+                    _remove_from_pending_plan(app)
+                except Exception as exc:
+                    failed.add(app)
+                    fail_msgs[app] = str(exc)
+                    alert(f"Failed to install {app}: {exc}")
+                    aborting = True
+
+            _dispatch()
+
+    if failed:
+        msg = f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}."
+        raise RuntimeError(msg)
+    _save_pending_plan([], source=source)
+
+
 def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
     """Return (app, reason) for installed apps whose runtime deps are absent from opt/.
 
@@ -2764,37 +2942,27 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     alert(f"Installing {n} {label}: {display}.")
     _save_pending_plan(plan, source="update")
     acquired = _acquire_install_lock()
-    failed: set[str] = set()
+    _binary = _can_install_binary()
+    _push = _can_push_binary()
     try:
-        for app, reason in plan:
-            app_deps_in_plan = dep_map.get(app, set())
-            if app_deps_in_plan & failed:
-                failed.add(app)
-                continue
-            try:
-                config = InstallConfig(
-                    name=app,
-                    reinstall=(app in stale_set),
-                    reinstall_reason=reason if app in stale_set else "",
-                    deps=False,
-                    verbose=verbose,
-                    binary=_can_install_binary(),
-                    push=_can_push_binary(),
-                    passthrough_args=_build_passthrough_args(app),
-                )
-                install_app(config)
-                _remove_from_pending_plan(app)
-            except Exception as exc:
-                alert(f"Failed to install {app}: {exc}")
-                failed.add(app)
-                break
+        _run_install_plan(
+            plan,
+            dep_map,
+            make_config=lambda app, reason: InstallConfig(
+                name=app,
+                reinstall=(app in stale_set),
+                reinstall_reason=reason if app in stale_set else "",
+                deps=False,
+                verbose=verbose,
+                binary=_binary,
+                push=_push,
+                passthrough_args=_build_passthrough_args(app),
+            ),
+            source="update",
+        )
     finally:
         if acquired:
             _release_install_lock()
-    if failed:
-        msg = f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}."
-        raise RuntimeError(msg)
-    _save_pending_plan([], source="update")
     alert_success("All stale apps updated successfully.")
 
 

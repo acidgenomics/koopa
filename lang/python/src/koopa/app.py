@@ -13,6 +13,93 @@ from koopa.prefix import app_prefix as koopa_app_prefix
 from koopa.prefix import opt_prefix as koopa_opt_prefix
 from koopa.system import arch2, os_id
 
+# Installer types that are purely download/extract — safe to run in parallel.
+_IO_BOUND_INSTALLERS: frozenset[str] = frozenset(
+    {
+        "conda-package",
+        "node-package",
+        "python-package",
+        "python-plugin",
+        "ruby-package",
+    }
+)
+
+# Installer types that compile from source and saturate all CPU cores.
+_CPU_BOUND_INSTALLERS: frozenset[str] = frozenset(
+    {
+        "gnu-app",
+        "haskell-package",
+        "libtool",
+        "openssl",
+        "perl-package",
+        "python",
+        "r",
+        "rust-package",
+    }
+)
+
+# Ambiguous-bucket apps (no "installer" field, no "src_url") whose dedicated
+# installer module only downloads a pre-built artifact — no compilation.
+_DOWNLOAD_ONLY_APPS: frozenset[str] = frozenset(
+    {
+        "1password-cli",
+        "anaconda",
+        "apache-spark",
+        "aspera-connect",
+        "aws-mountpoint-s3",
+        "bfg",
+        "ca-certificates",
+        "clickhouse",
+        "conda",
+        "databricks-cli",
+        "dotfiles",
+        "ensembl-perl-api",
+        "freetype",
+        "go",
+        "gseapy",
+        "haskell-ghcup",
+        "illumina-ica-cli",
+        "jfrog-cli",
+        "julia",
+        "ldc",
+        "libidn",
+        "ont-dorado",
+        "oracle-instant-client",
+        "powershell",
+        "quarto",
+        "r-gfortran",
+        "r-xcode-openmp",
+        "rstudio-server",
+        "rust",
+        "shiny-server",
+        "surrealdb",
+        "temurin",
+        "uv",
+    }
+)
+
+
+def is_cpu_bound_app(name: str, json_data: dict) -> bool:
+    """Return True when installing this app will saturate CPU cores.
+
+    CPU-bound apps compile from source (make -j, cargo, cmake --parallel,
+    go build, etc.) and must not run concurrently with other CPU-bound builds.
+    IO-bound apps only download and extract pre-built artifacts.
+    """
+    entry = json_data.get(name)
+    if not isinstance(entry, dict):
+        return False
+    installer = entry.get("installer", "")
+    if installer in _IO_BOUND_INSTALLERS:
+        return False
+    if installer in _CPU_BOUND_INSTALLERS:
+        return True
+    if entry.get("src_url"):
+        return True
+    # Ambiguous bucket: no installer field, no src_url. Conservative default is
+    # CPU-bound; the allowlist names apps we've verified are download-only.
+    return name not in _DOWNLOAD_ONLY_APPS
+
 
 def resolve_alias(name: str) -> str:
     """Resolve app alias to its target name (e.g. 'python' -> 'python3.14')."""

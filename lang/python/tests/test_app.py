@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from koopa.app import app_deps
+from koopa.app import app_deps, is_cpu_bound_app
 
 
 def test_app_deps_coreutils_excludes_attr_on_macos() -> None:
@@ -31,3 +31,59 @@ def test_app_deps_libarchive_includes_cmake() -> None:
     with patch("koopa.app.os_id", return_value="macos-arm64"):
         deps = app_deps("libarchive")
     assert "cmake" in deps
+
+
+# -- is_cpu_bound_app classifier tests ----------------------------------------
+
+
+def _json(installer: str = "", src_url: str = "") -> dict:
+    entry: dict = {}
+    if installer:
+        entry["installer"] = installer
+    if src_url:
+        entry["src_url"] = src_url
+    return entry
+
+
+def test_is_cpu_bound_conda_package() -> None:
+    assert is_cpu_bound_app("aws-cli", {"aws-cli": _json("conda-package")}) is False
+
+
+def test_is_cpu_bound_python_package() -> None:
+    assert is_cpu_bound_app("tqdm", {"tqdm": _json("python-package")}) is False
+
+
+def test_is_cpu_bound_node_package() -> None:
+    assert is_cpu_bound_app("pyright", {"pyright": _json("node-package")}) is False
+
+
+def test_is_cpu_bound_gnu_app() -> None:
+    assert is_cpu_bound_app("coreutils", {"coreutils": _json("gnu-app")}) is True
+
+
+def test_is_cpu_bound_rust_package() -> None:
+    assert is_cpu_bound_app("ripgrep", {"ripgrep": _json("rust-package")}) is True
+
+
+def test_is_cpu_bound_openssl_installer() -> None:
+    assert is_cpu_bound_app("openssl3", {"openssl3": _json("openssl")}) is True
+
+
+def test_is_cpu_bound_src_url() -> None:
+    assert is_cpu_bound_app("myapp", {"myapp": _json(src_url="https://example.com/myapp.tar.gz")}) is True
+
+
+def test_is_cpu_bound_download_only_allowlist_go() -> None:
+    assert is_cpu_bound_app("go", {"go": _json()}) is False
+
+
+def test_is_cpu_bound_download_only_allowlist_rust() -> None:
+    assert is_cpu_bound_app("rust", {"rust": _json()}) is False
+
+
+def test_is_cpu_bound_ambiguous_defaults_cpu() -> None:
+    assert is_cpu_bound_app("unknown-custom-app", {"unknown-custom-app": _json()}) is True
+
+
+def test_is_cpu_bound_missing_entry() -> None:
+    assert is_cpu_bound_app("nonexistent", {}) is False
