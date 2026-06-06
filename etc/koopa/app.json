@@ -1535,7 +1535,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-05",
+    "date": "2026-06-06",
     "default": true,
     "dependencies": [
       "node"
@@ -1549,7 +1549,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.165"
+    "version": "2.1.167"
   },
   "cli11": {
     "date": "2026-05-02",
