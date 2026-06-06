@@ -1984,11 +1984,9 @@ def check_app_versions(  # noqa: C901, PLR0915
             for app_name, version, spec in to_check
         }
         for future in as_completed(futures):
-            app_name = futures[future]
             result, msg = future.result()
             results.append(result)
             if pbar is not None:
-                pbar.set_postfix_str(app_name)
                 if msg:
                     pbar.write(msg, file=sys.stderr)
                 pbar.update(1)
