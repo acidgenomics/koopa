@@ -138,6 +138,8 @@ with open(os.path.join(out_dir, "MyTheme.bbColorScheme"), "w") as fh:
 print(f"BBEdit: open .bbColorScheme files from {out_dir} in BBEdit to install.")
 ```
 
+**Re-import is required after every regeneration.** Updating `~/.local/share/dracula-pro/themes/bbedit/` does NOT automatically update the copy inside BBEdit's sandbox. The user must double-click the `.bbColorScheme` file in Finder (or File → Open in BBEdit) to trigger the install prompt each time the theme changes. When a color theme fix appears to have no effect in an active BBEdit session, the first thing to check is whether the updated file has been re-imported — not whether the generator or sandboxing is broken.
+
 ## Dotfiles Are Managed by Chezmoi — Always Edit the Source First
 
 Home-directory dotfiles (e.g., `~/.config/nvim/`, `~/.claude/settings.json`,
