@@ -382,13 +382,3 @@ purple = "#PROPRIETARY_HEX"
 purple = "#bd93f9"
 {{- end }}
 ```
-
-**Pre-existing violations found in the repo (need cleanup):**
-- `chezmoi/dot_bashrc.tmpl` — Alucard fzf colors inline
-- `chezmoi/dot_config/bottom/bottom.toml.tmpl` — Alucard colors inline
-- `chezmoi/dot_config/fish/conf.d/koopa.fish.tmpl` — Alucard fzf colors inline
-- `chezmoi/dot_config/fish/fish_variables.tmpl` — Alucard fish colors inline
-- `chezmoi/dot_config/kak/colors/alucard.kak` — full Alucard kakoune theme
-- `chezmoi/dot_config/nushell/config.nu.tmpl` — Alucard nushell theme inline
-- `chezmoi/dot_config/powershell/Microsoft.PowerShell_profile.ps1.tmpl` — Alucard fzf/PSReadLine inline
-- `chezmoi/dot_config/starship.toml.tmpl` — Alucard palette inline
