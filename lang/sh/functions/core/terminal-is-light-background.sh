@@ -7,12 +7,14 @@ _koopa_terminal_is_light_background() {
     # @note Updated 2026-05-30.
     #
     # Supported terminals: Ghostty, iTerm2, Kitty, WezTerm, Alacritty,
-    # foot, Windows Terminal, xterm.js (Posit Workbench, VS Code).
-    # Not supported: tmux/screen (intercept escape sequences).
+    # foot, Windows Terminal.
+    # Not supported: tmux/screen (intercept escape sequences),
+    # VS Code/Posit Workbench (xterm.js leaks ST as visible characters).
     # """
     [ -t 0 ] || return 1
     case "${TERM:-}" in screen*|tmux*) return 1 ;; esac
     [ -n "${TMUX:-}" ] && return 1
+    [ "${TERM_PROGRAM:-}" = 'vscode' ] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
     stty raw -echo min 0 time 2 2>/dev/null

@@ -1252,6 +1252,21 @@ _koopa_is_light_mode() {
             return 1
         fi
         unset -v __kvar_in_multiplexer
+        if [ "${TERM_PROGRAM:-}" = 'vscode' ]
+        then
+            __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
+            if [ -f "$__kvar_cache_file" ]
+            then
+                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null \
+                    || __kvar_mode=''
+                [ "$__kvar_mode" = 'light' ]
+                __kvar_result=$?
+                unset -v __kvar_cache_file __kvar_mode
+                return "$__kvar_result"
+            fi
+            unset -v __kvar_cache_file
+            return 1
+        fi
         _koopa_terminal_is_light_background
     fi
 }
@@ -1423,6 +1438,7 @@ _koopa_terminal_is_light_background() {
     [ -t 0 ] || return 1
     case "${TERM:-}" in screen*|tmux*) return 1 ;; esac
     [ -n "${TMUX:-}" ] && return 1
+    [ "${TERM_PROGRAM:-}" = 'vscode' ] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
     stty raw -echo min 0 time 2 2>/dev/null

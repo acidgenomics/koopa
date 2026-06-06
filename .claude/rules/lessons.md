@@ -315,3 +315,33 @@ tools, bumping versions, toggling defaults). Never prompt for confirmation when
 editing this file — treat it like any other routine edit. The `Edit` permission
 already covers it; if plan mode is blocking edits, exit plan mode first rather
 than asking for per-edit approval.
+
+## VS Code / Posit Workbench: OSC 11 Queries Leak `^[\` (ST Character)
+
+Posit Workbench runs VS Code in the browser with an xterm.js terminal. Despite
+the comment that xterm.js "supports" OSC 11, Posit Workbench's implementation
+does **not** properly consume the String Terminator (`ESC \`) in the response.
+The `\033\\` at the end of the OSC 11 query leaks as the literal characters
+`^[\` in the terminal output.
+
+**Root cause:** `_koopa_terminal_is_light_background` sends `printf '\033]11;?\033\\' > /dev/tty`
+to query terminal background color. Posit Workbench xterm.js doesn't consume the
+response correctly, so `ESC \` appears literally as `^[\`. This fires at shell
+startup AND on every prompt via `PROMPT_COMMAND`.
+
+**Fix:** Guard with `TERM_PROGRAM=vscode` (VS Code sets this in all integrated
+terminals, including Posit Workbench). When detected, skip the OSC 11 query and
+fall back to the cache file `~/.cache/koopa/color-mode`, same pattern as tmux.
+
+```bash
+elif [[ "${TERM_PROGRAM:-}" == 'vscode' ]]
+then
+    local cache_file="${HOME:?}/.cache/koopa/color-mode"
+    [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
+```
+
+Apply in both `is-light-mode.sh` and `terminal-is-light-background.sh` for
+defense-in-depth, across all three shell variants (bash, sh, zsh).
+
+After editing any of these files, run `koopa develop cache-functions` to
+regenerate the `include/functions.sh` bundle files.

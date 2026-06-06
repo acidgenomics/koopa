@@ -2859,7 +2859,7 @@ def remove_unsupported_apps(*, verbose: bool = False) -> None:
     label_unsupported = "app" if n_unsupported == 1 else "apps"
     alert(f"Removing {n_unsupported} unsupported {label_unsupported}: {', '.join(apps)}")
     for app in apps:
-        config = UninstallConfig(name=app, verbose=verbose)
+        config = UninstallConfig(name=app, verbose=verbose, quiet=True)
         uninstall_app(config)
 
 

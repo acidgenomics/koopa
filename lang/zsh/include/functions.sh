@@ -1513,6 +1513,10 @@ _koopa_is_light_mode() {
     then
         local cache_file="${HOME:?}/.cache/koopa/color-mode"
         [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
+    elif [[ "${TERM_PROGRAM:-}" == 'vscode' ]]
+    then
+        local cache_file="${HOME:?}/.cache/koopa/color-mode"
+        [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
     else
         _koopa_terminal_is_light_background
     fi
@@ -1611,6 +1615,7 @@ _koopa_str_detect_posix() {
 _koopa_terminal_is_light_background() {
     [[ -t 0 ]] || return 1
     [[ -n "${TMUX:-}" || "${TERM:-}" == screen* || "${TERM:-}" == tmux* ]] && return 1
+    [[ "${TERM_PROGRAM:-}" == 'vscode' ]] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
     stty raw -echo min 0 time 2 2>/dev/null

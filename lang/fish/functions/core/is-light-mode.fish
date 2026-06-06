@@ -12,6 +12,9 @@ function _koopa_is_light_mode
         or string match -q 'tmux*' -- "$TERM"
         set -l cache_file "$HOME/.cache/koopa/color-mode"
         test -f "$cache_file"; and test (string trim < "$cache_file") = light
+    else if test "$TERM_PROGRAM" = vscode
+        set -l cache_file "$HOME/.cache/koopa/color-mode"
+        test -f "$cache_file"; and test (string trim < "$cache_file") = light
     else
         _koopa_terminal_is_light_background
     end

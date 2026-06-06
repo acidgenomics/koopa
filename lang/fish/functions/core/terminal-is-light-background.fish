@@ -5,6 +5,7 @@ function _koopa_terminal_is_light_background
     if set -q TMUX; or string match -q 'screen*' -- "$TERM"; or string match -q 'tmux*' -- "$TERM"
         return 1
     end
+    test "$TERM_PROGRAM" = vscode; and return 1
     set -l old_settings (stty -g 2>/dev/null); or return 1
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty

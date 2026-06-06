@@ -8,6 +8,10 @@ _koopa_is_light_mode() {
     then
         local cache_file="${HOME:?}/.cache/koopa/color-mode"
         [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
+    elif [[ "${TERM_PROGRAM:-}" == 'vscode' ]]
+    then
+        local cache_file="${HOME:?}/.cache/koopa/color-mode"
+        [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
     else
         _koopa_terminal_is_light_background
     fi
