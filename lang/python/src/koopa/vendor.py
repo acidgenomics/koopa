@@ -233,11 +233,11 @@ def _find_aws() -> str | None:
 
 
 def _s3_cp(src: str, dest: str, profile: str) -> None:
-    cmd = ["aws", "s3", "cp"]
+    cmd = ["aws", "s3", "cp", "--only-show-errors"]
     if profile:
         cmd += ["--profile", profile]
     cmd += [src, dest]
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, capture_output=True, check=True)
 
 
 def _s3_head(uri: str, profile: str) -> bool:
