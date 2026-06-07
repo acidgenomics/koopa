@@ -36,7 +36,7 @@ def main(
         raise RuntimeError(msg)
     libexec = os.path.join(prefix, "libexec")
     init_dir(libexec)
-    s3_base = "s3://artifacts.acidgenomics.com/installers"
+    s3_base = "s3://artifacts-REDACTED_AWS_ACCOUNT_ID-us-east-1-an/installers"
     s3_url = f"{s3_base}/bcl2fastq/src/{version}.tar.zip"
     local_file = f"{version}.tar.zip"
     subprocess.run(

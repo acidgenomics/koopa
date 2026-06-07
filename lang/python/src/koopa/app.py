@@ -403,7 +403,7 @@ def prune_app_binaries(dry_run: bool = False) -> None:
     - https://stackoverflow.com/questions/27274996/
     """
     dict = {
-        "bucket": "artifacts.acidgenomics.com",
+        "bucket": "artifacts-REDACTED_AWS_ACCOUNT_ID-us-east-1-an",
         "profile": "acidgenomics",
         "subdir": "binaries",
     }
