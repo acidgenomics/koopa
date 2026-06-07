@@ -22,6 +22,7 @@ class _TqdmFallback:
         desc: str = "",
         unit: str = "",
         total: int | None = None,
+        dynamic_ncols: bool = False,
     ) -> None:
         self._iterable: Iterable[Any] = iterable if iterable is not None else []
         if desc:
@@ -721,7 +722,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
                 failures[name] = str(exc)
                 tqdm.write(f"  FAILED (extra): {name}/{extra_filename}: {exc}")
 
-    for name in tqdm(targets, desc="Mirroring", unit="app"):
+    for name in tqdm(targets, desc="Mirroring", unit="app", dynamic_ncols=True):
         _mirror_one(name)
     _save_mirror_src_cache(cache)
 
@@ -836,7 +837,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
 
     bucket = "koopa.acidgenomics.com"
     missing: list[str] = []
-    for name in tqdm(targets, desc="Auditing", unit="app"):
+    for name in tqdm(targets, desc="Auditing", unit="app", dynamic_ncols=True):
         entry = data[name]
         version = entry.get("version", "")
         src_url = entry.get("src_url", "")

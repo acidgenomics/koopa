@@ -1,5 +1,35 @@
 # Lessons
 
+## Color Mode: Env-Driven vs File-Driven Consumers — Different Timing Guarantees
+
+koopa's color-mode consumers split into two categories with very different timing
+characteristics:
+
+**Env-driven** (always correct immediately after activation):
+`FZF_DEFAULT_OPTS`, `DFT_BACKGROUND`, `MCFLY_LIGHT`, `LS_COLORS`/`DIRENV_COLORS`.
+These read `$KOOPA_COLOR_MODE` directly in `_koopa_activate_*` functions. Since
+`KOOPA_COLOR_MODE` is set synchronously by `_koopa_activate_color_mode` at the
+top of the activation sequence, these are always correct in every new shell.
+
+**File-driven** (depend on on-disk chezmoi-rendered files):
+`bat` theme (`~/.config/bat/config` `--theme=` line), starship palette
+(`~/.config/starship.toml`), delta theme (`~/.config/delta/theme.gitconfig`).
+These read files whose content was baked in at the last `chezmoi apply`. If the
+apply hasn't happened yet for the current OS mode, the files are stale and the
+tool renders the wrong theme — even though `KOOPA_COLOR_MODE` and all env-driven
+tools are correct.
+
+**The classic symptom:** correct terminal theme, correct fzf/LS_COLORS colors,
+but wrong bat/starship/delta colors after a dark↔light flip. The env is NOT the
+bug — the on-disk theme files are stale. Check the mtime of
+`~/.config/bat/config`, `~/.config/starship.toml`, `~/.config/delta/theme.gitconfig`
+against the flip time (`.GlobalPreferences.plist` mtime on macOS).
+
+**The fix:** when `~/.cache/koopa/color-mode-applied` ≠ current OS mode, run
+`koopa configure user color-mode` **synchronously** (foreground) for interactive
+shells so the files are current before bat/starship read them. Non-interactive
+shells keep the background spawn (scripts must not block on a chezmoi apply).
+
 ## Zsh Uses Semantic Versioning — Never Set Version to a Bare Integer
 
 Zsh's release numbering is `5.x.y` (e.g., `5.9.1`). The integer `26` is **not** a valid zsh version — it is the GNU project major release number of the *zsh project itself*, not the tarball version. Setting `"version": "26"` in `app.json` causes URLs like `zsh-26.tar.xz` to 404.

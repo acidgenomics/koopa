@@ -315,8 +315,17 @@ _koopa_activate_color_mode() {
         if [ ! -f "$__kvar_applied" ] || \
             [ "$__kvar_applied_cached" != "$KOOPA_COLOR_MODE" ]
         then
-            "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                >>/dev/null 2>&1 &
+            if [ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]
+            then
+                if _koopa_is_interactive
+                then
+                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                        >>/dev/null 2>&1
+                else
+                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                        >>/dev/null 2>&1 &
+                fi
+            fi
         fi
         unset -v __kvar_applied __kvar_applied_cached
     else

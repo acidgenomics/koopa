@@ -149,6 +149,9 @@ def main(
         koopa_bin = os.path.join(koopa_prefix(), "bin")
         env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
         env["KOOPA_COLOR_MODE"] = new_mode
+        # Sentinel suppresses nested sync spawns in any koopa shell activated
+        # during chezmoi apply (prevents deadlock on the held flock).
+        env["KOOPA_COLOR_MODE_SYNCING"] = "1"
 
         # Targeted apply by target paths.  Never invokes opt/dotfiles/install,
         # so _sync_launchd_agent is never called and this launchd job cannot
