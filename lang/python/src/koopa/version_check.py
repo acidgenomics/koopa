@@ -1550,8 +1550,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "ruby": _AppCheckSpec(
-        "conda",
-        lambda: _check_conda("ruby", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        "dirlist",
+        lambda: _check_directory_listing(
+            "https://cache.ruby-lang.org/pub/ruby/4.0/",
+            "ruby",
+        ),
         (),
     ),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
