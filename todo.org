@@ -1,3 +1,4 @@
+** TODO PyCharm config is using Islands Light instead of Dracula Pro Alucard. Need to work on that.
 ** TODO RStudio Dracula Pro Alucard theme is looking weird on MBP.
 ** TODO Let's hide the 'Public key' alert during dotfiles configuration. Not helpful for users.
 ** TODO Ensure first class VS Code configuration and Dracula Pro color theme support for Antigravity IDE and Cursor.
