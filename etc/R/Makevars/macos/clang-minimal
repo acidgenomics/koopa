@@ -1,3 +1,0 @@
-CC=/usr/bin/clang
-CFLAGS=
-LDFLAGS = -L/opt/koopa/app/gettext/0.21/lib

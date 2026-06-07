@@ -1,0 +1,46 @@
+"""Utility functions for datatype handling/coercion."""
+
+
+def argsort(object: list, reverse: bool = False) -> list[int]:
+    """Return the indices that would sort an array.
+
+    See Also
+    --------
+    - https://stackoverflow.com/questions/3071415/
+    - https://stackoverflow.com/questions/6422700/
+    - https://stackoverflow.com/questions/6632188/
+    - https://numpy.org/doc/stable/reference/generated/numpy.argsort.html
+    - https://docs.python.org/3/howto/sorting.html
+
+    Examples
+    --------
+    >>> object = ["b", "a", "a", "c", "c", "c"]
+    >>> idx1 = argsort(object, reverse=False)
+    [1, 2, 0, 3, 4, 5]
+    >>> idx2 = argsort(object, reverse=True)
+    [3, 4, 5, 0, 1, 2]
+    >>> [object[i] for i in idx1]
+    ['a', 'a', 'b', 'c', 'c', 'c']
+    >>> [object[i] for i in idx2]
+    ['c', 'c', 'c', 'b', 'a', 'a']
+    """
+    iterable = range(len(object))
+    out = sorted(iterable, key=lambda i: object[i], reverse=reverse)
+    return out
+
+
+def unique_pos(object: list) -> list:
+    """Return the position index of unique values.
+
+    See Also
+    --------
+    - https://stackoverflow.com/questions/56830995/
+
+    Examples
+    --------
+    >>> object = [1, 2, 2, 3, 4, 5, 5, 5]
+    >>> unique_pos(object)
+    [0, 1, 3, 4, 5]
+    """
+    out = [object.index(x) for x in sorted(set(object))]
+    return out

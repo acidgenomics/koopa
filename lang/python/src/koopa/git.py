@@ -1,0 +1,315 @@
+"""Git operations.
+
+Converted from Bash functions: git-clone, git-pull, git-default-branch,
+git-last-commit-local, git-last-commit-remote, git-latest-tag,
+git-push-submodules, git-submodule-init, git-reset, git-rm-untracked,
+git-rename-master-to-main, git-set-remote-url, git-rm-submodule, etc.
+"""
+
+import os
+import shutil
+import subprocess
+
+
+def _git(
+    *args: str,
+    cwd: str | None = None,
+    capture: bool = True,
+) -> subprocess.CompletedProcess:
+    """Run a git command."""
+    cmd = ["git", *args]
+    return subprocess.run(
+        cmd,
+        cwd=cwd,
+        capture_output=capture,
+        text=True,
+        check=True,
+    )
+
+
+def git_clone(
+    url: str,
+    target: str | None = None,
+    *,
+    branch: str | None = None,
+    commit: str | None = None,
+    tag: str | None = None,
+    recursive: bool = False,
+) -> None:
+    """Clone a git repository.
+
+    Matches bash ``koopa_git_clone`` behaviour:
+    - branch: shallow clone with ``--depth=1 --single-branch``
+    - commit/tag: blobless clone with ``--filter=blob:none``, then checkout
+    """
+    args = ["clone", "--quiet"]
+    if branch:
+        args.extend(["--depth=1", "--single-branch", "--branch", branch])
+    elif tag:
+        args.extend(["--depth=1", "--single-branch", "--branch", tag])
+    else:
+        args.append("--filter=blob:none")
+    if recursive:
+        args.append("--recursive")
+    args.append(url)
+    if target:
+        args.append(target)
+    _git(*args, capture=False)
+    cwd = target or os.path.basename(url).removesuffix(".git")
+    if commit:
+        _git("checkout", "--quiet", commit, cwd=cwd, capture=False)
+
+
+def git_fetch(path: str = ".") -> None:
+    """Fetch from remote."""
+    _git("fetch", "--all", cwd=path, capture=False)
+
+
+def git_checkout(path: str = ".", *, ref: str = "HEAD") -> None:
+    """Checkout a specific ref."""
+    _git("checkout", ref, cwd=path, capture=False)
+
+
+def git_pull(
+    path: str = ".",
+    *,
+    rebase: bool = False,
+    autostash: bool = False,
+    capture: bool = False,
+) -> subprocess.CompletedProcess | None:
+    """Pull latest changes."""
+    args = ["pull"]
+    if rebase:
+        args.append("--rebase")
+    if autostash:
+        args.append("--autostash")
+    result = _git(*args, cwd=path, capture=capture)
+    if capture:
+        return result
+    return None
+
+
+def git_pull_safe(path: str) -> None:
+    """Pull a git repo if clean, warn on failure without raising.
+
+    Uses git_repo_has_unstaged_changes() to skip repos with active changes.
+    On auth failure, suggests 'gh auth switch' if gh is installed.
+    """
+    from koopa.alert import alert_info, warn
+
+    if not os.path.isdir(path) or not is_git_repo(path):
+        return
+    name = os.path.basename(path)
+    if git_repo_has_unstaged_changes(path):
+        warn(f"Skipping pull for '{name}': repo has active changes.")
+        return
+    if git_branch(path) == "HEAD":
+        return
+    alert_info(f"Pulling '{name}'.")
+    _auth_failure_patterns = (
+        "repository not found",
+        "not found",
+        "could not read username",
+        "permission denied",
+        "authentication failed",
+        "403",
+        "401",
+    )
+    try:
+        git_pull(path, rebase=True, autostash=True, capture=True)
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").lower()
+        if any(pat in stderr for pat in _auth_failure_patterns):
+            msg = f"Failed to pull '{name}': authentication error."
+            if shutil.which("gh"):
+                msg += " Consider running 'gh auth switch'."
+            warn(msg)
+        else:
+            warn(f"Failed to pull '{name}': {exc}")
+    except Exception as exc:
+        warn(f"Failed to pull '{name}': {exc}")
+
+
+def git_branch(path: str = ".") -> str:
+    """Get current branch name."""
+    result = _git("rev-parse", "--abbrev-ref", "HEAD", cwd=path)
+    return result.stdout.strip()
+
+
+def git_default_branch(path: str = ".") -> str:
+    """Get the default branch name (main or master)."""
+    result = _git("symbolic-ref", "refs/remotes/origin/HEAD", cwd=path)
+    ref = result.stdout.strip()
+    return ref.rsplit("/", maxsplit=1)[-1]
+
+
+def git_last_commit_local(path: str = ".") -> str:
+    """Get the last local commit SHA."""
+    result = _git("rev-parse", "HEAD", cwd=path)
+    return result.stdout.strip()
+
+
+def git_last_commit_remote(path: str = ".", *, branch: str | None = None) -> str:
+    """Get the last remote commit SHA."""
+    if branch is None:
+        branch = git_default_branch(path)
+    result = _git("rev-parse", f"origin/{branch}", cwd=path)
+    return result.stdout.strip()
+
+
+def git_remote_url(path: str = ".") -> str:
+    """Get remote origin URL."""
+    result = _git("config", "--get", "remote.origin.url", cwd=path)
+    return result.stdout.strip()
+
+
+def git_latest_tag(path: str = ".") -> str:
+    """Get the latest git tag."""
+    result = _git("describe", "--tags", "--abbrev=0", cwd=path)
+    return result.stdout.strip()
+
+
+def git_push_submodules(path: str = ".") -> None:
+    """Push all submodules."""
+    _git("push", "--recurse-submodules=on-demand", cwd=path, capture=False)
+
+
+def git_submodule_init(path: str = ".") -> None:
+    """Initialize and update submodules."""
+    _git("submodule", "update", "--init", "--recursive", cwd=path, capture=False)
+
+
+def git_merge_abort(path: str = ".") -> None:
+    """Abort an in-progress merge if one exists."""
+    merge_head = os.path.join(path, ".git", "MERGE_HEAD")
+    if os.path.isfile(merge_head):
+        _git("merge", "--abort", cwd=path, capture=False)
+
+
+def git_rebase_abort(path: str = ".") -> None:
+    """Abort an in-progress rebase if one exists."""
+    git_dir = os.path.join(path, ".git")
+    rebase_in_progress = os.path.isdir(os.path.join(git_dir, "rebase-merge")) or os.path.isdir(
+        os.path.join(git_dir, "rebase-apply")
+    )
+    if rebase_in_progress:
+        _git("rebase", "--abort", cwd=path, capture=False)
+
+
+def git_reset(path: str = ".", *, ref: str | None = None, hard: bool = False) -> None:
+    """Reset git repository."""
+    args = ["reset"]
+    if hard:
+        args.append("--hard")
+    if ref:
+        args.append(ref)
+    _git(*args, cwd=path, capture=False)
+
+
+def git_rm_untracked(path: str = ".") -> None:
+    """Remove untracked files."""
+    _git("clean", "-fdx", cwd=path, capture=False)
+
+
+def git_rename_master_to_main(path: str = ".") -> None:
+    """Rename master branch to main."""
+    _git("branch", "-m", "master", "main", cwd=path)
+    _git("push", "-u", "origin", "main", cwd=path, capture=False)
+
+
+def git_set_remote_url(url: str, path: str = ".") -> None:
+    """Set the remote origin URL."""
+    _git("remote", "set-url", "origin", url, cwd=path)
+
+
+def git_rm_submodule(submodule: str, path: str = ".") -> None:
+    """Remove a git submodule."""
+    _git("submodule", "deinit", "-f", submodule, cwd=path)
+    git_dir = os.path.join(path, ".git", "modules", submodule)
+    if os.path.isdir(git_dir):
+        shutil.rmtree(git_dir)
+    _git("rm", "-f", submodule, cwd=path)
+
+
+def git_commit_date(path: str = ".", *, ref: str = "HEAD") -> str:
+    """Get commit date in ISO format."""
+    result = _git("log", "-1", "--format=%aI", ref, cwd=path)
+    return result.stdout.strip()
+
+
+def git_repo_has_unstaged_changes(path: str = ".") -> bool:
+    """Check if repository has unstaged changes."""
+    result = subprocess.run(
+        ["git", "diff", "--quiet"],
+        cwd=path,
+        capture_output=True,
+        check=False,
+    )
+    return result.returncode != 0
+
+
+def git_repo_needs_pull_or_push(path: str = ".") -> bool:
+    """Check if repository needs a pull or push."""
+    _git("fetch", cwd=path)
+    local = git_last_commit_local(path)
+    try:
+        remote = git_last_commit_remote(path)
+    except subprocess.CalledProcessError:
+        return False
+    return local != remote
+
+
+def git_reset_fork_to_upstream(path: str = ".") -> None:
+    """Reset a fork to match upstream."""
+    branch = git_default_branch(path)
+    _git("fetch", "upstream", cwd=path)
+    _git("checkout", branch, cwd=path)
+    _git("reset", "--hard", f"upstream/{branch}", cwd=path)
+    _git("push", "origin", branch, "--force", cwd=path, capture=False)
+
+
+def assert_is_git_repo(path: str = ".") -> None:
+    """Assert that a directory is a git repository."""
+    git_dir = os.path.join(path, ".git")
+    if not os.path.isdir(git_dir):
+        msg = f"Not a git repository: '{path}'."
+        raise NotADirectoryError(msg)
+
+
+def is_git_repo(path: str = ".") -> bool:
+    """Check if a directory is a git repository."""
+    return os.path.isdir(os.path.join(path, ".git"))
+
+
+def git_status(path: str = ".") -> str:
+    """Get git status."""
+    result = _git("status", "--porcelain", cwd=path)
+    return result.stdout.strip()
+
+
+def git_log(path: str = ".", *, n: int = 10, oneline: bool = True) -> str:
+    """Get git log."""
+    args = ["log", f"-{n}"]
+    if oneline:
+        args.append("--oneline")
+    result = _git(*args, cwd=path)
+    return result.stdout.strip()
+
+
+def git_diff(path: str = ".", *, staged: bool = False) -> str:
+    """Get git diff."""
+    args = ["diff"]
+    if staged:
+        args.append("--staged")
+    result = _git(*args, cwd=path)
+    return result.stdout.strip()
+
+
+def git_stash(path: str = ".") -> None:
+    """Stash changes."""
+    _git("stash", cwd=path, capture=False)
+
+
+def git_stash_pop(path: str = ".") -> None:
+    """Pop stashed changes."""
+    _git("stash", "pop", cwd=path, capture=False)
