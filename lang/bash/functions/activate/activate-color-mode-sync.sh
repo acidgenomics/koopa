@@ -17,7 +17,6 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
-        _koopa_activate_mcfly_colors
         return 0
     }
     if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]
