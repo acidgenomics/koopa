@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Edit",
+      "Edit(.claude/rules/lessons.md)",
+      "Grep",
+      "Python(*)",
+      "Read",
+      "WebFetch"
+    ],
+    "defaultMode": "plan",
+    "deny": [
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git merge*)",
+      "Bash(git push*)",
+      "Bash(git rebase*)",
+      "Bash(git reset*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(.envrc)"
+    ]
+  }
+}

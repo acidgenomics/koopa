@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2024-09-24.
+#' @note Updated 2025-04-22.
 #'
 #' @section Restarting R:
 #'
@@ -355,25 +355,8 @@ local({
         ## Turn on auto-completion of installed package names.
         utils::rc.settings(ipck = TRUE)
     }
-    ## Configure graphics for Visual Studio Code.
-    ## See also:
-    ## - https://code.visualstudio.com/docs/languages/r
-    ## - https://aeturrell.github.io/markov-wanderer/posts/
-    ##     setting-up-r-in-vscode/
-    ## - https://www.milesmcbain.com/posts/alt-r-with-vscode/
-    ## - https://www.milesmcbain.com/posts/adding-addins-to-vscode/
-    ## > if (isTRUE(flag[["vscode"]])) {
-    ## >     if (isInstalled("httpgd")) {
-    ## >         options("vsc.plot" = FALSE)
-    ## >         options("device" = function(...) {
-    ## >             httpgd::hgd(silent = TRUE)
-    ## >             .vsc.browser(
-    ## >                 httpgd::hgd_url(history = FALSE),
-    ## >                 viewer = "Beside"
-    ## >             )
-    ## >         })
-    ## >     }
-    ## > }
+    ## Note: httpgd device for VS Code is handled by the 'r.plot.useHttpgd'
+    ## extension setting. No manual device configuration needed here.
     ## Debugging {{{2
     ## -------------------------------------------------------------------------
     options("warn" = 1L) # nolint
@@ -619,7 +602,7 @@ local({
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
     ## > if (isTRUE(flag[["rstudio"]])) {
-    ## >     Sys.umask("0002")
+    ## >     Sys.umask("0022")
     ## > }
     ## Improve PATH consistency with base R {{{3
     ## -------------------------------------------------------------------------
