@@ -401,7 +401,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     binary_prefix = "/opt/koopa"
     kp = koopa_prefix()
     os_str = os_slug()
-    s3_bucket = "s3://artifacts.acidgenomics.com/binaries"
+    s3_bucket = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/binaries"
     if kp != binary_prefix:
         msg = (
             f"Binary package installation not supported for koopa install "
@@ -460,7 +460,7 @@ def push_app_build(name: str) -> None:
 
     arch = arch2()
     os_str = os_slug()
-    s3_bucket = "s3://artifacts.acidgenomics.com/binaries"
+    s3_bucket = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/binaries"
     app_dir = os.path.join(app_prefix(), name)
     if not os.path.isdir(app_dir):
         msg = f"App directory does not exist: {app_dir}"
@@ -509,7 +509,7 @@ def push_missing_app_builds() -> None:
 
     arch = arch2()
     os_str = os_slug()
-    s3_bucket_bare = "artifacts.acidgenomics.com"
+    s3_bucket_bare = "artifacts-REDACTED_ACCOUNT_ID-us-east-1-an"
     opt = opt_prefix()
     app_dir = app_prefix()
     aws = shutil.which("aws")

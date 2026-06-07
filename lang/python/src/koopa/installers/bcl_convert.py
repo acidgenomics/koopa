@@ -15,7 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install BCL Convert."""
-    s3_base = "s3://artifacts.acidgenomics.com/installers"
+    s3_base = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/installers"
     s3_url = f"{s3_base}/bcl-convert/{version}.tar.xz"
     local_file = f"{version}.tar.xz"
     subprocess.run(
