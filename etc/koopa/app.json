@@ -30,7 +30,7 @@
       "unzip"
     ],
     "category": "Text",
-    "date": "2026-05-02",
+    "date": "2026-06-07",
     "default": false,
     "dependencies": [
       "perl"
@@ -48,7 +48,7 @@
     "url": [
       "https://beyondgrep.com/"
     ],
-    "version": "3.9.0"
+    "version": "3.10.0"
   },
   "agat": {
     "bin": [
@@ -580,7 +580,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-06-06",
+    "date": "2026-06-07",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -592,7 +592,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.34.62"
+    "version": "2.34.63"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -2377,7 +2377,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-06",
+    "date": "2026-06-07",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2387,7 +2387,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "373ea9ed2af5847dee09885fba8faf34c9c51943"
+    "version": "49f5641ac42425acff841b99ee09a2c5df9ff294"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -5949,7 +5949,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-06-05",
+    "date": "2026-06-07",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -5959,7 +5959,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.6.0"
+    "version": "2026.6.1"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -8782,7 +8782,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-02",
+    "date": "2026-06-07",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8792,7 +8792,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "a1b98eb7d303226be60a0afe3025fc87d67be23b"
+    "version": "425a8459a0c0b1c199398df951e3b80d116368fa"
   },
   "spacevim": {
     "date": "2026-05-10",
