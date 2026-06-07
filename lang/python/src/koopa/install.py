@@ -432,6 +432,7 @@ def install_app_from_binary_package(*prefixes: str) -> None:
                     "aws",
                     "s3",
                     "cp",
+                    "--only-show-errors",
                     "--profile",
                     aws_profile,
                     tar_url,
@@ -481,10 +482,12 @@ def push_app_build(name: str) -> None:
             "aws",
             "s3",
             "cp",
+            "--only-show-errors",
             "--profile",
             "acidgenomics",
             tar_file,
             tar_url,
+            capture=True,
         )
         if vendor_config() is not None:
             vendor_push_binary(tar_file, os_str, arch, name, tarball_name)
@@ -2732,6 +2735,24 @@ def _run_install_plan(  # noqa: C901, PLR0915
 
     # remaining_deps[app] = set of in-plan deps not yet done.
     remaining_deps: dict[str, set[str]] = {app: set(dep_map.get(app, set())) for app, _ in plan}
+    # If aws-cli is being rebuilt in this same run its bin/aws symlink is
+    # dangling while its prefix is rebuilt.  Any other app that would push or
+    # pull a binary through `aws` must therefore wait for aws-cli to finish,
+    # regardless of whether the current batch happens to need aws — the next
+    # app in the plan might, and the binary check at config-creation time would
+    # return False (aws not found yet) and skip the artificial blocker.
+    if "aws-cli" in remaining_deps:
+        aws_subtree: set[str] = {"aws-cli"}
+        stack = ["aws-cli"]
+        while stack:
+            cur = stack.pop()
+            for d in dep_map.get(cur, set()):
+                if d not in aws_subtree:
+                    aws_subtree.add(d)
+                    stack.append(d)
+        for app, deps in remaining_deps.items():
+            if app not in aws_subtree:
+                deps.add("aws-cli")
     plan_order = [app for app, _ in plan]
     started: set[str] = set()
     done: set[str] = set()
@@ -2758,8 +2779,9 @@ def _run_install_plan(  # noqa: C901, PLR0915
         elapsed_secs = time.monotonic() - loop_start
         elapsed = _fmt_duration(elapsed_secs)
         time_str = _styled_time(elapsed, seconds=elapsed_secs)
-        names = ", ".join(sorted(in_flight))
-        sys.stderr.write(f"\r\033[K   {frame} installing: {names} {time_str}")
+        n = len(in_flight)
+        label = "app" if n == 1 else "apps"
+        sys.stderr.write(f"\r\033[K   {frame} installing {n} {label} {time_str}")
         sys.stderr.flush()
 
     def _clear() -> None:
@@ -2865,7 +2887,7 @@ def _run_install_plan(  # noqa: C901, PLR0915
         _clear()
 
     if failed:
-        msg = f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}."
+        msg = f"{len(failed)} app(s) failed."
         raise RuntimeError(msg)
     _save_pending_plan([], source=source)
 
