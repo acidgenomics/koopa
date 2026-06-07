@@ -1,3 +1,4 @@
+** TODO Let's hide the 'Public key' alert during dotfiles configuration. Not helpful for users.
 ** TODO Ensure first class VS Code configuration and Dracula Pro color theme support for Antigravity IDE and Cursor.
 ** TODO Antigravity IDE is prompting way to much. We need to relax the gates on that.
 ** TODO Let's work on Claude code configuration parity with Antigravity IDE, Cursor, Codex.
