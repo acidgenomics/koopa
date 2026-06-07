@@ -11,6 +11,7 @@ from typing import Self
 _HISTORY_FILENAME = "build-times.json"
 
 _active_progress: "BuildProgress | None" = None
+_last_failure_tail: str | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
 _LOG_TAIL_LINES = 100
@@ -35,6 +36,11 @@ def _styled_time(elapsed: str, *, seconds: float | None = None) -> str:
 def get_active_progress() -> "BuildProgress | None":
     """Return the currently active build progress context, if any."""
     return _active_progress
+
+
+def get_last_failure_tail() -> str | None:
+    """Return the failure log tail stashed by the most recent noninteractive build, if any."""
+    return _last_failure_tail
 
 
 def _history_path() -> str:
@@ -94,11 +100,13 @@ class BuildProgress:
         name: str,
         *,
         version: str = "",
+        noninteractive: bool = False,
         quiet: bool = False,
         verbose: bool = False,
     ) -> None:
         self._name = name
         self._version = version
+        self._noninteractive = noninteractive
         self._quiet = quiet
         self._verbose = verbose
         self._start: float = 0.0
@@ -198,7 +206,7 @@ class BuildProgress:
         """
         self._current_step = current
         self._total_steps = total
-        if self._quiet:
+        if self._quiet or self._noninteractive:
             return
         if self._steps_finished:
             return
@@ -230,7 +238,11 @@ class BuildProgress:
     # -- Output capture and spinner -------------------------------------------
 
     def _start_capture(self) -> None:
-        """Redirect stdout/stderr to a temp log file and start spinner."""
+        """Redirect stdout/stderr to a temp log file and start spinner.
+
+        In noninteractive mode, output is still captured to the log but no
+        tty fd is duped and no spinner thread is started.
+        """
         self._log_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
             mode="w+",
             prefix="koopa-build-",
@@ -241,6 +253,8 @@ class BuildProgress:
         self._saved_stderr_fd = os.dup(2)
         os.dup2(self._log_file.fileno(), 1)
         os.dup2(self._log_file.fileno(), 2)
+        if self._noninteractive:
+            return
         self._tty_fd = os.dup(self._saved_stderr_fd)
         self._spinner_stop.clear()
         self._spinner_thread = threading.Thread(
@@ -251,6 +265,7 @@ class BuildProgress:
 
     def _stop_capture(self, *, failed: bool) -> None:
         """Restore fds, stop spinner, optionally dump log tail."""
+        global _last_failure_tail  # noqa: PLW0603
         self._spinner_stop.set()
         if self._spinner_thread is not None:
             self._spinner_thread.join(timeout=2)
@@ -261,16 +276,20 @@ class BuildProgress:
         self._saved_stdout_fd = -1
         self._saved_stderr_fd = -1
         tty = self._tty_fd
-        if failed or not self._steps_finished:
-            elapsed_secs = self.elapsed
-            elapsed = _fmt_duration(elapsed_secs)
-            marker = "x" if failed else "OK"
-            label = self._styled_label()
-            time_str = _styled_time(elapsed, seconds=elapsed_secs)
-            os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
-        if failed and self._log_file is not None:
+        if not self._noninteractive:
+            if failed or not self._steps_finished:
+                elapsed_secs = self.elapsed
+                elapsed = _fmt_duration(elapsed_secs)
+                marker = "x" if failed else "OK"
+                label = self._styled_label()
+                time_str = _styled_time(elapsed, seconds=elapsed_secs)
+                os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
+            if failed and self._log_file is not None:
+                self._log_file.flush()
+                self._dump_log_tail(tty)
+        elif failed and self._log_file is not None:
             self._log_file.flush()
-            self._dump_log_tail(tty)
+            _last_failure_tail = self._format_log_tail()
         if tty >= 0:
             os.close(tty)
             self._tty_fd = -1
@@ -305,37 +324,35 @@ class BuildProgress:
                 break
             idx += 1
 
-    def _dump_log_tail(self, tty: int) -> None:
-        """Print error lines and the last N lines of the build log to the tty."""
+    def _format_log_tail(self) -> str:
+        """Return error lines and the last N lines of the build log as a string."""
         if self._log_file is None:
-            return
+            return "  Build failed.\n"
         try:
             with open(self._log_file.name) as f:
                 lines = f.readlines()
         except OSError:
-            return
+            return "  Build failed.\n"
         if not lines:
-            os.write(tty, b"  Build failed.\n")
-            return
+            return "  Build failed.\n"
         sep = "─" * 40
         error_lines = [line for line in lines if "error" in line.lower()]
         tail = lines[-_LOG_TAIL_LINES:]
-        os.write(tty, b"  Build failed.\n")
-        os.write(tty, f"  Last {_LOG_TAIL_LINES} lines:\n".encode())
-        os.write(tty, f"  {sep}\n".encode())
+        parts = [f"  Build failed.\n  Last {_LOG_TAIL_LINES} lines:\n  {sep}\n"]
         for line in tail:
-            os.write(tty, f"  {line}".encode())
-            if not line.endswith("\n"):
-                os.write(tty, b"\n")
-        os.write(tty, f"  {sep}\n".encode())
+            parts.append(f"  {line}" if line.endswith("\n") else f"  {line}\n")
+        parts.append(f"  {sep}\n")
         if error_lines:
-            os.write(tty, f"  Error lines ({len(error_lines)}):\n".encode())
-            os.write(tty, f"  {sep}\n".encode())
+            parts.append(f"  Error lines ({len(error_lines)}):\n")
+            parts.append(f"  {sep}\n")
             for line in error_lines:
-                os.write(tty, f"  {line}".encode())
-                if not line.endswith("\n"):
-                    os.write(tty, b"\n")
-            os.write(tty, f"  {sep}\n".encode())
+                parts.append(f"  {line}" if line.endswith("\n") else f"  {line}\n")
+            parts.append(f"  {sep}\n")
+        return "".join(parts)
+
+    def _dump_log_tail(self, tty: int) -> None:
+        """Print error lines and the last N lines of the build log to the tty."""
+        os.write(tty, self._format_log_tail().encode())
 
     def _record_duration(self) -> None:
         history = _load_history()

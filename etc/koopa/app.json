@@ -1549,7 +1549,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.167"
+    "version": "2.1.168"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -2387,7 +2387,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "dba9aa6363b9c0bada796ee3e8e26adb84a9c43a"
+    "version": "373ea9ed2af5847dee09885fba8faf34c9c51943"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -10347,7 +10347,7 @@
       "go"
     ],
     "category": "Text",
-    "date": "2026-04-22",
+    "date": "2026-06-06",
     "default": false,
     "description": "YAML, JSON, and XML command-line processor",
     "notes": [
@@ -10357,7 +10357,7 @@
     "url": [
       "https://github.com/mikefarah/yq/"
     ],
-    "version": "4.53.2"
+    "version": "4.53.3"
   },
   "yt-dlp": {
     "bin": [

@@ -174,14 +174,14 @@ def _make_scheduler_config(
     return InstallConfig(name=app, binary=is_binary, deps=False)
 
 
-def _noop_worker(config: InstallConfig) -> tuple[str, float, None]:
+def _noop_worker(config: InstallConfig) -> tuple[str, float, None, None]:
     """Worker that succeeds immediately."""
-    return config.name, 0.0, None
+    return config.name, 0.0, None, None
 
 
-def _fail_worker(config: InstallConfig) -> tuple[str, float, None]:
-    """Worker that always raises."""
-    raise RuntimeError(f"injected failure: {config.name}")
+def _fail_worker(config: InstallConfig) -> tuple[str, float, str, None]:
+    """Worker that always returns a structured failure tuple."""
+    return config.name, 0.0, f"injected failure: {config.name}", None
 
 
 def test_run_install_plan_single_app() -> None:
@@ -194,7 +194,7 @@ def test_run_install_plan_single_app() -> None:
 
     def _worker(config):  # noqa: ANN001, ANN202
         calls.append(config.name)
-        return config.name, 0.0, None
+        return config.name, 0.0, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -202,6 +202,7 @@ def test_run_install_plan_single_app() -> None:
         patch("koopa.io.import_app_json", return_value={"myapp": {}}),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
+        patch("koopa.alert.alert_install_success"),
     ):
         _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)
 
@@ -221,10 +222,10 @@ def test_run_install_plan_dep_order() -> None:
         if config.name == "dep":
             dispatch_order.append("dep")
             dep_done.set()
-            return config.name, 0.0, None
+            return config.name, 0.0, None, None
         dep_done.wait(timeout=5)
         dispatch_order.append("app")
-        return config.name, 0.0, None
+        return config.name, 0.0, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -232,6 +233,7 @@ def test_run_install_plan_dep_order() -> None:
         patch("koopa.io.import_app_json", return_value={"dep": {}, "app": {}}),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
+        patch("koopa.alert.alert_install_success"),
     ):
         _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)
 
@@ -260,7 +262,7 @@ def test_run_install_plan_cpu_serialized() -> None:
         time.sleep(0.05)
         with lock:
             concurrent_cpu[0] -= 1
-        return config.name, 0.05, None
+        return config.name, 0.05, None, None
 
     # Both are CPU-bound (gnu-app installer)
     json_data = {"gcc": {"installer": "gnu-app"}, "llvm": {"installer": "gnu-app"}}
@@ -272,6 +274,7 @@ def test_run_install_plan_cpu_serialized() -> None:
         patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
+        patch("koopa.alert.alert_install_success"),
     ):
         _run_install_plan(plan, dep_map, make_config=_make)
 
@@ -302,7 +305,7 @@ def test_run_install_plan_io_parallel() -> None:
         time.sleep(0.05)
         with lock:
             current[0] -= 1
-        return config.name, 0.05, None
+        return config.name, 0.05, None, None
 
     json_data = {f"app{i}": {} for i in range(4)}
 
@@ -314,6 +317,7 @@ def test_run_install_plan_io_parallel() -> None:
         patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
+        patch("koopa.alert.alert_install_success"),
     ):
         _run_install_plan(plan, dep_map, make_config=_make)
 
@@ -330,8 +334,8 @@ def test_run_install_plan_failure_aborts() -> None:
 
     def _worker(config):  # noqa: ANN001, ANN202
         if config.name == "bad":
-            raise RuntimeError("injected")
-        return config.name, 0.0, None
+            return config.name, 0.0, "injected", None
+        return config.name, 0.0, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -340,6 +344,7 @@ def test_run_install_plan_failure_aborts() -> None:
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
         patch("koopa.alert.alert"),
+        patch("koopa.alert.alert_install_success"),
         pytest.raises(RuntimeError, match=r"app.*failed"),
     ):
         _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)

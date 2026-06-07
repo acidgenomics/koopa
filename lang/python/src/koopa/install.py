@@ -66,6 +66,7 @@ class InstallConfig:
     link_in_bin: bool | None = None
     link_in_man1: bool | None = None
     link_in_opt: bool | None = None
+    noninteractive: bool = False
     prefix_check: bool = True
     private: bool = False
     push: bool = False
@@ -723,6 +724,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     continue
                 dep_config = InstallConfig(
                     name=dep,
+                    noninteractive=config.noninteractive,
                     passthrough_args=_build_passthrough_args(dep),
                     push=config.push,
                 )
@@ -786,7 +788,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 os.environ[var] = val
     try:
         with BuildProgress(
-            config.name, version=config.version, quiet=config.quiet, verbose=config.verbose
+            config.name,
+            version=config.version,
+            noninteractive=config.noninteractive,
+            quiet=config.quiet,
+            verbose=config.verbose,
         ) as progress:
             if config.binary:
                 if config.mode != "shared" or not config.prefix:
@@ -2663,23 +2669,26 @@ def _remove_from_pending_plan(app: str) -> None:
 
 def _install_app_worker(
     config: "InstallConfig",
-) -> tuple[str, float, str | None]:
-    """Run install_app in a child process and return (name, elapsed, log_tail).
+) -> tuple[str, float, str | None, str | None]:
+    """Run install_app in a child process and return (name, elapsed, error, tail).
 
     Must be a module-level function so multiprocessing.spawn can pickle it.
-    Sets quiet=True so the child does no terminal rendering; the parent owns
-    all progress output.  On failure, raises with the log tail embedded in the
-    exception message so the parent can surface it.
+    Sets noninteractive=True so the child captures output to a per-app log
+    without touching the terminal; the parent owns all progress output.
+    Returns a structured tuple so the parent can surface the log tail on failure
+    without embedding multi-line text in an exception message.
     """
     import time
 
-    config.quiet = True
+    from koopa.progress import get_last_failure_tail
+
+    config.noninteractive = True
     t0 = time.monotonic()
     try:
         install_app(config)
     except Exception as exc:
-        raise RuntimeError(f"{config.name}: {exc}") from exc
-    return config.name, time.monotonic() - t0, None
+        return config.name, time.monotonic() - t0, str(exc), get_last_failure_tail()
+    return config.name, time.monotonic() - t0, None, None
 
 
 def _io_cap() -> int:
@@ -2711,9 +2720,10 @@ def _run_install_plan(
     import multiprocessing
     import time
 
-    from koopa.alert import alert
+    from koopa.alert import alert, alert_install_success
     from koopa.app import is_cpu_bound_app
     from koopa.io import import_app_json
+    from koopa.progress import _fmt_duration
 
     json_data = import_app_json()
     cap = _io_cap()
@@ -2793,14 +2803,25 @@ def _run_install_plan(
                 else:
                     io_running -= 1
                 try:
-                    _app, _elapsed, _ = fut.result()
-                    done.add(app)
-                    _remove_from_pending_plan(app)
+                    _app, _elapsed, _error, _tail = fut.result()
                 except Exception as exc:
+                    # Worker crashed (e.g. pickling error or OOM) — treat as failure.
                     failed.add(app)
                     fail_msgs[app] = str(exc)
                     alert(f"Failed to install {app}: {exc}")
                     aborting = True
+                    continue
+                if _error is not None:
+                    failed.add(app)
+                    fail_msgs[app] = _error
+                    alert(f"Failed to install {app}: {_error}")
+                    if _tail:
+                        sys.stderr.write(_tail)
+                    aborting = True
+                else:
+                    done.add(app)
+                    _remove_from_pending_plan(app)
+                    alert_install_success(_app, "", _fmt_duration(_elapsed))
 
             _dispatch()
 
