@@ -1,3 +1,10 @@
 ** TODO Ensure first class VS Code configuration and Dracula Pro color theme support for Antigravity IDE and Cursor.
 ** TODO Antigravity IDE is prompting way to much. We need to relax the gates on that.
 ** TODO Let's work on Claude code configuration parity with Antigravity IDE, Cursor, Codex.
+** TODO Put relevant Antigravity IDE settings under git config in ~/.config/koopa/dotfiles
+    Application Settings: ~/Library/Application Support/Antigravity IDE
+    General Configuration: ~/.antigravity-ide
+    Agent Brain & Chats: ~/.gemini/antigravity-ide (or ~/.gemini/antigravity)
+** TODO Use koopa to bootstrap a new git repo with the following structure:
+.github/workflows/ci.yaml
+    

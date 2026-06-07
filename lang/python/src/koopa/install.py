@@ -497,7 +497,7 @@ def push_missing_app_builds() -> None:
     """Push any installed app builds that are missing from S3.
 
     Iterates all symlinks in opt/, checks whether the corresponding binary
-    tarball exists in s3://artifacts.acidgenomics.com/binaries via a
+    tarball exists in s3://artifacts-981885022366-us-east-1-an/binaries via a
     lightweight head-object call, and pushes any that are absent.
 
     Intended as a post-update sweep to catch apps (e.g. conda, aws-cli) that
