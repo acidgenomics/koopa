@@ -10,10 +10,10 @@ import sys
 import tempfile
 from pathlib import Path
 
-_BUCKET = "python.acidgenomics.com"
+_BUCKET = "python-981885022366-us-east-1-an"
 _S3_URI = f"s3://{_BUCKET}"
 _PROFILE = "acidgenomics"
-_INDEX_URL = f"https://{_BUCKET}/simple/"
+_INDEX_URL = "https://python.acidgenomics.com/simple/"
 
 
 def _aws() -> str:
@@ -48,7 +48,7 @@ def _cloudfront_distribution_id() -> str:
 
 
 def _s3_list_packages() -> list[str]:
-    """List all filenames under s3://python.acidgenomics.com/packages/."""
+    """List all filenames under s3://python-981885022366-us-east-1-an/packages/."""
     aws = _aws()
     result = subprocess.run(
         [
