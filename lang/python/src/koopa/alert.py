@@ -79,7 +79,7 @@ def alert(message: str) -> None:
 
 def alert_info(message: str) -> None:
     """Print an info message."""
-    msg(message, prefix="ℹ", color="36")  # noqa: RUF001
+    msg(message, prefix="ⓘ", color="36")
 
 
 def alert_note(message: str) -> None:

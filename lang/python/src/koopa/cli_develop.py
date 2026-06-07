@@ -1556,9 +1556,7 @@ def _detect_color_mode_thrash(
     """
     import re
 
-    apply_re = re.compile(
-        r"(?:\[(?P<ts>[^\]]+)\]\s+)?Applying color mode:\s+(?P<mode>\S+)"
-    )
+    apply_re = re.compile(r"(?:\[(?P<ts>[^\]]+)\]\s+)?Applying color mode:\s+(?P<mode>\S+)")
     stable_re = re.compile(r"Color mode already applied:")
 
     best_len = 0
@@ -1601,9 +1599,7 @@ def _handle_color_mode_audit(args: list[str]) -> None:
 
     parser = argparse.ArgumentParser(
         prog="koopa develop color-mode-audit",
-        description=(
-            "Parse the color-mode sync log and fail if light↔dark thrash is detected."
-        ),
+        description=("Parse the color-mode sync log and fail if light↔dark thrash is detected."),
     )
     parser.add_argument(
         "--threshold",
