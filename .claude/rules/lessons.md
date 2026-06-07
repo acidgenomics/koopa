@@ -1,5 +1,53 @@
 # Lessons
 
+## `git filter-repo` Is for Identity Fixes; `git commit-tree` Replay Is for De-duplication
+
+`git filter-repo --mailmap` is the preferred tool for **author/email identity
+rewrites** (rename an email across all commits). It's fast, safe, and
+well-understood. Use it whenever the only problem is wrong names/emails.
+
+However, `git filter-repo` **cannot de-duplicate** history or remove merge
+commits — it preserves the existing graph topology. When the history has been
+accidentally doubled (e.g., a botched cleanup rewrote commits into clean copies,
+then a `git pull` merged the originals back in, leaving every commit present
+twice joined by spurious pull-merges), the correct tool is a **`git commit-tree`
+replay**:
+
+1. Read all non-merge commits via `git log`.
+2. Group by `(tree, author-date, full commit body)` — this key is a perfect
+   logical identity across both duplicate lineages.
+3. Pick one canonical copy per group (prefer bot-committed copies to preserve
+   `GitHub <noreply@github.com>` committer identity; never pick a
+   contaminated/wrong-identity copy).
+4. Sort canonicals by author-date (verify no ties first — a perfect total order
+   makes replay deterministic).
+5. Replay linearly via `git commit-tree <tree> -p <prev>` with the correct
+   `GIT_AUTHOR_*` / `GIT_COMMITTER_*` env vars.
+6. Verify: tree byte-match against old HEAD, expected commit count, zero
+   merges, zero contaminated identities, zero logical commits lost.
+7. Only then: `git update-ref refs/heads/main <new-tip>` + force-push.
+
+**The critical safety invariant:** before running, confirm **zero orphan
+commits** — i.e., every commit with a wrong/contaminated identity has a clean
+twin with the same tree. If any orphan exists, dropping the contaminated copy
+loses content and the replay is unsafe.
+
+## `git filter-repo` Is the Preferred Tool for Identity-Only History Rewrites
+
+`git filter-repo` (already on PATH at
+`/Users/mike/.local/share/koopa/bin/git-filter-repo`) is the standard for
+any commit-history rewrite where only **identity metadata** (author name/email,
+committer name/email) needs changing. Never use the deprecated `git
+filter-branch`. Example:
+
+```sh
+# mailmap file:
+# Michael Steinbaugh <mike@steinbaugh.com> <wrong@example.com>
+git filter-repo --mailmap <mailmap-file> --force
+git remote add origin <url>      # filter-repo removes the remote as a safety measure
+git push --force --set-upstream origin main
+```
+
 ## XDG Base Directories: Always Use the Env Var, Never Hardcode the Path
 
 Never hardcode `~/.config`, `~/.local/share`, `~/.cache`, or `~/.local/state`. Always derive them from the XDG env vars with the spec-mandated fallback:
