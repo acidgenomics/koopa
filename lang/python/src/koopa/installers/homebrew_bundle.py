@@ -6,6 +6,7 @@ import subprocess
 import sys
 
 from koopa.system import is_macos
+from koopa.xdg import xdg_config_home
 
 
 def main(
@@ -25,11 +26,7 @@ def main(
     if brew is None:
         msg = "Homebrew is not installed."
         raise FileNotFoundError(msg)
-    xdg_config = os.environ.get(
-        "XDG_CONFIG_HOME",
-        os.path.join(os.path.expanduser("~"), ".config"),
-    )
-    brewfile = os.path.join(xdg_config, "homebrew", "brewfile")
+    brewfile = os.path.join(xdg_config_home(), "homebrew", "brewfile")
     if not os.path.isfile(brewfile):
         msg = (
             f"Brewfile at '{brewfile}' does not exist. "

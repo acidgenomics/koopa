@@ -41,6 +41,7 @@ from koopa.system import (
     is_owner,
     os_slug,
 )
+from koopa.xdg import xdg_cache_home, xdg_config_home, xdg_data_home
 
 # -- Data classes -------------------------------------------------------------
 
@@ -1502,25 +1503,13 @@ __END__
 
 
 def _install_lock_path() -> str:
-    cache_dir = os.path.join(
-        os.environ.get(
-            "XDG_CACHE_HOME",
-            os.path.join(os.path.expanduser("~"), ".cache"),
-        ),
-        "koopa",
-    )
+    cache_dir = os.path.join(xdg_cache_home(), "koopa")
     return os.path.join(cache_dir, "install.lock")
 
 
 def _completions_lock_path() -> str:
     """Lock file to serialise completion-dir symlink operations across processes."""
-    cache_dir = os.path.join(
-        os.environ.get(
-            "XDG_CACHE_HOME",
-            os.path.join(os.path.expanduser("~"), ".cache"),
-        ),
-        "koopa",
-    )
+    cache_dir = os.path.join(xdg_cache_home(), "koopa")
     return os.path.join(cache_dir, "completions.lock")
 
 
@@ -1986,12 +1975,8 @@ def install_koopa(
 
     check_platform()
     source_prefix = koopa_prefix()
-    xdg_data_home = os.environ.get(
-        "XDG_DATA_HOME",
-        os.path.join(os.path.expanduser("~"), ".local", "share"),
-    )
     system_prefix = "/opt/koopa"
-    user_prefix = os.path.join(xdg_data_home, "koopa")
+    user_prefix = os.path.join(xdg_data_home(), "koopa")
     if is_admin():
         shared = True
     if not prefix:
@@ -2020,9 +2005,10 @@ def install_koopa(
         shutil.copytree(source_prefix, prefix, symlinks=True)
     os.environ["KOOPA_PREFIX"] = prefix
     if shared:
-        xdg_data_link = os.path.join(xdg_data_home, "koopa")
+        _xdg_data = xdg_data_home()
+        xdg_data_link = os.path.join(_xdg_data, "koopa")
         if not os.path.exists(xdg_data_link):
-            os.makedirs(xdg_data_home, exist_ok=True)
+            os.makedirs(_xdg_data, exist_ok=True)
             os.symlink(prefix, xdg_data_link)
     _update_venv(prefix)
 
@@ -2050,11 +2036,7 @@ def _zsh_compaudit_set_permissions() -> None:
 
 def _cleanup_legacy_config() -> None:
     """Fix legacy ~/.config/koopa/activate symlink and warn about shell profile references."""
-    xdg_config_home = os.environ.get(
-        "XDG_CONFIG_HOME",
-        os.path.join(os.path.expanduser("~"), ".config"),
-    )
-    legacy_activate = os.path.join(xdg_config_home, "koopa", "activate")
+    legacy_activate = os.path.join(xdg_config_home(), "koopa", "activate")
     if os.path.islink(legacy_activate):
         target = os.readlink(legacy_activate)
         activate_sh = os.path.join(koopa_prefix(), "activate.sh")
@@ -2602,8 +2584,6 @@ def _compute_install_plan(  # noqa: C901
 
 
 def _update_plan_cache_path() -> str:
-    from koopa.xdg import xdg_cache_home
-
     return os.path.join(xdg_cache_home(), "koopa", "update-plan.json")
 
 

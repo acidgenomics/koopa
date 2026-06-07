@@ -11,6 +11,7 @@ from koopa.alert import alert_info, alert_note
 from koopa.build import locate
 from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import os_appearance_mode
+from koopa.xdg import xdg_config_home
 
 # Chezmoi source-name prefixes that are stripped to get the target name.
 _CHEZMOI_STRIP_RE = re.compile(
@@ -178,7 +179,7 @@ def main(
             )
             if has_server.returncode == 0:
                 tmux_conf = os.path.join(
-                    os.environ.get("XDG_CONFIG_HOME", os.path.join(home, ".config")),
+                    xdg_config_home(),
                     "tmux",
                     "tmux.conf",
                 )

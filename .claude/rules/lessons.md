@@ -1,5 +1,34 @@
 # Lessons
 
+## XDG Base Directories: Always Use the Env Var, Never Hardcode the Path
+
+Never hardcode `~/.config`, `~/.local/share`, `~/.cache`, or `~/.local/state`. Always derive them from the XDG env vars with the spec-mandated fallback:
+
+**koopa Python** — use the helpers (already imported in most files):
+```python
+from koopa.xdg import xdg_config_home, xdg_data_home, xdg_cache_home
+xdg_config_home()   # os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+xdg_data_home()     # os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
+```
+Never inline `os.path.expanduser("~"), ".config"` or `Path.home() / ".local" / "share"` — these ignore a custom `$XDG_*` override.
+
+**chezmoi templates** — there is no native XDG variable; use:
+```
+{{- $dataHome := env "XDG_DATA_HOME" | default (joinPath .chezmoi.homeDir ".local/share") -}}
+{{- $configHome := env "XDG_CONFIG_HOME" | default (joinPath .chezmoi.homeDir ".config") -}}
+```
+The `.chezmoi.homeDir` inside `default` is the XDG fallback definition — unavoidable and correct. Reference example: `dot_config/rstudio/rstudio-prefs.json.tmpl:23`.
+
+**Standalone scripts** (no koopa import) — inline the same pattern:
+```python
+xdg_config_home = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+xdg_data_home = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+```
+
+**Key distinction:** `XDG_DATA_HOME` (single writable user data dir) vs `XDG_DATA_DIRS` (colon-separated read-only system *search* path — e.g. includes `/usr/share` and Ghostty's resources). Never derive a write/install location from `XDG_DATA_DIRS`.
+
+**Must NOT change:** `xdg.py` helper definitions; `koopa_prefix()` and all `<prefix>/share/...` FHS install-tree paths; IDE-fixed dirs (`~/.vscode`, `~/.positron`); macOS-native `~/Library/...`; per-tool non-XDG convention dirs (`~/.aws`, `~/.ssh`, `~/.conda`, `~/go`, `~/.emacs.d`).
+
 ## Color Mode: Env-Driven vs File-Driven Consumers — Different Timing Guarantees
 
 koopa's color-mode consumers split into two categories with very different timing

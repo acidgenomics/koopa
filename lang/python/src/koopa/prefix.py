@@ -6,6 +6,8 @@ Converted from POSIX shell and Bash prefix functions.
 import os
 from pathlib import Path
 
+from koopa.xdg import xdg_config_home
+
 
 def koopa_prefix() -> str:
     """Return koopa installation prefix."""
@@ -75,11 +77,7 @@ def scripts_private_prefix() -> str:
     """Return private scripts prefix."""
     return os.environ.get(
         "KOOPA_SCRIPTS_PRIVATE_PREFIX",
-        os.path.join(
-            os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
-            "koopa",
-            "scripts-private",
-        ),
+        os.path.join(xdg_config_home(), "koopa", "scripts-private"),
     )
 
 

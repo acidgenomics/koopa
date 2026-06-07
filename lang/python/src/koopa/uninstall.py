@@ -24,6 +24,7 @@ from koopa.prefix import (
 )
 from koopa.system import is_admin, is_owner
 from koopa.uninstallers import get_python_uninstaller, has_python_uninstaller
+from koopa.xdg import xdg_config_home, xdg_data_home
 
 
 @dataclass
@@ -179,19 +180,11 @@ def uninstall_koopa() -> None:
     shutil.rmtree(bootstrap, ignore_errors=True)
     print("Removing config prefix.", file=sys.stderr)
     shutil.rmtree(config, ignore_errors=True)
-    xdg_config_home = os.environ.get(
-        "XDG_CONFIG_HOME",
-        os.path.join(os.path.expanduser("~"), ".config"),
-    )
-    koopa_config = os.path.join(xdg_config_home, "koopa")
+    koopa_config = os.path.join(xdg_config_home(), "koopa")
     if os.path.isdir(koopa_config):
         print(f"Removing {koopa_config}.", file=sys.stderr)
         shutil.rmtree(koopa_config, ignore_errors=True)
-    xdg_data_home = os.environ.get(
-        "XDG_DATA_HOME",
-        os.path.join(os.path.expanduser("~"), ".local", "share"),
-    )
-    xdg_data_link = os.path.join(xdg_data_home, "koopa")
+    xdg_data_link = os.path.join(xdg_data_home(), "koopa")
     if os.path.islink(xdg_data_link):
         print(f"Removing {xdg_data_link}.", file=sys.stderr)
         os.unlink(xdg_data_link)
