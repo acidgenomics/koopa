@@ -25,12 +25,24 @@ Major changes:
   Added a Linux systemd user service (`koopa-color-mode-sync.service`) that
   subscribes to the XDG portal `SettingChanged` signal (with a `gsettings
   monitor` fallback) and invokes `koopa configure user color-mode` on appearance
-  changes.
+  changes. Interactive shells now invoke `koopa configure user color-mode`
+  synchronously when the cached mode is stale, so file-driven theme consumers
+  (bat, starship, delta) are re-rendered before they read their config files;
+  non-interactive shells keep the original background spawn. A
+  `KOOPA_COLOR_MODE_SYNCING` guard prevents re-entrant sync.
 - Improved dark/light color mode detection for VS Code, Posit Workbench, and
   Positron. Added a `TERM_PROGRAM=vscode` guard to skip the OSC 11 terminal
   background query in xterm.js-based terminals, where the response leaks
   `^[\` (the String Terminator) into terminal output. Falls back to the
   cached `~/.cache/koopa/color-mode` value, consistent with the tmux path.
+- Added support for parallel app installs. Multiple apps can now be installed
+  concurrently across worker processes. Child processes run in a new
+  `noninteractive` mode that captures output to a per-app log without touching
+  the terminal, leaving the parent in full control of progress rendering.
+  Failures are reported structurally — the failing app's log tail is surfaced
+  directly without embedding multi-line text in exception messages — and the
+  run aborts on first failure. Worker crashes (pickling errors, OOM) are caught
+  and surfaced gracefully.
 - Migrated binary package hosting to `artifacts.acidgenomics.com`.
 - Added `atuin` as the recommended shell history tool, bound to Ctrl+R.
   `mcfly` is now deprecated with `atuin` as its successor.
@@ -44,6 +56,13 @@ Minor changes:
 - Scoped AI agentic coding tools to major vendors only (Anthropic, Google,
   OpenAI, Microsoft, Amazon). Community OSS tools are out of scope.
 - Updated Claude Code configuration, primarily in `dotfiles`.
+- Removed mcfly color-handling activation code (`activate-mcfly`,
+  `activate-mcfly-colors`) across bash, zsh, and fish now that `atuin` is the
+  default history tool and `mcfly` is deprecated.
+- Added `koopa develop color-mode-audit` — parses the color-mode sync log and
+  exits non-zero when it detects light↔dark thrash (configurable `--threshold`,
+  default 4 consecutive alternating applies). Supports both the macOS log file
+  and Linux `journalctl`.
 
 New apps:
 
