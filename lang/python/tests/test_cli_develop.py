@@ -68,10 +68,10 @@ def test_activation_fork_audit_passes(capsys: pytest.CaptureFixture[str]) -> Non
 def test_detect_color_mode_thrash_healthy() -> None:
     """A log with one genuine toggle and stabilization is not thrash."""
     lines = [
-        "ⓘ Applying color mode: dark\n",
+        "▸ Applying color mode: dark\n",
         "** Color mode already applied: dark\n",
         "** Color mode already applied: dark\n",
-        "ⓘ Applying color mode: light\n",  # legitimate user toggle
+        "▸ Applying color mode: light\n",  # legitimate user toggle
         "** Color mode already applied: light\n",
         "** Color mode already applied: light\n",
     ]
@@ -82,10 +82,10 @@ def test_detect_color_mode_thrash_healthy() -> None:
 def test_detect_color_mode_thrash_detected() -> None:
     """Four consecutive alternating applies with no stabilization is thrash."""
     lines = [
-        "ⓘ Applying color mode: light\n",
-        "ⓘ Applying color mode: dark\n",
-        "ⓘ Applying color mode: light\n",
-        "ⓘ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
     ]
     longest, run = _detect_color_mode_thrash(lines)
     assert longest >= 4
@@ -98,12 +98,12 @@ def test_detect_color_mode_thrash_detected() -> None:
 def test_detect_color_mode_thrash_stabilization_resets_run() -> None:
     """An 'already applied' line between applies resets the run counter."""
     lines = [
-        "ⓘ Applying color mode: dark\n",
-        "ⓘ Applying color mode: light\n",
-        "ⓘ Applying color mode: dark\n",
+        "▸ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
         "** Color mode already applied: dark\n",  # stabilization — reset
-        "ⓘ Applying color mode: light\n",
-        "ⓘ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
     ]
     longest, _ = _detect_color_mode_thrash(lines)
     # The first burst is length 3, reset, then another 2 — no burst reaches 4.
@@ -111,12 +111,12 @@ def test_detect_color_mode_thrash_stabilization_resets_run() -> None:
 
 
 def test_detect_color_mode_thrash_tolerates_prefixes() -> None:
-    """Lines with ⓘ/** alert prefixes and plain lines both parse correctly."""
+    """Lines with ▸/** alert prefixes and plain lines both parse correctly."""
     lines_with_prefix = [
-        "ⓘ Applying color mode: dark\n",
-        "ⓘ Applying color mode: light\n",
-        "ⓘ Applying color mode: dark\n",
-        "ⓘ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
     ]
     lines_plain = [
         "Applying color mode: dark\n",
@@ -150,10 +150,10 @@ def test_detect_color_mode_thrash_parses_timestamps() -> None:
 def test_detect_color_mode_thrash_untimestamped_returns_none_ts() -> None:
     """Lines without timestamps return None for the timestamp field."""
     lines = [
-        "ⓘ Applying color mode: dark\n",
-        "ⓘ Applying color mode: light\n",
-        "ⓘ Applying color mode: dark\n",
-        "ⓘ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
+        "▸ Applying color mode: dark\n",
+        "▸ Applying color mode: light\n",
     ]
     longest, run = _detect_color_mode_thrash(lines)
     assert longest >= 4
@@ -188,10 +188,10 @@ def test_color_mode_audit_passes_on_clean_log(
     """A log with no thrash produces PASS and exit 0."""
     log = tmp_path / "color-mode-sync.log"
     log.write_text(
-        "ⓘ Applying color mode: dark\n"
+        "▸ Applying color mode: dark\n"
         "** Color mode already applied: dark\n"
         "** Color mode already applied: dark\n"
-        "ⓘ Applying color mode: light\n"
+        "▸ Applying color mode: light\n"
         "** Color mode already applied: light\n"
     )
     _DEVELOP_HANDLERS["color-mode-audit"](["--log", str(log)])
@@ -207,10 +207,10 @@ def test_color_mode_audit_fails_on_thrash_log(
     """A log with thrash produces FAIL and exit 1."""
     log = tmp_path / "color-mode-sync.log"
     log.write_text(
-        "ⓘ Applying color mode: light\n"
-        "ⓘ Applying color mode: dark\n"
-        "ⓘ Applying color mode: light\n"
-        "ⓘ Applying color mode: dark\n"
+        "▸ Applying color mode: light\n"
+        "▸ Applying color mode: dark\n"
+        "▸ Applying color mode: light\n"
+        "▸ Applying color mode: dark\n"
     )
     with pytest.raises(SystemExit) as exc_info:
         _DEVELOP_HANDLERS["color-mode-audit"](["--log", str(log)])
