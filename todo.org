@@ -6,5 +6,19 @@
     General Configuration: ~/.antigravity-ide
     Agent Brain & Chats: ~/.gemini/antigravity-ide (or ~/.gemini/antigravity)
 ** TODO Use koopa to bootstrap a new git repo with the following structure:
-.github/workflows/ci.yaml
-    
+    .github/workflows/ci.yaml
+** TODO Need to fix this situation during `koopa update`:
+    $ koopa update
+    => Pulling koopa on develop (c97eed8).
+    => Installing 36 apps: rclone, sqlite, gnupg, python3.12, python3.13, python3.14, doom-emacs, dotfiles, ipython, jupyterlab, ... and 26 more.
+    => Failed to install uv: [Errno 2] No such file or directory: 'aws'
+    => Failed to install rclone: [Errno 2] No such file or directory: 'aws'
+    => Failed to install claude-code: [Errno 2] No such file or directory: 'aws'
+       / installing: aws-cli, sqlite [14s]
+** TODO Progress is too jarring here:
+    upload: ../../var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-push-trgskl3c.tar.gz to s3://artifacts-981885022366-us-east-1-an/binaries/macos-15/arm64/sqlite/3.53.2.tar.gz
+       sqlite 3.53.2 OK [32s]
+       \ installing: aws-cli [1m01s]upload: ../../var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-push-yvpanba3.tar.gz to s3://artifacts-981885022366-us-east-1-an/binaries/macos-15/arm64/aws-cli/2.34.62.tar.gz
+       aws-cli 2.34.62 OK [1m01s]
+    Warning: Updating stale apps failed: 34 app(s) failed: 1password-cli, age, black, bumpver, claude-code, commitizen, copilot-cli, doom-emacs, dotfiles, gemini-cli, git-filter-repo, gnupg, ipython, jupyterlab, lesspipe, meson, poetry, pyflakes, pyright, pytest, python3.12, python3.13, python3.14, rclone, ruff, ruff-lsp, snakefmt, spacemacs, sphinx, sqlfluff, tqdm, ty, uv, yt-dlp.
+    Our parallel app update progress needs work here. I don't want it messaging all the app names separated by commas here, that looks bad
