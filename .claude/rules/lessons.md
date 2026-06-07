@@ -1,5 +1,76 @@
 # Lessons
 
+## Do Not Hardcode Proprietary Theme Colors in Tracked Files
+
+Proprietary paid-theme hex values (Dracula Pro, Dracula Pro Alucard, etc.) must not
+appear as literals in any tracked file. Always derive them at runtime from the locally
+installed source at `~/.local/share/dracula-pro/`.
+
+**Rule:** before writing any hex color into a tracked file, verify it does not appear
+in the local proprietary palette. If it does, the code must read it at runtime instead.
+
+Free Dracula OSS colors (`#282a36`, `#6272a4`, `#50fa7b`, `#f1fa8c`, `#ff79c6`,
+`#bd93f9`, `#8be9fd`, `#ffb86c`, `#ff5555`) are allowed as literals. Generic neutrals
+(`#ffffff`, `#000000`, `#fafafa`, plain greys) are fine. Everything else in a
+Dracula Pro theme context must be runtime-derived.
+
+When working on any theme-synthesis task:
+- Never copy a hex out of a vendor palette file and paste it into a tracked script.
+- Never quote proprietary hex values in documentation or lessons files.
+- Any doubt → check `grep -iE '<hex>' ~/.local/share/dracula-pro/themes/ghostty/pro`.
+
+## IntelliJ config-dir `colors/` Shadows Plugin-Bundled Schemes of the Same Name
+
+IntelliJ Platform (PyCharm, IntelliJ IDEA, etc.) gives editor scheme files in
+`<config>/colors/*.xml` **priority over plugin-bundled schemes of the same name**.
+If an old installer wrote a scheme directly to that directory, it silently wins over
+the correct plugin-packaged scheme — even if the plugin is loaded and the jar
+contains the right colors.
+
+**Symptoms:** the theme is confirmed selected, the plugin jar contains correct light
+colors (verified statically), but the editor still renders dark.
+
+**Fix pattern:** when switching from a config-dir scheme delivery to a plugin-bundled
+one, always add cleanup in the installer loop to `os.remove()` the stale config-dir
+files:
+
+```python
+for stale in (
+    os.path.join(ide_dir, "colors", "SchemeName.xml"),
+    os.path.join(ide_dir, "themes", "SchemeName.theme.json"),
+):
+    if os.path.isfile(stale):
+        os.remove(stale)
+```
+
+Run this before installing/updating the plugin so the correct version wins on the
+very next launch.
+
+## JetBrains Editor Scheme Synthesis: Derive the Substitution Map at Runtime
+
+When synthesizing a light editor scheme from a dark one by hex substitution, **never
+hardcode any proprietary palette values as literals** — not as map keys and not as
+map values. Proprietary paid-theme colors (Dracula Pro, Dracula Pro Alucard, etc.) in
+a tracked file is an IP violation and has caused public git-history leaks requiring
+`filter-repo` scrubs.
+
+**Correct approach:** build the substitution map entirely at runtime:
+- Keys come from `_parse_ghostty_palette(dp_dir, "<dark-variant>")` — parsed from the
+  local vendor source at `~/.local/share/<theme>/themes/ghostty/<variant>`.
+- Values come from `_parse_ghostty_palette(dp_dir, "<light-variant>")`, aligned by
+  ANSI index. Non-ANSI roles (orange, etc.) come from the Fleet experimental palette
+  JSON at `~/.local/share/<theme>/themes/jetbrains/experimental/fleet/`.
+- Tokens in the XML with no named-palette equivalent are lightened algorithmically
+  (luminance-flip via `colorsys`). No literals needed.
+
+**Verification (add as a permanent in-function assert):**
+```python
+survivors = {t.lower() for t in re.findall(r'value="([0-9A-Fa-f]{6})"', xml)} & set(named_map)
+assert not survivors, f"Dark tokens survived: {sorted(survivors)}"
+for m in re.finditer(r'name="[A-Z_]*BACKGROUND[^"]*"\s+value="([0-9A-Fa-f]{6})"', xml):
+    assert _relative_luminance("#" + m.group(1)) >= 0.55
+```
+
 ## `git filter-repo` Is for Identity Fixes; `git commit-tree` Replay Is for De-duplication
 
 `git filter-repo --mailmap` is the preferred tool for **author/email identity
