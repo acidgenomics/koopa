@@ -95,7 +95,7 @@ def git_pull_safe(path: str) -> None:
     Uses git_repo_has_unstaged_changes() to skip repos with active changes.
     On auth failure, suggests 'gh auth switch' if gh is installed.
     """
-    from koopa.alert import alert_note, warn
+    from koopa.alert import alert_info, warn
 
     if not os.path.isdir(path) or not is_git_repo(path):
         return
@@ -105,7 +105,7 @@ def git_pull_safe(path: str) -> None:
         return
     if git_branch(path) == "HEAD":
         return
-    alert_note(f"Pulling '{name}'.")
+    alert_info(f"Pulling '{name}'.")
     _auth_failure_patterns = (
         "repository not found",
         "not found",
