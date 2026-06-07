@@ -189,7 +189,7 @@ def _handle_push_app_build(args: list[str]) -> None:
     os_str = os_slug()
     prefix = opt_prefix()
     profile = "acidgenomics"
-    s3_bucket = "s3://artifacts.acidgenomics.com/binaries"
+    s3_bucket = "s3://artifacts-981885022366-us-east-1-an/binaries"
     tmp_dir = tempfile.mkdtemp()
     try:
         for name in args:

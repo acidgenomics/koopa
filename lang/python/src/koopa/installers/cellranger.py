@@ -15,7 +15,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install Cell Ranger."""
-    s3_base = "s3://artifacts.acidgenomics.com/installers"
+    s3_base = "s3://artifacts-981885022366-us-east-1-an/installers"
     s3_url = f"{s3_base}/cellranger/{version}.tar.xz"
     local_file = f"{version}.tar.xz"
     subprocess.run(
