@@ -598,6 +598,7 @@ _koopa_develop() {
         activation-speed-test) _arguments '*--help[--help]' '*--runs[--runs]' '*--shells[--shells]' '*--threshold-bash[--threshold-bash]' '*--threshold-fish[--threshold-fish]' '*--threshold-zsh[--threshold-zsh]' '*--verbose[--verbose]' ;;
         app-revdeps) _arguments '*--all[--all]' '*--help[--help]' ;;
         check-app-versions) _arguments '*--help[--help]' '*--json[--json]' '*--no-update[--no-update]' '*--reset-cache[--reset-cache]' '*--s3-upload[--s3-upload]' '*--source[--source]' ;;
+        color-mode-audit) _arguments '*--help[--help]' '*--log[--log]' '*--threshold[--threshold]' '*--verbose[--verbose]' ;;
         conda-candidates) _arguments '*--help[--help]' '*--verify[--verify]' ;;
         mirror-src) _arguments '*--help[--help]' '*--help[--help]' '*--prune[--prune]' ;;
         orphan-apps) _arguments '*--all[--all]' '*--help[--help]' ;;
@@ -619,6 +620,7 @@ _koopa_develop_cmds() {
         'cache-functions'
         'check-app-versions'
         'circular-dependencies'
+        'color-mode-audit'
         'conda-candidates'
         'edit-app-json'
         'find-ignored-bin-files'

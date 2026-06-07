@@ -1,9 +1,11 @@
 """Configure dark/light color-mode and re-render mode-dependent dotfiles."""
 
+import fcntl
 import os
 import re
 import shutil
 import subprocess
+from datetime import datetime
 
 from koopa.alert import alert_info, alert_note
 from koopa.build import locate
@@ -88,75 +90,104 @@ def main(
     Invoked by the macOS launchd / Linux systemd watcher on appearance changes;
     safe to run manually at any time.  To force a re-apply when the marker is
     stale, ``rm ~/.cache/koopa/color-mode-applied`` first.
+
+    Uses an exclusive file lock (fcntl.LOCK_EX) to serialize concurrent
+    invocations — the launchd WatchPaths watcher and every new shell can race
+    to run this at the same time.  Without serialization, concurrent runs read
+    different transient OS appearance states during a mode transition and stomp
+    each other's chezmoi apply, producing light↔dark thrash.  The lock plus a
+    double-checked marker ensure exactly one apply lands per mode change.
     """
     if os.geteuid() == 0:
         msg = "Must not be run as root."
         raise RuntimeError(msg)
 
-    new_mode = os_appearance_mode()
-
-    # Use a SEPARATE marker from the shell's detection cache
-    # (~/.cache/koopa/color-mode) to avoid the race where new shells write the
-    # cache before the watcher fires.
     home = os.path.expanduser("~")
     marker_file = os.path.join(home, ".cache", "koopa", "color-mode-applied")
+    ts = datetime.now().astimezone().isoformat(timespec="seconds")
+
+    # Fast path (lock-free): if the marker already matches the current OS mode,
+    # skip entirely.  This keeps the thundering herd from N new shells cheap —
+    # no lock contention in the common already-converged case.
+    new_mode = os_appearance_mode()
     if os.path.isfile(marker_file):
         with open(marker_file) as fh:
             if fh.read().strip() == new_mode:
-                alert_note(f"Color mode already applied: {new_mode}")
+                alert_note(f"[{ts}] Color mode already applied: {new_mode}")
                 return
 
-    alert_info(f"Applying color mode: {new_mode}")
+    # Serialized path: acquire an exclusive lock so only one process runs the
+    # chezmoi apply at a time.  Double-check the marker inside the lock — a
+    # concurrent process may have applied while we were waiting.
+    lock_file = os.path.join(home, ".cache", "koopa", "color-mode.lock")
+    os.makedirs(os.path.dirname(lock_file), exist_ok=True)
+    with open(lock_file, "w") as lock_fh:
+        fcntl.flock(lock_fh, fcntl.LOCK_EX)
 
-    chezmoi_prefix = os.path.join(opt_prefix(), "dotfiles", "chezmoi")
-    chezmoi = locate("chezmoi")
+        # Re-read the OS state and marker inside the lock.  During a mode
+        # transition defaults(1)/gdbus may briefly report the prior value;
+        # re-reading after the lock settles ensures we apply the final state.
+        new_mode = os_appearance_mode()
+        ts = datetime.now().astimezone().isoformat(timespec="seconds")
+        if os.path.isfile(marker_file):
+            with open(marker_file) as fh:
+                if fh.read().strip() == new_mode:
+                    alert_note(f"[{ts}] Color mode already applied: {new_mode}")
+                    return
 
-    target_files = _discover_color_mode_targets(chezmoi_prefix)
-    if not target_files:
-        alert_note("No color-mode targets found; nothing to apply.")
-        return
+        alert_info(f"[{ts}] Applying color mode: {new_mode}")
 
-    env = os.environ.copy()
-    koopa_bin = os.path.join(koopa_prefix(), "bin")
-    env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
-    env["KOOPA_COLOR_MODE"] = new_mode
+        chezmoi_prefix = os.path.join(opt_prefix(), "dotfiles", "chezmoi")
+        chezmoi = locate("chezmoi")
 
-    # Targeted apply by target paths.  Never invokes opt/dotfiles/install, so
-    # _sync_launchd_agent is never called and this launchd job cannot SIGTERM itself.
-    chezmoi_args = [
-        chezmoi,
-        "apply",
-        "--no-pager",
-        "--force",
-        f"--source={chezmoi_prefix}",
-    ]
-    if verbose:
-        chezmoi_args.append("--verbose")
-    chezmoi_args.extend(target_files)
-    subprocess.run(chezmoi_args, cwd=chezmoi_prefix, env=env, check=True)
+        target_files = _discover_color_mode_targets(chezmoi_prefix)
+        if not target_files:
+            alert_note("No color-mode targets found; nothing to apply.")
+            return
 
-    # Hot-reload any running tmux server so attached sessions reflow immediately.
-    tmux = shutil.which("tmux")
-    if tmux:
-        has_server = subprocess.run(
-            [tmux, "has-session"],
-            capture_output=True,
-            check=False,
-        )
-        if has_server.returncode == 0:
-            tmux_conf = os.path.join(
-                os.environ.get("XDG_CONFIG_HOME", os.path.join(home, ".config")),
-                "tmux",
-                "tmux.conf",
+        env = os.environ.copy()
+        koopa_bin = os.path.join(koopa_prefix(), "bin")
+        env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
+        env["KOOPA_COLOR_MODE"] = new_mode
+
+        # Targeted apply by target paths.  Never invokes opt/dotfiles/install,
+        # so _sync_launchd_agent is never called and this launchd job cannot
+        # SIGTERM itself.
+        chezmoi_args = [
+            chezmoi,
+            "apply",
+            "--no-pager",
+            "--force",
+            f"--source={chezmoi_prefix}",
+        ]
+        if verbose:
+            chezmoi_args.append("--verbose")
+        chezmoi_args.extend(target_files)
+        subprocess.run(chezmoi_args, cwd=chezmoi_prefix, env=env, check=True)
+
+        # Hot-reload any running tmux server so attached sessions reflow immediately.
+        tmux = shutil.which("tmux")
+        if tmux:
+            has_server = subprocess.run(
+                [tmux, "has-session"],
+                capture_output=True,
+                check=False,
             )
-            subprocess.run(
-                [tmux, "set-environment", "-g", "KOOPA_COLOR_MODE", new_mode],
-                check=True,
-            )
-            if os.path.isfile(tmux_conf):
-                subprocess.run([tmux, "source-file", tmux_conf], check=True)
+            if has_server.returncode == 0:
+                tmux_conf = os.path.join(
+                    os.environ.get("XDG_CONFIG_HOME", os.path.join(home, ".config")),
+                    "tmux",
+                    "tmux.conf",
+                )
+                subprocess.run(
+                    [tmux, "set-environment", "-g", "KOOPA_COLOR_MODE", new_mode],
+                    check=True,
+                )
+                if os.path.isfile(tmux_conf):
+                    subprocess.run([tmux, "source-file", tmux_conf], check=True)
 
-    # Write the applied-marker only after the targeted apply succeeds.
-    os.makedirs(os.path.dirname(marker_file), exist_ok=True)
-    with open(marker_file, "w") as fh:
-        fh.write(new_mode + "\n")
+        # Write the applied-marker only after the targeted apply succeeds,
+        # while still inside the lock.
+        os.makedirs(os.path.dirname(marker_file), exist_ok=True)
+        with open(marker_file, "w") as fh:
+            fh.write(new_mode + "\n")

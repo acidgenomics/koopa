@@ -1,7 +1,9 @@
 """CLI develop dispatch module unit tests."""
 
+from pathlib import Path
+
 import pytest
-from koopa.cli_develop import _DEVELOP_HANDLERS
+from koopa.cli_develop import _DEVELOP_HANDLERS, _detect_color_mode_thrash
 
 
 def test_handlers_not_empty() -> None:
@@ -21,6 +23,7 @@ def test_handlers_expected_commands() -> None:
         "activation-fork-audit",
         "activation-speed-test",
         "cache-functions",
+        "color-mode-audit",
         "generate-completion",
         "shellcheck",
     ]
@@ -55,3 +58,194 @@ def test_activation_fork_audit_passes(capsys: pytest.CaptureFixture[str]) -> Non
     captured = capsys.readouterr()
     assert "PASS" in captured.out
     assert "FAIL" not in captured.out
+
+
+# ---------------------------------------------------------------------------
+# _detect_color_mode_thrash unit tests
+# ---------------------------------------------------------------------------
+
+
+def test_detect_color_mode_thrash_healthy() -> None:
+    """A log with one genuine toggle and stabilization is not thrash."""
+    lines = [
+        "ℹ Applying color mode: dark\n",
+        "** Color mode already applied: dark\n",
+        "** Color mode already applied: dark\n",
+        "ℹ Applying color mode: light\n",  # legitimate user toggle
+        "** Color mode already applied: light\n",
+        "** Color mode already applied: light\n",
+    ]
+    longest, _ = _detect_color_mode_thrash(lines)
+    assert longest < 4
+
+
+def test_detect_color_mode_thrash_detected() -> None:
+    """Four consecutive alternating applies with no stabilization is thrash."""
+    lines = [
+        "ℹ Applying color mode: light\n",
+        "ℹ Applying color mode: dark\n",
+        "ℹ Applying color mode: light\n",
+        "ℹ Applying color mode: dark\n",
+    ]
+    longest, run = _detect_color_mode_thrash(lines)
+    assert longest >= 4
+    modes = [m for m, _ in run]
+    # Verify the run strictly alternates.
+    for i in range(1, len(modes)):
+        assert modes[i] != modes[i - 1], "run should strictly alternate"
+
+
+def test_detect_color_mode_thrash_stabilization_resets_run() -> None:
+    """An 'already applied' line between applies resets the run counter."""
+    lines = [
+        "ℹ Applying color mode: dark\n",
+        "ℹ Applying color mode: light\n",
+        "ℹ Applying color mode: dark\n",
+        "** Color mode already applied: dark\n",  # stabilization — reset
+        "ℹ Applying color mode: light\n",
+        "ℹ Applying color mode: dark\n",
+    ]
+    longest, _ = _detect_color_mode_thrash(lines)
+    # The first burst is length 3, reset, then another 2 — no burst reaches 4.
+    assert longest < 4
+
+
+def test_detect_color_mode_thrash_tolerates_prefixes() -> None:
+    """Lines with ℹ/** alert prefixes and plain lines both parse correctly."""
+    lines_with_prefix = [
+        "ℹ Applying color mode: dark\n",
+        "ℹ Applying color mode: light\n",
+        "ℹ Applying color mode: dark\n",
+        "ℹ Applying color mode: light\n",
+    ]
+    lines_plain = [
+        "Applying color mode: dark\n",
+        "Applying color mode: light\n",
+        "Applying color mode: dark\n",
+        "Applying color mode: light\n",
+    ]
+    longest_prefix, _ = _detect_color_mode_thrash(lines_with_prefix)
+    longest_plain, _ = _detect_color_mode_thrash(lines_plain)
+    assert longest_prefix == 4
+    assert longest_plain == 4
+
+
+def test_detect_color_mode_thrash_parses_timestamps() -> None:
+    """ISO-8601 timestamps are captured and detection still triggers."""
+    lines = [
+        "[2026-06-06T19:46:47-04:00] Applying color mode: light\n",
+        "[2026-06-06T19:46:48-04:00] Applying color mode: dark\n",
+        "[2026-06-06T19:46:49-04:00] Applying color mode: light\n",
+        "[2026-06-06T19:46:50-04:00] Applying color mode: dark\n",
+    ]
+    longest, run = _detect_color_mode_thrash(lines)
+    assert longest >= 4
+    # Timestamps should be captured.
+    timestamps = [ts for _, ts in run]
+    assert all(ts is not None for ts in timestamps)
+    assert timestamps[0] == "2026-06-06T19:46:47-04:00"
+    assert timestamps[-1] == "2026-06-06T19:46:50-04:00"
+
+
+def test_detect_color_mode_thrash_untimestamped_returns_none_ts() -> None:
+    """Lines without timestamps return None for the timestamp field."""
+    lines = [
+        "ℹ Applying color mode: dark\n",
+        "ℹ Applying color mode: light\n",
+        "ℹ Applying color mode: dark\n",
+        "ℹ Applying color mode: light\n",
+    ]
+    longest, run = _detect_color_mode_thrash(lines)
+    assert longest >= 4
+    assert all(ts is None for _, ts in run)
+
+
+def test_detect_color_mode_thrash_empty_log() -> None:
+    """An empty log returns zero length and empty run."""
+    longest, run = _detect_color_mode_thrash([])
+    assert longest == 0
+    assert run == []
+
+
+# ---------------------------------------------------------------------------
+# _handle_color_mode_audit integration tests (via temp log files)
+# ---------------------------------------------------------------------------
+
+
+def test_color_mode_audit_help(capsys: pytest.CaptureFixture[str]) -> None:
+    """--help exits cleanly with usage info."""
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["color-mode-audit"](["--help"])
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "thrash" in captured.out.lower()
+
+
+def test_color_mode_audit_passes_on_clean_log(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A log with no thrash produces PASS and exit 0."""
+    log = tmp_path / "color-mode-sync.log"
+    log.write_text(
+        "ℹ Applying color mode: dark\n"
+        "** Color mode already applied: dark\n"
+        "** Color mode already applied: dark\n"
+        "ℹ Applying color mode: light\n"
+        "** Color mode already applied: light\n"
+    )
+    _DEVELOP_HANDLERS["color-mode-audit"](["--log", str(log)])
+    captured = capsys.readouterr()
+    assert "PASS" in captured.out
+    assert "FAIL" not in captured.out
+
+
+def test_color_mode_audit_fails_on_thrash_log(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A log with thrash produces FAIL and exit 1."""
+    log = tmp_path / "color-mode-sync.log"
+    log.write_text(
+        "ℹ Applying color mode: light\n"
+        "ℹ Applying color mode: dark\n"
+        "ℹ Applying color mode: light\n"
+        "ℹ Applying color mode: dark\n"
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["color-mode-audit"](["--log", str(log)])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert "FAIL" in captured.out
+
+
+def test_color_mode_audit_verbose_on_thrash(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """--verbose reports the mode sequence on a thrashing log."""
+    log = tmp_path / "color-mode-sync.log"
+    log.write_text(
+        "[2026-06-06T19:46:47-04:00] Applying color mode: light\n"
+        "[2026-06-06T19:46:48-04:00] Applying color mode: dark\n"
+        "[2026-06-06T19:46:49-04:00] Applying color mode: light\n"
+        "[2026-06-06T19:46:50-04:00] Applying color mode: dark\n"
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["color-mode-audit"](["--log", str(log), "--verbose"])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert "FAIL" in captured.out
+    assert "light" in captured.out
+    assert "dark" in captured.out
+    assert "2026-06-06T19:46:47" in captured.out
+
+
+def test_color_mode_audit_missing_log_is_pass(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A missing --log path produces PASS (no log = nothing to complain about)."""
+    _DEVELOP_HANDLERS["color-mode-audit"](["--log", str(tmp_path / "nonexistent.log")])
+    captured = capsys.readouterr()
+    assert "PASS" in captured.out

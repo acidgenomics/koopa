@@ -1532,6 +1532,167 @@ def _handle_pypi_reindex(_: list[str]) -> None:
     reindex()
 
 
+def _detect_color_mode_thrash(
+    lines: list[str],
+) -> tuple[int, list[tuple[str, str | None]]]:
+    """Return the longest alternating apply-run and its (mode, timestamp) pairs.
+
+    Parses the ``koopa configure user color-mode`` log to detect concurrent
+    thrash — back-to-back applies that flip light↔dark without the stabilizing
+    ``Color mode already applied:`` line in between.
+
+    Detection is sequence-based (works on timestamped and legacy logs alike).
+    Timestamps in ``[ISO-8601]`` prefix position are captured when present and
+    returned for --verbose forensics.
+
+    Rules:
+    - ``Applying color mode: X`` — extends the alternating run when X differs
+      from the previous apply; resets to run of 1 when X repeats.
+    - ``Color mode already applied:`` — resets the run (stabilization seen).
+    - Any other line is ignored.
+
+    Returns ``(longest_run_length, mode_timestamp_pairs_for_that_run)``.
+    """
+    import re
+
+    apply_re = re.compile(
+        r"(?:\[(?P<ts>[^\]]+)\]\s+)?Applying color mode:\s+(?P<mode>\S+)"
+    )
+    stable_re = re.compile(r"Color mode already applied:")
+
+    best_len = 0
+    best_run: list[tuple[str, str | None]] = []
+    cur_run: list[tuple[str, str | None]] = []
+
+    for line in lines:
+        m = apply_re.search(line)
+        if m:
+            mode = m.group("mode")
+            ts = m.group("ts")
+            if cur_run and cur_run[-1][0] == mode:
+                # Same mode repeated — machine or human mash without flip; reset.
+                cur_run = [(mode, ts)]
+            else:
+                cur_run.append((mode, ts))
+            if len(cur_run) > best_len:
+                best_len = len(cur_run)
+                best_run = list(cur_run)
+        elif stable_re.search(line):
+            # Stabilization observed — the previous apply settled; reset run.
+            cur_run = []
+
+    return best_len, best_run
+
+
+def _handle_color_mode_audit(args: list[str]) -> None:
+    """Handle ``koopa develop color-mode-audit``.
+
+    Parses the color-mode sync log and fails (exit 1) when it finds thrash:
+    consecutive alternating ``Applying color mode`` lines with no stabilizing
+    ``Color mode already applied:`` line between them.  Threshold default of 4
+    means light→dark→light→dark, which is unambiguously machine thrash — a
+    human cannot toggle that fast.
+    """
+    import argparse
+    import platform
+
+    from koopa.alert import alert_note, alert_success
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop color-mode-audit",
+        description=(
+            "Parse the color-mode sync log and fail if light↔dark thrash is detected."
+        ),
+    )
+    parser.add_argument(
+        "--threshold",
+        type=int,
+        default=4,
+        metavar="N",
+        help="fail when the longest alternating apply-run is >= N (default: 4)",
+    )
+    parser.add_argument(
+        "--log",
+        metavar="PATH",
+        default=None,
+        help=(
+            "path to the log file (default: ~/Library/Logs/koopa-color-mode-sync.log "
+            "on macOS; journalctl on Linux)"
+        ),
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="print the offending mode sequence and total apply count",
+    )
+    parsed = parser.parse_args(args)
+
+    # Resolve log lines from the appropriate source.
+    lines: list[str]
+
+    if parsed.log is not None:
+        if not os.path.isfile(parsed.log):
+            alert_note(f"Log file not found: {parsed.log} — skipping audit.")
+            print("color-mode-audit: PASS (no log)")
+            return
+        with open(parsed.log) as fh:
+            lines = fh.readlines()
+    elif platform.system() == "Darwin":
+        default_log = os.path.join(
+            os.path.expanduser("~"), "Library", "Logs", "koopa-color-mode-sync.log"
+        )
+        if not os.path.isfile(default_log):
+            alert_note("No color-mode sync log found — skipping audit.")
+            print("color-mode-audit: PASS (no log)")
+            return
+        with open(default_log) as fh:
+            lines = fh.readlines()
+    else:
+        # Linux: read from the systemd journal.
+        journalctl = shutil.which("journalctl")
+        if journalctl is None:
+            alert_note("journalctl not found — skipping audit.")
+            print("color-mode-audit: PASS (no journalctl)")
+            return
+        result = subprocess.run(
+            [journalctl, "--user", "-u", "koopa-color-mode-sync", "--no-pager"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        lines = result.stdout.splitlines(keepends=True)
+
+    longest, run = _detect_color_mode_thrash(lines)
+
+    # Count total applies for --verbose context.
+    import re
+
+    apply_count = sum(1 for line in lines if re.search(r"Applying color mode:", line))
+
+    if parsed.verbose:
+        print(f"  Total 'Applying' lines in log: {apply_count}")
+        print(f"  Longest alternating apply-run: {longest}")
+        if run:
+            modes = " → ".join(m for m, _ in run)
+            print(f"  Run sequence: {modes}")
+            timestamps = [ts for _, ts in run if ts]
+            if len(timestamps) >= 2:
+                print(f"  Time span: {timestamps[0]}  →  {timestamps[-1]}")
+
+    status = "FAIL" if longest >= parsed.threshold else "PASS"
+    print(f"color-mode-audit: {status}  (longest run: {longest}, threshold: {parsed.threshold})")
+
+    if longest >= parsed.threshold:
+        print(
+            f"Color-mode thrash detected: {longest} consecutive alternating applies "
+            f"(threshold: {parsed.threshold}).",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    alert_success("color-mode-audit passed — no thrash detected.")
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "activation-speed-test": _handle_activation_speed_test,
     "activation-fork-audit": _handle_activation_fork_audit,
@@ -1565,6 +1726,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "conda-candidates": _handle_conda_candidates,
     "pypi-publish": _handle_pypi_publish,
     "pypi-reindex": _handle_pypi_reindex,
+    "color-mode-audit": _handle_color_mode_audit,
 }
 
 
