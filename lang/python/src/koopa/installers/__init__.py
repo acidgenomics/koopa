@@ -120,7 +120,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "ripgrep-all": f"{_M}._conda",
     "rmats": f"{_M}._conda",
     "rsem": f"{_M}._conda",
-    "ruby": f"{_M}._conda",
+    "ruby": f"{_M}.ruby_app",
     "salmon": f"{_M}._conda",
     "samtools": f"{_M}._conda",
     "sd": f"{_M}._conda",

@@ -8276,16 +8276,25 @@
       "ruby"
     ],
     "build_dependencies": [
-      "conda"
+      "make",
+      "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-05-24",
+    "date": "2026-06-07",
     "default": false,
+    "dependencies": [
+      "libffi",
+      "libyaml",
+      "openssl3",
+      "readline",
+      "zlib"
+    ],
     "description": "dynamic, open-source programming language",
-    "installer": "conda-package",
     "man1": [
       "ruby.1"
     ],
+    "revision": 2,
+    "src_url": "https://cache.ruby-lang.org/pub/ruby/{major_minor}/ruby-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
