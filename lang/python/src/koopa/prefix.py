@@ -85,7 +85,7 @@ def website_prefix() -> str:
     """Return koopa website prefix."""
     return os.environ.get(
         "KOOPA_WEBSITE_PREFIX",
-        os.path.expanduser("~/git/koopa-acidgenomics-com"),
+        os.path.expanduser("~/git/github/acidgenomics/koopa-acidgenomics-com"),
     )
 
 
