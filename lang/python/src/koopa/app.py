@@ -389,8 +389,10 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
             pruned.append(subdir)
             rmtree(subdir)
     if not dry_run and pruned:
+        from koopa.alert import alert_success
+
         n = len(pruned)
-        print(f"Pruned {n} app version{'s' if n != 1 else ''}.")
+        alert_success(f"Pruned {n} app version{'s' if n != 1 else ''}.")
 
 
 def prune_app_binaries(dry_run: bool = False) -> None:

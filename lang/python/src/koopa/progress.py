@@ -43,6 +43,30 @@ def get_last_failure_tail() -> str | None:
     return _last_failure_tail
 
 
+def format_completion_line(name: str, version: str, *, failed: bool, elapsed_secs: float) -> str:
+    """Return a terse completion line: '   name [version] OK|x [elapsed]'.
+
+    Mirrors the line BuildProgress._stop_capture writes on the tty, so both
+    single-app interactive builds and the parallel-scheduler parent produce
+    identical output.
+    """
+    version_display = version
+    if len(version_display) == 40 and all(c in "0123456789abcdef" for c in version_display):
+        version_display = version_display[:7]
+    if _use_color():
+        label = f"\033[1m{name}\033[0m"
+        if version_display:
+            label += f" \033[34m{version_display}\033[0m"
+    else:
+        label = name
+        if version_display:
+            label += f" {version_display}"
+    marker = "x" if failed else "OK"
+    elapsed = _fmt_duration(elapsed_secs)
+    time_str = _styled_time(elapsed, seconds=elapsed_secs)
+    return f"\r\033[K   {label} {marker} {time_str}\n"
+
+
 def _history_path() -> str:
     """Return path to the build-times JSON file under user cache."""
     from koopa.xdg import xdg_cache_home
@@ -279,11 +303,10 @@ class BuildProgress:
         if not self._noninteractive:
             if failed or not self._steps_finished:
                 elapsed_secs = self.elapsed
-                elapsed = _fmt_duration(elapsed_secs)
-                marker = "x" if failed else "OK"
-                label = self._styled_label()
-                time_str = _styled_time(elapsed, seconds=elapsed_secs)
-                os.write(tty, f"\r\033[K   {label} {marker} {time_str}\n".encode())
+                line = format_completion_line(
+                    self._name, self._version, failed=failed, elapsed_secs=elapsed_secs
+                )
+                os.write(tty, line.encode())
             if failed and self._log_file is not None:
                 self._log_file.flush()
                 self._dump_log_tail(tty)

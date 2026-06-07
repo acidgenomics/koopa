@@ -2669,8 +2669,8 @@ def _remove_from_pending_plan(app: str) -> None:
 
 def _install_app_worker(
     config: "InstallConfig",
-) -> tuple[str, float, str | None, str | None]:
-    """Run install_app in a child process and return (name, elapsed, error, tail).
+) -> tuple[str, str, float, str | None, str | None]:
+    """Run install_app in a child process and return (name, version, elapsed, error, tail).
 
     Must be a module-level function so multiprocessing.spawn can pickle it.
     Sets noninteractive=True so the child captures output to a per-app log
@@ -2687,8 +2687,14 @@ def _install_app_worker(
     try:
         install_app(config)
     except Exception as exc:
-        return config.name, time.monotonic() - t0, str(exc), get_last_failure_tail()
-    return config.name, time.monotonic() - t0, None, None
+        return (
+            config.name,
+            config.version,
+            time.monotonic() - t0,
+            str(exc),
+            get_last_failure_tail(),
+        )
+    return config.name, config.version, time.monotonic() - t0, None, None
 
 
 def _io_cap() -> int:
@@ -2700,7 +2706,7 @@ def _io_cap() -> int:
         return 4
 
 
-def _run_install_plan(
+def _run_install_plan(  # noqa: C901, PLR0915
     plan: list[tuple[str, str]],
     dep_map: dict[str, set[str]],
     *,
@@ -2720,10 +2726,15 @@ def _run_install_plan(
     import multiprocessing
     import time
 
-    from koopa.alert import alert, alert_install_success
+    from koopa.alert import _supports_color, alert
     from koopa.app import is_cpu_bound_app
     from koopa.io import import_app_json
-    from koopa.progress import _fmt_duration
+    from koopa.progress import (
+        _SPINNER_FRAMES,
+        _fmt_duration,
+        _styled_time,
+        format_completion_line,
+    )
 
     json_data = import_app_json()
     cap = _io_cap()
@@ -2750,6 +2761,30 @@ def _run_install_plan(
     cpu_busy = False
     io_running = 0
     aborting = False
+
+    # Animate a single aggregate status line when connected to a real tty.
+    # In verbose mode children stream to the terminal, so skip animation.
+    _plan_verbose = any(
+        make_config(app, next(r for a, r in plan if a == app)).verbose for app, _ in plan
+    )
+    use_live = not _plan_verbose and sys.stderr.isatty() and _supports_color()
+    spin_idx = 0
+    loop_start = time.monotonic()
+
+    def _redraw(in_flight: "set[str]") -> None:
+        nonlocal spin_idx
+        frame = _SPINNER_FRAMES[spin_idx % len(_SPINNER_FRAMES)]
+        spin_idx += 1
+        elapsed_secs = time.monotonic() - loop_start
+        elapsed = _fmt_duration(elapsed_secs)
+        time_str = _styled_time(elapsed, seconds=elapsed_secs)
+        names = ", ".join(sorted(in_flight))
+        sys.stderr.write(f"\r\033[K   {frame} installing: {names} {time_str}")
+        sys.stderr.flush()
+
+    def _clear() -> None:
+        sys.stderr.write("\r\033[K")
+        sys.stderr.flush()
 
     ctx = multiprocessing.get_context("spawn")
     with concurrent.futures.ProcessPoolExecutor(
@@ -2783,6 +2818,8 @@ def _run_install_plan(
                     io_running += 1
 
         _dispatch()
+        if use_live and running:
+            _redraw({running[fut][0] for fut in running})
 
         while running or (len(done) + len(failed) < len(plan)):
             if not running:
@@ -2794,8 +2831,16 @@ def _run_install_plan(
                 break
 
             finished, _ = concurrent.futures.wait(
-                running, return_when=concurrent.futures.FIRST_COMPLETED
+                running,
+                return_when=concurrent.futures.FIRST_COMPLETED,
+                timeout=0.2,
             )
+            if not finished:
+                # Timeout — no completions yet; just redraw the live line.
+                if use_live:
+                    _redraw({running[fut][0] for fut in running})
+                continue
+
             for fut in finished:
                 app, is_cpu, _t0 = running.pop(fut)
                 if is_cpu:
@@ -2803,15 +2848,19 @@ def _run_install_plan(
                 else:
                     io_running -= 1
                 try:
-                    _app, _elapsed, _error, _tail = fut.result()
+                    _app, _ver, _elapsed, _error, _tail = fut.result()
                 except Exception as exc:
                     # Worker crashed (e.g. pickling error or OOM) — treat as failure.
+                    if use_live:
+                        _clear()
                     failed.add(app)
                     fail_msgs[app] = str(exc)
                     alert(f"Failed to install {app}: {exc}")
                     aborting = True
                     continue
                 if _error is not None:
+                    if use_live:
+                        _clear()
                     failed.add(app)
                     fail_msgs[app] = _error
                     alert(f"Failed to install {app}: {_error}")
@@ -2821,9 +2870,19 @@ def _run_install_plan(
                 else:
                     done.add(app)
                     _remove_from_pending_plan(app)
-                    alert_install_success(_app, "", _fmt_duration(_elapsed))
+                    if use_live:
+                        _clear()
+                    sys.stderr.write(
+                        format_completion_line(_app, _ver, failed=False, elapsed_secs=_elapsed)
+                    )
+                    sys.stderr.flush()
 
             _dispatch()
+            if use_live and running:
+                _redraw({running[fut][0] for fut in running})
+
+    if use_live:
+        _clear()
 
     if failed:
         msg = f"{len(failed)} app(s) failed: {', '.join(sorted(failed))}."
