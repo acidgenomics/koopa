@@ -669,6 +669,53 @@ def _handle_df2(args: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
+def _handle_dns(args: list[str]) -> None:
+    import argparse
+
+    from koopa.dns import (
+        _DEFAULT_DOMAINS,
+        diff_live_vs_route53,
+        dns_records,
+        nameserver_provider,
+    )
+
+    parser = argparse.ArgumentParser(
+        prog="dns",
+        description="Print DNS records and nameserver provider for a domain.",
+    )
+    parser.add_argument(
+        "domains",
+        nargs="*",
+        default=list(_DEFAULT_DOMAINS),
+        help="domain(s) to inspect (default: acidgenomics.com steinbaugh.com)",
+    )
+    parser.add_argument(
+        "--route53",
+        action="store_true",
+        help="diff live DNS against Route 53 hosted zone",
+    )
+    parsed = parser.parse_args(args)
+    for domain in parsed.domains:
+        print(f"=== {domain} ===")
+        records = dns_records(domain)
+        ns_values = records.get("NS", [])
+        provider = nameserver_provider(ns_values)
+        print(f"Nameserver provider: {provider}")
+        for rtype, values in records.items():
+            print(f"  {rtype}:")
+            for v in values:
+                print(f"    {v}")
+        if parsed.route53:
+            drift = diff_live_vs_route53(domain)
+            if not drift or drift[0].startswith("  (AWS"):
+                print(f"Route 53 diff: {'in sync' if not drift else drift[0].strip()}")
+            else:
+                print("Route 53 diff: DRIFT DETECTED")
+                for line in drift:
+                    print(line)
+        print()
+
+
 def _handle_ip_address(args: list[str]) -> None:
     import argparse
 
@@ -979,6 +1026,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "delete-named-subdirs": _handle_delete_named_subdirs,
     "detab": _handle_detab,
     "df2": _handle_df2,
+    "dns": _handle_dns,
     "dot-clean": _handle_dot_clean,
     "download": _handle_download,
     "download-cran-latest": _handle_download_cran_latest,
