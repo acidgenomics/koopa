@@ -2137,7 +2137,10 @@ def _expand_src_url(template: str, version: str) -> str:
 def _mirror_src_to_s3(
     name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
-    """Download source tarball and upload to s3://koopa-REDACTED_AWS_ACCOUNT_ID-us-east-1-an/src/ and/or vendor."""
+    """Download source tarball and upload to s3://koopa-REDACTED_AWS_ACCOUNT_ID-us-east-1-an/src/.
+
+    Also upload and/or vendor.
+    """
     import tempfile
     import time
 
