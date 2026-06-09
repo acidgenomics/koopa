@@ -114,7 +114,7 @@ def test_handler_dns_output(capsys: pytest.CaptureFixture[str]) -> None:
         _HANDLERS["dns"](["acidgenomics.com"])
 
     captured = capsys.readouterr()
-    assert "acidgenomics.com" in captured.out
+    assert "=== acidgenomics.com ===" in captured.out
     assert "Route 53" in captured.out
     assert "NS:" in captured.out
     assert "MX:" in captured.out
