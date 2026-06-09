@@ -24,10 +24,11 @@ def _dig(name: str, rtype: str, *, nameserver: str | None = None) -> list[str]:
 
 def nameserver_provider(ns_values: list[str]) -> str:
     """Classify nameservers as Route 53, Hover, or Other."""
-    joined = " ".join(ns_values).lower()
-    if "awsdns" in joined:
+    # Route 53 nameservers have the pattern: ns-XXX.awsdns-YY.com
+    if any(".awsdns-" in ns.lower() for ns in ns_values):
         return "Route 53"
-    if "hover.com" in joined:
+    # Hover nameservers end with .hover.com (with or without trailing dot)
+    if any(ns.lower().rstrip(".").endswith(".hover.com") for ns in ns_values):
         return "Hover"
     return "Other"
 
