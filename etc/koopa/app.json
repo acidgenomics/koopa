@@ -971,7 +971,7 @@
       "flex"
     ],
     "category": "Build",
-    "date": "2026-05-02",
+    "date": "2026-06-08",
     "default": false,
     "dependencies": [
       "texinfo",
@@ -984,7 +984,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/binutils/?C=M;O=D"
     ],
-    "version": "2.46.0"
+    "version": "2.46.1"
   },
   "bioawk": {
     "date": "2023-10-16",
@@ -1535,7 +1535,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-06",
+    "date": "2026-06-08",
     "default": true,
     "dependencies": [
       "node"
@@ -1549,7 +1549,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.168"
+    "version": "2.1.169"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1561,7 +1561,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-06-02",
+    "date": "2026-06-08",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1569,7 +1569,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.3.12.3"
+    "version": "26.4.4.38"
   },
   "cloud-sql-proxy": {
     "bin": [
@@ -1621,7 +1621,7 @@
       "codex"
     ],
     "category": "AI",
-    "date": "2026-06-05",
+    "date": "2026-06-08",
     "default": true,
     "dependencies": [
       "node"
@@ -1635,7 +1635,7 @@
     "url": [
       "https://www.npmjs.com/package/@openai/codex"
     ],
-    "version": "0.137.0"
+    "version": "0.138.0"
   },
   "colorls": {
     "date": "2024-07-12",
@@ -2358,7 +2358,7 @@
     ],
     "category": "Container",
     "conda_channel": "conda-forge",
-    "date": "2026-05-08",
+    "date": "2026-06-08",
     "default": false,
     "description": "credential helpers for Docker",
     "installer": "conda-package",
@@ -2366,7 +2366,7 @@
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
     ],
-    "version": "0.9.7"
+    "version": "0.9.8"
   },
   "doom-emacs": {
     "bin": [
@@ -2377,7 +2377,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-07",
+    "date": "2026-06-08",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2387,7 +2387,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "49f5641ac42425acff841b99ee09a2c5df9ff294"
+    "version": "9f643edfb401d2382dd65168f94ae948d82348cd"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -4274,7 +4274,7 @@
       "go"
     ],
     "category": "Documentation",
-    "date": "2026-05-31",
+    "date": "2026-06-08",
     "default": false,
     "description": "fast static site generator written in Go",
     "notes": [
@@ -4285,7 +4285,7 @@
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
     ],
-    "version": "0.162.1"
+    "version": "0.163.0"
   },
   "hurl": {
     "bin": [
@@ -5762,7 +5762,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-06-05",
+    "date": "2026-06-08",
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
@@ -5771,7 +5771,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.8.0"
+    "version": "2.8.1"
   },
   "man-db": {
     "bin": [
@@ -8248,7 +8248,7 @@
       "make"
     ],
     "category": "Network",
-    "date": "2026-05-24",
+    "date": "2026-06-08",
     "default": true,
     "dependencies": [
       "lz4",
@@ -8266,7 +8266,7 @@
     "url": [
       "https://download.samba.org/pub/rsync/src/?C=M;O=D"
     ],
-    "version": "3.4.3"
+    "version": "3.4.4"
   },
   "ruby": {
     "bin": [
@@ -8732,7 +8732,7 @@
       "snow"
     ],
     "category": "Cloud",
-    "date": "2026-06-02",
+    "date": "2026-06-08",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -8748,7 +8748,7 @@
       "https://docs.snowflake.com/en/developer-guide/snowflake-cli/index",
       "https://github.com/snowflakedb/snowflake-cli"
     ],
-    "version": "3.19.0"
+    "version": "3.20.0"
   },
   "sox": {
     "bin": [
@@ -9453,7 +9453,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-06-05",
+    "date": "2026-06-08",
     "default": true,
     "dependencies": [
       "python"
@@ -9465,7 +9465,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.44"
+    "version": "0.0.45"
   },
   "udunits": {
     "date": "2022-08-30",
