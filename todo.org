@@ -1,1 +1,2 @@
 ** TODO It looks like cold shell boot can take too long on MBP. Can we debug what is happening?
+** TODO gget conda recipe is outdated, we should switch to pip install.
