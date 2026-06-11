@@ -21,6 +21,29 @@ _koopa_is_light_mode() {
         if [ "$__kvar_in_multiplexer" -eq 1 ]
         then
             unset -v __kvar_in_multiplexer
+            __kvar_tmux_mode=''
+            if [ -n "${TMUX:-}" ]
+            then
+                __kvar_tmux_mode="$(tmux show-environment -g KOOPA_COLOR_MODE 2>/dev/null)" \
+                    || __kvar_tmux_mode=''
+                case "$__kvar_tmux_mode" in
+                    KOOPA_COLOR_MODE=*)
+                        __kvar_tmux_mode="${__kvar_tmux_mode#KOOPA_COLOR_MODE=}"
+                        ;;
+                    *)
+                        __kvar_tmux_mode=''
+                        ;;
+                esac
+            fi
+            case "$__kvar_tmux_mode" in
+                light|dark)
+                    [ "$__kvar_tmux_mode" = 'light' ]
+                    __kvar_result=$?
+                    unset -v __kvar_tmux_mode
+                    return "$__kvar_result"
+                    ;;
+            esac
+            unset -v __kvar_tmux_mode
             __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
             if [ -f "$__kvar_cache_file" ]
             then
