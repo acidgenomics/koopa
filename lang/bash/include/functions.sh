@@ -200,6 +200,7 @@ _koopa_activate_bash_completion() {
     local koopa_prefix
     koopa_prefix="$(_koopa_koopa_prefix)"
     export BASH_COMPLETION_USER_DIR="${koopa_prefix}/share/bash-completion"
+    unset -v BASH_COMPLETION_VERSINFO
     local framework
     framework="${koopa_prefix}/opt/bash-completion/etc/profile.d/bash_completion.sh"
     [[ -f "$framework" ]] && source "$framework"
