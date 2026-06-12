@@ -1,5 +1,33 @@
 # Lessons
 
+## SSH Remote Servers: Prefer OSC Mode 2031 for Dark/Light Color-Mode Tracking
+
+When connecting to a remote server over SSH, prefer **tmux OSC mode 2031**
+(`client-light-theme` / `client-dark-theme` hooks, tmux ≥ 3.6) for light/dark
+color-mode propagation. It pushes theme state as escape sequences on the SSH data
+channel — sshd cannot strip them, no `AcceptEnv` directive is needed on the server,
+and no `SendEnv` forwarding from the client is required.
+
+The enabling requirement is tmux ≥ 3.6 on the remote. Always invoke koopa's bundled
+tmux via the SSH `RemoteCommand`:
+
+```
+RemoteCommand ~/.local/share/koopa/bin/tmux new-session -A
+```
+
+Never use the system tmux (often 3.2a, no mode-2031 support).
+
+`SendEnv KOOPA_COLOR_MODE` in `~/.ssh/config` is still worth keeping as an
+initial-value hint (it seeds the mode before the first tmux hook fires), but it is
+not the live-tracking mechanism and silently fails when the server's sshd lacks
+`AcceptEnv KOOPA_COLOR_MODE` — exactly the failure mode seen on `slurm` server
+where the system sshd had no koopa drop-in config.
+
+Root cause of the `slurm` server "washed out / dark themes in light mode" bug:
+the `RemoteCommand` was pointing to `/usr/bin/tmux` (3.2a) instead of koopa's
+bundled `~/.local/share/koopa/bin/tmux` (3.6b). Fixing the `RemoteCommand` is the
+only change needed — no sshd edits, no sudo on the remote.
+
 ## Do Not Hardcode Proprietary Theme Colors in Tracked Files
 
 Proprietary paid-theme hex values (Dracula Pro, Dracula Pro Alucard, etc.) must not
