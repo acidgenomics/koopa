@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (130) ---------------------------------------------
+    # -- conda-package (129) ---------------------------------------------
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
     "aria2": f"{_M}._conda",
@@ -78,7 +78,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "gdc-client": f"{_M}._conda",
     "genomepy": f"{_M}._conda",
     "gffutils": f"{_M}._conda",
-    "gget": f"{_M}._conda",
     "gh": f"{_M}._conda",
     "gitui": f"{_M}._conda",
     "google-cloud-sdk": f"{_M}.google_cloud_sdk",
@@ -149,7 +148,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "zenith": f"{_M}._conda",
     "zoxide": f"{_M}._conda",
     "zsh": f"{_M}.zsh_app",
-    # -- python-package (55) ---------------------------------------------
+    # -- python-package (56) ---------------------------------------------
     "ansible-core": f"{_M}._python_pkg",
     "apache-airflow": f"{_M}._python_pkg",
     "autoflake": f"{_M}._python_pkg",
@@ -162,6 +161,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "dbt": f"{_M}._python_pkg",
     "flake8": f"{_M}._python_pkg",
     "gentropy": f"{_M}._python_pkg",
+    "gget": f"{_M}._python_pkg",
     "git-filter-repo": f"{_M}._python_pkg",
     "glances": f"{_M}._python_pkg",
     "httpie": f"{_M}._python_pkg",
