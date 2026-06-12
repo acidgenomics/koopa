@@ -580,7 +580,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-06-11",
+    "date": "2026-06-12",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -592,7 +592,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.35.1"
+    "version": "2.35.2"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1535,7 +1535,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-11",
+    "date": "2026-06-12",
     "default": true,
     "dependencies": [
       "node"
@@ -1549,7 +1549,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.173"
+    "version": "2.1.175"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -2091,7 +2091,7 @@
       "dask"
     ],
     "category": "Data Science",
-    "date": "2026-03-18",
+    "date": "2026-06-12",
     "default": false,
     "dependencies": [
       "python"
@@ -2102,7 +2102,7 @@
     "url": [
       "https://www.dask.org/"
     ],
-    "version": "2026.3.0"
+    "version": "2026.6.0"
   },
   "databricks-cli": {
     "bin": [
@@ -2377,7 +2377,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-11",
+    "date": "2026-06-12",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2387,7 +2387,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "e337a37504fa0bd968fa8898814ca20d09d83138"
+    "version": "c4eb05b53cc55c21f8c0c4120de26525d4ccdb8e"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -3984,7 +3984,7 @@
       "curl"
     ],
     "category": "Build",
-    "date": "2026-05-26",
+    "date": "2026-06-12",
     "default": false,
     "description": "Haskell toolchain installer",
     "type": "cli",
@@ -3992,7 +3992,7 @@
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.2.5.0"
+    "version": "0.2.6.0"
   },
   "haskell-stack": {
     "bin": [
@@ -4274,7 +4274,7 @@
       "go"
     ],
     "category": "Documentation",
-    "date": "2026-06-08",
+    "date": "2026-06-12",
     "default": false,
     "description": "fast static site generator written in Go",
     "notes": [
@@ -4285,7 +4285,7 @@
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
     ],
-    "version": "0.163.0"
+    "version": "0.163.1"
   },
   "hurl": {
     "bin": [
@@ -5522,7 +5522,7 @@
       "pkg-config"
     ],
     "category": "Dotfile",
-    "date": "2026-05-19",
+    "date": "2026-06-12",
     "default": false,
     "dependencies": [
       "lua",
@@ -5543,7 +5543,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.2.2"
+    "version": "9.2.3"
   },
   "lsd": {
     "bin": [
@@ -8303,7 +8303,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-06-05",
+    "date": "2026-06-12",
     "default": true,
     "dependencies": [
       "python"
@@ -8314,7 +8314,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.15.16"
+    "version": "0.15.17"
   },
   "ruff-lsp": {
     "bin": [
@@ -8712,7 +8712,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-06-02",
+    "date": "2026-06-12",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -8722,7 +8722,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.22.0"
+    "version": "9.23.0"
   },
   "snowflake-cli": {
     "bin": [
@@ -9450,7 +9450,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-06-11",
+    "date": "2026-06-12",
     "default": true,
     "dependencies": [
       "python"
@@ -9462,7 +9462,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.48"
+    "version": "0.0.49"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9562,14 +9562,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-06-11",
+    "date": "2026-06-12",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.20"
+    "version": "0.11.21"
   },
   "valkey": {
     "bin": [
