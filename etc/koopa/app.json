@@ -7,6 +7,7 @@
     "date": "2026-06-05",
     "default": true,
     "description": "1Password command-line interface for secrets management",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://developer.1password.com/docs/cli/",
