@@ -57,6 +57,7 @@ _APP_TREE: dict[str, Any] = {
     },
     "claude": {
         "archive-plans": "claude-archive-plans",
+        "audit-tokens": "claude-audit-tokens",
     },
     "conda": {
         "clean-cache": "conda-clean-cache",
@@ -1131,6 +1132,104 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
         alert_success(f"Archived {len(to_move)} plan file(s).")
 
 
+def _estimate_claude_tokens(text: str) -> int:
+    """Estimate token count for Claude config text (chars / 4 heuristic)."""
+    return len(text) // 4
+
+
+def _rule_is_path_scoped(text: str) -> bool:
+    """Return True if a rules file has YAML frontmatter declaring ``paths:``."""
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return False
+    for line in lines[1:]:
+        if line.strip() == "---":
+            break
+        if line.startswith("paths:"):
+            return True
+    return False
+
+
+def _handle_claude_audit_tokens(args: list[str]) -> None:
+    """Handle ``koopa app claude audit-tokens``."""
+    import argparse
+    import glob
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app claude audit-tokens",
+        description=(
+            "Report approximate token cost of Claude config files "
+            "(~/.claude/CLAUDE.md and ~/.claude/rules/**/*.md). "
+            "Rules with 'paths:' frontmatter load conditionally (not every session). "
+            "--max-tokens gates the always-loaded subtotal only. "
+            "Token estimate: chars / 4."
+        ),
+    )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        metavar="N",
+        help="exit 1 if always-loaded tokens exceed N",
+    )
+    parsed = parser.parse_args(args)
+
+    from koopa.alert import alert_note, alert_success
+
+    home = os.path.expanduser("~")
+    claude_dir = os.path.join(home, ".claude")
+
+    # Collect the files that Claude discovers at session start
+    candidates = [os.path.join(claude_dir, "CLAUDE.md")]
+    rules_dir = os.path.join(claude_dir, "rules")
+    if os.path.isdir(rules_dir):
+        candidates.extend(sorted(glob.glob(os.path.join(rules_dir, "**", "*.md"), recursive=True)))
+
+    # (rel_path, bytes, tokens, path_scoped)
+    rows: list[tuple[str, int, int, bool]] = []
+    for path in candidates:
+        if not os.path.isfile(path):
+            continue
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        rel = os.path.relpath(path, home)
+        scoped = _rule_is_path_scoped(text)
+        rows.append((rel, len(text.encode("utf-8")), _estimate_claude_tokens(text), scoped))
+
+    if not rows:
+        alert_note("No globally-loaded Claude config files found.")
+        return
+
+    always = [(r, b, t) for r, b, t, s in rows if not s]
+    conditional = [(r, b, t) for r, b, t, s in rows if s]
+
+    always_tokens = sum(t for _, _, t in always)
+    always_bytes = sum(b for _, b, _ in always)
+
+    print(f"Always-loaded Claude config ({len(always)} files):")
+    for rel, nbytes, tokens in always:
+        print(f"  {tokens:5d} tokens  {nbytes:6d} B  ~/{rel}")
+    print(f"  {'─' * 38}")
+    print(f"  {always_tokens:5d} tokens  {always_bytes:6d} B  total (approx)")
+
+    if conditional:
+        cond_tokens = sum(t for _, _, t in conditional)
+        cond_bytes = sum(b for _, b, _ in conditional)
+        print(f"\nPath-scoped / conditional ({len(conditional)} files, loads only when matching files are open):")
+        for rel, nbytes, tokens in conditional:
+            print(f"  {tokens:5d} tokens  {nbytes:6d} B  ~/{rel}")
+        print(f"  {'─' * 38}")
+        print(f"  {cond_tokens:5d} tokens  {cond_bytes:6d} B  total (approx)")
+
+    if parsed.max_tokens is not None and always_tokens > parsed.max_tokens:
+        print(
+            f"Error: {always_tokens} always-loaded tokens exceeds --max-tokens {parsed.max_tokens}.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    alert_success(f"claude-audit-tokens: ~{always_tokens} always-loaded tokens across {len(always)} files.")
+
+
 # -- conda handlers ----------------------------------------------------------
 
 
@@ -2069,6 +2168,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "brew-version": _handle_brew_version,
     # claude
     "claude-archive-plans": _handle_claude_archive_plans,
+    "claude-audit-tokens": _handle_claude_audit_tokens,
     # conda
     "conda-clean-cache": _handle_conda_clean_cache,
     "conda-create-env": _handle_conda_create_env,

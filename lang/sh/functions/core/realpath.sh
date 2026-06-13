@@ -41,7 +41,7 @@ _koopa_realpath() {
             unset -v _kvar_rp_arg _kvar_rp_string
             return 1
         fi
-        __koopa_print "$_kvar_rp_string"
+        _koopa_print "$_kvar_rp_string"
     done
     unset -v _kvar_rp_arg _kvar_rp_string
     return 0

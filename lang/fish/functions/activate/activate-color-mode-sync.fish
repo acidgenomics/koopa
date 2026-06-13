@@ -14,6 +14,6 @@ function _koopa_activate_color_mode_sync
         set -e FZF_DEFAULT_OPTS
         _koopa_activate_fzf
         _koopa_activate_difftastic
-        _koopa_activate_mcfly_colors
+        _koopa_activate_dircolors
     end
 end

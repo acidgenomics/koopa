@@ -20,7 +20,6 @@ _koopa_activate_aliases() {
     alias k='_koopa_alias_k'
     alias kb='_koopa_alias_kb'
     alias kbs='_koopa_alias_kbs'
-    alias kdev='_koopa_alias_kdev'
     alias l='_koopa_alias_l'
     alias l.='l -d .*'
     alias l1='ls -1'
@@ -1236,7 +1235,7 @@ _koopa_duration_stop() {
         | "$__kvar_bc" \
     )"
     [ -n "$__kvar_duration" ] || return 1
-    _koopa_dl "$__kvar_key" "${__kvar_duration} ms"
+    _koopa_print "${__kvar_key}: ${__kvar_duration} ms"
     unset -v \
         KOOPA_DURATION_START \
         __kvar_bc \
@@ -1440,7 +1439,7 @@ _koopa_realpath() {
             unset -v _kvar_rp_arg _kvar_rp_string
             return 1
         fi
-        __koopa_print "$_kvar_rp_string"
+        _koopa_print "$_kvar_rp_string"
     done
     unset -v _kvar_rp_arg _kvar_rp_string
     return 0
