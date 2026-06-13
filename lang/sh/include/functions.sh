@@ -521,6 +521,22 @@ _koopa_activate_micromamba() {
     return 0
 }
 
+_koopa_activate_op() {
+    __kvar_plugins_file="${OP_CONFIG_DIR:-${XDG_CONFIG_HOME:?}/op}/plugins.sh"
+    if [ ! -f "$__kvar_plugins_file" ]
+    then
+        unset -v __kvar_plugins_file
+        return 0
+    fi
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
+    . "$__kvar_plugins_file"
+    [ "$__kvar_nounset" -eq 1 ] && set -u
+    unset -v __kvar_plugins_file __kvar_nounset
+    return 0
+}
+
 _koopa_activate_path_helper() {
     __kvar_path_helper='/usr/libexec/path_helper'
     if [ ! -x "$__kvar_path_helper" ]

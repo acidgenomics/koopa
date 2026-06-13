@@ -215,6 +215,7 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
+    _koopa_activate_op
     _koopa_activate_color_mode_sync
     return 0
 }
@@ -638,6 +639,18 @@ _koopa_activate_mise() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     source "$cache_file"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
+    return 0
+}
+
+_koopa_activate_op() {
+    local plugins_file
+    plugins_file="${OP_CONFIG_DIR:-${XDG_CONFIG_HOME:?}/op}/plugins.sh"
+    [[ -f "$plugins_file" ]] || return 0
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    source "$plugins_file"
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
