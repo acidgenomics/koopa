@@ -62,6 +62,7 @@ function __koopa_activate_koopa {
     _koopa_activate_difftastic
     _koopa_activate_aliases
     _koopa_activate_starship
+    _koopa_activate_completions
     _koopa_activate_color_mode_sync
 }
 
