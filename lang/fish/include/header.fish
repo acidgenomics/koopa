@@ -37,18 +37,26 @@ function __koopa_activate_koopa
     end
     _koopa_activate_bootstrap
     _koopa_add_to_path_start "$KOOPA_PREFIX/bin"
+    _koopa_add_to_manpath_start "$KOOPA_PREFIX/share/man"
     if test "$koopa_minimal" -eq 1
         return 0
     end
     _koopa_export_env
     _koopa_activate_ca_certificates
+    _koopa_activate_ruby
+    _koopa_activate_julia
+    _koopa_activate_python
+    _koopa_activate_pipx
+    _koopa_activate_bat
     _koopa_activate_difftastic
-    _koopa_activate_fzf
+    _koopa_activate_dircolors
     _koopa_activate_direnv
-    _koopa_activate_zoxide
-    _koopa_activate_conda
-    _koopa_activate_broot
-    _koopa_activate_atuin
+    _koopa_activate_docker
+    _koopa_activate_fzf
+    _koopa_activate_lesspipe
+    _koopa_activate_pyright
+    _koopa_activate_ripgrep
+    _koopa_activate_tealdeer
     if _koopa_is_macos
         # macOS-specific: Homebrew.
         if test -x /opt/homebrew/bin/brew
@@ -57,6 +65,7 @@ function __koopa_activate_koopa
             eval (/usr/local/bin/brew shellenv fish)
         end
     end
+    _koopa_activate_micromamba
     _koopa_add_to_path_start \
         /usr/local/sbin \
         /usr/local/bin \
@@ -64,6 +73,16 @@ function __koopa_activate_koopa
         "$HOME/.local/bin" \
         "$HOME/.bin" \
         "$HOME/bin"
+    _koopa_add_to_manpath_start \
+        /usr/local/man \
+        /usr/local/share/man
+    _koopa_add_to_manpath_end /usr/share/man
+    _koopa_activate_zoxide
+    _koopa_activate_conda
+    _koopa_activate_broot
+    _koopa_activate_atuin
+    _koopa_activate_pyenv
+    _koopa_activate_rbenv
     if not _koopa_is_subshell
         # Create today bucket symlink.
         set -l today_dir "$HOME/today"

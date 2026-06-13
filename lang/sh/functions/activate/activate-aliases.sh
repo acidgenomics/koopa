@@ -23,7 +23,6 @@ _koopa_activate_aliases() {
     alias k='_koopa_alias_k'
     alias kb='_koopa_alias_kb'
     alias kbs='_koopa_alias_kbs'
-    alias kdev='_koopa_alias_kdev'
     alias l='_koopa_alias_l'
     alias l.='l -d .*'
     alias l1='ls -1'
