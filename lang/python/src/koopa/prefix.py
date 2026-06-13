@@ -73,6 +73,11 @@ def zsh_completions_prefix() -> str:
     return os.path.join(koopa_prefix(), "share", "zsh", "site-functions")
 
 
+def powershell_completions_prefix() -> str:
+    """Return koopa central PowerShell completions directory."""
+    return os.path.join(koopa_prefix(), "share", "powershell", "completions")
+
+
 def scripts_private_prefix() -> str:
     """Return private scripts prefix."""
     return os.environ.get(

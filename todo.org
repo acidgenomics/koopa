@@ -1,0 +1,3 @@
+** TODO Improve integration with 1Password CLI tools
+    https://www.1password.dev/cli/shell-plugins
+** TODO Learn lesson that we never want to allow Claude to automatically install Python (pip, uv) or Node (npm) packages.
