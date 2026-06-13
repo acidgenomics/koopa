@@ -581,7 +581,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-06-12",
+    "date": "2026-06-13",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -593,7 +593,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.35.2"
+    "version": "2.35.3"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1536,7 +1536,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-12",
+    "date": "2026-06-13",
     "default": true,
     "dependencies": [
       "node"
@@ -1550,7 +1550,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.175"
+    "version": "2.1.177"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1701,7 +1701,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-06-11",
+    "date": "2026-06-13",
     "default": true,
     "dependencies": [
       "node"
@@ -1715,7 +1715,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.61"
+    "version": "1.0.62"
   },
   "coreutils": {
     "bin": [
@@ -2395,7 +2395,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-06-12",
+    "date": "2026-06-13",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2405,7 +2405,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "770ed0106151cce668c63550a2593cbe8d6e2b32"
+    "version": "c74ac46a93a9b64ccb55bbee6d999b3b4a97c58f"
   },
   "du-dust": {
     "bin": [
@@ -3542,7 +3542,7 @@
       "glances"
     ],
     "category": "Terminal",
-    "date": "2026-04-22",
+    "date": "2026-06-13",
     "default": false,
     "dependencies": [
       "python"
@@ -3557,7 +3557,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.5.4"
+    "version": "4.5.5"
   },
   "glib": {
     "build_dependencies": [
@@ -3985,7 +3985,7 @@
       "curl"
     ],
     "category": "Build",
-    "date": "2026-06-12",
+    "date": "2026-06-13",
     "default": false,
     "description": "Haskell toolchain installer",
     "type": "cli",
@@ -3993,14 +3993,14 @@
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.2.6.0"
+    "version": "0.2.6.1"
   },
   "haskell-stack": {
     "bin": [
       "stack"
     ],
     "category": "Build",
-    "date": "2026-02-22",
+    "date": "2026-06-13",
     "default": false,
     "description": "cross-platform Haskell build tool",
     "type": "cli",
@@ -4008,7 +4008,7 @@
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "3.9.3"
+    "version": "3.11.1"
   },
   "hdf5": {
     "bin": [
@@ -4727,7 +4727,7 @@
       "latch"
     ],
     "category": "Cloud",
-    "date": "2026-06-06",
+    "date": "2026-06-13",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -4744,7 +4744,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.76.0"
+    "version": "2.76.1"
   },
   "lazygit": {
     "bin": [
@@ -5599,7 +5599,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-05-26",
+    "date": "2026-06-13",
     "default": false,
     "description": "just-in-time compiler for Lua",
     "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
@@ -5608,7 +5608,7 @@
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
     ],
-    "version": "c3b379bf50c8819c61daa3afd9f21d9ec5708bd5"
+    "version": "72d2061ae2fa9a5fd45237943f9982baf59435ec"
   },
   "luarocks": {
     "bin": [
@@ -5950,7 +5950,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-06-11",
+    "date": "2026-06-13",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -5960,7 +5960,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.6.2"
+    "version": "2026.6.5"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7446,7 +7446,7 @@
       "pytest"
     ],
     "category": "Python",
-    "date": "2026-04-15",
+    "date": "2026-06-13",
     "default": true,
     "dependencies": [
       "python"
@@ -7464,7 +7464,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "9.0.3"
+    "version": "9.1.0"
   },
   "python": {
     "alias_of": "python3.14",
@@ -8403,7 +8403,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-03-19",
+    "date": "2026-06-13",
     "default": false,
     "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
@@ -8412,7 +8412,7 @@
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "1.11.4"
+    "version": "2.0.0"
   },
   "sambamba": {
     "date": "2024-12-30",
