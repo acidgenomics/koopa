@@ -1,5 +1,56 @@
 # Changelog
 
+## koopa 0.20.0 (2026-06-13)
+
+Major changes:
+
+- Hardened 1Password CLI (`op`) support. The `_1password_cli` installer now
+  generates vendor shell completions (bash, zsh, fish, powershell) offline at
+  install time via `op completion <shell>`, writing them into the app prefix's
+  `share`/`etc` completion dirs. Completion generation is best-effort — a
+  failure never aborts the install. Added `link_in_powershell_completions` in
+  `install.py` to symlink PowerShell completions into a central directory
+  (wired into `install_app` and `repair_app_symlinks`), a new
+  `activate-completions.ps1` to auto-source them at shell startup, and new
+  `activate-op` functions across bash, zsh, fish, and POSIX sh.
+- Added `koopa app claude audit-tokens`. Reports the approximate token cost
+  of always-loaded Claude config (`~/.claude/CLAUDE.md` and
+  `~/.claude/rules/**/*.md`), separating always-loaded files from path-scoped
+  rules (those with `paths:` YAML frontmatter, which load only when matching
+  files are open). Accepts `--max-tokens N` to exit non-zero when the
+  always-loaded subtotal exceeds the threshold.
+- Improved shell parity for fish and PowerShell. Added matching `activate-*`
+  functions for bat, dircolors, docker, julia, lesspipe, micromamba, pipx,
+  pyenv, pyright, python, rbenv, ripgrep, ruby, and tealdeer, plus
+  `add-to-manpath-start` / `add-to-manpath-end` core helpers, bringing fish
+  and PowerShell closer to the bash/zsh activation feature set.
+- Gated color mode correctly inside tmux. `is-light-mode` now reads the live
+  `KOOPA_COLOR_MODE` value from `tmux show-environment -g` (authoritative
+  per-server state) before falling back to the `~/.cache/koopa/color-mode`
+  file, and `activate-color-mode` unconditionally re-derives the mode whenever
+  `$TMUX` is set. Added a cache-file fallback to `_os_appearance_mode_linux`
+  for headless Linux hosts where no desktop portal or gsettings endpoint
+  answers.
+- Switched `gget` from the conda-package installer to the python-package
+  installer (PyPI). The `python` runtime is now a direct dependency, and
+  `linux-arm64` support is added.
+
+Minor changes:
+
+- Hardened bash completion activation: unset `BASH_COMPLETION_VERSINFO` before
+  sourcing koopa's framework so it wins over a system bash-completion already
+  sourced at login, ensuring the 2.12 `_comp_initialize` API matches the
+  completion files on `BASH_COMPLETION_USER_DIR`.
+- Fixed zsh `compinit` stale-cache bug: the fast path (`compinit -C`, reuse
+  dump) now checks whether any file in koopa's central `site-functions` dir is
+  newer than `.zcompdump`, and falls back to a full `compinit` if so. A
+  newly-linked completion is picked up in the next zsh session rather than
+  waiting up to 24 hours.
+- Removed `mise` and `television` shell activation functions across bash, zsh,
+  fish, and PowerShell (both are non-default apps; the activation stubs were
+  unused).
+- Updated app versions across the registry and refreshed shell completions.
+
 ## koopa 0.19.0 (2026-06-07)
 
 Major changes:
