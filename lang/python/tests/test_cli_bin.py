@@ -95,6 +95,7 @@ def test_nameserver_provider_other() -> None:
 
 def test_handler_dns_output(capsys: pytest.CaptureFixture[str]) -> None:
     """Test dns command output format with mocked dig."""
+    domain = "acidgenomics.com"
     dig_responses = {
         ("acidgenomics.com", "NS"): "ns-20.awsdns-02.com.\n",
         ("acidgenomics.com", "A"): "1.2.3.4\n",
@@ -111,10 +112,10 @@ def test_handler_dns_output(capsys: pytest.CaptureFixture[str]) -> None:
         return subprocess.CompletedProcess(cmd, 0, stdout=stdout, stderr="")
 
     with patch("koopa.dns.subprocess.run", side_effect=fake_run):
-        _HANDLERS["dns"](["acidgenomics.com"])
+        _HANDLERS["dns"]([domain])
 
     captured = capsys.readouterr()
-    assert "=== acidgenomics.com ===" in captured.out
+    assert f"=== {domain} ===" in captured.out
     assert "Route 53" in captured.out
     assert "NS:" in captured.out
     assert "MX:" in captured.out

@@ -1214,7 +1214,10 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
     if conditional:
         cond_tokens = sum(t for _, _, t in conditional)
         cond_bytes = sum(b for _, b, _ in conditional)
-        print(f"\nPath-scoped / conditional ({len(conditional)} files, loads only when matching files are open):")
+        print(
+            f"\nPath-scoped / conditional ({len(conditional)} files,"
+            " loads only when matching files are open):"
+        )
         for rel, nbytes, tokens in conditional:
             print(f"  {tokens:5d} tokens  {nbytes:6d} B  ~/{rel}")
         print(f"  {'─' * 38}")
@@ -1222,12 +1225,15 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
 
     if parsed.max_tokens is not None and always_tokens > parsed.max_tokens:
         print(
-            f"Error: {always_tokens} always-loaded tokens exceeds --max-tokens {parsed.max_tokens}.",
+            f"Error: {always_tokens} always-loaded tokens exceeds"
+            f" --max-tokens {parsed.max_tokens}.",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    alert_success(f"claude-audit-tokens: ~{always_tokens} always-loaded tokens across {len(always)} files.")
+    alert_success(
+        f"claude-audit-tokens: ~{always_tokens} always-loaded tokens across {len(always)} files."
+    )
 
 
 # -- conda handlers ----------------------------------------------------------
