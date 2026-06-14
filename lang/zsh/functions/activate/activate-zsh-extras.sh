@@ -12,6 +12,7 @@ _koopa_activate_zsh_extras() {
     _koopa_activate_zsh_prompt
     _koopa_activate_zsh_reverse_search
     _koopa_activate_zsh_completion
+    _koopa_activate_op
     _koopa_activate_color_mode_sync
     return 0
 }

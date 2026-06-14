@@ -185,7 +185,7 @@ install_perl() {
 }
 
 install_openssl() {
-    __kvar_version='3.6.2'
+    __kvar_version='3.6.3'
     printf 'Installing openssl.\n'
     __kvar_filename="openssl-${__kvar_version}.tar.gz"
     download_with_fallback \
@@ -414,7 +414,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.11.19'
+    __kvar_uv_version='0.11.21'
     __kvar_python_version='3.12.13'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"

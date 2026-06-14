@@ -1,5 +1,6 @@
 """System module unit tests."""
 
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -10,6 +11,7 @@ from koopa.system import (
     major_minor_patch_version,
     major_minor_version,
     major_version,
+    os_appearance_mode,
 )
 
 
@@ -106,3 +108,53 @@ def test_cpu_count_returns_positive_int() -> None:
     result = cpu_count()
     assert isinstance(result, int)
     assert result >= 1
+
+
+# os_appearance_mode — Linux headless cache-file fallback
+
+
+def _write_color_cache(tmp_path: Path, value: str) -> None:
+    cache_dir = tmp_path / ".cache" / "koopa"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "color-mode").write_text(value + "\n")
+
+
+def test_os_appearance_mode_linux_cache_light(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """On headless Linux (no gdbus/gsettings), cache file 'light' → 'light'."""
+    _write_color_cache(tmp_path, "light")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", return_value=None),
+    ):
+        assert os_appearance_mode() == "light"
+
+
+def test_os_appearance_mode_linux_cache_dark(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """On headless Linux (no gdbus/gsettings), cache file 'dark' → 'dark'."""
+    _write_color_cache(tmp_path, "dark")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", return_value=None),
+    ):
+        assert os_appearance_mode() == "dark"
+
+
+def test_os_appearance_mode_linux_no_cache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """On headless Linux with no cache file, default 'dark' is preserved."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", return_value=None),
+    ):
+        assert os_appearance_mode() == "dark"

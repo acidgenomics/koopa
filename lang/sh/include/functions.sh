@@ -20,7 +20,6 @@ _koopa_activate_aliases() {
     alias k='_koopa_alias_k'
     alias kb='_koopa_alias_kb'
     alias kbs='_koopa_alias_kbs'
-    alias kdev='_koopa_alias_kdev'
     alias l='_koopa_alias_l'
     alias l.='l -d .*'
     alias l1='ls -1'
@@ -290,7 +289,7 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-    elif [ -z "${KOOPA_COLOR_MODE:-}" ]
+    elif [ -z "${KOOPA_COLOR_MODE:-}" ] || [ -n "${TMUX:-}" ]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
@@ -317,14 +316,8 @@ _koopa_activate_color_mode() {
         then
             if [ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]
             then
-                if _koopa_is_interactive
-                then
-                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                        >>/dev/null 2>&1
-                else
-                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                        >>/dev/null 2>&1 &
-                fi
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &
             fi
         fi
         unset -v __kvar_applied __kvar_applied_cached
@@ -524,6 +517,22 @@ _koopa_activate_micromamba() {
     then
         export MAMBA_ROOT_PREFIX="${HOME:?}/.mamba"
     fi
+    return 0
+}
+
+_koopa_activate_op() {
+    __kvar_plugins_file="${OP_CONFIG_DIR:-${XDG_CONFIG_HOME:?}/op}/plugins.sh"
+    if [ ! -f "$__kvar_plugins_file" ]
+    then
+        unset -v __kvar_plugins_file
+        return 0
+    fi
+    __kvar_nounset=0
+    case "$-" in *u*) __kvar_nounset=1 ;; esac
+    [ "$__kvar_nounset" -eq 1 ] && set +u
+    . "$__kvar_plugins_file"
+    [ "$__kvar_nounset" -eq 1 ] && set -u
+    unset -v __kvar_plugins_file __kvar_nounset
     return 0
 }
 
@@ -1226,7 +1235,7 @@ _koopa_duration_stop() {
         | "$__kvar_bc" \
     )"
     [ -n "$__kvar_duration" ] || return 1
-    _koopa_dl "$__kvar_key" "${__kvar_duration} ms"
+    _koopa_print "${__kvar_key}: ${__kvar_duration} ms"
     unset -v \
         KOOPA_DURATION_START \
         __kvar_bc \
@@ -1258,6 +1267,29 @@ _koopa_is_light_mode() {
         if [ "$__kvar_in_multiplexer" -eq 1 ]
         then
             unset -v __kvar_in_multiplexer
+            __kvar_tmux_mode=''
+            if [ -n "${TMUX:-}" ]
+            then
+                __kvar_tmux_mode="$(tmux show-environment -g KOOPA_COLOR_MODE 2>/dev/null)" \
+                    || __kvar_tmux_mode=''
+                case "$__kvar_tmux_mode" in
+                    KOOPA_COLOR_MODE=*)
+                        __kvar_tmux_mode="${__kvar_tmux_mode#KOOPA_COLOR_MODE=}"
+                        ;;
+                    *)
+                        __kvar_tmux_mode=''
+                        ;;
+                esac
+            fi
+            case "$__kvar_tmux_mode" in
+                light|dark)
+                    [ "$__kvar_tmux_mode" = 'light' ]
+                    __kvar_result=$?
+                    unset -v __kvar_tmux_mode
+                    return "$__kvar_result"
+                    ;;
+            esac
+            unset -v __kvar_tmux_mode
             __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
             if [ -f "$__kvar_cache_file" ]
             then
@@ -1407,7 +1439,7 @@ _koopa_realpath() {
             unset -v _kvar_rp_arg _kvar_rp_string
             return 1
         fi
-        __koopa_print "$_kvar_rp_string"
+        _koopa_print "$_kvar_rp_string"
     done
     unset -v _kvar_rp_arg _kvar_rp_string
     return 0

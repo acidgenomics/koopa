@@ -20,14 +20,26 @@ function __koopa_activate_koopa {
 
     _koopa_activate_bootstrap
     _koopa_add_to_path_start (Join-Path $env:KOOPA_PREFIX 'bin')
+    _koopa_add_to_manpath_start (Join-Path $env:KOOPA_PREFIX 'share/man')
 
     if ($koopaMinimal -eq '1') { return }
 
     _koopa_export_env
     _koopa_activate_ca_certificates
+    _koopa_activate_ruby
+    _koopa_activate_julia
+    _koopa_activate_python
+    _koopa_activate_pipx
+    _koopa_activate_bat
     _koopa_activate_conda
-    _koopa_activate_fzf
+    _koopa_activate_dircolors
     _koopa_activate_direnv
+    _koopa_activate_docker
+    _koopa_activate_fzf
+    _koopa_activate_lesspipe
+    _koopa_activate_pyright
+    _koopa_activate_ripgrep
+    _koopa_activate_tealdeer
     _koopa_activate_zoxide
 
     # macOS-specific: Homebrew.
@@ -49,6 +61,8 @@ function __koopa_activate_koopa {
         )
     }
 
+    _koopa_activate_micromamba
+
     # Final PATH additions.
     _koopa_add_to_path_start @(
         '/usr/local/sbin',
@@ -58,7 +72,8 @@ function __koopa_activate_koopa {
         (Join-Path $HOME '.bin'),
         (Join-Path $HOME 'bin')
     )
-
+    _koopa_add_to_manpath_start @('/usr/local/man', '/usr/local/share/man')
+    _koopa_add_to_manpath_end '/usr/share/man'
     _koopa_activate_difftastic
     _koopa_activate_aliases
     _koopa_activate_starship
@@ -67,4 +82,10 @@ function __koopa_activate_koopa {
 
 if ($env:KOOPA_ACTIVATE -eq '1') {
     __koopa_activate_koopa
+    # Dot-call at top level so completion files' helper functions (e.g. cobra-
+    # generated __op_debug) land in the session scope rather than the local
+    # scope of __koopa_activate_koopa where they would evaporate on return.
+    $koopaMinimal = $env:KOOPA_MINIMAL
+    if (-not $koopaMinimal) { $koopaMinimal = '0' }
+    if ($koopaMinimal -ne '1') { . _koopa_activate_completions }
 }

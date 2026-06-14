@@ -9,7 +9,7 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]]
+    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]] || [[ -n "${TMUX:-}" ]]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
@@ -29,15 +29,9 @@ _koopa_activate_color_mode() {
         then
             if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
             then
-                if _koopa_is_interactive
-                then
-                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                        >>/dev/null 2>&1
-                else
-                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                        >>/dev/null 2>&1 &
-                    disown
-                fi
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &
+                disown
             fi
         fi
     else
