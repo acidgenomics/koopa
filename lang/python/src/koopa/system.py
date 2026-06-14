@@ -169,6 +169,7 @@ def _os_appearance_mode_linux() -> str:
         if cached in ("light", "dark"):
             return cached
     except OSError:
+        # Cache is optional; unreadable/missing cache falls back to default mode.
         pass
     return "dark"
 
