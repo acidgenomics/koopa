@@ -155,3 +155,10 @@ def main(
         _warn_cross_tree_overlap("private", main_targets, private_targets)
         _print_chezmoi_status(chezmoi, private_source, env, config=pcfg)
         subprocess.run([private_install_script], check=True, env=env)
+    # Hot-reload any running tmux server so rewritten color confs take effect
+    # without requiring a manual prefix+r or reconnect.  Also warn when the
+    # running server predates the newly-installed binary.
+    from koopa.tmux import reload_tmux_config, warn_tmux_stale
+
+    reload_tmux_config(env["KOOPA_COLOR_MODE"])
+    warn_tmux_stale()
