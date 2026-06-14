@@ -200,6 +200,7 @@ _koopa_activate_bash_completion() {
     local koopa_prefix
     koopa_prefix="$(_koopa_koopa_prefix)"
     export BASH_COMPLETION_USER_DIR="${koopa_prefix}/share/bash-completion"
+    unset -v BASH_COMPLETION_VERSINFO
     local framework
     framework="${koopa_prefix}/opt/bash-completion/etc/profile.d/bash_completion.sh"
     [[ -f "$framework" ]] && source "$framework"
@@ -214,6 +215,7 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
+    _koopa_activate_op
     _koopa_activate_color_mode_sync
     return 0
 }
@@ -413,7 +415,7 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]]
+    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]] || [[ -n "${TMUX:-}" ]]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
@@ -433,15 +435,9 @@ _koopa_activate_color_mode() {
         then
             if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
             then
-                if _koopa_is_interactive
-                then
-                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                        >>/dev/null 2>&1
-                else
-                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                        >>/dev/null 2>&1 &
-                    disown
-                fi
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &
+                disown
             fi
         fi
     else
@@ -627,22 +623,14 @@ _koopa_activate_micromamba() {
     return 0
 }
 
-_koopa_activate_mise() {
-    local mise
-    mise="${KOOPA_PREFIX:?}/bin/mise"
-    if [[ ! -x "$mise" ]]
-    then
-        return 0
-    fi
-    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/mise-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$mise" -nt "$cache_file" ]]; then
-        mkdir -p "${cache_file%/*}"
-        "$mise" activate bash > "$cache_file"
-    fi
+_koopa_activate_op() {
+    local plugins_file
+    plugins_file="${OP_CONFIG_DIR:-${XDG_CONFIG_HOME:?}/op}/plugins.sh"
+    [[ -f "$plugins_file" ]] || return 0
     local nounset=0
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
-    source "$cache_file"
+    source "$plugins_file"
     [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
@@ -855,26 +843,6 @@ _koopa_activate_tealdeer() {
         TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
     fi
     export TEALDEER_CONFIG_DIR
-    return 0
-}
-
-_koopa_activate_television() {
-    local tv
-    tv="${KOOPA_PREFIX:?}/bin/tv"
-    if [[ ! -x "$tv" ]]
-    then
-        return 0
-    fi
-    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/television-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$tv" -nt "$cache_file" ]]; then
-        mkdir -p "${cache_file%/*}"
-        "$tv" init bash > "$cache_file"
-    fi
-    local nounset=0
-    [[ -o nounset ]] && nounset=1
-    [[ "$nounset" -eq 1 ]] && set +o nounset
-    source "$cache_file"
-    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 
@@ -1849,8 +1817,19 @@ _koopa_is_light_mode() {
         [[ "$(/usr/bin/defaults read -g 'AppleInterfaceStyle' 2>/dev/null)" != 'Dark' ]]
     elif [[ -n "${TMUX:-}" || "${TERM:-}" == screen* || "${TERM:-}" == tmux* ]]
     then
-        local cache_file="${HOME:?}/.cache/koopa/color-mode"
-        [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
+        local tmux_mode=''
+        if [[ -n "${TMUX:-}" ]]
+        then
+            tmux_mode="$(tmux show-environment -g KOOPA_COLOR_MODE 2>/dev/null)"
+            tmux_mode="${tmux_mode#KOOPA_COLOR_MODE=}"
+        fi
+        if [[ "$tmux_mode" == 'light' || "$tmux_mode" == 'dark' ]]
+        then
+            [[ "$tmux_mode" == 'light' ]]
+        else
+            local cache_file="${HOME:?}/.cache/koopa/color-mode"
+            [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
+        fi
     elif [[ "${TERM_PROGRAM:-}" == 'vscode' ]]
     then
         local cache_file="${HOME:?}/.cache/koopa/color-mode"

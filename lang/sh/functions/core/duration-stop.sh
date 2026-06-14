@@ -26,7 +26,7 @@ _koopa_duration_stop() {
         | "$__kvar_bc" \
     )"
     [ -n "$__kvar_duration" ] || return 1
-    _koopa_dl "$__kvar_key" "${__kvar_duration} ms"
+    _koopa_print "${__kvar_key}: ${__kvar_duration} ms"
     unset -v \
         KOOPA_DURATION_START \
         __kvar_bc \

@@ -30,6 +30,7 @@ from koopa.prefix import (
     koopa_prefix,
     man1_prefix,
     opt_prefix,
+    powershell_completions_prefix,
     zsh_completions_prefix,
 )
 from koopa.system import (
@@ -378,6 +379,31 @@ def link_in_zsh_completions(prefix: str) -> None:
     _link_completions(
         zsh_completions_prefix(),
         _find_zsh_completion_files(prefix),
+    )
+
+
+def _find_powershell_completion_files(prefix: str) -> list[tuple[str, str]]:
+    """Return ``(source_path, filename)`` for PowerShell completion files in an app prefix.
+
+    Scans both the prefix root and prefix/libexec for:
+      - share/powershell/completions/
+    """
+    results: list[tuple[str, str]] = []
+    for root in (prefix, os.path.join(prefix, "libexec")):
+        subdir = os.path.join(root, "share", "powershell", "completions")
+        if os.path.isdir(subdir):
+            for entry in os.listdir(subdir):
+                source = os.path.join(subdir, entry)
+                if os.path.isfile(source):
+                    results.append((source, entry))
+    return results
+
+
+def link_in_powershell_completions(prefix: str) -> None:
+    """Symlink PowerShell completion files from an app prefix into the central dir."""
+    _link_completions(
+        powershell_completions_prefix(),
+        _find_powershell_completion_files(prefix),
     )
 
 
@@ -886,6 +912,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 link_in_bash_completions(config.prefix)
                 link_in_fish_completions(config.prefix)
                 link_in_zsh_completions(config.prefix)
+                link_in_powershell_completions(config.prefix)
         elif config.mode == "system":
             if config.update_ldconfig:
                 run("ldconfig", sudo=True, check=False)
@@ -3086,6 +3113,7 @@ def repair_app_symlinks() -> None:
         link_in_bash_completions(prefix)
         link_in_fish_completions(prefix)
         link_in_zsh_completions(prefix)
+        link_in_powershell_completions(prefix)
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:

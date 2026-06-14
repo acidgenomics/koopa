@@ -159,6 +159,18 @@ def _os_appearance_mode_linux() -> str:
         )
         if result.returncode == 0 and "prefer-light" in result.stdout:
             return "light"
+    # Fallback: koopa color-mode cache file (written by the shell activation
+    # layer from a terminal-background OSC 11 query).  Engages only on headless
+    # hosts where no desktop session answers the portal or gsettings queries.
+    cache_file = os.path.join(os.path.expanduser("~"), ".cache", "koopa", "color-mode")
+    try:
+        with open(cache_file) as fh:
+            cached = fh.read().strip()
+        if cached in ("light", "dark"):
+            return cached
+    except OSError:
+        # Cache is optional; unreadable/missing cache falls back to default mode.
+        pass
     return "dark"
 
 

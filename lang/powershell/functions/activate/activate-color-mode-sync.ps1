@@ -12,6 +12,7 @@ function _koopa_activate_color_mode_sync {
             Remove-Item Env:FZF_DEFAULT_OPTS -ErrorAction SilentlyContinue
             _koopa_activate_fzf
             _koopa_activate_difftastic
+            _koopa_activate_dircolors
         }
         & $origPrompt
     }
