@@ -762,6 +762,17 @@ def check_missing_default_apps() -> bool:
     return False
 
 
+def check_tmux_server_stale() -> bool:
+    """Check whether the running tmux server predates the on-disk bundled binary.
+
+    Returns True when the server is current or absent, False when stale.
+    Emits a warning with the kill-server remedy when stale.
+    """
+    from koopa.tmux import warn_tmux_stale
+
+    return warn_tmux_stale()
+
+
 def check_system() -> bool:
     """Run all system checks."""
     from koopa.alert import alert_note, alert_success, warn
@@ -770,6 +781,7 @@ def check_system() -> bool:
     needs_update = False
     needs_system_update = False
     needs_disk_space = False
+    needs_tmux_restart = False
     check_build_system()
     if not check_bootstrap_version():
         needs_update = True
@@ -792,9 +804,11 @@ def check_system() -> bool:
         needs_update = True
     if not check_disk("/"):
         needs_disk_space = True
+    if not check_tmux_server_stale():
+        needs_tmux_restart = True
     if needs_update:
         _print_update_plan()
-    if needs_update or needs_system_update or needs_disk_space:
+    if needs_update or needs_system_update or needs_disk_space or needs_tmux_restart:
         warn("System checks completed with warnings.")
         if needs_system_update:
             alert_note("Run 'koopa update system' to resolve these issues.")

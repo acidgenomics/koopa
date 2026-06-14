@@ -3,7 +3,6 @@
 import fcntl
 import os
 import re
-import shutil
 import subprocess
 from datetime import datetime
 
@@ -11,7 +10,7 @@ from koopa.alert import alert_info, alert_note
 from koopa.build import locate
 from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import os_appearance_mode
-from koopa.xdg import xdg_config_home
+from koopa.tmux import reload_tmux_config, warn_tmux_stale
 
 # Chezmoi source-name prefixes that are stripped to get the target name.
 _CHEZMOI_STRIP_RE = re.compile(
@@ -170,25 +169,9 @@ def main(
         subprocess.run(chezmoi_args, cwd=chezmoi_prefix, env=env, check=True)
 
         # Hot-reload any running tmux server so attached sessions reflow immediately.
-        tmux = shutil.which("tmux")
-        if tmux:
-            has_server = subprocess.run(
-                [tmux, "has-session"],
-                capture_output=True,
-                check=False,
-            )
-            if has_server.returncode == 0:
-                tmux_conf = os.path.join(
-                    xdg_config_home(),
-                    "tmux",
-                    "tmux.conf",
-                )
-                subprocess.run(
-                    [tmux, "set-environment", "-g", "KOOPA_COLOR_MODE", new_mode],
-                    check=True,
-                )
-                if os.path.isfile(tmux_conf):
-                    subprocess.run([tmux, "source-file", tmux_conf], check=True)
+        # Also warn when the running server predates the on-disk bundled binary.
+        reload_tmux_config(new_mode)
+        warn_tmux_stale()
 
         # Write the applied-marker only after the targeted apply succeeds,
         # while still inside the lock.
