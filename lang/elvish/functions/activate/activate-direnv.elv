@@ -6,7 +6,9 @@ fn activate-direnv {
         return
     }
     var cache-file = $E:XDG_CACHE_HOME'/koopa/shell-init/direnv-hook-elvish.elv'
-    if (or (not (path:is-regular $cache-file)) (path:is-newer $direnv $cache-file)) {
+    if (or (not (path:is-regular $cache-file)) ^
+           (not (has-external test)) ^
+           (bool ?(e:test $direnv -nt $cache-file))) {
         mkdir -p (path:dir $cache-file)
         e:direnv hook elvish > $cache-file
     }
