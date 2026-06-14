@@ -52,14 +52,14 @@ function _koopa_activate_aliases
     if test -x "$bin_prefix/zoxide"
         alias j=z
     end
-    # User-defined aliases.
-    if test -f "$HOME/.aliases"
-        source "$HOME/.aliases"
+    # User-defined aliases (fish-native; POSIX ~/.aliases* are for bash/zsh/sh).
+    if test -f "$HOME/.aliases.fish"
+        source "$HOME/.aliases.fish"
     end
-    if test -f "$HOME/.aliases-private"
-        source "$HOME/.aliases-private"
+    if test -f "$HOME/.aliases-private.fish"
+        source "$HOME/.aliases-private.fish"
     end
-    if test -f "$HOME/.aliases-work"
-        source "$HOME/.aliases-work"
+    if test -f "$HOME/.aliases-work.fish"
+        source "$HOME/.aliases-work.fish"
     end
 end

@@ -12,4 +12,10 @@ def main(
 ) -> None:
     """Install elvish."""
     url = f"https://github.com/elves/elvish/archive/refs/tags/v{version}.tar.gz"
-    build_go_package(url=url, prefix=prefix, name=name, version=version)
+    build_go_package(
+        url=url,
+        name=name,
+        version=version,
+        prefix=prefix,
+        build_cmd="./cmd/elvish",
+    )

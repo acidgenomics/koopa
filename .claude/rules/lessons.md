@@ -29,5 +29,5 @@
 | `rules/python.md` | `**/*.py`, `**/pyproject.toml` | `check=True`, `has_sudo`, dev-tools-standalone, XDG helpers, CLI completions, color-mode apply paths |
 | `rules/app-json.md` | `**/app.json` | `format-app-json`, revision bump, completions, successor invariant, version URL verification |
 | `rules/zsh.md` | `lang/zsh/**` | ShellCheck doesn't support zsh |
-| `rules/fish.md` | `**/*.fish` | `$VAR` not `${VAR}` |
+| `rules/fish.md` | `**/*.fish` | `$VAR` not `${VAR}`; only source `.fish` files — never POSIX `~/.aliases*` |
 | `dot_claude/rules/theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |
