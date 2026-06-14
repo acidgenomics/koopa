@@ -2322,8 +2322,8 @@ _koopa_is_arm64() {
 }
 
 _koopa_is_aws_ec2() {
+    [[ "$OSTYPE" == darwin* ]] && return 1
     [[ -x '/usr/bin/ec2metadata' ]] && return 0
-    [[ "$(hostname -d)" == 'ec2.internal' ]] && return 0
     return 1
 }
 
