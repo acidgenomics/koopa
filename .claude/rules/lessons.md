@@ -23,6 +23,7 @@
 | `koopa-chezmoi-dotfiles` | source path, always-edit-source-first, templates-before-generators, XDG in templates, re-run command |
 | `git-history-surgery` | git filter-repo identity rewrites, commit-tree replay for dedup (user-global skill) |
 | `elvish` | `eval` namespace isolation, closure/fn capture order, `use` compile-time lexical scoping, `edit:` interactive-only, `path:` 0.21.0 API, `brew shellenv` workaround, `(src)` under eval, koopa activation architecture |
+| `powershell` | activation architecture, starship mtime-guarded cache + header.ps1 ordering constraint, color-mode sync hook (file re-render trigger, marker+sentinel guard, `Start-Process -NoNewWindow` idiom), `_koopa_is_light_mode` per-platform detection, `sys.platform == "win32"` guard for `winreg` |
 
 ## Path-scoped rules (load when matching file is opened)
 
@@ -32,4 +33,4 @@
 | `rules/app-json.md` | `**/app.json` | `format-app-json`, revision bump, completions, successor invariant, version URL verification |
 | `rules/zsh.md` | `lang/zsh/**` | ShellCheck doesn't support zsh |
 | `rules/fish.md` | `**/*.fish` | `$VAR` not `${VAR}`; `set -g` vs `-gx` vs `-U` for color vars; `fish_variables` clobber trap; `fish_frozen_theme.fish`; conf.d load order; `fish_color_*` hex format; `set -S` diagnostic |
-| `dot_claude/rules/theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |
+| `rules/theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |
