@@ -1,0 +1,128 @@
+---
+name: koopa-chezmoi-dotfiles
+description: >
+  How koopa manages home dotfiles via chezmoi — source-of-truth layout, the
+  explicit --source flag, template-vs-generator ordering, XDG path derivation in
+  templates, and the correct re-run command. Use when editing a dotfile, working
+  in opt/dotfiles/chezmoi/, debugging a file that reverts on chezmoi apply, or
+  wiring a chezmoi template.
+---
+
+# koopa Chezmoi Dotfiles
+
+## Source of Truth
+
+The chezmoi source root is:
+```
+~/.local/share/koopa/opt/dotfiles/chezmoi/
+```
+
+**`~/.local/share/chezmoi` must not exist.** Chezmoi is always invoked with an
+explicit `--source=<opt/dotfiles>/chezmoi` flag. If `~/.local/share/chezmoi` exists,
+it was created accidentally — warn and remove it (after confirming it is not user
+data). A bare `chezmoi apply` without `--source` would deploy `dot_*` files into
+`~/chezmoi/` instead of `~/`, which is wrong.
+
+**Never run `chezmoi apply` without `--source`** pointing at `opt/dotfiles/chezmoi/`.
+
+## Always Edit the Source First
+
+Home-directory dotfiles are managed by chezmoi. The deployed copies under `~/` will
+be overwritten on the next `chezmoi apply`.
+
+**Always edit the chezmoi source file.** When a task touches a deployed dotfile
+(e.g. `~/.config/nvim/lua/plugins/treesitter.lua`), immediately locate and edit the
+corresponding source file (e.g.
+`~/.local/share/koopa/opt/dotfiles/chezmoi/dot_config/nvim/lua/plugins/treesitter.lua`).
+Do not treat the deployed copy and the source as two separate steps.
+
+After editing, deploy with a targeted apply:
+```sh
+chezmoi apply \
+  --source=~/.local/share/koopa/opt/dotfiles/chezmoi \
+  ~/.config/nvim/lua/plugins/treesitter.lua   # whichever file(s) changed
+```
+
+**Do NOT run `koopa configure user dotfiles` from inside a long-running agent session**
+— the session's `KOOPA_COLOR_MODE` may be stale and will clobber theme files. See
+skill `koopa-color-mode`.
+
+## Re-Run Command
+
+To re-run the full dotfiles installer:
+```sh
+koopa configure user dotfiles
+```
+NOT `koopa configure-dotfiles` (that command does not exist).
+
+## Templates Run Before Post-Install Generators
+
+Chezmoi templates execute **before** any post-install generator runs. When a template
+needs to detect something that a post-chezmoi function generates (e.g. a `.rstheme`
+file generated from an upstream `.tmTheme`), `stat` on the generated output will
+always miss at template render time.
+
+Instead, detect the **source** that triggers generation (e.g. the upstream `.tmTheme`
+file itself) rather than the generated artifact.
+
+## XDG Paths in Chezmoi Templates
+
+chezmoi has no native XDG variables. Use:
+```
+{{- $dataHome := env "XDG_DATA_HOME" | default (joinPath .chezmoi.homeDir ".local/share") -}}
+{{- $configHome := env "XDG_CONFIG_HOME" | default (joinPath .chezmoi.homeDir ".config") -}}
+```
+
+The `.chezmoi.homeDir` fallback is the XDG spec definition — unavoidable and correct.
+
+In standalone scripts (no `koopa` import), inline:
+```python
+xdg_config_home = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+xdg_data_home = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+```
+
+Never confuse `XDG_DATA_HOME` (single writable user data dir) with `XDG_DATA_DIRS`
+(colon-separated read-only system search path). Never derive a write/install location
+from `XDG_DATA_DIRS`.
+
+## Removing a File from the Chezmoi Source Leaves an Orphan
+
+Deleting a file from the chezmoi source tree does **not** cause `chezmoi apply` to
+remove the deployed copy under `~/`. Chezmoi only manages what it knows about; once a
+source file is deleted, chezmoi silently ignores the deployed counterpart — it becomes
+an untracked orphan that persists indefinitely.
+
+**The correct fix is `.chezmoiremove`**, not a manual `rm`. Add a `.chezmoiremove` file
+in the corresponding source directory listing the entries to purge. Chezmoi will then
+remove the deployed targets on the next `chezmoi apply`, and keep removing them on every
+subsequent apply — preventing stale copies from reappearing.
+
+`.chezmoiremove` patterns are relative to the **corresponding target directory** for
+that source level:
+
+```
+opt/dotfiles/chezmoi/dot_claude/skills/.chezmoiremove
+```
+```
+# entries are relative to ~/.claude/skills/
+koopa-theming
+koopa-color-mode
+koopa-chezmoi-dotfiles
+```
+
+```
+opt/dotfiles/chezmoi/dot_claude/rules/.chezmoiremove
+```
+```
+# entries are relative to ~/.claude/rules/
+theme-colors.md
+```
+
+On `chezmoi apply --source=~/.local/share/koopa/opt/dotfiles/chezmoi`, the listed
+targets are removed from `~`. No manual `rm` needed.
+
+This applies to all chezmoi-managed content: dotfiles, Claude Code skills, rules,
+settings — anything under `opt/dotfiles/chezmoi/dot_*/`.
+
+Failing to add a `.chezmoiremove` entry means the orphan remains active (e.g. as a
+globally-available Claude skill) even though the source no longer tracks it.
