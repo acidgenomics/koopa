@@ -3,10 +3,11 @@ function _koopa_activate_color_mode_sync
     # @note Updated 2026-05-31.
     _koopa_is_interactive; or return 0
     function _koopa_fish_color_mode_sync --on-event fish_postexec
+        set -l new_mode
         if _koopa_is_light_mode
-            set -l new_mode light
+            set new_mode light
         else
-            set -l new_mode dark
+            set new_mode dark
         end
         test "$new_mode" != "$KOOPA_COLOR_MODE"; or return 0
         set -gx KOOPA_COLOR_MODE "$new_mode"
