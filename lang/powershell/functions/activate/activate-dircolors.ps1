@@ -8,7 +8,7 @@ function _koopa_activate_dircolors {
     $confFile = Join-Path $prefix "dircolors-$env:KOOPA_COLOR_MODE"
     if (-not (Test-Path $confFile)) { return }
     # gdircolors only emits sh/csh; extract the LS_COLORS value directly.
-    $out = & $dircolors --sh $confFile
+    $out = (& $dircolors --sh $confFile) -join "`n"
     if ($out -match "LS_COLORS='(.*)';") {
         $env:LS_COLORS = $Matches[1]
     }

@@ -1,5 +1,5 @@
 # PowerShell header.
-# @note Updated 2026-05-01.
+# @note Updated 2026-06-13.
 # @note Requires PowerShell 7+ (pwsh).
 
 # Source function files.
@@ -49,7 +49,7 @@ function __koopa_activate_koopa {
             $brewPath = '/usr/local/bin/brew'
         }
         if (Test-Path $brewPath) {
-            Invoke-Expression (& $brewPath shellenv)
+            Invoke-Expression ((& $brewPath shellenv pwsh) -join "`n")
         }
     }
 
