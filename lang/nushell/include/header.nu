@@ -47,7 +47,7 @@ export use ../functions/activate/activate-aliases.nu *
 # Main activation function.
 # @note Updated 2026-05-01.
 export def _koopa_activate_koopa [] {
-    let koopa_minimal = ($env | get -i KOOPA_MINIMAL | default "0")
+    let koopa_minimal = ($env.KOOPA_MINIMAL? | default "0")
 
     _koopa_activate_bootstrap
     _koopa_add_to_path_start $"($env.KOOPA_PREFIX)/bin"
@@ -94,7 +94,7 @@ export def _koopa_activate_koopa [] {
 
 # Run activation if KOOPA_ACTIVATE is set.
 export def _koopa_run_activation [] {
-    let koopa_activate = ($env | get -i KOOPA_ACTIVATE | default "0")
+    let koopa_activate = ($env.KOOPA_ACTIVATE? | default "0")
     if $koopa_activate == "1" {
         _koopa_activate_koopa
     }

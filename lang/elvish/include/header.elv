@@ -1,70 +1,40 @@
 # Elvish header.
-# @note Updated 2026-05-01.
+# @note Updated 2026-06-14.
 
-use path
-use platform
 use str
 
-# Source function files.
+# Assemble all function-file bodies into a single string and eval it ONCE,
+# so every function shares one namespace and can call each other.
+# (Elvish `eval` uses an isolated namespace per call — per-file eval hides
+# the defined functions from the caller and from each other.)
+var fn-parts = []
 for dir [core prefix export activate] {
     var fn-dir = $E:KOOPA_PREFIX'/lang/elvish/functions/'$dir
-    if (path:is-dir $fn-dir) {
-        for f [(path:glob $fn-dir'/*.elv')] {
-            eval (slurp < $f)
+    for f [$fn-dir/*[nomatch-ok].elv] {
+        # activate-koopa.elv is appended last (see below) — skip it here.
+        if (not (str:has-suffix $f '/activate-koopa.elv')) {
+            set fn-parts = (conj $fn-parts (slurp < $f))
         }
     }
 }
+# activate-koopa.elv must load LAST among activate/ files. Elvish fn definitions
+# capture the namespace at execution time (closure semantics), so activate-starship
+# and activate-zoxide — which sort after activate-koopa alphabetically — would be
+# missing from the captured scope if activate-koopa.elv loaded in filename order.
+set fn-parts = (conj $fn-parts (slurp < $E:KOOPA_PREFIX'/lang/elvish/functions/activate/activate-koopa.elv'))
 
-# Save default system PATH.
+# Hoist module imports to the TOP of the assembled blob. `use` is resolved
+# lexically at compile time, and several function files reference path:/
+# platform:/str:/math: without their own `use`. Hoisting makes them visible
+# to all functions. Duplicate `use` lines in individual files are harmless.
+var fn-header = (str:join "\n" ['use path' 'use platform' 'use str' 'use math'])
+
+# The activation driver runs LAST — after all fn definitions are in scope.
+var fn-driver = "
 if (not (has-env KOOPA_DEFAULT_SYSTEM_PATH)) {
     set-env KOOPA_DEFAULT_SYSTEM_PATH (str:join ':' $paths)
 }
+if (and (has-env KOOPA_ACTIVATE) (eq $E:KOOPA_ACTIVATE '1')) { activate-koopa }
+"
 
-# Activation.
-fn activate-koopa {
-    var koopa-minimal = '0'
-    if (has-env KOOPA_MINIMAL) {
-        set koopa-minimal = $E:KOOPA_MINIMAL
-    }
-
-    activate-bootstrap
-    add-to-path-start $E:KOOPA_PREFIX'/bin'
-
-    if (eq $koopa-minimal '1') {
-        return
-    }
-
-    export-env
-    activate-ca-certificates
-    activate-conda
-    activate-fzf
-    activate-direnv
-    activate-zoxide
-
-    # macOS-specific: Homebrew.
-    if (eq $platform:os 'darwin') {
-        if (path:is-regular &follow-symlink '/opt/homebrew/bin/brew') {
-            eval (e:/opt/homebrew/bin/brew shellenv)
-        } elif (path:is-regular &follow-symlink '/usr/local/bin/brew') {
-            eval (e:/usr/local/bin/brew shellenv)
-        }
-    }
-
-    # Final PATH additions.
-    add-to-path-start ^
-        '/usr/local/sbin' ^
-        '/usr/local/bin' ^
-        (xdg-config-home)'/koopa/scripts-private/bin' ^
-        $E:HOME'/.local/bin' ^
-        $E:HOME'/.bin' ^
-        $E:HOME'/bin'
-
-    activate-difftastic
-    activate-aliases
-    activate-starship
-    activate-color-mode-sync
-}
-
-if (and (has-env KOOPA_ACTIVATE) (eq $E:KOOPA_ACTIVATE '1')) {
-    activate-koopa
-}
+eval (str:join "\n" [$fn-header (str:join "\n" $fn-parts) $fn-driver])

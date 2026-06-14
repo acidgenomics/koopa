@@ -1,6 +1,6 @@
 function _koopa_activate_color_mode_sync
     # Activate color mode sync hook.
-    # @note Updated 2026-05-31.
+    # @note Updated 2026-06-14.
     _koopa_is_interactive; or return 0
     function _koopa_fish_color_mode_sync --on-event fish_postexec
         set -l new_mode
@@ -16,5 +16,12 @@ function _koopa_activate_color_mode_sync
         _koopa_activate_fzf
         _koopa_activate_difftastic
         _koopa_activate_dircolors
+        set -l _palette
+        if test "$new_mode" = light
+            set _palette (test -n "$XDG_CONFIG_HOME" && echo "$XDG_CONFIG_HOME" || echo "$HOME/.config")/fish/dracula-pro-alucard-colors.fish
+        else
+            set _palette (test -n "$XDG_CONFIG_HOME" && echo "$XDG_CONFIG_HOME" || echo "$HOME/.config")/fish/dracula-pro-colors.fish
+        end
+        test -f "$_palette"; and source "$_palette"
     end
 end
