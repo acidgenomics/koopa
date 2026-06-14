@@ -8,7 +8,7 @@ _koopa_is_aws_ec2() {
     # @seealso
     # - https://serverfault.com/questions/462903/
     # """
+    _koopa_is_macos && return 1
     [ -x '/usr/bin/ec2metadata' ] && return 0
-    [ "$(hostname -d)" = 'ec2.internal' ] && return 0
     return 1
 }

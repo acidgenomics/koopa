@@ -115,6 +115,20 @@ def os_appearance_mode() -> str:
         return "dark" if result.stdout.strip() == "Dark" else "light"
     if platform.system() == "Linux":
         return _os_appearance_mode_linux()
+    if sys.platform == "win32":
+        # Guard on sys.platform (not platform.system()) so pyright and ty narrow
+        # the branch and resolve winreg without ignores; runtime result is identical.
+        import winreg  # Windows-only stdlib; lazy import.
+
+        try:
+            with winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER,
+                r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+            ) as key:
+                value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
+            return "light" if value == 1 else "dark"
+        except OSError:
+            return "dark"
     return "dark"
 
 

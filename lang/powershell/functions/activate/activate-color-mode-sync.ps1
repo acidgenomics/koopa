@@ -1,5 +1,5 @@
 # Activate color mode sync hook.
-# @note Updated 2026-05-31.
+# @note Updated 2026-06-14.
 function _koopa_activate_color_mode_sync {
     $origPrompt = $function:prompt
     $function:prompt = {
@@ -14,6 +14,26 @@ function _koopa_activate_color_mode_sync {
             _koopa_activate_difftastic
             _koopa_activate_dircolors
         }
+        # File-driven re-render trigger (starship/bat/delta toml). Backgrounded,
+        # marker + sentinel guarded; mirrors bash _koopa_activate_color_mode.
+        if (-not $env:KOOPA_COLOR_MODE_SYNCING) {
+            $appliedFile = Join-Path $HOME '.cache/koopa/color-mode-applied'
+            $applied = if (Test-Path $appliedFile) {
+                (Get-Content $appliedFile -First 1).Trim()
+            } else { '' }
+            if ($applied -ne $newMode) {
+                $koopaBin = Join-Path $env:KOOPA_PREFIX 'bin/koopa'
+                if (Test-Path $koopaBin) {
+                    $nullDev = if ($IsWindows) { 'NUL' } else { '/dev/null' }
+                    Start-Process -FilePath $koopaBin `
+                        -ArgumentList 'configure', 'user', 'color-mode' `
+                        -NoNewWindow `
+                        -RedirectStandardOutput $nullDev `
+                        -RedirectStandardError $nullDev `
+                        -ErrorAction SilentlyContinue | Out-Null
+                }
+            }
+        }
         & $origPrompt
-    }
+    }.GetNewClosure()
 }
