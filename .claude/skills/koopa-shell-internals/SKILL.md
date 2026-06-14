@@ -57,6 +57,30 @@ and macos/ function directories plus the header.
 | `$(_koopa_boolean_nounset)` | `[[ -o nounset ]]` inline |
 | `$(_koopa_add_to_path_string_start)` | inline fork-free dedup in `_koopa_add_to_path_start` |
 
+### Patterns banned from activation-path functions (network / blocking I/O)
+
+Any call that touches the network or a slow daemon is a cold-launch hang waiting
+to happen — even calls that measure 0ms warm can stall for seconds on a cold
+resolver, VPN wake, or idle daemon.
+
+| Do NOT use | Why | Use instead |
+|---|---|---|
+| `hostname -d` | DNS domain lookup; blocks on cold resolver/VPN | file-based signal or skip |
+| `hostname -f` | FQDN lookup; same DNS stall risk | `hostname -s` (local only) |
+| `curl`, `wget`, `/dev/tcp` | network I/O | never on activation path |
+| `scutil --get`, `networksetup` | may block on network daemon | guard with fast local check first |
+
+**Concrete case (2026-06):** `_koopa_is_aws_ec2` called `hostname -d` to check for
+`ec2.internal`. On corporate-managed Macs with VPN search domains this stalled for
+seconds on every cold Ghostty launch — and reproduced on EC2 login shells too.
+Fix: macOS short-circuit (`[[ "$OSTYPE" == darwin* ]] && return 1`) + drop the
+`hostname -d` heuristic entirely, keeping only the local `/usr/bin/ec2metadata`
+file-stat.
+
+**Rule:** when editing any `is-*/` or `activate-*/` function, grep the function body for
+`hostname`, `curl`, `wget`, `scutil`, `networksetup`, `dig`, `nslookup`. If found,
+flag it and replace with a file-stat or env-var check.
+
 ### Verification (run before merging any shell changes)
 
 ```sh
