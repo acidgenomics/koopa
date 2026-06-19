@@ -30,3 +30,7 @@ sh -c "$(curl -LSs https://koopa.acidgenomics.com/install)"
 
 Refer to the [koopa website](https://koopa.acidgenomics.com/) for full
 installation and usage details.
+
+## License
+
+Apache-2.0 — Copyright 2016 Acid Genomics LLC — see [LICENSE](LICENSE).
