@@ -399,6 +399,23 @@ def _check_antigravity_cli() -> str:
     return data["version"]
 
 
+def _fetch_antigravity_cli_extra_fields() -> dict[str, Any]:
+    """Fetch build_id and per-platform sha512 hashes from the auto-updater manifests."""
+    base = "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
+    platforms = ("darwin_arm64", "darwin_amd64", "linux_amd64", "linux_arm64")
+    sha512: dict[str, str] = {}
+    build_id: str = ""
+    for platform in platforms:
+        manifest = _http_get_json(f"{base}/{platform}.json")
+        sha512[platform] = manifest["sha512"]
+        if not build_id:
+            # build_id is embedded in the GCS URL path: .../<version>-<build_id>/...
+            url: str = manifest["url"]
+            segment = url.split("/antigravity-cli/", 1)[-1].split("/", 1)[0]
+            build_id = segment.split("-", 1)[-1]
+    return {"build_id": build_id, "sha512": sha512}
+
+
 def _check_repology(project: str) -> str:
     """Check latest upstream version via repology.org API."""
     data = _http_get_json(f"https://repology.org/api/v1/project/{project}")
@@ -705,6 +722,7 @@ class _AppCheckSpec:
     check_fn: Callable[..., str]
     args: tuple
     batch_size: int | None = None
+    extra_fields_fn: Callable[[], dict[str, Any]] | None = None
 
 
 def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
@@ -1480,7 +1498,12 @@ def _check_boost() -> str:
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
-    "antigravity-cli": _AppCheckSpec("google", _check_antigravity_cli, ()),
+    "antigravity-cli": _AppCheckSpec(
+        "google",
+        _check_antigravity_cli,
+        (),
+        extra_fields_fn=_fetch_antigravity_cli_extra_fields,
+    ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
     "attr": _AppCheckSpec(
         "dirlist",
@@ -2254,6 +2277,10 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             data[r.name]["version"] = r.latest_version
             data[r.name]["date"] = today
             data[r.name].pop("revision", None)
+            spec = _SPECIAL_CASES.get(r.name)
+            if spec is not None and spec.extra_fields_fn is not None:
+                extra = spec.extra_fields_fn()
+                data[r.name].update(extra)
             count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
