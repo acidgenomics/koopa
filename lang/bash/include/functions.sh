@@ -173,6 +173,9 @@ _koopa_activate_atuin() {
     then
         return 0
     fi
+    local bash_preexec
+    bash_preexec="${KOOPA_PREFIX:?}/opt/bash-preexec/share/bash-preexec/bash-preexec.sh"
+    [[ -f "$bash_preexec" ]] && source "$bash_preexec"
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/atuin-bash.sh"
     if [[ ! -f "$cache_file" ]] || [[ "$atuin" -nt "$cache_file" ]]; then
         mkdir -p "${cache_file%/*}"

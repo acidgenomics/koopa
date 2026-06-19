@@ -2,6 +2,8 @@
 name = "koopa"
 version = "0.20.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 classifiers = [
   "Private :: Do Not Upload",
   "Programming Language :: Python :: 3.12",
