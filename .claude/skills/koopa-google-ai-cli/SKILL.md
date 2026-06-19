@@ -42,19 +42,11 @@ The `build_id` is opaque and **not derivable from the version string** — it mu
 from the manifest and stored explicitly. The same `build_id` is shared across all platforms
 for a given version.
 
-## Version 1.0.10 Asset Table
+## Asset Table
 
-| OS / arch    | `<dir>`      | `<file>`               | SHA512 (truncated)          |
-|--------------|--------------|------------------------|-----------------------------|
-| macOS arm64  | `darwin-arm` | `cli_mac_arm64.tar.gz` | `fef05612...`               |
-| macOS x64    | `darwin-x64` | `cli_mac_x64.tar.gz`   | `a54367c0...`               |
-| Linux x64    | `linux-x64`  | `cli_linux_x64.tar.gz` | `45782840...`               |
-| Linux arm64  | `linux-arm`  | `cli_linux_arm64.tar.gz`| `95edc5fe...`              |
-
-Build ID for 1.0.10: `6349723456634880`
-
-Full SHA512s and the `_ASSETS` dict live in
-`lang/python/src/koopa/installers/antigravity_cli.py`.
+The `build_id`, per-platform `sha512` hashes, and `version` all live in the
+`"antigravity-cli"` entry in `etc/koopa/app.json` — not in the installer.
+The installer reads them at runtime via `import_app_json()`.
 
 ## Installer Module: `installers/antigravity_cli.py`
 
@@ -80,9 +72,9 @@ When bumping `antigravity-cli` to a new release:
      echo "=== $p ===" && curl -fsSL "$base/$p.json"
    done
    ```
-2. Update `_VERSION`, `_BUILD_ID`, and `_ASSETS` in `antigravity_cli.py` together.
-3. Bump `"version"` and `"date"` in `etc/koopa/app.json`.
-4. Run `koopa develop format-app-json` (no completions regen needed — name unchanged).
+2. Update `"version"`, `"date"`, `"build_id"`, and all four `"sha512"` values in
+   the `"antigravity-cli"` entry in `etc/koopa/app.json`. No Python changes needed.
+3. Run `koopa develop format-app-json` (no completions regen needed — name unchanged).
 
 ## Self-Update Gate
 
