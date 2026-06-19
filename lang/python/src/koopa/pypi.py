@@ -13,7 +13,7 @@ from pathlib import Path
 _BUCKET = "python-REDACTED_ACCOUNT_ID-us-east-1-an"
 _S3_URI = f"s3://{_BUCKET}"
 _PROFILE = "acidgenomics"
-_INDEX_URL = "https://python.acidgenomics.com/simple/"
+_INDEX_URL = "https://python.acidgenomics.com/"
 
 
 def _aws() -> str:
@@ -133,12 +133,15 @@ def _generate_index(
     packages: dict[str, list[tuple[str, str]]],
     output_dir: Path,
 ) -> None:
-    """Write PEP 503 simple index HTML tree to output_dir/simple/."""
-    simple = output_dir / "simple"
-    simple.mkdir(parents=True, exist_ok=True)
+    """Write PEP 503 simple index HTML tree to output_dir/.
+
+    The index is served at the domain root (no /simple/ prefix), so the
+    package pages live at /<name>/index.html and link to ../packages/<file>.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # Root index
-    with open(simple / "index.html", "w") as fh:
+    with open(output_dir / "index.html", "w") as fh:
         fh.write("<!DOCTYPE html>\n<html>\n<body>\n")
         for name in sorted(packages):
             fh.write(f'<a href="{name}/">{name}</a>\n')
@@ -146,19 +149,22 @@ def _generate_index(
 
     # Per-package index
     for name, files in packages.items():
-        pkg_dir = simple / name
+        pkg_dir = output_dir / name
         pkg_dir.mkdir(exist_ok=True)
         with open(pkg_dir / "index.html", "w") as fh:
             fh.write("<!DOCTYPE html>\n<html>\n<body>\n")
             for filename, sha256 in sorted(files):
-                fh.write(f'<a href="../../packages/{filename}#sha256={sha256}">{filename}</a>\n')
+                fh.write(f'<a href="../packages/{filename}#sha256={sha256}">{filename}</a>\n')
             fh.write("</body>\n</html>\n")
 
 
 def _sync_index_to_s3(index_dir: Path) -> None:
-    """Sync the simple/ index tree to S3."""
+    """Sync the index tree to S3 bucket root.
+
+    The ``--exclude "packages/*"`` guard is required so that ``--delete``
+    at the bucket root does not wipe uploaded wheel/sdist files.
+    """
     aws = _aws()
-    simple_dir = str(index_dir / "simple") + "/"
     subprocess.run(
         [
             aws,
@@ -166,17 +172,19 @@ def _sync_index_to_s3(index_dir: Path) -> None:
             f"--profile={_PROFILE}",
             "sync",
             "--delete",
+            "--exclude",
+            "packages/*",
             "--content-type",
             "text/html",
-            simple_dir,
-            f"{_S3_URI}/simple/",
+            str(index_dir) + "/",
+            f"{_S3_URI}/",
         ],
         check=True,
     )
 
 
 def _invalidate_cloudfront() -> None:
-    """Invalidate /simple/* in CloudFront."""
+    """Invalidate /* in CloudFront."""
     aws = _aws()
     dist_id = _cloudfront_distribution_id()
     subprocess.run(
@@ -190,7 +198,7 @@ def _invalidate_cloudfront() -> None:
             "--output",
             "text",
             "--paths",
-            "/simple/*",
+            "/*",
             f"--profile={_PROFILE}",
         ],
         check=True,
