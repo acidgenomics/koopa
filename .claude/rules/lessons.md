@@ -15,6 +15,7 @@
 
 | Skill | Covers |
 |---|---|
+| `koopa-atuin` | bash hook architecture (bash-preexec requirement), activation files, installer patterns, DB reset + re-import, config.toml inventory |
 | `koopa-app-registry` | `koopa install` syntax, atuin import, successor/default, completions, zsh version format, tool-inclusion scope |
 | `koopa-shell-internals` | git recovery in `update_koopa()`, lazy-load vs eager init, activation fork budget + verify commands |
 | `nushell` | parse-time `use`/`source` constraints, `nu -c` doesn't load config, env.nu→config.nu load order, starship+zoxide cache bootstrap, deprecated syntax (0.78→0.113), `ν` prompt glyph |
