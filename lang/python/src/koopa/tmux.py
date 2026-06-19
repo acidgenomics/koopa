@@ -108,9 +108,7 @@ def warn_tmux_stale() -> bool:
     # Re-read both versions for the warning text (tmux_server_is_stale already
     # verified they differ; we just need the strings for display).
     try:
-        disk_out = subprocess.run(
-            [tmux, "-V"], capture_output=True, text=True, check=True
-        )
+        disk_out = subprocess.run([tmux, "-V"], capture_output=True, text=True, check=True)
         disk_ver = extract_version(disk_out.stdout or disk_out.stderr)
         srv_out = subprocess.run(
             [tmux, "display-message", "-p", "#{version}"],

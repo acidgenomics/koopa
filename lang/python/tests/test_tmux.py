@@ -13,9 +13,7 @@ from koopa.tmux import reload_tmux_config, tmux_server_is_stale, warn_tmux_stale
 # ---------------------------------------------------------------------------
 
 
-def _run_side_effect(
-    disk_ver: str, srv_ver: str | None
-) -> Callable[..., MagicMock]:
+def _run_side_effect(disk_ver: str, srv_ver: str | None) -> Callable[..., MagicMock]:
     """Return a subprocess.run side-effect for (tmux -V) and (tmux display-message).
 
     ``srv_ver=None`` simulates "no server running" (non-zero returncode).
