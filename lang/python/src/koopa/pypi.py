@@ -281,7 +281,9 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
             check=True,
         )
 
-        dist_files = sorted(Path(dist_dir).iterdir())
+        dist_files = sorted(
+            f for f in Path(dist_dir).iterdir() if f.suffix == ".whl" or f.name.endswith(".tar.gz")
+        )
         if not dist_files:
             msg = "uv build produced no output files."
             raise RuntimeError(msg)
