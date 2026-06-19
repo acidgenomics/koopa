@@ -18,6 +18,7 @@
 | `koopa-atuin` | bash hook architecture (bash-preexec requirement), activation files, installer patterns, DB reset + re-import, config.toml inventory |
 | `koopa-app-registry` | `koopa install` syntax, atuin import, successor/default, completions, zsh version format, tool-inclusion scope, installer `main()` contract (only name/version/prefix/passthrough_args passed), `import_app_json()` pattern for extra fields, `extra_fields_fn` in `_AppCheckSpec` for auto-update of non-version metadata |
 | `koopa-release` | CHANGELOG format, bumpver contract (tag=false/push=false), pre-release gate (pytest+ruff+pyright), what's user-owned (tag/push/merge) |
+| `koopa-python-release` | Acid Genomics Python package release — python.acidgenomics.com hosting (S3+CloudFront PEP 503 root-URL index), `koopa app python publish`, quality gate config (ty/pyright exclude tests, pythonpath src), CHANGELOG format, verification smoke-test |
 | `koopa-shell-internals` | git recovery in `update_koopa()`, lazy-load vs eager init, activation fork budget + verify commands |
 | `nushell` | parse-time `use`/`source` constraints, `nu -c` doesn't load config, env.nu→config.nu load order, starship+zoxide cache bootstrap, deprecated syntax (0.78→0.113), `ν` prompt glyph |
 | `koopa-color-mode` | SSH OSC 2031, env- vs file-driven timing, VS Code OSC 11 leak, targeted chezmoi apply, render-from-OS rule, never re-verify from agent session |
