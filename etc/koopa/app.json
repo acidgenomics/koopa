@@ -154,10 +154,17 @@
     "bin": [
       "agy"
     ],
+    "build_id": "6349723456634880",
     "category": "AI",
     "date": "2026-06-19",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
+    "sha512": {
+      "darwin_arm64": "fef05612a2a8f2934301b7b8737b4356134d34acddf886046e0d4d7e4577c00717a8c11f8d84f958d9889b874fc3ee4756ee48ecba2295623185705fc3e90667",
+      "darwin_amd64": "a54367c0978d1e1330eecf5486398cd4c6b90d7fcd382ddda5afcfc698c063d6e27487e61fd27f223974cfd7ce35abca489b2c145d0f88e7188d2b1889e24760",
+      "linux_amd64": "45782840f8ce14207ec9b8b962e76e64f0e74e7920000f176180f7204e0f89e61c0e475c9a2b4859cc90f08c214848b9d90ac1c344ef987f796e276820078df1",
+      "linux_arm64": "95edc5fe6c3b45bbaba7683e748c7eaea5f1950f64eecf083cd53f3b41961fcf13fdab68c64d702d7e5b749c63dc6385c5b0159a85edc6ed12a9d1a323e61ee0"
+    },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
