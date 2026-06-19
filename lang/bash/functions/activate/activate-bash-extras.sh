@@ -9,6 +9,7 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bashrc_files
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
+    _koopa_activate_bash_preexec
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion

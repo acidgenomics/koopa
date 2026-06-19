@@ -173,9 +173,6 @@ _koopa_activate_atuin() {
     then
         return 0
     fi
-    local bash_preexec
-    bash_preexec="${KOOPA_PREFIX:?}/opt/bash-preexec/share/bash-preexec/bash-preexec.sh"
-    [[ -f "$bash_preexec" ]] && source "$bash_preexec"
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/atuin-bash.sh"
     if [[ ! -f "$cache_file" ]] || [[ "$atuin" -nt "$cache_file" ]]; then
         mkdir -p "${cache_file%/*}"
@@ -215,11 +212,25 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bashrc_files
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
+    _koopa_activate_bash_preexec
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
     _koopa_activate_op
     _koopa_activate_color_mode_sync
+    return 0
+}
+
+_koopa_activate_bash_preexec() {
+    _koopa_is_root && return 0
+    local bash_preexec
+    bash_preexec="${KOOPA_PREFIX:?}/opt/bash-preexec/share/bash-preexec/bash-preexec.sh"
+    [[ -f "$bash_preexec" ]] || return 0
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    source "$bash_preexec"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 
