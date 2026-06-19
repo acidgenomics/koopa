@@ -430,6 +430,9 @@
     "default": true,
     "description": "magical shell history with sync and search",
     "installer": "conda-package",
+    "soft_dependencies": [
+      "bash-preexec"
+    ],
     "type": "cli",
     "url": [
       "https://github.com/atuinsh/atuin/"
@@ -786,6 +789,18 @@
       "https://github.com/bash-lsp/bash-language-server/"
     ],
     "version": "5.6.0"
+  },
+  "bash-preexec": {
+    "category": "Shell",
+    "date": "2026-06-18",
+    "default": true,
+    "description": "preexec and precmd functions for Bash (like Zsh)",
+    "src_url": "https://raw.githubusercontent.com/rcaloras/bash-preexec/{version}/bash-preexec.sh",
+    "type": "cli",
+    "url": [
+      "https://github.com/rcaloras/bash-preexec"
+    ],
+    "version": "0.6.0"
   },
   "bashcov": {
     "bin": [
@@ -3507,7 +3522,7 @@
     "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-05-02",
-    "default": false,
+    "default": true,
     "description": "Git extension for versioning large files",
     "installer": "conda-package",
     "revision": 1,
