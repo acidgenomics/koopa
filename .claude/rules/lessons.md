@@ -22,6 +22,7 @@
 | `koopa-color-mode` | SSH OSC 2031, env- vs file-driven timing, VS Code OSC 11 leak, targeted chezmoi apply, render-from-OS rule, never re-verify from agent session |
 | `koopa-theming` | JetBrains scheme delivery + synthesis, macOS sandbox/BBEdit, atuin `[theme]` format, mcfly ANSI palette, Dracula Pro runtime architecture, fish color pipeline (`fish_frozen_theme.fish` override, `_FISH_COLOR_ROLES`, live sync hook, alucard ANSI-8 quirk, proprietary hex audit) |
 | `koopa-chezmoi-dotfiles` | source path, always-edit-source-first, templates-before-generators, XDG in templates, re-run command |
+| `koopa-dotfiles` | opt/dotfiles standalone clone, detached-HEAD-before-commit, license metadata |
 | `git-history-surgery` | git filter-repo identity rewrites, commit-tree replay for dedup (user-global skill) |
 | `elvish` | `eval` namespace isolation, closure/fn capture order, `use` compile-time lexical scoping, `edit:` interactive-only, `path:` 0.21.0 API, `brew shellenv` workaround, `(src)` under eval, koopa activation architecture |
 | `powershell` | activation architecture, starship mtime-guarded cache + header.ps1 ordering constraint, color-mode sync hook (file re-render trigger, marker+sentinel guard, `Start-Process -NoNewWindow` idiom), `_koopa_is_light_mode` per-platform detection, `sys.platform == "win32"` guard for `winreg` |
