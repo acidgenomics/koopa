@@ -967,8 +967,8 @@ def _generate_powershell_completion(
         "        }",
         "    }",
         "",
-        "    # Flag completion: when the current word starts with '--'.",
-        "    if ($wordToComplete -like '--*') {",
+        "    # Flag completion: when the current word starts with '-'.",
+        "    if ($wordToComplete -like '-*') {",
         "        $path = ($tokens -join '/')",
         "        $flagMap = @{",
     ]
@@ -1026,7 +1026,7 @@ def _generate_elvish_completion(
         "    var last = $args[-1]",
         "",
         "    # Flag completions.",
-        "    if (str:has-prefix $last '--') {",
+        "    if (str:has-prefix $last '-') {",
     ]
 
     # Build flag lookup per depth path.
@@ -1644,9 +1644,9 @@ def generate_completion() -> None:  # noqa: PLR0915
     lines.append(f"{_I}esac")
 
     # -- Flag completion block ------------------------------------------------
-    lines.append(f"{_I}# Flag completion: when the current word starts with '--', look up")
-    lines.append(f"{_I}# available flags for the resolved command path.")
-    lines.append(f'{_I}if [[ "${{COMP_WORDS[COMP_CWORD]}}" == --* ]]')
+    lines.append(f"{_I}# Flag completion: when the current word starts with '-', or when no")
+    lines.append(f"{_I}# subcommand candidates were found (leaf command), look up flags.")
+    lines.append(f'{_I}if [[ "${{COMP_WORDS[COMP_CWORD]}}" == -* ]] || [[ -z "${{args[*]}}" ]]')
     lines.append(f"{_I}then")
     lines.append(f"{i2}local _path=''")
     lines.append(f"{i2}local _i")

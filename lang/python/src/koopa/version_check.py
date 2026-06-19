@@ -1,5 +1,6 @@
 """Upstream version checking for apps in app.json."""
 
+import contextlib
 import importlib
 import inspect
 import json
@@ -385,20 +386,65 @@ def _friendly_network_error(exc: Exception) -> str | None:  # noqa: PLR0911
     return None
 
 
+def _check_1password_cli() -> str:
+    """Check 1Password CLI version via the AgileBits update API."""
+    data = _http_get_json("https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N")
+    return data["version"]
+
+
+def _check_antigravity_cli() -> str:
+    """Check Antigravity CLI version via the Google auto-updater manifest."""
+    base = "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
+    data = _http_get_json(f"{base}/darwin_arm64.json")
+    return data["version"]
+
+
+def _fetch_antigravity_cli_extra_fields() -> dict[str, Any]:
+    """Fetch build_id and per-platform sha512 hashes from the auto-updater manifests."""
+    base = "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
+    platforms = ("darwin_arm64", "darwin_amd64", "linux_amd64", "linux_arm64")
+    sha512: dict[str, str] = {}
+    build_id: str = ""
+    for platform in platforms:
+        manifest = _http_get_json(f"{base}/{platform}.json")
+        sha512[platform] = manifest["sha512"]
+        if not build_id:
+            # build_id is embedded in the GCS URL path: .../<version>-<build_id>/...
+            url: str = manifest["url"]
+            segment = url.split("/antigravity-cli/", 1)[-1].split("/", 1)[0]
+            build_id = segment.split("-", 1)[-1]
+    return {"build_id": build_id, "sha512": sha512}
+
+
+def _check_repology(project: str) -> str:
+    """Check latest upstream version via repology.org API."""
+    data = _http_get_json(f"https://repology.org/api/v1/project/{project}")
+    newest = [e["version"] for e in data if e.get("status") == "newest"]
+    if not newest:
+        msg = f"No newest version on repology for {project}"
+        raise RuntimeError(msg)
+    return max(newest, key=_version_key)
+
+
 def _check_nongnu(package: str) -> str:
-    """Check version from savannah non-GNU mirror with aggressive timeout."""
+    """Check version from savannah non-GNU mirror, with repology fallback."""
     url = f"https://download.savannah.nongnu.org/releases/{package}/"
-    try:
+    html: str | None = None
+    with contextlib.suppress(urllib.error.URLError, OSError, TimeoutError):
         html = _http_get_text(url, timeout=5, _retries=0)
+    if html is not None:
+        pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
+        versions = pattern.findall(html)
+        if not versions:
+            msg = f"No versions found for {package}"
+            raise RuntimeError(msg)
+        return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
+    # Savannah unreachable — fall back to repology.
+    try:
+        return _check_repology(package)
     except (urllib.error.URLError, OSError, TimeoutError) as exc:
         _raise_network_unavailable(exc)
         raise AssertionError("unreachable") from exc
-    pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
-    versions = pattern.findall(html)
-    if not versions:
-        msg = f"No versions found for {package}"
-        raise RuntimeError(msg)
-    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
 def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) -> str:
@@ -615,6 +661,14 @@ def _check_gitlab(domain: str, project_path: str) -> str:
     return sanitize_version(tag)
 
 
+def _check_man_db() -> str:
+    """Check man-db via GitLab, falling back to repology on network failure."""
+    try:
+        return _check_gitlab("gitlab.com", "man-db/man-db")
+    except (urllib.error.URLError, OSError, TimeoutError, _NetworkUnavailableError):
+        return _check_repology("man-db")
+
+
 # ── Installer source file GitHub repo extraction ──────────────────────
 
 _installer_github_cache: dict[str, str | None] = {}
@@ -668,6 +722,7 @@ class _AppCheckSpec:
     check_fn: Callable[..., str]
     args: tuple
     batch_size: int | None = None
+    extra_fields_fn: Callable[[], dict[str, Any]] | None = None
 
 
 def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
@@ -1442,6 +1497,13 @@ def _check_boost() -> str:
 
 
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
+    "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
+    "antigravity-cli": _AppCheckSpec(
+        "google",
+        _check_antigravity_cli,
+        (),
+        extra_fields_fn=_fetch_antigravity_cli_extra_fields,
+    ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
     "attr": _AppCheckSpec(
         "dirlist",
@@ -1464,7 +1526,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_nongnu("lzip"),
         (),
     ),
-    "man-db": _AppCheckSpec("gitlab", _check_gitlab, ("gitlab.com", "man-db/man-db")),
+    "man-db": _AppCheckSpec("gitlab", _check_man_db, ()),
     "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-cli": _AppCheckSpec(
@@ -2215,6 +2277,10 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             data[r.name]["version"] = r.latest_version
             data[r.name]["date"] = today
             data[r.name].pop("revision", None)
+            spec = _SPECIAL_CASES.get(r.name)
+            if spec is not None and spec.extra_fields_fn is not None:
+                extra = spec.extra_fields_fn()
+                data[r.name].update(extra)
             count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)

@@ -212,11 +212,25 @@ _koopa_activate_bash_extras() {
     _koopa_activate_bashrc_files
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
+    _koopa_activate_bash_preexec
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
     _koopa_activate_op
     _koopa_activate_color_mode_sync
+    return 0
+}
+
+_koopa_activate_bash_preexec() {
+    _koopa_is_root && return 0
+    local bash_preexec
+    bash_preexec="${KOOPA_PREFIX:?}/opt/bash-preexec/share/bash-preexec/bash-preexec.sh"
+    [[ -f "$bash_preexec" ]] || return 0
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    source "$bash_preexec"
+    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 
@@ -2322,8 +2336,8 @@ _koopa_is_arm64() {
 }
 
 _koopa_is_aws_ec2() {
+    [[ "$OSTYPE" == darwin* ]] && return 1
     [[ -x '/usr/bin/ec2metadata' ]] && return 0
-    [[ "$(hostname -d)" == 'ec2.internal' ]] && return 0
     return 1
 }
 

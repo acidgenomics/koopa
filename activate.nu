@@ -14,7 +14,7 @@
 # Alternatively, source the header directly:
 #     source /path/to/koopa/lang/nushell/include/header.nu
 
-if not ($env | get -i KOOPA_PREFIX | is-empty) {
+if not (($env.KOOPA_PREFIX? | default "") | is-empty) {
     # Already set by user in env.nu.
 } else {
     # Attempt to derive from this file's location.

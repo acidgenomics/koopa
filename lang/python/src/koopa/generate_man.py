@@ -276,7 +276,7 @@ def generate_man() -> str:
         lines += _tp(_bold(f"run {_roff_name(name)}"), "")
 
     lines += _section("COPYRIGHT")
-    lines.append("This software is provided under the GNU General Public License v3.0.")
+    lines.append("This software is licensed under the Apache License, Version 2.0.")
     lines.append(r"See \fBLICENSE\fR file for details.")
 
     return "\n".join(lines) + "\n"

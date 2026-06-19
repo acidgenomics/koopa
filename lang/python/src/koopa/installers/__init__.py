@@ -250,6 +250,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "units": f"{_M}._gnu",
     "wget": f"{_M}._gnu",
     "wget2": f"{_M}._gnu",
+    "antigravity-cli": f"{_M}.antigravity_cli",
     # -- node-package (7) ------------------------------------------------
     "aws-azure-login": f"{_M}._node_pkg",
     "claude-code": f"{_M}._node_pkg",
@@ -281,6 +282,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "armadillo": f"{_M}.armadillo",
     "bash": f"{_M}.bash_app",
     "bash-completion": f"{_M}.bash_completion",
+    "bash-preexec": f"{_M}.bash_preexec",
     "brotli": f"{_M}.brotli",
     "byobu": f"{_M}.byobu",
     "c-ares": f"{_M}.c_ares",

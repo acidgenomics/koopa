@@ -6,7 +6,9 @@ fn activate-starship {
         return
     }
     var cache-file = $E:XDG_CACHE_HOME'/koopa/shell-init/starship-elvish.elv'
-    if (or (not (path:is-regular $cache-file)) (path:is-newer $starship $cache-file)) {
+    if (or (not (path:is-regular $cache-file)) ^
+           (not (has-external test)) ^
+           (bool ?(e:test $starship -nt $cache-file))) {
         mkdir -p (path:dir $cache-file)
         e:starship init elvish > $cache-file
     }

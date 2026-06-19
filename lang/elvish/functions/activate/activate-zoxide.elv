@@ -6,7 +6,9 @@ fn activate-zoxide {
         return
     }
     var cache-file = $E:XDG_CACHE_HOME'/koopa/shell-init/zoxide-elvish.elv'
-    if (or (not (path:is-regular $cache-file)) (path:is-newer $zoxide $cache-file)) {
+    if (or (not (path:is-regular $cache-file)) ^
+           (not (has-external test)) ^
+           (bool ?(e:test $zoxide -nt $cache-file))) {
         mkdir -p (path:dir $cache-file)
         e:zoxide init elvish > $cache-file
     }
