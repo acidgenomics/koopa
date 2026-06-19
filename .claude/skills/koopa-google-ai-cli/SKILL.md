@@ -62,10 +62,16 @@ Key design decisions:
 
 ## Version Bump Procedure
 
-When bumping `antigravity-cli` to a new release:
+`koopa develop check-app-versions` handles everything automatically:
 
-1. Fetch all four platform manifests to get the new `version`, `build_id`, and per-platform
-   `sha512`:
+- `_check_antigravity_cli()` fetches the `darwin_arm64` manifest for the version string.
+- When `update_app_json()` writes a new version, `_fetch_antigravity_cli_extra_fields()`
+  fetches all four platform manifests and updates `build_id` and `sha512` in `app.json`
+  in the same pass.
+
+To bump manually:
+
+1. Fetch all four platform manifests:
    ```sh
    base="https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
    for p in darwin_arm64 darwin_amd64 linux_amd64 linux_arm64; do
