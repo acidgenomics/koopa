@@ -71,6 +71,7 @@ _koopa_app() {
         md5sum) _koopa_app_md5sum ;;
         miso) _koopa_app_miso ;;
         photos) _koopa_app_photos ;;
+        python) _koopa_app_python ;;
         r) _koopa_app_r ;;
         rnaeditingindexer) return 0 ;;
         rsem) _koopa_app_rsem ;;
@@ -104,6 +105,7 @@ _koopa_app_cmds() {
         'md5sum'
         'miso'
         'photos'
+        'python'
         'r'
         'rnaeditingindexer'
         'rsem'
@@ -434,6 +436,15 @@ _koopa_app_photos() {
     _describe -t commands 'photos command' cmds
 }
 
+_koopa_app_python() {
+    local -a cmds
+    cmds=(
+        'publish'
+        'reindex'
+    )
+    _describe -t commands 'python command' cmds
+}
+
 _koopa_app_r() {
     local -a cmds
     cmds=(
@@ -635,8 +646,6 @@ _koopa_develop_cmds() {
         'push-all-app-builds'
         'push-app-build'
         'push-app-builds'
-        'pypi-publish'
-        'pypi-reindex'
         'pyright'
         'pytest'
         'remove-app'

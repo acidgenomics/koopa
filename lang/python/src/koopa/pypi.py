@@ -34,8 +34,26 @@ def _uv() -> str:
     return path
 
 
+def _load_env_file() -> None:
+    """Load variables from <koopa-root>/.env into os.environ if not already set."""
+    env_path = Path(__file__).parents[4] / ".env"
+    if not env_path.is_file():
+        return
+    with open(env_path) as fh:
+        for raw in fh:
+            stripped = raw.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            key, _, value = stripped.partition("=")
+            key = key.strip()
+            value = value.strip()
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+
 def _cloudfront_distribution_id() -> str:
     """Return CloudFront distribution ID from environment, raising if absent."""
+    _load_env_file()
     dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON", "")
     if not dist_id:
         dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
@@ -264,7 +282,16 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
             dest = f"{_S3_URI}/packages/{f.name}"
             alert(f"Uploading '{f.name}' to '{dest}'.")
             subprocess.run(
-                [aws, "s3", f"--profile={_PROFILE}", "cp", str(f), dest],
+                [
+                    aws,
+                    "s3",
+                    f"--profile={_PROFILE}",
+                    "cp",
+                    "--content-type",
+                    "application/octet-stream",
+                    str(f),
+                    dest,
+                ],
                 check=True,
             )
     finally:

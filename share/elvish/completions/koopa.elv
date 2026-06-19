@@ -171,9 +171,9 @@ set edit:completion:arg-completer[koopa] = {|@args|
     } elif (== $n 3) {
         # Depth 1: subcommands of top-level.
         if (eq $args[1] 'app') {
-            put aws bioconda bowtie2 brew claude conda current docker file ftp git gpg hisat2 jekyll kallisto md5sum miso photos r rnaeditingindexer rsem salmon sra ssh star sys wget
+            put aws bioconda bowtie2 brew claude conda current docker file ftp git gpg hisat2 jekyll kallisto md5sum miso photos python r rnaeditingindexer rsem salmon sra ssh star sys wget
         } elif (eq $args[1] 'develop') {
-            put activation-fork-audit activation-speed-test app-deps app-revdeps audit-src-mirror bump-bootstrap bump-revision bump-venv-version cache-functions check-app-versions circular-dependencies color-mode-audit conda-candidates edit-app-json find-ignored-bin-files format-app-json generate-completion generate-man log mirror-src orphan-apps prune-app-binaries push-all-app-builds push-app-build push-app-builds pypi-publish pypi-reindex pyright pytest remove-app reset-revisions shellcheck update-docs
+            put activation-fork-audit activation-speed-test app-deps app-revdeps audit-src-mirror bump-bootstrap bump-revision bump-venv-version cache-functions check-app-versions circular-dependencies color-mode-audit conda-candidates edit-app-json find-ignored-bin-files format-app-json generate-completion generate-man log mirror-src orphan-apps prune-app-binaries push-all-app-builds push-app-build push-app-builds pyright pytest remove-app reset-revisions shellcheck update-docs
         } elif (eq $args[1] 'run') {
             put autopad-zeros clone convert-svg-to-png convert-utf8-nfd-to-nfc create-dmg delete-broken-symlinks delete-empty-dirs delete-named-subdirs detab df2 dns dot-clean download download-cran-latest download-github-latest entab eol-lf extract extract-all file-count find-and-move-in-sequence find-and-replace find-broken-symlinks find-empty-dirs find-files-without-line-ending find-large-dirs find-large-files ifactive ip-address ip-info line-count merge-pdf move-files-in-batch move-files-up-1-level move-into-dated-dirs-by-filename move-into-dated-dirs-by-timestamp nfiletypes rename-camel-case rename-from-csv rename-kebab-case rename-lowercase rename-snake-case rg-sort rg-unique sort-lines spotlight tar-multiple-dirs
         } elif (eq $args[1] 'system') {
@@ -230,6 +230,8 @@ set edit:completion:arg-completer[koopa] = {|@args|
                 put index
             } elif (eq $args[2] 'photos') {
                 put rename-with-exiftool
+            } elif (eq $args[2] 'python') {
+                put publish reindex
             } elif (eq $args[2] 'r') {
                 put bioconda-check check configure-environ configure-java configure-ldpaths configure-makevars copy-files-into-etc gfortran-libs install-packages-in-site-library package-version paste-to-vector remove-packages-in-system-library script shiny-run-app system-packages-non-base version
             } elif (eq $args[2] 'rsem') {

@@ -1513,26 +1513,6 @@ def _handle_activation_fork_audit(args: list[str]) -> None:
     alert_success("All shells meet their activation fork count thresholds.")
 
 
-def _handle_pypi_publish(args: list[str]) -> None:
-    """Handle ``koopa develop pypi-publish <package-dir>``."""
-    if not args:
-        print(
-            "Usage: koopa develop pypi-publish <package-dir>",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    from koopa.pypi import publish
-
-    publish(args[0])
-
-
-def _handle_pypi_reindex(_: list[str]) -> None:
-    """Handle ``koopa develop pypi-reindex``."""
-    from koopa.pypi import reindex
-
-    reindex()
-
-
 def _detect_color_mode_thrash(
     lines: list[str],
 ) -> tuple[int, list[tuple[str, str | None]]]:
@@ -1721,8 +1701,6 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "find-ignored-bin-files": _handle_find_ignored_bin_files,
     "orphan-apps": _handle_orphan_apps,
     "conda-candidates": _handle_conda_candidates,
-    "pypi-publish": _handle_pypi_publish,
-    "pypi-reindex": _handle_pypi_reindex,
     "color-mode-audit": _handle_color_mode_audit,
 }
 

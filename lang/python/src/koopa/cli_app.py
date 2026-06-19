@@ -139,6 +139,10 @@ _APP_TREE: dict[str, Any] = {
     "miso": {
         "index": "miso-index",
     },
+    "python": {
+        "publish": "python-publish",
+        "reindex": "python-reindex",
+    },
     "r": {
         "bioconda-check": "r-bioconda-check",
         "check": "r-check",
@@ -336,6 +340,24 @@ def _handle_docker_run(args: list[str]) -> None:
         bash=parsed.bash,
         bind=parsed.bind,
     )
+
+
+# -- python handlers ---------------------------------------------------------
+
+
+def _handle_python_publish(args: list[str]) -> None:
+    if not args:
+        print("Usage: koopa app python publish <package-dir>", file=sys.stderr)
+        sys.exit(1)
+    from koopa.pypi import publish
+
+    publish(args[0])
+
+
+def _handle_python_reindex(_: list[str]) -> None:
+    from koopa.pypi import reindex
+
+    reindex()
 
 
 # -- r handlers --------------------------------------------------------------
@@ -2252,6 +2274,9 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "gpg-prompt": _handle_gpg_prompt,
     "gpg-reload": _handle_gpg_reload,
     "gpg-restart": _handle_gpg_restart,
+    # python
+    "python-publish": _handle_python_publish,
+    "python-reindex": _handle_python_reindex,
     # r
     "r-bioconda-check": _handle_r_bioconda_check,
     "r-check": _handle_r_check,

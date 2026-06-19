@@ -124,6 +124,7 @@ _koopa_complete() {
                         'md5sum'
                         'miso'
                         'photos'
+                        'python'
                         'r'
                         'rnaeditingindexer'
                         'rsem'
@@ -165,8 +166,6 @@ _koopa_complete() {
                         'push-all-app-builds'
                         'push-app-build'
                         'push-app-builds'
-                        'pypi-publish'
-                        'pypi-reindex'
                         'pyright'
                         'pytest'
                         'remove-app'
@@ -1111,6 +1110,12 @@ _koopa_complete() {
                             ;;
                         'photos')
                             args+=('rename-with-exiftool')
+                            ;;
+                        'python')
+                            args+=(
+                                'publish'
+                                'reindex'
+                            )
                             ;;
                         'r')
                             args+=(
