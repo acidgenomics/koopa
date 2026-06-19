@@ -1,5 +1,46 @@
 # Changelog
 
+## koopa 0.21.0 (2026-06-19)
+
+Major changes:
+
+- Switched the license from AGPL-3.0 to Apache-2.0. The `LICENSE` file was
+  rewritten and `pyproject.toml` now declares `license = "Apache-2.0"`.
+- Added graceful handling of stale tmux servers over SSH. New `tmux.py` module
+  compares the running server's binary version against the on-disk bundled
+  `tmux` and, when they differ, `warn_tmux_stale()` emits the exact
+  `tmux kill-server` remedy — it never auto-kills sessions.
+  `reload_tmux_config()` hot-reloads config via `source-file`, pushing
+  `KOOPA_COLOR_MODE` into the server's global environment first so the
+  initial-palette `if-shell` block picks up the current mode.
+- Improved cross-shell configuration parity and eliminated interactive-shell
+  startup lag. Reworked elvish, nushell, fish, and PowerShell configuration;
+  fixed fish color-mode detection and PowerShell starship activation.
+  Eliminated lag introduced by the `is-aws-ec2` hostname check executing on
+  every interactive bash and zsh login.
+- Expanded upstream version checking. `version_check.py` gained a
+  `repology.org` fallback for the Savannah non-GNU mirror and `man-db` (so
+  a single mirror outage no longer fails the check), plus dedicated version
+  checks for the 1Password CLI (AgileBits update API) and Antigravity CLI
+  (Google auto-updater manifest).
+
+Minor changes:
+
+- Improved `atuin` configuration and promoted `bash-preexec` to a first-class
+  managed app (the preexec/precmd hook mechanism atuin relies on in bash).
+- Improved chezmoi configuration handling.
+- Reorganized the bundled Claude Code configuration — split inline lessons into
+  dedicated skills and path-scoped rules to reduce always-loaded token cost.
+- Updated app versions across the registry and refreshed shell completions.
+- Fixed an empty-`except` block flagged in code review.
+
+New apps:
+
+- `antigravity-cli` (1.0.10) — Google Antigravity AI agent CLI, the successor
+  to Gemini CLI. Installs the `agy` binary from content-addressed GCS
+  artifacts with per-platform SHA-512 verification. Non-default.
+- `bash-preexec` (0.6.0) — preexec/precmd functions for bash. Default.
+
 ## koopa 0.20.0 (2026-06-13)
 
 Major changes:
