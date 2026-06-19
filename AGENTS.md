@@ -56,6 +56,6 @@ lang/python/
 
 ## Global Behavior Rules
 
-See `~/.gemini/GEMINI.md` (Antigravity / gemini-cli) or `~/.codex/AGENTS.md`
+See `~/.gemini/GEMINI.md` (Antigravity CLI / `agy`) or `~/.codex/AGENTS.md`
 (Codex) for global interaction style, thinking rules, coding standards, and
 security rules that apply across all projects.
