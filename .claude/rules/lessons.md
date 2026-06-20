@@ -34,6 +34,7 @@
 | `git-history-surgery` | git filter-repo identity rewrites, commit-tree replay for dedup (user-global skill) |
 | `elvish` | `eval` namespace isolation, closure/fn capture order, `use` compile-time lexical scoping, `edit:` interactive-only, `path:` 0.21.0 API, `brew shellenv` workaround, `(src)` under eval, koopa activation architecture |
 | `powershell` | activation architecture, starship mtime-guarded cache + header.ps1 ordering constraint, color-mode sync hook (file re-render trigger, marker+sentinel guard, `Start-Process -NoNewWindow` idiom), `_koopa_is_light_mode` per-platform detection, `sys.platform == "win32"` guard for `winreg` |
+| `koopa-vscode` | Quarto VS Code plugin + LuaLS `.luarc.json` — portable path pattern (relative paths resolve against workspace root, use `opt/quarto/share/...` symlink not versioned `app/` path), remove `Generator` key to take manual control, strip `/.luarc.json` from `.gitignore`, LuaLS placeholder support (`${env:VAR}`, `${workspaceFolder}`, `~`) |
 
 ## Path-scoped rules (load when matching file is opened)
 
