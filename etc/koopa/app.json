@@ -100,7 +100,7 @@
       "rust"
     ],
     "category": "R",
-    "date": "2026-05-02",
+    "date": "2026-06-20",
     "default": false,
     "description": "R code formatter",
     "type": "cli",
@@ -108,7 +108,7 @@
       "https://posit-dev.github.io/air/",
       "https://github.com/posit-dev/air"
     ],
-    "version": "0.9.0"
+    "version": "0.10.0"
   },
   "anaconda": {
     "category": "Python",
@@ -2432,7 +2432,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-06-19",
+    "date": "2026-06-20",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2442,7 +2442,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "806d8278bc601f7cba3455cf3d4fcdd96cf79d5d"
+    "version": "fbd4a606bf2d13953b278fefa601663189a45ca8"
   },
   "du-dust": {
     "bin": [
@@ -4765,7 +4765,7 @@
       "latch"
     ],
     "category": "Cloud",
-    "date": "2026-06-19",
+    "date": "2026-06-20",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -4782,7 +4782,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.76.2"
+    "version": "2.76.3"
   },
   "lazygit": {
     "bin": [
@@ -5044,7 +5044,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2025-08-10",
+    "date": "2026-06-20",
     "default": false,
     "description": "foreign function interface library",
     "src_url": "https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz",
@@ -5053,7 +5053,7 @@
       "https://sourceware.org/libffi/",
       "https://github.com/libffi/libffi"
     ],
-    "version": "3.5.2"
+    "version": "3.6.0"
   },
   "libfido2": {
     "build_dependencies": [
@@ -9074,7 +9074,7 @@
       "surreal"
     ],
     "category": "Database",
-    "date": "2026-06-11",
+    "date": "2026-06-20",
     "default": false,
     "description": "multi-model database with SurrealQL query language",
     "type": "cli",
@@ -9082,7 +9082,7 @@
       "https://surrealdb.com/",
       "https://github.com/surrealdb/surrealdb/"
     ],
-    "version": "3.1.4"
+    "version": "3.1.5"
   },
   "swig": {
     "bin": [
@@ -9391,7 +9391,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-06-11",
+    "date": "2026-06-20",
     "default": false,
     "description": "upgrade all your tools with one command",
     "installer": "conda-package",
@@ -9399,7 +9399,7 @@
     "url": [
       "https://github.com/topgrade-rs/topgrade/"
     ],
-    "version": "17.6.1"
+    "version": "17.6.2"
   },
   "tqdm": {
     "bin": [
@@ -9601,14 +9601,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-06-19",
+    "date": "2026-06-20",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.22"
+    "version": "0.11.23"
   },
   "valkey": {
     "bin": [
@@ -9900,7 +9900,7 @@
     ],
     "category": "Network",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-06-20",
     "default": false,
     "description": "friendly and fast HTTP client",
     "installer": "conda-package",
@@ -9909,7 +9909,7 @@
       "https://github.com/ducaale/xh/",
       "https://crates.io/crates/xh"
     ],
-    "version": "0.25.3"
+    "version": "0.26.1"
   },
   "xorg-libice": {
     "build_dependencies": [
