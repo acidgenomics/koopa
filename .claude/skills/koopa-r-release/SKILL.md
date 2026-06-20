@@ -110,7 +110,7 @@ To sync / bootstrap all clones (zsh-safe — `for repo in $repos` doesn't word-s
 
 ```sh
 aws --profile acidgenomics s3 ls \
-  s3://r-REDACTED_ACCOUNT_ID-us-east-1-an/src/contrib/ \
+  s3://r-<account-id>-us-east-1-an/src/contrib/ \
   | awk '/\.tar\.gz$/ {print $NF}' \
   | sed -E 's/_[0-9].*\.tar\.gz$//' \
   | awk '{print "r-" tolower($0)}' \
@@ -131,7 +131,7 @@ aws --profile acidgenomics s3 ls \
 Verify afterwards:
 
 ```sh
-aws --profile acidgenomics s3 ls s3://r-REDACTED_ACCOUNT_ID-us-east-1-an/src/contrib/ \
+aws --profile acidgenomics s3 ls s3://r-<account-id>-us-east-1-an/src/contrib/ \
   | awk '/\.tar\.gz$/ {print $NF}' | sed -E 's/_[0-9].*\.tar\.gz$//' \
   | awk '{print "r-" tolower($0)}' | sort -u \
   | while IFS= read -r repo; do

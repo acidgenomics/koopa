@@ -402,8 +402,10 @@ def prune_app_binaries(dry_run: bool = False) -> None:
     --------
     - https://stackoverflow.com/questions/27274996/
     """
+    from koopa.aws import koopa_s3_bucket
+
     dict = {
-        "bucket": "artifacts-REDACTED_ACCOUNT_ID-us-east-1-an",
+        "bucket": koopa_s3_bucket("artifacts"),
         "profile": "acidgenomics",
         "subdir": "binaries",
     }

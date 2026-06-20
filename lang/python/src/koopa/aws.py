@@ -7,14 +7,57 @@ aws-batch-list-jobs, etc.
 """
 
 import json
+import os
 import re
 import subprocess
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# .env loader and account-scoped bucket helpers
+# ---------------------------------------------------------------------------
+
+
+def load_dotenv() -> None:
+    """Load <koopa-root>/.env into os.environ without overriding existing vars."""
+    env_path = Path(__file__).parents[4] / ".env"
+    if not env_path.is_file():
+        return
+    with open(env_path) as fh:
+        for raw in fh:
+            stripped = raw.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            key, _, value = stripped.partition("=")
+            key = key.strip()
+            value = value.strip()
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+
+def aws_account_id() -> str:
+    """Return the AWS account ID from AWS_ACCOUNT_ID env var, raising if absent."""
+    load_dotenv()
+    account_id = os.environ.get("AWS_ACCOUNT_ID", "")
+    if not account_id:
+        msg = "AWS_ACCOUNT_ID must be set (in environment or <koopa-root>/.env)."
+        raise RuntimeError(msg)
+    return account_id
+
+
+def koopa_s3_bucket(role: str) -> str:
+    """Return a private koopa S3 bucket name for the given role.
+
+    Bucket naming convention: <role>-<account-id>-us-east-1-an.
+    Examples: koopa_s3_bucket('r'), koopa_s3_bucket('artifacts').
+    """
+    return f"{role}-{aws_account_id()}-us-east-1-an"
+
+
+# ---------------------------------------------------------------------------
 
 
 def _aws(*args: str, capture: bool = True, timeout: int = 300) -> subprocess.CompletedProcess:
     """Run an AWS CLI command."""
-    import os
-
     cmd = ["aws", *args]
     env = os.environ.copy()
     env["AWS_PAGER"] = ""

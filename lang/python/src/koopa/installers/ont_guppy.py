@@ -23,8 +23,10 @@ def main(
         platform = "linux"
     arch_id = "amd64" if machine in ("x86_64",) else machine
     core = "cpu"
+    from koopa.aws import koopa_s3_bucket
+
     s3_url = (
-        f"s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/installers/ont-guppy/"
+        f"s3://{koopa_s3_bucket('artifacts')}/installers/ont-guppy/"
         f"ont-guppy-{version}-{platform}-{arch_id}-{core}.tar.gz"
     )
     subprocess.run(

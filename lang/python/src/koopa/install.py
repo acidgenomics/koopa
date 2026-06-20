@@ -423,11 +423,13 @@ def install_app_from_binary_package(*prefixes: str) -> None:
         msg = "At least one prefix is required."
         raise ValueError(msg)
     arch = arch2()
+    from koopa.aws import koopa_s3_bucket
+
     aws_profile = "acidgenomics"
     binary_prefix = "/opt/koopa"
     kp = koopa_prefix()
     os_str = os_slug()
-    s3_bucket = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/binaries"
+    s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
     if kp != binary_prefix:
         msg = (
             f"Binary package installation not supported for koopa install "
@@ -483,11 +485,12 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 
 def push_app_build(name: str) -> None:
     """Push completed build to S3 and/or vendor backend."""
+    from koopa.aws import koopa_s3_bucket
     from koopa.vendor import vendor_config, vendor_push_binary
 
     arch = arch2()
     os_str = os_slug()
-    s3_bucket = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/binaries"
+    s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
     app_dir = os.path.join(app_prefix(), name)
     if not os.path.isdir(app_dir):
         msg = f"App directory does not exist: {app_dir}"
@@ -526,8 +529,8 @@ def push_missing_app_builds() -> None:
     """Push any installed app builds that are missing from S3.
 
     Iterates all symlinks in opt/, checks whether the corresponding binary
-    tarball exists in s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/binaries via a
-    lightweight head-object call, and pushes any that are absent.
+    tarball exists in the private artifacts S3 bucket via a lightweight
+    head-object call, and pushes any that are absent.
 
     Intended as a post-update sweep to catch apps (e.g. conda, aws-cli) that
     were installed before the aws CLI was available in PATH.
@@ -535,10 +538,11 @@ def push_missing_app_builds() -> None:
     import subprocess as _subprocess
 
     from koopa.alert import alert, alert_note, alert_success
+    from koopa.aws import koopa_s3_bucket
 
     arch = arch2()
     os_str = os_slug()
-    s3_bucket_bare = "artifacts-REDACTED_ACCOUNT_ID-us-east-1-an"
+    s3_bucket_bare = koopa_s3_bucket("artifacts")
     opt = opt_prefix()
     app_dir = app_prefix()
     aws = shutil.which("aws")

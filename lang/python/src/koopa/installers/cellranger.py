@@ -15,7 +15,9 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install Cell Ranger."""
-    s3_base = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/installers"
+    from koopa.aws import koopa_s3_bucket
+
+    s3_base = f"s3://{koopa_s3_bucket('artifacts')}/installers"
     s3_url = f"{s3_base}/cellranger/{version}.tar.xz"
     local_file = f"{version}.tar.xz"
     subprocess.run(

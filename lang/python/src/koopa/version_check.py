@@ -2199,7 +2199,7 @@ def _expand_src_url(template: str, version: str) -> str:
 def _mirror_src_to_s3(
     name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
-    """Download source tarball and upload to s3://koopa-REDACTED_ACCOUNT_ID-us-east-1-an/src/.
+    """Download source tarball and upload to the private koopa S3 src/ mirror.
 
     Also upload and/or vendor.
     """
@@ -2211,7 +2211,9 @@ def _mirror_src_to_s3(
 
     url = _expand_src_url(src_url_template, version)
     filename = url.rsplit("/", 1)[-1]
-    s3_key = f"s3://koopa-REDACTED_ACCOUNT_ID-us-east-1-an/src/{name}/{filename}"
+    from koopa.aws import koopa_s3_bucket
+
+    s3_key = f"s3://{koopa_s3_bucket('koopa')}/src/{name}/{filename}"
     with tempfile.TemporaryDirectory() as tmp:
         local = os.path.join(tmp, filename)
         try:

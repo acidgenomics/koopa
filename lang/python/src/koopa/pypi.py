@@ -10,8 +10,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-_BUCKET = "python-REDACTED_ACCOUNT_ID-us-east-1-an"
-_S3_URI = f"s3://{_BUCKET}"
 _PROFILE = "acidgenomics"
 _INDEX_URL = "https://python.acidgenomics.com/"
 
@@ -34,26 +32,23 @@ def _uv() -> str:
     return path
 
 
-def _load_env_file() -> None:
-    """Load variables from <koopa-root>/.env into os.environ if not already set."""
-    env_path = Path(__file__).parents[4] / ".env"
-    if not env_path.is_file():
-        return
-    with open(env_path) as fh:
-        for raw in fh:
-            stripped = raw.strip()
-            if not stripped or stripped.startswith("#") or "=" not in stripped:
-                continue
-            key, _, value = stripped.partition("=")
-            key = key.strip()
-            value = value.strip()
-            if key and key not in os.environ:
-                os.environ[key] = value
+def _bucket() -> str:
+    """Return the Python package S3 bucket name (loaded from environment)."""
+    from koopa.aws import koopa_s3_bucket
+
+    return koopa_s3_bucket("python")
+
+
+def _s3_uri() -> str:
+    """Return the S3 URI prefix for the Python package bucket."""
+    return f"s3://{_bucket()}"
 
 
 def _cloudfront_distribution_id() -> str:
     """Return CloudFront distribution ID from environment, raising if absent."""
-    _load_env_file()
+    from koopa.aws import load_dotenv
+
+    load_dotenv()
     dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON", "")
     if not dist_id:
         dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
@@ -66,7 +61,7 @@ def _cloudfront_distribution_id() -> str:
 
 
 def _s3_list_packages() -> list[str]:
-    """List all filenames under s3://python-REDACTED_ACCOUNT_ID-us-east-1-an/packages/."""
+    """List all filenames under the Python package S3 bucket's packages/ prefix."""
     aws = _aws()
     result = subprocess.run(
         [
@@ -74,7 +69,7 @@ def _s3_list_packages() -> list[str]:
             "s3api",
             "list-objects-v2",
             "--bucket",
-            _BUCKET,
+            _bucket(),
             "--prefix",
             "packages/",
             f"--profile={_PROFILE}",
@@ -115,7 +110,7 @@ def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
             "s3",
             f"--profile={_PROFILE}",
             "cp",
-            f"{_S3_URI}/{key}",
+            f"{_s3_uri()}/{key}",
             local,
         ],
         capture_output=True,
@@ -177,7 +172,7 @@ def _sync_index_to_s3(index_dir: Path) -> None:
             "--content-type",
             "text/html",
             str(index_dir) + "/",
-            f"{_S3_URI}/",
+            f"{_s3_uri()}/",
         ],
         check=True,
     )
@@ -289,7 +284,7 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
             raise RuntimeError(msg)
 
         for f in dist_files:
-            dest = f"{_S3_URI}/packages/{f.name}"
+            dest = f"{_s3_uri()}/packages/{f.name}"
             alert(f"Uploading '{f.name}' to '{dest}'.")
             subprocess.run(
                 [

@@ -36,7 +36,9 @@ def main(
         raise RuntimeError(msg)
     libexec = os.path.join(prefix, "libexec")
     init_dir(libexec)
-    s3_base = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/installers"
+    from koopa.aws import koopa_s3_bucket
+
+    s3_base = f"s3://{koopa_s3_bucket('artifacts')}/installers"
     s3_url = f"{s3_base}/bcl2fastq/src/{version}.tar.zip"
     local_file = f"{version}.tar.zip"
     subprocess.run(

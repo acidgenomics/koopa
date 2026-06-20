@@ -16,8 +16,6 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-_BUCKET = "r-REDACTED_ACCOUNT_ID-us-east-1-an"
-_S3_URI = f"s3://{_BUCKET}"
 _PROFILE = "acidgenomics"
 _INDEX_URL = "https://r.acidgenomics.com/"
 
@@ -121,26 +119,23 @@ def _aws() -> str:
     return path
 
 
-def _load_env_file() -> None:
-    """Load variables from <koopa-root>/.env into os.environ if not already set."""
-    env_path = Path(__file__).parents[4] / ".env"
-    if not env_path.is_file():
-        return
-    with open(env_path) as fh:
-        for raw in fh:
-            stripped = raw.strip()
-            if not stripped or stripped.startswith("#") or "=" not in stripped:
-                continue
-            key, _, value = stripped.partition("=")
-            key = key.strip()
-            value = value.strip()
-            if key and key not in os.environ:
-                os.environ[key] = value
+def _bucket() -> str:
+    """Return the R package S3 bucket name (loaded from environment)."""
+    from koopa.aws import koopa_s3_bucket
+
+    return koopa_s3_bucket("r")
+
+
+def _s3_uri() -> str:
+    """Return the S3 URI prefix for the R package bucket."""
+    return f"s3://{_bucket()}"
 
 
 def _cloudfront_distribution_id() -> str:
     """Return CloudFront distribution ID from environment, raising if absent."""
-    _load_env_file()
+    from koopa.aws import load_dotenv
+
+    load_dotenv()
     dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_R", "")
     if not dist_id:
         dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
@@ -189,7 +184,7 @@ def _stream_description_from_s3(key: str) -> dict[str, str]:
     """Stream a tarball from S3 and extract only its DESCRIPTION file."""
     aws = _aws()
     result = subprocess.run(
-        [aws, "s3", f"--profile={_PROFILE}", "cp", f"{_S3_URI}/{key}", "-"],
+        [aws, "s3", f"--profile={_PROFILE}", "cp", f"{_s3_uri()}/{key}", "-"],
         capture_output=True,
         check=True,
     )
@@ -209,7 +204,7 @@ def _s3_list_packages(prefix: str) -> list[dict[str, str]]:
             "s3api",
             "list-objects-v2",
             "--bucket",
-            _BUCKET,
+            _bucket(),
             "--prefix",
             prefix.rstrip("/") + "/",
             f"--profile={_PROFILE}",
@@ -244,7 +239,7 @@ def _s3_list_binary_prefixes() -> list[str]:
             "s3api",
             "list-objects-v2",
             "--bucket",
-            _BUCKET,
+            _bucket(),
             "--prefix",
             "bin/",
             f"--profile={_PROFILE}",
@@ -313,7 +308,7 @@ def _upload_manifest(packages_text: str, s3_prefix: str, tmp_dir: str) -> None:
                 "--content-type",
                 "binary/octet-stream",
                 local,
-                f"{_S3_URI}/{s3_key}",
+                f"{_s3_uri()}/{s3_key}",
             ],
             check=True,
         )
@@ -368,7 +363,7 @@ def _archive_old_source(pkg_name: str, new_filename: str) -> None:
             "s3api",
             "list-objects-v2",
             "--bucket",
-            _BUCKET,
+            _bucket(),
             "--prefix",
             f"src/contrib/{pkg_name}_",
             f"--profile={_PROFILE}",
@@ -396,8 +391,8 @@ def _archive_old_source(pkg_name: str, new_filename: str) -> None:
                 "s3",
                 f"--profile={_PROFILE}",
                 "mv",
-                f"{_S3_URI}/{key}",
-                f"{_S3_URI}/{archive_key}",
+                f"{_s3_uri()}/{key}",
+                f"{_s3_uri()}/{archive_key}",
             ],
             check=True,
         )
@@ -415,7 +410,7 @@ def _upload_package(local_path: str, s3_key: str) -> None:
             "--content-type",
             "application/x-tar",
             local_path,
-            f"{_S3_URI}/{s3_key}",
+            f"{_s3_uri()}/{s3_key}",
         ],
         check=True,
     )
@@ -543,10 +538,10 @@ def publish(
             alert(f"Archiving previous version of '{pkg_name}' in src/contrib.")
             _archive_old_source(pkg_name, src_base)
 
-            alert(f"Uploading '{src_base}' to s3://{_BUCKET}/{src_key}.")
+            alert(f"Uploading '{src_base}' to s3://{_bucket()}/{src_key}.")
             _upload_package(src_path, src_key)
 
-            alert(f"Uploading '{bin_base}' to s3://{_BUCKET}/{bin_key}.")
+            alert(f"Uploading '{bin_base}' to s3://{_bucket()}/{bin_key}.")
             _upload_package(bin_path, bin_key)
 
             alert("Regenerating src/contrib PACKAGES manifests.")
@@ -636,8 +631,8 @@ def archive_src(*, invalidate: bool = True) -> None:
                     "s3",
                     f"--profile={_PROFILE}",
                     "mv",
-                    f"{_S3_URI}/{key}",
-                    f"{_S3_URI}/{archive_key}",
+                    f"{_s3_uri()}/{key}",
+                    f"{_s3_uri()}/{archive_key}",
                 ],
                 check=True,
             )

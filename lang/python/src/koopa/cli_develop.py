@@ -189,7 +189,9 @@ def _handle_push_app_build(args: list[str]) -> None:
     os_str = os_slug()
     prefix = opt_prefix()
     profile = "acidgenomics"
-    s3_bucket = "s3://artifacts-REDACTED_ACCOUNT_ID-us-east-1-an/binaries"
+    from koopa.aws import koopa_s3_bucket
+
+    s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
     tmp_dir = tempfile.mkdtemp()
     try:
         for name in args:
@@ -461,7 +463,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
         action="store_true",
         dest="s3_upload",
         help=(
-            "upload source tarballs to s3://koopa-REDACTED_ACCOUNT_ID-us-east-1-an"
+            "upload source tarballs to the private koopa S3 bucket"
             " (requires acidgenomics AWS profile)"
         ),
     )
@@ -617,7 +619,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     """Handle ``koopa develop mirror-src [<name>...]``.
 
     Downloads source tarballs from upstream and uploads to the
-    s3://koopa-REDACTED_ACCOUNT_ID-us-east-1-an/src/ mirror. With no args, mirrors all
+    private koopa S3 src/ mirror. With no args, mirrors all
     apps with a ``"src_url"`` defined in app.json.
     """
     import time
@@ -631,7 +633,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
         print(
             "usage: koopa develop mirror-src [--prune] [<name>...]\n\n"
             "Download source tarballs from upstream and upload to the\n"
-            "s3://koopa-REDACTED_ACCOUNT_ID-us-east-1-an/src/ mirror and/or vendor backend.\n\n"
+            "private koopa S3 src/ mirror and/or vendor backend.\n\n"
             "With no args, mirrors all apps with a 'src_url' in app.json.\n\n"
             "Options:\n"
             "  --prune  Delete stale files from S3 after mirroring",
@@ -672,7 +674,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     except ModuleNotFoundError:
         tqdm = cast(Any, _TqdmFallback)  # type: ignore[assignment]
 
-    bucket = "koopa-REDACTED_ACCOUNT_ID-us-east-1-an"
+    from koopa.aws import koopa_s3_bucket
+
+    bucket = koopa_s3_bucket("koopa")
     cache = _load_mirror_src_cache()
     now = time.time()
     _cache_ttl = 86400  # 24 hours
@@ -800,7 +804,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
     """Handle ``koopa develop audit-src-mirror [<name>...]``.
 
     Checks which mirror apps have their current source tarball present in
-    s3://koopa-REDACTED_ACCOUNT_ID-us-east-1-an/src/ using a lightweight head-object call.
+    the private koopa S3 src/ mirror using a lightweight head-object call.
     Exits 1 if any are missing.
     """
     import shutil as _shutil
@@ -835,7 +839,9 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
     except ModuleNotFoundError:
         tqdm = cast(Any, _TqdmFallback)  # type: ignore[assignment]
 
-    bucket = "koopa-REDACTED_ACCOUNT_ID-us-east-1-an"
+    from koopa.aws import koopa_s3_bucket
+
+    bucket = koopa_s3_bucket("koopa")
     missing: list[str] = []
     for name in tqdm(targets, desc="Auditing", unit="app", dynamic_ncols=True):
         entry = data[name]
