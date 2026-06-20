@@ -448,6 +448,7 @@ _koopa_app_python() {
 _koopa_app_r() {
     local -a cmds
     cmds=(
+        'archive'
         'bioconda-check'
         'check'
         'configure-environ'
@@ -455,10 +456,14 @@ _koopa_app_r() {
         'configure-ldpaths'
         'configure-makevars'
         'copy-files-into-etc'
+        'deploy'
         'gfortran-libs'
         'install-packages-in-site-library'
         'package-version'
         'paste-to-vector'
+        'publish'
+        'publish-from-github'
+        'reindex'
         'remove-packages-in-system-library'
         'script'
         'shiny-run-app'

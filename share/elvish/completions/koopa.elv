@@ -92,6 +92,16 @@ set edit:completion:arg-completer[koopa] = {|@args|
             put --fastq-dir --help --index-dir --output-dir
         } elif (eq $path 'app/miso/index') {
             put --gff-file --help --output-dir
+        } elif (eq $path 'app/r/archive') {
+            put --help --no-invalidate
+        } elif (eq $path 'app/r/deploy') {
+            put --help --no-invalidate
+        } elif (eq $path 'app/r/publish') {
+            put --help --no-check --no-deploy --no-invalidate
+        } elif (eq $path 'app/r/publish-from-github') {
+            put --check --help --no-invalidate --org
+        } elif (eq $path 'app/r/reindex') {
+            put --help --no-invalidate
         } elif (eq $path 'app/r/shiny-run-app') {
             put --help --port
         } elif (eq $path 'app/rnaeditingindexer') {
@@ -233,7 +243,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
             } elif (eq $args[2] 'python') {
                 put publish reindex
             } elif (eq $args[2] 'r') {
-                put bioconda-check check configure-environ configure-java configure-ldpaths configure-makevars copy-files-into-etc gfortran-libs install-packages-in-site-library package-version paste-to-vector remove-packages-in-system-library script shiny-run-app system-packages-non-base version
+                put archive bioconda-check check configure-environ configure-java configure-ldpaths configure-makevars copy-files-into-etc deploy gfortran-libs install-packages-in-site-library package-version paste-to-vector publish publish-from-github reindex remove-packages-in-system-library script shiny-run-app system-packages-non-base version
             } elif (eq $args[2] 'rsem') {
                 put index quant
             } elif (eq $args[2] 'salmon') {

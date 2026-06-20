@@ -31,6 +31,8 @@ def aws_s3_sync(
     exclude: list[str] | None = None,
     include: list[str] | None = None,
     dryrun: bool = False,
+    follow_symlinks: bool = False,
+    size_only: bool = False,
     profile: str | None = None,
 ) -> None:
     """Sync files between local and S3 or between S3 buckets."""
@@ -39,6 +41,10 @@ def aws_s3_sync(
         args.append("--delete")
     if dryrun:
         args.append("--dryrun")
+    if follow_symlinks:
+        args.append("--follow-symlinks")
+    if size_only:
+        args.append("--size-only")
     if exclude:
         for pattern in exclude:
             args.extend(["--exclude", pattern])

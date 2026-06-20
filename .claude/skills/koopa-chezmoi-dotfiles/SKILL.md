@@ -126,3 +126,65 @@ settings — anything under `opt/dotfiles/chezmoi/dot_*/`.
 
 Failing to add a `.chezmoiremove` entry means the orphan remains active (e.g. as a
 globally-available Claude skill) even though the source no longer tracks it.
+
+## Go Template Whitespace Trim: `-}}` Eats the Following Newline
+
+A variable-declaration or `stat` call that produces **no output** but uses `-}}` (trim
+right) will silently consume the newline *after* the action — welding the next line onto
+the end of whatever came before it.
+
+Classic manifestation in tmux configs:
+
+```
+# ...comment text.
+{{- $someVar := stat "..." -}}
+%hidden foo="bar"
+```
+
+Rendered output:
+```
+# ...comment text.%hidden foo="bar"
+```
+
+Because the merged line begins with `#`, tmux reads the whole thing as a comment — the
+`%hidden` directive is never parsed, the variable is never defined, and every later
+`source-file "${foo}"` expands `${foo}` to empty, producing a bogus path.
+
+**Rule:** use `}}` (no trim) on the *right* side of side-effect-free template actions
+(variable declarations, `stat` calls) when the *next* line must remain on its own line.
+Use `{{-` (trim left) to remove the action's own blank line cleanly. The pattern:
+
+```
+{{- $someVar := stat "..." }}
+%hidden foo="bar"
+```
+
+### Diagnosing "tmux can't find X.conf" errors
+
+The filename in the error is the last thing to investigate. First check whether the
+variables referenced in the path are actually defined — search the *deployed* file for
+the `%hidden` directive that defines them. A merged comment+directive means the
+directive was silently treated as a comment and the variable is undefined. Everything
+that expands it then resolves to an empty-prefix path.
+
+### Safe tmux config validation
+
+Parse a tmux config without touching any live session:
+
+```sh
+~/.local/share/koopa/bin/tmux -L _koopa_probe -f ~/.config/tmux/tmux.conf \
+  start-server \; kill-server
+```
+
+Clean exit = no parse errors. Always use koopa's bundled tmux (not `/usr/bin/tmux`)
+to match the version assumptions in the config (e.g. `%if #{>=:#{version},3.6}`).
+
+### When targeted apply is safe from an agent session
+
+The `koopa-color-mode` skill warns against running full dotfiles apply from a
+long-running agent session because the session's `KOOPA_COLOR_MODE` is frozen. That
+warning applies to templates that **branch on `KOOPA_COLOR_MODE`**.
+
+Templates that branch only on `stat` (filesystem presence) are safe to apply from
+any session — they read the filesystem, not the inherited env. A targeted apply of
+such a template carries no stale-mode risk.

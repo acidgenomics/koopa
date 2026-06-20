@@ -247,3 +247,55 @@ For light mode with Dracula Pro Alucard (Ghostty): `results_fg = "grey"` works;
 
 Always test mcfly colors from the specific terminal emulator that will be used — VS
 Code and Ghostty can give opposite results for the same config.
+
+## Vim Colorscheme and Airline Theme
+
+### Airline is not auto-adaptive — set it explicitly
+
+vim-airline does **not** inherit the theme from the active colorscheme. When
+`colorscheme dracula_pro_alucard` (light) is set without also setting
+`g:airline_theme`, airline falls back to its implicit dark theme (`theme=dark`),
+producing a neon-yellow/near-black statusline over a light Alucard buffer.
+
+The `dracula_pro` airline theme file
+(`~/.vim/pack/theme/start/dracula_pro/autoload/airline/themes/dracula_pro.vim`)
+is palette-adaptive: it reads `g:dracula_pro#palette` at the time the theme is
+applied. Since Alucard populates that palette with light values before
+`dracula_pro_base.vim` runs, the airline theme is light-safe — one theme name is
+correct for both light and dark modes.
+
+**Pattern:** set `g:airline_theme='dracula_pro'` immediately after every
+`colorscheme dracula_pro*` call — both in the startup block and in any live-switch
+function. In the live-switch function, pair it with `silent! AirlineTheme dracula_pro`
+to repaint a running airline instance (a `let g:` alone does not refresh the running
+statusline).
+
+```vim
+" Startup (both light and dark branches):
+colorscheme dracula_pro_alucard   " or dracula_pro / dracula_pro_<variant>
+let g:airline_theme='dracula_pro'
+
+" Live-switch function (s:KoopaApplyColorMode):
+colorscheme dracula_pro_alucard   " or variant
+silent! AirlineTheme dracula_pro
+```
+
+Leave non-Pro fallbacks (`vim-one` → `airline_theme='one'`; free `dracula` → no
+airline theme) unchanged.
+
+### `set background=dark` is baked into the Dracula Pro base scheme
+
+`dracula_pro_base.vim` always sets `set background=dark` regardless of which variant
+is loaded. This is intentional — the scheme uses explicit `guifg`/`guibg` values and
+does not rely on Vim's `background` option for palette selection. A `background=dark`
+value after loading Alucard is therefore expected and correct, not a bug. The
+Alucard-specific `dracula_pro_alucard.vim` overrides the palette dict entries before
+calling `runtime colors/dracula_pro_base.vim`, so the light colors are already in
+`g:dracula_pro#palette` when the base file runs.
+
+### Contrast with nvim (lualine)
+
+nvim uses lualine with `theme = 'auto'`
+(`dot_config/nvim/lua/plugins/ui.lua`). lualine's auto theme derives directly from
+the active colorscheme's highlight groups, so Alucard → light statusline happens
+automatically with no explicit airline-equivalent call needed.

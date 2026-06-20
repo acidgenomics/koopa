@@ -144,6 +144,7 @@ _APP_TREE: dict[str, Any] = {
         "reindex": "python-reindex",
     },
     "r": {
+        "archive": "r-archive",
         "bioconda-check": "r-bioconda-check",
         "check": "r-check",
         "configure-environ": "r-configure-environ",
@@ -151,10 +152,14 @@ _APP_TREE: dict[str, Any] = {
         "configure-ldpaths": "r-configure-ldpaths",
         "configure-makevars": "r-configure-makevars",
         "copy-files-into-etc": "r-copy-files-into-etc",
+        "deploy": "r-deploy",
         "gfortran-libs": "r-gfortran-libs",
         "install-packages-in-site-library": "r-install-packages-in-site-library",
         "package-version": "r-package-version",
         "paste-to-vector": "r-paste-to-vector",
+        "publish": "r-publish",
+        "publish-from-github": "r-publish-from-github",
+        "reindex": "r-reindex",
         "remove-packages-in-system-library": "r-remove-packages-in-system-library",
         "script": "r-script",
         "shiny-run-app": "r-shiny-run-app",
@@ -382,6 +387,120 @@ def _handle_r_check(args: list[str]) -> None:
     from koopa.r import r_check
 
     r_check(args[0])
+
+
+def _handle_r_archive(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r archive")
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import archive_src
+
+    archive_src(invalidate=parsed.invalidate)
+
+
+def _handle_r_publish_from_github(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r publish-from-github")
+    parser.add_argument("pkg_name", help="GitHub repository name (e.g. r-goalie).")
+    parser.add_argument(
+        "--org",
+        default="acidgenomics",
+        help="GitHub organisation (default: acidgenomics).",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Run R CMD check before building.",
+    )
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import publish_from_github
+
+    publish_from_github(
+        parsed.pkg_name,
+        org=parsed.org,
+        check=parsed.check,
+        invalidate=parsed.invalidate,
+    )
+
+
+def _handle_r_deploy(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r deploy")
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import deploy
+
+    deploy(invalidate=parsed.invalidate)
+
+
+def _handle_r_publish(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r publish")
+    parser.add_argument("package_dir", help="Path to R package source directory.")
+    parser.add_argument(
+        "--no-check",
+        dest="check",
+        action="store_false",
+        help="Skip R CMD check before building.",
+    )
+    parser.add_argument(
+        "--no-deploy",
+        dest="deploy",
+        action="store_false",
+        help="Skip S3 upload and PACKAGES regeneration.",
+    )
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import publish
+
+    publish(
+        parsed.package_dir,
+        check=parsed.check,
+        deploy=parsed.deploy,
+        invalidate=parsed.invalidate,
+    )
+
+
+def _handle_r_reindex(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r reindex")
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import reindex
+
+    reindex(invalidate=parsed.invalidate)
 
 
 def _handle_r_configure_environ(args: list[str]) -> None:
@@ -2278,6 +2397,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "python-publish": _handle_python_publish,
     "python-reindex": _handle_python_reindex,
     # r
+    "r-archive": _handle_r_archive,
     "r-bioconda-check": _handle_r_bioconda_check,
     "r-check": _handle_r_check,
     "r-configure-environ": _handle_r_configure_environ,
@@ -2285,10 +2405,14 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "r-configure-ldpaths": _handle_r_configure_ldpaths,
     "r-configure-makevars": _handle_r_configure_makevars,
     "r-copy-files-into-etc": _handle_r_copy_files_into_etc,
+    "r-deploy": _handle_r_deploy,
     "r-gfortran-libs": _handle_r_gfortran_libs,
     "r-install-packages-in-site-library": _handle_r_install_packages,
     "r-package-version": _handle_r_package_version,
     "r-paste-to-vector": _handle_r_paste_to_vector,
+    "r-publish": _handle_r_publish,
+    "r-publish-from-github": _handle_r_publish_from_github,
+    "r-reindex": _handle_r_reindex,
     "r-remove-packages-in-system-library": _handle_r_remove_packages,
     "r-script": _handle_r_script,
     "r-shiny-run-app": _handle_r_shiny_run_app,
