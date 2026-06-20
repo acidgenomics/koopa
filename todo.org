@@ -1,4 +1,3 @@
-** TODO Update copyright year on koopa website https://koopa.acidgenomics.com/
-** DONE Released pointillism 0.8.0 — Seurat 5 compat, Apache-2.0 relicense, air + roxygen2 8.x tooling, AcidDevtools::check() passes.
-    ~/git/personal/r-pointillism
 ** TODO Apache 2 license badge doesn't appear clearly on GitHub for koopa, dotfiles, and Python packages currently. It is working for R packages.
+** TODO How can we push website documentation for Python packages to python.acidgenomics.com?
+** TODO Publish all our R and Python packages at bioconda.

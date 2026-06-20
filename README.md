@@ -1,6 +1,7 @@
 # koopa 🐢
 
 ![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)
+![License: Apache-2.0](https://img.shields.io/github/license/acidgenomics/koopa)
 
 Shell bootloader for data science.
 

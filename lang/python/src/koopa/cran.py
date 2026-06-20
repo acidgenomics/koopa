@@ -647,6 +647,73 @@ def archive_src(*, invalidate: bool = True) -> None:
         alert("src/contrib is already clean — no superseded versions found.")
 
 
+def clean_orphan_binaries(*, invalidate: bool = True) -> None:
+    """Delete binary tarballs that have no matching source package in src/contrib.
+
+    A binary is an orphan when its package name does not appear in src/contrib
+    at *any* version (i.e. the source package was fully retired).  Version
+    mismatches (binary older/newer than source) are not orphans — those are
+    handled by republishing.
+
+    Iterates every active binary prefix discovered in S3.
+
+    Parameters
+    ----------
+    invalidate
+        Invalidate CloudFront PACKAGES* caches if any orphans are deleted.
+    """
+    from koopa.alert import alert
+
+    # Build the set of package names present in src/contrib.
+    alert("Listing src/contrib packages.")
+    src_objects = _s3_list_packages("src/contrib")
+    src_names: set[str] = set()
+    for obj in src_objects:
+        stem = obj["Filename"][: -len(".tar.gz")]
+        parts = stem.rsplit("_", 1)
+        if len(parts) == 2:
+            src_names.add(parts[0])
+
+    active_prefixes = [
+        p.rstrip("/") for p in _s3_list_binary_prefixes() if _ACTIVE_BINARY_PREFIX in p
+    ]
+
+    aws = _aws()
+    deleted = 0
+    for prefix in active_prefixes:
+        alert(f"Checking binary prefix '{prefix}' for orphans.")
+        bin_objects = _s3_list_packages(prefix)
+        for obj in bin_objects:
+            filename = obj["Filename"]
+            stem = filename[: -len(".tgz")]
+            parts = stem.rsplit("_", 1)
+            if len(parts) != 2:
+                continue
+            pkg_name = parts[0]
+            if pkg_name not in src_names:
+                alert(f"Deleting orphan binary '{filename}' (no source package).")
+                subprocess.run(
+                    [
+                        aws,
+                        "s3",
+                        f"--profile={_PROFILE}",
+                        "rm",
+                        f"{_s3_uri()}/{obj['Key']}",
+                    ],
+                    check=True,
+                )
+                deleted += 1
+
+    if deleted:
+        alert(f"Deleted {deleted} orphan binary/binaries. Regenerating manifests.")
+        for prefix in active_prefixes:
+            _reindex_prefix(prefix, binary=True)
+        if invalidate:
+            _invalidate_cloudfront()
+    else:
+        alert("No orphan binaries found.")
+
+
 def publish_from_github(
     pkg_name: str,
     *,

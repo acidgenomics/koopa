@@ -146,6 +146,7 @@ _APP_TREE: dict[str, Any] = {
     "r": {
         "archive": "r-archive",
         "bioconda-check": "r-bioconda-check",
+        "clean-orphan-binaries": "r-clean-orphan-binaries",
         "check": "r-check",
         "configure-environ": "r-configure-environ",
         "configure-java": "r-configure-java",
@@ -403,6 +404,22 @@ def _handle_r_archive(args: list[str]) -> None:
     from koopa.cran import archive_src
 
     archive_src(invalidate=parsed.invalidate)
+
+
+def _handle_r_clean_orphan_binaries(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r clean-orphan-binaries")
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import clean_orphan_binaries
+
+    clean_orphan_binaries(invalidate=parsed.invalidate)
 
 
 def _handle_r_publish_from_github(args: list[str]) -> None:
@@ -2406,6 +2423,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     # r
     "r-archive": _handle_r_archive,
     "r-bioconda-check": _handle_r_bioconda_check,
+    "r-clean-orphan-binaries": _handle_r_clean_orphan_binaries,
     "r-check": _handle_r_check,
     "r-configure-environ": _handle_r_configure_environ,
     "r-configure-java": _handle_r_configure_java,

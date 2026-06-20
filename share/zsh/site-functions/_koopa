@@ -451,6 +451,7 @@ _koopa_app_r() {
         'archive'
         'bioconda-check'
         'check'
+        'clean-orphan-binaries'
         'configure-environ'
         'configure-java'
         'configure-ldpaths'
