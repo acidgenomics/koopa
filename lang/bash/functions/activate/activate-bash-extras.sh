@@ -3,14 +3,17 @@
 _koopa_activate_bash_extras() {
     # """
     # Activate Bash extras.
-    # @note Updated 2025-01-02.
+    # @note Updated 2026-03-23.
     # """
     _koopa_is_interactive || return 0
+    _koopa_activate_bashrc_files
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
+    _koopa_activate_bash_preexec
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_bash_completion
-    _koopa_activate_completion
+    _koopa_activate_op
+    _koopa_activate_color_mode_sync
     return 0
 }

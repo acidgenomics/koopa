@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-koopa_major_minor_patch_version() {
-    _koopa_major_minor_patch_version "$@"
-}
