@@ -1120,6 +1120,7 @@ _koopa_complete() {
                         'python')
                             args+=(
                                 'publish'
+                                'publish-docs'
                                 'reindex'
                             )
                             ;;

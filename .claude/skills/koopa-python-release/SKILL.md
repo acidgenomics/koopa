@@ -132,6 +132,61 @@ Keep-a-Changelog style, version at top. Example heading:
 Sections: `### Features`, `### Bug Fixes`, `### Changes`, `### Tests`.
 Omit empty sections.
 
+## Documentation hosting
+
+Rendered Sphinx docs are hosted at **python-docs.acidgenomics.com** — a separate
+S3 bucket + CloudFront distribution from the package index, so the two are fully
+independent (reindex never touches docs).
+
+- Docs URL: `https://python-docs.acidgenomics.com/<name>/`
+- Bucket role: `python-docs` → `python-docs-<acct>-us-east-1-an`
+  (via `koopa_s3_bucket("python-docs")` in `aws.py`)
+- CloudFront env var: `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS`
+  (fallback: `AWS_CLOUDFRONT_DISTRIBUTION_ID`)
+- Publish tooling: `koopa app python publish-docs <package-dir>`
+  (calls `koopa.pypi.publish_docs`)
+- Implementation: `lang/python/src/koopa/pypi.py` — `publish_docs()`
+
+### publish-docs workflow
+
+```sh
+koopa app python publish-docs ~/git/personal/py-syntactic
+```
+
+This:
+1. Reads `[project] name` from `pyproject.toml`, PEP 503-normalises it.
+2. Runs `uv run --extra docs sphinx-build -W -b html docs/ <tmp>/html`.
+3. Syncs `<tmp>/html/` → `s3://python-docs-<acct>-us-east-1-an/syntactic/`
+   with `--delete` (scoped to that package's subtree only).
+4. Invalidates CloudFront `/*` on the docs distribution.
+
+Requires: AWS profile `acidgenomics` configured;
+`AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS` set in `<koopa-root>/.env`.
+
+### User-owned AWS provisioning (one-time setup)
+
+- S3 bucket `python-docs-<acct>-us-east-1-an` (same region/account as the
+  package index bucket).
+- CloudFront distribution: origin = docs bucket, alias =
+  `python-docs.acidgenomics.com`, ACM cert, default root object `index.html`.
+- Route53 record `python-docs.acidgenomics.com` → CloudFront distribution.
+- Add `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS` to `<koopa-root>/.env`.
+
+### Verification
+
+```sh
+# Dry-run docs build locally (no AWS required):
+cd ~/git/personal/py-syntactic
+uv run --extra docs sphinx-build -W -b html docs/ /tmp/docs-test
+
+# After publish-docs:
+curl -sI https://python-docs.acidgenomics.com/syntactic/ | head -5
+
+# Confirm package index is unaffected:
+koopa app python reindex
+curl -sI https://python-docs.acidgenomics.com/syntactic/ | head -5
+```
+
 ## R analog
 
 R packages are hosted at `r.acidgenomics.com` via a drat repo in

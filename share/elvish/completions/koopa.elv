@@ -243,7 +243,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
             } elif (eq $args[2] 'photos') {
                 put rename-with-exiftool
             } elif (eq $args[2] 'python') {
-                put publish reindex
+                put publish publish-docs reindex
             } elif (eq $args[2] 'r') {
                 put archive bioconda-check check clean-orphan-binaries configure-environ configure-java configure-ldpaths configure-makevars copy-files-into-etc deploy gfortran-libs install-packages-in-site-library package-version paste-to-vector publish publish-from-github reindex remove-packages-in-system-library script shiny-run-app system-packages-non-base version
             } elif (eq $args[2] 'rsem') {

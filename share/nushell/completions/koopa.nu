@@ -68,7 +68,7 @@ def koopa_app_miso_cmds [] { ["index"] }
 
 def koopa_app_photos_cmds [] { ["rename-with-exiftool"] }
 
-def koopa_app_python_cmds [] { ["publish", "reindex"] }
+def koopa_app_python_cmds [] { ["publish", "publish-docs", "reindex"] }
 
 def koopa_app_r_cmds [] { ["archive", "bioconda-check", "check", "clean-orphan-binaries", "configure-environ", "configure-java", "configure-ldpaths", "configure-makevars", "copy-files-into-etc", "deploy", "gfortran-libs", "install-packages-in-site-library", "package-version", "paste-to-vector", "publish", "publish-from-github", "reindex", "remove-packages-in-system-library", "script", "shiny-run-app", "system-packages-non-base", "version"] }
 

@@ -440,6 +440,7 @@ _koopa_app_python() {
     local -a cmds
     cmds=(
         'publish'
+        'publish-docs'
         'reindex'
     )
     _describe -t commands 'python command' cmds

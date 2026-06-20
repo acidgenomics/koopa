@@ -160,8 +160,9 @@ complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcomman
 # app photos
 complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from photos; and not __fish_seen_subcommand_from rename-with-exiftool' -a 'rename-with-exiftool'
 # app python
-complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from python; and not __fish_seen_subcommand_from publish reindex' -a 'publish'
-complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from python; and not __fish_seen_subcommand_from publish reindex' -a 'reindex'
+complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from python; and not __fish_seen_subcommand_from publish publish-docs reindex' -a 'publish'
+complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from python; and not __fish_seen_subcommand_from publish publish-docs reindex' -a 'publish-docs'
+complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from python; and not __fish_seen_subcommand_from publish publish-docs reindex' -a 'reindex'
 # app r
 complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from r; and not __fish_seen_subcommand_from archive bioconda-check check clean-orphan-binaries configure-environ configure-java configure-ldpaths configure-makevars copy-files-into-etc deploy gfortran-libs install-packages-in-site-library package-version paste-to-vector publish publish-from-github reindex remove-packages-in-system-library script shiny-run-app system-packages-non-base version' -a 'archive'
 complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from r; and not __fish_seen_subcommand_from archive bioconda-check check clean-orphan-binaries configure-environ configure-java configure-ldpaths configure-makevars copy-files-into-etc deploy gfortran-libs install-packages-in-site-library package-version paste-to-vector publish publish-from-github reindex remove-packages-in-system-library script shiny-run-app system-packages-non-base version' -a 'bioconda-check'

@@ -244,6 +244,57 @@ def reindex(*, invalidate: bool = True) -> None:
     alert(f"Index updated. Packages: {sorted(packages)}")
 
 
+def _docs_bucket() -> str:
+    """Return the Python docs S3 bucket name (loaded from environment)."""
+    from koopa.aws import koopa_s3_bucket
+
+    return koopa_s3_bucket("python-docs")
+
+
+def _docs_s3_uri() -> str:
+    """Return the S3 URI prefix for the Python docs bucket."""
+    return f"s3://{_docs_bucket()}"
+
+
+def _docs_distribution_id() -> str:
+    """Return CloudFront distribution ID for the docs site, raising if absent."""
+    from koopa.aws import load_dotenv
+
+    load_dotenv()
+    dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS", "")
+    if not dist_id:
+        dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
+    if not dist_id:
+        msg = (
+            "AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS "
+            "(or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
+        )
+        raise RuntimeError(msg)
+    return dist_id
+
+
+def _invalidate_cloudfront_docs() -> None:
+    """Invalidate /* in the docs CloudFront distribution."""
+    aws = _aws()
+    dist_id = _docs_distribution_id()
+    subprocess.run(
+        [
+            aws,
+            "cloudfront",
+            "create-invalidation",
+            "--distribution-id",
+            dist_id,
+            "--no-cli-pager",
+            "--output",
+            "text",
+            "--paths",
+            "/*",
+            f"--profile={_PROFILE}",
+        ],
+        check=True,
+    )
+
+
 def publish(package_dir: str, *, invalidate: bool = True) -> None:
     """Build and publish a Python package to python.acidgenomics.com.
 
@@ -303,3 +354,64 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     reindex(invalidate=invalidate)
+
+
+def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
+    """Build and publish a package's Sphinx docs to python-docs.acidgenomics.com.
+
+    The rendered site is synced to s3://<docs-bucket>/<name>/ where <name> is the
+    PEP 503-normalised project name read from pyproject.toml.  The package index
+    at python.acidgenomics.com is not touched.
+
+    Parameters
+    ----------
+    package_dir
+        Path to a Python package source directory (must contain pyproject.toml
+        and a ``docs/`` directory with a Sphinx ``conf.py``).
+    invalidate
+        Whether to invalidate the CloudFront cache after uploading.
+    """
+    import tomllib
+
+    from koopa.alert import alert
+    from koopa.aws import aws_s3_sync
+
+    pkg_path = Path(package_dir).resolve()
+    pyproject = pkg_path / "pyproject.toml"
+    if not pyproject.is_file():
+        msg = f"No pyproject.toml found in '{pkg_path}'."
+        raise FileNotFoundError(msg)
+    if not (pkg_path / "docs" / "conf.py").is_file():
+        msg = f"No docs/conf.py found in '{pkg_path}'."
+        raise FileNotFoundError(msg)
+
+    with open(pyproject, "rb") as fh:
+        meta = tomllib.load(fh)
+    raw_name = meta.get("project", {}).get("name", "")
+    if not raw_name:
+        msg = f"[project] name not found in '{pyproject}'."
+        raise RuntimeError(msg)
+    name = _normalize_name(raw_name)
+
+    uv = _uv()
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        out_dir = os.path.join(tmp_dir, "html")
+        alert(f"Building Sphinx docs for '{name}' in '{pkg_path}'.")
+        subprocess.run(
+            [uv, "run", "--extra", "docs", "sphinx-build", "-W", "-b", "html", "docs/", out_dir],
+            cwd=str(pkg_path),
+            check=True,
+        )
+
+        dest = f"{_docs_s3_uri()}/{name}/"
+        alert(f"Syncing docs to '{dest}'.")
+        aws_s3_sync(out_dir + "/", dest, delete=True, profile=_PROFILE)
+
+        if invalidate:
+            alert("Invalidating CloudFront docs cache.")
+            _invalidate_cloudfront_docs()
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    alert(f"Docs published: https://python-docs.acidgenomics.com/{name}/")

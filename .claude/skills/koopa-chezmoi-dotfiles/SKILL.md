@@ -97,25 +97,18 @@ in the corresponding source directory listing the entries to purge. Chezmoi will
 remove the deployed targets on the next `chezmoi apply`, and keep removing them on every
 subsequent apply — preventing stale copies from reappearing.
 
-`.chezmoiremove` patterns are relative to the **corresponding target directory** for
-that source level:
+Keep a **single `.chezmoiremove` at the chezmoi source root** (`chezmoi/.chezmoiremove`),
+with all entries as paths relative to `~`. Never nest per-subdirectory `.chezmoiremove`
+files — the root file is the one place to audit all removals:
 
 ```
-opt/dotfiles/chezmoi/dot_claude/skills/.chezmoiremove
+opt/dotfiles/chezmoi/.chezmoiremove
 ```
 ```
-# entries are relative to ~/.claude/skills/
-koopa-theming
-koopa-color-mode
-koopa-chezmoi-dotfiles
-```
-
-```
-opt/dotfiles/chezmoi/dot_claude/rules/.chezmoiremove
-```
-```
-# entries are relative to ~/.claude/rules/
-theme-colors.md
+.claude/rules/theme-colors.md
+.claude/skills/koopa-chezmoi-dotfiles
+.claude/skills/koopa-color-mode
+.claude/skills/koopa-theming
 ```
 
 On `chezmoi apply --source=~/.local/share/koopa/opt/dotfiles/chezmoi`, the listed

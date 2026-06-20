@@ -141,6 +141,7 @@ _APP_TREE: dict[str, Any] = {
     },
     "python": {
         "publish": "python-publish",
+        "publish-docs": "python-publish-docs",
         "reindex": "python-reindex",
     },
     "r": {
@@ -358,6 +359,15 @@ def _handle_python_publish(args: list[str]) -> None:
     from koopa.pypi import publish
 
     publish(args[0])
+
+
+def _handle_python_publish_docs(args: list[str]) -> None:
+    if not args:
+        print("Usage: koopa app python publish-docs <package-dir>", file=sys.stderr)
+        sys.exit(1)
+    from koopa.pypi import publish_docs
+
+    publish_docs(args[0])
 
 
 def _handle_python_reindex(_: list[str]) -> None:
@@ -2419,6 +2429,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "gpg-restart": _handle_gpg_restart,
     # python
     "python-publish": _handle_python_publish,
+    "python-publish-docs": _handle_python_publish_docs,
     "python-reindex": _handle_python_reindex,
     # r
     "r-archive": _handle_r_archive,
