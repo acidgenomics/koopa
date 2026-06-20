@@ -7,3 +7,4 @@
 ** STARTED Publish all our R and Python packages at bioconda.
 ** STARTED We should fix this for our R development systems.
     pdflatex not found! Not building PDF manual.
+** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
