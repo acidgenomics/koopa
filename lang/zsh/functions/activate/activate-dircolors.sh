@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+
+_koopa_activate_dircolors() {
+    [[ -n "${SHELL:-}" ]] || return 0
+    local dircolors
+    dircolors="${KOOPA_PREFIX:?}/bin/gdircolors"
+    if [[ ! -x "$dircolors" ]]
+    then
+        return 0
+    fi
+    local prefix
+    prefix="${XDG_CONFIG_HOME:?}/dircolors"
+    if [[ ! -d "$prefix" ]]
+    then
+        return 0
+    fi
+    local conf_file
+    conf_file="${prefix}/dircolors-${KOOPA_COLOR_MODE:?}"
+    if [[ ! -f "$conf_file" ]]
+    then
+        return 0
+    fi
+    eval "$("$dircolors" "$conf_file")"
+    alias gdir='gdir --color=auto'
+    alias gegrep='gegrep --color=auto'
+    alias gfgrep='gfgrep --color=auto'
+    alias ggrep='ggrep --color=auto'
+    alias gls='gls --color=auto'
+    alias gvdir='gvdir --color=auto'
+    return 0
+}

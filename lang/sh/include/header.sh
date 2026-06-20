@@ -3,17 +3,17 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2025-01-30.
+    # @note Updated 2026-04-30.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    if [ -f "${KOOPA_PREFIX}/lang/sh/functions.sh" ]
+    if [ -f "${KOOPA_PREFIX}/lang/sh/include/functions.sh" ]
     then
         # shellcheck source=/dev/null
-        . "${KOOPA_PREFIX}/lang/sh/functions.sh"
+        . "${KOOPA_PREFIX}/lang/sh/include/functions.sh"
     else
         for __kvar_file in \
             "${KOOPA_PREFIX}/lang/sh/functions/"*'/'*'.sh'
@@ -47,7 +47,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa.
-    # @note Updated 2024-10-04.
+    # @note Updated 2025-04-24.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -65,6 +65,7 @@ __koopa_activate_koopa() {
     _koopa_export_editor || return 1
     _koopa_export_gnupg || return 1
     _koopa_export_history || return 1
+    _koopa_export_manpager || return 1
     _koopa_export_pager || return 1
     _koopa_activate_ca_certificates || return 1
     _koopa_activate_ruby || return 1
@@ -72,18 +73,15 @@ __koopa_activate_koopa() {
     _koopa_activate_python || return 1
     _koopa_activate_pipx || return 1
     _koopa_activate_color_mode || return 1
-    _koopa_activate_alacritty || return 1
     _koopa_activate_bat || return 1
-    _koopa_activate_bottom || return 1
-    _koopa_activate_delta || return 1
     _koopa_activate_difftastic || return 1
     _koopa_activate_dircolors || return 1
     _koopa_activate_direnv || return 1
     _koopa_activate_docker || return 1
-    _koopa_activate_fzf || return 0
+    _koopa_activate_fzf || return 1
     _koopa_activate_gcc_colors || return 1
-    _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1
+    _koopa_activate_pyright || return 1
     _koopa_activate_ripgrep || return 1
     # This is problematic for keys with a passkey, so disabling at the moment.
     # > _koopa_activate_ssh_key || return 1
@@ -98,8 +96,10 @@ __koopa_activate_koopa() {
     _koopa_add_to_path_start \
         '/usr/local/sbin' \
         '/usr/local/bin' \
-        "$(_koopa_xdg_local_home)/bin" \
         "$(_koopa_scripts_private_prefix)/bin" \
+        "$(_koopa_xdg_local_home)/bin" \
+        "${HOME:?}/.bin" \
+        "${HOME:?}/bin" \
         || return 1
     _koopa_add_to_manpath_start \
         '/usr/local/man' \
@@ -114,6 +114,7 @@ __koopa_activate_koopa() {
         _koopa_check_multiple_users || return 1
     fi
     _koopa_activate_aliases || return 1
+    _koopa_activate_op || return 1
     return 0
 }
 

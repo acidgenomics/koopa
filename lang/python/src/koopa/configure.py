@@ -1,0 +1,54 @@
+"""Application configuration functions.
+
+Provides ``configure_app`` -- the Python equivalent of the Bash function
+``_koopa_configure_app``.
+"""
+
+import os
+from dataclasses import dataclass
+
+from koopa.alert import alert_configure_start, alert_configure_success
+from koopa.configurers import get_python_configurer, has_python_configurer
+from koopa.system import is_admin, is_owner, is_root
+
+
+@dataclass
+class ConfigureConfig:
+    """Configuration for application configuration."""
+
+    name: str
+    mode: str = "shared"
+    platform: str = "common"
+    verbose: bool = False
+
+
+def configure_app(config: ConfigureConfig) -> None:
+    """Configure an application in an isolated subshell."""
+    if config.verbose:
+        os.environ["KOOPA_VERBOSE"] = "1"
+    if config.mode == "shared":
+        if not is_owner():
+            msg = "Only the koopa owner can configure shared apps."
+            raise PermissionError(msg)
+    elif config.mode == "system":
+        if not is_owner():
+            msg = "Only the koopa owner can configure system apps."
+            raise PermissionError(msg)
+        if not is_admin():
+            msg = "Admin/root access required for system configuration."
+            raise PermissionError(msg)
+    elif config.mode == "user" and is_root():
+        msg = "Root user cannot configure user apps."
+        raise PermissionError(msg)
+    alert_configure_start(config.name)
+    if not has_python_configurer(config.name, config.platform, config.mode):
+        msg = f"No configurer for '{config.name}' ({config.platform}/{config.mode})."
+        raise FileNotFoundError(msg)
+    configurer = get_python_configurer(config.name, config.platform, config.mode)
+    configurer(
+        name=config.name,
+        platform=config.platform,
+        mode=config.mode,
+        verbose=config.verbose,
+    )
+    alert_configure_success(config.name)
