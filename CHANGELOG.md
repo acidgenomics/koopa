@@ -1,5 +1,37 @@
 # Changelog
 
+## koopa 0.22.0 (2026-06-20)
+
+Major changes:
+
+- Added cloud-native R package repository management for r.acidgenomics.com,
+  replacing the local drat/git approach. New `cran.py` treats S3 as the source
+  of truth: tarballs upload directly and PACKAGES manifests regenerate by
+  streaming each tarball's DESCRIPTION, using S3 ETags as checksums. Exposed
+  via `koopa app r publish`, `publish-from-github`, `reindex`, `archive`,
+  `deploy`, and `clean-orphan-binaries`. Only sonoma-arm64 carries active
+  binaries; older macOS arm64 prefixes get empty skeleton manifests so clients
+  fall back to source silently. CloudFront manifest paths are invalidated after
+  each publish.
+- Added private PyPI index management for python.acidgenomics.com. New
+  `pypi.py` publishes Acid Genomics Python packages to an S3 + CloudFront
+  PEP 503 index served at the domain root, via `koopa app python publish`,
+  `publish-docs`, and `reindex`.
+- Moved AWS account ID and private S3 bucket names out of source code into
+  `.env`, loaded lazily via helpers in `aws.py` (`aws_account_id()`,
+  `koopa_s3_bucket()`). All installers and `cran.py`/`pypi.py` now resolve
+  these at call time rather than at import.
+
+Minor changes:
+
+- Improved antigravity-cli installer and updated its version-check logic to
+  use the Google auto-updater manifest.
+- Put `.luarc.json` under version control (LuaLS configuration for VS Code).
+- Normalized the Apache-2.0 `LICENSE` text to the canonical upstream wording.
+- Updated app versions across the registry, bumped the bootstrap version, and
+  refreshed shell completions.
+- Reorganized bundled Claude Code skills and rules (internal tooling).
+
 ## koopa 0.21.0 (2026-06-19)
 
 Major changes:

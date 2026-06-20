@@ -1,3 +1,4 @@
+** TODO Before finalizing release, can we confirm that tmux configuration is fixed on EC2?
 ** STARTED How can we push website documentation for Python packages to python.acidgenomics.com?
    Implemented koopa app python publish-docs. Docs host at
    python-docs.acidgenomics.com/<name>/. Requires one-time AWS provisioning:
@@ -5,6 +6,4 @@
    Route53 record, and AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS in .env.
    See koopa-python-release skill for full details.
 ** STARTED Publish all our R and Python packages at bioconda.
-** STARTED We should fix this for our R development systems.
-    pdflatex not found! Not building PDF manual.
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
