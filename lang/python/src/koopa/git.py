@@ -169,6 +169,22 @@ def git_latest_tag(path: str = ".") -> str:
     return result.stdout.strip()
 
 
+def git_tag_exists(tag: str, path: str = ".") -> bool:
+    """Check if a git tag exists locally."""
+    result = _git("tag", "--list", tag, cwd=path)
+    return bool(result.stdout.strip())
+
+
+def git_create_tag(tag: str, message: str, path: str = ".") -> None:
+    """Create an annotated git tag."""
+    _git("tag", "-a", tag, "-m", message, cwd=path)
+
+
+def git_push_tag(tag: str, path: str = ".") -> None:
+    """Push a tag to origin."""
+    _git("push", "origin", tag, cwd=path, capture=False)
+
+
 def git_push_submodules(path: str = ".") -> None:
     """Push all submodules."""
     _git("push", "--recurse-submodules=on-demand", cwd=path, capture=False)

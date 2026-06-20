@@ -81,6 +81,55 @@ file-stat.
 `hostname`, `curl`, `wget`, `scutil`, `networksetup`, `dig`, `nslookup`. If found,
 flag it and replace with a file-stat or env-var check.
 
+## direnv Must Capture Its Baseline Last
+
+### How `_koopa_activate_direnv` works (two-step)
+
+1. **Hook sourcing** (order-independent): caches and sources `direnv hook <shell>`, which
+   installs a precmd/chpwd hook. This step is safe at any activation position.
+2. **`eval "$(direnv export <shell>)"`** (order-critical): this fires immediately at
+   activation time. If the shell is already inside a directory with an `.envrc` (e.g. the
+   koopa repo's `.envrc` which activates `.venv`), direnv loads the `.envrc` **and records the
+   current PATH as its restore baseline** — the snapshot it will revert to on
+   `direnv: unloading`.
+
+### The invariant
+
+**`_koopa_activate_direnv` must be the last PATH-mutating step in activation.**
+
+If it runs *before* any `_koopa_add_to_path_start` calls, the baseline is frozen at a
+mid-activation PATH where `koopa/bin` precedes `/usr/local/bin`. On `direnv: unloading` the
+PATH reverts to that snapshot, floating `koopa/bin` ahead of `/usr/local/bin` and shadowing
+system tools.
+
+Correct position in every shell header: **after the final `_koopa_add_to_path_start` block**
+(the `/usr/local/bin` / `~/.local/bin` block), just before the aliases/today-bucket block.
+
+### Failure signature
+
+- Shell is launched *inside* a directory with an `.envrc`
+- Navigate away → `direnv: unloading` is printed
+- `which R` (or `whence -p R`, `which python`, etc.) resolves to a **koopa-managed** binary
+  rather than the expected system tool
+
+### Verification
+
+```sh
+# Should print /usr/local/bin/R (was koopa/bin/R before fix)
+zsh -lic 'cd ~/.local/share/koopa; cd /tmp; whence -p R'
+
+# Should still print /usr/local/bin/R (regression check)
+zsh -lic 'cd /tmp; cd ~/.local/share/koopa; cd /tmp; whence -p R'
+
+# PATH head — /usr/local/bin must precede koopa/bin after unload
+zsh -lic 'cd ~/.local/share/koopa; cd /tmp; printf "%s\n" "${(@s/:/)PATH}" | head -5'
+```
+
+### Affected shells / exemptions
+
+All shells with a `_koopa_activate_direnv` call are subject to this ordering constraint:
+bash, zsh, fish, nushell, powershell. **elvish** has no direnv activation — exempt.
+
 ### Verification (run before merging any shell changes)
 
 ```sh

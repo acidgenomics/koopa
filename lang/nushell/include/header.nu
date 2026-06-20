@@ -61,7 +61,6 @@ export def _koopa_activate_koopa [] {
     _koopa_activate_conda
     _koopa_activate_difftastic
     _koopa_activate_fzf
-    _koopa_activate_direnv
     _koopa_activate_zoxide
     _koopa_activate_starship
     _koopa_activate_color_mode_sync
@@ -90,6 +89,7 @@ export def _koopa_activate_koopa [] {
         $"($env.HOME)/.bin"
         $"($env.HOME)/bin"
     ]
+    _koopa_activate_direnv
 }
 
 # Run activation if KOOPA_ACTIVATE is set.

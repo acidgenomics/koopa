@@ -90,7 +90,6 @@ __koopa_activate_koopa() {
     _koopa_activate_bat || return 1
     _koopa_activate_difftastic || return 1
     _koopa_activate_dircolors || return 1
-    _koopa_activate_direnv || return 1
     _koopa_activate_docker || return 1
     _koopa_activate_fzf || return 1
     _koopa_activate_gcc_colors || return 1
@@ -120,6 +119,7 @@ __koopa_activate_koopa() {
     _koopa_add_to_manpath_end \
         '/usr/share/man' \
         || return 1
+    _koopa_activate_direnv || return 1
     if ! _koopa_is_subshell
     then
         _koopa_activate_today_bucket || return 1

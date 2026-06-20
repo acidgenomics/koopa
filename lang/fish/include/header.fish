@@ -50,7 +50,6 @@ function __koopa_activate_koopa
     _koopa_activate_bat
     _koopa_activate_difftastic
     _koopa_activate_dircolors
-    _koopa_activate_direnv
     _koopa_activate_docker
     _koopa_activate_fzf
     _koopa_activate_lesspipe
@@ -83,6 +82,7 @@ function __koopa_activate_koopa
     _koopa_activate_atuin
     _koopa_activate_pyenv
     _koopa_activate_rbenv
+    _koopa_activate_direnv
     if not _koopa_is_subshell
         # Create today bucket symlink.
         set -l today_dir "$HOME/today"

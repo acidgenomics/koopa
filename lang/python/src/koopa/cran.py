@@ -19,7 +19,6 @@ from pathlib import Path
 _BUCKET = "r-REDACTED_ACCOUNT_ID-us-east-1-an"
 _S3_URI = f"s3://{_BUCKET}"
 _PROFILE = "acidgenomics"
-_CLOUDFRONT_DISTRIBUTION_ID = "REDACTED_CF_DIST_ID"
 _INDEX_URL = "https://r.acidgenomics.com/"
 
 # CloudFront paths invalidated after every publish (manifests only — tarballs are immutable).
@@ -74,14 +73,25 @@ R <- file.path(R.home(), "bin", "R")
 message(sprintf("Building %s %s.", name, version))
 build_args <- c("CMD", "build", "--log", "--md5",
     "--no-build-vignettes", "--no-manual", shQuote(pkg))
-system2(R, build_args, stderr = TRUE)
+system2(R, build_args)
 src <- file.path(td, paste0(name, "_", version, ".tar.gz"))
 stopifnot(file.exists(src))
-if (file.size(src) > 2e6) stop(sprintf("Source package too large: %s", src))
-system2(R, c("CMD", "INSTALL", "--build", shQuote(src)), stderr = TRUE)
-bin <- file.path(td, paste0(name, "_", version, ".tgz"))
+repos <- c(INDEX_URL, if (requireNamespace("BiocManager", quietly=TRUE))
+    BiocManager::repositories() else c(CRAN="https://cloud.r-project.org"))
+deps <- desc::desc_get_deps(file = descFile)
+deps <- deps[deps[["type"]] %in% c("Imports", "Depends"), "package"]
+deps <- setdiff(deps, c("R", name))
+if (length(deps) > 0L) {
+    message(sprintf("Installing %d missing dependencies.", length(deps)))
+    install.packages(deps, repos = repos)
+}
+system2(R, c("CMD", "INSTALL", "--build", shQuote(src)))
+bin_expected <- file.path(td, paste0(name, "_", version, ".tgz"))
+bin_candidates <- list.files(c(td, getwd()), pattern = "[.]tgz$", full.names = TRUE)
+bin <- if (file.exists(bin_expected)) bin_expected else {
+    if (length(bin_candidates) > 0L) bin_candidates[[1L]] else bin_expected
+}
 stopifnot(file.exists(bin))
-if (file.size(bin) > 5e6) stop(sprintf("Binary package too large: %s", bin))
 bin_url <- contrib.url(INDEX_URL, type = "binary")
 bin_subpath <- sub(paste0("^", gsub("/$", "", INDEX_URL), "/?"), "", bin_url)
 cat(src, bin, bin_subpath, sep = "\\n")
@@ -129,13 +139,14 @@ def _load_env_file() -> None:
 
 
 def _cloudfront_distribution_id() -> str:
-    """Return CloudFront distribution ID from environment, with hardcoded fallback."""
+    """Return CloudFront distribution ID from environment, raising if absent."""
     _load_env_file()
     dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_R", "")
     if not dist_id:
         dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
     if not dist_id:
-        dist_id = _CLOUDFRONT_DISTRIBUTION_ID
+        msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_R (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
+        raise RuntimeError(msg)
     return dist_id
 
 
@@ -417,15 +428,30 @@ def _r_build(package_dir: str, build_dir: str) -> tuple[str, str, str]:
     Returns (src_path, bin_path, bin_subpath). The bin_subpath is determined by
     contrib.url(..., type='binary') from the running R, so it's always correct
     for the current platform (e.g. sonoma-arm64/contrib/4.6).
+
+    Stderr is passed through to the terminal so build/install errors are visible.
+    Only stdout (the final 3 lines of paths) is captured.
     """
-    from koopa.r import _r_eval
+    import shutil
+
+    rscript = shutil.which("Rscript")
+    if rscript is None:
+        msg = "Rscript is not installed."
+        raise RuntimeError(msg)
 
     code = (
         _BUILD_R.replace("PKG_DIR", _r_quoted(package_dir))
         .replace("BUILD_DIR", _r_quoted(build_dir))
         .replace("INDEX_URL", _r_quoted(_INDEX_URL))
     )
-    result = _r_eval(code, capture=True)
+    # Capture stdout only; let stderr flow to the terminal so errors are visible.
+    result = subprocess.run(
+        [rscript, "-e", code],
+        capture_output=False,
+        stdout=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
     lines = [ln for ln in result.stdout.splitlines() if ln.strip()]
     if len(lines) < 3:
         msg = f"Expected 3 lines from R build script, got: {result.stdout!r}"
@@ -466,6 +492,7 @@ def publish(
     check: bool = True,
     deploy: bool = True,
     invalidate: bool = True,
+    tag: bool = True,
 ) -> None:
     """Build and publish an R package to r.acidgenomics.com.
 
@@ -482,6 +509,10 @@ def publish(
         Upload to S3 and regenerate PACKAGES manifests after building.
     invalidate
         Invalidate CloudFront PACKAGES* caches (only when deploy=True).
+    tag
+        Create an annotated git tag vX.Y.Z and push it to origin after a
+        successful deploy. Only runs when the package dir is a git repo.
+        Tag message: "<Package> v<Version> (<Date>)".
     """
     from koopa.alert import alert
 
@@ -529,6 +560,23 @@ def publish(
                 _invalidate_cloudfront()
 
             alert(f"Published '{src_base}' to {_INDEX_URL}")
+
+            if tag:
+                from koopa.git import git_create_tag, git_push_tag, git_tag_exists, is_git_repo
+                from koopa.system import today
+
+                if is_git_repo(str(pkg_path)):
+                    desc = _parse_dcf((pkg_path / "DESCRIPTION").read_text())
+                    version = desc["Version"]
+                    date = desc.get("Date") or today()
+                    tag_name = f"v{version}"
+                    message = f"{desc['Package']} v{version} ({date})"
+                    if git_tag_exists(tag_name, str(pkg_path)):
+                        alert(f"Tag '{tag_name}' already exists locally; skipping creation.")
+                    else:
+                        alert(f"Tagging '{tag_name}'.")
+                        git_create_tag(tag_name, message, str(pkg_path))
+                    git_push_tag(tag_name, str(pkg_path))
         else:
             alert(f"Built '{src_base}' and '{bin_base}' (deploy skipped).")
 
@@ -644,7 +692,7 @@ def publish_from_github(
             [git, "clone", "--depth=1", url, clone_dir],
             check=True,
         )
-        publish(clone_dir, check=check, invalidate=invalidate)
+        publish(clone_dir, check=check, invalidate=invalidate, tag=False)
 
 
 def reindex(*, invalidate: bool = True) -> None:

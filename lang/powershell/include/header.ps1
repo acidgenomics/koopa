@@ -33,7 +33,6 @@ function __koopa_activate_koopa {
     _koopa_activate_bat
     _koopa_activate_conda
     _koopa_activate_dircolors
-    _koopa_activate_direnv
     _koopa_activate_docker
     _koopa_activate_fzf
     _koopa_activate_lesspipe
@@ -74,6 +73,7 @@ function __koopa_activate_koopa {
     )
     _koopa_add_to_manpath_start @('/usr/local/man', '/usr/local/share/man')
     _koopa_add_to_manpath_end '/usr/share/man'
+    _koopa_activate_direnv
     _koopa_activate_difftastic
     _koopa_activate_aliases
     _koopa_activate_starship

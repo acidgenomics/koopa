@@ -476,6 +476,12 @@ def _handle_r_publish(args: list[str]) -> None:
         action="store_false",
         help="Skip CloudFront cache invalidation.",
     )
+    parser.add_argument(
+        "--no-tag",
+        dest="tag",
+        action="store_false",
+        help="Skip creating and pushing the git release tag.",
+    )
     parsed = parser.parse_args(args)
     from koopa.cran import publish
 
@@ -484,6 +490,7 @@ def _handle_r_publish(args: list[str]) -> None:
         check=parsed.check,
         deploy=parsed.deploy,
         invalidate=parsed.invalidate,
+        tag=parsed.tag,
     )
 
 

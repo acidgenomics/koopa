@@ -3,7 +3,7 @@
 ## Hosting
 
 Python packages are hosted at **python.acidgenomics.com** — a private PEP 503
-"simple" index backed by S3 (`s3://python-REDACTED_ACCOUNT_ID-us-east-1-an`) and served
+"simple" index backed by S3 (bucket in `_BUCKET` in `lang/python/src/koopa/pypi.py`) and served
 via CloudFront. Packages are NOT published to public pypi.org.
 
 - Packages: `s3://…/packages/<file>`
