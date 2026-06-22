@@ -401,7 +401,7 @@
     ],
     "category": "Text",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-06-22",
     "default": false,
     "description": "AST-aware structural code search and replace tool",
     "installer": "conda-package",
@@ -410,7 +410,7 @@
       "https://ast-grep.github.io/",
       "https://github.com/ast-grep/ast-grep/"
     ],
-    "version": "0.43.0"
+    "version": "0.44.0"
   },
   "attr": {
     "build_dependencies": [
@@ -605,7 +605,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-06-19",
+    "date": "2026-06-22",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -617,7 +617,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.35.7"
+    "version": "2.35.9"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1573,7 +1573,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-06-19",
+    "date": "2026-06-22",
     "default": true,
     "dependencies": [
       "node"
@@ -1587,7 +1587,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.183"
+    "version": "2.1.185"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1687,7 +1687,7 @@
       "git-cz"
     ],
     "category": "Python",
-    "date": "2026-05-31",
+    "date": "2026-06-22",
     "default": true,
     "dependencies": [
       "python"
@@ -1700,7 +1700,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.16.3"
+    "version": "4.16.4"
   },
   "conda": {
     "bin": [
@@ -2415,7 +2415,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-19",
+    "date": "2026-06-22",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2425,14 +2425,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "dce7f1d376cc21619cf161d288cc34512a211445"
+    "version": "0012109e82f55299c38df7444daf0470f716e023"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-06-20",
+    "date": "2026-06-22",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2442,7 +2442,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "fbd4a606bf2d13953b278fefa601663189a45ca8"
+    "version": "6e2f10b53b83db6d06837456512ca73fa5e8da61"
   },
   "du-dust": {
     "bin": [
@@ -3408,14 +3408,13 @@
       "gget"
     ],
     "category": "Bioinformatics",
-    "date": "2026-06-11",
+    "date": "2026-06-22",
     "default": false,
     "dependencies": [
       "python"
     ],
     "description": "efficient querying of genomic databases",
     "installer": "python-package",
-    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -3426,7 +3425,7 @@
       "https://github.com/pachterlab/gget",
       "https://pypi.org/project/gget/"
     ],
-    "version": "0.30.6"
+    "version": "0.30.7"
   },
   "gh": {
     "bin": [
@@ -3872,7 +3871,7 @@
       "rust"
     ],
     "category": "Bioinformatics",
-    "date": "2026-04-29",
+    "date": "2026-06-22",
     "default": false,
     "dependencies": [
       "python"
@@ -3883,7 +3882,7 @@
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.2.1"
+    "version": "1.3.0"
   },
   "gsl": {
     "date": "2024-12-30",
@@ -4575,7 +4574,7 @@
     ],
     "category": "Text",
     "conda_channel": "conda-forge",
-    "date": "2025-10-08",
+    "date": "2026-06-22",
     "default": true,
     "description": "lightweight command-line JSON processor",
     "installer": "conda-package",
@@ -4586,7 +4585,7 @@
     "url": [
       "https://github.com/stedolan/jq/"
     ],
-    "version": "1.8.1"
+    "version": "1.8.2"
   },
   "julia": {
     "bin": [
@@ -5988,7 +5987,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-06-19",
+    "date": "2026-06-22",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -5998,7 +5997,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.6.9"
+    "version": "2026.6.12"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -8441,7 +8440,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-06-19",
+    "date": "2026-06-22",
     "default": false,
     "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
@@ -8450,7 +8449,7 @@
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "2.0.1"
+    "version": "2.1.1"
   },
   "sambamba": {
     "date": "2024-12-30",
@@ -8818,7 +8817,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-06-19",
+    "date": "2026-06-22",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8828,7 +8827,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "dd7db2156218b359167219a17b16f0857b0a4d10"
+    "version": "7ee024bd93d7737c8c4e40dd04934d15e3ff87b9"
   },
   "spacevim": {
     "date": "2026-05-10",
