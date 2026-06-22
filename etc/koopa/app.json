@@ -10425,6 +10425,26 @@
     ],
     "version": "2026.6.9"
   },
+  "zed": {
+    "bin": [
+      "zed"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Editor",
+    "conda_channel": "conda-forge",
+    "date": "2026-06-22",
+    "default": false,
+    "description": "high-performance, multiplayer code editor",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://zed.dev/",
+      "https://github.com/zed-industries/zed/"
+    ],
+    "version": "1.7.2"
+  },
   "zellij": {
     "bin": [
       "zellij"
