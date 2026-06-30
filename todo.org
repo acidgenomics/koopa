@@ -6,9 +6,3 @@
    Route53 record, and AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS in .env.
    See koopa-python-release skill for full details.
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
-** TODO How did we hit this situation with clickhouse?
-    clickhouse: 26.4.4.38 pinned too high (latest stable: 26.3.16.16)
-** TODO Resolve this pinning issue?
-    glib: 2.89.0 pinned too high (latest stable: 2.88.2)
-** TODO Need to fix glib version check
-  glib           2.89.0  (latest stable: 2.88.2)  (gitlab)
