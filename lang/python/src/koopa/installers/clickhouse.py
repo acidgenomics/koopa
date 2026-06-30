@@ -26,7 +26,7 @@ def main(
         suffix = "-aarch64" if machine == "arm64" else ""
         url = (
             f"https://github.com/ClickHouse/ClickHouse/releases/download/"
-            f"v{version}-lts/clickhouse-macos{suffix}"
+            f"v{version}-stable/clickhouse-macos{suffix}"
         )
         dest = os.path.join(bin_dir, "clickhouse")
         download(url, dest)
@@ -36,7 +36,7 @@ def main(
         arch_slug = "arm64" if machine == "arm64" else "amd64"
         url = (
             f"https://github.com/ClickHouse/ClickHouse/releases/download/"
-            f"v{version}-lts/clickhouse-common-static-{version}-{arch_slug}.tgz"
+            f"v{version}-stable/clickhouse-common-static-{version}-{arch_slug}.tgz"
         )
         tarball = download(url)
         extract(tarball, prefix)

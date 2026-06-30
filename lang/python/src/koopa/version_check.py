@@ -1105,6 +1105,39 @@ def _check_staden_io_lib() -> str:
     return m.group(1).replace("-", ".")
 
 
+def _check_clickhouse() -> str:
+    """Check clickhouse, tracking the latest stable release line."""
+    data = _http_get_json(
+        "https://api.github.com/repos/ClickHouse/ClickHouse/tags?per_page=100",
+        github=True,
+    )
+    versions: list[str] = []
+    for tag in data:
+        m = re.match(r"v([\d.]+)-stable$", tag["name"])
+        if m:
+            versions.append(m.group(1))
+    if not versions:
+        msg = "No clickhouse stable tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=_version_key)
+
+
+def _check_glib() -> str:
+    """Check glib, restricting to GNOME stable (even-minor) releases."""
+    base = "https://gitlab.gnome.org/api/v4/projects/GNOME%2Fglib"
+    data = _gitlab_get_json(f"{base}/releases?per_page=20")
+    versions: list[str] = []
+    for rel in data:
+        v = sanitize_version(rel.get("tag_name", rel.get("name", "")))
+        parts = v.split(".")
+        if len(parts) >= 2 and int(parts[1]) % 2 == 0:
+            versions.append(v)
+    if not versions:
+        msg = "No stable glib releases found"
+        raise RuntimeError(msg)
+    return max(versions, key=_version_key)
+
+
 def _check_temurin() -> str:
     info = _http_get_json("https://api.adoptium.net/v3/info/available_releases")
     lts = info.get("most_recent_lts")
@@ -1505,6 +1538,8 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         extra_fields_fn=_fetch_antigravity_cli_extra_fields,
     ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
+    "clickhouse": _AppCheckSpec("github", _check_clickhouse, ()),
+    "glib": _AppCheckSpec("gitlab", _check_glib, ()),
     "attr": _AppCheckSpec(
         "dirlist",
         lambda: _check_nongnu("attr"),
