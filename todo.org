@@ -6,3 +6,4 @@
    Route53 record, and AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS in .env.
    See koopa-python-release skill for full details.
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
+** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
