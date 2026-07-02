@@ -3483,6 +3483,7 @@
       "make",
       "perl",
       "python",
+      "rust",
       "vim",
       "xz"
     ],
@@ -3503,6 +3504,7 @@
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
     ],
+    "revision": 1,
     "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [

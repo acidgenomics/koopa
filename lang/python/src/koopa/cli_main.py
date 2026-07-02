@@ -710,6 +710,10 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             warn(f"Installing missing default apps failed: {exc}")
         try:
+            update_system_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"System updates failed: {exc}")
+        try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")

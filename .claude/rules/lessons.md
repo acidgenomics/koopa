@@ -31,9 +31,12 @@
 | `koopa-dotfiles` | opt/dotfiles standalone clone, detached-HEAD-before-commit, license metadata |
 | `koopa-google-ai-cli` | Antigravity CLI (`agy`) installer — GCS versioned-URL pinning, build_id+SHA512 stored in app.json (auto-updated via `extra_fields_fn`), self-update gate, `~/.gemini/` config layout, gemini-cli successor relationship |
 | `koopa-completion` | completion generator architecture, bash lazy-load, zsh compdump freshness, flag-gate bug pattern (bare TAB on leaf commands), `generate-completion` regen workflow |
+| `git` | git 2.55 features — `git history` (fixup/reword/split), `format-rev` (EXPERIMENTAL), `url-parse`, `checkout -m` autostash, `--graph-lane-limit`, `--max-count-oldest`, push to remote groups, Linux fsmonitor |
+| `koopa-git` | koopa develop→main PR pattern, `-X ours` conflict resolution, tag management, rebase-abort recovery |
 | `git-history-surgery` | git filter-repo identity rewrites, commit-tree replay for dedup (user-global skill) |
 | `elvish` | `eval` namespace isolation, closure/fn capture order, `use` compile-time lexical scoping, `edit:` interactive-only, `path:` 0.21.0 API, `brew shellenv` workaround, `(src)` under eval, koopa activation architecture |
 | `powershell` | activation architecture, starship mtime-guarded cache + header.ps1 ordering constraint, color-mode sync hook (file re-render trigger, marker+sentinel guard, `Start-Process -NoNewWindow` idiom), `_koopa_is_light_mode` per-platform detection, `sys.platform == "win32"` guard for `winreg` |
+| `koopa-rust` | Rust/cargo conventions for koopa installers — hermetic `CARGO_HOME` (always `tempfile.mkdtemp(prefix="koopa-cargo-")`), `"rust"` in `build_dependencies`, `NO_RUST` opt-out policy, offline crate check |
 | `koopa-vscode` | Quarto VS Code plugin + LuaLS `.luarc.json` — portable path pattern (relative paths resolve against workspace root, use `opt/quarto/share/...` symlink not versioned `app/` path), remove `Generator` key to take manual control, strip `/.luarc.json` from `.gitignore`, LuaLS placeholder support (`${env:VAR}`, `${workspaceFolder}`, `~`) |
 | `license` | Apache-2.0 LICENSE file conventions — canonical sources per repo type (Python/koopa/dotfiles: `gh api /licenses/apache-2.0`; R packages: usethis template), how GitHub licensee detection works, corruption history, badge wiring |
 
