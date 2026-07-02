@@ -8,3 +8,4 @@
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
 ** TODO koopa system check warns about system R version mismatch but koopa update doesn't handle that automatically.
     How should we recommend users fix this situation?
+** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
