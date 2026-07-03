@@ -7,3 +7,5 @@
    See koopa-python-release skill for full details.
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
 ** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
+** TODO Need to fix an error with our git version checker
+    git: check failed (connection error)
