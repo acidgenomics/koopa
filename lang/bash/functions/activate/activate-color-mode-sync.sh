@@ -17,6 +17,19 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
+        # File-driven re-render trigger (starship/bat/delta toml). Backgrounded,
+        # marker + sentinel guarded; mirrors _koopa_activate_color_mode.
+        if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+        then
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$new_mode" ]]
+            then
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &
+                disown
+            fi
+        fi
         return 0
     }
     if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]

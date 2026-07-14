@@ -1012,6 +1012,57 @@ def _handle_spotlight(args: list[str]) -> None:
     print(output)
 
 
+def _handle_reset_terminal(args: list[str]) -> None:
+    """Handle ``koopa run reset-terminal``.
+
+    Emits the DEC private-mode disable sequences that remote tmux leaves
+    enabled on the local terminal when an SSH session dies abruptly (mouse
+    tracking modes 1000/1002/1003/1006, color-scheme reporting mode 2031,
+    alternate screen, focus events, bracketed paste), then runs ``stty sane``
+    and ``tput reset`` to return the terminal to a sane cooked state.
+
+    Recovery for: ``^[[<0;56;29M`` (SGR mouse reports) and ``^[[?997;2n``
+    (mode-2031 light-mode reports) leaking as literal keystrokes.
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="reset-terminal",
+        description="Reset terminal DEC private modes and tty state.",
+    )
+    parser.parse_args(args)
+
+    # Emit all disable sequences in a single write to minimise the window
+    # between sequences.  Open /dev/tty directly so this works even when
+    # stdout is redirected.
+    sequences = (
+        "\033[?1000l"  # mouse tracking off (X10)
+        "\033[?1002l"  # mouse tracking off (button events)
+        "\033[?1003l"  # mouse tracking off (all events)
+        "\033[?1006l"  # SGR mouse encoding off
+        "\033[?1004l"  # focus event reporting off
+        "\033[?2004l"  # bracketed paste off
+        "\033[?2031l"  # color-scheme reporting (mode 2031) off
+        "\033[?1049l"  # leave alternate screen
+        "\033[?25h"  # show cursor
+    )
+    try:
+        with open("/dev/tty", "w") as tty:
+            tty.write(sequences)
+            tty.flush()
+    except OSError:
+        sys.stdout.write(sequences)
+        sys.stdout.flush()
+
+    stty = shutil.which("stty")
+    if stty is not None:
+        subprocess.run([stty, "sane"], check=True)
+
+    tput = shutil.which("tput")
+    if tput is not None:
+        subprocess.run([tput, "reset"], check=True)
+
+
 # -- Dispatch table ------------------------------------------------------------
 
 
@@ -1059,6 +1110,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "rename-lowercase": _handle_rename_lowercase,
     "rename-snake-case": _handle_rename_snake_case,
     "rg-sort": _handle_rg_sort,
+    "reset-terminal": _handle_reset_terminal,
     "rg-unique": _handle_rg_unique,
     "sort-lines": _handle_sort_lines,
     "spotlight": _handle_spotlight,

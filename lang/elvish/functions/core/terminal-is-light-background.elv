@@ -1,12 +1,15 @@
 # Query terminal background color via OSC 11.
 # @note Updated 2026-05-30.
 fn terminal-is-light-background {
+    # Hoist old-settings before try so the catch block can restore tty state
+    # if an error occurs after stty raw is set.
+    var old-settings = ''
+    try { set old-settings = (stty -g) } catch { put $false; return }
     try {
         if (or (has-env TMUX) (str:has-prefix (get-env TERM) 'screen') (str:has-prefix (get-env TERM) 'tmux')) {
             put $false
             return
         }
-        var old-settings = (stty -g)
         stty raw -echo min 0 time 2
         print "\x1b]11;?\x1b\\" > /dev/tty
         var response = (dd bs=64 count=1 < /dev/tty 2>/dev/null)
@@ -26,6 +29,8 @@ fn terminal-is-light-background {
         var luma = (math:trunc (/ (+ (* $r 299) (* $g 587) (* $b 114)) 1000))
         put (> $luma 128)
     } catch {
+        # Restore tty settings if an error occurred after stty raw was set.
+        try { stty $old-settings } catch { }
         put $false
     }
 }

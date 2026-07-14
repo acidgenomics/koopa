@@ -9,7 +9,6 @@ from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
 from koopa.install import can_build_binary
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
-from koopa.system import has_firewall
 from koopa.version import major_minor_version
 
 
@@ -22,10 +21,21 @@ def main(
 ) -> None:
     """Install python."""
     env = activate_app_deps()
-    if has_firewall() or can_build_binary():
+    if can_build_binary():
+        # Builder machines compile from source to produce distributable binaries.
         _install_from_source(version=version, prefix=prefix, env=env)
     else:
-        _install_from_uv(version=version, prefix=prefix, env=env)
+        # Everyone else prefers the prebuilt uv CPython (seconds, no compile).
+        # Fall back to a source build if the CDN is unreachable (e.g. strict
+        # firewall that blocks even HTTPS downloads).
+        try:
+            _install_from_uv(version=version, prefix=prefix, env=env)
+        except (subprocess.CalledProcessError, OSError, RuntimeError) as exc:
+            print(
+                f"  uv python install failed ({exc}); falling back to source build.",
+                file=sys.stderr,
+            )
+            _install_from_source(version=version, prefix=prefix, env=env)
 
 
 def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
@@ -43,12 +53,10 @@ def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
     conf_args = [
         "--enable-ipv6",
         "--enable-loadable-sqlite-extensions",
-        "--enable-optimizations",
         "--enable-shared",
         f"--prefix={prefix}",
         "--with-computed-gotos",
         "--with-ensurepip=install",
-        "--with-lto",
         f"--with-openssl={openssl_prefix}",
         f"BZIP2_CFLAGS=-I{bzip2_prefix}/include",
         f"BZIP2_LIBS=-L{bzip2_prefix}/lib -lbz2",
@@ -58,6 +66,12 @@ def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
         "py_cv_module__gdbm=disabled",
         "py_cv_module__tkinter=disabled",
     ]
+    # PGO (--enable-optimizations) runs the full CPython test suite during the
+    # build and roughly doubles/triples compile time.  LTO (--with-lto) also
+    # adds significant overhead.  Enable both only on designated builder machines
+    # that produce distributable binaries; regular installs use the faster path.
+    if can_build_binary():
+        conf_args += ["--enable-optimizations", "--with-lto"]
     if sys.platform == "darwin":
         conf_args.append("--with-dtrace=/usr/sbin/dtrace")
         arch = os.uname().machine
