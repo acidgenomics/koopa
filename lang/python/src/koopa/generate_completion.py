@@ -19,7 +19,7 @@ Usage::
 import ast
 import os
 from datetime import date
-from typing import Any
+from typing import Any, cast
 
 # ---------------------------------------------------------------------------
 # Static data: commands that cannot be introspected from Python dispatch
@@ -105,6 +105,7 @@ def _get_main_command_flags() -> dict[str, list[str]]:
         if name not in _TOP_CMDS:
             continue
         flags = ["--help"]
+        subparser = cast(argparse.ArgumentParser, subparser)
         for action in subparser._actions:
             for opt in action.option_strings:
                 if opt.startswith("--"):
