@@ -23,5 +23,15 @@ function _koopa_activate_color_mode_sync
             set _palette (test -n "$XDG_CONFIG_HOME" && echo "$XDG_CONFIG_HOME" || echo "$HOME/.config")/fish/dracula-pro-colors.fish
         end
         test -f "$_palette"; and source "$_palette"
+        # File-driven re-render trigger (starship/bat/delta toml). Backgrounded,
+        # marker + sentinel guarded; mirrors bash _koopa_activate_color_mode.
+        if not set -q KOOPA_COLOR_MODE_SYNCING
+            set -l applied_file "$HOME/.cache/koopa/color-mode-applied"
+            if not test -f "$applied_file"
+                or test (string trim < "$applied_file") != "$new_mode"
+                $KOOPA_PREFIX/bin/koopa configure user color-mode > /dev/null 2>&1 &
+                disown
+            end
+        end
     end
 end

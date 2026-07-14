@@ -2683,6 +2683,7 @@ def _remove_from_pending_plan(app: str) -> None:
 
 def _install_app_worker(
     config: "InstallConfig",
+    pid_map: "dict[str, int] | None" = None,
 ) -> tuple[str, str, float, str | None, str | None]:
     """Run install_app in a child process and return (name, version, elapsed, error, tail).
 
@@ -2691,12 +2692,25 @@ def _install_app_worker(
     without touching the terminal; the parent owns all progress output.
     Returns a structured tuple so the parent can surface the log tail on failure
     without embedding multi-line text in an exception message.
+
+    When *pid_map* is provided (a Manager dict), the worker registers its PID so
+    the parent scheduler can target the process tree for a hard-abort kill.
     """
+    import contextlib
     import time
 
     from koopa.progress import get_last_failure_tail
 
+    # Become a session leader so the parent can os.killpg() the full process
+    # tree (compiler sub-processes, linkers, etc.) on a hard timeout abort.
+    # Guard against the rare case where the spawn worker is already a session
+    # leader (os.setsid() raises OSError in that case).
+    with contextlib.suppress(OSError):
+        os.setsid()
+
     config.noninteractive = True
+    if pid_map is not None:
+        pid_map[config.name] = os.getpid()
     t0 = time.monotonic()
     try:
         install_app(config)
@@ -2720,7 +2734,37 @@ def _io_cap() -> int:
         return 4
 
 
-def _run_install_plan(  # noqa: C901, PLR0915
+def _warn_threshold() -> int | None:
+    """Return KOOPA_INSTALL_APP_WARN seconds, default 1800 (30 min).
+
+    Set to 0 to disable the slow-app warning entirely.
+    """
+    try:
+        val = int(os.environ.get("KOOPA_INSTALL_APP_WARN", "1800"))
+        return val if val > 0 else None
+    except ValueError:
+        return 1800
+
+
+def _timeout_threshold() -> int | None:
+    """Return KOOPA_INSTALL_APP_TIMEOUT seconds, or None (disabled) if unset.
+
+    When set, a running app that exceeds this threshold is killed and the
+    batch is aborted.  This is a hard abort — the entire pool is shut down,
+    not just the one app, because ProcessPoolExecutor workers cannot be
+    killed in isolation without poisoning the pool.
+    """
+    raw = os.environ.get("KOOPA_INSTALL_APP_TIMEOUT", "")
+    if not raw:
+        return None
+    try:
+        val = int(raw)
+        return val if val > 0 else None
+    except ValueError:
+        return None
+
+
+def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     plan: list[tuple[str, str]],
     dep_map: dict[str, set[str]],
     *,
@@ -2738,7 +2782,9 @@ def _run_install_plan(  # noqa: C901, PLR0915
     """
     import concurrent.futures
     import multiprocessing
+    import signal
     import time
+    from typing import cast
 
     from koopa.alert import _supports_color, alert
     from koopa.app import is_cpu_bound_app
@@ -2747,6 +2793,7 @@ def _run_install_plan(  # noqa: C901, PLR0915
         _SPINNER_FRAMES,
         _fmt_duration,
         _styled_time,
+        build_log_path,
         format_completion_line,
     )
 
@@ -2801,18 +2848,41 @@ def _run_install_plan(  # noqa: C901, PLR0915
     )
     use_live = not _plan_verbose and sys.stderr.isatty() and _supports_color()
     spin_idx = 0
-    loop_start = time.monotonic()
 
-    def _redraw(in_flight: "set[str]") -> None:
+    # Watchdog thresholds (both may be None = disabled).
+    _warn_secs = _warn_threshold()
+    _timeout_secs = _timeout_threshold()
+    # Apps that have already triggered the slow-app warning (fire once per app).
+    _warned: set[str] = set()
+
+    _max_visible_apps = 3  # cap how many names fit on one spinner line
+
+    def _redraw(items: "list[tuple[str, float]]") -> None:
+        """Redraw the aggregate spinner line naming each in-flight app.
+
+        *items* is a list of ``(app_name, dispatch_t0)`` pairs — one per
+        currently running future.  Each app is shown with its own elapsed
+        time so a stuck app is immediately identifiable::
+
+            | installing 2 apps: python3.12 [12m03s], sqlite [45s]
+        """
         nonlocal spin_idx
+        now = time.monotonic()
         frame = _SPINNER_FRAMES[spin_idx % len(_SPINNER_FRAMES)]
         spin_idx += 1
-        elapsed_secs = time.monotonic() - loop_start
-        elapsed = _fmt_duration(elapsed_secs)
-        time_str = _styled_time(elapsed, seconds=elapsed_secs)
-        n = len(in_flight)
+        n = len(items)
         label = "app" if n == 1 else "apps"
-        sys.stderr.write(f"\r\033[K   {frame} installing {n} {label} {time_str}")
+        visible = items[:_max_visible_apps]
+        parts = []
+        for app_name, t0 in visible:
+            app_secs = now - t0
+            app_elapsed = _fmt_duration(app_secs)
+            app_time = _styled_time(app_elapsed, seconds=app_secs)
+            parts.append(f"{app_name} {app_time}")
+        names_str = ", ".join(parts)
+        if n > _max_visible_apps:
+            names_str += f" +{n - _max_visible_apps} more"
+        sys.stderr.write(f"\r\033[K   {frame} installing {n} {label}: {names_str}")
         sys.stderr.flush()
 
     def _clear() -> None:
@@ -2820,6 +2890,14 @@ def _run_install_plan(  # noqa: C901, PLR0915
         sys.stderr.flush()
 
     ctx = multiprocessing.get_context("spawn")
+    # Manager for the PID map used by hard-abort (3c); created lazily only when
+    # KOOPA_INSTALL_APP_TIMEOUT is set to avoid the Manager process overhead.
+    _manager = multiprocessing.Manager() if _timeout_secs is not None else None
+    # DictProxy[Any, Any] behaves like dict[str, int] at runtime.
+    _pid_map: dict[str, int] | None = (
+        cast("dict[str, int]", _manager.dict()) if _manager is not None else None
+    )
+
     with concurrent.futures.ProcessPoolExecutor(
         mp_context=ctx,
         max_workers=cap + 1,  # +1 for the potential single CPU build
@@ -2842,7 +2920,7 @@ def _run_install_plan(  # noqa: C901, PLR0915
                 elif io_running >= cap:
                     continue
                 config = make_config(app, next(r for a, r in plan if a == app))
-                fut = pool.submit(_install_app_worker, config)
+                fut = pool.submit(_install_app_worker, config, _pid_map)
                 running[fut] = (app, is_cpu, time.monotonic())
                 started.add(app)
                 if is_cpu:
@@ -2850,9 +2928,13 @@ def _run_install_plan(  # noqa: C901, PLR0915
                 else:
                     io_running += 1
 
+        def _running_items() -> list[tuple[str, float]]:
+            """Return ``[(name, t0), ...]`` for currently running futures."""
+            return [(running[f][0], running[f][2]) for f in running]
+
         _dispatch()
         if use_live and running:
-            _redraw({running[fut][0] for fut in running})
+            _redraw(_running_items())
 
         while running or (len(done) + len(failed) < len(plan)):
             if not running:
@@ -2869,9 +2951,52 @@ def _run_install_plan(  # noqa: C901, PLR0915
                 timeout=0.2,
             )
             if not finished:
-                # Timeout — no completions yet; just redraw the live line.
+                # Timeout — no completions yet; check watchdog thresholds,
+                # then redraw the live spinner line.
+                now = time.monotonic()
+                for _fut, (app_name, _is_cpu, app_t0) in list(running.items()):
+                    app_elapsed = now - app_t0
+                    # 3b: warn once when an app exceeds the slow-app threshold.
+                    if (
+                        _warn_secs is not None
+                        and app_elapsed >= _warn_secs
+                        and app_name not in _warned
+                    ):
+                        _warned.add(app_name)
+                        if use_live:
+                            _clear()
+                        elapsed_str = _fmt_duration(app_elapsed)
+                        log = build_log_path(app_name)
+                        alert(
+                            f"Warning: {app_name} has been running for"
+                            f" {elapsed_str} — possibly stuck."
+                            f"\n  Tail the build log to investigate:"
+                            f"\n    tail -f {log}"
+                        )
+                    # 3c: hard-abort when app exceeds the timeout threshold.
+                    if _timeout_secs is not None and app_elapsed >= _timeout_secs and not aborting:
+                        elapsed_str = _fmt_duration(app_elapsed)
+                        if use_live:
+                            _clear()
+                        alert(
+                            f"Timeout: {app_name} exceeded"
+                            f" {_timeout_secs}s limit ({elapsed_str} elapsed)."
+                            f" Aborting install."
+                        )
+                        # Kill the stuck app's process group, then abort the
+                        # pool.  ProcessPoolExecutor workers cannot be killed
+                        # in isolation, so this is a whole-batch abort.
+                        import contextlib
+
+                        pid = (_pid_map or {}).get(app_name)
+                        if pid is not None:
+                            with contextlib.suppress(OSError, ProcessLookupError):
+                                os.killpg(os.getpgid(pid), signal.SIGKILL)
+                        failed.add(app_name)
+                        fail_msgs[app_name] = f"Timed out after {elapsed_str}."
+                        aborting = True
                 if use_live:
-                    _redraw({running[fut][0] for fut in running})
+                    _redraw(_running_items())
                 continue
 
             for fut in finished:
@@ -2883,7 +3008,8 @@ def _run_install_plan(  # noqa: C901, PLR0915
                 try:
                     _app, _ver, _elapsed, _error, _tail = fut.result()
                 except Exception as exc:
-                    # Worker crashed (e.g. pickling error or OOM) — treat as failure.
+                    # Worker crashed (e.g. pickling error or OOM — including
+                    # BrokenProcessPool after a hard-abort kill).
                     if use_live:
                         _clear()
                     failed.add(app)
@@ -2912,7 +3038,7 @@ def _run_install_plan(  # noqa: C901, PLR0915
 
             _dispatch()
             if use_live and running:
-                _redraw({running[fut][0] for fut in running})
+                _redraw(_running_items())
 
     if use_live:
         _clear()

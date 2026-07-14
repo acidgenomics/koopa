@@ -406,6 +406,17 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
+        if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+        then
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$new_mode" ]]
+            then
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &
+                disown
+            fi
+        fi
         return 0
     }
     if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]
@@ -827,6 +838,18 @@ _koopa_activate_ruby() {
     prefix="${HOME:?}/.gem"
     export GEM_HOME="$prefix"
     _koopa_add_to_path_start "${prefix}/bin"
+    return 0
+}
+
+_koopa_activate_ssh_reset() {
+    _koopa_is_interactive || return 0
+    [[ "${KOOPA_SSH_RESET:-0}" == '1' ]] || return 0
+    ssh() {
+        command ssh "$@"
+        local __koopa_ssh_status=$?
+        "${KOOPA_PREFIX:?}/bin/koopa" run reset-terminal >/dev/null 2>&1
+        return $__koopa_ssh_status
+    }
     return 0
 }
 
@@ -2121,6 +2144,8 @@ _koopa_terminal_is_light_background() {
     [[ "${TERM_PROGRAM:-}" == 'vscode' ]] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
+    trap 'stty "$__kvar_old_settings" 2>/dev/null; trap - RETURN INT TERM' \
+        RETURN INT TERM
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty
     __kvar_response="$(dd bs=64 count=1 2>/dev/null < /dev/tty)"

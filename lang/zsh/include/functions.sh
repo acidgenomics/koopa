@@ -327,6 +327,16 @@ _koopa_activate_color_mode_sync() {
             _palette="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/dracula-pro-colors.zsh"
         fi
         [[ -f "$_palette" ]] && source "$_palette"
+        if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+        then
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$new_mode" ]]
+            then
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &!
+            fi
+        fi
         return 0
     }
     autoload -Uz add-zsh-hook
@@ -1543,6 +1553,8 @@ _koopa_terminal_is_light_background() {
     [[ "${TERM_PROGRAM:-}" == 'vscode' ]] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
+    trap 'stty "$__kvar_old_settings" 2>/dev/null; trap - EXIT INT TERM' \
+        EXIT INT TERM
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty
     __kvar_response="$(dd bs=64 count=1 2>/dev/null < /dev/tty)"

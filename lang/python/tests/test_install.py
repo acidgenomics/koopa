@@ -174,12 +174,18 @@ def _make_scheduler_config(
     return InstallConfig(name=app, binary=is_binary, deps=False)
 
 
-def _noop_worker(config: InstallConfig) -> tuple[str, str, float, None, None]:
+def _noop_worker(
+    config: InstallConfig,
+    pid_map: dict[str, int] | None = None,
+) -> tuple[str, str, float, None, None]:
     """Worker that succeeds immediately."""
     return config.name, config.version, 0.0, None, None
 
 
-def _fail_worker(config: InstallConfig) -> tuple[str, str, float, str, None]:
+def _fail_worker(
+    config: InstallConfig,
+    pid_map: dict[str, int] | None = None,
+) -> tuple[str, str, float, str, None]:
     """Worker that always returns a structured failure tuple."""
     return config.name, config.version, 0.0, f"injected failure: {config.name}", None
 
@@ -192,7 +198,7 @@ def test_run_install_plan_single_app() -> None:
     dep_map: dict = {}
     calls: list[str] = []
 
-    def _worker(config):  # noqa: ANN001, ANN202
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         calls.append(config.name)
         return config.name, config.version, 0.0, None, None
 
@@ -217,7 +223,7 @@ def test_run_install_plan_dep_order() -> None:
     dispatch_order: list[str] = []
     dep_done = threading.Event()
 
-    def _worker(config):  # noqa: ANN001, ANN202
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         if config.name == "dep":
             dispatch_order.append("dep")
             dep_done.set()
@@ -251,7 +257,7 @@ def test_run_install_plan_cpu_serialized() -> None:
     def _make(app: str, _reason: str) -> InstallConfig:
         return InstallConfig(name=app, binary=False, deps=False)
 
-    def _worker(config):  # noqa: ANN001, ANN202
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         import time
 
         with lock:
@@ -293,7 +299,7 @@ def test_run_install_plan_io_parallel() -> None:
     def _make(app: str, _reason: str) -> InstallConfig:
         return InstallConfig(name=app, binary=True, deps=False)
 
-    def _worker(config):  # noqa: ANN001, ANN202
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         import time
 
         with lock:
@@ -328,7 +334,7 @@ def test_run_install_plan_failure_aborts() -> None:
     plan = [("bad", ""), ("good", "")]
     dep_map: dict = {}
 
-    def _worker(config):  # noqa: ANN001, ANN202
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         if config.name == "bad":
             return config.name, config.version, 0.0, "injected", None
         return config.name, config.version, 0.0, None, None
