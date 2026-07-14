@@ -34,6 +34,19 @@ Use `from koopa.xdg import xdg_config_home, xdg_data_home` — never hardcode
 xdg_config_home = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
 ```
 
+## CLI dispatch tiers
+
+koopa has three tiers; pick the lightest one that fits:
+
+| Tier | Invocation | Register in | When to use |
+|---|---|---|---|
+| `koopa run X` | `koopa run reset-terminal` | `cli_bin.py:_HANDLERS` | Self-contained utility; no group needed; auto-discovered by completions |
+| `koopa system X` | `koopa system info` | `cli_system.py:handle_system` | System-info / admin ops that don't fit the install/configure/develop groups |
+| Top-level `koopa X` | `koopa install` | `cli_main.py:_build_parser` + `handlers` dict + `_TOP_CMDS` in 8 places in `generate_completion.py` | Major lifecycle commands only; adding one is invasive |
+
+Default to `koopa run` for new utilities — zero parser changes, completion
+auto-discovers via `_load_run_commands()` reading `_HANDLERS.keys()`.
+
 ## CLI completions
 
 Adding, renaming, or removing a CLI command in `cli_*.py` requires running
