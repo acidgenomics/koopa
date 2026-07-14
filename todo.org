@@ -1,15 +1,11 @@
-** STARTED Publish all our R and Python packages at bioconda.
-** STARTED How can we push website documentation for Python packages to python.acidgenomics.com?
+** TODO How can we push website documentation for Python packages to python.acidgenomics.com?
    Implemented koopa app python publish-docs. Docs host at
    python-docs.acidgenomics.com/<name>/. Requires one-time AWS provisioning:
    S3 bucket python-docs-<acct>-us-east-1-an, CloudFront distribution,
    Route53 record, and AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS in .env.
    See koopa-python-release skill for full details.
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
-** TODO koopa system check warns about system R version mismatch but koopa update doesn't handle that automatically.
-    How should we recommend users fix this situation?
 ** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
-** TODO Need to fix an error with our git version checker
-    git: check failed (connection error)
-** TODO Need to exclude beta versions from boost checks
+** STARTED Publish all our R and Python packages at bioconda.
+** STARTED Need to exclude beta versions from boost checks
     boost: 1.91.0-1 -> 1.92.0.beta1

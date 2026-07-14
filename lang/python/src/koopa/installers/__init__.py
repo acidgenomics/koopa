@@ -549,6 +549,7 @@ PYTHON_INSTALLER_MODES: list[tuple[str, str, str]] = [
     # update-system (koopa update system)
     ("homebrew", "common", "update-system"),
     ("python", "macos", "update-system"),
+    ("r", "debian", "update-system"),
     ("r", "macos", "update-system"),
     ("tex-packages", "common", "update-system"),
 ]
