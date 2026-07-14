@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-05-06.
+# @note Updated 2026-07-14.
 # """
 
 set -o errexit
@@ -15,7 +15,7 @@ then
     _curl_verbose='--verbose'
 else
     _make_verbose=''
-    _curl_verbose='--silent'
+    _curl_verbose='--progress-bar'
 fi
 
 is_macos() {
