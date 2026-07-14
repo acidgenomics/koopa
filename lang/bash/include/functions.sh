@@ -774,6 +774,10 @@ _koopa_activate_python() {
     then
         export VIRTUAL_ENV_DISABLE_PROMPT=1
     fi
+    if [[ -z "${UV_SYSTEM_CERTS:-}" ]]
+    then
+        export UV_SYSTEM_CERTS='true'
+    fi
     return 0
 }
 
@@ -2616,8 +2620,16 @@ _koopa_macos_activate_homebrew() {
         return 0
     fi
     export HOMEBREW_PREFIX="${dict['prefix']}"
+    export HOMEBREW_CELLAR="${dict['prefix']}/Cellar"
+    export HOMEBREW_REPOSITORY="${dict['prefix']}"
     dict['brewfile']="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${dict['prefix']}/bin"
+    if [[ -z "${INFOPATH:-}" ]]
+    then
+        export INFOPATH="${dict['prefix']}/share/info"
+    else
+        export INFOPATH="${dict['prefix']}/share/info:${INFOPATH}"
+    fi
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] \
         && [[ -f "${dict['brewfile']}" ]]
     then
