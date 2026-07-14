@@ -2918,8 +2918,12 @@ def _run_install_plan(  # noqa: C901, PLR0915
         _clear()
 
     if failed:
-        msg = f"{len(failed)} app(s) failed."
-        raise RuntimeError(msg)
+        root_failures = sorted(fail_msgs)
+        skipped = sorted(failed - set(root_failures))
+        parts = [f"{len(root_failures)} app(s) failed: {', '.join(root_failures)}."]
+        if skipped:
+            parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
+        raise RuntimeError(" ".join(parts))
     _save_pending_plan([], source=source)
 
 
@@ -3261,18 +3265,20 @@ def _update_system_homebrew(*, verbose: bool = False) -> None:
 
 
 def _update_system_r(*, verbose: bool = False) -> None:
-    """Update macOS system R if installed and outdated."""
+    """Update system R if installed and outdated."""
     from koopa.alert import alert, warn
-    from koopa.check import check_macos_system_r
+    from koopa.check import check_system_r
+    from koopa.system import is_macos
 
-    if check_macos_system_r():
+    if check_system_r():
         return
-    alert("Updating macOS system R.")
+    alert("Updating system R.")
+    platform = "macos" if is_macos() else "debian"
     try:
         config = InstallConfig(
             name="r",
             mode="system",
-            platform="macos",
+            platform=platform,
             reinstall=True,
             verbose=verbose,
         )

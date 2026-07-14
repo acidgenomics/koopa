@@ -82,6 +82,61 @@ and merges the result into the app.json entry atomically.
 This ensures `koopa develop check-app-versions` never writes a stale `build_id`
 when bumping the version.
 
+## Version Check Machinery
+
+### Architecture
+
+`version_check.py` is the entire version-check implementation. Key landmarks:
+
+- **`_SPECIAL_CASES`** — dict mapping app name → `_AppCheckSpec`. Checked first by
+  `classify_app()`; apps not listed fall back to generic GitHub/PyPI/conda inference.
+- **`_run_check`** — the per-app worker (nested inside `check_app_versions`). Calls
+  `spec.check_fn`, runs the pre-release filter, writes the cache, then compares
+  `_version_key(sanitize_version(...))` to decide outdated/current/pinned-too-high.
+- **`update_app_json`** — recomputes `r.is_outdated` from `VersionCheckResult` and
+  writes `version`/`date` for every outdated app. `is_outdated` is a property that
+  re-evaluates on the stored `latest_version`; setting `latest_version = current`
+  (not `None`) suppresses an app across report, write, and cache uniformly.
+- **Cache** — `~/.cache/koopa/version-check.json`, 24-hour TTL. A cached pre-release
+  is treated as a cache miss so a stale beta from a previous run can't leak.
+
+### Safe investigation flags
+
+Always pass `--no-update` when testing a version-check fix — it skips the `app.json`
+write so a bad result can't corrupt the registry:
+
+```sh
+koopa develop check-app-versions --no-update boost git
+```
+
+`--reset-cache` forces fresh network lookups, bypassing the 24h cache:
+
+```sh
+koopa develop check-app-versions --reset-cache --no-update boost
+```
+
+### Recovery when a bad version is written to app.json
+
+If `check-app-versions` runs without `--no-update` before a fix is in place (or a
+pre-release guard fires only after the fact), the bad version lands in `app.json` as
+`current`. At that point the pre-release guard correctly does **not** suppress it
+(an app pinned to a pre-release can still receive pre-release updates). Fix:
+
+1. Edit `app.json` directly — revert `version` and `date` to the last known-good values.
+2. Run `koopa develop format-app-json` to normalize.
+3. Re-run `check-app-versions --reset-cache --no-update <app>` to confirm.
+
+### Pre-release suppression
+
+`_is_prerelease(version)` (regex-based, fleet-wide) suppresses any upstream candidate
+whose version string contains an explicit pre-release marker (`alpha`, `beta`, `rc`,
+`dev`, `pre`, `preview`, `snapshot`, `nightly`, `canary`) — unless the app is itself
+already pinned to a pre-release. Single-letter stable suffixes (`1.1.1w`, `1.2.3a`)
+are intentionally not matched. The guard lives in `_run_check`, before `cache.put`.
+
+Boost is the canonical example: boostorg publishes betas as GitHub's non-prerelease
+"latest" release, so GitHub's own `prerelease` flag doesn't filter them.
+
 ## Tool-Inclusion Scope
 
 koopa includes AI agentic coding tools from **major vendors only**: Anthropic, Google,
