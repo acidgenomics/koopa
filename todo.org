@@ -11,3 +11,5 @@
 ** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
 ** TODO Need to fix an error with our git version checker
     git: check failed (connection error)
+** TODO Need to exclude beta versions from boost checks
+    boost: 1.91.0-1 -> 1.92.0.beta1
