@@ -527,7 +527,7 @@ def check_disk(path: str = "/") -> bool:
 
 def check_system_r() -> bool:
     """Check if system R is current."""
-    from koopa.system import is_debian_like, is_macos
+    from koopa.system import is_admin, is_debian_like, is_macos
     from koopa.version import extract_version
 
     json_data = import_app_json()
@@ -540,6 +540,8 @@ def check_system_r() -> bool:
             "/Library/Frameworks/R.framework/Resources/bin/R",
         )
     elif is_debian_like():
+        if not is_admin():
+            return True
         r_bins = (
             "/usr/bin/R",
             "/usr/local/bin/R",
