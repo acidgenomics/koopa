@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Equivalent upstream one-liner (not used — would reset PATH before koopa builds it):
+# eval "$(/opt/homebrew/bin/brew shellenv)"
 _koopa_macos_activate_homebrew() {
     local -A dict
     dict['prefix']="$(_koopa_homebrew_prefix)"
@@ -8,8 +10,16 @@ _koopa_macos_activate_homebrew() {
         return 0
     fi
     export HOMEBREW_PREFIX="${dict['prefix']}"
+    export HOMEBREW_CELLAR="${dict['prefix']}/Cellar"
+    export HOMEBREW_REPOSITORY="${dict['prefix']}"
     dict['brewfile']="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${dict['prefix']}/bin"
+    if [[ -z "${INFOPATH:-}" ]]
+    then
+        export INFOPATH="${dict['prefix']}/share/info"
+    else
+        export INFOPATH="${dict['prefix']}/share/info:${INFOPATH}"
+    fi
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] \
         && [[ -f "${dict['brewfile']}" ]]
     then
