@@ -777,6 +777,7 @@ _koopa_activate_starship() {
     then
         unset -v STARSHIP_SHELL
     fi
+    export STARSHIP_LOG='error'
     local nounset=0
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset

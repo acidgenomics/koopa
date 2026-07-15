@@ -1,8 +1,12 @@
 """Application management functions."""
 
+import sys
+import threading
+import time
 from datetime import datetime
 from json import loads
-from os.path import isdir, islink, join, realpath
+from os import getpid, rename
+from os.path import basename, isdir, islink, join, realpath
 from shutil import rmtree
 from subprocess import run
 
@@ -12,6 +16,8 @@ from koopa.io import import_app_json
 from koopa.prefix import app_prefix as koopa_app_prefix
 from koopa.prefix import opt_prefix as koopa_opt_prefix
 from koopa.system import arch2, os_id
+
+_PRUNE_TRASH_PREFIX = ".koopa-prune-trash."
 
 # Installer types that are purely download/extract — safe to run in parallel.
 _IO_BOUND_INSTALLERS: frozenset[str] = frozenset(
@@ -353,6 +359,20 @@ def installed_apps() -> list:
     return names
 
 
+def _prune_spinner(stop: threading.Event, start: float) -> None:
+    from koopa.progress import _SPINNER_FRAMES, _fmt_duration
+
+    if not sys.stderr.isatty():
+        return
+    idx = 0
+    while not stop.wait(0.2):
+        frame = _SPINNER_FRAMES[idx % len(_SPINNER_FRAMES)]
+        elapsed = _fmt_duration(time.monotonic() - start)
+        print(f"\r\033[K   {frame} [{elapsed}]", end="", flush=True, file=sys.stderr)
+        idx += 1
+    print("\r\033[K", end="", flush=True, file=sys.stderr)
+
+
 def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
     """Prune apps."""
     app_prefix = koopa_app_prefix()
@@ -361,6 +381,8 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
     installed_names = installed_apps()
     opt_prefix = koopa_opt_prefix()
     pruned: list[str] = []
+    to_delete: list[str] = []
+    pid = getpid()
     for name in installed_names:
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
@@ -379,6 +401,10 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
             basename_only=False,
         )
         for subdir in subdirs:
+            # Sweep leftover trash from interrupted prior runs.
+            if basename(subdir).startswith(_PRUNE_TRASH_PREFIX):
+                to_delete.append(subdir)
+                continue
             if subdir == linked_subdir:
                 continue
             if dry_run:
@@ -386,8 +412,30 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
                 continue
             if verbose:
                 print(f"Pruning {subdir!r}.")
+            # Rename into a hidden sibling first: atomic and O(1) on NFS,
+            # removes the old version from the live namespace immediately.
+            trash = join(app_prefix, name, f"{_PRUNE_TRASH_PREFIX}{basename(subdir)}.{pid}")
+            try:
+                rename(subdir, trash)
+                to_delete.append(trash)
+            except OSError:
+                to_delete.append(subdir)
             pruned.append(subdir)
-            rmtree(subdir)
+    if not dry_run and to_delete:
+        from koopa.alert import alert
+
+        alert("Pruning old app versions.")
+        stop = threading.Event()
+        spinner = threading.Thread(
+            target=_prune_spinner, args=(stop, time.monotonic()), daemon=True
+        )
+        spinner.start()
+        try:
+            for path in to_delete:
+                rmtree(path, ignore_errors=True)
+        finally:
+            stop.set()
+            spinner.join()
     if not dry_run and pruned:
         from koopa.alert import alert_success
 

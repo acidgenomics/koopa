@@ -1063,6 +1063,55 @@ def _handle_reset_terminal(args: list[str]) -> None:
         subprocess.run([tput, "reset"], check=True)
 
 
+def _handle_update_today_bucket(args: list[str]) -> None:
+    """Handle ``koopa run update-today-bucket``.
+
+    Repoint the dated 'today bucket' symlink at today's dir
+    (``<bucket>/YYYY/MM/DD``). Python port of the shell activation function
+    ``_koopa_activate_today_bucket`` so the link stays current even when no
+    new interactive shell is launched (e.g. working all day in GUI apps).
+    Idempotent; no-ops when no bucket dir exists.
+    """
+    import argparse
+
+    from koopa.file_ops import ln, mkdir
+
+    parser = argparse.ArgumentParser(
+        prog="update-today-bucket",
+        description="Repoint the dated today-bucket symlink to today's date.",
+    )
+    parser.parse_args(args)
+
+    home = os.path.expanduser("~")
+    env_bucket = os.environ.get("KOOPA_BUCKET", "")
+    if env_bucket:
+        if not os.path.isdir(env_bucket):
+            return
+        bucket_dir = env_bucket
+        today_link = os.path.join(home, "today")
+    elif os.path.isdir(os.path.join(home, "bucket")):
+        bucket_dir = os.path.join(home, "bucket")
+        today_link = os.path.join(home, "today")
+    elif os.path.isdir(os.path.join(home, "Documents", "bucket")):
+        bucket_dir = os.path.join(home, "Documents", "bucket")
+        today_link = os.path.join(home, "Documents", "today")
+    else:
+        return
+
+    # Safety: if today_link is a real directory (not a symlink), do not clobber
+    # it — file_ops.ln would rmtree it. This should never happen in practice
+    # since the link is always koopa-managed, but belt-and-suspenders.
+    if os.path.isdir(today_link) and not os.path.islink(today_link):
+        return
+
+    subdirs = datetime.now().astimezone().strftime("%Y/%m/%d")
+    dated_dir = os.path.join(bucket_dir, subdirs)
+    if os.path.islink(today_link) and subdirs in os.path.realpath(today_link):
+        return
+    mkdir(dated_dir)
+    ln(dated_dir, today_link)
+
+
 # -- Dispatch table ------------------------------------------------------------
 
 
@@ -1115,6 +1164,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "sort-lines": _handle_sort_lines,
     "spotlight": _handle_spotlight,
     "tar-multiple-dirs": _handle_tar_multiple_dirs,
+    "update-today-bucket": _handle_update_today_bucket,
 }
 
 
