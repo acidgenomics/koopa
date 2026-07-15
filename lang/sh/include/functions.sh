@@ -1319,6 +1319,21 @@ _koopa_is_light_mode() {
             unset -v __kvar_cache_file
             return 1
         fi
+        if [ -n "${SSH_CONNECTION:-}" ] || [ -n "${SSH_TTY:-}" ]
+        then
+            __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
+            if [ -f "$__kvar_cache_file" ]
+            then
+                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null \
+                    || __kvar_mode=''
+                [ "$__kvar_mode" = 'light' ]
+                __kvar_result=$?
+                unset -v __kvar_cache_file __kvar_mode
+                return "$__kvar_result"
+            fi
+            unset -v __kvar_cache_file
+            return 1
+        fi
         _koopa_terminal_is_light_background
     fi
 }

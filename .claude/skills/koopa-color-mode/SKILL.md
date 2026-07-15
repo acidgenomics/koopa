@@ -34,6 +34,47 @@ live-tracking mechanism and silently fails when sshd lacks `AcceptEnv KOOPA_COLO
 `/usr/bin/tmux` (3.2a) instead of koopa's bundled tmux (3.6b). Fixing the
 `RemoteCommand` is the only change needed.
 
+## SSH Login Hang: Pre-tmux RemoteCommand Shell
+
+**Symptom:** `ssh <host>` prints the banner then hangs. The hang is not during
+connection — it occurs during koopa shell activation in the login shell.
+
+**Cause:** `_koopa_terminal_is_light_background` issues a blocking OSC 11
+background-color query (`printf '\033]11;?\033\\' > /dev/tty`) and reads the reply
+with `dd bs=64 count=1 < /dev/tty`, bounded by `stty raw -echo min 0 time 2`
+(VTIME 0.2s). The VTIME bound applies to fd 0, but the `dd` reads from a
+separately-opened `/dev/tty` — when those descriptors diverge over SSH, VTIME never
+applies and the read blocks in canonical mode indefinitely.
+
+**Why a tmux `RemoteCommand` host still hangs:** the SSH config pattern
+
+```
+RemoteCommand ~/.local/share/koopa/bin/tmux new-session -A
+RequestTTY yes
+SetEnv TERM=xterm-256color
+```
+
+causes sshd to run the **login shell** to exec tmux. koopa activation runs in that
+outer shell *before* tmux starts — `$TMUX` is unset, so the tmux guard misses. `TERM`
+is forced to `xterm-256color`, so the `screen*/tmux*` guard misses too. If the remote
+sshd lacks `AcceptEnv KOOPA_COLOR_MODE` (meaning `SendEnv` silently no-ops),
+`KOOPA_COLOR_MODE` is empty → `_koopa_color_mode` → `_koopa_is_light_mode` → the
+blocking probe → hang.
+
+**Fix (implemented 2026-07-15):** SSH-session guard in the `_koopa_is_light_mode`
+**dispatcher** (`lang/*/functions/core/is-light-mode.*`) across all seven shells.
+When `SSH_CONNECTION` or `SSH_TTY` is set and not inside tmux, fall back to
+`~/.cache/koopa/color-mode` — identical to the existing vscode branch. tmux-over-SSH
+still uses the tmux branch (live OSC-2031); the SSH branch only fires in the pre-tmux
+outer shell and on bare SSH sessions (no `RemoteCommand`).
+
+The guard lives in the **dispatcher**, not the probe — so it returns the correct cached
+color rather than forcing dark (`return 1`).
+
+After editing bash/sh/zsh dispatchers, run `koopa develop cache-functions` to
+regenerate `lang/{bash,sh,zsh}/include/functions.sh`. fish/elvish/nushell/powershell
+source function files directly — no regen needed.
+
 ## Abrupt SSH Death Leaves Local Terminal Wedged
 
 **Symptom:** local shell prints `^[[<0;56;29M` / `^[[<0;56;29m` (SGR mouse reports,
