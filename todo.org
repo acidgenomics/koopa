@@ -1,3 +1,6 @@
+** TODO Addition of Homebrew update into koopa update causes hang
+    => Updating Homebrew.
+       homebrew \ [39h24m]
 ** TODO How can we push website documentation for Python packages to python.acidgenomics.com?
    Implemented koopa app python publish-docs. Docs host at
    python-docs.acidgenomics.com/<name>/. Requires one-time AWS provisioning:
