@@ -7044,6 +7044,26 @@
     ],
     "version": "1.15.0"
   },
+  "pixi": {
+    "bin": [
+      "pixi"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Python",
+    "conda_channel": "conda-forge",
+    "date": "2026-07-20",
+    "default": false,
+    "description": "cross-platform, multi-language package management tool",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://pixi.sh/",
+      "https://github.com/prefix-dev/pixi/"
+    ],
+    "version": "0.73.0"
+  },
   "pixman": {
     "build_dependencies": [
       "meson",

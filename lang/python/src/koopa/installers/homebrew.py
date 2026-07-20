@@ -13,6 +13,7 @@ def _update_homebrew() -> None:
     """Update Homebrew and upgrade all formulae and casks."""
     from koopa.alert import alert, alert_update_start, alert_update_success
     from koopa.brew import (
+        _brew,
         brew_doctor_filtered,
         brew_prefix,
         brew_reset_permissions,
@@ -26,8 +27,8 @@ def _update_homebrew() -> None:
     brew_reset_permissions()
     alert("Updating Homebrew.")
     os.environ["PATH"] = os.path.join(prefix, "bin") + ":" + os.environ.get("PATH", "")
-    subprocess.run(["brew", "analytics", "off"], check=True)
-    subprocess.run(["brew", "update"], check=True)
+    _brew("analytics", "off", capture=False)
+    _brew("update", capture=False)
     if is_macos():
         alert("Checking casks.")
         brew_upgrade_casks()
@@ -35,16 +36,11 @@ def _update_homebrew() -> None:
     brew_upgrade_brews()
     alert("Cleaning up.")
     brew_untap_deprecated()
-    subprocess.run(["brew", "cleanup", "-s"], check=True)
-    cache_dir = subprocess.run(
-        ["brew", "--cache"],
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout.strip()
+    _brew("cleanup", "-s", capture=False)
+    cache_dir = _brew("--cache").stdout.strip()
     if cache_dir and os.path.isdir(cache_dir):
         shutil.rmtree(cache_dir, ignore_errors=True)
-    subprocess.run(["brew", "autoremove"], check=True)
+    _brew("autoremove", capture=False)
     brew_doctor_filtered()
     alert_update_success(f"Homebrew at '{prefix}'")
 

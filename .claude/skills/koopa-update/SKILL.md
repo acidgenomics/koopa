@@ -96,6 +96,22 @@ filtered by platform via `_platform_matches()` (`install.py:3327`).
 Reinstalls the `homebrew` system app → `brew update`, upgrade casks/brews,
 cleanup, `brew doctor`.
 
+**Non-interactive requirement.** All brew subprocesses must run with
+`stdin=subprocess.DEVNULL` and `env=_brew_env()` (`brew.py:14`). Without this,
+`BuildProgress._start_capture()` redirects fds 1/2 to the log file while leaving
+fd 0 (stdin) on the tty — any brew/cask/`sudo` prompt is invisible and blocks
+forever (confirmed 39h24m hang). `_brew_env()` sets `NONINTERACTIVE=1`,
+`HOMEBREW_NO_ENV_HINTS=1`, and `HOMEBREW_NO_AUTO_UPDATE=1`; the last only disables
+the *implicit* pre-command auto-update, not the explicit `brew update` step.
+
+- All brew calls are centralized through `_brew()` in `brew.py` — that helper
+  enforces `stdin=DEVNULL` and `env=_brew_env()` for every caller, including
+  `koopa app brew upgrade`.
+- The `sudo chown` in `brew_reset_permissions` also uses `stdin=DEVNULL` (no brew
+  env needed, but same hang vector if sudo re-prompts).
+- Tests in `lang/python/tests/test_brew.py` lock this invariant: any future raw
+  `subprocess.run(["brew", ...])` without hardening will break the regression test.
+
 ### System R (`install.py:3393`, `check.py:528`)
 
 `_update_system_r()` calls `check_system_r()` first. `check_system_r()`:
