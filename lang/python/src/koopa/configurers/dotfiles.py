@@ -162,3 +162,12 @@ def main(
 
     reload_tmux_config(env["KOOPA_COLOR_MODE"])
     warn_tmux_stale()
+    # Keep the applied-marker in sync with what we just rendered so that
+    # color_mode.py's fast-path doesn't skip a corrective re-render later.
+    # Without this write, a dotfiles run while the OS is light leaves the
+    # marker unchanged (dark) even though the static configs were just frozen
+    # light — permanently suppressing correction via 'configure user color-mode'.
+    marker_file = os.path.join(home, ".cache", "koopa", "color-mode-applied")
+    os.makedirs(os.path.dirname(marker_file), exist_ok=True)
+    with open(marker_file, "w") as fh:
+        fh.write(env["KOOPA_COLOR_MODE"] + "\n")
