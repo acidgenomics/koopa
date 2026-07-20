@@ -4461,7 +4461,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-07-20",
+    "date": "2025-06-19",
     "default": false,
     "dependencies": [
       "gmp"
@@ -4472,7 +4472,7 @@
     "url": [
       "https://libisl.sourceforge.io/?C=M;O=D"
     ],
-    "version": "0.28"
+    "version": "0.27"
   },
   "isort": {
     "bin": [
