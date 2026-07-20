@@ -11,10 +11,40 @@ import subprocess
 import sys
 
 
+def _brew_env() -> dict[str, str]:
+    """Return an environment that forbids interactive Homebrew prompts.
+
+    Homebrew blocks on tty stdin for confirmations (cask reinstalls that shell
+    out to ``sudo``, tap migrations, and similar). During a koopa update the
+    build-progress context redirects stdout and stderr to a log file, so such a
+    prompt is invisible and the process hangs forever. ``NONINTERACTIVE`` makes
+    brew refuse to prompt and fail fast instead.
+
+    Returns
+    -------
+    dict[str, str]
+        A copy of ``os.environ`` with the non-interactive flags set.
+    """
+    env = os.environ.copy()
+    env["NONINTERACTIVE"] = "1"
+    env["HOMEBREW_NO_ENV_HINTS"] = "1"
+    # Suppresses the implicit auto-update brew runs before install/reinstall/
+    # cleanup; does NOT block the explicit ``brew update`` step.
+    env["HOMEBREW_NO_AUTO_UPDATE"] = "1"
+    return env
+
+
 def _brew(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
-    """Run a brew command."""
+    """Run a brew command non-interactively with no tty stdin."""
     cmd = ["brew", *args]
-    return subprocess.run(cmd, capture_output=capture, text=True, check=True)
+    return subprocess.run(
+        cmd,
+        capture_output=capture,
+        text=True,
+        check=True,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
+    )
 
 
 def brew_prefix() -> str:
@@ -64,6 +94,8 @@ def brew_upgrade_casks() -> None:
         capture_output=True,
         text=True,
         check=False,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
     )
     casks = []
     for line in result.stdout.strip().splitlines():
@@ -81,10 +113,7 @@ def brew_upgrade_casks() -> None:
         )
         raise PermissionError(msg)
     print(f"{len(casks)} outdated cask(s): {', '.join(casks)}", file=sys.stderr)
-    subprocess.run(
-        ["brew", "reinstall", "--cask", "--force", *casks],
-        check=True,
-    )
+    _brew("reinstall", "--cask", "--force", *casks, capture=False)
     for cask in casks:
         if cask == "r":
             try:
@@ -112,12 +141,14 @@ def brew_upgrade_brews() -> None:
         capture_output=True,
         text=True,
         check=True,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
     )
     brews = [x for x in result.stdout.strip().splitlines() if x]
     if not brews:
         return
     print(f"{len(brews)} outdated brew(s): {', '.join(brews)}", file=sys.stderr)
-    subprocess.run(["brew", "reinstall", "--force", *brews], check=True)
+    _brew("reinstall", "--force", *brews, capture=False)
 
 
 def brew_untap_deprecated() -> None:
@@ -136,10 +167,17 @@ def brew_untap_deprecated() -> None:
             capture_output=True,
             text=True,
             check=False,
+            stdin=subprocess.DEVNULL,
+            env=_brew_env(),
         )
         tap_prefix = result.stdout.strip()
         if tap_prefix and os.path.isdir(tap_prefix):
-            subprocess.run(["brew", "untap", tap], check=False)
+            subprocess.run(
+                ["brew", "untap", tap],
+                check=False,
+                stdin=subprocess.DEVNULL,
+                env=_brew_env(),
+            )
 
 
 def brew_doctor_filtered() -> None:
@@ -159,13 +197,20 @@ def brew_doctor_filtered() -> None:
         capture_output=True,
         text=True,
         check=False,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
     )
     all_checks = [x for x in result.stdout.strip().splitlines() if x]
     enabled_checks = [c for c in all_checks if c not in disabled_checks]
     if not enabled_checks:
         return
-    subprocess.run(["brew", "config"], check=False)
-    subprocess.run(["brew", "doctor", *enabled_checks], check=False)
+    subprocess.run(["brew", "config"], check=False, stdin=subprocess.DEVNULL, env=_brew_env())
+    subprocess.run(
+        ["brew", "doctor", *enabled_checks],
+        check=False,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
+    )
 
 
 def brew_dump_brewfile(path: str = "Brewfile") -> None:
@@ -206,6 +251,7 @@ def brew_reset_permissions() -> None:
         subprocess.run(
             ["sudo", "chown", "-R", f"{user}:admin", prefix],
             check=True,
+            stdin=subprocess.DEVNULL,
         )
 
 
