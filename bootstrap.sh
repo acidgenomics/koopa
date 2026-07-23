@@ -159,7 +159,7 @@ download_with_fallback() {
 }
 
 install_perl() {
-    __kvar_version='5.42.2'
+    __kvar_version='5.44.0'
     printf 'Installing perl.\n'
     __kvar_filename="perl-${__kvar_version}.tar.gz"
     __kvar_major="${__kvar_version%%.*}"
@@ -414,7 +414,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.11.29'
+    __kvar_uv_version='0.11.31'
     __kvar_python_version='3.12.13'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
