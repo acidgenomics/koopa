@@ -4467,7 +4467,8 @@
       "gmp"
     ],
     "description": "integer set library for polyhedral compilation",
-    "src_url": "https://downloads.sourceforge.net/project/libisl/isl-{version}.tar.xz",
+    "revision": 1,
+    "src_url": "https://libisl.sourceforge.io/isl-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://libisl.sourceforge.io/?C=M;O=D"
