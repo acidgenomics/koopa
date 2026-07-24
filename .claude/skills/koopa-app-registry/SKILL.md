@@ -34,7 +34,7 @@ no sense to install an app by default when a known better alternative exists.
 
 Shell autocomplete definitions are **generated**, not hand-maintained:
 
-- **New app entry** (brand new name in the registry): run `koopa develop generate-completions`.
+- **New app entry** (brand new name in the registry): run `koopa develop generate-completion`.
 - **Renaming / adding / removing a CLI command** in `cli_*.py`: run `koopa develop generate-completion`.
 - Toggling `default: true/false` or bumping `version`/`date` on an existing entry does **not** require regeneration — the app name is already in the completion lists.
 

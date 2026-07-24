@@ -154,23 +154,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5958982624477184",
+    "build_id": "6535449645285376",
     "category": "AI",
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "d4e33f52abd8a4fd094ec3a12b31bb1b657ca4fb2b9f8aa7740c40fe47f575267eb0a24d35263fddd4027575013670001c95f6d5c23fdfdfc2ce50986dc638c4",
-      "darwin_amd64": "8ef1b7424e4505f236317e0752dfac9df7790bc260a62ce34fb6b2a5196610e3d10d3b26374c5ea5e5d2a7b99638e21734f455954f357bd4790e0e4027f8a520",
-      "linux_amd64": "906bff59c73bed630274f67efc77e3fa2064fe126f4d7521c7e58dc6773d8d1f3ce8688f1178f7ef65776728f782a8ebc211189617cfbb42e7df48f5614ad1f5",
-      "linux_arm64": "605e139707e10bcecfd415f290b37ee31967182c909918bf8103fb902cd1284d68af0d6302894fc58e84f47690f259d81094347c4486b7ea419a608eeaffebee"
+      "darwin_arm64": "76b801b2c52eb106ec25073bda5d61a28bc3ff78f79631675642b743cd39fe2e5039a14211d03cabee88bf03450785af5859d1e7ca47c5c51e0676389b4b9d45",
+      "darwin_amd64": "e8b08ca86cd0056304158840953be83a0527b25bbfdaa436a7c5ef1d1193444b988f63a1887dbf4709850d2069693bf07c14fedc60726aa0de138cb6e6e5f9ef",
+      "linux_amd64": "9f1357223c38bf7751cd168f46191fe96f5effbbdbf9ed5cabf1276865ce5d03163b418a83a98282c753a2bbf535ec977f0b9ee1cf3bc41fc09a3d1e631bac4c",
+      "linux_arm64": "753b46e9329aec6c0a609e7cb5be8281463f535053501a502aed5aa2253e3533bd731448423d6b683b131ec5d87729fb33a8eb9b6beb27945ed0d9c7ab239704"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.1.5"
+    "version": "1.1.6"
   },
   "apache-airflow": {
     "bin": [
@@ -401,7 +401,7 @@
     ],
     "category": "Text",
     "conda_channel": "conda-forge",
-    "date": "2026-07-14",
+    "date": "2026-07-24",
     "default": false,
     "description": "AST-aware structural code search and replace tool",
     "installer": "conda-package",
@@ -410,7 +410,7 @@
       "https://ast-grep.github.io/",
       "https://github.com/ast-grep/ast-grep/"
     ],
-    "version": "0.44.1"
+    "version": "0.45.0"
   },
   "attr": {
     "build_dependencies": [
@@ -605,7 +605,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -617,7 +617,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.5"
+    "version": "2.36.7"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1156,7 +1156,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-07-24",
     "default": false,
     "description": "cross-platform graphical process and system monitor",
     "installer": "conda-package",
@@ -1164,7 +1164,7 @@
     "url": [
       "https://github.com/ClementTsang/bottom/"
     ],
-    "version": "0.12.2"
+    "version": "0.14.6"
   },
   "bowtie2": {
     "bin": [
@@ -1573,7 +1573,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "default": true,
     "dependencies": [
       "node"
@@ -1587,7 +1587,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.218"
+    "version": "2.1.219"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1737,7 +1737,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "default": true,
     "dependencies": [
       "node"
@@ -1751,7 +1751,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.73"
+    "version": "1.0.74"
   },
   "coreutils": {
     "bin": [
@@ -5852,7 +5852,7 @@
       "marimo"
     ],
     "category": "Python",
-    "date": "2026-07-14",
+    "date": "2026-07-24",
     "default": false,
     "dependencies": [
       "python"
@@ -5864,7 +5864,7 @@
       "https://marimo.io/",
       "https://pypi.org/project/marimo/"
     ],
-    "version": "0.23.14"
+    "version": "0.23.15"
   },
   "markdownlint-cli": {
     "bin": [
@@ -5983,7 +5983,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -5993,7 +5993,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.7.11"
+    "version": "2026.7.12"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7867,7 +7867,7 @@
       "quarto"
     ],
     "category": "R",
-    "date": "2026-05-26",
+    "date": "2026-07-24",
     "default": true,
     "description": "scientific and technical publishing system",
     "type": "cli",
@@ -7875,7 +7875,7 @@
       "https://quarto.org/",
       "https://github.com/quarto-dev/quarto-cli/"
     ],
-    "version": "1.9.38"
+    "version": "1.10.18"
   },
   "r": {
     "bin": [
@@ -8372,7 +8372,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-07-20",
+    "date": "2026-07-24",
     "default": true,
     "dependencies": [
       "python"
@@ -8383,7 +8383,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.15.22"
+    "version": "0.16.0"
   },
   "ruff-lsp": {
     "bin": [
@@ -8545,7 +8545,7 @@
       "scanpy"
     ],
     "category": "Bioinformatics",
-    "date": "2026-06-30",
+    "date": "2026-07-24",
     "default": false,
     "dependencies": [
       "python"
@@ -8556,7 +8556,7 @@
     "url": [
       "https://scanpy.readthedocs.io/"
     ],
-    "version": "1.12.2"
+    "version": "1.12.3"
   },
   "scons": {
     "category": "Build",
@@ -9436,7 +9436,7 @@
       "tqdm"
     ],
     "category": "Python",
-    "date": "2026-07-20",
+    "date": "2026-07-24",
     "default": true,
     "dependencies": [
       "python"
@@ -9447,7 +9447,7 @@
     "url": [
       "https://pypi.org/project/tqdm/"
     ],
-    "version": "4.69.0"
+    "version": "4.69.1"
   },
   "tree": {
     "bin": [
@@ -9631,14 +9631,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-07-23",
+    "date": "2026-07-24",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.11.31"
+    "version": "0.11.32"
   },
   "valkey": {
     "bin": [
@@ -10465,7 +10465,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-07-20",
+    "date": "2026-07-24",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10474,7 +10474,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.11.3"
+    "version": "1.12.0"
   },
   "zellij": {
     "bin": [
