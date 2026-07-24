@@ -7429,6 +7429,25 @@
     ],
     "version": "3.1.0"
   },
+  "pyproject-fmt": {
+    "bin": [
+      "pyproject-fmt"
+    ],
+    "category": "Python",
+    "date": "2026-07-24",
+    "default": false,
+    "dependencies": [
+      "python"
+    ],
+    "description": "apply a consistent format to pyproject.toml files",
+    "installer": "python-package",
+    "type": "cli",
+    "url": [
+      "https://pypi.org/project/pyproject-fmt/",
+      "https://github.com/tox-dev/pyproject-fmt/"
+    ],
+    "version": "2.25.3"
+  },
   "pyrefly": {
     "bin": [
       "pyrefly"

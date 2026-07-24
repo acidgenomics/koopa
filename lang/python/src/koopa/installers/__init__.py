@@ -149,7 +149,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "zenith": f"{_M}._conda",
     "zoxide": f"{_M}._conda",
     "zsh": f"{_M}.zsh_app",
-    # -- python-package (56) ---------------------------------------------
+    # -- python-package (57) ---------------------------------------------
     "ansible-core": f"{_M}._python_pkg",
     "apache-airflow": f"{_M}._python_pkg",
     "autoflake": f"{_M}._python_pkg",
@@ -186,6 +186,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "pygments": f"{_M}._python_pkg",
     "pylint": f"{_M}._python_pkg",
     "pyrefly": f"{_M}._python_pkg",
+    "pyproject-fmt": f"{_M}._python_pkg",
     "pyright": f"{_M}._python_pkg",
     "pytaglib": f"{_M}._python_pkg",
     "pytest": f"{_M}._python_pkg",
