@@ -1,112 +1,43 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [ "setuptools" ]
+
 [project]
 name = "koopa"
 version = "0.22.0"
-authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
+description = "Shell bootloader for data science."
+readme = "README.md"
+keywords = [ "bioinformatics", "data science", "fair data", "ngs", "shell" ]
 license = "Apache-2.0"
-license-files = ["LICENSE"]
+license-files = [ "LICENSE" ]
+authors = [ { name = "Michael Steinbaugh", email = "mike@steinbaugh.com" } ]
+requires-python = "==3.12.*"
 classifiers = [
   "Private :: Do Not Upload",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12",
 ]
-description = "Shell bootloader for data science."
-keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
-readme = "README.md"
-requires-python = "==3.12.*"
-
-[project.optional-dependencies]
-extra = [
-  "syntactic>=0.1.0",
+optional-dependencies.extra = [
+  "syntactic>=0.1",
   "tqdm",
 ]
+scripts.koopa = "koopa.cli_main:main"
 
-[[tool.uv.index]]
-name = "acidgenomics"
-url = "https://python.acidgenomics.com/simple/"
+[tool.setuptools]
+packages.find.where = [ "lang/python/src" ]
 
-[tool.uv.sources]
-syntactic = { index = "acidgenomics" }
-
-[project.scripts]
-koopa = "koopa.cli_main:main"
-
-[build-system]
-build-backend = "setuptools.build_meta"
-requires = ["setuptools"]
-
-[tool.bumpver]
-commit = true
-commit_message = "Bump version to {new_version}."
-current_version = "v0.22.0"
-push = false
-tag = false
-tag_message = "{new_version}"
-tag_scope = "default"
-version_pattern = "vMAJOR.MINOR.PATCH"
-
-[tool.bumpver.file_patterns]
-"pyproject.toml" = [
-  'current_version = "{version}"',
-  'version = "{pep440_version}"',
-]
-
-[tool.pytest.ini_options]
-pythonpath = ["lang/python/src"]
-testpaths = ["lang/python/tests"]
-
-[tool.coverage.run]
-relative_files = true
-source = ["lang/python/src"]
-
-[tool.interrogate]
-fail-under = 80
-ignore-init-method = true
-ignore-init-module = true
-ignore-property-decorators = false
-ignore-setters = false
-verbose = 2
-
-[tool.numpydoc_validation]
-checks = [
-  "all",  # report on all checks, except
-  "GL01", # do not require docstring formatting that conflicts with ruff
-  "GL02", # ...
-  "GL03", # ...
-  "GL08", # nor require __init__ docstrings (params documented in class docstring)
-  "ES01", # nor require an extended summary
-  "EX01", # nor examples
-  "PR02", # nor require parameter docs for dataclasses (fields are self-documenting)
-  "SA01", # nor a see also section
-  "SS06", # nor require the summary to fit on one line
-]
-# Allow docstrings to start with these words.
-override_SS05 = ['^Access ', '^Assess ', '^Process ']
-
-[tool.pyright]
-extraPaths = ["opt/pytest/libexec/lib/python3.14/site-packages"]
-include = ["lang/python"]
-pythonVersion = "3.12"
-reportMissingModuleSource = "error"
-verboseOutput = true
+[tool.uv]
+sources.syntactic = { index = "acidgenomics" }
+index = [ { name = "acidgenomics", url = "https://python.acidgenomics.com/simple/" } ]
 
 [tool.ruff]
-indent-width = 4
-line-length = 100
 target-version = "py312"
-
-[tool.ruff.format]
-docstring-code-format = true
-docstring-code-line-length = 72
-quote-style = "double"
-
-[tool.ruff.lint]
-# List of rules: https://docs.astral.sh/ruff/rules/
-ignore = [
-  "D203",    # one-blank-line-before-class
-  "D213",    # multi-line-summary-second-line
-  "D401",    # non-imperative-mood
-  "PLC0415", # import-outside-top-level
-]
-select = [
+line-length = 100
+indent-width = 4
+format.quote-style = "double"
+format.docstring-code-line-length = 72
+format.docstring-code-format = true
+lint.select = [
   "ANN",  # flake8-annotations
   "B",    # flake8-bugbear
   "C90",  # mccabe
@@ -125,49 +56,92 @@ select = [
   "UP",   # pyupgrade
   "W",    # pycodestyle
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"lang/python/src/koopa/cli_app.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_bin.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_develop.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_internal.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_main.py" = ["PLC0415"]
-"lang/python/src/koopa/cli_system.py" = ["PLC0415"]
-
-[tool.ruff.lint.isort]
-extra-standard-library = ["typing"]
-known-first-party = []
-order-by-type = true
-relative-imports-order = "closest-to-furthest"
-section-order = [
+# List of rules: https://docs.astral.sh/ruff/rules/
+lint.ignore = [
+  "D203",    # one-blank-line-before-class
+  "D213",    # multi-line-summary-second-line
+  "D401",    # non-imperative-mood
+  "PLC0415", # import-outside-top-level
+]
+lint.per-file-ignores."lang/python/src/koopa/cli_app.py" = [ "PLC0415" ]
+lint.per-file-ignores."lang/python/src/koopa/cli_bin.py" = [ "PLC0415" ]
+lint.per-file-ignores."lang/python/src/koopa/cli_develop.py" = [ "PLC0415" ]
+lint.per-file-ignores."lang/python/src/koopa/cli_internal.py" = [ "PLC0415" ]
+lint.per-file-ignores."lang/python/src/koopa/cli_main.py" = [ "PLC0415" ]
+lint.per-file-ignores."lang/python/src/koopa/cli_system.py" = [ "PLC0415" ]
+lint.isort.extra-standard-library = [ "typing" ]
+lint.isort.known-first-party = []
+lint.isort.order-by-type = true
+lint.isort.relative-imports-order = "closest-to-furthest"
+lint.isort.section-order = [
   "future",
   "standard-library",
   "third-party",
   "first-party",
   "local-folder",
 ]
+lint.mccabe.max-complexity = 30
+lint.pycodestyle.max-doc-length = 100
+lint.pydocstyle.convention = "numpy"
+lint.pylint.allow-magic-value-types = [ "bytes", "float", "int", "str" ]
+lint.pylint.max-args = 30
+lint.pylint.max-branches = 30
+lint.pylint.max-positional-args = 2
+lint.pylint.max-statements = 100
 
-[tool.ruff.lint.mccabe]
-max-complexity = 30
+[tool.interrogate]
+fail-under = 80
+ignore-init-method = true
+ignore-init-module = true
+ignore-property-decorators = false
+ignore-setters = false
+verbose = 2
 
-[tool.ruff.lint.pycodestyle]
-max-doc-length = 100
+[tool.pyright]
+pythonVersion = "3.12"
+include = [ "lang/python" ]
+extraPaths = [ "opt/pytest/libexec/lib/python3.14/site-packages" ]
+reportMissingModuleSource = "error"
+verboseOutput = true
 
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
+[tool.ty]
+environment.extra-paths = [ "opt/pytest/libexec/lib/python3.14/site-packages" ]
+terminal.error-on-warning = true
 
-[tool.ruff.lint.pylint]
-allow-magic-value-types = ["bytes", "float", "int", "str"]
-max-args = 30
-max-branches = 30
-max-positional-args = 2
-max-statements = 100
+[tool.pytest]
+ini_options.testpaths = [ "lang/python/tests" ]
+ini_options.pythonpath = [ "lang/python/src" ]
 
-[tool.setuptools.packages.find]
-where = ["lang/python/src"]
+[tool.coverage]
+run.relative_files = true
+run.source = [ "lang/python/src" ]
 
-[tool.ty.environment]
-extra-paths = ["opt/pytest/libexec/lib/python3.14/site-packages"]
+[tool.bumpver]
+commit = true
+commit_message = "Bump version to {new_version}."
+current_version = "v0.22.0"
+push = false
+tag = false
+tag_message = "{new_version}"
+tag_scope = "default"
+version_pattern = "vMAJOR.MINOR.PATCH"
+file_patterns."pyproject.toml" = [
+  'current_version = "{version}"',
+  'version = "{pep440_version}"',
+]
 
-[tool.ty.terminal]
-error-on-warning = true
+[tool.numpydoc_validation]
+checks = [
+  "all",  # report on all checks, except
+  "GL01", # do not require docstring formatting that conflicts with ruff
+  "GL02", # ...
+  "GL03", # ...
+  "GL08", # nor require __init__ docstrings (params documented in class docstring)
+  "ES01", # nor require an extended summary
+  "EX01", # nor examples
+  "PR02", # nor require parameter docs for dataclasses (fields are self-documenting)
+  "SA01", # nor a see also section
+  "SS06", # nor require the summary to fit on one line
+]
+# Allow docstrings to start with these words.
+override_SS05 = [ "^Access ", "^Assess ", "^Process " ]
