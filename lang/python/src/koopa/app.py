@@ -3,9 +3,10 @@
 import sys
 import threading
 import time
+from collections.abc import Callable
 from datetime import datetime
 from json import loads
-from os import getpid, rename
+from os import chmod, getpid, rename
 from os.path import basename, isdir, islink, join, realpath
 from shutil import rmtree
 from subprocess import run
@@ -373,6 +374,20 @@ def _prune_spinner(stop: threading.Event, start: float) -> None:
     print("\r\033[K", end="", flush=True, file=sys.stderr)
 
 
+def _prune_rmtree_onexc(
+    func: Callable[..., None],
+    path: str,
+    excinfo: BaseException,
+) -> None:
+    """Retry rmtree callbacks after fixing restrictive permissions."""
+    del func  # not reliably callable for all shutil internals (e.g. os.open).
+    if isinstance(excinfo, PermissionError):
+        chmod(path, 0o700)
+        rmtree(path, ignore_errors=True)
+        return
+    raise excinfo
+
+
 def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
     """Prune apps."""
     app_prefix = koopa_app_prefix()
@@ -432,7 +447,10 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
         spinner.start()
         try:
             for path in to_delete:
-                rmtree(path, ignore_errors=True)
+                try:
+                    rmtree(path, onexc=_prune_rmtree_onexc)
+                except OSError:
+                    continue
         finally:
             stop.set()
             spinner.join()

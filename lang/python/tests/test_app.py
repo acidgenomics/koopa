@@ -1,8 +1,8 @@
 """App module unit tests."""
 
-import os
 import stat
 from pathlib import Path
+from typing import Protocol
 from unittest.mock import patch
 
 from koopa.app import _PRUNE_TRASH_PREFIX, app_deps, is_cpu_bound_app, prune_apps
@@ -123,10 +123,20 @@ def _setup_prune_tree(tmp_path: Path, name: str, linked_ver: str, stale_ver: str
 
 
 def _cli_json(name: str) -> dict:
-    return {name: {"type": "cli", "version": linked_ver} for linked_ver in ["current"]}
+    return {name: {"type": "cli", "version": "current"}}
 
 
-def _patch_prune(app_dir: str, opt_dir: str, json_data: dict, installed: list):
+class _PatchController(Protocol):
+    def start(self) -> object: ...
+    def stop(self) -> None: ...
+
+
+def _patch_prune(
+    app_dir: str,
+    opt_dir: str,
+    json_data: dict,
+    installed: list,
+) -> list[_PatchController]:
     return [
         patch("koopa.app.koopa_app_prefix", return_value=app_dir),
         patch("koopa.app.koopa_opt_prefix", return_value=opt_dir),
@@ -156,7 +166,9 @@ def test_prune_apps_removes_stale_keeps_linked(tmp_path: Path) -> None:
 def test_prune_apps_resilient_to_undeletable_subdir(tmp_path: Path) -> None:
     """prune_apps() does not raise even when rmtree encounters a locked subdir."""
     app_dir, opt_dir = _setup_prune_tree(tmp_path, "myapp", "1.1", "1.0")
-    locked = Path(app_dir) / "myapp" / "1.0" / "locked"
+    app_dir_path = Path(app_dir)
+    app_root = app_dir_path / "myapp"
+    locked = app_root / "1.0" / "locked"
     locked.mkdir()
     locked.chmod(0o000)
     json_data = {"myapp": {"type": "cli", "version": "1.1"}}
@@ -168,10 +180,16 @@ def test_prune_apps_resilient_to_undeletable_subdir(tmp_path: Path) -> None:
     finally:
         for p in patches:
             p.stop()
+        # prune_apps may atomically move the stale version into a trash path,
+        # so unlock any migrated "locked" dir to let pytest clean tmp dirs.
+        for candidate in app_root.glob(f"{_PRUNE_TRASH_PREFIX}*/locked"):
+            candidate.chmod(stat.S_IRWXU)
         if locked.exists():
             locked.chmod(stat.S_IRWXU)
     # The stale version must no longer be visible under the live namespace.
     assert not (Path(app_dir) / "myapp" / "1.0").exists()
+    remaining = list((Path(app_dir) / "myapp").iterdir())
+    assert not any(r.name.startswith(_PRUNE_TRASH_PREFIX) for r in remaining)
 
 
 def test_prune_apps_sweeps_leftover_trash(tmp_path: Path) -> None:
