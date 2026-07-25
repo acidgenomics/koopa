@@ -154,23 +154,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "6535449645285376",
+    "build_id": "5951805767680000",
     "category": "AI",
-    "date": "2026-07-24",
+    "date": "2026-07-25",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "76b801b2c52eb106ec25073bda5d61a28bc3ff78f79631675642b743cd39fe2e5039a14211d03cabee88bf03450785af5859d1e7ca47c5c51e0676389b4b9d45",
-      "darwin_amd64": "e8b08ca86cd0056304158840953be83a0527b25bbfdaa436a7c5ef1d1193444b988f63a1887dbf4709850d2069693bf07c14fedc60726aa0de138cb6e6e5f9ef",
-      "linux_amd64": "9f1357223c38bf7751cd168f46191fe96f5effbbdbf9ed5cabf1276865ce5d03163b418a83a98282c753a2bbf535ec977f0b9ee1cf3bc41fc09a3d1e631bac4c",
-      "linux_arm64": "753b46e9329aec6c0a609e7cb5be8281463f535053501a502aed5aa2253e3533bd731448423d6b683b131ec5d87729fb33a8eb9b6beb27945ed0d9c7ab239704"
+      "darwin_arm64": "712ff022a40616414b44a9044b09c7662a45b61fe5bada08bd00af97b66f1baa0a9374bb98137ed559e93a7499f8fa832d6558bfa37b20a9f612b5be245f31b7",
+      "darwin_amd64": "40ab64cd0f25febd4f48762d3fab619c23f0b4af30d7c95a83ebd34a7ad37b346ca2cd7d593b5d60aeaf838acdf3ee061e747d7ca1398e5fad9ffc567781ba31",
+      "linux_amd64": "720d5a7ff256aa5dd6712513cd5eb6fe031cf9e7523a33bcbda7755120ced53bb64ff985b402ce068e5895e0ffb348c2632545039a1dde6daad591f164d5852f",
+      "linux_arm64": "6b42366c3926994785301af43e01f595c5b8e43eb521166d98478539368b0daafb3211000fb2280ade6a37da0a6c438ef28abc2c82b6c8263017b245878fc506"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.1.6"
+    "version": "1.1.7"
   },
   "apache-airflow": {
     "bin": [
@@ -605,7 +605,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-07-24",
+    "date": "2026-07-25",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -617,7 +617,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.7"
+    "version": "2.36.8"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1573,7 +1573,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-07-24",
+    "date": "2026-07-25",
     "default": true,
     "dependencies": [
       "node"
@@ -1587,7 +1587,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.219"
+    "version": "2.1.220"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1737,7 +1737,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-07-24",
+    "date": "2026-07-25",
     "default": true,
     "dependencies": [
       "node"
@@ -1751,7 +1751,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.74"
+    "version": "1.0.75"
   },
   "coreutils": {
     "bin": [
@@ -2430,7 +2430,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-07-24",
+    "date": "2026-07-25",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2440,7 +2440,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "0ffe2ce8c9e1db2c81a9559079f6d154afdd06bb"
+    "version": "3ed5fe2ffff12ad794022149cc53ca0395ddfbed"
   },
   "du-dust": {
     "bin": [
@@ -4416,9 +4416,10 @@
       "icav2"
     ],
     "category": "Cloud",
-    "date": "2026-05-31",
+    "date": "2026-07-25",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
+    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4429,7 +4430,7 @@
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
-    "version": "2.46.0"
+    "version": "2.47.0"
   },
   "imagemagick": {
     "date": "2026-05-02",
@@ -5558,7 +5559,7 @@
       "pkg-config"
     ],
     "category": "Dotfile",
-    "date": "2026-07-23",
+    "date": "2026-07-25",
     "default": false,
     "dependencies": [
       "lua",
@@ -5579,7 +5580,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.2.9"
+    "version": "9.2.10"
   },
   "lsd": {
     "bin": [
@@ -8921,7 +8922,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-06-28",
+    "date": "2026-07-25",
     "default": false,
     "dependencies": [
       "readline",
@@ -8939,7 +8940,7 @@
     "url": [
       "https://www.sqlite.org/download.html"
     ],
-    "version": "3.53.3"
+    "version": "3.53.4"
   },
   "staden-io-lib": {
     "date": "2026-05-06",
