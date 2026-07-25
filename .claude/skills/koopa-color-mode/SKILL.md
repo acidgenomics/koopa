@@ -211,6 +211,30 @@ override (e.g. npm, pip, claude configs), silently clobbering work config.
 `configurers/color_mode.py` delegates to `dotfiles.py`'s `main()` with
 `KOOPA_DOTFILES_SKIP_PULL=1` — never runs its own standalone `chezmoi apply`.
 
+## Stale Session Env Contaminates chezmoi status and diff
+
+**Named symptom:** `chezmoi diff` shows exactly one changed line —
+`"workbench.colorTheme": "Dracula Pro"` flipping to `"Dracula Pro (Alucard)"` (or
+vice versa) — across editor settings files you have not touched.
+
+**Cause:** the agent/shell session's `KOOPA_COLOR_MODE` is frozen at a value that
+doesn't match the real OS mode. Templates branching on `KOOPA_COLOR_MODE` render
+differently under the stale env, producing a phantom diff. This is NOT real drift.
+
+**Always verify OS mode before acting on a diff:**
+```sh
+echo "Session: ${KOOPA_COLOR_MODE:-<unset>}"
+defaults read -g AppleInterfaceStyle 2>/dev/null || echo "(absent = LIGHT)"
+cat ~/.cache/koopa/color-mode-applied 2>/dev/null
+```
+If session ≠ OS mode, re-run chezmoi commands with the real mode overridden:
+```sh
+KOOPA_COLOR_MODE=dark chezmoi diff --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
+```
+
+**corollary:** a file that shows ` M` under the stale env, but is clean under
+the correct env, has NOT drifted. Do not "fix" it.
+
 ## Never Verify by Re-Running the Installer from an Agent Session
 
 Never run `koopa configure user dotfiles` from inside a Claude Code (or other

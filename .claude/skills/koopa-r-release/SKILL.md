@@ -1,3 +1,12 @@
+---
+name: koopa-r-release
+description: >-
+  koopa R package release — cloud-native S3 + CloudFront, acidgenomics profile,
+  koopa app r publish/reindex/archive, sonoma-arm64 binaries, pre-release
+  AcidDevtools::check() gate. Use when releasing, publishing, reindexing, or
+  archiving an Acid Genomics R package.
+---
+
 # koopa R Package Release
 
 ## Architecture: Cloud-Native S3

@@ -1,11 +1,13 @@
 ---
 name: koopa-chezmoi-dotfiles
-description: >
+description: >-
   How koopa manages home dotfiles via chezmoi — source-of-truth layout, the
   explicit --source flag, template-vs-generator ordering, XDG path derivation in
-  templates, and the correct re-run command. Use when editing a dotfile, working
-  in opt/dotfiles/chezmoi/, debugging a file that reverts on chezmoi apply, or
-  wiring a chezmoi template.
+  templates, symlink_ source files for App Support bridges, diagnosing chezmoi
+  status contamination from stale env, and the correct re-run command. Use when
+  editing a dotfile, working in opt/dotfiles/chezmoi/, debugging a file that
+  reverts on chezmoi apply, wiring a chezmoi template, or bridging XDG paths to
+  macOS Library/Application Support.
 ---
 
 # koopa Chezmoi Dotfiles
@@ -119,6 +121,85 @@ settings — anything under `opt/dotfiles/chezmoi/dot_*/`.
 
 Failing to add a `.chezmoiremove` entry means the orphan remains active (e.g. as a
 globally-available Claude skill) even though the source no longer tracks it.
+
+## macOS App Support Bridges: Use symlink_ Source Files
+
+macOS apps like VS Code, Cursor, Positron, Antigravity, nushell, and ruff read
+config from `~/Library/Application Support/<App>/` rather than the XDG
+`~/.config/<App>/` path that chezmoi manages. Bridge these with chezmoi-native
+`symlink_` source files — not imperative Python in `opt/dotfiles/install`.
+
+**Source file layout:**
+```
+private_Library/
+  Application Support/         ← literal space, fine in chezmoi v2
+    Code/User/
+      symlink_settings.json.tmpl
+      symlink_keybindings.json.tmpl
+    Cursor/User/
+      symlink_settings.json.tmpl
+    Positron/User/
+      symlink_settings.json.tmpl
+    Antigravity/User/
+      symlink_settings.json.tmpl
+      symlink_keybindings.json.tmpl
+    nushell/
+      symlink_config.nu.tmpl
+      symlink_env.nu.tmpl
+    ruff/
+      symlink_pyproject.toml.tmpl
+```
+
+**Content of each symlink source file** is the symlink target (a template string):
+```
+{{ .chezmoi.homeDir }}/.config/Code/User/settings.json
+```
+
+**Why this beats Python imperative code:** chezmoi owns the symlinks. `chezmoi
+status` detects if one breaks. `chezmoi apply` self-heals on every dotfiles run.
+The Python `install` block only runs on explicit `koopa configure user dotfiles`.
+
+**VS Code writes through symlinks in place** (no atomic rename) — the XDG file
+stays the single source of truth, chezmoi manages it, VS Code writes through the
+App Support symlink without chezmoi knowing or caring.
+
+**Library/ is included on macOS** by `.chezmoiignore` (excluded only on
+non-Darwin). The existing `private_Library/` tree (LaunchAgents, KeyBindings)
+confirms the pattern works.
+
+**Verify with:**
+```sh
+KOOPA_COLOR_MODE=dark chezmoi diff --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi" \
+  ~/Library/Application\ Support/Code/User/settings.json
+# mode 120000 in diff = symlink — correct
+```
+
+## Diagnosing Spurious chezmoi status / diff Output
+
+**Symptom:** `chezmoi status` shows ` M` on files you haven't changed; `chezmoi
+diff` shows a single line flip like `"workbench.colorTheme": "Dracula Pro"` →
+`"Dracula Pro (Alucard)"`.
+
+**Cause:** your shell session has a stale `KOOPA_COLOR_MODE` (e.g. `light`) that
+doesn't match the current OS mode (`dark`). Templates that branch on
+`KOOPA_COLOR_MODE` render differently under your env than they do on disk,
+producing a phantom diff.
+
+**Diagnosis:**
+```sh
+echo "Session: ${KOOPA_COLOR_MODE:-<unset>}"
+defaults read -g AppleInterfaceStyle 2>/dev/null || echo "(absent = light)"
+cat ~/.cache/koopa/color-mode-applied 2>/dev/null
+```
+If the session value differs from the OS/marker, the diff is an artifact.
+
+**Fix:** pass the real OS mode explicitly to any chezmoi command:
+```sh
+KOOPA_COLOR_MODE=dark chezmoi status --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
+KOOPA_COLOR_MODE=dark chezmoi diff   --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
+```
+Never trust inherited `KOOPA_COLOR_MODE` in a long-running agent session —
+always derive it from `defaults read -g AppleInterfaceStyle` first.
 
 ## Go Template Whitespace Trim: `-}}` Eats the Following Newline
 

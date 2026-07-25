@@ -1,3 +1,11 @@
+---
+name: license
+description: >-
+  Apache-2.0 LICENSE file conventions (Acid Genomics) — canonical sources per repo type,
+  how GitHub licensee detection works (>=98% match), corruption history, badge wiring.
+  Use when adding or repairing a LICENSE file or a repo shows NOASSERTION.
+---
+
 # Apache-2.0 License File Conventions (Acid Genomics)
 
 Applies to all repos under `~/git/personal/` and `~/.local/share/koopa/`.
