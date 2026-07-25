@@ -38,7 +38,7 @@
 | `elvish` | `eval` namespace isolation, closure/fn capture order, `use` compile-time lexical scoping, `edit:` interactive-only, `path:` 0.21.0 API, `brew shellenv` workaround, `(src)` under eval, koopa activation architecture |
 | `powershell` | activation architecture, starship mtime-guarded cache + header.ps1 ordering constraint, color-mode sync hook (file re-render trigger, marker+sentinel guard, `Start-Process -NoNewWindow` idiom), `_koopa_is_light_mode` per-platform detection, `sys.platform == "win32"` guard for `winreg` |
 | `koopa-rust` | Rust/cargo conventions for koopa installers — hermetic `CARGO_HOME` (always `tempfile.mkdtemp(prefix="koopa-cargo-")`), `"rust"` in `build_dependencies`, `NO_RUST` opt-out policy, offline crate check |
-| `koopa-vscode` | Quarto VS Code plugin + LuaLS `.luarc.json` — portable path pattern (relative paths resolve against workspace root, use `opt/quarto/share/...` symlink not versioned `app/` path), remove `Generator` key to take manual control, strip `/.luarc.json` from `.gitignore`, LuaLS placeholder support (`${env:VAR}`, `${workspaceFolder}`, `~`) |
+| `koopa-vscode` | VS Code terminal font + Nerd Font glyph debugging (CoreText family names, `mdls` lookup, App Support symlink bridge, write-race prevention via `autoDetectColorScheme`), Quarto VS Code plugin + LuaLS `.luarc.json` — portable path pattern, remove `Generator` key, LuaLS placeholder support |
 | `license` | Apache-2.0 LICENSE file conventions — canonical sources per repo type (Python/koopa/dotfiles: `gh api /licenses/apache-2.0`; R packages: usethis template), how GitHub licensee detection works, corruption history, badge wiring |
 
 ## Path-scoped rules (load when matching file is opened)

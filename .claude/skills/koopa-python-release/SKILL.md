@@ -1,3 +1,11 @@
+---
+name: koopa-python-release
+description: >-
+  Acid Genomics Python package release — python.acidgenomics.com PEP 503 S3+CloudFront
+  index, koopa app python publish/reindex, quality gate, CHANGELOG format, smoke test.
+  Use when releasing or publishing an Acid Genomics Python package.
+---
+
 # Acid Genomics Python Package Release
 
 ## Hosting
