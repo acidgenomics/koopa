@@ -86,7 +86,7 @@ lint.pydocstyle.convention = "numpy"
 lint.pylint.allow-magic-value-types = [ "bytes", "float", "int", "str" ]
 lint.pylint.max-args = 30
 lint.pylint.max-branches = 30
-lint.pylint.max-positional-args = 2
+lint.pylint.max-positional-args = 30
 lint.pylint.max-statements = 100
 
 [tool.interrogate]

@@ -693,7 +693,7 @@ def _zsh_app_namespace_completions(
             if not isinstance(sub_val, dict):
                 continue
             sub_fn = str(sub).replace("-", "_")
-            leaves = sorted(sub_val.keys())
+            leaves = sorted(cast(dict[str, Any], sub_val).keys())
             lines += [
                 f"_koopa_app_{fn}_{sub_fn}() {{",
                 "    local -a cmds",
@@ -1176,7 +1176,7 @@ def _generate_nushell_completion(
             # Depth 3: sub-namespace completers.
             for sub, sub_val in sorted(val.items()):
                 if isinstance(sub_val, dict):
-                    leaves = sorted(sub_val.keys())
+                    leaves = sorted(cast(dict[str, Any], sub_val).keys())
                     sub_fn = f"koopa_app_{ns.replace('-', '_')}_{str(sub).replace('-', '_')}_cmds"
                     _nu_completer(lines, sub_fn, leaves)
 
