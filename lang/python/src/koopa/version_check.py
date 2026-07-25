@@ -1468,10 +1468,10 @@ def _check_aspera_connect() -> str:
 
 def _check_illumina_ica_cli() -> str:
     html = _http_get_text(
-        "https://help.ica.illumina.com/reference/software-release-notes",
+        "https://help.ica.illumina.com/command-line-interface/cli-releasehistory",
         timeout=30,
     )
-    versions = re.findall(r"ICA v(\d+\.\d+\.\d+)", html)
+    versions = re.findall(r"cli/(\d+\.\d+\.\d+)/ica-linux-amd64\.zip", html)
     if not versions:
         msg = "No Illumina ICA CLI versions found"
         raise RuntimeError(msg)
