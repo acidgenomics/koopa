@@ -9,6 +9,7 @@ git-rename-master-to-main, git-set-remote-url, git-rm-submodule, etc.
 import os
 import shutil
 import subprocess
+import time
 
 
 def _git(
@@ -35,12 +36,14 @@ def git_clone(
     commit: str | None = None,
     tag: str | None = None,
     recursive: bool = False,
+    retries: int = 3,
 ) -> None:
     """Clone a git repository.
 
     Matches bash ``koopa_git_clone`` behaviour:
     - branch: shallow clone with ``--depth=1 --single-branch``
     - commit/tag: blobless clone with ``--filter=blob:none``, then checkout
+    - retries: retry up to this many times on network errors (default: 3)
     """
     args = ["clone", "--quiet"]
     if branch:
@@ -54,7 +57,40 @@ def git_clone(
     args.append(url)
     if target:
         args.append(target)
-    _git(*args, capture=False)
+
+    for attempt in range(1, retries + 1):
+        try:
+            _git(*args, capture=False)
+            break
+        except subprocess.CalledProcessError as exc:
+            stderr = (exc.stderr or "").lower()
+            is_network_error = any(
+                pattern in stderr
+                for pattern in [
+                    "connection reset",
+                    "connection refused",
+                    "connection timed out",
+                    "rpc failed",
+                    "early eof",
+                    "fetch-pack",
+                    "recv failure",
+                    "broken pipe",
+                ]
+            )
+            if attempt < retries and is_network_error:
+                wait_time = 2 ** (attempt - 1)
+                from koopa.alert import alert_info
+
+                alert_info(
+                    f"Network error during git clone (attempt {attempt}/{retries}), "
+                    f"retrying in {wait_time}s..."
+                )
+                time.sleep(wait_time)
+                if target and os.path.exists(target):
+                    shutil.rmtree(target)
+            else:
+                raise
+
     cwd = target or os.path.basename(url).removesuffix(".git")
     if commit:
         _git("checkout", "--quiet", commit, cwd=cwd, capture=False)
