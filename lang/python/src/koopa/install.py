@@ -832,7 +832,31 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 if config.mode != "shared" or not config.prefix:
                     msg = "Binary install requires shared mode and a prefix."
                     raise RuntimeError(msg)
-                install_app_from_binary_package(config.prefix)
+                try:
+                    install_app_from_binary_package(config.prefix)
+                except (FileNotFoundError, subprocess.CalledProcessError):
+                    if has_python_installer(config.name, config.platform, config.mode):
+                        from koopa.alert import alert_info
+
+                        alert_info(
+                            f"Binary package not available for '{config.name}', "
+                            "falling back to source build."
+                        )
+                        installer_fn = get_python_installer(
+                            config.name, config.platform, config.mode
+                        )
+                        from koopa.installers._context import set_app_name, set_app_version
+
+                        set_app_name(config.name)
+                        set_app_version(config.version)
+                        installer_fn(
+                            name=config.name,
+                            version=config.version,
+                            prefix=config.prefix,
+                            passthrough_args=config.passthrough_args,
+                        )
+                    else:
+                        raise
             elif has_python_installer(config.name, config.platform, config.mode):
                 installer_fn = get_python_installer(config.name, config.platform, config.mode)
                 from koopa.installers._context import set_app_name, set_app_version
