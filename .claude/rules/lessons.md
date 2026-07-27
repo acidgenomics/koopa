@@ -49,4 +49,5 @@
 | `rules/app-json.md` | `**/app.json` | `format-app-json`, revision bump, completions, successor invariant, version URL verification |
 | `rules/zsh.md` | `lang/zsh/**` | ShellCheck doesn't support zsh |
 | `rules/fish.md` | `**/*.fish` | `$VAR` not `${VAR}`; `set -g` vs `-gx` vs `-U` for color vars; `fish_variables` clobber trap; `fish_frozen_theme.fish`; conf.d load order; `fish_color_*` hex format; `set -S` diagnostic |
+| `rules/bash.md` | `lang/bash/**`, `lang/sh/**`, `**/*.sh`, `.claude/skills/**/*.md` | `${VAR}` only when adjacent text follows (path suffix, concatenation); bare `$VAR` when standalone; fish excepted |
 | `rules/theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |

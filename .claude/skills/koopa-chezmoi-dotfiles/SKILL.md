@@ -169,7 +169,7 @@ confirms the pattern works.
 
 **Verify with:**
 ```sh
-KOOPA_COLOR_MODE=dark chezmoi diff --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi" \
+KOOPA_COLOR_MODE=dark chezmoi diff --source="${HOME}/.local/share/koopa/opt/dotfiles/chezmoi" \
   ~/Library/Application\ Support/Code/User/settings.json
 # mode 120000 in diff = symlink — correct
 ```
@@ -195,8 +195,8 @@ If the session value differs from the OS/marker, the diff is an artifact.
 
 **Fix:** pass the real OS mode explicitly to any chezmoi command:
 ```sh
-KOOPA_COLOR_MODE=dark chezmoi status --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
-KOOPA_COLOR_MODE=dark chezmoi diff   --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
+KOOPA_COLOR_MODE=dark chezmoi status --source="${HOME}/.local/share/koopa/opt/dotfiles/chezmoi"
+KOOPA_COLOR_MODE=dark chezmoi diff   --source="${HOME}/.local/share/koopa/opt/dotfiles/chezmoi"
 ```
 Never trust inherited `KOOPA_COLOR_MODE` in a long-running agent session —
 always derive it from `defaults read -g AppleInterfaceStyle` first.

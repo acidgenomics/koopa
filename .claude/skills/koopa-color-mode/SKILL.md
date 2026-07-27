@@ -229,7 +229,7 @@ cat ~/.cache/koopa/color-mode-applied 2>/dev/null
 ```
 If session ≠ OS mode, re-run chezmoi commands with the real mode overridden:
 ```sh
-KOOPA_COLOR_MODE=dark chezmoi diff --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
+KOOPA_COLOR_MODE=dark chezmoi diff --source="${HOME}/.local/share/koopa/opt/dotfiles/chezmoi"
 ```
 
 **corollary:** a file that shows ` M` under the stale env, but is clean under
