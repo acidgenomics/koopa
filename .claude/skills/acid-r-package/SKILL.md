@@ -2,7 +2,7 @@
 name: acid-r-package
 description: >-
   Acid Genomics R package development conventions — per-project air.toml, global
-  ~/.lintr only, roxygen2 8.x @importFrom split, S4 linter tuning, AcidDevtools::check()
+  ~/.lintr only, roxygen2 8.x @importFrom split, S4 linter tuning, AcidDevTools::check()
   gate. Use when writing or checking an acidgenomics R package, configuring air/lintr,
   or fixing roxygen/lint failures.
 ---
