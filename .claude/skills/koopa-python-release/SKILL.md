@@ -1,9 +1,10 @@
 ---
 name: koopa-python-release
 description: >-
-  Acid Genomics Python package release — python.acidgenomics.com PEP 503 S3+CloudFront
-  index, koopa app python publish/reindex, quality gate, CHANGELOG format, smoke test.
-  Use when releasing or publishing an Acid Genomics Python package.
+  Acid Genomics Python package release — python.acidgenomics.com PEP 503
+  S3+CloudFront index at /simple/, same-domain docs at /<name>/, generated
+  landing page at /, koopa app python publish/publish-docs/reindex, quality
+  gate, CHANGELOG format, smoke test. See koopa-r-release for the R analog.
 ---
 
 # Acid Genomics Python Package Release
@@ -11,12 +12,23 @@ description: >-
 ## Hosting
 
 Python packages are hosted at **python.acidgenomics.com** — a private PEP 503
-"simple" index backed by S3 (bucket in `_BUCKET` in `lang/python/src/koopa/pypi.py`) and served
-via CloudFront. Packages are NOT published to public pypi.org.
+"simple" index backed by S3 (bucket `python-<account-id>-us-east-1-an` via
+`koopa_s3_bucket("python")` in `aws.py`) and served via CloudFront. Packages
+are NOT published to public pypi.org.
 
-- Packages: `s3://…/packages/<file>`
-- Index: served at the bucket root (`/`) — `index.html` + `<name>/index.html`
-- Publish tooling: `koopa app python publish <package-dir>` (calls `koopa.pypi.publish`)
+All Python materials (packages, docs, landing page) live on the same domain
+and bucket. Layout:
+
+| URL | S3 key | Produced by |
+|---|---|---|
+| `python.acidgenomics.com/` | `index.html` | `reindex` (generated landing page) |
+| `.../simple/` | `simple/index.html` | `reindex` (PEP 503 root) |
+| `.../simple/<name>/` | `simple/<name>/index.html` | `reindex` (per-package) |
+| `.../packages/<file>` | `packages/<file>` | `publish` |
+| `.../<name>/` | `<name>/index.html` | `publish-docs` (Sphinx) |
+
+- Publish tooling: `koopa app python publish <package-dir>`
+- Docs tooling: `koopa app python publish-docs <package-dir>`
 - Reindex tooling: `koopa app python reindex`
 - Implementation: `lang/python/src/koopa/pypi.py`
 
@@ -24,11 +36,15 @@ via CloudFront. Packages are NOT published to public pypi.org.
 
 ```sh
 # one-off
-uv pip install --index-url 'https://python.acidgenomics.com/' syntactic
+uv pip install --index-url 'https://python.acidgenomics.com/simple/' syntactic
 
 # project pyproject.toml
 [[tool.uv.index]]
-url = "https://python.acidgenomics.com/"
+name = "acidgenomics"
+url = "https://python.acidgenomics.com/simple/"
+
+[tool.uv]
+sources.syntactic = { index = "acidgenomics" }
 ```
 
 ## Release checklist (e.g. `py-syntactic`)
@@ -85,8 +101,9 @@ koopa app python publish ~/git/personal/py-syntactic
 ```
 
 This runs `uv build`, uploads wheel + sdist to S3, regenerates the PEP 503
-index HTML at the bucket root, syncs it (with `--exclude "packages/*"` to
-protect wheels from `--delete`), and invalidates CloudFront `/*`.
+index HTML under `simple/` (scoped `--delete` cannot touch `packages/` or
+per-package docs), re-generates the landing page at `/`, and invalidates
+CloudFront `/*`.
 
 Requires: AWS profile `acidgenomics` configured; `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON`
 set (or `AWS_CLOUDFRONT_DISTRIBUTION_ID` as fallback) — loaded from
@@ -109,7 +126,7 @@ After publish, confirm the package is installable:
 tmp=$(mktemp -d)
 uv venv --quiet "$tmp/venv"
 uv pip install --python "$tmp/venv/bin/python" \
-    --index-url 'https://python.acidgenomics.com/' \
+    --index-url 'https://python.acidgenomics.com/simple/' \
     syntactic
 "$tmp/venv/bin/python" -c "import syntactic; print(syntactic.__all__)"
 rm -rf "$tmp"
@@ -117,17 +134,64 @@ rm -rf "$tmp"
 
 ## pypi.py index layout
 
-The index is served at the **domain root** (not `/simple/`). The S3 bucket
-structure is:
+The PEP 503 index lives under the `simple/` prefix. The S3 bucket structure is:
 
 ```
-packages/                     ← wheels + sdists (never touched by reindex sync)
-index.html                    ← root listing: <a href="syntactic/">syntactic</a>
-syntactic/index.html          ← per-package: links to ../packages/<file>#sha256=…
+packages/                         <- wheels + sdists (never touched by reindex sync)
+simple/index.html                 <- root listing: <a href="syntactic/">syntactic</a>
+simple/syntactic/index.html       <- per-package: links to ../../packages/<file>#sha256=...
+index.html                        <- generated landing page (separate cp, not in simple/ sync)
+<name>/                           <- Sphinx docs (published by publish-docs)
 ```
 
-`_sync_index_to_s3` uses `--exclude "packages/*"` with `--delete` so that
-reindexing never wipes uploaded artifacts.
+`_sync_index_to_s3` targets `s3://bucket/simple/` with `--delete`; this confines
+deletion to the `simple/` subtree so packages and docs are never at risk.
+
+## Documentation
+
+```sh
+koopa app python publish-docs ~/git/personal/py-syntactic
+```
+
+This builds Sphinx docs via `uv run --extra docs sphinx-build -W -b html docs/ <tmp>/html`,
+syncs to `s3://python-<acct>-us-east-1-an/syntactic/` (same bucket as packages),
+and invalidates CloudFront `/*` on the same distribution.
+
+Docs are served at **https://python.acidgenomics.com/syntactic/** — no separate
+subdomain, no separate bucket, no separate CloudFront distribution.
+
+`--delete` in the docs sync is scoped to `<name>/`, so it cannot touch `simple/`
+or `packages/`.
+
+A package name equal to `simple` or `packages` is rejected at publish-docs time
+to prevent any possible collision with the index/artifacts prefixes.
+
+Requires: same AWS profile + `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON` as `publish`.
+No additional env vars needed. `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS` is
+not used and does not need to be set.
+
+### Verification
+
+```sh
+# Dry-run docs build locally (no AWS required):
+cd ~/git/personal/py-syntactic
+uv run --extra docs sphinx-build -W -b html docs/ /tmp/docs-test
+
+# After publish-docs:
+curl -sI https://python.acidgenomics.com/syntactic/ | head -5
+
+# Confirm package index is unaffected:
+koopa app python reindex
+curl -sI https://python.acidgenomics.com/simple/syntactic/ | head -5
+```
+
+## Landing page
+
+`reindex` auto-generates `index.html` at the bucket root from each wheel's
+`Summary` field (read via `zipfile` while the wheel is local for hashing).
+Flat alphabetical list with links to per-package docs (`/<name>/`) and an
+install note pointing at `/simple/`. No curated categories — fully automatic
+on every `publish` or `reindex`.
 
 ## CHANGELOG format (py-* packages)
 
@@ -139,61 +203,6 @@ Keep-a-Changelog style, version at top. Example heading:
 
 Sections: `### Features`, `### Bug Fixes`, `### Changes`, `### Tests`.
 Omit empty sections.
-
-## Documentation hosting
-
-Rendered Sphinx docs are hosted at **python-docs.acidgenomics.com** — a separate
-S3 bucket + CloudFront distribution from the package index, so the two are fully
-independent (reindex never touches docs).
-
-- Docs URL: `https://python-docs.acidgenomics.com/<name>/`
-- Bucket role: `python-docs` → `python-docs-<acct>-us-east-1-an`
-  (via `koopa_s3_bucket("python-docs")` in `aws.py`)
-- CloudFront env var: `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS`
-  (fallback: `AWS_CLOUDFRONT_DISTRIBUTION_ID`)
-- Publish tooling: `koopa app python publish-docs <package-dir>`
-  (calls `koopa.pypi.publish_docs`)
-- Implementation: `lang/python/src/koopa/pypi.py` — `publish_docs()`
-
-### publish-docs workflow
-
-```sh
-koopa app python publish-docs ~/git/personal/py-syntactic
-```
-
-This:
-1. Reads `[project] name` from `pyproject.toml`, PEP 503-normalises it.
-2. Runs `uv run --extra docs sphinx-build -W -b html docs/ <tmp>/html`.
-3. Syncs `<tmp>/html/` → `s3://python-docs-<acct>-us-east-1-an/syntactic/`
-   with `--delete` (scoped to that package's subtree only).
-4. Invalidates CloudFront `/*` on the docs distribution.
-
-Requires: AWS profile `acidgenomics` configured;
-`AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS` set in `<koopa-root>/.env`.
-
-### User-owned AWS provisioning (one-time setup)
-
-- S3 bucket `python-docs-<acct>-us-east-1-an` (same region/account as the
-  package index bucket).
-- CloudFront distribution: origin = docs bucket, alias =
-  `python-docs.acidgenomics.com`, ACM cert, default root object `index.html`.
-- Route53 record `python-docs.acidgenomics.com` → CloudFront distribution.
-- Add `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS` to `<koopa-root>/.env`.
-
-### Verification
-
-```sh
-# Dry-run docs build locally (no AWS required):
-cd ~/git/personal/py-syntactic
-uv run --extra docs sphinx-build -W -b html docs/ /tmp/docs-test
-
-# After publish-docs:
-curl -sI https://python-docs.acidgenomics.com/syntactic/ | head -5
-
-# Confirm package index is unaffected:
-koopa app python reindex
-curl -sI https://python-docs.acidgenomics.com/syntactic/ | head -5
-```
 
 ## R analog
 

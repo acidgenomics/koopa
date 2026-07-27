@@ -34,7 +34,7 @@ AWS_ACCOUNT_ID=<12-digit account ID>
 
 # CloudFront distribution IDs (set the specific var; generic is the fallback)
 AWS_CLOUDFRONT_DISTRIBUTION_ID_R=<id>          # r.acidgenomics.com
-AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON=<id>     # python.acidgenomics.com
+AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON=<id>     # python.acidgenomics.com (index + docs)
 AWS_CLOUDFRONT_DISTRIBUTION_ID=<id>            # generic fallback (optional)
 ```
 
@@ -45,7 +45,7 @@ All private koopa buckets follow: `<role>-<account-id>-us-east-1-an`
 | Role | Domain / purpose |
 |---|---|
 | `r` | r.acidgenomics.com R package repo |
-| `python` | python.acidgenomics.com PyPI index |
+| `python` | python.acidgenomics.com — PEP 503 index (`/simple/`), docs (`/<name>/`), landing (`/`) |
 | `koopa` | Source tarball mirror (koopa develop mirror-src) |
 | `artifacts` | Pre-built binary packages + restricted installers |
 

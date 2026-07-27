@@ -8,10 +8,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 _PROFILE = "acidgenomics"
-_INDEX_URL = "https://python.acidgenomics.com/"
 
 
 def _aws() -> str:
@@ -124,14 +124,32 @@ def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
     return h.hexdigest()
 
 
+def _read_wheel_summary(whl_path: str) -> str:
+    """Read the Summary field from a wheel's METADATA, returning '' if absent."""
+    try:
+        with zipfile.ZipFile(whl_path) as zf:
+            meta_name = next(
+                (n for n in zf.namelist() if n.endswith(".dist-info/METADATA")),
+                None,
+            )
+            if meta_name is None:
+                return ""
+            for line in zf.read(meta_name).decode(errors="replace").splitlines():
+                if line.startswith("Summary:"):
+                    return line[len("Summary:") :].strip()
+    except (OSError, zipfile.BadZipFile):
+        pass
+    return ""
+
+
 def _generate_index(
     packages: dict[str, list[tuple[str, str]]],
     output_dir: Path,
 ) -> None:
     """Write PEP 503 simple index HTML tree to output_dir/.
 
-    The index is served at the domain root (no /simple/ prefix), so the
-    package pages live at /<name>/index.html and link to ../packages/<file>.
+    The index is served at /simple/ (PEP 503 convention), so the package
+    pages live at /simple/<name>/index.html and link to ../../packages/<file>.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -149,15 +167,52 @@ def _generate_index(
         with open(pkg_dir / "index.html", "w") as fh:
             fh.write("<!DOCTYPE html>\n<html>\n<body>\n")
             for filename, sha256 in sorted(files):
-                fh.write(f'<a href="../packages/{filename}#sha256={sha256}">{filename}</a>\n')
+                fh.write(f'<a href="../../packages/{filename}#sha256={sha256}">{filename}</a>\n')
             fh.write("</body>\n</html>\n")
 
 
-def _sync_index_to_s3(index_dir: Path) -> None:
-    """Sync the index tree to S3 bucket root.
+def _generate_landing(
+    packages_summaries: dict[str, str],
+    output_path: Path,
+) -> None:
+    """Write the root landing page to output_path.
 
-    The ``--exclude "packages/*"`` guard is required so that ``--delete``
-    at the bucket root does not wipe uploaded wheel/sdist files.
+    Mirrors the r.acidgenomics.com structure: breadcrumb to Acid Genomics,
+    alphabetical package list with descriptions linking to per-package docs,
+    and an installation note pointing at /simple/.
+    """
+    with open(output_path, "w") as fh:
+        fh.write('<!DOCTYPE html>\n<html lang="en">\n<head>\n')
+        fh.write("<title>Python packages</title>\n")
+        fh.write('<meta charset="UTF-8" />\n')
+        fh.write('<meta name="viewport" content="width=device-width" />\n')
+        fh.write("</head>\n<body>\n")
+        fh.write("<nav>\n")
+        fh.write(
+            '<div id="breadcrumb"><a href="https://acidgenomics.com/">Acid Genomics</a></div>\n'
+        )
+        fh.write("</nav>\n")
+        fh.write("<h1>Python packages</h1>\n<hr />\n<dl>\n")
+        for name in sorted(packages_summaries):
+            summary = packages_summaries[name]
+            fh.write(f'  <dt><a href="{name}/">{name}</a></dt>\n')
+            if summary:
+                fh.write(f"  <dd>{summary}</dd>\n")
+        fh.write("</dl>\n<hr />\n")
+        fh.write(
+            "<p>Install: "
+            "<code>"
+            "uv pip install --index-url https://python.acidgenomics.com/simple/ &lt;package&gt;"
+            "</code></p>\n"
+        )
+        fh.write("</body>\n</html>\n")
+
+
+def _sync_index_to_s3(index_dir: Path) -> None:
+    """Sync the PEP 503 index tree to s3://bucket/simple/.
+
+    Scoping the sync to the simple/ prefix confines --delete to that
+    subtree; packages/ and per-package docs are never touched.
     """
     aws = _aws()
     subprocess.run(
@@ -167,12 +222,27 @@ def _sync_index_to_s3(index_dir: Path) -> None:
             f"--profile={_PROFILE}",
             "sync",
             "--delete",
-            "--exclude",
-            "packages/*",
             "--content-type",
             "text/html",
             str(index_dir) + "/",
-            f"{_s3_uri()}/",
+            f"{_s3_uri()}/simple/",
+        ],
+        check=True,
+    )
+
+
+def _upload_landing(landing_path: Path) -> None:
+    """Upload the root landing page to s3://bucket/index.html."""
+    subprocess.run(
+        [
+            _aws(),
+            "s3",
+            f"--profile={_PROFILE}",
+            "cp",
+            "--content-type",
+            "text/html",
+            str(landing_path),
+            f"{_s3_uri()}/index.html",
         ],
         check=True,
     )
@@ -228,12 +298,34 @@ def reindex(*, invalidate: bool = True) -> None:
             sha256 = _sha256_of_s3_file(f"packages/{filename}", tmp_dir)
             packages.setdefault(name, []).append((filename, sha256))
 
-        index_dir = Path(tmp_dir) / "index"
+        alert("Reading wheel metadata for landing page.")
+        aws = _aws()
+        summaries: dict[str, str] = {}
+        for name in sorted(packages):
+            whl = next((f for f, _ in packages[name] if f.endswith(".whl")), None)
+            if whl is None:
+                summaries[name] = ""
+                continue
+            local = os.path.join(tmp_dir, whl)
+            subprocess.run(
+                [aws, "s3", f"--profile={_PROFILE}", "cp", f"{_s3_uri()}/packages/{whl}", local],
+                capture_output=True,
+                check=True,
+            )
+            summaries[name] = _read_wheel_summary(local)
+            os.unlink(local)
+
+        simple_dir = Path(tmp_dir) / "simple"
         alert("Generating PEP 503 index HTML.")
-        _generate_index(packages, index_dir)
+        _generate_index(packages, simple_dir)
 
         alert("Syncing index to S3.")
-        _sync_index_to_s3(index_dir)
+        _sync_index_to_s3(simple_dir)
+
+        alert("Generating landing page.")
+        landing_path = Path(tmp_dir) / "index.html"
+        _generate_landing(summaries, landing_path)
+        _upload_landing(landing_path)
 
         if invalidate:
             alert("Invalidating CloudFront cache.")
@@ -242,57 +334,6 @@ def reindex(*, invalidate: bool = True) -> None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     alert(f"Index updated. Packages: {sorted(packages)}")
-
-
-def _docs_bucket() -> str:
-    """Return the Python docs S3 bucket name (loaded from environment)."""
-    from koopa.aws import koopa_s3_bucket
-
-    return koopa_s3_bucket("python-docs")
-
-
-def _docs_s3_uri() -> str:
-    """Return the S3 URI prefix for the Python docs bucket."""
-    return f"s3://{_docs_bucket()}"
-
-
-def _docs_distribution_id() -> str:
-    """Return CloudFront distribution ID for the docs site, raising if absent."""
-    from koopa.aws import load_dotenv
-
-    load_dotenv()
-    dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS", "")
-    if not dist_id:
-        dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
-    if not dist_id:
-        msg = (
-            "AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS "
-            "(or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
-        )
-        raise RuntimeError(msg)
-    return dist_id
-
-
-def _invalidate_cloudfront_docs() -> None:
-    """Invalidate /* in the docs CloudFront distribution."""
-    aws = _aws()
-    dist_id = _docs_distribution_id()
-    subprocess.run(
-        [
-            aws,
-            "cloudfront",
-            "create-invalidation",
-            "--distribution-id",
-            dist_id,
-            "--no-cli-pager",
-            "--output",
-            "text",
-            "--paths",
-            "/*",
-            f"--profile={_PROFILE}",
-        ],
-        check=True,
-    )
 
 
 def publish(package_dir: str, *, invalidate: bool = True) -> None:
@@ -357,11 +398,12 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
 
 
 def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
-    """Build and publish a package's Sphinx docs to python-docs.acidgenomics.com.
+    """Build and publish a package's Sphinx docs to python.acidgenomics.com.
 
-    The rendered site is synced to s3://<docs-bucket>/<name>/ where <name> is the
-    PEP 503-normalised project name read from pyproject.toml.  The package index
-    at python.acidgenomics.com is not touched.
+    The rendered site is synced to s3://<python-bucket>/<name>/ where <name>
+    is the PEP 503-normalised project name read from pyproject.toml. Docs are
+    served at https://python.acidgenomics.com/<name>/ on the same domain and
+    bucket as the package index. The index at /simple/ is not touched.
 
     Parameters
     ----------
@@ -392,6 +434,9 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
         msg = f"[project] name not found in '{pyproject}'."
         raise RuntimeError(msg)
     name = _normalize_name(raw_name)
+    if name in {"simple", "packages"}:
+        msg = f"Package name '{name}' collides with a reserved path on python.acidgenomics.com."
+        raise ValueError(msg)
 
     uv = _uv()
     tmp_dir = tempfile.mkdtemp()
@@ -404,14 +449,14 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
             check=True,
         )
 
-        dest = f"{_docs_s3_uri()}/{name}/"
+        dest = f"{_s3_uri()}/{name}/"
         alert(f"Syncing docs to '{dest}'.")
         aws_s3_sync(out_dir + "/", dest, delete=True, profile=_PROFILE)
 
         if invalidate:
-            alert("Invalidating CloudFront docs cache.")
-            _invalidate_cloudfront_docs()
+            alert("Invalidating CloudFront cache.")
+            _invalidate_cloudfront()
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
-    alert(f"Docs published: https://python-docs.acidgenomics.com/{name}/")
+    alert(f"Docs published: https://python.acidgenomics.com/{name}/")
