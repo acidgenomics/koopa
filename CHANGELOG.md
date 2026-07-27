@@ -1,5 +1,33 @@
 # Changelog
 
+## koopa 0.23.0 (2026-07-26)
+
+Major changes:
+
+- Enhanced `koopa update` logic and improved platform checks on Debian.
+- Improved Homebrew and uv shell activation, and reworked completion-support
+  handling.
+- Fixed color-mode handling and restored progress-status output.
+- Improved upstream version checks for glib and clickhouse, and optimized the
+  git build.
+
+New apps:
+
+- `pixi` (0.73.0, non-default) -- cross-platform, multi-language package
+  management tool.
+- `pyproject-fmt` (2.25.3, non-default) -- applies a consistent format to
+  pyproject.toml files; the project's own `pyproject.toml` was reformatted
+  with it.
+- `zed` (1.12.0, non-default) -- high-performance, multiplayer code editor.
+
+Minor changes:
+
+- Fixed the isl/libisl installer and updated its version.
+- Fixed the doom-emacs install.
+- Fixed `ty` linter errors and corrected app-version metadata.
+- Added a note documenting the Homebrew `update` hang.
+- Updated app versions across the registry and refreshed dotfiles.
+
 ## koopa 0.22.0 (2026-06-20)
 
 Major changes:
