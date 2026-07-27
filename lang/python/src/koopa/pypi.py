@@ -177,34 +177,47 @@ def _generate_landing(
 ) -> None:
     """Write the root landing page to output_path.
 
-    Mirrors the r.acidgenomics.com structure: breadcrumb to Acid Genomics,
-    alphabetical package list with descriptions linking to per-package docs,
-    and an installation note pointing at /simple/.
+    Mirrors the r.acidgenomics.com structure and stylesheet: breadcrumb to
+    Acid Genomics, Google site search, alphabetical package list with
+    descriptions linking to per-package docs, and a footer with the install
+    snippet and license. css/front.css and images/logo.svg are uploaded
+    separately (not part of the generated tree); see the module docstring
+    for the S3 layout.
     """
     with open(output_path, "w") as fh:
-        fh.write('<!DOCTYPE html>\n<html lang="en">\n<head>\n')
+        fh.write('<!DOCTYPE html>\n<html lang="en" id="front">\n<head>\n')
         fh.write("<title>Python packages</title>\n")
+        fh.write('<link rel="stylesheet" type="text/css" href="css/front.css" />\n')
         fh.write('<meta charset="UTF-8" />\n')
         fh.write('<meta name="viewport" content="width=device-width" />\n')
-        fh.write("</head>\n<body>\n")
+        fh.write("</head>\n\n<body>\n")
         fh.write("<nav>\n")
         fh.write(
             '<div id="breadcrumb"><a href="https://acidgenomics.com/">Acid Genomics</a></div>\n'
         )
-        fh.write("</nav>\n")
-        fh.write("<h1>Python packages</h1>\n<hr />\n<dl>\n")
+        fh.write('<form method="get" action="https://www.google.com/search">\n')
+        fh.write("<div>\n")
+        fh.write('<input type="text" name="q" maxlength="255" placeholder="search" value="" />\n')
+        fh.write('<input type="hidden" name="sitesearch" value="acidgenomics.com" />\n')
+        fh.write("</div>\n</form>\n</nav>\n")
+        fh.write("<h1>Python packages</h1>\n<hr />\n\n<dl>\n")
         for name in sorted(packages_summaries):
             summary = packages_summaries[name]
             fh.write(f'  <dt><a href="{name}/">{name}</a></dt>\n')
             if summary:
                 fh.write(f"  <dd>{summary}</dd>\n")
-        fh.write("</dl>\n<hr />\n")
+        fh.write("</dl>\n\n<hr />\n\n")
         fh.write(
-            "<p>Install: "
-            "<code>"
-            "uv pip install --index-url https://python.acidgenomics.com/simple/ &lt;package&gt;"
-            "</code></p>\n"
+            "<p>Install: <code>uv pip install "
+            "--index-url https://python.acidgenomics.com/simple/ "
+            "&lt;package&gt;</code></p>\n\n"
         )
+        fh.write(
+            '<p><a href="https://github.com/acidgenomics/">Source code</a> is provided under '
+            'the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a> '
+            "license.</p>\n\n"
+        )
+        fh.write("<p>© 2026-pres. Acid Genomics LLC.</p>\n\n\n")
         fh.write("</body>\n</html>\n")
 
 
