@@ -1,5 +1,26 @@
 # Changelog
 
+## koopa 0.24.0 (2026-07-27)
+
+Major changes:
+
+- Moved the private Python package index from the bare domain root to
+  `/simple/` (PEP 503 convention, matching `pypi.org/simple`). The index
+  generator now writes to `s3://python-<acct>-us-east-1-an/simple/`;
+  per-package file hrefs updated from `../packages/` to `../../packages/`.
+- Consolidated Python documentation onto the same domain: `publish-docs`
+  now syncs Sphinx output to `s3://python-<acct>-us-east-1-an/<name>/`,
+  served at `https://python.acidgenomics.com/<name>/`. The previously
+  referenced `python-docs-*` bucket and `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS`
+  env var are no longer used.
+- `reindex` now auto-generates a landing page at `python.acidgenomics.com/`
+  from each wheel's `Summary` metadata field, mirroring the
+  `r.acidgenomics.com` structure with an alphabetical package list linking
+  to per-package docs and an install snippet.
+- Removed dead code: `_docs_bucket`, `_docs_s3_uri`, `_docs_distribution_id`,
+  `_invalidate_cloudfront_docs`, and the unused `_INDEX_URL` constant from
+  `pypi.py`.
+
 ## koopa 0.23.0 (2026-07-26)
 
 Major changes:
