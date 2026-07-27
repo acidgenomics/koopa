@@ -33,8 +33,13 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    ruff format --check lang/python/src/
    pyright lang/python/src/
    ```
-4. **User-owned** — `git tag vX.Y.Z`, `git push origin develop`,
-   `git push origin vX.Y.Z`, merge `develop`→`main` via PR.
+4. **User-owned** — tag, push, and merge:
+   ```sh
+   git tag vX.Y.Z
+   git push origin develop
+   git push origin vX.Y.Z
+   # then open a PR: develop -> main
+   ```
 
 ## CHANGELOG.md format
 
