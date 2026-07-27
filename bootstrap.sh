@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-05-06.
+# @note Updated 2026-07-14.
 # """
 
 set -o errexit
@@ -15,7 +15,7 @@ then
     _curl_verbose='--verbose'
 else
     _make_verbose=''
-    _curl_verbose='--silent'
+    _curl_verbose='--progress-bar'
 fi
 
 is_macos() {
@@ -159,7 +159,7 @@ download_with_fallback() {
 }
 
 install_perl() {
-    __kvar_version='5.42.2'
+    __kvar_version='5.44.0'
     printf 'Installing perl.\n'
     __kvar_filename="perl-${__kvar_version}.tar.gz"
     __kvar_major="${__kvar_version%%.*}"
@@ -369,7 +369,7 @@ install_xz() {
 }
 
 install_libffi() {
-    __kvar_version='3.6.0'
+    __kvar_version='3.7.1'
     printf 'Installing libffi.\n'
     __kvar_filename="libffi-${__kvar_version}.tar.gz"
     download_with_fallback \
@@ -414,7 +414,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.11.23'
+    __kvar_uv_version='0.11.32'
     __kvar_python_version='3.12.13'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"

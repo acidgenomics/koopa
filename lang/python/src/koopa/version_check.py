@@ -157,6 +157,10 @@ _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 _VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+_PRERELEASE_RE = re.compile(
+    r"(?<![a-zA-Z])(?:alpha|beta|preview|pre|rc|dev|snapshot|nightly|canary)(?![a-zA-Z])",
+    re.IGNORECASE,
+)
 
 
 def _version_key(version: str) -> tuple[int, ...]:
@@ -169,6 +173,50 @@ def _version_key(version: str) -> tuple[int, ...]:
             if m.group(2):
                 nums.append(ord(m.group(2).lower()))
     return tuple(nums)
+
+
+def _is_prerelease(version: str) -> bool:
+    """Return whether a version string denotes a pre-release.
+
+    Detects explicit pre-release markers (alpha, beta, rc, dev, pre, preview,
+    snapshot, nightly, canary), including glued forms such as ``1.92.0.beta1``
+    and ``1.2.0alpha``. A bare single trailing letter (e.g. ``1.1.1w``,
+    ``1.2.3a``) is a stable release and is intentionally not matched.
+
+    Parameters
+    ----------
+    version : str
+        Version string to inspect.
+
+    Returns
+    -------
+    bool
+        True if the version looks like a pre-release.
+    """
+    return bool(_PRERELEASE_RE.search(version))
+
+
+def _is_retryable_network_error(exc: BaseException) -> bool:
+    """Return whether a network exception is transient and worth retrying.
+
+    Covers 5xx server errors, 429/403 rate-limit responses, and URL/connection
+    errors whose underlying reason is an SSL, reset, or timeout condition.
+
+    Parameters
+    ----------
+    exc : BaseException
+        Exception to inspect.
+
+    Returns
+    -------
+    bool
+        True if the request should be retried.
+    """
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code >= 500 or exc.code in (403, 429)
+    if isinstance(exc, urllib.error.URLError):
+        return isinstance(exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError))
+    return isinstance(exc, (ssl.SSLError, ConnectionResetError))
 
 
 def _http_get_json(
@@ -192,11 +240,7 @@ def _http_get_json(
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return json.loads(resp.read().decode())
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
-            if isinstance(exc, urllib.error.HTTPError) and exc.code >= 500:
-                pass
-            elif isinstance(exc, urllib.error.URLError) and not isinstance(
-                exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError)
-            ):
+            if not _is_retryable_network_error(exc):
                 raise
             last_exc = exc
             if attempt < _retries:
@@ -215,11 +259,7 @@ def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return resp.read().decode()
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
-            if isinstance(exc, urllib.error.HTTPError) and exc.code >= 500:
-                pass
-            elif isinstance(exc, urllib.error.URLError) and not isinstance(
-                exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError)
-            ):
+            if not _is_retryable_network_error(exc):
                 raise
             last_exc = exc
             if attempt < _retries:
@@ -362,8 +402,35 @@ def _raise_network_unavailable(exc: Exception | None) -> None:
     raise _NetworkUnavailableError(msg) from exc
 
 
-def _friendly_network_error(exc: Exception) -> str | None:  # noqa: PLR0911
+def _urlerror_message(exc: urllib.error.URLError) -> str:
+    """Map a URLError's underlying reason to a friendly message.
+
+    Parameters
+    ----------
+    exc : urllib.error.URLError
+        The exception whose ``.reason`` is inspected.
+
+    Returns
+    -------
+    str
+        A human-readable failure label.
+    """
+    reason = exc.reason
+    if isinstance(reason, (ssl.SSLError, TimeoutError)):
+        return "check failed (network timeout)"
+    if isinstance(reason, ConnectionResetError):
+        return "check failed (connection reset)"
+    if isinstance(reason, OSError):
+        return "check failed (network error)"
+    return "check failed (connection error)"
+
+
+def _friendly_network_error(exc: Exception) -> str | None:
     """Return a clean message for network exceptions, or None if not network-related."""
+    # HTTPError is a URLError subclass whose .reason is a status-phrase string; it never
+    # matches the typed reason branches below, so surface the HTTP status code explicitly.
+    if isinstance(exc, urllib.error.HTTPError):
+        return f"check failed (HTTP {exc.code})"
     if isinstance(exc, ssl.SSLError):
         return (
             "check failed (network timeout)"
@@ -375,14 +442,7 @@ def _friendly_network_error(exc: Exception) -> str | None:  # noqa: PLR0911
     if isinstance(exc, ConnectionResetError):
         return "check failed (connection reset)"
     if isinstance(exc, urllib.error.URLError):
-        reason = exc.reason
-        if isinstance(reason, (ssl.SSLError, TimeoutError)):
-            return "check failed (network timeout)"
-        if isinstance(reason, ConnectionResetError):
-            return "check failed (connection reset)"
-        if isinstance(reason, OSError):
-            return "check failed (network error)"
-        return "check failed (connection error)"
+        return _urlerror_message(exc)
     return None
 
 
@@ -1105,6 +1165,39 @@ def _check_staden_io_lib() -> str:
     return m.group(1).replace("-", ".")
 
 
+def _check_clickhouse() -> str:
+    """Check clickhouse, tracking the latest stable release line."""
+    data = _http_get_json(
+        "https://api.github.com/repos/ClickHouse/ClickHouse/tags?per_page=100",
+        github=True,
+    )
+    versions: list[str] = []
+    for tag in data:
+        m = re.match(r"v([\d.]+)-stable$", tag["name"])
+        if m:
+            versions.append(m.group(1))
+    if not versions:
+        msg = "No clickhouse stable tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=_version_key)
+
+
+def _check_glib() -> str:
+    """Check glib, restricting to GNOME stable (even-minor) releases."""
+    base = "https://gitlab.gnome.org/api/v4/projects/GNOME%2Fglib"
+    data = _gitlab_get_json(f"{base}/releases?per_page=20")
+    versions: list[str] = []
+    for rel in data:
+        v = sanitize_version(rel.get("tag_name", rel.get("name", "")))
+        parts = v.split(".")
+        if len(parts) >= 2 and int(parts[1]) % 2 == 0:
+            versions.append(v)
+    if not versions:
+        msg = "No stable glib releases found"
+        raise RuntimeError(msg)
+    return max(versions, key=_version_key)
+
+
 def _check_temurin() -> str:
     info = _http_get_json("https://api.adoptium.net/v3/info/available_releases")
     lts = info.get("most_recent_lts")
@@ -1375,10 +1468,10 @@ def _check_aspera_connect() -> str:
 
 def _check_illumina_ica_cli() -> str:
     html = _http_get_text(
-        "https://help.ica.illumina.com/reference/software-release-notes",
+        "https://help.ica.illumina.com/command-line-interface/cli-releasehistory",
         timeout=30,
     )
-    versions = re.findall(r"ICA v(\d+\.\d+\.\d+)", html)
+    versions = re.findall(r"cli/(\d+\.\d+\.\d+)/ica-linux-amd64\.zip", html)
     if not versions:
         msg = "No Illumina ICA CLI versions found"
         raise RuntimeError(msg)
@@ -1496,6 +1589,14 @@ def _check_boost() -> str:
     return re.sub(r"^boost-", "", tag)
 
 
+def _check_isl() -> str:
+    if not _has_acidgenomics_aws():
+        raise RuntimeError(
+            "isl version bump requires acidgenomics AWS access to mirror src tarball"
+        )
+    return _check_directory_listing("https://libisl.sourceforge.io/", "isl")
+
+
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
     "antigravity-cli": _AppCheckSpec(
@@ -1505,6 +1606,8 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         extra_fields_fn=_fetch_antigravity_cli_extra_fields,
     ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
+    "clickhouse": _AppCheckSpec("github", _check_clickhouse, ()),
+    "glib": _AppCheckSpec("gitlab", _check_glib, ()),
     "attr": _AppCheckSpec(
         "dirlist",
         lambda: _check_nongnu("attr"),
@@ -1518,6 +1621,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
+    "isl": _AppCheckSpec("dirlist", _check_isl, ()),
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),
@@ -1962,7 +2066,7 @@ def check_app_versions(  # noqa: C901, PLR0915
     for app_name, version, spec in specs:
         if cache is not None:
             cached = cache.get(app_name)
-            if cached is not None:
+            if cached is not None and not (_is_prerelease(cached) and not _is_prerelease(version)):
                 if _SHA_RE.match(cached):
                     results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
                     continue
@@ -2009,6 +2113,11 @@ def check_app_versions(  # noqa: C901, PLR0915
                 raise RuntimeError(msg)
             if spec.batch_size is not None:
                 latest = _apply_batch_version(latest, current, spec.batch_size)
+            # Suppress an upstream pre-release (e.g. a beta published as GitHub's
+            # "latest") unless this app is itself pinned to a pre-release. Do not
+            # cache it, and report no update so is_outdated stays False.
+            if _is_prerelease(latest) and not _is_prerelease(current):
+                return VersionCheckResult(app_name, current, current, spec.source, None), None
             if cache is not None:
                 cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)

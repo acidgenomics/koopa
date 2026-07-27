@@ -18,6 +18,13 @@ fn is-light-mode {
         } else {
             put $false
         }
+    } elif (or (has-env SSH_CONNECTION) (has-env SSH_TTY)) {
+        var cache-file = $E:HOME'/.cache/koopa/color-mode'
+        if (path:is-regular $cache-file) {
+            eq (str:trim-space (slurp < $cache-file)) 'light'
+        } else {
+            put $false
+        }
     } else {
         terminal-is-light-background
     }

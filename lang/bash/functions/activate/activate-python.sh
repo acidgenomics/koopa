@@ -26,5 +26,9 @@ _koopa_activate_python() {
     then
         export VIRTUAL_ENV_DISABLE_PROMPT=1
     fi
+    if [[ -z "${UV_SYSTEM_CERTS:-}" ]]
+    then
+        export UV_SYSTEM_CERTS='true'
+    fi
     return 0
 }

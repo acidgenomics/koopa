@@ -25,5 +25,12 @@ function _koopa_is_light_mode {
         }
         return $false
     }
+    if ($env:SSH_CONNECTION -or $env:SSH_TTY) {
+        $cacheFile = Join-Path $HOME '.cache/koopa/color-mode'
+        if (Test-Path $cacheFile) {
+            return (Get-Content $cacheFile -First 1).Trim() -eq 'light'
+        }
+        return $false
+    }
     return (_koopa_terminal_is_light_background)
 }

@@ -16,7 +16,7 @@ that installed instances need to be re-linked or reinstalled.
 ## Completions
 
 Adding a **new** app entry (a name not previously in the registry) → run
-`koopa develop generate-completions` afterward.
+`koopa develop generate-completion` afterward.
 
 Toggling `default: true/false` or bumping `version`/`date` on an **existing** entry
 → no regeneration needed.

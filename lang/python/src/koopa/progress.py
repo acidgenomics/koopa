@@ -6,7 +6,7 @@ import sys
 import tempfile
 import threading
 import time
-from typing import Self
+from typing import IO, Self
 
 _HISTORY_FILENAME = "build-times.json"
 
@@ -74,6 +74,20 @@ def _history_path() -> str:
     return os.path.join(xdg_cache_home(), "koopa", _HISTORY_FILENAME)
 
 
+def build_log_path(name: str) -> str:
+    """Return the deterministic build-log path for *name*.
+
+    Each app writes to a fixed location so a stuck build can always be found
+    and tailed without knowing a temp-file name:
+      ``$XDG_CACHE_HOME/koopa/logs/<name>.log``
+    The file is overwritten on each install run and is kept even on failure so
+    a failed or hung build's output is inspectable afterward.
+    """
+    from koopa.xdg import xdg_cache_home
+
+    return os.path.join(xdg_cache_home(), "koopa", "logs", f"{name}.log")
+
+
 def _load_history() -> dict[str, float]:
     """Load build timing history from disk."""
     path = _history_path()
@@ -137,7 +151,7 @@ class BuildProgress:
         self._elapsed: float = 0.0
         self._total_steps: int = 0
         self._current_step: int = 0
-        self._log_file: tempfile._TemporaryFileWrapper | None = None
+        self._log_file: tempfile._TemporaryFileWrapper | IO[str] | None = None
         self._saved_log_path: str | None = None
         self._saved_stdout_fd: int = -1
         self._saved_stderr_fd: int = -1
@@ -262,17 +276,19 @@ class BuildProgress:
     # -- Output capture and spinner -------------------------------------------
 
     def _start_capture(self) -> None:
-        """Redirect stdout/stderr to a temp log file and start spinner.
+        """Redirect stdout/stderr to a named build-log file and start spinner.
+
+        Each app logs to a fixed, predictable path under the XDG cache dir:
+          ``$XDG_CACHE_HOME/koopa/logs/<name>.log``
+        This file is overwritten on each run and kept even on failure so a
+        stuck or failed build's output can be inspected after the fact.
 
         In noninteractive mode, output is still captured to the log but no
         tty fd is duped and no spinner thread is started.
         """
-        self._log_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
-            mode="w+",
-            prefix="koopa-build-",
-            suffix=".log",
-            delete=False,
-        )
+        log_path = build_log_path(self._name)
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        self._log_file = open(log_path, "w")  # noqa: SIM115
         self._saved_stdout_fd = os.dup(1)
         self._saved_stderr_fd = os.dup(2)
         os.dup2(self._log_file.fileno(), 1)
@@ -319,13 +335,10 @@ class BuildProgress:
         if self._log_file is not None:
             log_path = self._log_file.name
             self._log_file.close()
-            if failed:
-                import contextlib
-
-                with contextlib.suppress(OSError):
-                    os.unlink(log_path)
-            else:
-                self._saved_log_path = log_path
+            # Keep the log file whether the build succeeded or failed so a
+            # failed or stuck build's output is always inspectable.  It will
+            # be overwritten on the next install run for this app.
+            self._saved_log_path = log_path
             self._log_file = None
 
     def _spin(self) -> None:

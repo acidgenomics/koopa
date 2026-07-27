@@ -81,6 +81,30 @@ file-stat.
 `hostname`, `curl`, `wget`, `scutil`, `networksetup`, `dig`, `nslookup`. If found,
 flag it and replace with a file-stat or env-var check.
 
+## Activation Change Ordering: cache-functions Before Shell Reload
+
+When a change touches **both** a `functions/activate/*.sh` source file **and** a
+call site in `lang/bash/include/header.sh` (or the zsh/sh equivalents), you must
+run `koopa develop cache-functions` **before** reloading the shell.
+
+`header.sh` calls the function by name. The function body is loaded from the
+generated bundle (`lang/bash/include/functions.sh`), not from the source file
+directly. If the shell reloads before the bundle is regenerated, `header.sh`
+references a name that isn't in the bundle yet → `command not found` at activation.
+
+**Safe sequence:**
+1. Write the new `functions/activate/*.sh` file.
+2. Add the call site to `header.sh`.
+3. Run `koopa develop cache-functions`.
+4. **Then** reload the shell.
+
+**Unsafe:** steps 3 and 4 swapped. The shell reload in step 4 will fail with
+`_koopa_activate_<new_function>: command not found`.
+
+Same rule applies to any new function referenced in `header.sh` regardless of
+source directory (`functions/core/`, `functions/activate/`, etc.). The bundle is
+the runtime; the source tree is the authoring surface.
+
 ## direnv Must Capture Its Baseline Last
 
 ### How `_koopa_activate_direnv` works (two-step)

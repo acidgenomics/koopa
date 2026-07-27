@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (129) ---------------------------------------------
+    # -- conda-package (130) ---------------------------------------------
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
     "aria2": f"{_M}._conda",
@@ -144,11 +144,12 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "xh": f"{_M}._conda",
     "xsv": f"{_M}._conda",
     "yazi": f"{_M}._conda",
+    "zed": f"{_M}._conda",
     "zellij": f"{_M}._conda",
     "zenith": f"{_M}._conda",
     "zoxide": f"{_M}._conda",
     "zsh": f"{_M}.zsh_app",
-    # -- python-package (56) ---------------------------------------------
+    # -- python-package (57) ---------------------------------------------
     "ansible-core": f"{_M}._python_pkg",
     "apache-airflow": f"{_M}._python_pkg",
     "autoflake": f"{_M}._python_pkg",
@@ -185,6 +186,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "pygments": f"{_M}._python_pkg",
     "pylint": f"{_M}._python_pkg",
     "pyrefly": f"{_M}._python_pkg",
+    "pyproject-fmt": f"{_M}._python_pkg",
     "pyright": f"{_M}._python_pkg",
     "pytaglib": f"{_M}._python_pkg",
     "pytest": f"{_M}._python_pkg",
@@ -548,6 +550,7 @@ PYTHON_INSTALLER_MODES: list[tuple[str, str, str]] = [
     # update-system (koopa update system)
     ("homebrew", "common", "update-system"),
     ("python", "macos", "update-system"),
+    ("r", "debian", "update-system"),
     ("r", "macos", "update-system"),
     ("tex-packages", "common", "update-system"),
 ]

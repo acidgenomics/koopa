@@ -1325,64 +1325,121 @@ def _rule_is_path_scoped(text: str) -> bool:
     return False
 
 
-def _handle_claude_audit_tokens(args: list[str]) -> None:
-    """Handle ``koopa app claude audit-tokens``."""
-    import argparse
+def _scan_claude_config(
+    claude_dir: str,
+    display_root: str,
+) -> list[tuple[str, int, int, bool]]:
+    """Scan a .claude config dir and root CLAUDE.md for always/conditional files.
+
+    Parameters
+    ----------
+    claude_dir : str
+        Path to the `.claude` directory (e.g. ``~/.claude`` or ``<proj>/.claude``).
+    display_root : str
+        Root directory used to compute display-relative paths.
+
+    Returns
+    -------
+    list[tuple[str, int, int, bool]]
+        Each tuple is ``(rel_path, byte_count, token_count, is_path_scoped)``.
+        ``rel_path`` is relative to ``display_root``.
+    """
     import glob
 
-    parser = argparse.ArgumentParser(
-        prog="koopa app claude audit-tokens",
-        description=(
-            "Report approximate token cost of Claude config files "
-            "(~/.claude/CLAUDE.md and ~/.claude/rules/**/*.md). "
-            "Rules with 'paths:' frontmatter load conditionally (not every session). "
-            "--max-tokens gates the always-loaded subtotal only. "
-            "Token estimate: chars / 4."
-        ),
-    )
-    parser.add_argument(
-        "--max-tokens",
-        type=int,
-        metavar="N",
-        help="exit 1 if always-loaded tokens exceed N",
-    )
-    parsed = parser.parse_args(args)
-
-    from koopa.alert import alert_note, alert_success
-
-    home = os.path.expanduser("~")
-    claude_dir = os.path.join(home, ".claude")
-
-    # Collect the files that Claude discovers at session start
-    candidates = [os.path.join(claude_dir, "CLAUDE.md")]
+    candidates: list[str] = [
+        os.path.join(display_root, "CLAUDE.md"),
+        os.path.join(claude_dir, "CLAUDE.md"),
+    ]
     rules_dir = os.path.join(claude_dir, "rules")
     if os.path.isdir(rules_dir):
         candidates.extend(sorted(glob.glob(os.path.join(rules_dir, "**", "*.md"), recursive=True)))
 
-    # (rel_path, bytes, tokens, path_scoped)
+    seen: set[str] = set()
     rows: list[tuple[str, int, int, bool]] = []
     for path in candidates:
         if not os.path.isfile(path):
             continue
+        real = os.path.realpath(path)
+        if real in seen:
+            continue
+        seen.add(real)
         with open(path, encoding="utf-8") as fh:
             text = fh.read()
-        rel = os.path.relpath(path, home)
+        rel = os.path.relpath(path, display_root)
         scoped = _rule_is_path_scoped(text)
         rows.append((rel, len(text.encode("utf-8")), _estimate_claude_tokens(text), scoped))
 
-    if not rows:
-        alert_note("No globally-loaded Claude config files found.")
-        return
+    return rows
 
+
+def _find_project_root(start: str) -> str | None:
+    """Walk up from start to find a project root containing .claude/ or .git/.
+
+    Parameters
+    ----------
+    start : str
+        Starting directory (usually CWD).
+
+    Returns
+    -------
+    str or None
+        Absolute path to the project root directory, or ``None`` if not found or
+        if the discovered root equals the user home directory (to avoid
+        double-counting the global tree).
+    """
+    home = os.path.expanduser("~")
+    global_claude = os.path.realpath(os.path.join(home, ".claude"))
+    current = os.path.abspath(start)
+    git_root: str | None = None
+
+    while True:
+        claude_candidate = os.path.join(current, ".claude")
+        if os.path.isdir(claude_candidate) and os.path.realpath(claude_candidate) != global_claude:
+            if current != home:
+                return current
+        elif os.path.isdir(os.path.join(current, ".git")) and git_root is None:
+            git_root = current
+
+        parent = os.path.dirname(current)
+        if parent == current:
+            break
+        current = parent
+
+    if git_root is not None and git_root != home:
+        return git_root
+    return None
+
+
+def _print_config_block(
+    label: str,
+    rows: list[tuple[str, int, int, bool]],
+    prefix: str,
+) -> tuple[int, int]:
+    """Print a formatted config block and return (always_tokens, always_file_count).
+
+    Parameters
+    ----------
+    label : str
+        Section header label (e.g. ``"Global (~/.claude)"``).
+    rows : list[tuple[str, int, int, bool]]
+        Rows from ``_scan_claude_config``.
+    prefix : str
+        Prefix prepended to each displayed path (e.g. ``"~/"`` or ``"myrepo/"``).
+
+    Returns
+    -------
+    tuple[int, int]
+        ``(always_tokens, always_file_count)`` for the always-loaded rows.
+    """
     always = [(r, b, t) for r, b, t, s in rows if not s]
     conditional = [(r, b, t) for r, b, t, s in rows if s]
 
     always_tokens = sum(t for _, _, t in always)
     always_bytes = sum(b for _, b, _ in always)
 
-    print(f"Always-loaded Claude config ({len(always)} files):")
+    print(f"{label} ({len(always)} files):")
     for rel, nbytes, tokens in always:
-        print(f"  {tokens:5d} tokens  {nbytes:6d} B  ~/{rel}")
+        print(f"  {tokens:5d} tokens  {nbytes:6d} B  {prefix}{rel}")
     print(f"  {'─' * 38}")
     print(f"  {always_tokens:5d} tokens  {always_bytes:6d} B  total (approx)")
 
@@ -1394,20 +1451,117 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
             " loads only when matching files are open):"
         )
         for rel, nbytes, tokens in conditional:
-            print(f"  {tokens:5d} tokens  {nbytes:6d} B  ~/{rel}")
+            print(f"  {tokens:5d} tokens  {nbytes:6d} B  {prefix}{rel}")
         print(f"  {'─' * 38}")
         print(f"  {cond_tokens:5d} tokens  {cond_bytes:6d} B  total (approx)")
 
-    if parsed.max_tokens is not None and always_tokens > parsed.max_tokens:
+    return always_tokens, len(always)
+
+
+def _handle_claude_audit_tokens(args: list[str]) -> None:
+    """Handle ``koopa app claude audit-tokens``."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app claude audit-tokens",
+        description=(
+            "Report approximate token cost of Claude config files. "
+            "Rules with 'paths:' frontmatter load conditionally (not every session). "
+            "--max-tokens gates the combined always-loaded total. "
+            "Token estimate: chars / 4."
+        ),
+    )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        metavar="N",
+        help="exit 1 if combined always-loaded tokens exceed N",
+    )
+    parser.add_argument(
+        "--scope",
+        choices=["all", "global", "project"],
+        default="all",
+        help="which config trees to report (default: all)",
+    )
+    parser.add_argument(
+        "--project-dir",
+        metavar="PATH",
+        help="explicit project root (overrides CWD discovery)",
+    )
+    parsed = parser.parse_args(args)
+
+    from koopa.alert import alert_note, alert_success
+
+    home = os.path.expanduser("~")
+    global_claude = os.path.join(home, ".claude")
+
+    combined_tokens = 0
+    combined_files = 0
+    printed_global = False
+    printed_project = False
+
+    # --- Global block ---
+    if parsed.scope in ("all", "global"):
+        global_rows = _scan_claude_config(global_claude, home)
+        if not global_rows:
+            alert_note("No globally-loaded Claude config files found.")
+        else:
+            g_tokens, g_files = _print_config_block(
+                "Global (~/.claude) config",
+                global_rows,
+                "~/",
+            )
+            combined_tokens += g_tokens
+            combined_files += g_files
+            printed_global = True
+
+    # --- Project block ---
+    if parsed.scope in ("all", "project"):
+        if parsed.project_dir:
+            proj_root: str | None = os.path.abspath(parsed.project_dir)
+        else:
+            proj_root = _find_project_root(os.getcwd())
+
+        if proj_root is None:
+            alert_note("No project .claude/ config found.")
+            if parsed.scope == "project":
+                return
+        else:
+            proj_claude = os.path.join(proj_root, ".claude")
+            proj_rows = _scan_claude_config(proj_claude, proj_root)
+            if not proj_rows:
+                alert_note("No project .claude/ config found.")
+                if parsed.scope == "project":
+                    return
+            else:
+                basename = os.path.basename(proj_root)
+                if printed_global:
+                    print()
+                p_tokens, p_files = _print_config_block(
+                    f"Project ({basename}) config",
+                    proj_rows,
+                    f"{basename}/",
+                )
+                combined_tokens += p_tokens
+                combined_files += p_files
+                printed_project = True
+
+    # --- Combined footer ---
+    if printed_global and printed_project:
+        print(f"\n{'─' * 38}")
+        print(f"Combined always-loaded: {combined_tokens} tokens across {combined_files} files")
+
+    if parsed.max_tokens is not None and combined_tokens > parsed.max_tokens:
         print(
-            f"Error: {always_tokens} always-loaded tokens exceeds"
+            f"Error: {combined_tokens} always-loaded tokens exceeds"
             f" --max-tokens {parsed.max_tokens}.",
             file=sys.stderr,
         )
         sys.exit(1)
 
     alert_success(
-        f"claude-audit-tokens: ~{always_tokens} always-loaded tokens across {len(always)} files."
+        f"claude-audit-tokens: ~{combined_tokens} always-loaded tokens"
+        f" across {combined_files} files."
     )
 
 

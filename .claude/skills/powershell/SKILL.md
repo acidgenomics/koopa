@@ -143,9 +143,12 @@ storm. Always check `$env:KOOPA_COLOR_MODE_SYNCING` before firing the background
   ```python
   if sys.platform == "win32":
       import winreg  # Windows-only stdlib; lazy import.
+
       try:
-          with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
-                              r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") as key:
+          with winreg.OpenKey(
+              winreg.HKEY_CURRENT_USER,
+              r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+          ) as key:
               value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
           return "light" if value == 1 else "dark"
       except OSError:

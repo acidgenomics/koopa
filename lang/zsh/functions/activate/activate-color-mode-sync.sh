@@ -30,6 +30,18 @@ _koopa_activate_color_mode_sync() {
         # free local source; the free-Dracula inline fallback (Pro not installed)
         # requires a new shell — acceptable since Pro is the target environment.
         [[ -f "$_palette" ]] && source "$_palette"
+        # File-driven re-render trigger (starship/bat/delta toml). Backgrounded,
+        # marker + sentinel guarded; mirrors _koopa_activate_color_mode.
+        if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+        then
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$new_mode" ]]
+            then
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &!
+            fi
+        fi
         return 0
     }
     autoload -Uz add-zsh-hook

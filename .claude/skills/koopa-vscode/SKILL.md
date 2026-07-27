@@ -1,10 +1,113 @@
 ---
 name: koopa-vscode
-description: >
-  Quarto VS Code plugin and LuaLS (.luarc.json) configuration for the koopa
-  project. Use when editing .luarc.json, understanding how Quarto generates it,
-  or making project-local VS Code extension config portable across machines.
+description: >-
+  VS Code terminal font configuration, Nerd Font glyph debugging, and Quarto/LuaLS
+  setup for koopa. Use when debugging missing terminal glyphs (tofu), changing the
+  VS Code terminal or editor font, understanding the App Support symlink bridge for
+  editor settings, editing .luarc.json, or making VS Code config portable across
+  machines.
 ---
+
+# koopa VS Code Configuration
+
+## VS Code Terminal Font and Nerd Font Glyphs
+
+### The App Support symlink bridge
+
+On macOS, chezmoi manages VS Code settings at the XDG path
+`~/.config/Code/User/settings.json`. VS Code reads from
+`~/Library/Application Support/Code/User/settings.json`. koopa bridges these
+with a chezmoi `symlink_` source file — the App Support path is a symlink to the
+XDG file. The same pattern applies to Cursor, Positron, Antigravity, nushell,
+and ruff. See `koopa-chezmoi-dotfiles` for the full layout.
+
+VS Code writes settings back through the symlink in place (no atomic rename), so
+the XDG file remains the single source of truth.
+
+### Diagnosing missing terminal glyphs (tofu)
+
+Nerd Font glyphs (e.g. starship's battery `󰂃`, U+F0083) render correctly in
+Ghostty but show as tofu in the VS Code integrated terminal. This is always a
+**terminal font** problem, never a starship config problem.
+
+**Step 1 — verify the font family name.** VS Code (Electron/Chromium) matches
+the macOS CoreText registered family name exactly. Ghostty uses its own fuzzy
+font discovery and accepts long descriptive names. They are different resolvers.
+
+Find the real family name:
+```sh
+mdls -raw -name com_apple_ats_name_family \
+  ~/Library/Fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf
+# → JetBrainsMonoNL NFM     ← this is what VS Code needs
+```
+
+Do NOT use the long descriptive name (e.g. `JetBrainsMonoNL Nerd Font Mono`) in
+VS Code settings — it does not resolve via CoreText and silently falls back to the
+base non-Nerd font.
+
+**Verified CoreText family names for installed JetBrains variants:**
+| File | VS Code family string |
+|---|---|
+| `JetBrainsMonoNLNerdFontMono-Regular.ttf` | `JetBrainsMonoNL NFM` |
+| `JetBrainsMonoNLNerdFont-Regular.ttf` | `JetBrainsMonoNL NF` |
+| `JetBrainsMonoNerdFontMono-Regular.ttf` | `JetBrainsMono NFM` |
+| `JetBrainsMonoNL-Regular.ttf` | `JetBrains Mono NL` |
+| `JetBrainsMono[wght].ttf` | `JetBrains Mono` |
+
+**Step 2 — confirm the setting reaches VS Code.** VS Code reads from
+`~/Library/Application Support/Code/User/settings.json`, not the XDG path.
+Verify the symlink is in place:
+```sh
+ls -l ~/Library/Application\ Support/Code/User/settings.json
+# should show -> /Users/<name>/.config/Code/User/settings.json
+```
+If it's a plain file, the chezmoi symlink bridge hasn't run yet. Run
+`koopa configure user dotfiles` from a normal terminal.
+
+**Step 3 — check what VS Code is actually reading:**
+```sh
+grep "fontFamily" ~/Library/Application\ Support/Code/User/settings.json
+```
+
+### Font configuration in chezmoi templates
+
+The four VS Code-family editor templates all live under
+`opt/dotfiles/chezmoi/dot_config/{Code,Cursor,Positron,Antigravity}/User/settings.json.tmpl`.
+
+Correct font settings (no ligatures, Nerd Font Mono for glyph coverage):
+```json
+"editor.fontFamily": "'JetBrainsMonoNL NFM', 'JetBrains Mono', monospace",
+"editor.fontLigatures": false,
+"terminal.integrated.fontFamily": "'JetBrainsMonoNL NFM', 'JetBrains Mono', monospace",
+```
+
+`NL` = No-Ligatures build. `NFM` = Nerd Font Mono (single-width glyphs, correct
+for terminals). The fallback `'JetBrains Mono'` ensures the editor stays usable
+if the Nerd Font is not installed.
+
+### Avoiding a write race on settings.json
+
+`settings.json` is a contested file: chezmoi writes it, VS Code writes it, and
+koopa's background `com.koopa.color-mode-sync` watcher re-renders it on every
+OS dark/light flip if the template contains `KOOPA_COLOR_MODE`.
+
+**Rule:** do NOT put `KOOPA_COLOR_MODE`-conditional logic in `settings.json.tmpl`.
+Instead use VS Code's native OS-appearance following:
+```json
+"window.autoDetectColorScheme": true,
+"workbench.preferredDarkColorTheme": "Dracula Pro",
+"workbench.preferredLightColorTheme": "Dracula Pro (Alucard)",
+```
+With these three keys, VS Code switches themes on OS appearance changes by itself.
+The `KOOPA_COLOR_MODE` branch is redundant and causes the race.
+
+If `workbench.colorTheme` is set conditionally in any editor template, remove it.
+Verify with:
+```sh
+grep -l "KOOPA_COLOR_MODE" \
+  opt/dotfiles/chezmoi/dot_config/*/User/settings.json.tmpl
+# expect: no output
+```
 
 # koopa VS Code Plugin Configuration
 

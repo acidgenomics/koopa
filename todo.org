@@ -1,9 +1,9 @@
-** TODO Before finalizing release, can we confirm that tmux configuration is fixed on EC2?
-** STARTED How can we push website documentation for Python packages to python.acidgenomics.com?
+** TODO How can we push website documentation for Python packages to python.acidgenomics.com?
    Implemented koopa app python publish-docs. Docs host at
    python-docs.acidgenomics.com/<name>/. Requires one-time AWS provisioning:
    S3 bucket python-docs-<acct>-us-east-1-an, CloudFront distribution,
    Route53 record, and AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS in .env.
    See koopa-python-release skill for full details.
-** STARTED Publish all our R and Python packages at bioconda.
 ** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
+** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
+** TODO Publish all our R and Python packages at bioconda.

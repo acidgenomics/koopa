@@ -9,6 +9,19 @@ fn activate-color-mode-sync {
             unset-env FZF_DEFAULT_OPTS
             activate-fzf
             activate-difftastic
+            # File-driven re-render trigger (starship/bat/delta toml).
+            # Backgrounded via sh -c, marker + sentinel guarded; mirrors
+            # bash _koopa_activate_color_mode.
+            if (not (has-env KOOPA_COLOR_MODE_SYNCING)) {
+                var applied = $E:HOME'/.cache/koopa/color-mode-applied'
+                var cur = ''
+                if (path:is-regular $applied) {
+                    set cur = (str:trim-space (slurp < $applied))
+                }
+                if (not (eq $cur $new-mode)) {
+                    sh -c $E:KOOPA_PREFIX'/bin/koopa configure user color-mode >/dev/null 2>&1 &'
+                }
+            }
         }
     })
 }

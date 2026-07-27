@@ -6,6 +6,10 @@ _koopa_terminal_is_light_background() {
     [[ "${TERM_PROGRAM:-}" == 'vscode' ]] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
+    # Restore tty settings on any exit path (normal return, error branch, or
+    # signal) so an interrupted probe never leaves the terminal in raw mode.
+    trap 'stty "$__kvar_old_settings" 2>/dev/null; trap - EXIT INT TERM' \
+        EXIT INT TERM
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty
     __kvar_response="$(dd bs=64 count=1 2>/dev/null < /dev/tty)"

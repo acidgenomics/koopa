@@ -9,6 +9,13 @@ export def _koopa_is_light_mode [] {
         } else {
             false
         }
+    } else if ($env.SSH_CONNECTION? != null) or ($env.SSH_TTY? != null) {
+        let cache_file = ($env.HOME | path join ".cache" "koopa" "color-mode")
+        if ($cache_file | path exists) {
+            (open $cache_file | str trim) == "light"
+        } else {
+            false
+        }
     } else {
         _koopa_terminal_is_light_background
     }

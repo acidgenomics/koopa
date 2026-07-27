@@ -5,6 +5,7 @@ fn activate-starship {
     if (not (path:is-regular &follow-symlink $starship)) {
         return
     }
+    set-env STARSHIP_LOG error
     var cache-file = $E:XDG_CACHE_HOME'/koopa/shell-init/starship-elvish.elv'
     if (or (not (path:is-regular $cache-file)) ^
            (not (has-external test)) ^

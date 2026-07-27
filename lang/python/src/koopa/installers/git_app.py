@@ -3,6 +3,7 @@
 import os
 import shutil
 import subprocess
+import tempfile
 
 from koopa.archive import extract
 from koopa.build import app_prefix, locate
@@ -50,6 +51,7 @@ def main(
     )
     download_extract_cd()
     subprocess_env = env.to_env_dict()
+    subprocess_env["CARGO_HOME"] = tempfile.mkdtemp(prefix="koopa-cargo-")
     jobs = os.cpu_count() or 1
     conf_args = [
         "--disable-nls",

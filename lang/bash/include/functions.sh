@@ -406,6 +406,17 @@ _koopa_activate_color_mode_sync() {
         _koopa_activate_fzf
         _koopa_activate_dircolors
         _koopa_activate_difftastic
+        if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+        then
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$new_mode" ]]
+            then
+                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                    >>/dev/null 2>&1 &
+                disown
+            fi
+        fi
         return 0
     }
     if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]
@@ -774,6 +785,10 @@ _koopa_activate_python() {
     then
         export VIRTUAL_ENV_DISABLE_PROMPT=1
     fi
+    if [[ -z "${UV_SYSTEM_CERTS:-}" ]]
+    then
+        export UV_SYSTEM_CERTS='true'
+    fi
     return 0
 }
 
@@ -826,6 +841,18 @@ _koopa_activate_ruby() {
     return 0
 }
 
+_koopa_activate_ssh_reset() {
+    _koopa_is_interactive || return 0
+    [[ "${KOOPA_SSH_RESET:-0}" == '1' ]] || return 0
+    ssh() {
+        command ssh "$@"
+        local __koopa_ssh_status=$?
+        "${KOOPA_PREFIX:?}/bin/koopa" run reset-terminal >/dev/null 2>&1
+        return $__koopa_ssh_status
+    }
+    return 0
+}
+
 _koopa_activate_starship() {
     local starship
     starship="${KOOPA_PREFIX:?}/bin/starship"
@@ -837,6 +864,7 @@ _koopa_activate_starship() {
     then
         unset -v STARSHIP_SHELL
     fi
+    export STARSHIP_LOG='error'
     local nounset=0
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
@@ -1848,6 +1876,10 @@ _koopa_is_light_mode() {
     then
         local cache_file="${HOME:?}/.cache/koopa/color-mode"
         [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
+    elif [[ -n "${SSH_CONNECTION:-}" || -n "${SSH_TTY:-}" ]]
+    then
+        local cache_file="${HOME:?}/.cache/koopa/color-mode"
+        [[ -f "$cache_file" ]] && [[ "$(<"$cache_file")" == 'light' ]]
     else
         _koopa_terminal_is_light_background
     fi
@@ -2117,6 +2149,8 @@ _koopa_terminal_is_light_background() {
     [[ "${TERM_PROGRAM:-}" == 'vscode' ]] && return 1
     local __kvar_old_settings __kvar_response __kvar_rgb __kvar_r __kvar_g __kvar_b __kvar_luma
     __kvar_old_settings="$(stty -g 2>/dev/null)" || return 1
+    trap 'stty "$__kvar_old_settings" 2>/dev/null; trap - RETURN INT TERM' \
+        RETURN INT TERM
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty
     __kvar_response="$(dd bs=64 count=1 2>/dev/null < /dev/tty)"
@@ -2616,8 +2650,16 @@ _koopa_macos_activate_homebrew() {
         return 0
     fi
     export HOMEBREW_PREFIX="${dict['prefix']}"
+    export HOMEBREW_CELLAR="${dict['prefix']}/Cellar"
+    export HOMEBREW_REPOSITORY="${dict['prefix']}"
     dict['brewfile']="${XDG_CONFIG_HOME:?}/homebrew/Brewfile"
     _koopa_add_to_path_start "${dict['prefix']}/bin"
+    if [[ -z "${INFOPATH:-}" ]]
+    then
+        export INFOPATH="${dict['prefix']}/share/info"
+    else
+        export INFOPATH="${dict['prefix']}/share/info:${INFOPATH}"
+    fi
     if [[ -z "${HOMEBREW_BUNDLE_FILE_GLOBAL:-}" ]] \
         && [[ -f "${dict['brewfile']}" ]]
     then

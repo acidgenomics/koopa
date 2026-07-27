@@ -15,6 +15,9 @@ function _koopa_is_light_mode
     else if test "$TERM_PROGRAM" = vscode
         set -l cache_file "$HOME/.cache/koopa/color-mode"
         test -f "$cache_file"; and test (string trim < "$cache_file") = light
+    else if set -q SSH_CONNECTION; or set -q SSH_TTY
+        set -l cache_file "$HOME/.cache/koopa/color-mode"
+        test -f "$cache_file"; and test (string trim < "$cache_file") = light
     else
         _koopa_terminal_is_light_background
     end

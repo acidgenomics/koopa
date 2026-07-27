@@ -97,6 +97,24 @@ with subcommand names before this block and are unaffected.
 Same single-dash relaxation applied to PowerShell (`-like '-*'`) and elvish
 (`str:has-prefix $last '-'`) emitters.
 
+## Adding a `koopa run` command
+
+`koopa run` completions are auto-discovered from `cli_bin.py:_HANDLERS` via
+`_load_run_commands()` in `generate_completion.py`. No manual completion edits
+are needed — just:
+
+1. Add `_handle_my_cmd(args: list[str]) -> None` in `cli_bin.py`.
+2. Register `"my-cmd": _handle_my_cmd,` in `_HANDLERS` (keep alphabetical).
+3. Run `koopa develop generate-completion`.
+
+`koopa system` subcommands are similarly auto-discovered from the `handle_system`
+string-comparison chain, but require explicitly adding a `if subcmd == "my-cmd":` branch.
+`koopa admin` subcommands are discovered from `_ADMIN_HANDLERS`.
+
+Top-level commands (`koopa install`, `koopa configure`, …) require manual edits to
+`_build_parser` and to `_TOP_CMDS` in 8 places in `generate_completion.py` — avoid
+adding top-level commands unless truly necessary.
+
 ## Diagnosing "completion not working"
 
 ```bash

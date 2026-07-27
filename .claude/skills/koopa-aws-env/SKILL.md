@@ -1,3 +1,12 @@
+---
+name: koopa-aws-env
+description: >-
+  koopa AWS environment configuration — the gitignored <koopa-root>/.env,
+  load_dotenv()/aws_account_id()/koopa_s3_bucket() helpers in aws.py, required vars,
+  bucket naming, lazy-eval rule. Use when adding an AWS secret, wiring a
+  bucket/CloudFront ID, or debugging a missing AWS env var in release tooling.
+---
+
 # koopa AWS Environment Configuration
 
 ## Purpose

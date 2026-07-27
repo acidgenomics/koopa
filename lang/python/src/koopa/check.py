@@ -525,20 +525,32 @@ def check_disk(path: str = "/") -> bool:
     return True
 
 
-def check_macos_system_r() -> bool:
-    """Check if system R is current on macOS."""
+def check_system_r() -> bool:
+    """Check if system R is current."""
+    from koopa.system import is_admin, is_debian_like, is_macos
     from koopa.version import extract_version
 
     json_data = import_app_json()
     expected = json_data.get("r", {}).get("version", "")
     if not expected:
         return True
+    if is_macos():
+        r_bins = (
+            "/usr/local/bin/R",
+            "/Library/Frameworks/R.framework/Resources/bin/R",
+        )
+    elif is_debian_like():
+        if not is_admin():
+            return True
+        r_bins = (
+            "/usr/bin/R",
+            "/usr/local/bin/R",
+        )
+    else:
+        return True
     ok = True
     seen: set[str] = set()
-    for r_bin in (
-        "/usr/local/bin/R",
-        "/Library/Frameworks/R.framework/Resources/bin/R",
-    ):
+    for r_bin in r_bins:
         if not os.path.isfile(r_bin) or not os.access(r_bin, os.X_OK):
             continue
         real = os.path.realpath(r_bin)
@@ -775,8 +787,8 @@ def check_tmux_server_stale() -> bool:
 
 def check_system() -> bool:
     """Run all system checks."""
-    from koopa.alert import alert_note, alert_success, warn
-    from koopa.system import is_macos
+    from koopa.alert import alert_note, alert_success
+    from koopa.system import is_debian_like, is_macos
 
     needs_update = False
     needs_system_update = False
@@ -785,15 +797,6 @@ def check_system() -> bool:
     check_build_system()
     if not check_bootstrap_version():
         needs_update = True
-    if is_macos():
-        if not check_macos_system_r():
-            needs_system_update = True
-        if not check_macos_system_python():
-            needs_system_update = True
-        if not check_macos_xcode_clt():
-            needs_system_update = True
-        if not check_macos_icloud_drive():
-            needs_system_update = True
     if not check_installed_apps():
         needs_update = True
     if not check_broken_app_installs():
@@ -806,13 +809,17 @@ def check_system() -> bool:
         needs_disk_space = True
     if not check_tmux_server_stale():
         needs_tmux_restart = True
-    if needs_update:
-        _print_update_plan()
+    if (is_macos() or is_debian_like()) and not check_system_r():
+        needs_system_update = True
+    if is_macos():
+        if not check_macos_system_python():
+            needs_system_update = True
+        if not check_macos_xcode_clt():
+            needs_system_update = True
+        if not check_macos_icloud_drive():
+            needs_system_update = True
     if needs_update or needs_system_update or needs_disk_space or needs_tmux_restart:
-        warn("System checks completed with warnings.")
-        if needs_system_update:
-            alert_note("Run 'koopa update system' to resolve these issues.")
-        elif needs_update:
+        if needs_update or needs_system_update:
             alert_note("Run 'koopa update' to resolve these issues.")
         if needs_disk_space:
             alert_note("Free up disk space on '/'.")

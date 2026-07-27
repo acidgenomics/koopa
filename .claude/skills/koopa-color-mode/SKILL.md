@@ -34,6 +34,94 @@ live-tracking mechanism and silently fails when sshd lacks `AcceptEnv KOOPA_COLO
 `/usr/bin/tmux` (3.2a) instead of koopa's bundled tmux (3.6b). Fixing the
 `RemoteCommand` is the only change needed.
 
+## SSH Login Hang: Pre-tmux RemoteCommand Shell
+
+**Symptom:** `ssh <host>` prints the banner then hangs. The hang is not during
+connection — it occurs during koopa shell activation in the login shell.
+
+**Cause:** `_koopa_terminal_is_light_background` issues a blocking OSC 11
+background-color query (`printf '\033]11;?\033\\' > /dev/tty`) and reads the reply
+with `dd bs=64 count=1 < /dev/tty`, bounded by `stty raw -echo min 0 time 2`
+(VTIME 0.2s). The VTIME bound applies to fd 0, but the `dd` reads from a
+separately-opened `/dev/tty` — when those descriptors diverge over SSH, VTIME never
+applies and the read blocks in canonical mode indefinitely.
+
+**Why a tmux `RemoteCommand` host still hangs:** the SSH config pattern
+
+```
+RemoteCommand ~/.local/share/koopa/bin/tmux new-session -A
+RequestTTY yes
+SetEnv TERM=xterm-256color
+```
+
+causes sshd to run the **login shell** to exec tmux. koopa activation runs in that
+outer shell *before* tmux starts — `$TMUX` is unset, so the tmux guard misses. `TERM`
+is forced to `xterm-256color`, so the `screen*/tmux*` guard misses too. If the remote
+sshd lacks `AcceptEnv KOOPA_COLOR_MODE` (meaning `SendEnv` silently no-ops),
+`KOOPA_COLOR_MODE` is empty → `_koopa_color_mode` → `_koopa_is_light_mode` → the
+blocking probe → hang.
+
+**Fix (implemented 2026-07-15):** SSH-session guard in the `_koopa_is_light_mode`
+**dispatcher** (`lang/*/functions/core/is-light-mode.*`) across all seven shells.
+When `SSH_CONNECTION` or `SSH_TTY` is set and not inside tmux, fall back to
+`~/.cache/koopa/color-mode` — identical to the existing vscode branch. tmux-over-SSH
+still uses the tmux branch (live OSC-2031); the SSH branch only fires in the pre-tmux
+outer shell and on bare SSH sessions (no `RemoteCommand`).
+
+The guard lives in the **dispatcher**, not the probe — so it returns the correct cached
+color rather than forcing dark (`return 1`).
+
+After editing bash/sh/zsh dispatchers, run `koopa develop cache-functions` to
+regenerate `lang/{bash,sh,zsh}/include/functions.sh`. fish/elvish/nushell/powershell
+source function files directly — no regen needed.
+
+## Abrupt SSH Death Leaves Local Terminal Wedged
+
+**Symptom:** local shell prints `^[[<0;56;29M` / `^[[<0;56;29m` (SGR mouse reports,
+DEC modes 1000/1006) and `^[[?997;2n` (mode-2031 color-scheme report: `997;2` = light)
+as literal keystrokes into the prompt.
+
+**Cause:** remote tmux enables these DEC private modes on the *local* terminal over the
+SSH data channel:
+- Mouse tracking — `set-option -g mouse on` ([tmux.conf.tmpl:200](opt/dotfiles/chezmoi/dot_config/tmux/tmux.conf.tmpl#L200))
+- Color-scheme notifications (mode 2031) — the tmux ≥ 3.6 `client-dark-theme`/
+  `client-light-theme` hooks ([tmux.conf.tmpl:176-191](opt/dotfiles/chezmoi/dot_config/tmux/tmux.conf.tmpl#L176-L191))
+
+When SSH dies abruptly (e.g. `ssh_dispatch_run_fatal: message authentication code
+incorrect` — a transport-level packet integrity failure), tmux never sends the paired
+disable sequences (`CSI ? 1000 l`, `CSI ? 1006 l`, `CSI ? 2031 l`) back to the local
+terminal. The local terminal stays subscribed, so mouse moves and OS dark/light changes
+inject escape bytes as prompt input.
+
+**koopa is NOT the emitter.** koopa emits none of these enable sequences — the
+enable is owned by tmux (≥ 3.6) and the outer terminal emulator. The "Terminal
+appearance changed to light mode. Updating shell colors." message fires
+*coincidentally* because the tmux `client-light-theme` hook set
+`KOOPA_COLOR_MODE=light` which the per-prompt `_koopa_bash_color_mode_sync` then
+detected — koopa is reacting to the tmux hook, not causing the escape leak.
+
+**Recovery:**
+```
+koopa run reset-terminal
+```
+Emits `CSI ? 1000/1002/1003/1006 l`, `CSI ? 1004 l`, `CSI ? 2004 l`, `CSI ? 2031 l`,
+`CSI ? 1049 l` (leave alt-screen), `CSI ? 25 h` (show cursor), then `stty sane` and
+`tput reset`.
+
+Manual fallback (if koopa venv is unavailable):
+```
+stty sane; printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l\033[?2031l'; tput reset
+```
+
+**Optional auto-reset on ssh exit:** `export KOOPA_SSH_RESET=1` (set in shell profile)
+enables an opt-in `ssh()` wrapper defined by `_koopa_activate_ssh_reset` that runs
+`koopa run reset-terminal` automatically on every ssh exit. Off by default so the real
+`ssh` binary is unshadowed unless explicitly requested.
+
+**Related:** the OSC-11 probe hardening below (`terminal-is-light-background.sh`)
+follows the same edit-source-then-`koopa develop cache-functions` workflow described in
+the "VS Code / Posit Workbench: OSC 11 Leaks" section.
+
 ## Env-Driven vs File-Driven Consumers
 
 koopa's color-mode consumers split into two categories with very different timing:
@@ -122,6 +210,30 @@ override (e.g. npm, pip, claude configs), silently clobbering work config.
 
 `configurers/color_mode.py` delegates to `dotfiles.py`'s `main()` with
 `KOOPA_DOTFILES_SKIP_PULL=1` — never runs its own standalone `chezmoi apply`.
+
+## Stale Session Env Contaminates chezmoi status and diff
+
+**Named symptom:** `chezmoi diff` shows exactly one changed line —
+`"workbench.colorTheme": "Dracula Pro"` flipping to `"Dracula Pro (Alucard)"` (or
+vice versa) — across editor settings files you have not touched.
+
+**Cause:** the agent/shell session's `KOOPA_COLOR_MODE` is frozen at a value that
+doesn't match the real OS mode. Templates branching on `KOOPA_COLOR_MODE` render
+differently under the stale env, producing a phantom diff. This is NOT real drift.
+
+**Always verify OS mode before acting on a diff:**
+```sh
+echo "Session: ${KOOPA_COLOR_MODE:-<unset>}"
+defaults read -g AppleInterfaceStyle 2>/dev/null || echo "(absent = LIGHT)"
+cat ~/.cache/koopa/color-mode-applied 2>/dev/null
+```
+If session ≠ OS mode, re-run chezmoi commands with the real mode overridden:
+```sh
+KOOPA_COLOR_MODE=dark chezmoi diff --source="$HOME/.local/share/koopa/opt/dotfiles/chezmoi"
+```
+
+**corollary:** a file that shows ` M` under the stale env, but is clean under
+the correct env, has NOT drifted. Do not "fix" it.
 
 ## Never Verify by Re-Running the Installer from an Agent Session
 

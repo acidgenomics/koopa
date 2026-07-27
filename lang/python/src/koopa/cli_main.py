@@ -670,7 +670,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         if mode == "system":
             update_system_apps(verbose=args.verbose)
             return
-        from koopa.alert import alert_success, styled_name, warn
+        from koopa.alert import alert_success, stop, styled_name, warn
         from koopa.app import prune_apps
         from koopa.check import prune_broken_symlinks
         from koopa.install import repair_app_symlinks
@@ -701,18 +701,26 @@ def _handle_update(args: argparse.Namespace) -> None:
             warn(f"Removing unsupported apps failed: {exc}")
         prune_broken_symlinks()
         repair_app_symlinks()
+        install_error: str | None = None
         try:
             update_stale_apps(verbose=args.verbose)
         except Exception as exc:
-            warn(f"Updating stale apps failed: {exc}")
+            install_error = str(exc)
         try:
             install_missing_default_apps(verbose=args.verbose)
         except Exception as exc:
-            warn(f"Installing missing default apps failed: {exc}")
+            if install_error is None:
+                install_error = str(exc)
+        try:
+            update_system_apps(verbose=args.verbose)
+        except Exception as exc:
+            warn(f"System updates failed: {exc}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")
+        if install_error is not None:
+            stop(f"koopa update failed: {install_error}")
         alert_success(f"{styled_name('koopa')} update was successful.")
     finally:
         if acquired:
