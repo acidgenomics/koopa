@@ -4,7 +4,9 @@ description: >-
   Acid Genomics Python package release — python.acidgenomics.com PEP 503
   S3+CloudFront index at /simple/, same-domain docs at /<name>/, generated
   landing page at /, koopa app python publish/publish-docs/reindex, quality
-  gate, CHANGELOG format, smoke test. See koopa-r-release for the R analog.
+  gate, CHANGELOG format, smoke test, uv run venv-shebang gotcha, Sphinx
+  docs-build RST/numpydoc pitfalls, acidgenomics CSS theming for
+  pydata-sphinx-theme. See koopa-r-release for the R analog.
 ---
 
 # Acid Genomics Python Package Release
@@ -93,6 +95,40 @@ tagging and pushing.
   This overrides `VIRTUAL_ENV` and points `ty` directly at the local venv.
 - `pytest` needs `pythonpath = ["src"]` in `[tool.pytest.ini_options]` for
   src-layout packages to be importable without a venv install.
+- `ruff`'s `[tool.ruff.lint.pylint] max-positional-args` is frequently
+  scaffolded at `2`, which fires `PLR0917` on nearly every public function
+  with more than 2 typed positional params — not a real defect. Check the
+  actual max arity in the reported violations
+  (`ruff check src/ 2>&1 | grep PLR0917 | grep -oE '\([0-9]+ >' | sort -V`)
+  and set `max-positional-args` to that ceiling, not an arbitrary round number.
+
+### Running `pytest`/tools inside the package's own venv
+
+Always use `uv run --extra develop pytest`, never a bare `pytest` on PATH —
+koopa's own dev-tools-standalone convention (`pytest` as a global koopa app,
+not a venv dependency) does NOT apply to `uv`-managed personal packages. Their
+`pytest` lives in the `develop` extra and must run against the package's
+own `.venv`.
+
+**Symptom of getting this wrong:** `uv run pytest` silently resolves to a
+*different* `pytest` (koopa's global one) and fails with
+`ModuleNotFoundError: No module named 'numpy'` (or similar) even though the
+package's own `.venv` has the dependency installed. Root cause is usually a
+**stale shebang**: `.venv/bin/pytest`'s `#!` line hardcodes the venv's
+absolute path at creation time. If the repo was ever cloned/moved (e.g.
+`~/git/acidgenomics/py-foo` → `~/git/personal/py-foo`), the shebang still
+points at the old, now-nonexistent path, so `./.venv/bin/pytest` fails with
+`bad interpreter: ... no such file or directory` and `uv run` falls through
+to a global `pytest` on PATH instead of erroring loudly.
+
+Diagnose: `head -1 .venv/bin/pytest` — if it doesn't match the current repo
+path, the venv is stale. Fix (non-destructive, no `rm -rf .venv` needed):
+```sh
+uv sync --extra develop --reinstall
+```
+This rewrites every entry-point script's shebang in place. Packages with
+extra optional-dependency groups need those included too, e.g.
+`uv sync --extra develop --extra bio --extra docs`.
 
 ### Publish
 
@@ -170,6 +206,12 @@ Requires: same AWS profile + `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON` as `publish
 No additional env vars needed. `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS` is
 not used and does not need to be set.
 
+**No ReadTheDocs.** Do not scaffold or leave a `.readthedocs.yaml` in any
+package — docs build entirely through `publish-docs`. If one is present
+(leftover from an earlier scaffold, before this same-domain-docs setup
+existed), delete it; the `docs/` source tree and its `[project.optional-dependencies] docs`
+group stay, only the RTD-specific config file goes.
+
 ### Verification
 
 ```sh
@@ -184,6 +226,92 @@ curl -sI https://python.acidgenomics.com/syntactic/ | head -5
 koopa app python reindex
 curl -sI https://python.acidgenomics.com/simple/syntactic/ | head -5
 ```
+
+### `docs/index.rst` install guide — must match the README, not `pip install <name>`
+
+Sphinx doc scaffolds (and stale hand-written ones) commonly default to
+`pip install <name>` in the Installation section. That's wrong here — the
+package doesn't exist on public PyPI, only on the private index — so it
+sends readers straight into a `pip` failure or, worse, a same-named
+malicious package on PyPI. Always match the README's install block exactly:
+
+```rst
+Installation
+------------
+
+This package is hosted at `python.acidgenomics.com <https://python.acidgenomics.com/>`_.
+We recommend using `uv <https://docs.astral.sh/uv/>`_ to install.
+
+.. code-block:: bash
+
+   uv pip install \
+       --index-url 'https://python.acidgenomics.com/simple/' \
+       <name>
+```
+
+Check `README.md` and `docs/index.rst` together whenever the index URL
+changes — they drift independently and neither build/test/lint gate catches
+a wrong-but-valid install snippet.
+
+## Docs-build gotchas (`sphinx-build -W`)
+
+`publish-docs` runs Sphinx with `-W` (warnings-as-errors), so any of these
+block a real release, not just lint:
+
+- **Google-style `Args:` docstring blocks break docutils.** These packages use
+  numpydoc (`Parameters`/`Returns`/`Notes` sections), not Google style. A
+  stray `Args:` block — especially one with a wrapped continuation line —
+  produces `ERROR: Unexpected indentation.`. Convert to a numpydoc
+  `Parameters` section (or, for a function with no complex params, just
+  prose) to match the rest of the codebase.
+- **A docstring mentioning a name ending in `_` as plain text breaks RST.**
+  RST treats a bare word ending in `_` followed by whitespace as a hyperlink
+  reference target. `"""Raised by assert_ when ..."""` fails with
+  `ERROR: Unknown target name: "assert"` (RST strips the trailing
+  underscore looking for a link). Fix: wrap it in double backticks —
+  ``` ``assert_`` ``` — so it's rendered as literal code, not parsed as a link.
+- **`See Also` expects a cross-reference list, not a bare URL.** numpydoc's
+  `See Also` section parses `name : description` entries; a plain URL line
+  fails signature-mangling with `Error parsing See Also entry '<url>'`. Move
+  URLs to a `Notes` section instead (free-form prose, no special parsing).
+- **numpydoc's per-class method autosummary conflicts with
+  `sphinx.ext.autosummary`'s stub generation** on any class with several
+  public methods, producing one `autosummary: stub file not found
+  '<Class>.<method>'` warning per method (autodoc already documents each
+  method inline on the same page; the numpydoc table just duplicates that
+  with broken links). Fix in `conf.py`:
+  ```python
+  numpydoc_show_class_members = False
+  ```
+
+## Same-domain acidgenomics CSS theme for Sphinx docs
+
+`pydata_sphinx_theme`'s default look doesn't match the site's minimalist,
+monospace-first Dracula-derived aesthetic (same one used by
+`r.acidgenomics.com`'s pkgdown sites, sourced from `steinbaugh.com/css/`).
+pkgdown and Sphinx render completely different DOM/class structures
+(Bootstrap navbar classes differ, Pygments vs. pandoc/Rouge syntax-highlight
+token conventions), so the two can't share one literal CSS file — the fix is
+a purpose-written stylesheet that maps `pydata-sphinx-theme`'s own
+`--pst-color-*` CSS variables onto the site's `--foreground-color` /
+`--purple-color` / etc. palette (from `steinbaugh.com/css/colors.css`), plus
+a Pygments token-class → color mapping that reuses the same short-code
+convention (`.k` keyword, `.s` string, `.c` comment, ...) that Rouge/pandoc
+also use — see `steinbaugh.com/css/rouge.css` + `rouge-light.css` for the
+canonical mapping to replicate.
+
+This stylesheet lives once at `s3://python-<acct>-us-east-1-an/css/sphinx.css`
+(uploaded manually via `aws s3 cp`, outside the `simple/` generated tree —
+same pattern as the landing page's `css/front.css` + `images/logo.svg`), and
+every package's `conf.py` references it:
+
+```python
+html_css_files = ["https://python.acidgenomics.com/css/sphinx.css"]
+```
+
+One shared file, one absolute URL per package — no local `docs/_static/`
+duplication, and a future palette change propagates to all packages' docs on
+their next `publish-docs` run without touching any package repo.
 
 ## Landing page
 

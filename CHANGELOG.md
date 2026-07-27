@@ -20,6 +20,9 @@ Major changes:
 - Removed dead code: `_docs_bucket`, `_docs_s3_uri`, `_docs_distribution_id`,
   `_invalidate_cloudfront_docs`, and the unused `_INDEX_URL` constant from
   `pypi.py`.
+- Published a shared acidgenomics CSS theme (`css/sphinx.css`) so Sphinx docs
+  match the site's monospace, Dracula-derived look already used by
+  `r.acidgenomics.com`'s pkgdown sites.
 
 ## koopa 0.23.0 (2026-07-26)
 
