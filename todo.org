@@ -1,3 +1,8 @@
+** TODO Need to fix geos download logic, don't want beta
+ koopa develop mirror-src geos
+Listing S3 objects...
+  Mirroring: geos/3.15.0beta2.tar.gz
+Mirroring:   0%|                                                                      | 0/1 [00:00<?, ?app/s]
 ** TODO mirror-src download issue
 Downloading 'https://github.com/libgeos/geos/archive/3.15.0b.tar.gz' to '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmp4up8gtnk/3.15.0b.tar.gz'.
   % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current

@@ -3337,7 +3337,7 @@
     "url": [
       "https://github.com/libgeos/geos/"
     ],
-    "version": "3.15.0b"
+    "version": "3.15.0beta2"
   },
   "gettext": {
     "build_dependencies": [
