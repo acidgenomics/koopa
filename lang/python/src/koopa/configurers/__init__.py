@@ -31,7 +31,11 @@ PYTHON_CONFIGURERS: dict[tuple[str, str, str], str] = {
 
 def has_python_configurer(name: str, platform: str, mode: str) -> bool:
     """Check if app has a Python-native configurer."""
-    return (name, platform, mode) in PYTHON_CONFIGURERS
+    if (name, platform, mode) in PYTHON_CONFIGURERS:
+        return True
+    if platform != "common" and (name, "common", mode) in PYTHON_CONFIGURERS:
+        return True
+    return False
 
 
 def get_python_configurer(
@@ -40,6 +44,9 @@ def get_python_configurer(
     mode: str,
 ) -> Callable[..., None]:
     """Dynamically import and return the configurer's ``main`` function."""
-    module_path = PYTHON_CONFIGURERS[(name, platform, mode)]
+    key = (name, platform, mode)
+    if key not in PYTHON_CONFIGURERS:
+        key = (name, "common", mode)
+    module_path = PYTHON_CONFIGURERS[key]
     mod = importlib.import_module(module_path)
     return mod.main  # type: ignore[attr-defined]

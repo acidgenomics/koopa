@@ -4,11 +4,22 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from koopa.configurers import get_python_configurer, has_python_configurer
+import koopa.configurers.dotfiles as dotfiles_mod
 from koopa.configurers.dotfiles import (
     _chezmoi_managed,
     _print_chezmoi_status,
     _warn_cross_tree_overlap,
 )
+
+
+def test_has_python_configurer_falls_back_to_common_for_macos_user() -> None:
+    assert has_python_configurer("dotfiles", "macos", "user")
+    assert has_python_configurer("color-mode", "macos", "user")
+
+
+def test_get_python_configurer_falls_back_to_common_for_macos_user() -> None:
+    assert get_python_configurer("dotfiles", "macos", "user") is dotfiles_mod.main
 
 # ---------------------------------------------------------------------------
 # _warn_cross_tree_overlap
