@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from koopa.alert import alert_configure_start, alert_configure_success
 from koopa.configurers import get_python_configurer, has_python_configurer
-from koopa.system import is_admin, is_owner, is_root
+from koopa.system import is_admin, is_owner, is_root, get_os_id
 
 
 @dataclass
@@ -41,6 +41,12 @@ def configure_app(config: ConfigureConfig) -> None:
         msg = "Root user cannot configure user apps."
         raise PermissionError(msg)
     alert_configure_start(config.name)
+    # If caller used the generic 'common' platform, resolve to the
+    # concrete OS identifier (e.g. 'macos', 'debian') so the Python
+    # configurer registry can be looked up correctly.
+    if config.platform == "common":
+        config.platform = get_os_id()
+
     if not has_python_configurer(config.name, config.platform, config.mode):
         msg = f"No configurer for '{config.name}' ({config.platform}/{config.mode})."
         raise FileNotFoundError(msg)
