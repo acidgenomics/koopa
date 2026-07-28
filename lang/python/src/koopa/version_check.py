@@ -22,7 +22,7 @@ from typing import Any
 from koopa.installers import PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
 from koopa.prefix import koopa_prefix
-from koopa.version import sanitize_version
+from koopa.version import PRERELEASE_MARKERS, sanitize_version
 from koopa.xdg import xdg_cache_home
 
 
@@ -158,7 +158,7 @@ _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:
 _VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _PRERELEASE_RE = re.compile(
-    r"(?<![a-zA-Z])(?:alpha|beta|preview|pre|rc|dev|snapshot|nightly|canary)(?![a-zA-Z])",
+    rf"(?<![a-zA-Z])(?:{PRERELEASE_MARKERS})(?![a-zA-Z])",
     re.IGNORECASE,
 )
 
@@ -2315,11 +2315,11 @@ def _mirror_src_to_s3(
     import tempfile
     import time
 
-    from koopa.download import download_with_mirror
+    from koopa.download import _derive_filename, download_with_mirror
     from koopa.vendor import vendor_config, vendor_push_src
 
     url = _expand_src_url(src_url_template, version)
-    filename = url.rsplit("/", 1)[-1]
+    filename = _derive_filename(url)
     from koopa.aws import koopa_s3_bucket
 
     s3_key = f"s3://{koopa_s3_bucket('koopa')}/src/{name}/{filename}"
@@ -2414,9 +2414,9 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             src_url = data[r.name].get("src_url", "")
             if not src_url:
                 continue
-            _mirror_src_to_s3(r.name, r.latest_version, src_url)
+            _mirror_src_to_s3(r.name, r.latest_version, src_url, quiet=True)
             for extra_tmpl in data[r.name].get("extra_src_urls", []):
-                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
+                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl, quiet=True)
     elif s3_upload:
         print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
     return count

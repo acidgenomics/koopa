@@ -103,6 +103,9 @@ def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
     os_key = _os_id()
     if os_key in supported and not supported[os_key]:
         msg = f"'{name}' is not supported on {os_key}."
+        note = app_meta.get("unsupported_note", "")
+        if note:
+            msg += f"\n{note}"
         raise RuntimeError(msg)
 
 

@@ -24,6 +24,35 @@ _USER_AGENT = (
 )
 
 
+def _is_sourceforge_url(url: str) -> bool:
+    """Return whether a URL points at sourceforge.net or a subdomain."""
+    host = urlparse(url).hostname or ""
+    return host == "sourceforge.net" or host.endswith(".sourceforge.net")
+
+
+# Extensions that archive.is_valid_archive() can actually recognize by magic
+# bytes (gzip, bzip2, xz, zstd, lzip), matching archive.extract()/decompress().
+# A src_url can point at a non-archive payload (e.g. bash-preexec's
+# bash-preexec.sh), which should not be run through that check.
+_ARCHIVE_EXTS = (
+    ".tar.gz",
+    ".tar.bz2",
+    ".tar.xz",
+    ".tar.zst",
+    ".tar.zstd",
+    ".tar.lz",
+    ".tgz",
+    ".tbz2",
+    ".txz",
+    ".gz",
+    ".bz2",
+    ".xz",
+    ".zst",
+    ".zstd",
+    ".lz",
+)
+
+
 def download(
     url: str,
     output: str | None = None,
@@ -125,6 +154,7 @@ def download_with_mirror(
     from koopa.vendor import vendor_config, vendor_download_src, vendor_pull_priority
 
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
+    is_archive_payload = filename.lower().endswith(_ARCHIVE_EXTS)
     urls = [primary_url]
 
     # Insert vendor mirror URL at position 1 (right after the primary URL).
@@ -156,7 +186,7 @@ def download_with_mirror(
                 speed_time=speed_time,
                 quiet=quiet,
             )
-            if not archive.is_valid_archive(tarball):
+            if is_archive_payload and not archive.is_valid_archive(tarball):
                 raise ValueError("invalid archive")
             return tarball
         except Exception as exc:
@@ -260,8 +290,9 @@ def _download_curl(
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and os.path.isfile(ca_bundle):
         curl_args.extend(["--cacert", ca_bundle])
-    _host = urlparse(url).hostname or ""
-    if _host == "sourceforge.net" or _host.endswith(".sourceforge.net"):
+    # SourceForge's Cloudflare front 403s this desktop-browser UA string on the
+    # files/.../download redirect hop; curl's own default UA is accepted.
+    if not _is_sourceforge_url(url):
         curl_args.extend(["--user-agent", _USER_AGENT])
     if os.environ.get("http_proxy") or os.environ.get("https_proxy"):
         curl_args.append("--insecure")
@@ -274,7 +305,9 @@ def _download_curl(
 def _download_urllib(url: str, output: str) -> None:
     """Download using urllib."""
     req = urllib.request.Request(url)
-    req.add_header("User-Agent", _USER_AGENT)
+    # See _download_curl: SourceForge 403s this UA string.
+    if not _is_sourceforge_url(url):
+        req.add_header("User-Agent", _USER_AGENT)
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and not os.path.isfile(ca_bundle):
         ca_bundle = None

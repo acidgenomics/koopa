@@ -2,7 +2,6 @@
 
 import os
 import shutil
-import sys
 
 from koopa.archive import extract
 from koopa.download import download
@@ -15,14 +14,14 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install illumina-ica-cli."""
-    if sys.platform == "darwin":
-        os_id = "darwin"
-    else:
-        os_id = "linux"
+    """Install illumina-ica-cli.
+
+    Illumina publishes amd64 archives only; this app is gated to linux-amd64
+    in app.json.
+    """
     url = (
         f"https://stratus-documentation-us-east-1-public.s3.amazonaws.com/"
-        f"cli/{version}/ica-{os_id}-amd64.zip"
+        f"cli/{version}/ica-linux-amd64.zip"
     )
     zipfile = download(url)
     extract(zipfile, "src")

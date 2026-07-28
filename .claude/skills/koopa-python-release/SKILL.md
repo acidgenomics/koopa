@@ -168,6 +168,17 @@ uv pip install --python "$tmp/venv/bin/python" \
 rm -rf "$tmp"
 ```
 
+**Blocked in an agent session:** `guard-installs.sh` (a `PreToolUse` hook)
+rejects `uv pip install` when run from inside Claude Code — installs require
+explicit user action. Substitute HTTP-only checks that prove the index and
+artifact are correct without installing anything, and surface the real
+install command for the user to run:
+
+```sh
+curl -sI 'https://python.acidgenomics.com/simple/syntactic/'   # 200
+curl -sI 'https://python.acidgenomics.com/packages/syntactic-<ver>-py3-none-any.whl'
+```
+
 ## pypi.py index layout
 
 The PEP 503 index lives under the `simple/` prefix. The S3 bucket structure is:
@@ -338,3 +349,17 @@ R packages are hosted at `r.acidgenomics.com` via a drat repo in
 `~/git/personal/r-acidgenomics-com`, using the same AWS account/profile/
 CloudFront pattern. The Python index reuses that infra with a hand-rolled
 PEP 503 generator in place of drat.
+
+Python's `/simple/` (index) + `/packages/` (wheels/sdists) split is PEP 503
+canonical, matching `pypi.org`'s own layout — do not "fix" this to match R's
+`/<name>/` docs convention. `/packages/` here holds real artifacts, not docs,
+so it can never be repurposed the way R's `/packages/` prefix was. See
+`koopa-r-release` for the R side of this: R's pkgdown docs moved from
+`/packages/<name>/` to `/<name>/` specifically to converge on one rule across
+both sites (artifacts under reserved prefixes, docs at `/<name>/`) — a move
+that was only possible because R's `/packages/` never held artifacts.
+
+The GitHub "Website" field on each `py-<pkg>` repo (independent of any URL in
+the repo content itself) also needs setting/updating via `gh api -X PATCH` —
+see `koopa-r-release`'s "Don't forget the GitHub Website field" note, including
+the multi-account `gh auth` gotcha.

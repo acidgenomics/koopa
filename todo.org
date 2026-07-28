@@ -1,59 +1,11 @@
-** TODO Need to fix geos download logic, don't want beta
- koopa develop mirror-src geos
-Listing S3 objects...
-  Mirroring: geos/3.15.0beta2.tar.gz
-Mirroring:   0%|                                                                      | 0/1 [00:00<?, ?app/s]
-** TODO mirror-src download issue
-Downloading 'https://github.com/libgeos/geos/archive/3.15.0b.tar.gz' to '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmp4up8gtnk/3.15.0b.tar.gz'.
-  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
-                                 Dload  Upload  Total   Spent   Left   Speed
-  0      0   0      0   0      0      0      0                              0
-  0      0   0      0   0      0      0      0                              0
-curl: (22) The requested URL returned error: 404
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-  0    14    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-curl: (56) The requested URL returned error: 404
-  FAILED: geos: Download failed for 'geos': HTTP Error 404: Not Found
-  Uploading: git/git-2.55.0.tar.xz
-** TODO mirror-src download issues
-2 app(s) failed to mirror:
-  bash-preexec: Download failed for 'bash-preexec': invalid archive
-  geos: Download failed for 'geos': HTTP Error 404: Not Found
-** DONE Migrate python.acidgenomics.com to PEP 503 /simple/ with same-domain docs
-   Consolidated everything onto one bucket/distribution instead of the
-   separate python-docs.acidgenomics.com subdomain originally planned:
-   - Index moved from bucket root to /simple/ (matches pypi.org/simple
-     convention); pypi.py's _generate_index/_sync_index_to_s3 retargeted,
-     scoped --delete confines damage to the simple/ prefix.
-   - Docs consolidated to /<name>/ on the SAME bucket/distribution as the
-     index; removed the dead python-docs bucket role and
-     AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS env var entirely.
-   - reindex() now auto-generates a landing page at / from each wheel's
-     Summary metadata, styled to match r.acidgenomics.com (same
-     steinbaugh.com CSS chain, breadcrumb logo, Google site search).
-   - Verified end-to-end: real `uv pip install --index-url .../simple/`
-     resolves and imports; CloudFront directory-index resolution confirmed
-     two levels deep (previously untested).
-   - Released/fixed all 7 personal packages (acidbase, acidgenomes,
-     acidplyr, cellosaurus, goalie, pipette, syntactic): stale Documentation
-     URLs, README install snippets, docs/index.rst install guides (were
-     "pip install <name>" against public PyPI, now fixed), removed
-     .readthedocs.yaml scaffolding, fixed numpydoc/RST docstring bugs
-     blocking `sphinx-build -W`, applied acidgenomics CSS theme
-     (html_css_files -> shared python.acidgenomics.com/css/sphinx.css) to
-     Sphinx docs across all 7.
-   - Real bugfixes shipped along the way: acidgenomes 0.2.0 (NaN biotype
-     crash), cellosaurus 0.2.0 (Cellosaurus 54.0 list-typed fields), each
-     with a verified regression test.
-   - Resolved 13 Dependabot alerts (goalie pillow floor via
-     override-dependencies; stale unreferenced requirements.txt in
-     acidgenomes; uv/pytest/Pygments lock refreshes elsewhere).
-   Follow-up still open: an external downstream consumer repo still points
-   at the bare-root index URL and needs its pyproject.toml index bumped to
-   /simple/ (tracked outside this repo). r.acidgenomics.com's landing page
-   is still hand-authored HTML, not generated like the Python one.
-** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
 ** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
-** TODO Publish all our R and Python packages at bioconda.
+https://r.acidgenomics.com/syntactic/news/index.html
+** TODO Publish all our packages at bioconda. Consider including koopa too.
+** TODO Run `koopa app r reindex` against production once the R docs migration lands
+   The generated r.acidgenomics.com landing page (cran.py::_generate_landing,
+   landing.py) links every package to /<name>/, but that migration
+   (packages/<name>/ -> <name>/) is still in flight — see
+   todo-move-python-transient-sonnet.md. Until it ships, /<name>/ 404s for all
+   24 R packages, so running reindex now would publish a page full of dead
+   links. Run reindex only after the docs-migration plan completes and
+   /<name>/ resolves for a sample package.
