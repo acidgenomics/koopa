@@ -702,8 +702,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
             cache[cache_key] = now
             return
         try:
-            tqdm.write(f"  Uploading: {cache_key}")
-            _mirror_src_to_s3(name, version, src_url, strict=True, quiet=False)
+            tqdm.write(f"  Mirroring: {cache_key}")
+            _mirror_src_to_s3(name, version, src_url, strict=True, quiet=True)
+            tqdm.write(f"  Mirrored: {cache_key}")
             cache[cache_key] = now
         except Exception as exc:
             failures[name] = str(exc)
@@ -720,7 +721,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
                 cache[extra_cache_key] = now
                 continue
             try:
-                _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=False)
+                tqdm.write(f"  Mirroring: {extra_cache_key}")
+                _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=True)
+                tqdm.write(f"  Mirrored: {extra_cache_key}")
                 cache[extra_cache_key] = now
             except Exception as exc:
                 failures[name] = str(exc)
