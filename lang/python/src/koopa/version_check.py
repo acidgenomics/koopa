@@ -2333,7 +2333,7 @@ def _mirror_src_to_s3(
                 output=local,
                 quiet=quiet,
                 skip_koopa_mirror=True,
-                max_time=60,
+                max_time=None,
             )
         except Exception as exc:
             if strict:

@@ -1,3 +1,21 @@
+** TODO mirror-src download issue
+Downloading 'https://github.com/libgeos/geos/archive/3.15.0b.tar.gz' to '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmp4up8gtnk/3.15.0b.tar.gz'.
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0
+curl: (22) The requested URL returned error: 404
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0    14    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (56) The requested URL returned error: 404
+  FAILED: geos: Download failed for 'geos': HTTP Error 404: Not Found
+  Uploading: git/git-2.55.0.tar.xz
+** TODO mirror-src download issues
+2 app(s) failed to mirror:
+  bash-preexec: Download failed for 'bash-preexec': invalid archive
+  geos: Download failed for 'geos': HTTP Error 404: Not Found
 ** DONE Migrate python.acidgenomics.com to PEP 503 /simple/ with same-domain docs
    Consolidated everything onto one bucket/distribution instead of the
    separate python-docs.acidgenomics.com subdomain originally planned:
