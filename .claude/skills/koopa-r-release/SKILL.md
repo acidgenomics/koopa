@@ -86,12 +86,33 @@ the binary build now succeeds.
 
 Regenerate all PACKAGES manifests from current S3 contents. Discovers active binary
 prefixes automatically. Writes empty skeleton PACKAGES for `_SKELETON_BINARY_PREFIXES`
-(suppress R client warnings on big-sur-arm64 paths).
+(suppress R client warnings on big-sur-arm64 paths). Also regenerates and uploads the
+landing page at `r.acidgenomics.com/index.html` (see below); `koopa app r publish`
+does the same as part of its `src/contrib` reindex step.
 
 ```sh
 koopa app r reindex               # reindex everything + invalidate CloudFront
 koopa app r reindex --no-invalidate
 ```
+
+### Landing page
+
+`s3://<r-bucket>/index.html` is generated, not hand-authored — `_generate_landing()`
+in `cran.py` builds it from the `Package`/`Description` fields already parsed while
+reindexing `src/contrib` (no extra S3 calls). It shares its HTML skeleton (head, nav,
+breadcrumb, Google site search, footer) with the Python landing page via
+`render_landing()` in `landing.py`.
+
+Packages are grouped by the `_CATEGORIES` list in `cran.py` — a `list[tuple[str,
+list[str]]]` (order matters), not a dict. **Adding a new package that should appear
+in a specific section requires adding its lowercased name to that section's list.**
+A package present in `src/contrib` but absent from every category still appears —
+under an "Infrastructure" fallback section — with a warning printed to stderr, so a
+new package can never silently vanish from the page; it just lands somewhere less
+specific until categorized.
+
+Docs hrefs on the page use `_DOCS_PATH` (`"{name}/"`, matching `publish-docs`'s
+layout above). Footer license is Apache 2.0, matching every package's `DESCRIPTION`.
 
 ### `koopa app r deploy [--no-invalidate]`
 
@@ -105,6 +126,64 @@ Keeps only the latest version flat in `src/contrib/`. Regenerates manifests.
 ```sh
 koopa app r archive
 ```
+
+### `koopa app r publish-docs <package-dir> [--no-invalidate]`
+
+Build a package's pkgdown site and sync it to `s3://<r-bucket>/<name>/`, served at
+`https://r.acidgenomics.com/<name>/`. `<name>` is the lowercased `Package` field from
+`DESCRIPTION`. `src/contrib/` and `bin/` are never touched — the sync is scoped to the
+package's own prefix. Rejects a package name colliding with a reserved top-level
+prefix (`bin`, `css`, `extdata`, `images`, `packages`, `src`, `testdata`).
+
+```sh
+koopa app r publish-docs ~/git/personal/r-syntactic
+```
+
+Implementation: `publish_docs()` in `cran.py`, mirroring `pypi.py`'s `publish_docs()`.
+
+**Legacy path:** docs used to live at `https://r.acidgenomics.com/packages/<name>/`.
+That prefix collided with nothing on the artifact side (R tarballs live under
+`src/contrib/` and `bin/`, unlike Python's `/packages/` which holds wheels), so the
+`/packages/` docs prefix was purely historical. It's now `/<name>/`, matching
+`python.acidgenomics.com`'s docs layout. An S3 website `RoutingRule` on the R bucket
+301-redirects any `/packages/<name>/...` request to `/<name>/...` — set `HostName` to
+`r.acidgenomics.com` and `Protocol` to `https` explicitly; an explicit `RoutingRules`
+redirect defaults to the bucket's own S3-website hostname over plain HTTP if you omit
+them, unlike S3's automatic trailing-slash redirect which stays host-relative.
+
+**Superseded:** `AcidDevTools::pkgdownDeployToAws()` (in `r-aciddevtools`) is
+`.Deprecated()` in favor of this command — its old default `bucketDir` pointed at
+`s3://r.acidgenomics.com/packages/`, a legacy bucket holding zero live objects (the
+real origin is the account-scoped `r-<acct>-us-east-1-an` bucket), so every deploy
+through it was silently writing into a void. `AcidDevTools::publish()` now shells out
+to `koopa app r publish-docs` directly instead of calling it.
+
+**Don't forget the GitHub "Website" field.** Each `r-<pkg>` repo has a
+`homepage` field (shown as "Website" on the repo page) that's independent of
+anything in the repo content — a URL migration like this one won't touch it
+unless you update it separately:
+
+```sh
+gh api -X PATCH repos/acidgenomics/r-<pkg> -f homepage="https://r.acidgenomics.com/<pkg>/"
+# verify:
+gh api repos/acidgenomics/r-<pkg> --jq '.homepage'
+```
+
+The Python side (`py-<pkg>`) uses the same pattern with
+`https://python.acidgenomics.com/<pkg>/`.
+
+**Multi-account `gh` gotcha:** the PATCH 404s (not 403 — GitHub returns 404 on
+a repo write without permission, not a clear auth error) if the *active* `gh`
+account lacks write access to the `acidgenomics` org. Check first:
+
+```sh
+gh auth status   # look for "Active account: true" next to the right user
+```
+
+If the active account is wrong, `gh auth switch --hostname github.com --user <owner>`
+— this changes the machine-wide active account for every future `gh` command,
+not just the current one. Confirm with the user before switching if it's not
+obviously already their intent.
 
 ## Local Clone Setup
 
@@ -217,6 +296,19 @@ rm -rf "$tmp"
 
 Expected: binary pulled from `sonoma-arm64/contrib/4.6/` with no warning.
 
+**`install.packages()` blocked in an agent session:** `guard-installs.sh` (a
+`PreToolUse` hook) rejects this smoke test when run from inside Claude Code —
+by design, installs require explicit user action. Substitute an HTTP-only
+check that proves the same thing without installing anything:
+
+```sh
+curl -s "https://r.acidgenomics.com/src/contrib/PACKAGES" | grep -A2 "^Package: goalie"
+curl -sI "https://r.acidgenomics.com/src/contrib/goalie_<ver>.tar.gz"   # 200 + correct content-type
+```
+
+Surface the real `install.packages()` command to the user to run themselves
+if the full round-trip is needed.
+
 ## Pre-Release Quality Gate
 
 Run before publish (replaces manual `R CMD check`):
@@ -241,8 +333,9 @@ See skill `acid-r-package` for the full dev conventions (tooling, lintr, roxygen
 
 ## AcidDevTools Integration
 
-`AcidDevTools::publish()` calls `koopa app r publish --no-check` internally. The
-`check` and `pkgdown` steps remain in R; build/upload/reindex are all koopa.
+`AcidDevTools::publish()` calls `koopa app r publish --no-check` internally, and
+(when `pkgdown = TRUE`) shells out to `koopa app r publish-docs` before that. The
+`check` step remains in R; build/upload/reindex/pkgdown-deploy are all koopa.
 
 Source: `~/git/personal/r-aciddevtools/R/publish.R`
 
@@ -278,10 +371,18 @@ _SKELETON_BINARY_PREFIXES: list[str] = [
 | Concept | Python | R |
 |---|---|---|
 | Command | `koopa app python publish` | `koopa app r publish` |
+| Docs command | `koopa app python publish-docs` | `koopa app r publish-docs` |
 | Module | `koopa/pypi.py` | `koopa/cran.py` |
 | Build | `uv build` | `R CMD build` + `R CMD INSTALL --build` |
 | Index format | PEP 503 HTML (hand-rolled) | CRAN PACKAGES DCF |
 | Manifest regen | list S3 + SHA256 via download | stream DESCRIPTION only; ETag = MD5 |
 | Version mgmt | bumpver | manual in DESCRIPTION |
 | Index URL | `https://python.acidgenomics.com/` | `https://r.acidgenomics.com/` |
+| Docs URL | `https://python.acidgenomics.com/<name>/` | `https://r.acidgenomics.com/<name>/` |
+| Artifact prefix | `/packages/` (wheels/sdists) | `/src/contrib/`, `/bin/` (tarballs) |
 | Dep install on binary build | N/A (pure Python) | auto via `install.packages()` |
+
+Both sites now follow the same rule: artifacts under reserved prefixes, docs at
+`/<name>/`. Python's `/packages/` prefix holds real artifacts (PEP 503 convention,
+matching `pypi.org`) and must not be repurposed for docs. R has no artifacts at
+`/packages/` — that prefix is retired entirely.

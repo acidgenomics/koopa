@@ -39,6 +39,40 @@ _SKELETON_BINARY_PREFIXES: list[str] = [
     "bin/macosx/big-sur-arm64/contrib/4.6",
 ]
 
+# Top-level prefixes reserved for package artifacts/assets; a pkgdown docs
+# directory name must not collide with any of these.
+_RESERVED_PREFIXES = {"bin", "css", "extdata", "images", "packages", "src", "testdata"}
+
+# Docs path template for the landing page, relative to the bucket root.
+# Post-migration form; was "packages/{name}/" before publish_docs() moved to
+# syncing docs at s3://<r-bucket>/<name>/ directly.
+_DOCS_PATH = "{name}/"
+
+# Curated sections for the generated landing page, in display order. Any
+# src/contrib package absent from every list here is appended to
+# "Infrastructure" with a warning, so a newly published package can never
+# silently vanish from the page.
+_CATEGORIES: list[tuple[str, list[str]]] = [
+    ("Import/export", ["pipette", "acidgenomes", "acidplyr", "goalie", "syntactic"]),
+    ("Visualization", ["acidplots"]),
+    ("RNA sequencing", ["deseqanalysis", "acidgsea", "acidexperiment"]),
+    ("Single-cell RNA sequencing", ["pointillism", "chromium", "acidsinglecell"]),
+    ("Annotation databases", ["cellosaurus", "eggnog", "panther", "wormbase"]),
+    (
+        "Infrastructure",
+        [
+            "basejump",
+            "acidbase",
+            "acidcli",
+            "acidgenerics",
+            "acidmarkdown",
+            "acidroxygen",
+            "acidtest",
+            "aciddevtools",
+        ],
+    ),
+]
+
 # DCF fields written to PACKAGES for source packages (in order).
 _SOURCE_FIELDS = [
     "Package",
@@ -100,6 +134,12 @@ _WRITE_RDS_R = """\
 setwd(DIR)
 pkgs <- read.dcf("PACKAGES")
 saveRDS(pkgs, "PACKAGES.rds", compress = "xz")
+"""
+
+# R script to build a pkgdown site. Sentinel PKG_DIR is replaced before eval.
+_BUILD_DOCS_R = """\
+stopifnot(requireNamespace("pkgdown", quietly = TRUE))
+pkgdown::build_site(pkg = PKG_DIR, preview = FALSE)
 """
 
 
@@ -314,11 +354,13 @@ def _upload_manifest(packages_text: str, s3_prefix: str, tmp_dir: str) -> None:
         )
 
 
-def _reindex_prefix(s3_prefix: str, *, binary: bool = False) -> None:
+def _reindex_prefix(s3_prefix: str, *, binary: bool = False) -> list[dict[str, str]]:
     """Regenerate and upload PACKAGES manifests for one S3 prefix.
 
     Streams only the DESCRIPTION file from each tarball — no full downloads.
-    Uses S3 ETag as MD5sum (valid for single-part uploads).
+    Uses S3 ETag as MD5sum (valid for single-part uploads). Returns the parsed
+    entries (full DESCRIPTION fields, including Description) so callers such
+    as the landing page generator can reuse them without re-streaming.
     """
     from koopa.alert import alert
 
@@ -345,6 +387,7 @@ def _reindex_prefix(s3_prefix: str, *, binary: bool = False) -> None:
         _upload_manifest(packages_text, s3_prefix, tmp_dir)
 
     alert(f"Uploaded PACKAGES manifests to '{s3_prefix}' ({len(entries)} packages).")
+    return entries
 
 
 def _archive_old_source(pkg_name: str, new_filename: str) -> None:
@@ -454,8 +497,72 @@ def _r_build(package_dir: str, build_dir: str) -> tuple[str, str, str]:
     return lines[-3], lines[-2], lines[-1]
 
 
-def _invalidate_cloudfront() -> None:
-    """Invalidate PACKAGES* manifest paths on CloudFront."""
+def _generate_landing(entries: list[dict[str, str]]) -> str:
+    """Render the root landing page HTML from src/contrib DESCRIPTION entries.
+
+    Reuses the Package/Description fields already parsed by _reindex_prefix()
+    for src/contrib — no extra S3 calls or tarball streams. Packages are
+    grouped by _CATEGORIES; any package present in S3 but absent from every
+    category warns to stderr and is appended to "Infrastructure" so it is
+    never silently dropped from the page.
+    """
+    by_lower = {entry["Package"].lower(): entry for entry in entries if entry.get("Package")}
+    categorized = {name for _, names in _CATEGORIES for name in names}
+
+    uncategorized = sorted(by_lower.keys() - categorized)
+    for name in uncategorized:
+        print(
+            f"Warning: '{name}' is not in _CATEGORIES; adding to 'Infrastructure'.",
+            file=sys.stderr,
+        )
+
+    sections: list[tuple[str, list[tuple[str, str, str]]]] = []
+    for heading, names in _CATEGORIES:
+        section_names = names + uncategorized if heading == "Infrastructure" else names
+        section_entries = []
+        for name in section_names:
+            entry = by_lower.get(name)
+            if entry is None:
+                continue
+            display_name = entry["Package"]
+            description = " ".join(entry.get("Description", "").split())
+            section_entries.append((display_name, _DOCS_PATH.format(name=name), description))
+        if section_entries:
+            sections.append((heading, section_entries))
+
+    from koopa.landing import render_landing
+
+    return render_landing(
+        "R packages",
+        sections,
+        license_name="Apache 2.0",
+        license_url="https://www.apache.org/licenses/LICENSE-2.0",
+        copyright_years="2019-pres.",
+    )
+
+
+def _upload_landing(html_content: str, tmp_dir: str) -> None:
+    """Write the landing page to a temp file and upload it to s3://bucket/index.html."""
+    local = os.path.join(tmp_dir, "index.html")
+    with open(local, "w") as fh:
+        fh.write(html_content)
+    subprocess.run(
+        [
+            _aws(),
+            "s3",
+            f"--profile={_PROFILE}",
+            "cp",
+            "--content-type",
+            "text/html",
+            local,
+            f"{_s3_uri()}/index.html",
+        ],
+        check=True,
+    )
+
+
+def _invalidate_cloudfront(paths: list[str] | None = None) -> None:
+    """Invalidate the given CloudFront paths (defaults to PACKAGES* manifests)."""
     aws = _aws()
     dist_id = _cloudfront_distribution_id()
     subprocess.run(
@@ -469,7 +576,7 @@ def _invalidate_cloudfront() -> None:
             "--output",
             "text",
             "--paths",
-            *_CLOUDFRONT_PATHS,
+            *(paths if paths is not None else _CLOUDFRONT_PATHS),
             f"--profile={_PROFILE}",
         ],
         check=True,
@@ -545,14 +652,18 @@ def publish(
             _upload_package(bin_path, bin_key)
 
             alert("Regenerating src/contrib PACKAGES manifests.")
-            _reindex_prefix("src/contrib", binary=False)
+            src_entries = _reindex_prefix("src/contrib", binary=False)
 
             alert(f"Regenerating {bin_subpath} PACKAGES manifests.")
             _reindex_prefix(bin_subpath, binary=True)
 
+            alert("Generating landing page.")
+            landing_html = _generate_landing(src_entries)
+            _upload_landing(landing_html, build_dir)
+
             if invalidate:
-                alert("Invalidating CloudFront PACKAGES* caches.")
-                _invalidate_cloudfront()
+                alert("Invalidating CloudFront PACKAGES* and landing page caches.")
+                _invalidate_cloudfront([*_CLOUDFRONT_PATHS, "/", "/index.html"])
 
             alert(f"Published '{src_base}' to {_INDEX_URL}")
 
@@ -574,6 +685,73 @@ def publish(
                     git_push_tag(tag_name, str(pkg_path))
         else:
             alert(f"Built '{src_base}' and '{bin_base}' (deploy skipped).")
+
+
+def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
+    """Build and publish a package's pkgdown site to r.acidgenomics.com.
+
+    The rendered site is synced to s3://<r-bucket>/<name>/ where <name> is the
+    lowercased ``Package`` field read from DESCRIPTION. Docs are served at
+    https://r.acidgenomics.com/<name>/ on the same domain and bucket as the
+    package repo. src/contrib/ and bin/ are not touched.
+
+    Parameters
+    ----------
+    package_dir
+        Path to an R package source directory (must contain DESCRIPTION and
+        a ``_pkgdown.yml`` config).
+    invalidate
+        Whether to invalidate the CloudFront cache after uploading.
+    """
+    import shutil
+
+    from koopa.alert import alert
+    from koopa.aws import aws_s3_sync
+
+    pkg_path = Path(package_dir).expanduser().resolve()
+    desc_file = pkg_path / "DESCRIPTION"
+    if not desc_file.is_file():
+        msg = f"No DESCRIPTION found in '{pkg_path}'."
+        raise FileNotFoundError(msg)
+    if not (pkg_path / "_pkgdown.yml").is_file():
+        msg = f"No _pkgdown.yml found in '{pkg_path}'."
+        raise FileNotFoundError(msg)
+
+    desc = _parse_dcf(desc_file.read_text())
+    raw_name = desc.get("Package", "")
+    if not raw_name:
+        msg = f"Package field not found in '{desc_file}'."
+        raise RuntimeError(msg)
+    name = raw_name.lower()
+    if name in _RESERVED_PREFIXES:
+        msg = f"Package name '{name}' collides with a reserved path on r.acidgenomics.com."
+        raise ValueError(msg)
+
+    rscript = shutil.which("Rscript")
+    if rscript is None:
+        msg = "Rscript is not installed."
+        raise RuntimeError(msg)
+
+    docs_dir = pkg_path / "docs"
+    alert(f"Building pkgdown site for '{name}' in '{pkg_path}'.")
+    code = _BUILD_DOCS_R.replace("PKG_DIR", _r_quoted(str(pkg_path)))
+    subprocess.run([rscript, "-e", code], check=True)
+    if not docs_dir.is_dir():
+        msg = f"pkgdown did not produce a docs/ directory in '{pkg_path}'."
+        raise RuntimeError(msg)
+
+    try:
+        dest = f"{_s3_uri()}/{name}/"
+        alert(f"Syncing docs to '{dest}'.")
+        aws_s3_sync(str(docs_dir) + "/", dest, delete=True, profile=_PROFILE)
+
+        if invalidate:
+            alert(f"Invalidating CloudFront cache for '/{name}/*'.")
+            _invalidate_cloudfront([f"/{name}/*"])
+    finally:
+        shutil.rmtree(docs_dir, ignore_errors=True)
+
+    alert(f"Docs published: https://r.acidgenomics.com/{name}/")
 
 
 def archive_src(*, invalidate: bool = True) -> None:
@@ -773,7 +951,7 @@ def reindex(*, invalidate: bool = True) -> None:
     from koopa.alert import alert
 
     alert("Reindexing src/contrib.")
-    _reindex_prefix("src/contrib", binary=False)
+    src_entries = _reindex_prefix("src/contrib", binary=False)
 
     # Active binary prefixes — only sonoma-arm64; discover all R versions present.
     active_prefixes = [
@@ -789,9 +967,14 @@ def reindex(*, invalidate: bool = True) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             _upload_manifest("", prefix, tmp_dir)
 
+    alert("Generating landing page.")
+    landing_html = _generate_landing(src_entries)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        _upload_landing(landing_html, tmp_dir)
+
     if invalidate:
-        alert("Invalidating CloudFront PACKAGES* caches.")
-        _invalidate_cloudfront()
+        alert("Invalidating CloudFront PACKAGES* and landing page caches.")
+        _invalidate_cloudfront([*_CLOUDFRONT_PATHS, "/", "/index.html"])
 
     alert("Reindex complete.")
 

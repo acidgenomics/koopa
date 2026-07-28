@@ -3329,7 +3329,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-07-14",
+    "date": "2026-07-28",
     "default": false,
     "description": "geometry engine for geographic information systems",
     "src_url": "https://github.com/libgeos/geos/archive/{version}.tar.gz",
@@ -3337,7 +3337,7 @@
     "url": [
       "https://github.com/libgeos/geos/"
     ],
-    "version": "3.15.0beta2"
+    "version": "3.14.1"
   },
   "gettext": {
     "build_dependencies": [
@@ -4419,13 +4419,20 @@
     "date": "2026-07-25",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
-    "revision": 1,
+    "installer_platform": "linux",
+    "notes": [
+      "Illumina ships amd64 builds only; no arm64 for macOS or Linux.",
+      "The darwin-amd64 build runs under Rosetta 2, but Rosetta is deliberately not supported.",
+      "Only the Linux amd64 archive is used; see _check_illumina_ica_cli in version_check.py."
+    ],
+    "revision": 2,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-arm64": false
     },
     "type": "cli",
+    "unsupported_note": "Illumina publishes amd64 builds only (no arm64 for macOS or Linux). Run icav2 on a Linux x86_64 host, e.g. an AWS EC2 instance.",
     "url": [
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"

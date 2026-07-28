@@ -105,6 +105,41 @@ def test_sanitize_version_plain() -> None:
     assert sanitize_version("10.2.1") == "10.2.1"
 
 
+def test_sanitize_version_preserves_beta_marker() -> None:
+    """Test sanitize_version preserves an explicit pre-release marker and its digits."""
+    assert sanitize_version("3.15.0beta2") == "3.15.0beta2"
+
+
+def test_sanitize_version_preserves_rc_marker() -> None:
+    """Test sanitize_version preserves an 'rc' pre-release marker."""
+    assert sanitize_version("3.14.0rc1") == "3.14.0rc1"
+
+
+def test_sanitize_version_preserves_alpha_marker() -> None:
+    """Test sanitize_version preserves an 'alpha' pre-release marker."""
+    assert sanitize_version("1.2.0alpha") == "1.2.0alpha"
+
+
+def test_sanitize_version_preserves_dotted_beta_marker() -> None:
+    """Test sanitize_version preserves a dot-separated pre-release marker."""
+    assert sanitize_version("1.92.0.beta1") == "1.92.0.beta1"
+
+
+def test_sanitize_version_preserves_hyphenated_rc_marker() -> None:
+    """Test sanitize_version preserves a hyphen-separated pre-release marker."""
+    assert sanitize_version("1.2.3-rc2") == "1.2.3-rc2"
+
+
+def test_sanitize_version_preserves_dev_marker() -> None:
+    """Test sanitize_version preserves a 'dev' pre-release marker with digits."""
+    assert sanitize_version("2.0.0.dev4") == "2.0.0.dev4"
+
+
+def test_sanitize_version_preserves_letter_suffix_no_marker() -> None:
+    """Test sanitize_version still preserves a bare trailing letter (no marker word)."""
+    assert sanitize_version("1.1.1w") == "1.1.1w"
+
+
 def test_version_pattern_matches() -> None:
     """Test version_pattern produces a valid regex."""
     import re

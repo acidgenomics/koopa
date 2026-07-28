@@ -9,6 +9,15 @@ from pathlib import Path
 
 from koopa.prefix import koopa_prefix
 
+# Shared with koopa.version_check._PRERELEASE_RE so both modules agree on what
+# counts as a pre-release marker.
+PRERELEASE_MARKERS = "alpha|beta|preview|pre|rc|dev|snapshot|nightly|canary"
+
+_SANITIZE_VERSION_RE = re.compile(
+    rf"(\d+(?:\.\d+)*(?:[._-]?(?:{PRERELEASE_MARKERS})[0-9.]*|[a-zA-Z])?)",
+    re.IGNORECASE,
+)
+
 
 def koopa_version() -> str:
     """Return koopa version from pyproject.toml."""
@@ -65,7 +74,10 @@ def major_minor_patch_version(version: str) -> str:
 def sanitize_version(version: str) -> str:
     """Sanitize a version string to numeric format.
 
-    Strips leading 'v', trailing non-numeric suffixes, etc.
+    Strips leading 'v', trailing non-numeric suffixes, etc. Preserves an
+    explicit pre-release marker (e.g. 'beta2' in '3.15.0beta2') so that
+    downstream pre-release detection still works after sanitization. A bare
+    trailing letter with no marker word (e.g. '1.1.1w') is preserved as-is.
 
     Parameters
     ----------
@@ -80,5 +92,5 @@ def sanitize_version(version: str) -> str:
     v = version.strip()
     if v.startswith("v") or v.startswith("V"):
         v = v[1:]
-    match = re.match(r"(\d+(?:\.\d+)*[a-zA-Z]?)", v)
+    match = _SANITIZE_VERSION_RE.match(v)
     return match.group(1) if match else v

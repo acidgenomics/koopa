@@ -349,3 +349,30 @@ def test_run_install_plan_failure_aborts() -> None:
         pytest.raises(RuntimeError, match=r"app.*failed"),
     ):
         _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)
+
+
+def test_check_platform_support_appends_unsupported_note() -> None:
+    """The gate error includes the app's unsupported_note when set."""
+    import pytest
+    from koopa.cli_main import _check_platform_support, _os_id
+
+    app_meta = {
+        "supported": {_os_id(): False},
+        "unsupported_note": "Use a Linux x86_64 host instead.",
+    }
+
+    with pytest.raises(RuntimeError, match=r"Use a Linux x86_64 host instead\."):
+        _check_platform_support("illumina-ica-cli", app_meta)
+
+
+def test_check_platform_support_no_note() -> None:
+    """The gate error is bare when unsupported_note is absent."""
+    import pytest
+    from koopa.cli_main import _check_platform_support, _os_id
+
+    app_meta = {"supported": {_os_id(): False}}
+
+    with pytest.raises(RuntimeError) as exc_info:
+        _check_platform_support("some-app", app_meta)
+
+    assert "\n" not in str(exc_info.value)
