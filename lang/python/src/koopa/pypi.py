@@ -171,6 +171,16 @@ def _generate_index(
             fh.write("</body>\n</html>\n")
 
 
+# Category groupings, mirroring r.acidgenomics.com's landing page. Packages not
+# listed here (e.g. a brand-new package not yet categorized) fall into "Other" at
+# the end, so nothing silently drops off the landing page.
+_LANDING_CATEGORIES: list[tuple[str, list[str]]] = [
+    ("Import/export", ["pipette", "acidgenomes", "acidplyr", "goalie", "syntactic"]),
+    ("Annotation databases", ["cellosaurus"]),
+    ("Infrastructure", ["acidbase"]),
+]
+
+
 def _generate_landing(
     packages_summaries: dict[str, str],
     output_path: Path,
@@ -178,18 +188,27 @@ def _generate_landing(
     """Write the root landing page to output_path.
 
     Mirrors the r.acidgenomics.com structure and stylesheet: breadcrumb to
-    Acid Genomics, Google site search, alphabetical package list with
-    descriptions linking to per-package docs, and a footer with the install
-    snippet and license. css/front.css and images/logo.svg are uploaded
-    separately (not part of the generated tree); see the module docstring
-    for the S3 layout.
+    Acid Genomics, Google site search, a categorized package list (see
+    _LANDING_CATEGORIES) with descriptions linking to per-package docs, and a
+    footer with the install snippet and license. css/front.css and
+    images/logo.svg are uploaded separately (not part of the generated tree);
+    see the module docstring for the S3 layout.
     """
     from koopa.landing import render_landing
 
-    entries = [(name, f"{name}/", packages_summaries[name]) for name in sorted(packages_summaries)]
+    remaining = dict(packages_summaries)
+    sections: list[tuple[str, list[tuple[str, str, str]]]] = []
+    for heading, names in _LANDING_CATEGORIES:
+        entries = [(name, f"{name}/", remaining.pop(name)) for name in names if name in remaining]
+        if entries:
+            sections.append((heading, entries))
+    if remaining:
+        entries = [(name, f"{name}/", remaining[name]) for name in sorted(remaining)]
+        sections.append(("Other", entries))
+
     content = render_landing(
         "Python packages",
-        [("", entries)],
+        sections,
         license_name="Apache 2.0",
         license_url="https://www.apache.org/licenses/LICENSE-2.0",
         copyright_years="2026-pres.",
@@ -437,9 +456,23 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     tmp_dir = tempfile.mkdtemp()
     try:
         out_dir = os.path.join(tmp_dir, "html")
+        doctree_dir = os.path.join(tmp_dir, "doctrees")
         alert(f"Building Sphinx docs for '{name}' in '{pkg_path}'.")
         subprocess.run(
-            [uv, "run", "--extra", "docs", "sphinx-build", "-W", "-b", "html", "docs/", out_dir],
+            [
+                uv,
+                "run",
+                "--extra",
+                "docs",
+                "sphinx-build",
+                "-W",
+                "-b",
+                "html",
+                "-d",
+                doctree_dir,
+                "docs/",
+                out_dir,
+            ],
             cwd=str(pkg_path),
             check=True,
         )
@@ -455,3 +488,45 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     alert(f"Docs published: https://python.acidgenomics.com/{name}/")
+
+
+def publish_assets(*, invalidate: bool = True) -> None:
+    """Upload shared static assets to python.acidgenomics.com.
+
+    Uploads koopa's tracked copy of assets/sphinx.css to s3://<python-bucket>/css/sphinx.css.
+    Every package's docs/conf.py references this file by absolute URL, so a single
+    upload updates the theme for all published docs sites at once.
+
+    Parameters
+    ----------
+    invalidate
+        Whether to invalidate the CloudFront cache after uploading.
+    """
+    from koopa.alert import alert
+
+    css_path = Path(__file__).parent / "assets" / "sphinx.css"
+    if not css_path.is_file():
+        msg = f"Asset not found: '{css_path}'."
+        raise FileNotFoundError(msg)
+
+    dest = f"{_s3_uri()}/css/sphinx.css"
+    alert(f"Uploading '{css_path}' to '{dest}'.")
+    subprocess.run(
+        [
+            _aws(),
+            "s3",
+            f"--profile={_PROFILE}",
+            "cp",
+            "--content-type",
+            "text/css",
+            str(css_path),
+            dest,
+        ],
+        check=True,
+    )
+
+    if invalidate:
+        alert("Invalidating CloudFront cache.")
+        _invalidate_cloudfront()
+
+    alert(f"Assets published: {dest}")

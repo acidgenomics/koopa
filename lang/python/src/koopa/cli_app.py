@@ -141,6 +141,7 @@ _APP_TREE: dict[str, Any] = {
     },
     "python": {
         "publish": "python-publish",
+        "publish-assets": "python-publish-assets",
         "publish-docs": "python-publish-docs",
         "reindex": "python-reindex",
     },
@@ -375,6 +376,12 @@ def _handle_python_reindex(_: list[str]) -> None:
     from koopa.pypi import reindex
 
     reindex()
+
+
+def _handle_python_publish_assets(_: list[str]) -> None:
+    from koopa.pypi import publish_assets
+
+    publish_assets()
 
 
 # -- r handlers --------------------------------------------------------------
@@ -2601,6 +2608,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "gpg-restart": _handle_gpg_restart,
     # python
     "python-publish": _handle_python_publish,
+    "python-publish-assets": _handle_python_publish_assets,
     "python-publish-docs": _handle_python_publish_docs,
     "python-reindex": _handle_python_reindex,
     # r

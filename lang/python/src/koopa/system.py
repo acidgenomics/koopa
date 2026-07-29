@@ -372,6 +372,11 @@ def get_os_id() -> str:
     return _os_id()
 
 
+def get_os_id_like() -> str:
+    """Get the OS ID_LIKE string (e.g. 'debian' for Ubuntu)."""
+    return _os_id_like()
+
+
 @lru_cache(maxsize=1)
 def _os_id() -> str:
     """Get OS ID from /etc/os-release."""

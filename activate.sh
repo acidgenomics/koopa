@@ -24,12 +24,19 @@ Activate koopa.
 
 supported environment variables:
     KOOPA_FORCE=1
-        Force activation inside of non-interactive shells.
+        Force activation as an interactive shell, even when non-interactive.
         Not generally recommended, but used by koopa installer.
     KOOPA_MINIMAL=1
         Minimal mode.
         Simply load koopa programs into PATH.
         Skips additional program and shell configuration.
+    KOOPA_AUTO_ACTIVATE=1
+        Opt in to activation inside of non-interactive shells
+        (e.g. 'ssh host cmd', CI steps, agentic harnesses). Off by default:
+        non-interactive shells do not activate unless this is set, since
+        activation can source '.envrc' files, secrets, and other side
+        effects that are unsafe to run unattended. Not recommended for
+        general use.
     KOOPA_SKIP=1
         Skip activation in current shell session.
         Recommended for users who want to selectively disable activation
@@ -136,9 +143,19 @@ __koopa_export_koopa_subshell() {
 __koopa_header() {
     # """
     # Shared shell header file location.
-    # @note Updated 2023-05-18.
+    # @note Updated 2026-07-29.
+    #
+    # Bash 1-3 (e.g. macOS system '/bin/bash') isn't supported by the
+    # Bash-specific header, which version-gates out and returns having loaded
+    # nothing. Route these to the POSIX header instead, which handles Ash,
+    # Busybox, Dash, Ksh93, and old Bash the same way.
     # """
     __kvar_shell="$(__koopa_shell_name)"
+    case "${BASH_VERSION:-}" in
+        '1.'* | '2.'* | '3.'*)
+            __kvar_shell='sh'
+            ;;
+    esac
     __kvar_file="${KOOPA_PREFIX:?}/lang/${__kvar_shell}/include/header.sh"
     [ -f "$__kvar_file" ] || return 1
     __koopa_print "$__kvar_file"
@@ -209,12 +226,32 @@ __koopa_posix_source() {
 __koopa_preflight() {
     # """
     # Run pre-flight checks.
-    # @note Updated 2021-10-25.
+    # @note Updated 2026-07-29.
+    #
+    # Non-interactive shells do not activate by default: activation can
+    # source '.envrc' files (arbitrary code, can hang on a slow command),
+    # secrets, and other side effects that are unsafe to run unattended in
+    # e.g. 'ssh host cmd', 'scp', 'rsync', or CI steps. Set
+    # 'KOOPA_AUTO_ACTIVATE=1' to opt in.
+    #
+    # When opted in, and 'KOOPA_PREFIX' is already exported with its 'bin'
+    # directory already on 'PATH', activation already happened in a parent
+    # shell and non-interactive re-activation is skipped, since PATH/env
+    # exports are inherited by child shells. Interactive shells always
+    # re-run activation, since prompt/alias/history state doesn't carry
+    # across shells the same way.
     # """
     [ "${KOOPA_SKIP:-0}" -eq 1 ] && return 1
     [ "${KOOPA_FORCE:-0}" -eq 1 ] && return 0
     __koopa_check_zsh || return 1
-    __koopa_is_interactive || return 1
+    __koopa_is_interactive && return 0
+    [ "${KOOPA_AUTO_ACTIVATE:-0}" -eq 1 ] || return 1
+    if [ -n "${KOOPA_PREFIX:-}" ]
+    then
+        case ":${PATH:-}:" in
+            *":${KOOPA_PREFIX}/bin:"*) return 1 ;;
+        esac
+    fi
     return 0
 }
 

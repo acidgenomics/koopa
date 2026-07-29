@@ -56,14 +56,32 @@ def koopa_s3_bucket(role: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+class _AwsError(subprocess.CalledProcessError):
+    """CalledProcessError that includes AWS CLI stderr in its message.
+
+    Subclasses rather than replaces CalledProcessError so existing handlers
+    (e.g. the s3 rm retry in cli_develop) keep catching it and reading .stderr.
+    """
+
+    def __str__(self) -> str:
+        base = f"aws command failed (exit {self.returncode}): {' '.join(self.cmd[1:])}"
+        stderr = (self.stderr or "").strip()
+        if stderr:
+            return f"{base}\n{stderr}"
+        return base
+
+
 def _aws(*args: str, capture: bool = True, timeout: int = 300) -> subprocess.CompletedProcess:
     """Run an AWS CLI command."""
     cmd = ["aws", *args]
     env = os.environ.copy()
     env["AWS_PAGER"] = ""
-    return subprocess.run(
-        cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=env
-    )
+    try:
+        return subprocess.run(
+            cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=env
+        )
+    except subprocess.CalledProcessError as exc:
+        raise _AwsError(exc.returncode, exc.cmd, exc.output, exc.stderr) from exc
 
 
 def aws_s3_sync(

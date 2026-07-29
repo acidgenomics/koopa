@@ -333,8 +333,10 @@ _koopa_activate_color_mode_sync() {
             if [[ ! -f "$applied_file" ]] || \
                 [[ "$(<"$applied_file")" != "$new_mode" ]]
             then
+                local log_file="${XDG_CACHE_HOME:?}/koopa/logs/color-mode.log"
+                mkdir -p "${log_file%/*}"
                 "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                    >>/dev/null 2>&1 &!
+                    >>"$log_file" 2>&1 &!
             fi
         fi
         return 0
@@ -360,21 +362,26 @@ _koopa_activate_color_mode() {
     if [[ -n "${KOOPA_COLOR_MODE:-}" ]]
     then
         export KOOPA_COLOR_MODE
-        local cache_file="${HOME:?}/.cache/koopa/color-mode"
-        if [[ ! -f "$cache_file" ]] || \
-            [[ "$(<"$cache_file")" != "$KOOPA_COLOR_MODE" ]]
+        if _koopa_is_interactive
         then
-            mkdir -p "${cache_file%/*}"
-            printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
-        fi
-        local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
-        if [[ ! -f "$applied_file" ]] || \
-            [[ "$(<"$applied_file")" != "$KOOPA_COLOR_MODE" ]]
-        then
-            if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+            local cache_file="${HOME:?}/.cache/koopa/color-mode"
+            if [[ ! -f "$cache_file" ]] || \
+                [[ "$(<"$cache_file")" != "$KOOPA_COLOR_MODE" ]]
             then
-                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                    >>/dev/null 2>&1 &!
+                mkdir -p "${cache_file%/*}"
+                printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
+            fi
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$KOOPA_COLOR_MODE" ]]
+            then
+                if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+                then
+                    local log_file="${XDG_CACHE_HOME:?}/koopa/logs/color-mode.log"
+                    mkdir -p "${log_file%/*}"
+                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                        >>"$log_file" 2>&1 &!
+                fi
             fi
         fi
     else
@@ -506,7 +513,44 @@ _koopa_activate_direnv() {
                 "$direnv" hook "$shell" > "$cache_file"
             fi
             source "$cache_file"
-            eval "$("$direnv" export "$shell")"
+            if [[ "$shell" == 'bash' ]]
+            then
+                _direnv_hook() {
+                    local previous_exit_status=$?
+                    trap -- '' SIGINT
+                    local hook_timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
+                    local hook_gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
+                    if [[ "$hook_timeout" -gt 0 ]] && [[ -x "$hook_gtimeout" ]]
+                    then
+                        eval "$("$hook_gtimeout" "$hook_timeout" "${KOOPA_PREFIX:?}/bin/direnv" export bash)"
+                    else
+                        eval "$("${KOOPA_PREFIX:?}/bin/direnv" export bash)"
+                    fi
+                    trap - SIGINT
+                    return "$previous_exit_status"
+                }
+            else
+                _direnv_hook() {
+                    trap -- '' SIGINT
+                    local hook_timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
+                    local hook_gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
+                    if [[ "$hook_timeout" -gt 0 ]] && [[ -x "$hook_gtimeout" ]]
+                    then
+                        eval "$("$hook_gtimeout" "$hook_timeout" "${KOOPA_PREFIX:?}/bin/direnv" export zsh)"
+                    else
+                        eval "$("${KOOPA_PREFIX:?}/bin/direnv" export zsh)"
+                    fi
+                    trap - SIGINT
+                }
+            fi
+            local timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
+            local gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
+            if [[ "$timeout" -gt 0 ]] && [[ -x "$gtimeout" ]]
+            then
+                eval "$("$gtimeout" "$timeout" "$direnv" export "$shell")"
+            else
+                eval "$("$direnv" export "$shell")"
+            fi
             ;;
     esac
     [[ "$nounset" -eq 1 ]] && set -o nounset
@@ -802,6 +846,7 @@ _koopa_activate_tealdeer() {
 }
 
 _koopa_activate_today_bucket() {
+    _koopa_is_interactive || return 0
     local bucket_dir
     bucket_dir="${KOOPA_BUCKET:-}"
     local today_link
@@ -1297,6 +1342,7 @@ _koopa_arch() {
 }
 
 _koopa_check_multiple_users() {
+    _koopa_is_interactive || return 0
     _koopa_is_aws_ec2 || return 0
     local n
     n="$(_koopa_logged_in_user_count)"

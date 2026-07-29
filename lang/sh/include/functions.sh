@@ -296,31 +296,37 @@ _koopa_activate_color_mode() {
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
     then
         export KOOPA_COLOR_MODE
-        __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
-        __kvar_cached=''
-        [ -f "$__kvar_cache_file" ] && \
-            read -r __kvar_cached < "$__kvar_cache_file" 2>/dev/null || true
-        if [ ! -f "$__kvar_cache_file" ] || \
-            [ "$__kvar_cached" != "$KOOPA_COLOR_MODE" ]
+        if _koopa_is_interactive
         then
-            mkdir -p "${__kvar_cache_file%/*}"
-            printf '%s\n' "$KOOPA_COLOR_MODE" > "$__kvar_cache_file"
-        fi
-        unset -v __kvar_cache_file __kvar_cached
-        __kvar_applied="${HOME:?}/.cache/koopa/color-mode-applied"
-        __kvar_applied_cached=''
-        [ -f "$__kvar_applied" ] && \
-            read -r __kvar_applied_cached < "$__kvar_applied" 2>/dev/null || true
-        if [ ! -f "$__kvar_applied" ] || \
-            [ "$__kvar_applied_cached" != "$KOOPA_COLOR_MODE" ]
-        then
-            if [ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]
+            __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
+            __kvar_cached=''
+            [ -f "$__kvar_cache_file" ] && \
+                read -r __kvar_cached < "$__kvar_cache_file" 2>/dev/null || true
+            if [ ! -f "$__kvar_cache_file" ] || \
+                [ "$__kvar_cached" != "$KOOPA_COLOR_MODE" ]
             then
-                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                    >>/dev/null 2>&1 &
+                mkdir -p "${__kvar_cache_file%/*}"
+                printf '%s\n' "$KOOPA_COLOR_MODE" > "$__kvar_cache_file"
             fi
+            unset -v __kvar_cache_file __kvar_cached
+            __kvar_applied="${HOME:?}/.cache/koopa/color-mode-applied"
+            __kvar_applied_cached=''
+            [ -f "$__kvar_applied" ] && \
+                read -r __kvar_applied_cached < "$__kvar_applied" 2>/dev/null || true
+            if [ ! -f "$__kvar_applied" ] || \
+                [ "$__kvar_applied_cached" != "$KOOPA_COLOR_MODE" ]
+            then
+                if [ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]
+                then
+                    __kvar_log_file="${XDG_CACHE_HOME:?}/koopa/logs/color-mode.log"
+                    mkdir -p "${__kvar_log_file%/*}"
+                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                        >>"$__kvar_log_file" 2>&1 &
+                    unset -v __kvar_log_file
+                fi
+            fi
+            unset -v __kvar_applied __kvar_applied_cached
         fi
-        unset -v __kvar_applied __kvar_applied_cached
     else
         unset -v KOOPA_COLOR_MODE
     fi
@@ -448,18 +454,62 @@ _koopa_activate_direnv() {
         DIRENV_DIR \
         DIRENV_FILE \
         DIRENV_WATCHES
+    __kvar_timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
+    __kvar_gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
+    case "$__kvar_shell" in
+        'bash')
+            eval "$("$__kvar_direnv" hook bash)"
+            _direnv_hook() {
+                __kvar_hook_status=$?
+                trap -- '' SIGINT
+                __kvar_hook_timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
+                __kvar_hook_gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
+                if [ "$__kvar_hook_timeout" -gt 0 ] && [ -x "$__kvar_hook_gtimeout" ]
+                then
+                    eval "$("$__kvar_hook_gtimeout" "$__kvar_hook_timeout" "${KOOPA_PREFIX:?}/bin/direnv" export bash)"
+                else
+                    eval "$("${KOOPA_PREFIX:?}/bin/direnv" export bash)"
+                fi
+                trap - SIGINT
+                unset -v __kvar_hook_gtimeout __kvar_hook_timeout
+                return "$__kvar_hook_status"
+            }
+            ;;
+        'zsh')
+            eval "$("$__kvar_direnv" hook zsh)"
+            _direnv_hook() {
+                trap -- '' SIGINT
+                __kvar_hook_timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
+                __kvar_hook_gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
+                if [ "$__kvar_hook_timeout" -gt 0 ] && [ -x "$__kvar_hook_gtimeout" ]
+                then
+                    eval "$("$__kvar_hook_gtimeout" "$__kvar_hook_timeout" "${KOOPA_PREFIX:?}/bin/direnv" export zsh)"
+                else
+                    eval "$("${KOOPA_PREFIX:?}/bin/direnv" export zsh)"
+                fi
+                trap - SIGINT
+                unset -v __kvar_hook_gtimeout __kvar_hook_timeout
+            }
+            ;;
+    esac
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
-            eval "$("$__kvar_direnv" hook "$__kvar_shell")"
-            eval "$("$__kvar_direnv" export "$__kvar_shell")"
+            if [ "$__kvar_timeout" -gt 0 ] && [ -x "$__kvar_gtimeout" ]
+            then
+                eval "$("$__kvar_gtimeout" "$__kvar_timeout" "$__kvar_direnv" export "$__kvar_shell")"
+            else
+                eval "$("$__kvar_direnv" export "$__kvar_shell")"
+            fi
             ;;
     esac
     [ "$__kvar_nounset" -eq 1 ] && set -u
     unset -v \
         __kvar_direnv \
+        __kvar_gtimeout \
         __kvar_nounset \
-        __kvar_shell
+        __kvar_shell \
+        __kvar_timeout
     return 0
 }
 
@@ -727,6 +777,7 @@ _koopa_activate_tealdeer() {
 }
 
 _koopa_activate_today_bucket() {
+    _koopa_is_interactive || return 0
     __kvar_bucket_dir="${KOOPA_BUCKET:-}"
     if [ -n "$__kvar_bucket_dir" ]
     then
@@ -1109,6 +1160,7 @@ _koopa_arch() {
 }
 
 _koopa_check_multiple_users() {
+    _koopa_is_interactive || return 0
     _koopa_is_aws_ec2 || return 0
     __kvar_n="$(_koopa_logged_in_user_count)"
     if [ "$__kvar_n" -gt 1 ]

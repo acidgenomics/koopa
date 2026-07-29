@@ -2,11 +2,14 @@
 name: koopa-python-release
 description: >-
   Acid Genomics Python package release — python.acidgenomics.com PEP 503
-  S3+CloudFront index at /simple/, same-domain docs at /<name>/, generated
-  landing page at /, koopa app python publish/publish-docs/reindex, quality
-  gate, CHANGELOG format, smoke test, uv run venv-shebang gotcha, Sphinx
-  docs-build RST/numpydoc pitfalls, acidgenomics CSS theming for
-  pydata-sphinx-theme. See koopa-r-release for the R analog.
+  S3+CloudFront index at /simple/, same-domain docs at /<name>/, categorized
+  landing page at /, koopa app python publish/publish-docs/publish-assets/
+  reindex, quality gate (ruff/pyright/ty/pytest/numpydoc lint), pytest
+  --doctest-modules wiring, pkgdown-shaped docs/ structure (index.md +
+  reference/index.rst + changelog.md), CHANGELOG format, smoke test, uv run
+  venv-shebang gotcha, Sphinx docs-build RST/numpydoc pitfalls, tracked
+  acidgenomics CSS theme for pydata-sphinx-theme (dark mode +
+  specificity fixes). See koopa-r-release for the R analog.
 ---
 
 # Acid Genomics Python Package Release
@@ -65,6 +68,7 @@ Applies to any package in `~/git/personal/py-<name>` that uses `bumpver` +
    pyright
    ty check
    pytest
+   numpydoc lint src/<name>/
    ```
 3. All gates must be green before proceeding.
 
@@ -101,6 +105,58 @@ tagging and pushing.
   actual max arity in the reported violations
   (`ruff check src/ 2>&1 | grep PLR0917 | grep -oE '\([0-9]+ >' | sort -V`)
   and set `max-positional-args` to that ceiling, not an arbitrary round number.
+
+### `numpydoc lint` + doctest gate
+
+Every package's `[tool.numpydoc_validation]` in `pyproject.toml` is enforced by
+two things, both required for a real release (not just for building docs):
+
+- `pytest.ini_options` sets `testpaths = ["src", "tests"]` and
+  `addopts = "... --doctest-modules"`, so a plain `pytest` run executes every
+  `Examples` doctest in `src/` alongside the hand-written test suite. Pytest's
+  own doctest runner enables `ELLIPSIS` by default — a bare `doctest` module
+  invocation (`python -m doctest file.py`) does not, so a doctest that passes
+  under `pytest` can still fail under `python -m doctest` and vice versa;
+  treat `pytest` as authoritative since that's what the gate runs.
+- `numpydoc lint src/<name>/` checks docstring *structure* (every `Parameters`
+  entry has a description, every function has a `Returns`/`Yields` section)
+  — this is a separate tool from `pytest --doctest-modules`, which only checks
+  that `Examples` *content* is correct. Run both; each catches things the
+  other can't.
+- `[tool.numpydoc_validation]` needs `exclude = ['\._\w']` to skip private
+  (underscore-prefixed) functions/methods. `numpydoc`'s `node_name` is dotted
+  module-qualified (e.g. `case_conversion._camel_case`), so `exclude = ['^_']`
+  never matches — the underscore is never at the start of `node_name` once
+  inside a module. A "private" module whose own functions have no individual
+  underscore prefix (e.g. `_file_utils.py` holding `file_ext`, `init_dir`,
+  etc.) isn't caught by this regex either; document those functions for real
+  rather than widening the exclude, since a broader pattern risks masking
+  genuine gaps.
+- **`numpydoc lint`'s parser crashes (raises `ValueError`, not a lint
+  finding) on a bare URL in a `See Also` section** — this aborts the whole
+  run, not just that one docstring. `See Also` expects `name : description`
+  cross-reference entries; move URLs to `Notes` instead (see the RST section
+  below — this is the same underlying numpydoc parser, just triggered by
+  `lint` instead of `sphinx-build`).
+- A custom module-docstring section header other than the standard numpydoc
+  set (`Parameters`, `Returns`, `Notes`, `Examples`, ...) — e.g. a hand-rolled
+  `Public API` heading — fails with `GL06 Found unknown section`. Fold it
+  into `Notes` instead of inventing a new heading.
+- Mark network-dependent or slow doctests (live HTTP calls, downloading a
+  multi-MB reference database) with `# doctest: +SKIP` on each line rather
+  than fixing them to run fast — they're illustrative, not unit tests. A
+  doctest that silently never ran until this gate was wired in is exactly
+  the kind of thing worth checking for: re-verify the *literal expected
+  output* of every doctest you touch by actually running it, since a
+  docstring can look plausible and still assert the wrong value (case,
+  precision, or exact string) with nothing ever having caught it before.
+- **A function that prints progress messages breaks its own doctest** unless
+  the example passes whatever silences it (`quiet=True` or equivalent) — the
+  printed line becomes part of doctest's expected stdout and a plain
+  `>>> result = my_func(...)` example fails because the expected block only
+  has the return value, not the interleaved print. Either pass the quiet
+  flag in the example or assign to `_`/`result` and don't show a return
+  value at all if the function has no meaningful one.
 
 ### Running `pytest`/tools inside the package's own venv
 
@@ -238,29 +294,65 @@ koopa app python reindex
 curl -sI https://python.acidgenomics.com/simple/syntactic/ | head -5
 ```
 
-### `docs/index.rst` install guide — must match the README, not `pip install <name>`
+### `docs/` structure — pkgdown-shaped, not a flat API dump
 
-Sphinx doc scaffolds (and stale hand-written ones) commonly default to
+Every package's `docs/` follows the same four-piece layout (mirroring
+`r.acidgenomics.com`'s pkgdown sites, not a generic Sphinx API-reference
+scaffold — these packages are libraries whose exported functions get called
+directly, not consumed as an API surface):
+
+```
+docs/
+├── conf.py              extensions += myst_parser; numpydoc_show_class_members = False
+├── index.md             "Get started": narrative ported from README.md, with
+│                        real worked examples as doctests (or +SKIP for
+│                        network/slow ones)
+├── reference/
+│   └── index.rst        categorized `.. autosummary::` blocks, ~ short names,
+│                        ONE ENTRY PER EXPORT — never a single module-level
+│                        entry (that collapses to one flat kitchen-sink page)
+└── changelog.md         ```{include} ../CHANGELOG.md``` with :start-line: 1
+                        to skip the redundant "# Changelog" H1
+```
+
+Categories in `reference/index.rst` come from the R analog's `_pkgdown.yml`
+`reference:` section (`~/git/personal/r-<name>/_pkgdown.yml`) — reuse that
+curation rather than inventing new groupings. Verify the categorization is
+exhaustive by diffing against `sorted(<pkg>.__all__)` in Python, not by eye;
+with 70+ exports it's easy to silently drop one.
+
+`docs/api.rst` and `docs/generated/<name>.rst` (the old single-module-entry
+scaffold) should not exist in any package — delete them if found.
+
+**macOS case-insensitive filesystem trap:** if a package exports both a
+constant and a lowercase alias for the same object (e.g. `NA_STRINGS` and
+`na_strings`), `autosummary_generate` writes `<pkg>.NA_STRINGS.rst` and
+`<pkg>.na_strings.rst` — the same path on a case-insensitive filesystem. One
+silently overwrites the other and the build emits `WARNING: autosummary:
+stub file not found`. Reference only one of the two names in
+`reference/index.rst`; mention the alias in prose in `index.md` instead.
+Check every package's `__all__` for other lowercased duplicates before
+assuming this doesn't apply.
+
+**Install guide must match the README, not `pip install <name>`.** Sphinx
+doc scaffolds (and stale hand-written ones) commonly default to
 `pip install <name>` in the Installation section. That's wrong here — the
 package doesn't exist on public PyPI, only on the private index — so it
 sends readers straight into a `pip` failure or, worse, a same-named
 malicious package on PyPI. Always match the README's install block exactly:
 
-```rst
-Installation
-------------
+> ## Installation
+>
+> This package is hosted at [python.acidgenomics.com](https://python.acidgenomics.com/).
+> We recommend using [uv](https://docs.astral.sh/uv/) to install.
+>
+> ```sh
+> uv pip install \
+>     --index-url 'https://python.acidgenomics.com/simple/' \
+>     <name>
+> ```
 
-This package is hosted at `python.acidgenomics.com <https://python.acidgenomics.com/>`_.
-We recommend using `uv <https://docs.astral.sh/uv/>`_ to install.
-
-.. code-block:: bash
-
-   uv pip install \
-       --index-url 'https://python.acidgenomics.com/simple/' \
-       <name>
-```
-
-Check `README.md` and `docs/index.rst` together whenever the index URL
+Check `README.md` and `docs/index.md` together whenever the index URL
 changes — they drift independently and neither build/test/lint gate catches
 a wrong-but-valid install snippet.
 
@@ -295,6 +387,91 @@ block a real release, not just lint:
   numpydoc_show_class_members = False
   ```
 
+## Privacy leaks in published docs: local paths reaching S3
+
+Sphinx's autodoc renders literal parameter *default values* into the
+generated signature — including objects that stringify to an absolute
+filesystem path. Any function with a default that resolves the local
+environment at *import time* bakes whoever's machine built the docs
+directly into the public page:
+
+```python
+# WRONG — evaluated once, at import time, in whichever environment
+# happens to run `sphinx-build` (often the docs author's own checkout).
+def download_thing(*, output_dir: Path = Path.cwd()) -> None: ...
+# Renders publicly as:
+#   output_dir: Path = PosixPath('/Users/<realname>/git/personal/py-foo')
+```
+
+This is the exact same root cause as Python's classic mutable-default-argument
+trap — an expression in a `def` signature runs once, at *def* time, not once
+per call — just surfacing as a privacy leak instead of a data-sharing bug.
+**Fix:** default to `None` in the signature, resolve the real value inside
+the function body:
+
+```python
+def download_thing(*, output_dir: Path | None = None) -> None:
+    if output_dir is None:
+        output_dir = Path.cwd()  # evaluated per call, not baked into the signature
+    ...
+```
+
+Applies to any of `Path.cwd()`, `Path.home()`, `os.getcwd()`, or similar
+environment-dependent calls used directly as a parameter default anywhere in
+`src/`. Audit with:
+
+```sh
+grep -rn "Path\.cwd()\|os\.getcwd()\|Path\.home()" src/
+```
+
+A hit inside a function *body* is fine (evaluated per call); a hit in a
+`def ...(param: Path = <expr>)` *signature* is the bug. `numpydoc lint` and
+`sphinx-build -W` do not catch this — it's a semantically valid signature
+that just happens to expose whoever built it. **Audit rendered HTML for
+usernames/home-dir paths after any `publish-docs`, not just at
+`sphinx-build` time** — grep the actual synced output, or the live pages,
+for the local account name:
+
+```sh
+grep -rl "$(whoami)" /path/to/built/html/
+```
+
+**A second, structural leak path: Sphinx's own build cache.** By default
+`sphinx-build` writes `.doctrees/` (pickled `environment.pickle` +
+per-page `.doctree` files) inside the output directory, and those pickles
+embed full absolute local paths (source file locations, `.venv` site-packages
+paths) regardless of anything in `conf.py` or the docstrings — this is
+Sphinx's own incremental-build bookkeeping, unrelated to doc content.
+`publish_docs()` in `pypi.py` used to sync the whole output directory verbatim,
+so `.doctrees/` (and the paths inside it) went to S3 on every publish, for
+every package, invisibly — `grep -rl` against the rendered *HTML* won't find
+this, since it's binary pickle data, not markup. Fixed by isolating the
+doctree cache outside the synced tree entirely:
+
+```python
+subprocess.run([..., "sphinx-build", "-W", "-b", "html", "-d", doctree_dir, "docs/", out_dir], ...)
+```
+
+`-d PATH` (`--doctree-dir`) tells Sphinx to write its cache to a directory
+that's never part of what gets synced — instead of trying to exclude
+`.doctrees/*` from the sync afterward, which is one config drift away from
+silently regressing back. If a leak like this is ever found on an
+already-published package, deleting the HTML doesn't fix it retroactively —
+the actual polluted prefix on S3 needs a direct `aws s3 rm --recursive`
+before republishing:
+
+```sh
+aws s3 rm "s3://python-<acct>-us-east-1-an/<name>/.doctrees/" --recursive --profile acidgenomics
+```
+
+**Full-bucket audit** (catches both leak classes at once, across every
+package, independent of what any single `sphinx-build` run looked like):
+
+```sh
+aws s3 sync s3://python-<acct>-us-east-1-an /tmp/s3-audit --profile acidgenomics --quiet
+grep -rla "$(whoami)" /tmp/s3-audit/   # must be empty
+```
+
 ## Same-domain acidgenomics CSS theme for Sphinx docs
 
 `pydata_sphinx_theme`'s default look doesn't match the site's minimalist,
@@ -311,10 +488,17 @@ convention (`.k` keyword, `.s` string, `.c` comment, ...) that Rouge/pandoc
 also use — see `steinbaugh.com/css/rouge.css` + `rouge-light.css` for the
 canonical mapping to replicate.
 
-This stylesheet lives once at `s3://python-<acct>-us-east-1-an/css/sphinx.css`
-(uploaded manually via `aws s3 cp`, outside the `simple/` generated tree —
-same pattern as the landing page's `css/front.css` + `images/logo.svg`), and
-every package's `conf.py` references it:
+This stylesheet is tracked at `lang/python/src/koopa/assets/sphinx.css` in the
+koopa repo (not hand-uploaded blind — it's reviewable in git like any other
+source file) and published to
+`s3://python-<acct>-us-east-1-an/css/sphinx.css` via:
+
+```sh
+koopa app python publish-assets
+```
+
+Implementation: `publish_assets()` in `pypi.py`. Every package's `conf.py`
+references the S3 URL:
 
 ```python
 html_css_files = ["https://python.acidgenomics.com/css/sphinx.css"]
@@ -322,15 +506,37 @@ html_css_files = ["https://python.acidgenomics.com/css/sphinx.css"]
 
 One shared file, one absolute URL per package — no local `docs/_static/`
 duplication, and a future palette change propagates to all packages' docs on
-their next `publish-docs` run without touching any package repo.
+their next `publish-docs` run without touching any package repo. Re-run
+`publish-assets` after editing the tracked CSS file; `publish-docs` does not
+re-upload it.
+
+**Two failure modes to check for whenever editing this file**, since a
+passing `sphinx-build` says nothing about which CSS rule actually wins in
+the browser — verify visually (toggle OS dark/light mode) after publishing:
+
+- **Dark mode requires its own `--pst-color-*` block.** `colors.css` flips
+  its palette via `@media (prefers-color-scheme: dark)` on `:root`, so a
+  `html[data-theme="dark"] { --pst-color-primary: var(--purple-color); ... }`
+  block (mirroring the light one) is required — without it, dark mode falls
+  back to pydata's own unmapped defaults.
+- **Syntax-highlight selectors must match Sphinx's own specificity, not just
+  exist.** Sphinx's generated `_static/pygments.css` emits
+  `html[data-theme="light"] .highlight .k { ... }` (specificity 0,3,1). A
+  bare `.highlight .k { ... }` (0,2,0) in the shared stylesheet loses
+  regardless of load order — the whole highlighting block silently becomes
+  dead code. Scope every `.highlight .<tok>` rule under
+  `html[data-theme="light"]`/`html[data-theme="dark"]` to match.
 
 ## Landing page
 
 `reindex` auto-generates `index.html` at the bucket root from each wheel's
 `Summary` field (read via `zipfile` while the wheel is local for hashing).
-Flat alphabetical list with links to per-package docs (`/<name>/`) and an
-install note pointing at `/simple/`. No curated categories — fully automatic
-on every `publish` or `reindex`.
+Categorized (matching `r.acidgenomics.com`'s landing page groupings) via
+`_LANDING_CATEGORIES` in `pypi.py`; any package not listed there falls into
+an "Other" section so nothing silently disappears from the page. Add new
+packages to `_LANDING_CATEGORIES` when they're published, or they'll land in
+"Other" until categorized. Regenerated automatically on every `publish` or
+`reindex` — no manual step beyond keeping `_LANDING_CATEGORIES` current.
 
 ## CHANGELOG format (py-* packages)
 

@@ -8,7 +8,7 @@ from os.path import dirname, isfile, join
 from re import compile
 from time import sleep
 
-from koopa.prefix import koopa_prefix
+from koopa.prefix import config_prefix, koopa_prefix
 
 
 def extract_conda_bin_names(json_file: str) -> list:
@@ -76,8 +76,10 @@ def export_app_json(data: dict) -> None:
 
 def import_app_json() -> dict:
     """Import 'app.json' data file."""
-    file = join(koopa_prefix(), "etc/koopa/app.json")
-    assert isfile(file)
+    file = join(config_prefix(), "app.json")
+    if not isfile(file):
+        msg = f"Missing app.json data file: {file!r}."
+        raise FileNotFoundError(msg)
     data = import_json(file)
     return data
 

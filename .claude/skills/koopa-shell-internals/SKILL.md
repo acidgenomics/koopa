@@ -3,7 +3,8 @@ name: koopa-shell-internals
 description: >
   Internals of koopa shell activation and update recovery. Use when optimizing
   shell startup, editing activation-path functions, caching plugin init output,
-  debugging lazy-load wrappers, or fixing update_koopa() merge/rebase recovery.
+  debugging lazy-load wrappers, fixing update_koopa() merge/rebase recovery, or
+  reasoning about non-interactive activation (SSH, CI, agentic harnesses).
 ---
 
 # koopa Shell Internals
@@ -105,6 +106,151 @@ Same rule applies to any new function referenced in `header.sh` regardless of
 source directory (`functions/core/`, `functions/activate/`, etc.). The bundle is
 the runtime; the source tree is the authoring surface.
 
+## Non-Interactive Activation (opt-in; reverted default-on 2026-07-29)
+
+Non-interactive shells (`ssh host 'cmd'`, CI steps, agentic harnesses) do **not**
+activate by default. Set `KOOPA_AUTO_ACTIVATE=1` to opt in (PATH and environment
+exports only, no prompt/alias/history machinery). A default-on version of this
+shipped briefly on 2026-07-29 and was reverted the same day after reproducing real
+hangs and stderr corruption — see "Why default-on was reverted" below before
+re-attempting this.
+
+### Which rc file each invocation actually reads (verified via `env -i`)
+
+| Invocation | Files read |
+|---|---|
+| `ssh host 'cmd'` (bash) | `.bashrc` only (bash is built with `SSH_SOURCE_BASHRC`) |
+| `bash -lc` | `.bash_profile` only |
+| `bash -c` (no `SSH_CLIENT`) | none |
+| `zsh -c` | **`.zshenv` only** — `.zshrc` is never read |
+| `zsh -lc` | `.zshenv`, `.zprofile`, `.zlogin` |
+| `zsh -ic` | `.zshenv`, `.zshrc` |
+
+**Trap:** `.zshrc` is a dead end for `zsh -c`. If non-interactive zsh activation is
+ever wanted, `~/.zshenv` is the only rc file that runs — but see the hazards below
+before putting activation there. `.zshenv` runs for **every** zsh invocation,
+including tool subprocesses (`zsh -c '...'` inside editors, scripts, etc.), not just
+remote sessions.
+
+### `KOOPA_FORCE=1` is not the non-interactive lever
+
+`KOOPA_FORCE=1` also flips `_koopa_is_interactive` true (see
+`lang/sh/functions/is/is-interactive.sh`), which turns on starship/atuin/prompt
+machinery. Measured fallout under a non-TTY, `TERM=dumb` shell:
+
+```
+bash 5.3: atuin-bash.sh: line 783: bind: warning: line editing not enabled
+zsh:      [ERROR] - (starship::print): Under a 'dumb' terminal (TERM=dumb).
+```
+
+Any stderr during `ssh host 'cmd'` is a regression (breaks `scp`/`rsync` framing
+expectations even when they don't literally share the channel). The correct lever
+is `KOOPA_ACTIVATE=1` with `_koopa_is_interactive` left `false`, so every existing
+`_koopa_is_interactive || return 0` guard keeps suppressing interactive-only code.
+
+### Why default-on was reverted
+
+The 2026-07-29 default-on attempt claimed "verified clean: 0 bytes stdout, 0 bytes
+stderr" for the `KOOPA_ACTIVATE=1` path. That verification ran from a cwd with no
+`.envrc` and does not generalize. Reproduced same-day, on the deployed code:
+
+- **8.15s hang vs 0.01s legacy.** `_koopa_activate_direnv` runs
+  `eval "$(direnv export)"` on the activation path, which executes arbitrary
+  `.envrc` code in the cwd. A `.envrc` containing `sleep 8` blocked
+  `ssh host 'cmd'` for 8 seconds. This is exactly the blocking-I/O class banned
+  from the activation path by the "network / blocking I/O" table above — the
+  default-on change reintroduced it via `.envrc`, on a far wider surface (any
+  cwd, any teammate's `.envrc`). (Since bounded with `gtimeout` on both the
+  startup export and the installed `cd` hook — see "`.envrc` execution is
+  bounded by `gtimeout`" under "direnv Must Capture Its Baseline Last" — but
+  that fix came later and doesn't retroactively excuse shipping default-on
+  without it.)
+- **106 bytes of stderr from a blocked `.envrc`; 48 bytes even on success**
+  (`direnv: loading ...` / `direnv: error ... is blocked`). Corrupts the
+  `ssh host 'cmd'` output channel.
+- **The interactive gating (below) was applied only to `lang/sh/`.** The
+  `lang/bash/` and `lang/zsh/` copies of `_koopa_activate_today_bucket` and
+  `_koopa_check_multiple_users` had zero occurrences of `_koopa_is_interactive`,
+  so on the shells people actually use, `~/today` still got rewritten and EC2
+  still printed to stdout under a non-interactive shell. (Since fixed — see
+  "Side-effect functions" below, now applied to all three shell families.)
+- **Secrets loaded into every non-interactive shell.**
+  `_koopa_activate_profile_files` sources `.profile-work`, `.profile-private`,
+  `.secrets*`. Exported-variable count in `zsh -c` went 11 → 69.
+- **The opt-out env var was unreachable when needed.** `zsh -c 'KOOPA_NO_AUTO_ACTIVATE=1 echo hi'`
+  still hung 6s, because `.zshenv` had already run before the inline assignment
+  took effect. Recovery required `ssh -o SendEnv`/`AcceptEnv` or a dotfile edit —
+  no way to un-stick a session from the command line alone.
+
+**Rule:** if non-interactive activation is revisited, `_koopa_activate_direnv`
+(and anything else that can execute cwd-controlled code or block) must be
+excluded from the non-interactive path entirely, not just gated on
+`_koopa_is_interactive` inside functions that assume they'll still partially run.
+Verify from three cwds: none, an authorized `.envrc`, and a *blocked* `.envrc` —
+the no-`.envrc` case is not representative.
+
+### Side-effect functions must be explicitly interactive-gated
+
+Gating `__koopa_preflight` on interactivity is not enough — three functions run
+regardless, gated only on `! _koopa_is_subshell`:
+
+- `_koopa_activate_today_bucket` — `mkdir` + rewrites the `~/today` symlink
+- `_koopa_check_multiple_users` — **prints to stdout** on AWS EC2
+- `_koopa_activate_color_mode` — cache-file writes + background `koopa configure
+  user color-mode` spawn
+
+Each needs its own `_koopa_is_interactive || return 0` (or, for color-mode, gate
+only the cache/spawn block and keep the `KOOPA_COLOR_MODE` export unconditional —
+it's a plain env var non-interactive consumers benefit from too). Skipping this
+means every `scp`/`rsync`/git-over-ssh mutates `~/today`, writes cache files, and
+on EC2 can print to stdout mid-transfer. This gate must be applied in all three
+shell families (`lang/sh/`, `lang/bash/`, `lang/zsh/`) — each has its own copy of
+these functions, and the bundles (`lang/*/include/functions.sh`) must be
+regenerated via `koopa develop cache-functions` after editing any of them.
+
+### macOS system bash (3.2) silently activates nothing
+
+`__koopa_header` in `activate.sh` routes on shell *name*, so bash 3.2 gets
+`lang/bash/include/header.sh`, which version-gates out (`'1.'* | '2.'* | '3.'*`)
+and returns 0 having loaded nothing — no error, just no PATH change. Route
+`BASH_VERSION` matching `1.`/`2.`/`3.` to the POSIX header (`lang/sh/include/header.sh`)
+instead, which works fine under bash 3.2.
+
+### Re-activation short-circuit (only matters when `KOOPA_AUTO_ACTIVATE=1`)
+
+Nested activation (parent shell activates, spawns a child that activates again)
+would re-pay the full ~85ms cost every time, since PATH/env exports are inherited
+but nothing checked for that. `__koopa_preflight` short-circuits (return 1, skip)
+when non-interactive, `KOOPA_AUTO_ACTIVATE=1` is set, and `KOOPA_PREFIX/bin` is
+already on `PATH`. Interactive shells still always re-run activation, since
+prompt/alias state doesn't carry across shells the same way env vars do. Since
+non-interactive activation is opt-in and off by default, this short-circuit is
+dormant unless a caller explicitly sets `KOOPA_AUTO_ACTIVATE=1`.
+
+### Verification (use `env -i`, not your current shell's PATH)
+
+Testing with the current shell's inherited PATH produces false passes — e.g.
+`command -v git` resolves via `/usr/bin/git` regardless of whether koopa activated.
+Use a koopa-only binary like `bat` instead, and always start from `env -i`. Default
+is off, so these should print nothing:
+
+```sh
+env -i HOME="$HOME" TERM=dumb PATH=/usr/bin:/bin bash -c '. "$HOME/.profile"; command -v bat'
+env -i HOME="$HOME" TERM=dumb PATH=/usr/bin:/bin zsh -c 'command -v bat'
+env -i HOME="$HOME" SSH_CLIENT="1.2.3.4 1 2" TERM=dumb PATH=/usr/bin:/bin bash -c 'command -v bat'
+```
+
+The opt-in path (`KOOPA_AUTO_ACTIVATE=1`) should activate, and must be checked from
+a cwd with a **blocked** `.envrc`, not just a clean one — that's the case the
+2026-07-29 "verified clean" claim missed:
+
+```sh
+D="$(mktemp -d)"; cd "$D"; echo 'export FOO=bar' > .envrc   # deliberately not allowed
+env -i HOME="$HOME" TERM=dumb KOOPA_AUTO_ACTIVATE=1 PATH=/usr/bin:/bin \
+    bash -c '. "$HOME/.profile"; command -v bat' >o 2>e
+wc -c <o; wc -c <e   # bat found; stderr will be non-zero — expected with direnv on this path
+```
+
 ## direnv Must Capture Its Baseline Last
 
 ### How `_koopa_activate_direnv` works (two-step)
@@ -116,6 +262,73 @@ the runtime; the source tree is the authoring surface.
    koopa repo's `.envrc` which activates `.venv`), direnv loads the `.envrc` **and records the
    current PATH as its restore baseline** — the snapshot it will revert to on
    `direnv: unloading`.
+
+### `.envrc` execution is bounded by `gtimeout` (added 2026-07-29)
+
+`direnv export` evaluates the `.envrc` in the current directory, i.e. arbitrary code
+(`sleep 60`, a network call, anything). This was the root cause of the hangs cited
+above under "Why default-on was reverted" — but it isn't limited to the
+non-interactive path. **The same eager `eval` runs unconditionally on the interactive
+path too**, and — this is the part that's easy to miss — **`direnv hook <shell>`
+installs a `precmd`/`chpwd`/`PROMPT_COMMAND` function that re-runs `direnv export` on
+every subsequent `cd`**, not just at shell startup. A pathological `.envrc` therefore
+wedges the shell both when the shell starts inside that directory *and* every time a
+user later `cd`s into it.
+
+Both call sites (the one-time startup export, and the installed `_direnv_hook`) are
+now wrapped with `gtimeout` (`${KOOPA_PREFIX}/bin/gtimeout`, from the `coreutils` app —
+present on macOS and Linux since koopa always installs GNU coreutils). Default bound:
+5 seconds, overridable via `KOOPA_DIRENV_TIMEOUT` (seconds); `KOOPA_DIRENV_TIMEOUT=0`
+disables the bound and restores the unbounded legacy call.
+
+**The hook body cannot close over this function's locals.** `_direnv_hook` is defined
+inside `_koopa_activate_direnv`, but it's *invoked* later, from `precmd_functions` /
+`PROMPT_COMMAND`, after `_koopa_activate_direnv` has already returned. Bash/zsh don't
+capture enclosing-function locals in a nested function the way a lexical closure
+would — by the time `_direnv_hook` runs, this function's `local timeout=...` and
+`local gtimeout=...` are already gone. The hook body must re-derive both from globals
+(`KOOPA_PREFIX`, `KOOPA_DIRENV_TIMEOUT`) every time it fires, not reference the
+enclosing function's locals. Verify this class of bug isn't reintroduced:
+
+```sh
+bash -c '
+outer() {
+  local secret="from_outer"
+  inner() { echo "secret=${secret:-UNSET}"; }
+}
+outer
+inner   # prints "secret=UNSET" — the closure does NOT work in bash/zsh
+'
+```
+
+`gtimeout` (without `-v`) writes nothing of its own to stdout or stderr on timeout;
+direnv's own `direnv: loading ...` notice on stderr still passes through either way,
+since it's outside the `$(...)` capture that `eval` consumes. On timeout, the captured
+stdout is empty, so the `eval` is a no-op for that directory — the shell continues
+without direnv's exports rather than hanging.
+
+**Testing trap:** `bash -c 'cd $dir; other_cmd'` and `zsh -c 'cd $dir; other_cmd'`
+do **not** reliably exercise the hook the same way. zsh's `chpwd_functions` fires
+synchronously on `cd` even under `-c`. Bash's `PROMPT_COMMAND` only fires at the next
+*prompt redraw* — `bash -i -c '...'` never produces one, so a naive test that doesn't
+also `eval "$PROMPT_COMMAND"` after the `cd` will falsely appear instant. Verify with:
+
+```sh
+D="$(mktemp -d)"; cd "$D"; printf 'sleep 30\n' > .envrc
+"${KOOPA_PREFIX}/bin/direnv" allow .
+cd "${KOOPA_PREFIX:-$HOME/.local/share/koopa}"
+
+# zsh: chpwd fires on cd directly — should bound at ~5s, not 30s.
+time zsh -i -c "cd $D; echo reached" </dev/null
+
+# bash: must explicitly fire PROMPT_COMMAND to simulate a real prompt cycle.
+time bash -i -c "cd $D; eval \"\$PROMPT_COMMAND\"; echo reached" </dev/null
+```
+
+Measured cost of the `gtimeout` wrapper itself: ~0ms (A/B'd via
+`KOOPA_DIRENV_TIMEOUT=0` vs default, and against a `git stash` of the pre-fix files —
+both landed in the same 145-210ms band across repeated `activation-speed-test` runs;
+the spread is session/system load noise, not this change).
 
 ### The invariant
 

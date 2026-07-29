@@ -3,7 +3,7 @@
 _koopa_activate_today_bucket() {
     # """
     # Create a dated file today bucket.
-    # @note Updated 2024-09-17.
+    # @note Updated 2026-07-29.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -19,6 +19,7 @@ _koopa_activate_today_bucket() {
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
+    _koopa_is_interactive || return 0
     __kvar_bucket_dir="${KOOPA_BUCKET:-}"
     if [ -n "$__kvar_bucket_dir" ]
     then

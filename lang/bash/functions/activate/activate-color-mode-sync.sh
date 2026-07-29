@@ -25,8 +25,10 @@ _koopa_activate_color_mode_sync() {
             if [[ ! -f "$applied_file" ]] || \
                 [[ "$(<"$applied_file")" != "$new_mode" ]]
             then
+                local log_file="${XDG_CACHE_HOME:?}/koopa/logs/color-mode.log"
+                mkdir -p "${log_file%/*}"
                 "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                    >>/dev/null 2>&1 &
+                    >>"$log_file" 2>&1 &
                 disown
             fi
         fi
