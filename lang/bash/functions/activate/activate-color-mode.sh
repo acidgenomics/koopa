@@ -16,22 +16,27 @@ _koopa_activate_color_mode() {
     if [[ -n "${KOOPA_COLOR_MODE:-}" ]]
     then
         export KOOPA_COLOR_MODE
-        local cache_file="${HOME:?}/.cache/koopa/color-mode"
-        if [[ ! -f "$cache_file" ]] || \
-            [[ "$(<"$cache_file")" != "$KOOPA_COLOR_MODE" ]]
+        if _koopa_is_interactive
         then
-            mkdir -p "${cache_file%/*}"
-            printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
-        fi
-        local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
-        if [[ ! -f "$applied_file" ]] || \
-            [[ "$(<"$applied_file")" != "$KOOPA_COLOR_MODE" ]]
-        then
-            if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+            local cache_file="${HOME:?}/.cache/koopa/color-mode"
+            if [[ ! -f "$cache_file" ]] || \
+                [[ "$(<"$cache_file")" != "$KOOPA_COLOR_MODE" ]]
             then
-                "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
-                    >>/dev/null 2>&1 &
-                disown
+                mkdir -p "${cache_file%/*}"
+                printf '%s\n' "$KOOPA_COLOR_MODE" > "$cache_file"
+            fi
+            local applied_file="${HOME:?}/.cache/koopa/color-mode-applied"
+            if [[ ! -f "$applied_file" ]] || \
+                [[ "$(<"$applied_file")" != "$KOOPA_COLOR_MODE" ]]
+            then
+                if [[ -z "${KOOPA_COLOR_MODE_SYNCING:-}" ]]
+                then
+                    local log_file="${XDG_CACHE_HOME:?}/koopa/logs/color-mode.log"
+                    mkdir -p "${log_file%/*}"
+                    "${KOOPA_PREFIX:?}/bin/koopa" configure user color-mode \
+                        >>"$log_file" 2>&1 &
+                    disown
+                fi
             fi
         fi
     else

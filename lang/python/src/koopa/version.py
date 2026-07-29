@@ -20,15 +20,25 @@ _SANITIZE_VERSION_RE = re.compile(
 
 
 def koopa_version() -> str:
-    """Return koopa version from pyproject.toml."""
+    """Return koopa version.
+
+    Prefers installed package metadata (the case for a pip/conda install,
+    where no 'pyproject.toml' ships alongside the package). Falls back to
+    reading 'pyproject.toml' directly for a git checkout, where the installed
+    package metadata may be stale relative to the working tree.
+    """
     import tomllib
+    from importlib.metadata import PackageNotFoundError, version
 
     pyproject = Path(koopa_prefix()) / "pyproject.toml"
     if pyproject.is_file():
         with open(pyproject, "rb") as fh:
             data = tomllib.load(fh)
         return data.get("project", {}).get("version", "unknown")
-    return "unknown"
+    try:
+        return version("koopa")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def version_pattern() -> str:

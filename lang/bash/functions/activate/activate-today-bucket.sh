@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 _koopa_activate_today_bucket() {
+    _koopa_is_interactive || return 0
     local bucket_dir
     bucket_dir="${KOOPA_BUCKET:-}"
     local today_link

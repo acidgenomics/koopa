@@ -1,0 +1,218 @@
+@import url("https://steinbaugh.com/css/fonts.css");
+@import url("https://steinbaugh.com/css/colors.css") screen;
+
+html[data-theme="light"] {
+    --pst-color-primary: var(--purple-color);
+    --pst-color-primary-text: var(--bw-color-2);
+    --pst-color-primary-highlight: var(--purple-color);
+    --pst-color-primary-highlight-text: var(--bw-color-2);
+    --pst-color-secondary: var(--orange-color);
+    --pst-color-secondary-text: var(--bw-color-2);
+    --pst-color-secondary-highlight: var(--orange-color);
+    --pst-color-secondary-highlight-text: var(--bw-color-2);
+    --pst-color-link: var(--link-color);
+    --pst-color-link-hover: var(--link-hover-color);
+    --pst-color-link-higher-contrast: var(--link-hover-color);
+    --pst-color-inline-code: var(--code-color);
+    --pst-color-text-base: var(--foreground-color);
+    --pst-color-text-muted: var(--comment-color);
+    --pst-color-heading: var(--header-color);
+    --pst-color-background: var(--background-color);
+    --pst-color-on-background: var(--background-color);
+    --pst-color-surface: var(--current-line-color);
+    --pst-color-on-surface: var(--foreground-color);
+    --pst-color-border: var(--border-color);
+    --pst-color-table: var(--foreground-color);
+    color-scheme: light;
+}
+
+html[data-theme="dark"] {
+    --pst-color-primary: var(--purple-color);
+    --pst-color-primary-text: var(--bw-color-2);
+    --pst-color-primary-highlight: var(--purple-color);
+    --pst-color-primary-highlight-text: var(--bw-color-2);
+    --pst-color-secondary: var(--orange-color);
+    --pst-color-secondary-text: var(--bw-color-2);
+    --pst-color-secondary-highlight: var(--orange-color);
+    --pst-color-secondary-highlight-text: var(--bw-color-2);
+    --pst-color-link: var(--link-color);
+    --pst-color-link-hover: var(--link-hover-color);
+    --pst-color-link-higher-contrast: var(--link-hover-color);
+    --pst-color-inline-code: var(--code-color);
+    --pst-color-text-base: var(--foreground-color);
+    --pst-color-text-muted: var(--comment-color);
+    --pst-color-heading: var(--header-color);
+    --pst-color-background: var(--background-color);
+    --pst-color-on-background: var(--background-color);
+    --pst-color-surface: var(--current-line-color);
+    --pst-color-on-surface: var(--foreground-color);
+    --pst-color-border: var(--border-color);
+    --pst-color-table: var(--foreground-color);
+    color-scheme: dark;
+}
+
+body {
+    font-family: monospace-web, monospace;
+}
+
+h1, h2, h3, h4, h5, h6,
+.bd-header__inner .navbar-brand {
+    font-family: sans-serif-web, sans-serif;
+}
+
+a.navbar-brand.logo {
+    background-image: url("../images/logo.svg");
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 1.5rem;
+    padding-left: 2rem;
+}
+
+/* Syntax highlighting: same token-class -> color mapping as rouge.css,
+ * since Sphinx (Pygments) and Jekyll (Rouge) share Pygments-derived
+ * short codes for tokens. */
+
+/* Light theme: re-scoped under html[data-theme="light"] so specificity
+ * (0,3,1) beats Sphinx-generated _static/pygments.css, which emits the
+ * same html[data-theme="light"] .highlight .<tok> selector shape. A bare
+ * .highlight .<tok> rule (0,2,0) loses to pygments.css regardless of load
+ * order, silently making this whole block dead code. */
+html[data-theme="light"] .highlight { background: var(--background-color); color: var(--foreground-color); }
+html[data-theme="light"] .highlight .bp,
+html[data-theme="light"] .highlight .c,
+html[data-theme="light"] .highlight .c1,
+html[data-theme="light"] .highlight .cd,
+html[data-theme="light"] .highlight .cm,
+html[data-theme="light"] .highlight .cp,
+html[data-theme="light"] .highlight .cs { color: var(--comment-color); }
+html[data-theme="light"] .highlight .o,
+html[data-theme="light"] .highlight .ow,
+html[data-theme="light"] .highlight .p,
+html[data-theme="light"] .highlight .pi,
+html[data-theme="light"] .highlight .w { color: var(--foreground-color); }
+html[data-theme="light"] .highlight .k,
+html[data-theme="light"] .highlight .kn,
+html[data-theme="light"] .highlight .kp,
+html[data-theme="light"] .highlight .kr,
+html[data-theme="light"] .highlight .kv { color: var(--keyword-color); }
+html[data-theme="light"] .highlight .err { color: var(--error-color); }
+html[data-theme="light"] .highlight .gd { color: var(--pink-color); }
+html[data-theme="light"] .highlight .ge { color: var(--bright-color); }
+html[data-theme="light"] .highlight .gh,
+html[data-theme="light"] .highlight .gi,
+html[data-theme="light"] .highlight .go,
+html[data-theme="light"] .highlight .gp,
+html[data-theme="light"] .highlight .gu { color: var(--gray-color); }
+html[data-theme="light"] .highlight .gr,
+html[data-theme="light"] .highlight .gt { color: var(--red-color); }
+html[data-theme="light"] .highlight .il { color: var(--cyan-color); }
+html[data-theme="light"] .highlight .kc,
+html[data-theme="light"] .highlight .kd,
+html[data-theme="light"] .highlight .kn,
+html[data-theme="light"] .highlight .kp,
+html[data-theme="light"] .highlight .kr { color: var(--bright-color); }
+html[data-theme="light"] .highlight .kt { color: var(--purple-color); }
+html[data-theme="light"] .highlight .m,
+html[data-theme="light"] .highlight .mb,
+html[data-theme="light"] .highlight .mf,
+html[data-theme="light"] .highlight .mh,
+html[data-theme="light"] .highlight .mi,
+html[data-theme="light"] .highlight .mo,
+html[data-theme="light"] .highlight .mx,
+html[data-theme="light"] .highlight .na,
+html[data-theme="light"] .highlight .no,
+html[data-theme="light"] .highlight .vc,
+html[data-theme="light"] .highlight .vg,
+html[data-theme="light"] .highlight .vi { color: var(--cyan-color); }
+html[data-theme="light"] .highlight .nb,
+html[data-theme="light"] .highlight .nt { color: var(--blue-color); }
+html[data-theme="light"] .highlight .nc,
+html[data-theme="light"] .highlight .ni { color: var(--purple-color); }
+html[data-theme="light"] .highlight .nd,
+html[data-theme="light"] .highlight .nn { color: var(--gray-color); }
+html[data-theme="light"] .highlight .ne,
+html[data-theme="light"] .highlight .nf,
+html[data-theme="light"] .highlight .nl { color: var(--red-color); }
+html[data-theme="light"] .highlight .s,
+html[data-theme="light"] .highlight .s1,
+html[data-theme="light"] .highlight .s2,
+html[data-theme="light"] .highlight .sb,
+html[data-theme="light"] .highlight .sc,
+html[data-theme="light"] .highlight .sd,
+html[data-theme="light"] .highlight .se,
+html[data-theme="light"] .highlight .sh,
+html[data-theme="light"] .highlight .si,
+html[data-theme="light"] .highlight .sx { color: var(--red-color); }
+html[data-theme="light"] .highlight .sr { color: var(--green-color); }
+html[data-theme="light"] .highlight .ss { color: var(--pink-color); }
+
+/* Dark theme: same token -> color mapping, scoped to data-theme="dark" so
+ * it wins over pygments.css there too. */
+html[data-theme="dark"] .highlight { background: var(--background-color); color: var(--foreground-color); }
+html[data-theme="dark"] .highlight .bp,
+html[data-theme="dark"] .highlight .c,
+html[data-theme="dark"] .highlight .c1,
+html[data-theme="dark"] .highlight .cd,
+html[data-theme="dark"] .highlight .cm,
+html[data-theme="dark"] .highlight .cp,
+html[data-theme="dark"] .highlight .cs { color: var(--comment-color); }
+html[data-theme="dark"] .highlight .o,
+html[data-theme="dark"] .highlight .ow,
+html[data-theme="dark"] .highlight .p,
+html[data-theme="dark"] .highlight .pi,
+html[data-theme="dark"] .highlight .w { color: var(--foreground-color); }
+html[data-theme="dark"] .highlight .k,
+html[data-theme="dark"] .highlight .kn,
+html[data-theme="dark"] .highlight .kp,
+html[data-theme="dark"] .highlight .kr,
+html[data-theme="dark"] .highlight .kv { color: var(--keyword-color); }
+html[data-theme="dark"] .highlight .err { color: var(--error-color); }
+html[data-theme="dark"] .highlight .gd { color: var(--pink-color); }
+html[data-theme="dark"] .highlight .ge { color: var(--bright-color); }
+html[data-theme="dark"] .highlight .gh,
+html[data-theme="dark"] .highlight .gi,
+html[data-theme="dark"] .highlight .go,
+html[data-theme="dark"] .highlight .gp,
+html[data-theme="dark"] .highlight .gu { color: var(--gray-color); }
+html[data-theme="dark"] .highlight .gr,
+html[data-theme="dark"] .highlight .gt { color: var(--red-color); }
+html[data-theme="dark"] .highlight .il { color: var(--cyan-color); }
+html[data-theme="dark"] .highlight .kc,
+html[data-theme="dark"] .highlight .kd,
+html[data-theme="dark"] .highlight .kn,
+html[data-theme="dark"] .highlight .kp,
+html[data-theme="dark"] .highlight .kr { color: var(--bright-color); }
+html[data-theme="dark"] .highlight .kt { color: var(--purple-color); }
+html[data-theme="dark"] .highlight .m,
+html[data-theme="dark"] .highlight .mb,
+html[data-theme="dark"] .highlight .mf,
+html[data-theme="dark"] .highlight .mh,
+html[data-theme="dark"] .highlight .mi,
+html[data-theme="dark"] .highlight .mo,
+html[data-theme="dark"] .highlight .mx,
+html[data-theme="dark"] .highlight .na,
+html[data-theme="dark"] .highlight .no,
+html[data-theme="dark"] .highlight .vc,
+html[data-theme="dark"] .highlight .vg,
+html[data-theme="dark"] .highlight .vi { color: var(--cyan-color); }
+html[data-theme="dark"] .highlight .nb,
+html[data-theme="dark"] .highlight .nt { color: var(--blue-color); }
+html[data-theme="dark"] .highlight .nc,
+html[data-theme="dark"] .highlight .ni { color: var(--purple-color); }
+html[data-theme="dark"] .highlight .nd,
+html[data-theme="dark"] .highlight .nn { color: var(--gray-color); }
+html[data-theme="dark"] .highlight .ne,
+html[data-theme="dark"] .highlight .nf,
+html[data-theme="dark"] .highlight .nl { color: var(--red-color); }
+html[data-theme="dark"] .highlight .s,
+html[data-theme="dark"] .highlight .s1,
+html[data-theme="dark"] .highlight .s2,
+html[data-theme="dark"] .highlight .sb,
+html[data-theme="dark"] .highlight .sc,
+html[data-theme="dark"] .highlight .sd,
+html[data-theme="dark"] .highlight .se,
+html[data-theme="dark"] .highlight .sh,
+html[data-theme="dark"] .highlight .si,
+html[data-theme="dark"] .highlight .sx { color: var(--red-color); }
+html[data-theme="dark"] .highlight .sr { color: var(--green-color); }
+html[data-theme="dark"] .highlight .ss { color: var(--pink-color); }

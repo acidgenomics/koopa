@@ -2,9 +2,13 @@
 name: koopa-r-release
 description: >-
   koopa R package release — cloud-native S3 + CloudFront, acidgenomics profile,
-  koopa app r publish/reindex/archive, sonoma-arm64 binaries, pre-release
-  AcidDevTools::check() gate. Use when releasing, publishing, reindexing, or
-  archiving an Acid Genomics R package.
+  koopa app r publish/reindex/archive/clean-orphan-binaries/publish-docs,
+  sonoma-arm64 binaries, pre-release AcidDevTools::check() gate, pkgdown
+  NEWS.md/reference-index silent-failure traps, CloudFront wildcard
+  invalidation false-"Completed" gotcha. Use when releasing, publishing,
+  reindexing, or archiving an Acid Genomics R package, cleaning up orphaned
+  binaries or retired doc prefixes, when a pkgdown site's Changelog renders
+  empty, or when a CDN edge serves stale content after invalidation.
 ---
 
 # koopa R Package Release
@@ -95,6 +99,18 @@ koopa app r reindex               # reindex everything + invalidate CloudFront
 koopa app r reindex --no-invalidate
 ```
 
+**Wildcard invalidation can report `Completed` while an edge still serves stale
+content.** `reindex()`'s own invalidation uses glob paths
+(`/bin/macosx/sonoma-arm64/contrib/*/PACKAGES*`). Confirmed live: after
+deleting a stale binary and re-running `reindex`, `aws cloudfront
+get-invalidation` returned `Completed` within seconds, but the PACKAGES file
+served by the edge still had the old `ETag` and a climbing `Age` header for
+several minutes afterward. Don't trust the invalidation status alone —
+compare `ETag` between the CDN response and `aws s3api head-object` on the
+same key. If they still differ, issue a second invalidation with the **exact
+path** (no glob) for that key; that resolved it immediately when the wildcard
+invalidation didn't.
+
 ### Landing page
 
 `s3://<r-bucket>/index.html` is generated, not hand-authored — `_generate_landing()`
@@ -125,6 +141,29 @@ Keeps only the latest version flat in `src/contrib/`. Regenerates manifests.
 
 ```sh
 koopa app r archive
+```
+
+**Binaries have no equivalent.** `_archive_old_source()` (called from `publish()`)
+only ever touches `src/contrib/`. There is no `_archive_old_binary()`, so
+superseded `.tgz` files pile up under `bin/macosx/sonoma-arm64/contrib/<Rver>/`
+forever — cosmetic only, since R always resolves the highest version, but it
+means the binary manifest carries dead entries that `clean-orphan-binaries`
+(below) will never touch. Confirmed live: `AcidDevTools_0.7.10.tgz` sat next to
+`0.7.11.tgz` until manually deleted. Fixing this is still open — see `todo.org`.
+
+### `koopa app r clean-orphan-binaries [--no-invalidate]`
+
+Deletes a binary `.tgz` only when its **package name** is entirely absent from
+`src/contrib` — i.e. the source package was fully retired. **It does not catch
+a superseded version of a still-published package** (that's the `archive` gap
+above); `clean_orphan_binaries()`'s docstring excludes this case explicitly.
+For a one-off superseded binary, delete the exact S3 key by hand and re-run
+`reindex`:
+
+```sh
+aws s3 rm "s3://<r-bucket>/bin/macosx/sonoma-arm64/contrib/<Rver>/<Pkg>_<old-ver>.tgz" \
+  --profile=acidgenomics
+koopa app r reindex
 ```
 
 ### `koopa app r publish-docs <package-dir> [--no-invalidate]`
@@ -184,6 +223,60 @@ If the active account is wrong, `gh auth switch --hostname github.com --user <ow
 — this changes the machine-wide active account for every future `gh` command,
 not just the current one. Confirm with the user before switching if it's not
 obviously already their intent.
+
+### pkgdown silent-failure traps
+
+Found across the full 24-package fleet in one sweep (2026-07-29). All four
+either produce an empty page with no error, or abort the build in a way that
+doesn't point at the actual root cause:
+
+**1. `NEWS.md` must never open with a top-level `# ` heading.** If line 1 is
+`# Release notes` followed by `## <Pkg> X.Y.Z (...)` release headings, pkgdown
+parses the whole file as one `h1`-rooted section, calls `tweak_section_levels()`
+to demote every heading (release headings become `h3`), then matches versions
+only against `h2`. It finds none, drops every section, and emits `no version
+headings found` as a warning rather than an error. The page still builds and
+deploys, just with an empty Changelog. Fix: delete the `# ` line (and the
+blank line after it) so the file starts directly at `## <Pkg> ...`. Verify
+before deploying:
+
+```r
+e <- loadNamespace("pkgdown")
+pkg <- pkgdown::as_pkgdown(".")
+nrow(e$data_news(pkg))   # must be > 0, with no accompanying warning
+```
+
+**2. `news: one_page: false` must be a YAML mapping, not a list.**
+
+```yaml
+# wrong: silently ignored, one_page always defaults to TRUE
+news:
+  - one_page: false
+
+# right
+news:
+  one_page: false
+```
+
+`pkgdown::check_pkgdown()` reports "No problems found" either way, so this
+never surfaces as a lint failure. Confirm the fix took effect by checking
+`docs/news/` for per-minor-version pages (`news-X.Y.html`) instead of a
+single `index.html`.
+
+**3. pkgdown 2.2+ hard-errors when `_pkgdown.yml`'s `reference:` index omits
+any exported topic** (internal S4 classes, `show`, `dots`, etc.) not marked
+`@keywords internal`. Older pkgdown (2.0.x-2.1.x) only warned, so a package
+last deployed under an older version can carry a stale, incomplete
+`reference:` index that only breaks on the next upgrade. `build_site()`'s
+error message names the missing topics directly; add a `title: Internal`
+section listing them.
+
+**4. Deployed docs paths are case-sensitive**, because the S3 prefix is
+always the lowercased `Package` field. `/AcidBase/news/` 404s; `/acidbase/news/`
+is 200. Always spot-check a deploy with the lowercase slug, and check content
+inside `<main>` specifically: the page's own table-of-contents sidebar also
+contains an `<h2>On this page</h2>`, which will falsely read as "has content"
+in a naive `grep -c '<h2'` check.
 
 ## Local Clone Setup
 
@@ -246,8 +339,15 @@ The tag `v<ver>` is created and pushed to `origin` automatically by `publish`. U
 
 ## Relicensing (AGPL-3 → Apache-2.0)
 
-16 packages in the repo are still AGPL-3. The pattern (already done for 8, most
-recently pointillism 0.8.0):
+**Done as of 2026-07-29** — verified live by grepping `License:` for every
+`Package:` entry in `src/contrib/PACKAGES`: all 24 active packages report
+`License: Apache License (>= 2)`, including every name on the older
+AGPL-3-holdouts list this section used to carry (AcidCLI, AcidDevTools,
+AcidExperiment, AcidGSEA, AcidGenerics, AcidMarkdown, AcidPlots, AcidRoxygen,
+AcidSingleCell, AcidTest, Chromium, DESeqAnalysis, EggNOG, PANTHER, WormBase,
+basejump). The landing-page footer (generated by `_generate_landing()`) also
+now correctly says Apache 2.0, matching. If a future package somehow reverts,
+the pattern is:
 - `License: Apache License (>= 2)` in DESCRIPTION (CRAN shipped-template form)
 - `LICENSE.md` at repo root (`usethis::use_apache_license()` output)
 - Delete the old plain `LICENSE` file
@@ -339,16 +439,25 @@ See skill `acid-r-package` for the full dev conventions (tooling, lintr, roxygen
 
 Source: `~/git/personal/r-aciddevtools/R/publish.R`
 
-## Active Package List (src/contrib as of 2026-06-20)
+## Active Package List (src/contrib as of 2026-07-29)
 
-25 active source packages; 25 with sonoma-arm64 binaries.
+24 active source packages; 24 with sonoma-arm64 binaries. All Apache 2.0 —
+see Relicensing above.
 
-Packages still on AGPL-3 (need relicense): AcidCLI, AcidDevTools, AcidExperiment,
-AcidGSEA, AcidGenerics, AcidMarkdown, AcidPlots, AcidRoxygen, AcidSingleCell,
-AcidTest, Chromium, DESeqAnalysis, EggNOG, PANTHER, WormBase, basejump.
+Archived / no longer maintained (source removed from `src/contrib`, so absent
+from the generated landing page automatically): cBioPortalAnalysis,
+DepMapAnalysis.
 
-Archived / no longer maintained: bcbioBase, bcbioRNASeq, bcbioSingleCell,
-cBioPortalAnalysis, DepMapAnalysis, koopa (R package).
+**Docs-only cleanup:** `acidshiny/`, `bb8/`, and `koopa` (the R package, not
+this repo) had orphaned pkgdown doc prefixes on the bucket with no matching
+source package — deleted (108 objects). `bcbiobase/`, `bcbiornaseq/`, and
+`bcbiosinglecell/` docs were deliberately **kept live** despite being in the
+same no-source-package state: they're published, possibly-cited packages
+(bcbioBase, bcbioRNASeq, bcbioSingleCell), and there's no redirect to offer a
+reader who lands on an old link. Before deleting any orphaned doc prefix,
+check whether the package was ever CRAN/Bioconductor-published or likely
+cited in a paper — if so, default to keeping the docs even though the
+package itself is retired.
 
 ## `_SKELETON_BINARY_PREFIXES` (in `cran.py`)
 
