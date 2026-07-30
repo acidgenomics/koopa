@@ -85,7 +85,11 @@ def download(
             speed_time=speed_time,
             quiet=quiet,
         )
-    except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
+    except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError) as exc:
+        print(
+            f"  Download failed for '{url}' ({exc}); retrying with /usr/bin/curl.",
+            file=sys.stderr,
+        )
         try:
             _download_curl(
                 url,
@@ -98,7 +102,8 @@ def download(
                 curl_cmd="/usr/bin/curl",
                 quiet=quiet,
             )
-        except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
+        except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError) as exc2:
+            print(f"  Download failed for '{url}' ({exc2}); retrying with urllib.", file=sys.stderr)
             _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
@@ -299,7 +304,15 @@ def _download_curl(
     if os.environ.get("KOOPA_VERBOSE") == "1":
         curl_args.append("--verbose")
     curl_args.append(url)
-    subprocess.run(curl_args, check=True)
+    if not quiet:
+        subprocess.run(curl_args, check=True)
+        return
+    try:
+        subprocess.run(curl_args, capture_output=True, text=True, check=True)
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip()
+        msg = f"curl exit {exc.returncode}: {stderr}" if stderr else f"curl exit {exc.returncode}"
+        raise RuntimeError(msg) from exc
 
 
 def _download_urllib(url: str, output: str) -> None:

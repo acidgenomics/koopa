@@ -53,11 +53,12 @@ _DOCS_PATH = "{name}/"
 # "Infrastructure" with a warning, so a newly published package can never
 # silently vanish from the page.
 _CATEGORIES: list[tuple[str, list[str]]] = [
-    ("Import/export", ["pipette", "acidgenomes", "acidplyr", "goalie", "syntactic"]),
+    ("Import/export", ["pipette"]),
+    ("Data manipulation", ["acidplyr", "syntactic"]),
     ("Visualization", ["acidplots"]),
     ("RNA sequencing", ["deseqanalysis", "acidgsea", "acidexperiment"]),
     ("Single-cell RNA sequencing", ["pointillism", "chromium", "acidsinglecell"]),
-    ("Annotation databases", ["cellosaurus", "eggnog", "panther", "wormbase"]),
+    ("Annotation databases", ["acidgenomes", "cellosaurus", "eggnog", "panther", "wormbase"]),
     (
         "Infrastructure",
         [
@@ -69,6 +70,7 @@ _CATEGORIES: list[tuple[str, list[str]]] = [
             "acidroxygen",
             "acidtest",
             "aciddevtools",
+            "goalie",
         ],
     ),
 ]
@@ -527,6 +529,7 @@ def _generate_landing(entries: list[dict[str, str]]) -> str:
             display_name = entry["Package"]
             description = " ".join(entry.get("Description", "").split())
             section_entries.append((display_name, _DOCS_PATH.format(name=name), description))
+        section_entries.sort(key=lambda entry: entry[0].lower())
         if section_entries:
             sections.append((heading, section_entries))
 

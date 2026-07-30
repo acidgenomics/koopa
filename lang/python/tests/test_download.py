@@ -1,5 +1,6 @@
 """Download module unit tests."""
 
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -7,6 +8,7 @@ from koopa.download import (
     _derive_filename,
     _download_curl,
     _is_sourceforge_url,
+    download,
     download_with_mirror,
 )
 
@@ -153,3 +155,58 @@ def test_download_curl_sends_user_agent_for_non_sourceforge(
         str(tmp_path / "pkg-1.0.tar.gz"),
     )
     assert "--user-agent" in captured["args"]
+
+
+def test_download_curl_quiet_folds_stderr_into_exception(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Quiet mode captures curl's stderr and raises it instead of leaking it.
+
+    Regression test: a bare `curl: (28) Connection timed out ...` line used to
+    leak to the terminal from a quiet, fully-recovered mirror-upload attempt,
+    with no indication of which app or URL stalled.
+    """
+    monkeypatch.setattr("koopa.download._check_curl", lambda curl_cmd: None)
+
+    def fake_run(args: list[str], **_kwargs: object) -> None:
+        raise subprocess.CalledProcessError(
+            28, args, stderr="curl: (28) Connection timed out after 10002 milliseconds\n"
+        )
+
+    monkeypatch.setattr("koopa.download.subprocess.run", fake_run)
+    with pytest.raises(RuntimeError, match=r"curl exit 28.*Connection timed out"):
+        _download_curl(
+            "https://example.com/pkg-1.0.tar.gz",
+            str(tmp_path / "pkg-1.0.tar.gz"),
+            quiet=True,
+        )
+
+
+def test_download_reports_url_when_falling_back(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A recovered fallback names the URL and next transport, even in quiet mode.
+
+    Regression test: quiet=True suppressed the "Downloading ..." line and the
+    per-attempt failure, so a stall that self-healed via the /usr/bin/curl
+    fallback was invisible except for the leaked bare curl error.
+    """
+    output = tmp_path / "pkg-1.0.tar.gz"
+
+    def fake_download_curl(
+        _url: str, out: str, *, curl_cmd: str = "curl", **_kwargs: object
+    ) -> None:
+        if curl_cmd == "curl":
+            raise RuntimeError("curl exit 28: Connection timed out")
+        Path(out).write_text("payload")
+
+    monkeypatch.setattr("koopa.download._download_curl", fake_download_curl)
+    result = download(
+        "https://example.com/pkg-1.0.tar.gz",
+        str(output),
+        quiet=True,
+    )
+    assert result == str(output)
+    err = capsys.readouterr().err
+    assert "pkg-1.0.tar.gz" in err
+    assert "/usr/bin/curl" in err
