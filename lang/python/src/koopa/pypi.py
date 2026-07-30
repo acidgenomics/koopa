@@ -171,13 +171,14 @@ def _generate_index(
             fh.write("</body>\n</html>\n")
 
 
-# Category groupings, mirroring r.acidgenomics.com's landing page. Packages not
-# listed here (e.g. a brand-new package not yet categorized) fall into "Other" at
-# the end, so nothing silently drops off the landing page.
+# Category groupings, by what each package actually does. Packages not listed
+# here (e.g. a brand-new package not yet categorized) fall into "Other" at the
+# end, so nothing silently drops off the landing page.
 _LANDING_CATEGORIES: list[tuple[str, list[str]]] = [
-    ("Import/export", ["pipette", "acidgenomes", "acidplyr", "goalie", "syntactic"]),
-    ("Annotation databases", ["cellosaurus"]),
-    ("Infrastructure", ["acidbase"]),
+    ("Import/export", ["pipette"]),
+    ("Data manipulation", ["acidplyr", "syntactic"]),
+    ("Annotation databases", ["acidgenomes", "cellosaurus"]),
+    ("Infrastructure", ["acidbase", "goalie"]),
 ]
 
 
@@ -190,9 +191,9 @@ def _generate_landing(
     Mirrors the r.acidgenomics.com structure and stylesheet: breadcrumb to
     Acid Genomics, Google site search, a categorized package list (see
     _LANDING_CATEGORIES) with descriptions linking to per-package docs, and a
-    footer with the install snippet and license. css/front.css and
-    images/logo.svg are uploaded separately (not part of the generated tree);
-    see the module docstring for the S3 layout.
+    footer with the license. css/front.css and images/logo.svg are uploaded
+    separately (not part of the generated tree); see the module docstring for
+    the S3 layout.
     """
     from koopa.landing import render_landing
 
@@ -200,6 +201,7 @@ def _generate_landing(
     sections: list[tuple[str, list[tuple[str, str, str]]]] = []
     for heading, names in _LANDING_CATEGORIES:
         entries = [(name, f"{name}/", remaining.pop(name)) for name in names if name in remaining]
+        entries.sort(key=lambda entry: entry[0].lower())
         if entries:
             sections.append((heading, entries))
     if remaining:
@@ -212,11 +214,6 @@ def _generate_landing(
         license_name="Apache 2.0",
         license_url="https://www.apache.org/licenses/LICENSE-2.0",
         copyright_years="2026-pres.",
-        install_note=(
-            "Install: <code>uv pip install "
-            "--index-url https://python.acidgenomics.com/simple/ "
-            "&lt;package&gt;</code>"
-        ),
     )
     with open(output_path, "w") as fh:
         fh.write(content)
