@@ -531,12 +531,37 @@ the browser — verify visually (toggle OS dark/light mode) after publishing:
 
 `reindex` auto-generates `index.html` at the bucket root from each wheel's
 `Summary` field (read via `zipfile` while the wheel is local for hashing).
-Categorized (matching `r.acidgenomics.com`'s landing page groupings) via
-`_LANDING_CATEGORIES` in `pypi.py`; any package not listed there falls into
-an "Other" section so nothing silently disappears from the page. Add new
-packages to `_LANDING_CATEGORIES` when they're published, or they'll land in
-"Other" until categorized. Regenerated automatically on every `publish` or
+Categorized via `_LANDING_CATEGORIES` in `pypi.py` — a
+`list[tuple[str, list[str]]]`, section order matters — with entries sorted
+alphabetically (case-insensitive, by display name) within each section. Any
+package not listed in `_LANDING_CATEGORIES` falls into an "Other" section so
+nothing silently disappears from the page. Add new packages to
+`_LANDING_CATEGORIES` when they're published, or they'll land in "Other"
+until categorized. Regenerated automatically on every `publish` or
 `reindex` — no manual step beyond keeping `_LANDING_CATEGORIES` current.
+
+**No install snippet on the landing page, by design.** An earlier revision
+included `Install: uv pip install --index-url ... <package>` in the footer
+via `render_landing()`'s `install_note` param — removed because it's
+confusing without per-package context (each package's own docs already has
+a proper Installation section matching its README). The parameter still
+exists on `render_landing()` (shared with the R site's caller in `cran.py`,
+which never passed it either), but don't reintroduce it here.
+
+**Categories are duplicated, not shared, across the two sites — keep them in
+sync by hand.** `_LANDING_CATEGORIES` here and `_CATEGORIES` in `cran.py` (R
+side) are independent lists; nothing enforces that a package with both a
+Python and R implementation sits under the same heading on both
+python.acidgenomics.com and r.acidgenomics.com. Update both files in the
+same change when adding or recategorizing a package. Category assignment is
+easy to get wrong on the first pass — `goalie` and `syntactic` both sat
+under "Import/export" for a while simply because that's where an earlier
+revision put them, not because either does any I/O; `acidplyr` isn't
+"Infrastructure" just because other packages build on it, since users also
+call it directly (it ended up with its own "Data manipulation" section).
+Judge by what the package actually does for the person calling it, not by
+where a sibling package already sits, and when genuinely unsure, ask rather
+than pick whichever category "seems close enough."
 
 ## CHANGELOG format (py-* packages)
 
