@@ -278,6 +278,102 @@ inside `<main>` specifically: the page's own table-of-contents sidebar also
 contains an `<h2>On this page</h2>`, which will falsely read as "has content"
 in a naive `grep -c '<h2'` check.
 
+**5. `goalie::bapply()`'s own parameter is `useNames`, not `USE.NAMES`** — a
+caller that (understandably, since it wraps `vapply()`) passes `USE.NAMES =`
+doesn't hit an "unused argument" error; it silently falls through `bapply()`'s
+own `...` and collides with the `USE.NAMES = useNames` that `bapply()` passes
+to `vapply()` internally, aborting with `formal argument "USE.NAMES" matched
+by multiple actual arguments`. This breaks any code path that reaches the
+call — including, non-obviously, a pkgdown vignette that calls a completely
+unrelated-looking function (e.g. `Cellosaurus()`, via `cacheUrl()` →
+`initDir()` → `bapply()` in AcidBase), so the error surfaces at `build_site()`
+time pointing at the vignette chunk, not at the actual bad call site several
+frames down. Found live in `AcidBase::initDir()` and three call sites in
+`pipette::export-methods.R`; grep any package that calls `bapply()` for this:
+
+```sh
+grep -rn "bapply(" -A6 R/*.R | grep -B6 "USE\.NAMES"
+```
+
+Fix is a rename, not a logic change: `USE.NAMES = <flag>` → `useNames =
+<flag>` at the call site. Reinstall the fixed package
+(`devtools::install(upgrade = FALSE)`) before re-testing a downstream
+package that depends on it — R doesn't pick up source changes in an
+installed dependency without a reinstall.
+
+## S4 list-like classes (`CompressedCharacterList`/`CharacterList`/etc.) are slow to index in a loop
+
+Found while investigating why `Cellosaurus()` (168,970 rows) took 4+ minutes,
+versus `py-cellosaurus`'s pandas equivalent finishing in under 9 seconds for
+the same dataset. Profiling (`Rprof`, plus manual `Sys.time()` bracketing of
+each pipeline stage — `Rprof` doesn't see time spent inside `mclapply`'s
+forked children, only the parent's IPC overhead, so bracket stage timings
+directly rather than trusting a flat profile alone) isolated two real,
+independently-fixable bottlenecks, plus one new unrelated bug surfaced along
+the way. All three verified with `identical()` against the pre-fix output on
+the real, full dataset — a synthetic/small-N benchmark is not sufficient
+here; see the second finding below for why.
+
+**1. `AcidPlyr::rbindToDataFrame()` did two named-list scans per cell.**
+Building the transposed `DFrame` used a nested `Map(Map(...))`: for every
+`(row, column)` pair it checked `j %in% names(x[[i]])` then looked up
+`x[[i]][[j]]` by name — two linear scans per cell, ~2.9M cells for this
+dataset. Fixed by doing one `match()` per row (not per cell) against the
+full column set, then a single vectorized `row[idx]` to align all columns at
+once — 10.8s → 8.4s on the real data (measured in isolation, i.e. calling
+`rbindToDataFrame()` directly on the already-parsed entry list, not via the
+full `Cellosaurus()` pipeline). **Two correctness traps hit while doing
+this, both caught by `identical()` against the original, not by
+inspection:**
+  - `Map(i = seq_along(x), ...)`'s `USE.NAMES = TRUE` does **not** name the
+    result when `i` is an unnamed integer vector — `Map`/`mapply` only
+    names-by-value when the varying argument is itself a character vector.
+    A naive rewrite that iterates `X = x` (the named list) instead of
+    `X = seq_along(x)` silently changes output names on nested-list columns.
+  - `row[idx]` on an **atomic vector** row coerces an unmatched (`NA`)
+    position to that vector's type (e.g. `NA_integer_`), not a plain logical
+    `NA` — but the original code's fallback is always plain `NA` regardless
+    of row type. Must overwrite: `out[is.na(idx)] <- list(NA)` after the
+    vectorized index, for both the list-row and atomic-row branches.
+- **2. `[[` on a `CompressedCharacterList`/`CharacterList` (IRanges S4
+  classes) costs ~1 ms/call**, because it goes through S4 dispatch and
+  slot-based range extraction every time, not a simple offset lookup.
+  `.batchFormatNestedCols()` called `[[i]]` on six such columns inside a
+  per-row loop nested inside `mclapply` — for 168,970 rows that's ~1M `[[`
+  calls, and since it's inside `mclapply`, **every forked worker re-pays
+  this cost independently** rather than sharing one paid-once cost. This
+  single function accounted for 257 of `Cellosaurus()`'s ~290 total seconds.
+  Fix: convert each column to a plain base `list` with `as.list()` once,
+  *before* the `mclapply` loop — `list[[i]]` is O(1) with zero dispatch.
+  257s → 38s (6.8x) on the real dataset, verified `identical()`.
+  **This class of bug is invisible in a small/synthetic benchmark** — the
+  per-call dispatch overhead is roughly constant, so it only dominates
+  runtime once the row count is large enough that dispatch cost outweighs
+  the actual per-row work; a 5,000-row synthetic test showed no meaningful
+  difference, but a 168,970-row real dataset showed a 6.8x gap. When
+  benchmarking anything that indexes an IRanges S4 list-like class in a
+  loop, test at (or extrapolate from) the real data's actual scale, not a
+  small stand-in.
+- **New bug found, not yet fixed:** `AcidBase::download()`
+  ([download.R:60-66](https://github.com/acidgenomics/r-acidbase))
+  hardcodes `mode = "wb"` when forwarding to `utils::download.file()`, but
+  also forwards `...` after it. `pipette:::.localOrRemoteFile()`
+  ([import-methods.R:563-568](https://github.com/acidgenomics/r-pipette))
+  passes its own `mode = mode` (computed from the file extension, `"w"` for
+  text or `"wb"` for binary) through that same `...`, so any text-file
+  download (`mode = "w"`) collides with the hardcoded `mode = "wb"` and
+  aborts with `formal argument "mode" matched by multiple actual
+  arguments`. Surfaced as a `Cellosaurus` test failure
+  (`test-currentCellosaurusVersion.R`) with a call stack that looks
+  Cellosaurus-specific but the actual defect is in `AcidBase`. Same root
+  cause class as the `bapply()`/`USE.NAMES` bug above: a function that
+  hardcodes an argument *and* forwards `...` risks the caller supplying
+  that same argument by name through `...`. Not fixed in this session —
+  either drop the hardcoded `mode = "wb"` and require callers to pass it,
+  or have `.localOrRemoteFile()` stop passing `mode` explicitly and let
+  `download()` always write binary (check whether any caller actually
+  relies on text mode first).
+
 ## Local Clone Setup
 
 All 24 active packages are cloned under `~/git/personal/r-<pkgname>` (HTTPS origin).
