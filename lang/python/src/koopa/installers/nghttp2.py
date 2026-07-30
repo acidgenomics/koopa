@@ -17,15 +17,9 @@ def main(
     download_extract_cd()
     make_build(
         conf_args=[
-            "--disable-examples",
-            "--disable-hpack-tools",
             "--disable-silent-rules",
             "--disable-static",
-            "--with-libcares",
-            "--with-libxml2",
-            "--with-openssl",
-            "--with-zlib",
-            "--without-systemd",
+            "--enable-lib-only",
             f"PYTHON={python}",
             f"--prefix={prefix}",
         ],
