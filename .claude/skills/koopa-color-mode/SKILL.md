@@ -5,9 +5,10 @@ description: >
   and chezmoi-rendered theme files. Use when debugging wrong-palette or stale-theme
   symptoms after a dark↔light flip, working on color-mode sync jobs or watchers,
   editing the chezmoi color-mode apply path, investigating why bat/starship/delta
-  renders the wrong theme while fzf/LS_COLORS look correct, or diagnosing a Linux
+  renders the wrong theme while fzf/LS_COLORS look correct, diagnosing a Linux
   host stuck on the wrong palette over SSH (gdbus/XDG-portal parsing, `read`
-  clobbering, or dead in-tmux re-derive logic).
+  clobbering, or dead in-tmux re-derive logic), or confirming whether a fix that
+  touches opt/dotfiles/chezmoi has actually rolled out to a host.
 ---
 
 # koopa Color Mode
@@ -353,6 +354,27 @@ fi
 Applies identically to all three of `lang/{bash,sh,zsh}/functions/activate/
 activate-color-mode.sh`. Leave `_koopa_color_mode` itself untouched — the
 return-the-env behavior is correct and relied upon elsewhere.
+
+## A Two-Repo Fix Needs Both Halves Pushed AND the Pin Bumped
+
+The 2026-08 stuck-light-mode investigation above spanned two repos: the gdbus
+parse bug lived in `koopa` (`system.py`), but the trailing-newline fix for the
+tmux mode-2031 hooks lived in `opt/dotfiles/chezmoi/dot_config/tmux/
+tmux.conf.tmpl` — a separate git repo (`github.com/acidgenomics/dotfiles`) pinned
+by SHA in `etc/koopa/app.json`.
+
+Pushing the koopa half alone made the primary symptom (starship/bat/delta stuck
+light) fully disappear on the test host, which made it easy to assume the whole
+fix had landed. It hadn't: the dotfiles-repo commit sat local-only until it was
+also pushed and the `app.json` pin bumped — see `koopa-dotfiles` skill for the
+exact 4-step rollout and the "known failure mode" this causes (`koopa install
+dotfiles` reports the old SHA as current; the expected file is silently absent
+from `koopa configure user dotfiles`'s pending-changes list).
+
+**Takeaway:** when a color-mode fix touches anything under `opt/dotfiles/
+chezmoi/`, don't declare it shipped from the koopa-side push alone — confirm the
+dotfiles repo's `origin/main` SHA matches (or is ahead of) the `version` pinned
+in `etc/koopa/app.json` before telling the user it's live.
 
 ## Never Verify by Re-Running the Installer from an Agent Session
 
