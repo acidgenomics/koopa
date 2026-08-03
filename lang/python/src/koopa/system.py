@@ -92,6 +92,12 @@ def is_macos() -> bool:
     return platform.system() == "Darwin"
 
 
+# Matches the variant-wrapped uint32 value in gdbus's `Settings.Read` output,
+# e.g. '(<<uint32 1>>,)'. Anchoring on 'uint32' avoids a bare digit search
+# matching a character inside the type name itself.
+_PORTAL_COLOR_SCHEME_RE = re.compile(r"uint32\s+(\d+)")
+
+
 def is_windows() -> bool:
     """Check if running on Windows."""
     return platform.system() == "Windows"
@@ -157,11 +163,15 @@ def _os_appearance_mode_linux() -> str:
             check=False,
         )
         if result.returncode == 0:
-            stdout = result.stdout.strip()
-            if "2" in stdout:
-                return "light"
-            if "1" in stdout:
-                return "dark"
+            match = _PORTAL_COLOR_SCHEME_RE.search(result.stdout)
+            if match:
+                scheme = match.group(1)
+                # 0 = no-preference (fall through), 1 = prefer-dark,
+                # 2 = prefer-light.
+                if scheme == "1":
+                    return "dark"
+                if scheme == "2":
+                    return "light"
     # Fallback: gsettings (GNOME-only, but common).
     gsettings = shutil.which("gsettings")
     if gsettings:
@@ -171,8 +181,11 @@ def _os_appearance_mode_linux() -> str:
             text=True,
             check=False,
         )
-        if result.returncode == 0 and "prefer-light" in result.stdout:
-            return "light"
+        if result.returncode == 0:
+            if "prefer-light" in result.stdout:
+                return "light"
+            if "prefer-dark" in result.stdout:
+                return "dark"
     # Fallback: koopa color-mode cache file (written by the shell activation
     # layer from a terminal-background OSC 11 query).  Engages only on headless
     # hosts where no desktop session answers the portal or gsettings queries.

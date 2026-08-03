@@ -355,7 +355,15 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]] || [[ -n "${TMUX:-}" ]]
+    elif [[ -n "${TMUX:-}" ]]
+    then
+        if _koopa_is_light_mode
+        then
+            KOOPA_COLOR_MODE='light'
+        else
+            KOOPA_COLOR_MODE='dark'
+        fi
+    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi

@@ -1,7 +1,7 @@
 """System module unit tests."""
 
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from koopa.system import (
@@ -156,5 +156,85 @@ def test_os_appearance_mode_linux_no_cache(
     with (
         patch("platform.system", return_value="Linux"),
         patch("shutil.which", return_value=None),
+    ):
+        assert os_appearance_mode() == "dark"
+
+
+# os_appearance_mode — Linux XDG portal (gdbus) parsing
+#
+# gdbus prints the variant-wrapped value, e.g. '(<<uint32 1>>,)'. The type
+# name 'uint32' contains a literal '2', so a naive '"2" in stdout' substring
+# check always matches regardless of the actual value.
+
+
+def _which_gdbus_only(name: str) -> str | None:
+    return "/usr/bin/gdbus" if name == "gdbus" else None
+
+
+def test_os_appearance_mode_linux_portal_prefer_dark(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Portal color-scheme 1 (prefer-dark) resolves to 'dark'.
+
+    Regression test: 'uint32' contains a '2', so a substring check against
+    the raw stdout would previously misclassify this as 'light'.
+    """
+    monkeypatch.delenv("HOME", raising=False)
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", side_effect=_which_gdbus_only),
+        patch(
+            "subprocess.run",
+            return_value=MagicMock(returncode=0, stdout="(<<uint32 1>>,)\n"),
+        ),
+    ):
+        assert os_appearance_mode() == "dark"
+
+
+def test_os_appearance_mode_linux_portal_prefer_light(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Portal color-scheme 2 (prefer-light) resolves to 'light'."""
+    monkeypatch.delenv("HOME", raising=False)
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", side_effect=_which_gdbus_only),
+        patch(
+            "subprocess.run",
+            return_value=MagicMock(returncode=0, stdout="(<<uint32 2>>,)\n"),
+        ),
+    ):
+        assert os_appearance_mode() == "light"
+
+
+def test_os_appearance_mode_linux_portal_no_preference_falls_back(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Portal color-scheme 0 (no-preference) falls through to the cache file."""
+    _write_color_cache(tmp_path, "light")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", side_effect=_which_gdbus_only),
+        patch(
+            "subprocess.run",
+            return_value=MagicMock(returncode=0, stdout="(<<uint32 0>>,)\n"),
+        ),
+    ):
+        assert os_appearance_mode() == "light"
+
+
+def test_os_appearance_mode_linux_portal_unavailable_falls_back(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A non-zero gdbus exit (portal absent) falls through to the cache file."""
+    _write_color_cache(tmp_path, "dark")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", side_effect=_which_gdbus_only),
+        patch("subprocess.run", return_value=MagicMock(returncode=1, stdout="")),
     ):
         assert os_appearance_mode() == "dark"

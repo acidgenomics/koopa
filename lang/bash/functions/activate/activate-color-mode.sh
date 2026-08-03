@@ -9,7 +9,18 @@ _koopa_activate_color_mode() {
         else
             KOOPA_COLOR_MODE='dark'
         fi
-    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]] || [[ -n "${TMUX:-}" ]]
+    elif [[ -n "${TMUX:-}" ]]
+    then
+        # Inside tmux, re-derive from the tmux server env rather than trusting
+        # an inherited value, which may be stale (days-old server, reattached
+        # session). '_koopa_color_mode' would just echo the stale value back.
+        if _koopa_is_light_mode
+        then
+            KOOPA_COLOR_MODE='light'
+        else
+            KOOPA_COLOR_MODE='dark'
+        fi
+    elif [[ -z "${KOOPA_COLOR_MODE:-}" ]]
     then
         KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
