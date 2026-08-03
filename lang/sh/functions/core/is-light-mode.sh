@@ -6,7 +6,8 @@ _koopa_is_light_mode() {
         __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
         if [ -f "$__kvar_cache_file" ]
         then
-            read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null || __kvar_mode=''
+            __kvar_mode=''
+            read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null
             [ "$__kvar_mode" = 'light' ]
             __kvar_result=$?
             unset -v __kvar_cache_file __kvar_mode
@@ -47,8 +48,8 @@ _koopa_is_light_mode() {
             __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
             if [ -f "$__kvar_cache_file" ]
             then
-                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null \
-                    || __kvar_mode=''
+                __kvar_mode=''
+                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null
                 [ "$__kvar_mode" = 'light' ]
                 __kvar_result=$?
                 unset -v __kvar_cache_file __kvar_mode
@@ -63,8 +64,8 @@ _koopa_is_light_mode() {
             __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
             if [ -f "$__kvar_cache_file" ]
             then
-                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null \
-                    || __kvar_mode=''
+                __kvar_mode=''
+                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null
                 [ "$__kvar_mode" = 'light' ]
                 __kvar_result=$?
                 unset -v __kvar_cache_file __kvar_mode
@@ -78,8 +79,8 @@ _koopa_is_light_mode() {
             __kvar_cache_file="${HOME:?}/.cache/koopa/color-mode"
             if [ -f "$__kvar_cache_file" ]
             then
-                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null \
-                    || __kvar_mode=''
+                __kvar_mode=''
+                read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null
                 [ "$__kvar_mode" = 'light' ]
                 __kvar_result=$?
                 unset -v __kvar_cache_file __kvar_mode

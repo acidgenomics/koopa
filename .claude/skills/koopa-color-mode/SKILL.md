@@ -4,8 +4,10 @@ description: >
   How koopa propagates and applies dark/light color mode across SSH, tmux, shells,
   and chezmoi-rendered theme files. Use when debugging wrong-palette or stale-theme
   symptoms after a dark↔light flip, working on color-mode sync jobs or watchers,
-  editing the chezmoi color-mode apply path, or investigating why bat/starship/delta
-  renders the wrong theme while fzf/LS_COLORS look correct.
+  editing the chezmoi color-mode apply path, investigating why bat/starship/delta
+  renders the wrong theme while fzf/LS_COLORS look correct, or diagnosing a Linux
+  host stuck on the wrong palette over SSH (gdbus/XDG-portal parsing, `read`
+  clobbering, or dead in-tmux re-derive logic).
 ---
 
 # koopa Color Mode
@@ -234,6 +236,123 @@ KOOPA_COLOR_MODE=dark chezmoi diff --source="${HOME}/.local/share/koopa/opt/dotf
 
 **corollary:** a file that shows ` M` under the stale env, but is clean under
 the correct env, has NOT drifted. Do not "fix" it.
+
+## Linux Portal Probe: `uint32` Substring Collision (stuck-light bug)
+
+**Symptom:** starship/bat/delta render the **light** palette on a Linux host over
+SSH even though `KOOPA_COLOR_MODE` in the session is correctly `dark` and tmux
+mode-2031 is live. The env-driven layer is right; only the file-driven layer is
+wrong, and it never self-heals.
+
+**Root cause:** `_os_appearance_mode_linux()` in
+[system.py](lang/python/src/koopa/system.py) parsed the raw `gdbus call ...
+Settings.Read org.freedesktop.appearance color-scheme` stdout with a bare
+substring test:
+
+```python
+stdout = result.stdout.strip()   # '(<<uint32 1>>,)' for prefer-dark
+if "2" in stdout:                # "uint32" contains a literal '2'!
+    return "light"
+```
+
+The type name in gdbus's variant-wrapped output (`(<<uint32 1>>,)`) always
+contains a `2`, so this test is true unconditionally — the function returns
+`"light"` for every portal value (`0`, `1`, and `2` alike) whenever gdbus exits 0.
+**Fix:** anchor on the type name and extract the digit that follows it —
+`re.compile(r"uint32\s+(\d+)")` — never substring-match the raw stdout.
+
+**Why it wedges instead of surfacing immediately:** `os_appearance_mode()` is the
+sole mode source for the targeted-apply job in `configurers/color_mode.py`. Once
+it returns the wrong value, the job renders all `KOOPA_COLOR_MODE`-branching
+templates from the wrong palette *and* writes that wrong value to
+`~/.cache/koopa/color-mode-applied`. Every subsequent new shell compares the
+marker against the (correct) `KOOPA_COLOR_MODE` env var, sees a permanent
+mismatch, and respawns the sync job — which reaches the same wrong conclusion
+every time. `rm`-ing the marker does not help; the probe itself is deterministic,
+so only fixing the parse breaks the loop.
+
+**Diagnostic:** run the exact gdbus call by hand and compare against
+`os_appearance_mode()` — if the portal reports `uint32 1` (prefer-dark) but koopa
+resolves `light`, this is the bug:
+```sh
+gdbus call --session --dest org.freedesktop.portal.Desktop \
+  --object-path /org/freedesktop/portal/desktop \
+  --method org.freedesktop.portal.Settings.Read \
+  org.freedesktop.appearance color-scheme
+python3 -c 'from koopa.system import os_appearance_mode; print(os_appearance_mode())'
+```
+
+Regression coverage lives in
+[test_system.py](lang/python/tests/test_system.py) — the gsettings fallback had
+the same class of issue (`"prefer-light" in stdout` with no explicit
+`"prefer-dark"` check, silently relying on the trailing default) and was
+tightened alongside.
+
+## POSIX `read` Clobbers a Successfully-Read Value
+
+**Symptom:** on `sh` specifically (not bash/zsh), the cache-file fallback in
+`_koopa_is_light_mode` reads back `dark` even when
+`~/.cache/koopa/color-mode` correctly contains `light`.
+
+**Cause:** `read -r var < file` returns exit status 1 on EOF without a trailing
+newline, but it has **already assigned** the variable before returning. The idiom
+`read -r var < "$f" 2>/dev/null || var=''` treats that nonzero status as failure
+and blanks the value it just read. The tmux mode-2031 hooks
+([tmux.conf.tmpl](opt/dotfiles/chezmoi/dot_config/tmux/tmux.conf.tmpl)) wrote the
+cache with `printf light >` (no trailing newline), so every `sh` reader of that
+file silently degraded to dark.
+
+**Fix:** pre-initialize, don't post-correct:
+```sh
+__kvar_mode=''
+read -r __kvar_mode < "$__kvar_cache_file" 2>/dev/null
+```
+And make the writer emit a newline (`echo` instead of `printf` with no `\n`) so
+the cache format matches what `printf '%s\n'` already writes elsewhere. bash/zsh
+are unaffected — they use `$(<file)` command substitution, which strips trailing
+newlines and never exhibits this. Grep for `read -r .* || .*=''` across
+`lang/sh/` before assuming a single-shell fix is complete; it was a 4-occurrence
+pattern in one file, not a one-off.
+
+## Dead In-Tmux Re-Derive in `activate-color-mode.sh`
+
+**Symptom:** a stale `KOOPA_COLOR_MODE` inherited from a days-old tmux server (or
+a reattached session) is never corrected at shell activation, even though the
+code has a branch that looks like it should handle exactly this:
+
+```sh
+elif [ -z "${KOOPA_COLOR_MODE:-}" ] || [ -n "${TMUX:-}" ]
+then
+    KOOPA_COLOR_MODE="$(_koopa_color_mode)"
+fi
+```
+
+**Cause:** `_koopa_color_mode()` (in `core/color-mode.sh`) returns
+`$KOOPA_COLOR_MODE` verbatim whenever it is already set — that's its documented
+job for non-interactive consumers. So the `-n "${TMUX:-}"` half of this condition
+is a no-op: it re-invokes a function whose first move is to hand back the exact
+stale value it's trying to replace.
+
+**Fix:** in the tmux branch, call `_koopa_is_light_mode` directly (which *does*
+consult `tmux show-environment -g KOOPA_COLOR_MODE`) instead of routing through
+`_koopa_color_mode`. Mirror the shape the macOS branch already uses:
+```sh
+elif [ -n "${TMUX:-}" ]
+then
+    if _koopa_is_light_mode
+    then
+        KOOPA_COLOR_MODE='light'
+    else
+        KOOPA_COLOR_MODE='dark'
+    fi
+elif [ -z "${KOOPA_COLOR_MODE:-}" ]
+then
+    KOOPA_COLOR_MODE="$(_koopa_color_mode)"
+fi
+```
+Applies identically to all three of `lang/{bash,sh,zsh}/functions/activate/
+activate-color-mode.sh`. Leave `_koopa_color_mode` itself untouched — the
+return-the-env behavior is correct and relied upon elsewhere.
 
 ## Never Verify by Re-Running the Installer from an Agent Session
 
