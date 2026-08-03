@@ -2,8 +2,11 @@
 name: koopa-dotfiles
 description: >
   Managing the opt/dotfiles standalone git clone — git state, committing changes,
-  and license/metadata updates. Use when making changes to opt/dotfiles/ that need
-  to be committed, or when the clone is in a detached HEAD state.
+  license/metadata updates, and the app.json pin rollout to hosts. Use when making
+  changes to opt/dotfiles/ that need to be committed, when the clone is in a
+  detached HEAD state, or when a fix that touches both the koopa repo and
+  opt/dotfiles/chezmoi appears to not take effect on a remote host after koopa
+  side changes land.
 ---
 
 # koopa Dotfiles Repo Management
@@ -48,3 +51,43 @@ Apache-2.0 — Copyright 2016 Acid Genomics LLC — see [LICENSE](LICENSE).
 
 To verify no AGPL traces remain: `grep -i "affero\|agpl" opt/dotfiles/LICENSE`
 should return nothing.
+
+## Pinned version — a fix touching both repos needs two pushes, and the pin auto-tracks main HEAD
+
+The `dotfiles` app entry in `etc/koopa/app.json` pins `opt/dotfiles/` to an exact
+commit SHA (`version` field, e.g. `"d1281d312911bcbb893a333f715fbe2e9aee6e77"`).
+`koopa install dotfiles` on any host checks out exactly that SHA — pushing new
+commits to `github.com/acidgenomics/dotfiles` main does not change what any host
+installs until this pin advances.
+
+**The pin is not hand-edited.** `koopa develop check-app-versions` (run without
+`--no-update`) queries `github.com/acidgenomics/dotfiles`'s `main` branch HEAD via
+`_check_github_head()` in
+[version_check.py](lang/python/src/koopa/version_check.py) and, if it differs
+from the pinned SHA, calls `update_app_json()` to rewrite `app.json`'s `version`
+and `date` fields and drop any stale `revision` — this is the source of the
+`"Update dotfiles"` commits you'll see in `git log -- etc/koopa/app.json`. Do not
+manually edit the `dotfiles` entry's `version` field; run the check command
+instead, from the koopa repo whose `opt/dotfiles/` clone already has the new
+commit pushed.
+
+**A fix that spans both `koopa` and `opt/dotfiles/chezmoi` needs, in order:**
+1. Commit + push in `opt/dotfiles` (see detached-HEAD check above).
+2. `koopa develop check-app-versions dotfiles` (no `--no-update`) to pull the new
+   pin into `app.json`.
+3. Commit + push that `app.json` change in the koopa repo itself.
+4. On the target host: `git pull` (koopa repo) → `koopa install dotfiles`
+   (picks up the new pin) → `koopa configure user dotfiles` (re-renders).
+
+**Known failure mode:** shipping only the koopa-side half of a fix (e.g. a Python
+probe bug) looks fully resolved once it's live, because most such bugs are
+one-repo. But if the same investigation also touched a chezmoi template (as the
+2026-08 stuck-light-mode fix did — the Python `gdbus` parse bug in `koopa`, plus a
+tmux-hook trailing-newline fix in `opt/dotfiles/chezmoi/dot_config/tmux/
+tmux.conf.tmpl`), the dotfiles half is invisible until steps 2–4 above happen.
+Symptom on the host: `koopa install dotfiles` reports the **old** SHA as already
+current, and the expected file never shows up in the `koopa configure user
+dotfiles` pending-changes list. Check `git log -1 origin/main` in `opt/dotfiles`
+against the `version` pin currently in `app.json` (or just run
+`check-app-versions dotfiles` and look for "outdated") to confirm the SHA a fix
+landed in has actually been promoted, not just pushed.
