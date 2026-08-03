@@ -4,10 +4,11 @@ description: >
   Reference for koopa theme synthesis across editors and terminals — Dracula Pro
   runtime pipeline, fish color architecture (fish_frozen_theme.fish override, _FISH_COLOR_ROLES
   generator, live sync hook), JetBrains/IntelliJ scheme delivery, atuin and mcfly color
-  config, and macOS sandboxed-app theme installation. Use when generating or fixing
-  editor/terminal color schemes, debugging a theme that renders incorrectly, or
-  writing theme-install code. For the "never hardcode Pro hex" guardrail see the
-  path-scoped theme-colors rule.
+  config, vim/nvim statusline theming (airline explicit g:airline_theme read, lualine
+  palette-reading theme function, why 'auto' silently produces wrong colors), and
+  macOS sandboxed-app theme installation. Use when generating or fixing editor/terminal
+  color schemes, debugging a theme that renders incorrectly, or writing theme-install
+  code. For the "never hardcode Pro hex" guardrail see the path-scoped theme-colors rule.
 ---
 
 # koopa Theming Reference
@@ -293,9 +294,45 @@ Alucard-specific `dracula_pro_alucard.vim` overrides the palette dict entries be
 calling `runtime colors/dracula_pro_base.vim`, so the light colors are already in
 `g:dracula_pro#palette` when the base file runs.
 
-### Contrast with nvim (lualine)
+### nvim (lualine) needs the same explicit read as airline — `auto` does not work
 
-nvim uses lualine with `theme = 'auto'`
-(`dot_config/nvim/lua/plugins/ui.lua`). lualine's auto theme derives directly from
-the active colorscheme's highlight groups, so Alucard → light statusline happens
-automatically with no explicit airline-equivalent call needed.
+Unlike vim-airline, lualine ships **no** Dracula Pro theme file at all (no
+`lua/lualine/themes/dracula_pro.lua`), so `theme = 'auto'` was never deriving
+from the colorscheme — it was falling through to lualine's bundled `auto.lua`,
+which *guesses* by scraping unrelated highlight groups (`PmenuSel`,
+`StatusLine`, `String`) through a ±10% brightness modifier and a contrast-
+iteration loop. Measured result: gray-on-gray in both dark and Alucard, with
+wrong per-mode accents (e.g. yellow instead of green for insert in Alucard).
+This is a heuristic guess, not a faithful derivation, and it produces the
+wrong colors.
+
+**Fix (`dot_config/nvim/lua/plugins/ui.lua`):** mirror the airline pattern —
+read `g:dracula_pro#palette` directly, just via the Lua accessor
+`vim.g['dracula_pro#palette']` instead of vim's `g:` syntax. A
+`dracula_pro_lualine_theme()` function builds the lualine theme table from
+`purple`/`green`/`yellow`/`red`/`cyan` per mode, with `fg` on `selection` for
+section `b` (the vendor airline theme's `fg` on `comment` measures 2.78:1 in
+Alucard — fails WCAG AA) and `bgdark` for section `c` (Alucard's `bglight`
+equals `Normal.bg` exactly, so the bar's middle would vanish).
+
+```lua
+local function dracula_pro_lualine_theme()
+    local p = vim.g['dracula_pro#palette']
+    if type(p) ~= 'table' or type(p.purple) ~= 'table' then
+        return nil
+    end
+    -- build theme table from p.purple, p.green, p.selection, p.bgdark, etc.
+end
+```
+
+`opts` must be a **function**, not a table literal — a literal is evaluated at
+lazy.nvim spec-parse time, before any colorscheme has loaded, so the palette
+global wouldn't exist yet. `theme` must also be a function: lualine's own
+`autocmd lualine ColorScheme *` re-invokes it on every `:colorscheme` call,
+which is what makes a live dark↔light flip re-derive automatically — the
+Lua-side equivalent of airline's `silent! AirlineTheme dracula_pro` re-paint.
+
+Leave non-Pro fallbacks unchanged: the function returns `nil` when Pro isn't
+installed, so `theme` falls back to the string `'auto'` — correct for
+`dracula.nvim` (bundled `lualine/themes/dracula.lua`, free OSS hex) and
+`vim-one` (no bundled match either way).
