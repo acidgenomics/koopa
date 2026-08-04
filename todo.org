@@ -18,3 +18,6 @@ https://r.acidgenomics.com/syntactic/news/index.html
    Cosmetic only — R always resolves the highest version — but worth fixing
    so it doesn't need another manual cleanup pass later.
 ** TODO Publish all our packages at bioconda. Consider including koopa too.
+** TODO Homebrew update progress is getting swallowed too much in koopa update
+    => Updating Homebrew.
+       homebrew \ [3m30s]
