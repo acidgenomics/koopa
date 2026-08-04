@@ -2180,24 +2180,12 @@
     "version": "1.10.0"
   },
   "datafusion": {
-    "bin": [
-      "datafusion-cli"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Database",
-    "conda_channel": "conda-forge",
-    "date": "2026-06-30",
-    "default": false,
-    "description": "Apache Arrow-native SQL query engine with CLI",
-    "installer": "conda-package",
-    "type": "cli",
+    "date": "2026-08-04",
+    "removed": true,
     "url": [
       "https://datafusion.apache.org/",
       "https://github.com/apache/datafusion/"
-    ],
-    "version": "54.0.0"
+    ]
   },
   "dbt": {
     "bin": [
@@ -4354,11 +4342,17 @@
     ],
     "category": "Network",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-08-04",
     "default": false,
     "description": "HTTP testing tool using plain-text test files",
     "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-arm64": false
+    },
     "type": "cli",
+    "unsupported_note": "conda-forge publishes Linux builds only (no osx-arm64). Run hurl on a Linux host.",
     "url": [
       "https://hurl.dev/",
       "https://github.com/Orange-OpenSource/hurl/"
@@ -4578,7 +4572,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-08-04",
     "default": false,
     "description": "interactive JSON navigator with live jq filter support",
     "installer": "conda-package",
@@ -4586,7 +4580,7 @@
     "url": [
       "https://github.com/ynqa/jnv/"
     ],
-    "version": "0.7.1"
+    "version": "0.7.0"
   },
   "jpeg": {
     "date": "2024-12-30",
@@ -8723,6 +8717,28 @@
       "https://github.com/koalaman/shellcheck/"
     ],
     "version": "0.11.0"
+  },
+  "shfmt": {
+    "bin": [
+      "shfmt"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Shell",
+    "conda_channel": "conda-forge",
+    "date": "2026-08-04",
+    "default": false,
+    "description": "shell parser, formatter, and interpreter",
+    "installer": "conda-package",
+    "installer_args": {
+      "name": "go-shfmt"
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/mvdan/sh"
+    ],
+    "version": "3.13.1"
   },
   "shiny-server": {
     "category": "R",
