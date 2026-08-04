@@ -11,15 +11,17 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (131) ---------------------------------------------
+    # -- conda-package (137) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
     "aria2": f"{_M}._conda",
     "aspell": f"{_M}._conda",
+    "ast-grep": f"{_M}._conda",
     "autodock": f"{_M}._conda",
     "autodock-vina": f"{_M}._conda",
     "axel": f"{_M}._conda",
+    "cloud-sql-proxy": f"{_M}._conda",
     "docker-credential-helpers": f"{_M}._conda",
     "ghostscript": f"{_M}._conda",
     "git-lfs": f"{_M}._conda",
@@ -86,12 +88,15 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "helix": f"{_M}._conda",
     "hisat2": f"{_M}._conda",
     "htseq": f"{_M}._conda",
+    "hurl": f"{_M}._conda",
     "hyperfine": f"{_M}._conda",
     "jj": f"{_M}._conda",
+    "jnv": f"{_M}._conda",
     "jq": f"{_M}._conda",
     "just": f"{_M}._conda",
     "k9s": f"{_M}._conda",
     "kallisto": f"{_M}._conda",
+    "lazygit": f"{_M}._conda",
     "libnetcdf": f"{_M}._conda",
     "lsd": f"{_M}._conda",
     "luigi": f"{_M}._conda",
@@ -110,6 +115,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "pandoc": f"{_M}._conda",
     "perl": f"{_M}.perl_app",
     "picard": f"{_M}._conda",
+    "pixi": f"{_M}._conda",
     "procs": f"{_M}._conda",
     "pymol": f"{_M}._conda",
     "r": f"{_M}._conda",
@@ -126,6 +132,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "sd": f"{_M}._conda",
     "seqkit": f"{_M}._conda",
     "shellcheck": f"{_M}._conda",
+    "shfmt": f"{_M}._conda",
     "snakemake": f"{_M}._conda",
     "sox": f"{_M}._conda",
     "star": f"{_M}._conda",
@@ -150,7 +157,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "zenith": f"{_M}._conda",
     "zoxide": f"{_M}._conda",
     "zsh": f"{_M}.zsh_app",
-    # -- python-package (57) ---------------------------------------------
+    # -- python-package (58) ---------------------------------------------
     "ansible-core": f"{_M}._python_pkg",
     "apache-airflow": f"{_M}._python_pkg",
     "autoflake": f"{_M}._python_pkg",
@@ -160,6 +167,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bumpver": f"{_M}._python_pkg",
     "commitizen": f"{_M}._python_pkg",
     "csvkit": f"{_M}._python_pkg",
+    "dask": f"{_M}._python_pkg",
     "dbt": f"{_M}._python_pkg",
     "flake8": f"{_M}._python_pkg",
     "gentropy": f"{_M}._python_pkg",
