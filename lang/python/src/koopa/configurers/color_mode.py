@@ -127,6 +127,10 @@ def main(
         # Re-read the OS state and marker inside the lock.  During a mode
         # transition defaults(1)/gdbus may briefly report the prior value;
         # re-reading after the lock settles ensures we apply the final state.
+        # Paying os_appearance_mode() twice per run is only cheap because the
+        # probe itself is bounded (headless-session gate + subprocess timeout
+        # in _os_appearance_mode_linux) -- don't reintroduce an unbounded
+        # probe here.
         new_mode = os_appearance_mode()
         ts = datetime.now().astimezone().isoformat(timespec="seconds")
         if os.path.isfile(marker_file):
