@@ -251,8 +251,8 @@ Settings.Read org.freedesktop.appearance color-scheme` stdout with a bare
 substring test:
 
 ```python
-stdout = result.stdout.strip()   # '(<<uint32 1>>,)' for prefer-dark
-if "2" in stdout:                # "uint32" contains a literal '2'!
+stdout = result.stdout.strip()  # '(<<uint32 1>>,)' for prefer-dark
+if "2" in stdout:  # "uint32" contains a literal '2'!
     return "light"
 ```
 
