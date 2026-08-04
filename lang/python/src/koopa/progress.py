@@ -79,7 +79,7 @@ def build_log_path(name: str) -> str:
 
     Each app writes to a fixed location so a stuck build can always be found
     and tailed without knowing a temp-file name:
-      ``$XDG_CACHE_HOME/koopa/logs/<name>.log``
+      ``${XDG_CACHE_HOME}/koopa/logs/<name>.log``
     The file is overwritten on each install run and is kept even on failure so
     a failed or hung build's output is inspectable afterward.
     """
@@ -279,7 +279,7 @@ class BuildProgress:
         """Redirect stdout/stderr to a named build-log file and start spinner.
 
         Each app logs to a fixed, predictable path under the XDG cache dir:
-          ``$XDG_CACHE_HOME/koopa/logs/<name>.log``
+          ``${XDG_CACHE_HOME}/koopa/logs/<name>.log``
         This file is overwritten on each run and kept even on failure so a
         stuck or failed build's output can be inspected after the fact.
 

@@ -53,6 +53,30 @@ def _require_supported_platform() -> None:
         sys.exit(1)
 
 
+def _require_git_managed_install() -> None:
+    """Abort if koopa was not installed via the native git-managed installer.
+
+    App install/uninstall/update write into and self-update koopa's own
+    prefix via 'git pull' (see 'koopa.install.update_koopa'), which conflicts
+    with a package manager's (e.g. conda) relocatable, externally-managed
+    prefix. A packaged koopa is detected the same way 'update_koopa' already
+    detects a pinned release: not a git repo, or a detached HEAD.
+    """
+    from koopa.git import git_branch, is_git_repo
+    from koopa.prefix import koopa_prefix
+
+    prefix = koopa_prefix()
+    if is_git_repo(prefix) and git_branch(prefix) != "HEAD":
+        return
+    print(
+        "Error: app management is unavailable in this koopa install.\n"
+        "Use the native installer instead:"
+        " https://koopa.acidgenomics.com/install",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
 def _exec_restart_with_bootstrap() -> None:
     """Replace the current process with a fresh koopa invocation.
 
@@ -103,6 +127,9 @@ def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
     os_key = _os_id()
     if os_key in supported and not supported[os_key]:
         msg = f"'{name}' is not supported on {os_key}."
+        note = app_meta.get("unsupported_note", "")
+        if note:
+            msg += f"\n{note}"
         raise RuntimeError(msg)
 
 
@@ -338,6 +365,7 @@ def _resolve_apps_and_mode(
 def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
     _require_supported_platform()
+    _require_git_managed_install()
 
     apps, mode = _resolve_apps_and_mode(args)
     if args.all:
@@ -397,6 +425,7 @@ def _handle_install(args: argparse.Namespace) -> None:
 def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     _require_supported_platform()
+    _require_git_managed_install()
     from koopa.app import stale_revdeps
     from koopa.install import _acquire_install_lock, _release_install_lock, install_app
 
@@ -565,6 +594,7 @@ def _confirm_destructive(prompt: str, yes: bool) -> bool:
 
 def _handle_uninstall(args: argparse.Namespace) -> None:
     """Handle ``koopa uninstall`` subcommand."""
+    _require_git_managed_install()
     from koopa.app import app_revdeps, installed_apps
     from koopa.install import _acquire_install_lock, _release_install_lock
     from koopa.uninstall import UninstallConfig, uninstall_app, uninstall_koopa
@@ -633,6 +663,7 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     _require_supported_platform()
+    _require_git_managed_install()
     from koopa.install import (
         _acquire_install_lock,
         _cleanup_legacy_config,

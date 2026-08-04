@@ -92,6 +92,12 @@ def is_macos() -> bool:
     return platform.system() == "Darwin"
 
 
+# Matches the variant-wrapped uint32 value in gdbus's `Settings.Read` output,
+# e.g. '(<<uint32 1>>,)'. Anchoring on 'uint32' avoids a bare digit search
+# matching a character inside the type name itself.
+_PORTAL_COLOR_SCHEME_RE = re.compile(r"uint32\s+(\d+)")
+
+
 def is_windows() -> bool:
     """Check if running on Windows."""
     return platform.system() == "Windows"
@@ -132,47 +138,83 @@ def os_appearance_mode() -> str:
     return "dark"
 
 
+def _linux_has_graphical_session() -> bool:
+    """Return True when a graphical desktop session appears to be present.
+
+    The XDG desktop portal is only meaningful inside a real desktop session.
+    On headless hosts (SSH, SLURM login nodes, CI) the D-Bus session bus often
+    still exists, so ``gdbus`` connects successfully and then blocks for the
+    full D-Bus activation timeout (~28s measured) while systemd tries and
+    fails to activate ``xdg-desktop-portal``. Gating on session type is what
+    makes that cost avoidable; probing D-Bus availability is not sufficient,
+    since the bus being reachable says nothing about whether a portal will
+    ever answer.
+    """
+    if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
+        return True
+    if os.environ.get("XDG_CURRENT_DESKTOP"):
+        return True
+    return os.environ.get("XDG_SESSION_TYPE", "") in ("wayland", "x11")
+
+
 def _os_appearance_mode_linux() -> str:
     """Return 'dark' or 'light' on Linux via XDG portal or gsettings fallback."""
-    # Primary: XDG desktop portal (freedesktop standard; works on GNOME and KDE).
-    # color-scheme: 0 = no-preference, 1 = prefer-dark, 2 = prefer-light.
-    gdbus = shutil.which("gdbus")
-    if gdbus:
-        result = subprocess.run(
-            [
-                gdbus,
-                "call",
-                "--session",
-                "--dest",
-                "org.freedesktop.portal.Desktop",
-                "--object-path",
-                "/org/freedesktop/portal/desktop",
-                "--method",
-                "org.freedesktop.portal.Settings.Read",
-                "org.freedesktop.appearance",
-                "color-scheme",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode == 0:
-            stdout = result.stdout.strip()
-            if "2" in stdout:
-                return "light"
-            if "1" in stdout:
-                return "dark"
-    # Fallback: gsettings (GNOME-only, but common).
-    gsettings = shutil.which("gsettings")
-    if gsettings:
-        result = subprocess.run(
-            [gsettings, "get", "org.gnome.desktop.interface", "color-scheme"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode == 0 and "prefer-light" in result.stdout:
-            return "light"
+    if _linux_has_graphical_session():
+        # Primary: XDG desktop portal (freedesktop standard; works on GNOME
+        # and KDE). color-scheme: 0 = no-preference, 1 = prefer-dark,
+        # 2 = prefer-light.
+        gdbus = shutil.which("gdbus")
+        if gdbus:
+            try:
+                result = subprocess.run(
+                    [
+                        gdbus,
+                        "call",
+                        "--session",
+                        "--dest",
+                        "org.freedesktop.portal.Desktop",
+                        "--object-path",
+                        "/org/freedesktop/portal/desktop",
+                        "--method",
+                        "org.freedesktop.portal.Settings.Read",
+                        "org.freedesktop.appearance",
+                        "color-scheme",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=5,
+                )
+            except subprocess.TimeoutExpired:
+                result = None
+            if result is not None and result.returncode == 0:
+                match = _PORTAL_COLOR_SCHEME_RE.search(result.stdout)
+                if match:
+                    scheme = match.group(1)
+                    # 0 = no-preference (fall through), 1 = prefer-dark,
+                    # 2 = prefer-light.
+                    if scheme == "1":
+                        return "dark"
+                    if scheme == "2":
+                        return "light"
+        # Fallback: gsettings (GNOME-only, but common).
+        gsettings = shutil.which("gsettings")
+        if gsettings:
+            try:
+                result = subprocess.run(
+                    [gsettings, "get", "org.gnome.desktop.interface", "color-scheme"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=5,
+                )
+            except subprocess.TimeoutExpired:
+                result = None
+            if result is not None and result.returncode == 0:
+                if "prefer-light" in result.stdout:
+                    return "light"
+                if "prefer-dark" in result.stdout:
+                    return "dark"
     # Fallback: koopa color-mode cache file (written by the shell activation
     # layer from a terminal-background OSC 11 query).  Engages only on headless
     # hosts where no desktop session answers the portal or gsettings queries.
@@ -370,6 +412,11 @@ def is_os_like(os_id: str) -> bool:
 def get_os_id() -> str:
     """Get the OS identifier string."""
     return _os_id()
+
+
+def get_os_id_like() -> str:
+    """Get the OS ID_LIKE string (e.g. 'debian' for Ubuntu)."""
+    return _os_id_like()
 
 
 @lru_cache(maxsize=1)

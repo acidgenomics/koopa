@@ -8,6 +8,7 @@ import ssl
 import urllib.error
 
 import pytest
+from koopa.version import sanitize_version
 from koopa.version_check import (
     _friendly_network_error,
     _is_prerelease,
@@ -57,6 +58,26 @@ def test_is_prerelease_matches(version: str) -> None:
 def test_is_prerelease_rejects(version: str) -> None:
     """Stable versions (including single-letter suffixes) are not treated as pre-release."""
     assert _is_prerelease(version) is False
+
+
+@pytest.mark.parametrize(
+    "version",
+    [
+        "3.15.0beta2",
+        "3.14.0rc1",
+        "1.2.0alpha",
+        "1.92.0.beta1",
+    ],
+)
+def test_is_prerelease_survives_sanitize_version(version: str) -> None:
+    """A pre-release marker must still be detected after sanitize_version().
+
+    Regression test: sanitize_version() previously truncated pre-release
+    suffixes down to a single letter (e.g. '3.15.0beta2' -> '3.15.0b'), which
+    made this same _is_prerelease() check fail open in
+    check_app_versions()._run_check(), letting a geos beta land in app.json.
+    """
+    assert _is_prerelease(sanitize_version(version)) is True
 
 
 # ── _friendly_network_error ────────────────────────────────────────────────

@@ -9,7 +9,7 @@ function _koopa_terminal_is_light_background
     set -l old_settings (stty -g 2>/dev/null); or return 1
     # fish has no trap mechanism for functions, so a hard signal between the
     # stty raw below and the restore two lines later can leave the terminal in
-    # raw mode.  The dd timeout (time 2 = 0.2s) bounds the raw window; the
+    # raw mode. The dd timeout (time 2 = 0.2s) bounds the raw window; the
     # early returns after the restore are already post-restore and safe.
     stty raw -echo min 0 time 2 2>/dev/null
     printf '\033]11;?\033\\' > /dev/tty

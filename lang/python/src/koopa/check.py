@@ -626,25 +626,32 @@ def check_macos_system_python() -> bool:
     return ok
 
 
-def check_macos_xcode_clt() -> bool:
-    """Check if Xcode Command Line Tools SDK is current on macOS."""
+def _macos_xcode_clt_sdk_current() -> bool | None:
+    """Check whether the installed CLT SDK is current.
+
+    Returns
+    -------
+    bool | None
+        ``True`` if current, ``False`` if out of date (already warned), or
+        ``None`` if no SDK data is available to compare.
+    """
     import json
     import platform
 
     sdk_settings = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/SDKSettings.json"
     if not isfile(sdk_settings):
-        return True
+        return None
     try:
         with open(sdk_settings) as f:
             data = json.load(f)
     except (OSError, json.JSONDecodeError):
-        return True
+        return None
     sdk_version = data.get("Version", "")
     if not sdk_version:
-        return True
+        return None
     macos_version = platform.mac_ver()[0]
     if not macos_version:
-        return True
+        return None
     sdk_major = _version_tuple(sdk_version)[:1]
     os_major = _version_tuple(macos_version)[:1]
     if sdk_major < os_major:
@@ -655,6 +662,98 @@ def check_macos_xcode_clt() -> bool:
             f" for macOS {macos_version}."
             " Run 'xcode-select --install' to update."
         )
+        return False
+    return True
+
+
+def _macos_xcode_clt_installed() -> bool:
+    """Check whether a CLT package identifier is installed via `pkgutil`/`xcode-select`."""
+    import re
+    import subprocess
+
+    try:
+        # Check for an installed CLT package identifier.
+        pkg = subprocess.run(
+            ["/usr/sbin/pkgutil", "--pkg-info", "com.apple.pkg.CLTools_Executables"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        pkg = None
+    if pkg and pkg.returncode == 0 and pkg.stdout:
+        # pkgutil output contains a 'version: ' line when installed.
+        return re.search(r"version:\s*(\S+)", pkg.stdout) is not None
+    # Fallback: xcode-select -p returns a path when either Xcode or CLT installed.
+    try:
+        xs = subprocess.run(
+            ["/usr/bin/xcode-select", "-p"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=3,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return False
+    return xs.returncode == 0 and bool(xs.stdout.strip())
+
+
+def _macos_xcode_clt_update_available() -> bool:
+    """Check whether `softwareupdate` reports an available CLT update.
+
+    By default skip the slow `softwareupdate --list` query to avoid delaying
+    `koopa system check`. Only run it when explicitly opted in via the
+    environment variable `KOOPA_ALLOW_MACOS_SOFTWARE_UPDATE=1`.
+    """
+    import re
+    import subprocess
+
+    if os.environ.get("KOOPA_ALLOW_MACOS_SOFTWARE_UPDATE") != "1":
+        return False
+    try:
+        sw = subprocess.run(
+            ["/usr/sbin/softwareupdate", "--list"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=3,
+        )
+        su_out = (sw.stdout or "") + "\n" + (sw.stderr or "")
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        su_out = ""
+    return bool(su_out) and bool(
+        re.search(
+            r"command line tools|command-line tools|CLTools|Command Line Tools for Xcode",
+            su_out,
+            re.IGNORECASE,
+        )
+    )
+
+
+def check_macos_xcode_clt() -> bool:
+    """Check if Xcode Command Line Tools SDK is current on macOS."""
+    sdk_current = _macos_xcode_clt_sdk_current()
+    if sdk_current is False:
+        return False
+    if sdk_current is None:
+        return True
+    # Additional checks: detect whether CLT are missing or whether
+    # softwareupdate reports an available CLT update. Some macOS
+    # prompts offer a newer CLT package even when the SDK file exists,
+    # so consult `pkgutil`/`xcode-select` and `softwareupdate` too.
+    if _macos_xcode_clt_update_available():
+        from koopa.alert import warn
+
+        warn(
+            "A Command Line Tools update is available via Software Update."
+            " Run 'softwareupdate --list' or 'xcode-select --install' to update."
+        )
+        return False
+    if not _macos_xcode_clt_installed():
+        from koopa.alert import warn
+
+        warn("Xcode Command Line Tools not detected. Install with 'xcode-select --install'.")
         return False
     return True
 

@@ -3,10 +3,13 @@
 _koopa_check_multiple_users() {
     # """
     # Check for multiple users, and print who is logged in.
-    # @note Updated 2023-09-14.
+    # @note Updated 2026-07-29.
     #
-    # Only performing this check on AWS EC2 currently.
+    # Only performing this check on AWS EC2 currently. Also gated on
+    # interactivity: this prints to stdout, which would otherwise corrupt
+    # non-interactive consumers like 'scp' and 'rsync' over SSH.
     # """
+    _koopa_is_interactive || return 0
     _koopa_is_aws_ec2 || return 0
     __kvar_n="$(_koopa_logged_in_user_count)"
     if [ "$__kvar_n" -gt 1 ]

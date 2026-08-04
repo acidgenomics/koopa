@@ -41,6 +41,9 @@ def configure_app(config: ConfigureConfig) -> None:
         msg = "Root user cannot configure user apps."
         raise PermissionError(msg)
     alert_configure_start(config.name)
+    # Platform resolution (generic 'common' -> concrete OS id/family, and
+    # vice versa) happens inside has_python_configurer/get_python_configurer
+    # so both stay in agreement; config.platform itself is left untouched.
     if not has_python_configurer(config.name, config.platform, config.mode):
         msg = f"No configurer for '{config.name}' ({config.platform}/{config.mode})."
         raise FileNotFoundError(msg)

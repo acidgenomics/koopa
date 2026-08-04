@@ -624,6 +624,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     """
     import time
 
+    from koopa.download import _derive_filename
     from koopa.io import import_app_json
     from koopa.vendor import vendor_can_push
     from koopa.vendor import vendor_config as _vendor_config
@@ -693,7 +694,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
         if not version or not src_url:
             return
         url = _expand_src_url(src_url, version)
-        filename = url.rsplit("/", 1)[-1]
+        filename = _derive_filename(url)
         cache_key = f"{name}/{filename}"
         if cache_key in cache and (now - cache[cache_key]) < _cache_ttl:
             return
@@ -702,8 +703,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
             cache[cache_key] = now
             return
         try:
-            tqdm.write(f"  Uploading: {cache_key}")
+            tqdm.write(f"  Mirroring: {cache_key}")
             _mirror_src_to_s3(name, version, src_url, strict=True, quiet=True)
+            tqdm.write(f"  Mirrored: {cache_key}")
             cache[cache_key] = now
         except Exception as exc:
             failures[name] = str(exc)
@@ -711,7 +713,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
             return
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
-            extra_filename = extra_url.rsplit("/", 1)[-1]
+            extra_filename = _derive_filename(extra_url)
             extra_cache_key = f"{name}/{extra_filename}"
             if extra_cache_key in cache and (now - cache[extra_cache_key]) < _cache_ttl:
                 continue
@@ -720,7 +722,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
                 cache[extra_cache_key] = now
                 continue
             try:
+                tqdm.write(f"  Mirroring: {extra_cache_key}")
                 _mirror_src_to_s3(name, version, extra_tmpl, strict=True, quiet=True)
+                tqdm.write(f"  Mirrored: {extra_cache_key}")
                 cache[extra_cache_key] = now
             except Exception as exc:
                 failures[name] = str(exc)
@@ -750,10 +754,10 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
             continue
         expected: set[str] = set()
         url = _expand_src_url(src_url, version)
-        expected.add(url.rsplit("/", 1)[-1])
+        expected.add(_derive_filename(url))
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
-            expected.add(extra_url.rsplit("/", 1)[-1])
+            expected.add(_derive_filename(extra_url))
         prefix = f"src/{name}/"
         for key in existing_keys:
             if not key.startswith(prefix):
@@ -809,6 +813,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
     """
     import shutil as _shutil
 
+    from koopa.download import _derive_filename
     from koopa.io import import_app_json
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws
 
@@ -850,7 +855,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
         if not version or not src_url:
             continue
         url = _expand_src_url(src_url, version)
-        filename = url.rsplit("/", 1)[-1]
+        filename = _derive_filename(url)
         key = f"src/{name}/{filename}"
         result = subprocess.run(
             [
@@ -872,7 +877,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
             missing.append(name)
         for extra_tmpl in entry.get("extra_src_urls", []):
             extra_url = _expand_src_url(extra_tmpl, version)
-            extra_filename = extra_url.rsplit("/", 1)[-1]
+            extra_filename = _derive_filename(extra_url)
             extra_key = f"src/{name}/{extra_filename}"
             extra_result = subprocess.run(
                 [

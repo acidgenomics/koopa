@@ -2,13 +2,38 @@
 
 import subprocess
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
+from koopa.configurers import get_python_configurer, has_python_configurer
 from koopa.configurers.dotfiles import (
     _chezmoi_managed,
     _print_chezmoi_status,
     _warn_cross_tree_overlap,
+    main,
 )
+
+
+def test_has_python_configurer_falls_back_to_common_for_macos_user() -> None:
+    """Concrete macos platform falls back to the common registry entry."""
+    assert has_python_configurer("dotfiles", "macos", "user")
+    assert has_python_configurer("color-mode", "macos", "user")
+
+
+def test_get_python_configurer_falls_back_to_common_for_macos_user() -> None:
+    """Concrete macos platform resolves to the common configurer's module."""
+    assert get_python_configurer("dotfiles", "macos", "user") is main
+
+
+def test_has_python_configurer_expands_common_to_os_id_like_family() -> None:
+    """Generic common platform expands to the host's ID_LIKE family."""
+    with (
+        patch("koopa.system.get_os_id", return_value="ubuntu"),
+        patch("koopa.system.get_os_id_like", return_value="debian"),
+        patch("koopa.system.is_macos", return_value=False),
+    ):
+        assert has_python_configurer("base", "common", "system")
+
 
 # ---------------------------------------------------------------------------
 # _warn_cross_tree_overlap

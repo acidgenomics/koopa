@@ -141,6 +141,7 @@ _APP_TREE: dict[str, Any] = {
     },
     "python": {
         "publish": "python-publish",
+        "publish-assets": "python-publish-assets",
         "publish-docs": "python-publish-docs",
         "reindex": "python-reindex",
     },
@@ -160,6 +161,7 @@ _APP_TREE: dict[str, Any] = {
         "package-version": "r-package-version",
         "paste-to-vector": "r-paste-to-vector",
         "publish": "r-publish",
+        "publish-docs": "r-publish-docs",
         "publish-from-github": "r-publish-from-github",
         "reindex": "r-reindex",
         "remove-packages-in-system-library": "r-remove-packages-in-system-library",
@@ -376,6 +378,12 @@ def _handle_python_reindex(_: list[str]) -> None:
     reindex()
 
 
+def _handle_python_publish_assets(_: list[str]) -> None:
+    from koopa.pypi import publish_assets
+
+    publish_assets()
+
+
 # -- r handlers --------------------------------------------------------------
 
 
@@ -519,6 +527,23 @@ def _handle_r_publish(args: list[str]) -> None:
         invalidate=parsed.invalidate,
         tag=parsed.tag,
     )
+
+
+def _handle_r_publish_docs(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app r publish-docs")
+    parser.add_argument("package_dir", help="Path to R package source directory.")
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.cran import publish_docs
+
+    publish_docs(parsed.package_dir, invalidate=parsed.invalidate)
 
 
 def _handle_r_reindex(args: list[str]) -> None:
@@ -2583,6 +2608,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "gpg-restart": _handle_gpg_restart,
     # python
     "python-publish": _handle_python_publish,
+    "python-publish-assets": _handle_python_publish_assets,
     "python-publish-docs": _handle_python_publish_docs,
     "python-reindex": _handle_python_reindex,
     # r
@@ -2601,6 +2627,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "r-package-version": _handle_r_package_version,
     "r-paste-to-vector": _handle_r_paste_to_vector,
     "r-publish": _handle_r_publish,
+    "r-publish-docs": _handle_r_publish_docs,
     "r-publish-from-github": _handle_r_publish_from_github,
     "r-reindex": _handle_r_reindex,
     "r-remove-packages-in-system-library": _handle_r_remove_packages,

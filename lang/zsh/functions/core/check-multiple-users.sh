@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 _koopa_check_multiple_users() {
+    _koopa_is_interactive || return 0
     _koopa_is_aws_ec2 || return 0
     local n
     n="$(_koopa_logged_in_user_count)"

@@ -4,10 +4,9 @@ import os
 from glob import glob
 from pathlib import Path
 from typing import TYPE_CHECKING
-from urllib.parse import urlparse
 
 from koopa.archive import extract
-from koopa.download import download, download_with_mirror
+from koopa.download import _derive_filename, download, download_with_mirror
 from koopa.io import import_json
 
 if TYPE_CHECKING:
@@ -53,7 +52,7 @@ def download_extract_cd(url: str | None = None) -> None:
             raise ValueError(msg)
         url = _resolve_src_url(name, version)
     if name:
-        filename = os.path.basename(urlparse(url).path)
+        filename = _derive_filename(url)
         tarball = download_with_mirror(url, name, filename)
     else:
         tarball = download(url)

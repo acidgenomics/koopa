@@ -9,17 +9,36 @@ from pathlib import Path
 
 from koopa.prefix import koopa_prefix
 
+# Shared with koopa.version_check._PRERELEASE_RE so both modules agree on what
+# counts as a pre-release marker.
+PRERELEASE_MARKERS = "alpha|beta|preview|pre|rc|dev|snapshot|nightly|canary"
+
+_SANITIZE_VERSION_RE = re.compile(
+    rf"(\d+(?:\.\d+)*(?:[._-]?(?:{PRERELEASE_MARKERS})[0-9.]*|[a-zA-Z])?)",
+    re.IGNORECASE,
+)
+
 
 def koopa_version() -> str:
-    """Return koopa version from pyproject.toml."""
+    """Return koopa version.
+
+    Prefers installed package metadata (the case for a pip/conda install,
+    where no 'pyproject.toml' ships alongside the package). Falls back to
+    reading 'pyproject.toml' directly for a git checkout, where the installed
+    package metadata may be stale relative to the working tree.
+    """
     import tomllib
+    from importlib.metadata import PackageNotFoundError, version
 
     pyproject = Path(koopa_prefix()) / "pyproject.toml"
     if pyproject.is_file():
         with open(pyproject, "rb") as fh:
             data = tomllib.load(fh)
         return data.get("project", {}).get("version", "unknown")
-    return "unknown"
+    try:
+        return version("koopa")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def version_pattern() -> str:
@@ -65,7 +84,10 @@ def major_minor_patch_version(version: str) -> str:
 def sanitize_version(version: str) -> str:
     """Sanitize a version string to numeric format.
 
-    Strips leading 'v', trailing non-numeric suffixes, etc.
+    Strips leading 'v', trailing non-numeric suffixes, etc. Preserves an
+    explicit pre-release marker (e.g. 'beta2' in '3.15.0beta2') so that
+    downstream pre-release detection still works after sanitization. A bare
+    trailing letter with no marker word (e.g. '1.1.1w') is preserved as-is.
 
     Parameters
     ----------
@@ -80,5 +102,5 @@ def sanitize_version(version: str) -> str:
     v = version.strip()
     if v.startswith("v") or v.startswith("V"):
         v = v[1:]
-    match = re.match(r"(\d+(?:\.\d+)*[a-zA-Z]?)", v)
+    match = _SANITIZE_VERSION_RE.match(v)
     return match.group(1) if match else v

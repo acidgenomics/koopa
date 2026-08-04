@@ -127,8 +127,11 @@ def _cli_json(name: str) -> dict:
 
 
 class _PatchController(Protocol):
-    def start(self) -> object: ...
-    def stop(self) -> None: ...
+    def start(self) -> object:
+        pass
+
+    def stop(self) -> None:
+        pass
 
 
 def _patch_prune(

@@ -684,6 +684,9 @@ def main(
         ("AppleInterfaceStyleSwitchesAutomatically", "-bool", "true"),
         # Liquid Glass: prefer "Tinted" over "Clear" (macOS Tahoe).
         ("NSGlassDiffusionSetting", "-int", "1"),
+        # Ensure accessibility Reduce Transparency is disabled so the
+        # Liquid Glass (tinted) effect can be applied.
+        ("ReduceTransparency", "-bool", "false"),
     ]
     for key, type_flag, value in global_domain_writes:
         subprocess.run(
@@ -691,16 +694,22 @@ def main(
             check=True,
         )
     # Delete keys where "automatic"/"multicolor" is represented by absence.
+    # Check for the key first to avoid `defaults` printing "Domain not found"
+    # when the key is absent.
     for domain, key in [
         ("-globalDomain", "AppleInterfaceStyle"),
         ("NSGlobalDomain", "AppleAccentColor"),
         ("NSGlobalDomain", "AppleHighlightColor"),
         ("NSGlobalDomain", "AppleIconAppearanceTintColor"),
     ]:
-        subprocess.run(
-            [defaults, "delete", domain, key],
+        check = subprocess.run(
+            [defaults, "read", domain, key],
+            capture_output=True,
+            text=True,
             check=False,
         )
+        if check.returncode == 0:
+            subprocess.run([defaults, "delete", domain, key], check=False)
     # Writes using -g (global): (key, type_flag, value)
     g_writes: list[tuple[str, str, str]] = [
         ("com.apple.mouse.scaling", "-float", "2.0"),

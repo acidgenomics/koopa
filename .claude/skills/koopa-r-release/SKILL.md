@@ -2,9 +2,13 @@
 name: koopa-r-release
 description: >-
   koopa R package release — cloud-native S3 + CloudFront, acidgenomics profile,
-  koopa app r publish/reindex/archive, sonoma-arm64 binaries, pre-release
-  AcidDevTools::check() gate. Use when releasing, publishing, reindexing, or
-  archiving an Acid Genomics R package.
+  koopa app r publish/reindex/archive/clean-orphan-binaries/publish-docs,
+  sonoma-arm64 binaries, pre-release AcidDevTools::check() gate, pkgdown
+  NEWS.md/reference-index silent-failure traps, CloudFront wildcard
+  invalidation false-"Completed" gotcha. Use when releasing, publishing,
+  reindexing, or archiving an Acid Genomics R package, cleaning up orphaned
+  binaries or retired doc prefixes, when a pkgdown site's Changelog renders
+  empty, or when a CDN edge serves stale content after invalidation.
 ---
 
 # koopa R Package Release
@@ -86,12 +90,45 @@ the binary build now succeeds.
 
 Regenerate all PACKAGES manifests from current S3 contents. Discovers active binary
 prefixes automatically. Writes empty skeleton PACKAGES for `_SKELETON_BINARY_PREFIXES`
-(suppress R client warnings on big-sur-arm64 paths).
+(suppress R client warnings on big-sur-arm64 paths). Also regenerates and uploads the
+landing page at `r.acidgenomics.com/index.html` (see below); `koopa app r publish`
+does the same as part of its `src/contrib` reindex step.
 
 ```sh
 koopa app r reindex               # reindex everything + invalidate CloudFront
 koopa app r reindex --no-invalidate
 ```
+
+**Wildcard invalidation can report `Completed` while an edge still serves stale
+content.** `reindex()`'s own invalidation uses glob paths
+(`/bin/macosx/sonoma-arm64/contrib/*/PACKAGES*`). Confirmed live: after
+deleting a stale binary and re-running `reindex`, `aws cloudfront
+get-invalidation` returned `Completed` within seconds, but the PACKAGES file
+served by the edge still had the old `ETag` and a climbing `Age` header for
+several minutes afterward. Don't trust the invalidation status alone —
+compare `ETag` between the CDN response and `aws s3api head-object` on the
+same key. If they still differ, issue a second invalidation with the **exact
+path** (no glob) for that key; that resolved it immediately when the wildcard
+invalidation didn't.
+
+### Landing page
+
+`s3://<r-bucket>/index.html` is generated, not hand-authored — `_generate_landing()`
+in `cran.py` builds it from the `Package`/`Description` fields already parsed while
+reindexing `src/contrib` (no extra S3 calls). It shares its HTML skeleton (head, nav,
+breadcrumb, Google site search, footer) with the Python landing page via
+`render_landing()` in `landing.py`.
+
+Packages are grouped by the `_CATEGORIES` list in `cran.py` — a `list[tuple[str,
+list[str]]]` (order matters), not a dict. **Adding a new package that should appear
+in a specific section requires adding its lowercased name to that section's list.**
+A package present in `src/contrib` but absent from every category still appears —
+under an "Infrastructure" fallback section — with a warning printed to stderr, so a
+new package can never silently vanish from the page; it just lands somewhere less
+specific until categorized.
+
+Docs hrefs on the page use `_DOCS_PATH` (`"{name}/"`, matching `publish-docs`'s
+layout above). Footer license is Apache 2.0, matching every package's `DESCRIPTION`.
 
 ### `koopa app r deploy [--no-invalidate]`
 
@@ -105,6 +142,237 @@ Keeps only the latest version flat in `src/contrib/`. Regenerates manifests.
 ```sh
 koopa app r archive
 ```
+
+**Binaries have no equivalent.** `_archive_old_source()` (called from `publish()`)
+only ever touches `src/contrib/`. There is no `_archive_old_binary()`, so
+superseded `.tgz` files pile up under `bin/macosx/sonoma-arm64/contrib/<Rver>/`
+forever — cosmetic only, since R always resolves the highest version, but it
+means the binary manifest carries dead entries that `clean-orphan-binaries`
+(below) will never touch. Confirmed live: `AcidDevTools_0.7.10.tgz` sat next to
+`0.7.11.tgz` until manually deleted. Fixing this is still open — see `todo.org`.
+
+### `koopa app r clean-orphan-binaries [--no-invalidate]`
+
+Deletes a binary `.tgz` only when its **package name** is entirely absent from
+`src/contrib` — i.e. the source package was fully retired. **It does not catch
+a superseded version of a still-published package** (that's the `archive` gap
+above); `clean_orphan_binaries()`'s docstring excludes this case explicitly.
+For a one-off superseded binary, delete the exact S3 key by hand and re-run
+`reindex`:
+
+```sh
+aws s3 rm "s3://<r-bucket>/bin/macosx/sonoma-arm64/contrib/<Rver>/<Pkg>_<old-ver>.tgz" \
+  --profile=acidgenomics
+koopa app r reindex
+```
+
+### `koopa app r publish-docs <package-dir> [--no-invalidate]`
+
+Build a package's pkgdown site and sync it to `s3://<r-bucket>/<name>/`, served at
+`https://r.acidgenomics.com/<name>/`. `<name>` is the lowercased `Package` field from
+`DESCRIPTION`. `src/contrib/` and `bin/` are never touched — the sync is scoped to the
+package's own prefix. Rejects a package name colliding with a reserved top-level
+prefix (`bin`, `css`, `extdata`, `images`, `packages`, `src`, `testdata`).
+
+```sh
+koopa app r publish-docs ~/git/personal/r-syntactic
+```
+
+Implementation: `publish_docs()` in `cran.py`, mirroring `pypi.py`'s `publish_docs()`.
+
+**Legacy path:** docs used to live at `https://r.acidgenomics.com/packages/<name>/`.
+That prefix collided with nothing on the artifact side (R tarballs live under
+`src/contrib/` and `bin/`, unlike Python's `/packages/` which holds wheels), so the
+`/packages/` docs prefix was purely historical. It's now `/<name>/`, matching
+`python.acidgenomics.com`'s docs layout. An S3 website `RoutingRule` on the R bucket
+301-redirects any `/packages/<name>/...` request to `/<name>/...` — set `HostName` to
+`r.acidgenomics.com` and `Protocol` to `https` explicitly; an explicit `RoutingRules`
+redirect defaults to the bucket's own S3-website hostname over plain HTTP if you omit
+them, unlike S3's automatic trailing-slash redirect which stays host-relative.
+
+**Superseded:** `AcidDevTools::pkgdownDeployToAws()` (in `r-aciddevtools`) is
+`.Deprecated()` in favor of this command — its old default `bucketDir` pointed at
+`s3://r.acidgenomics.com/packages/`, a legacy bucket holding zero live objects (the
+real origin is the account-scoped `r-<acct>-us-east-1-an` bucket), so every deploy
+through it was silently writing into a void. `AcidDevTools::publish()` now shells out
+to `koopa app r publish-docs` directly instead of calling it.
+
+**Don't forget the GitHub "Website" field.** Each `r-<pkg>` repo has a
+`homepage` field (shown as "Website" on the repo page) that's independent of
+anything in the repo content — a URL migration like this one won't touch it
+unless you update it separately:
+
+```sh
+gh api -X PATCH repos/acidgenomics/r-<pkg> -f homepage="https://r.acidgenomics.com/<pkg>/"
+# verify:
+gh api repos/acidgenomics/r-<pkg> --jq '.homepage'
+```
+
+The Python side (`py-<pkg>`) uses the same pattern with
+`https://python.acidgenomics.com/<pkg>/`.
+
+**Multi-account `gh` gotcha:** the PATCH 404s (not 403 — GitHub returns 404 on
+a repo write without permission, not a clear auth error) if the *active* `gh`
+account lacks write access to the `acidgenomics` org. Check first:
+
+```sh
+gh auth status   # look for "Active account: true" next to the right user
+```
+
+If the active account is wrong, `gh auth switch --hostname github.com --user <owner>`
+— this changes the machine-wide active account for every future `gh` command,
+not just the current one. Confirm with the user before switching if it's not
+obviously already their intent.
+
+### pkgdown silent-failure traps
+
+Found across the full 24-package fleet in one sweep (2026-07-29). All four
+either produce an empty page with no error, or abort the build in a way that
+doesn't point at the actual root cause:
+
+**1. `NEWS.md` must never open with a top-level `# ` heading.** If line 1 is
+`# Release notes` followed by `## <Pkg> X.Y.Z (...)` release headings, pkgdown
+parses the whole file as one `h1`-rooted section, calls `tweak_section_levels()`
+to demote every heading (release headings become `h3`), then matches versions
+only against `h2`. It finds none, drops every section, and emits `no version
+headings found` as a warning rather than an error. The page still builds and
+deploys, just with an empty Changelog. Fix: delete the `# ` line (and the
+blank line after it) so the file starts directly at `## <Pkg> ...`. Verify
+before deploying:
+
+```r
+e <- loadNamespace("pkgdown")
+pkg <- pkgdown::as_pkgdown(".")
+nrow(e$data_news(pkg))   # must be > 0, with no accompanying warning
+```
+
+**2. `news: one_page: false` must be a YAML mapping, not a list.**
+
+```yaml
+# wrong: silently ignored, one_page always defaults to TRUE
+news:
+  - one_page: false
+
+# right
+news:
+  one_page: false
+```
+
+`pkgdown::check_pkgdown()` reports "No problems found" either way, so this
+never surfaces as a lint failure. Confirm the fix took effect by checking
+`docs/news/` for per-minor-version pages (`news-X.Y.html`) instead of a
+single `index.html`.
+
+**3. pkgdown 2.2+ hard-errors when `_pkgdown.yml`'s `reference:` index omits
+any exported topic** (internal S4 classes, `show`, `dots`, etc.) not marked
+`@keywords internal`. Older pkgdown (2.0.x-2.1.x) only warned, so a package
+last deployed under an older version can carry a stale, incomplete
+`reference:` index that only breaks on the next upgrade. `build_site()`'s
+error message names the missing topics directly; add a `title: Internal`
+section listing them.
+
+**4. Deployed docs paths are case-sensitive**, because the S3 prefix is
+always the lowercased `Package` field. `/AcidBase/news/` 404s; `/acidbase/news/`
+is 200. Always spot-check a deploy with the lowercase slug, and check content
+inside `<main>` specifically: the page's own table-of-contents sidebar also
+contains an `<h2>On this page</h2>`, which will falsely read as "has content"
+in a naive `grep -c '<h2'` check.
+
+**5. `goalie::bapply()`'s own parameter is `useNames`, not `USE.NAMES`** — a
+caller that (understandably, since it wraps `vapply()`) passes `USE.NAMES =`
+doesn't hit an "unused argument" error; it silently falls through `bapply()`'s
+own `...` and collides with the `USE.NAMES = useNames` that `bapply()` passes
+to `vapply()` internally, aborting with `formal argument "USE.NAMES" matched
+by multiple actual arguments`. This breaks any code path that reaches the
+call — including, non-obviously, a pkgdown vignette that calls a completely
+unrelated-looking function (e.g. `Cellosaurus()`, via `cacheUrl()` →
+`initDir()` → `bapply()` in AcidBase), so the error surfaces at `build_site()`
+time pointing at the vignette chunk, not at the actual bad call site several
+frames down. Found live in `AcidBase::initDir()` and three call sites in
+`pipette::export-methods.R`; grep any package that calls `bapply()` for this:
+
+```sh
+grep -rn "bapply(" -A6 R/*.R | grep -B6 "USE\.NAMES"
+```
+
+Fix is a rename, not a logic change: `USE.NAMES = <flag>` → `useNames =
+<flag>` at the call site. Reinstall the fixed package
+(`devtools::install(upgrade = FALSE)`) before re-testing a downstream
+package that depends on it — R doesn't pick up source changes in an
+installed dependency without a reinstall.
+
+## S4 list-like classes (`CompressedCharacterList`/`CharacterList`/etc.) are slow to index in a loop
+
+Found while investigating why `Cellosaurus()` (168,970 rows) took 4+ minutes,
+versus `py-cellosaurus`'s pandas equivalent finishing in under 9 seconds for
+the same dataset. Profiling (`Rprof`, plus manual `Sys.time()` bracketing of
+each pipeline stage — `Rprof` doesn't see time spent inside `mclapply`'s
+forked children, only the parent's IPC overhead, so bracket stage timings
+directly rather than trusting a flat profile alone) isolated two real,
+independently-fixable bottlenecks, plus one new unrelated bug surfaced along
+the way. All three verified with `identical()` against the pre-fix output on
+the real, full dataset — a synthetic/small-N benchmark is not sufficient
+here; see the second finding below for why.
+
+**1. `AcidPlyr::rbindToDataFrame()` did two named-list scans per cell.**
+Building the transposed `DFrame` used a nested `Map(Map(...))`: for every
+`(row, column)` pair it checked `j %in% names(x[[i]])` then looked up
+`x[[i]][[j]]` by name — two linear scans per cell, ~2.9M cells for this
+dataset. Fixed by doing one `match()` per row (not per cell) against the
+full column set, then a single vectorized `row[idx]` to align all columns at
+once — 10.8s → 8.4s on the real data (measured in isolation, i.e. calling
+`rbindToDataFrame()` directly on the already-parsed entry list, not via the
+full `Cellosaurus()` pipeline). **Two correctness traps hit while doing
+this, both caught by `identical()` against the original, not by
+inspection:**
+  - `Map(i = seq_along(x), ...)`'s `USE.NAMES = TRUE` does **not** name the
+    result when `i` is an unnamed integer vector — `Map`/`mapply` only
+    names-by-value when the varying argument is itself a character vector.
+    A naive rewrite that iterates `X = x` (the named list) instead of
+    `X = seq_along(x)` silently changes output names on nested-list columns.
+  - `row[idx]` on an **atomic vector** row coerces an unmatched (`NA`)
+    position to that vector's type (e.g. `NA_integer_`), not a plain logical
+    `NA` — but the original code's fallback is always plain `NA` regardless
+    of row type. Must overwrite: `out[is.na(idx)] <- list(NA)` after the
+    vectorized index, for both the list-row and atomic-row branches.
+- **2. `[[` on a `CompressedCharacterList`/`CharacterList` (IRanges S4
+  classes) costs ~1 ms/call**, because it goes through S4 dispatch and
+  slot-based range extraction every time, not a simple offset lookup.
+  `.batchFormatNestedCols()` called `[[i]]` on six such columns inside a
+  per-row loop nested inside `mclapply` — for 168,970 rows that's ~1M `[[`
+  calls, and since it's inside `mclapply`, **every forked worker re-pays
+  this cost independently** rather than sharing one paid-once cost. This
+  single function accounted for 257 of `Cellosaurus()`'s ~290 total seconds.
+  Fix: convert each column to a plain base `list` with `as.list()` once,
+  *before* the `mclapply` loop — `list[[i]]` is O(1) with zero dispatch.
+  257s → 38s (6.8x) on the real dataset, verified `identical()`.
+  **This class of bug is invisible in a small/synthetic benchmark** — the
+  per-call dispatch overhead is roughly constant, so it only dominates
+  runtime once the row count is large enough that dispatch cost outweighs
+  the actual per-row work; a 5,000-row synthetic test showed no meaningful
+  difference, but a 168,970-row real dataset showed a 6.8x gap. When
+  benchmarking anything that indexes an IRanges S4 list-like class in a
+  loop, test at (or extrapolate from) the real data's actual scale, not a
+  small stand-in.
+- **New bug found, not yet fixed:** `AcidBase::download()`
+  ([download.R:60-66](https://github.com/acidgenomics/r-acidbase))
+  hardcodes `mode = "wb"` when forwarding to `utils::download.file()`, but
+  also forwards `...` after it. `pipette:::.localOrRemoteFile()`
+  ([import-methods.R:563-568](https://github.com/acidgenomics/r-pipette))
+  passes its own `mode = mode` (computed from the file extension, `"w"` for
+  text or `"wb"` for binary) through that same `...`, so any text-file
+  download (`mode = "w"`) collides with the hardcoded `mode = "wb"` and
+  aborts with `formal argument "mode" matched by multiple actual
+  arguments`. Surfaced as a `Cellosaurus` test failure
+  (`test-currentCellosaurusVersion.R`) with a call stack that looks
+  Cellosaurus-specific but the actual defect is in `AcidBase`. Same root
+  cause class as the `bapply()`/`USE.NAMES` bug above: a function that
+  hardcodes an argument *and* forwards `...` risks the caller supplying
+  that same argument by name through `...`. Not fixed in this session —
+  either drop the hardcoded `mode = "wb"` and require callers to pass it,
+  or have `.localOrRemoteFile()` stop passing `mode` explicitly and let
+  `download()` always write binary (check whether any caller actually
+  relies on text mode first).
 
 ## Local Clone Setup
 
@@ -167,8 +435,15 @@ The tag `v<ver>` is created and pushed to `origin` automatically by `publish`. U
 
 ## Relicensing (AGPL-3 → Apache-2.0)
 
-16 packages in the repo are still AGPL-3. The pattern (already done for 8, most
-recently pointillism 0.8.0):
+**Done as of 2026-07-29** — verified live by grepping `License:` for every
+`Package:` entry in `src/contrib/PACKAGES`: all 24 active packages report
+`License: Apache License (>= 2)`, including every name on the older
+AGPL-3-holdouts list this section used to carry (AcidCLI, AcidDevTools,
+AcidExperiment, AcidGSEA, AcidGenerics, AcidMarkdown, AcidPlots, AcidRoxygen,
+AcidSingleCell, AcidTest, Chromium, DESeqAnalysis, EggNOG, PANTHER, WormBase,
+basejump). The landing-page footer (generated by `_generate_landing()`) also
+now correctly says Apache 2.0, matching. If a future package somehow reverts,
+the pattern is:
 - `License: Apache License (>= 2)` in DESCRIPTION (CRAN shipped-template form)
 - `LICENSE.md` at repo root (`usethis::use_apache_license()` output)
 - Delete the old plain `LICENSE` file
@@ -217,6 +492,19 @@ rm -rf "$tmp"
 
 Expected: binary pulled from `sonoma-arm64/contrib/4.6/` with no warning.
 
+**`install.packages()` blocked in an agent session:** `guard-installs.sh` (a
+`PreToolUse` hook) rejects this smoke test when run from inside Claude Code —
+by design, installs require explicit user action. Substitute an HTTP-only
+check that proves the same thing without installing anything:
+
+```sh
+curl -s "https://r.acidgenomics.com/src/contrib/PACKAGES" | grep -A2 "^Package: goalie"
+curl -sI "https://r.acidgenomics.com/src/contrib/goalie_<ver>.tar.gz"   # 200 + correct content-type
+```
+
+Surface the real `install.packages()` command to the user to run themselves
+if the full round-trip is needed.
+
 ## Pre-Release Quality Gate
 
 Run before publish (replaces manual `R CMD check`):
@@ -241,21 +529,31 @@ See skill `acid-r-package` for the full dev conventions (tooling, lintr, roxygen
 
 ## AcidDevTools Integration
 
-`AcidDevTools::publish()` calls `koopa app r publish --no-check` internally. The
-`check` and `pkgdown` steps remain in R; build/upload/reindex are all koopa.
+`AcidDevTools::publish()` calls `koopa app r publish --no-check` internally, and
+(when `pkgdown = TRUE`) shells out to `koopa app r publish-docs` before that. The
+`check` step remains in R; build/upload/reindex/pkgdown-deploy are all koopa.
 
 Source: `~/git/personal/r-aciddevtools/R/publish.R`
 
-## Active Package List (src/contrib as of 2026-06-20)
+## Active Package List (src/contrib as of 2026-07-29)
 
-25 active source packages; 25 with sonoma-arm64 binaries.
+24 active source packages; 24 with sonoma-arm64 binaries. All Apache 2.0 —
+see Relicensing above.
 
-Packages still on AGPL-3 (need relicense): AcidCLI, AcidDevTools, AcidExperiment,
-AcidGSEA, AcidGenerics, AcidMarkdown, AcidPlots, AcidRoxygen, AcidSingleCell,
-AcidTest, Chromium, DESeqAnalysis, EggNOG, PANTHER, WormBase, basejump.
+Archived / no longer maintained (source removed from `src/contrib`, so absent
+from the generated landing page automatically): cBioPortalAnalysis,
+DepMapAnalysis.
 
-Archived / no longer maintained: bcbioBase, bcbioRNASeq, bcbioSingleCell,
-cBioPortalAnalysis, DepMapAnalysis, koopa (R package).
+**Docs-only cleanup:** `acidshiny/`, `bb8/`, and `koopa` (the R package, not
+this repo) had orphaned pkgdown doc prefixes on the bucket with no matching
+source package — deleted (108 objects). `bcbiobase/`, `bcbiornaseq/`, and
+`bcbiosinglecell/` docs were deliberately **kept live** despite being in the
+same no-source-package state: they're published, possibly-cited packages
+(bcbioBase, bcbioRNASeq, bcbioSingleCell), and there's no redirect to offer a
+reader who lands on an old link. Before deleting any orphaned doc prefix,
+check whether the package was ever CRAN/Bioconductor-published or likely
+cited in a paper — if so, default to keeping the docs even though the
+package itself is retired.
 
 ## `_SKELETON_BINARY_PREFIXES` (in `cran.py`)
 
@@ -278,10 +576,18 @@ _SKELETON_BINARY_PREFIXES: list[str] = [
 | Concept | Python | R |
 |---|---|---|
 | Command | `koopa app python publish` | `koopa app r publish` |
+| Docs command | `koopa app python publish-docs` | `koopa app r publish-docs` |
 | Module | `koopa/pypi.py` | `koopa/cran.py` |
 | Build | `uv build` | `R CMD build` + `R CMD INSTALL --build` |
 | Index format | PEP 503 HTML (hand-rolled) | CRAN PACKAGES DCF |
 | Manifest regen | list S3 + SHA256 via download | stream DESCRIPTION only; ETag = MD5 |
 | Version mgmt | bumpver | manual in DESCRIPTION |
 | Index URL | `https://python.acidgenomics.com/` | `https://r.acidgenomics.com/` |
+| Docs URL | `https://python.acidgenomics.com/<name>/` | `https://r.acidgenomics.com/<name>/` |
+| Artifact prefix | `/packages/` (wheels/sdists) | `/src/contrib/`, `/bin/` (tarballs) |
 | Dep install on binary build | N/A (pure Python) | auto via `install.packages()` |
+
+Both sites now follow the same rule: artifacts under reserved prefixes, docs at
+`/<name>/`. Python's `/packages/` prefix holds real artifacts (PEP 503 convention,
+matching `pypi.org`) and must not be repurposed for docs. R has no artifacts at
+`/packages/` — that prefix is retired entirely.

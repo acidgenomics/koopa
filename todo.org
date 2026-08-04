@@ -1,9 +1,23 @@
-** TODO How can we push website documentation for Python packages to python.acidgenomics.com?
-   Implemented koopa app python publish-docs. Docs host at
-   python-docs.acidgenomics.com/<name>/. Requires one-time AWS provisioning:
-   S3 bucket python-docs-<acct>-us-east-1-an, CloudFront distribution,
-   Route53 record, and AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON_DOCS in .env.
-   See koopa-python-release skill for full details.
-** TODO Our updated R packaging approach at r.acidgenomics.com doesn't update websites automatically?
-** TODO Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
-** TODO Publish all our R and Python packages at bioconda.
+** STARTED Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
+https://r.acidgenomics.com/syntactic/news/index.html
+** DONE Run `koopa app r reindex` against production once the R docs migration lands
+   Migration confirmed live (all 24 packages resolving at /<name>/, old
+   /packages/<name>/ paths 301-redirecting). Ran `koopa app r reindex`:
+   landing page now lists all 24 packages (was 16, missing the entire
+   Infrastructure section) with the correct Apache 2.0 footer (was AGPLv3).
+   Also deleted the stale AcidDevTools_0.7.10.tgz binary (superseded by
+   0.7.11, orphaned because publish() has no binary-archiving step — see new
+   TODO below) and three retired doc prefixes with no citation risk
+   (acidshiny/, bb8/, koopa/ — 108 objects). Kept bcbioBase/bcbioRNASeq/
+   bcbioSingleCell docs live; they're published, possibly-cited packages.
+** TODO `publish()` in cran.py has no binary-archiving step for superseded R package versions
+   `_archive_old_source()` moves outdated *source* tarballs to
+   src/contrib/Archive/, but there's no equivalent for the sonoma-arm64
+   binary prefix, so old .tgz files accumulate there indefinitely (found
+   AcidDevTools_0.7.10.tgz sitting alongside 0.7.11; deleted it manually).
+   Cosmetic only — R always resolves the highest version — but worth fixing
+   so it doesn't need another manual cleanup pass later.
+** TODO Publish all our packages at bioconda. Consider including koopa too.
+** TODO Homebrew update progress is getting swallowed too much in koopa update
+    => Updating Homebrew.
+       homebrew \ [3m30s]

@@ -4,16 +4,29 @@ Converted from POSIX shell and Bash prefix functions.
 """
 
 import os
+import sys
 from pathlib import Path
 
 from koopa.xdg import xdg_config_home
 
 
 def koopa_prefix() -> str:
-    """Return koopa installation prefix."""
+    """Return koopa installation prefix.
+
+    Honors 'KOOPA_PREFIX' when set, matching what 'bin/koopa' and
+    'activate.sh' already export. Falls back to the git-checkout layout
+    ('lang/python/src/koopa/__file__' -> 4 levels up = koopa root) for
+    unactivated shells. As a last resort (e.g. installed as a package with
+    no koopa data tree alongside it), returns the package's own directory.
+    """
+    env_prefix = os.environ.get("KOOPA_PREFIX")
+    if env_prefix and os.path.isdir(env_prefix):
+        return env_prefix
     p = Path(__file__).resolve()
-    # lang/python/src/koopa/__file__ -> 4 levels up = koopa root
-    return str(p.parents[4])
+    checkout_root = p.parents[4]
+    if (checkout_root / "lang" / "python" / "src").is_dir():
+        return str(checkout_root)
+    return str(p.parent)
 
 
 def app_prefix(name: str | None = None, version: str | None = None) -> str:
@@ -43,14 +56,32 @@ def bootstrap_prefix() -> str:
     return koopa_prefix().rstrip(os.sep) + "-bootstrap"
 
 
+def data_prefix() -> str:
+    """Return the prefix containing koopa's data files ('etc/', 'share/').
+
+    Under a git checkout or an activated shell (``KOOPA_PREFIX`` set), this is
+    'koopa_prefix()' itself. setuptools cannot package 'etc/koopa/app.json' or
+    'share/' as package-data because they live outside the 'koopa' package
+    directory ('lang/python/src/koopa/'), so an installed (e.g. conda) package
+    instead relies on its build recipe having copied them under
+    'sys.prefix' -- the same convention koopa's own recipes use for tools
+    like 'git' that drop a bash-completion file under
+    '$PREFIX/share/bash-completion/completions/'.
+    """
+    prefix = koopa_prefix()
+    if os.path.isfile(os.path.join(prefix, "etc", "koopa", "app.json")):
+        return prefix
+    return sys.prefix
+
+
 def config_prefix() -> str:
     """Return koopa config/etc prefix."""
-    return os.path.join(koopa_prefix(), "etc", "koopa")
+    return os.path.join(data_prefix(), "etc", "koopa")
 
 
 def man_prefix() -> str:
     """Return koopa man prefix."""
-    return os.path.join(koopa_prefix(), "share", "man")
+    return os.path.join(data_prefix(), "share", "man")
 
 
 def man1_prefix() -> str:
@@ -60,22 +91,22 @@ def man1_prefix() -> str:
 
 def bash_completions_prefix() -> str:
     """Return koopa central bash-completion completions directory."""
-    return os.path.join(koopa_prefix(), "share", "bash-completion", "completions")
+    return os.path.join(data_prefix(), "share", "bash-completion", "completions")
 
 
 def fish_completions_prefix() -> str:
     """Return koopa central fish completions directory."""
-    return os.path.join(koopa_prefix(), "share", "fish", "vendor_completions.d")
+    return os.path.join(data_prefix(), "share", "fish", "vendor_completions.d")
 
 
 def zsh_completions_prefix() -> str:
     """Return koopa central zsh completions directory."""
-    return os.path.join(koopa_prefix(), "share", "zsh", "site-functions")
+    return os.path.join(data_prefix(), "share", "zsh", "site-functions")
 
 
 def powershell_completions_prefix() -> str:
     """Return koopa central PowerShell completions directory."""
-    return os.path.join(koopa_prefix(), "share", "powershell", "completions")
+    return os.path.join(data_prefix(), "share", "powershell", "completions")
 
 
 def scripts_private_prefix() -> str:
