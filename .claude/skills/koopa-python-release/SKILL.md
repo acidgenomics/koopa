@@ -399,6 +399,8 @@ directly into the public page:
 # WRONG — evaluated once, at import time, in whichever environment
 # happens to run `sphinx-build` (often the docs author's own checkout).
 def download_thing(*, output_dir: Path = Path.cwd()) -> None: ...
+
+
 # Renders publicly as:
 #   output_dir: Path = PosixPath('/Users/<realname>/git/personal/py-foo')
 ```
