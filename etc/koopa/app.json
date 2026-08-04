@@ -627,7 +627,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-03",
+    "date": "2026-08-04",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -639,7 +639,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.14"
+    "version": "2.36.15"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -689,7 +689,7 @@
       "az"
     ],
     "category": "Cloud",
-    "date": "2026-07-14",
+    "date": "2026-08-04",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -704,7 +704,7 @@
     "url": [
       "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
     ],
-    "version": "2.88.0"
+    "version": "2.89.0"
   },
   "bamtools": {
     "bin": [
@@ -1595,7 +1595,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-07-25",
+    "date": "2026-08-04",
     "default": true,
     "dependencies": [
       "node"
@@ -1609,7 +1609,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.220"
+    "version": "2.1.221"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1621,7 +1621,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-07-23",
+    "date": "2026-08-04",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1629,7 +1629,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.7.1.1315"
+    "version": "26.7.2.59"
   },
   "cloud-sql-proxy": {
     "bin": [
@@ -1759,7 +1759,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-08-03",
+    "date": "2026-08-04",
     "default": true,
     "dependencies": [
       "node"
@@ -1773,7 +1773,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.77"
+    "version": "1.0.78"
   },
   "coreutils": {
     "bin": [
@@ -2423,7 +2423,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-03",
+    "date": "2026-08-04",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2433,7 +2433,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "6b855e89cb4088a1bacd8ce7fe573ef45a87944e"
+    "version": "001a7ce6b8aaaf2b2b0403d2431a0bdb4d6de5b3"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -3729,7 +3729,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-07-30",
+    "date": "2026-08-04",
     "default": true,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
@@ -3738,7 +3738,7 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "578.0.0"
+    "version": "579.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -4658,7 +4658,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-07-20",
+    "date": "2026-08-04",
     "default": true,
     "description": "handy way to save and run project-specific commands",
     "installer": "conda-package",
@@ -4667,7 +4667,7 @@
       "https://github.com/casey/just/",
       "https://crates.io/crates/just"
     ],
-    "version": "1.57.0"
+    "version": "1.58.0"
   },
   "k9s": {
     "bin": [
@@ -4813,7 +4813,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-07-20",
+    "date": "2026-08-04",
     "default": false,
     "description": "terminal UI for git with a simple and intuitive interface",
     "installer": "conda-package",
@@ -4821,7 +4821,7 @@
     "url": [
       "https://github.com/jesseduffield/lazygit/"
     ],
-    "version": "0.63.1"
+    "version": "0.64.0"
   },
   "ldc": {
     "build_dependencies": [
@@ -6007,7 +6007,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-08-03",
+    "date": "2026-08-04",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6017,7 +6017,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.8.0"
+    "version": "2026.8.1"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6475,7 +6475,7 @@
     ],
     "category": "Language",
     "conda_channel": "conda-forge",
-    "date": "2026-08-03",
+    "date": "2026-08-04",
     "default": false,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
@@ -6494,7 +6494,7 @@
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.5.1"
+    "version": "26.6.0"
   },
   "npth": {
     "build_dependencies": [
@@ -6981,7 +6981,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2025-04-15",
+    "date": "2026-08-04",
     "default": false,
     "description": "Java tools for high-throughput sequencing data",
     "installer": "conda-package",
@@ -6996,7 +6996,7 @@
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.4.0"
+    "version": "3.5.0"
   },
   "pigz": {
     "bin": [
@@ -7051,7 +7051,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-07-30",
+    "date": "2026-08-04",
     "default": false,
     "dependencies": [
       "python"
@@ -7063,7 +7063,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.16.5"
+    "version": "1.16.6"
   },
   "pixi": {
     "bin": [
@@ -7074,7 +7074,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-08-03",
+    "date": "2026-08-04",
     "default": false,
     "description": "cross-platform, multi-language package management tool",
     "installer": "conda-package",
@@ -7083,7 +7083,7 @@
       "https://pixi.sh/",
       "https://github.com/prefix-dev/pixi/"
     ],
-    "version": "0.76.0"
+    "version": "0.76.1"
   },
   "pixman": {
     "build_dependencies": [
@@ -7353,7 +7353,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-07-20",
+    "date": "2026-08-04",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7364,7 +7364,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.1"
+    "version": "2.8.2"
   },
   "pyflakes": {
     "bin": [
@@ -7457,7 +7457,7 @@
       "pyproject-fmt"
     ],
     "category": "Python",
-    "date": "2026-07-27",
+    "date": "2026-08-04",
     "default": false,
     "dependencies": [
       "python"
@@ -7469,7 +7469,7 @@
       "https://pypi.org/project/pyproject-fmt/",
       "https://github.com/tox-dev/pyproject-fmt/"
     ],
-    "version": "2.26.0"
+    "version": "2.27.0"
   },
   "pyrefly": {
     "bin": [
@@ -8893,7 +8893,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-07-30",
+    "date": "2026-08-04",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8903,7 +8903,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "bc3ea24cb6028ad93cd4fbe1b8d28c185ef7dc0e"
+    "version": "f9fabff508cc0899cff72b54afd597e1ceb0c885"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9071,7 +9071,7 @@
       "streamlit"
     ],
     "category": "Python",
-    "date": "2026-07-23",
+    "date": "2026-08-04",
     "default": false,
     "dependencies": [
       "python"
@@ -9084,7 +9084,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.60.0"
+    "version": "1.61.0"
   },
   "subread": {
     "bin": [
@@ -9564,7 +9564,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-07-30",
+    "date": "2026-08-04",
     "default": true,
     "dependencies": [
       "python"
@@ -9576,7 +9576,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.65"
+    "version": "0.0.66"
   },
   "udunits": {
     "date": "2022-08-30",
