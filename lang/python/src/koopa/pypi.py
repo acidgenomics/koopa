@@ -138,6 +138,8 @@ def _read_wheel_summary(whl_path: str) -> str:
                 if line.startswith("Summary:"):
                     return line[len("Summary:") :].strip()
     except (OSError, zipfile.BadZipFile):
+        # A corrupt/unreadable wheel shouldn't abort the whole reindex; the
+        # landing page just shows no description for this package.
         pass
     return ""
 
