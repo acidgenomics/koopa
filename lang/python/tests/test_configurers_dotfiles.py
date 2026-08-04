@@ -4,13 +4,13 @@ import subprocess
 from pathlib import Path
 from unittest.mock import patch
 
-import koopa.configurers.dotfiles as dotfiles_mod
 import pytest
 from koopa.configurers import get_python_configurer, has_python_configurer
 from koopa.configurers.dotfiles import (
     _chezmoi_managed,
     _print_chezmoi_status,
     _warn_cross_tree_overlap,
+    main,
 )
 
 
@@ -22,7 +22,7 @@ def test_has_python_configurer_falls_back_to_common_for_macos_user() -> None:
 
 def test_get_python_configurer_falls_back_to_common_for_macos_user() -> None:
     """Concrete macos platform resolves to the common configurer's module."""
-    assert get_python_configurer("dotfiles", "macos", "user") is dotfiles_mod.main
+    assert get_python_configurer("dotfiles", "macos", "user") is main
 
 
 def test_has_python_configurer_expands_common_to_os_id_like_family() -> None:
