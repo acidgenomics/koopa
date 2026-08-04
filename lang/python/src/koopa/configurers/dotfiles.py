@@ -90,6 +90,31 @@ def _warn_cross_tree_overlap(
         print(f"  {target}", file=sys.stderr)
 
 
+def _check_broken_symlink(tree_label: str, prefix: str) -> None:
+    """Raise when a tree's prefix is a symlink whose target no longer exists.
+
+    The "run this tree's install script" checks elsewhere in this module use
+    ``os.path.isfile``/``isdir``, which silently return ``False`` through a
+    dangling symlink — indistinguishable from the tree simply not being
+    configured on this host. That ambiguity is the actual defect: a symlink
+    broken by moving or renaming the tree's directory would otherwise skip
+    the tree's install script (and everything a chezmoi template elsewhere
+    gates on "does this prefix exist" via ``stat``, which also follows
+    symlinks) with no output at all, indefinitely, on any host that isn't
+    re-run through the initial setup flow that would re-create the link.
+    Fail loudly instead: a broken symlink here always means misconfiguration,
+    never "tree absent," so raise rather than warn-and-continue.
+    """
+    if os.path.islink(prefix) and not os.path.isdir(prefix):
+        target = os.readlink(prefix)
+        msg = (
+            f"{tree_label} symlink is broken: {prefix} -> {target} "
+            "(target does not exist). Repoint the symlink at the tree's "
+            "current location before continuing."
+        )
+        raise FileNotFoundError(msg)
+
+
 def main(
     *,
     name: str,
@@ -140,6 +165,7 @@ def main(
     _print_chezmoi_status(chezmoi, main_source, env)
     subprocess.run([install_script], check=True, env=env)
     work_install_script = os.path.join(dotfiles_work_prefix, "install")
+    _check_broken_symlink("work", dotfiles_work_prefix)
     if os.path.isfile(work_install_script):
         alert_info(f"Running '{work_install_script}'.")
         wcfg = work_config if os.path.isfile(work_config) else None
@@ -148,6 +174,7 @@ def main(
         _print_chezmoi_status(chezmoi, work_source, env, config=wcfg)
         subprocess.run([work_install_script], check=True, env=env)
     private_install_script = os.path.join(dotfiles_private_prefix, "install")
+    _check_broken_symlink("private", dotfiles_private_prefix)
     if os.path.isfile(private_install_script):
         alert_info(f"Running '{private_install_script}'.")
         pcfg = private_config if os.path.isfile(private_config) else None

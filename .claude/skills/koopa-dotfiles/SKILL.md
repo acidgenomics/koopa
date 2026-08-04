@@ -73,11 +73,18 @@ commit pushed.
 
 **A fix that spans both `koopa` and `opt/dotfiles/chezmoi` needs, in order:**
 1. Commit + push in `opt/dotfiles` (see detached-HEAD check above).
-2. `koopa develop check-app-versions dotfiles` (no `--no-update`) to pull the new
-   pin into `app.json`.
+2. `koopa develop check-app-versions --reset-cache dotfiles` (no `--no-update`) to
+   pull the new pin into `app.json`. **`--reset-cache` is not optional here:** the
+   version cache has a 24h TTL (per `koopa-app-registry`), so if the check ran
+   earlier the same day for any reason, the cached pre-push HEAD masks the commit
+   you just pushed until the cache expires — the check reports "up to date" against
+   stale data instead of fetching the new SHA.
 3. Commit + push that `app.json` change in the koopa repo itself.
-4. On the target host: `git pull` (koopa repo) → `koopa install dotfiles`
-   (picks up the new pin) → `koopa configure user dotfiles` (re-renders).
+4. On every host that needs the fix, **including this one**: `git pull` (koopa
+   repo) → `koopa install dotfiles` (re-clones at the new SHA into a new
+   `app/dotfiles/<short-sha>/` and relinks `opt/dotfiles/` to it — the version-check
+   step above only patches the `app.json` pin, it does not touch the local clone or
+   symlink) → `koopa configure user dotfiles` (re-renders).
 
 **Known failure mode:** shipping only the koopa-side half of a fix (e.g. a Python
 probe bug) looks fully resolved once it's live, because most such bugs are
