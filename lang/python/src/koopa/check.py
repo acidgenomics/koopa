@@ -915,8 +915,8 @@ def check_system() -> bool:
             needs_system_update = True
         if not check_macos_xcode_clt():
             needs_system_update = True
-        if not check_macos_icloud_drive():
-            needs_system_update = True
+        # iCloud Drive Desktop & Documents sync is not a reliable system check for
+        # our macOS environment, so do not fail `koopa system check` on this.
     if needs_update or needs_system_update or needs_disk_space or needs_tmux_restart:
         if needs_update or needs_system_update:
             alert_note("Run 'koopa update' to resolve these issues.")
