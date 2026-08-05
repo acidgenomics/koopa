@@ -1,7 +1,3 @@
-** STARTED Need to fix this false positive about koopa system check
-    $ koopa system check
-    Warning: iCloud Drive Desktop & Documents sync is disabled. Re-enable in System Settings > Apple ID > iCloud > iCloud Drive.
-    ** Run 'koopa update' to resolve these issues.
 ** TODO Need to fix this weird error message too:
     koopa install dotfiles
     Build failed.
