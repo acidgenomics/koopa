@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+from koopa.check import check_system
 from koopa.system import (
     arch2,
     color_mode,
@@ -109,6 +110,29 @@ def test_cpu_count_returns_positive_int() -> None:
     result = cpu_count()
     assert isinstance(result, int)
     assert result >= 1
+
+
+def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`koopa system check` must not run the macOS iCloud Drive sync check."""
+    monkeypatch.setattr("koopa.system.is_macos", lambda: True)
+    monkeypatch.setattr("koopa.system.is_debian_like", lambda: False)
+    monkeypatch.setattr("koopa.check.check_build_system", lambda: None)
+    monkeypatch.setattr("koopa.check.check_bootstrap_version", lambda: True)
+    monkeypatch.setattr("koopa.check.check_installed_apps", lambda: True)
+    monkeypatch.setattr("koopa.check.check_broken_app_installs", lambda: True)
+    monkeypatch.setattr("koopa.check.check_broken_symlinks", lambda: True)
+    monkeypatch.setattr("koopa.check.check_missing_default_apps", lambda: True)
+    monkeypatch.setattr("koopa.check.check_disk", lambda path: True)
+    monkeypatch.setattr("koopa.check.check_tmux_server_stale", lambda: True)
+    monkeypatch.setattr("koopa.check.check_macos_system_python", lambda: True)
+    monkeypatch.setattr("koopa.check.check_macos_xcode_clt", lambda: True)
+    monkeypatch.setattr(
+        "koopa.check.check_macos_icloud_drive",
+        lambda: (_ for _ in ()).throw(
+            AssertionError("iCloud check should not run during koopa system check")
+        ),
+    )
+    assert check_system() is True
 
 
 # os_appearance_mode — Linux headless cache-file fallback
