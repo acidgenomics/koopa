@@ -3345,7 +3345,7 @@ def update_system_apps(*, verbose: bool = False) -> None:
     for name, plat in entries:
         if not _platform_matches(plat):
             continue
-        _run_system_update(name, verbose=verbose)
+        _run_system_update(name, verbose=True)
 
 
 def _platform_matches(plat: str) -> bool:
@@ -3372,8 +3372,6 @@ def _run_system_update(name: str, *, verbose: bool) -> None:
         _update_system_r(verbose=verbose)
     elif name == "python":
         _update_system_python(verbose=verbose)
-    elif name == "tex-packages":
-        _update_system_tex_packages(verbose=verbose)
 
 
 def _update_system_tex_packages(*, verbose: bool = False) -> None:
@@ -3401,7 +3399,6 @@ def _update_system_homebrew(*, verbose: bool = False) -> None:
 
     if shutil.which("brew") is None:
         return
-    alert("Updating Homebrew.")
     try:
         config = InstallConfig(
             name="homebrew",
