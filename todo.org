@@ -1,3 +1,12 @@
+** TODO Need to fix this weird error message too:
+    koopa install dotfiles
+    Build failed.
+    Error: AWS_ACCOUNT_ID must be set
+    Seeing this on incorrectly configured legacy builder machine.
+** TODO Need to fix this false positive about koopa system check
+    $ koopa system check
+    Warning: iCloud Drive Desktop & Documents sync is disabled. Re-enable in System Settings > Apple ID > iCloud > iCloud Drive.
+    ** Run 'koopa update' to resolve these issues.
 ** STARTED Our R package pkgdown NEWS (Changelog) files still aren't rendering correctly.
 https://r.acidgenomics.com/syntactic/news/index.html
 ** DONE Run `koopa app r reindex` against production once the R docs migration lands
