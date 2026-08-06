@@ -112,9 +112,13 @@ def brew_upgrade_casks() -> None:
             "Elevate permissions via admin portal first, then retry."
         )
         raise PermissionError(msg)
-    print(f"{len(casks)} outdated cask(s): {', '.join(casks)}", file=sys.stderr)
-    _brew("reinstall", "--cask", "--force", *casks, capture=False)
-    for cask in casks:
+    from koopa.progress import note, set_status
+
+    note(f"{len(casks)} outdated cask(s): {', '.join(casks)}")
+    n = len(casks)
+    for i, cask in enumerate(casks, start=1):
+        set_status(f"upgrading casks [{i}/{n}] {cask}")
+        _brew("reinstall", "--cask", "--force", cask, capture=False)
         if cask == "r":
             try:
                 from koopa.r import configure_r_environ, configure_r_makevars
@@ -147,8 +151,13 @@ def brew_upgrade_brews() -> None:
     brews = [x for x in result.stdout.strip().splitlines() if x]
     if not brews:
         return
-    print(f"{len(brews)} outdated brew(s): {', '.join(brews)}", file=sys.stderr)
-    _brew("reinstall", "--force", *brews, capture=False)
+    from koopa.progress import note, set_status
+
+    note(f"{len(brews)} outdated brew(s): {', '.join(brews)}")
+    n = len(brews)
+    for i, brew_name in enumerate(brews, start=1):
+        set_status(f"upgrading brews [{i}/{n}] {brew_name}")
+        _brew("reinstall", "--force", brew_name, capture=False)
 
 
 def brew_untap_deprecated() -> None:

@@ -1,17 +1,21 @@
-** TODO Need to fix this weird error message too:
-    koopa install dotfiles
-    Build failed.
-    Error: AWS_ACCOUNT_ID must be set
-    Seeing this on incorrectly configured legacy builder machine.
-    Probably because the machine had legacy KOOPA_BUILDER=1 config
-** TODO `publish()` in cran.py has no binary-archiving step for superseded R package versions
-   `_archive_old_source()` moves outdated *source* tarballs to
-   src/contrib/Archive/, but there's no equivalent for the sonoma-arm64
-   binary prefix, so old .tgz files accumulate there indefinitely (found
-   AcidDevTools_0.7.10.tgz sitting alongside 0.7.11; deleted it manually).
-   Cosmetic only — R always resolves the highest version — but worth fixing
-   so it doesn't need another manual cleanup pass later.
-** TODO Homebrew update progress is getting swallowed too much in koopa update
-    => Updating Homebrew.
-       homebrew \ [3m30s]
 ** TODO Publish all our packages at bioconda. Consider including koopa too.
+** TODO Resume koopa Sphinx docs site theming (koopa.acidgenomics.com)
+   New Sphinx CLI reference site is built (docs/, generate_docs.py,
+   site.py, cli_docs.py) and passes `sphinx-build -W`, but
+   the pydata-sphinx-theme visual styling in
+   lang/python/src/koopa/assets/sphinx.css (shared with
+   python.acidgenomics.com) needs another pass. Fixed so far: no sticky
+   header, no sidebars, no breadcrumb, no "Show Source" (also disabled
+   across all 7 py-* package conf.py files, not yet republished), no
+   Sphinx/theme footer credits, copyright reads "© Copyright 2018-pres.
+   Acid Genomics LLC.", root font-size matches steinbaugh.com's 12pt/14pt,
+   inline code/ASCII-logo lost the boxed "code sample" styling, header/
+   footer/article left-edge alignment confirmed pixel-identical via
+   DevTools (article/footer both x=16, .bd-article's stray
+   padding-left:2rem removed). Still unresolved: general iteration on
+   pydata-sphinx-theme was slow and error-prone (misjudged CSS specificity
+   several times); worth a fresh look, possibly by actually screenshotting
+   the rendered page (playwright/puppeteer not currently installed) instead
+   of reasoning from theme source alone. Local preview: `uv run --extra
+   docs sphinx-build -b html docs/ /tmp/koopa-docs-preview && cd
+   /tmp/koopa-docs-preview && python3 -m http.server 8765`.

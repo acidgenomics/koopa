@@ -35,6 +35,7 @@ AWS_ACCOUNT_ID=<12-digit account ID>
 # CloudFront distribution IDs (set the specific var; generic is the fallback)
 AWS_CLOUDFRONT_DISTRIBUTION_ID_R=<id>          # r.acidgenomics.com
 AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON=<id>     # python.acidgenomics.com (index + docs)
+AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA=<id>      # koopa.acidgenomics.com (Sphinx docs site)
 AWS_CLOUDFRONT_DISTRIBUTION_ID=<id>            # generic fallback (optional)
 ```
 
@@ -46,7 +47,7 @@ All private koopa buckets follow: `<role>-<account-id>-us-east-1-an`
 |---|---|
 | `r` | r.acidgenomics.com R package repo |
 | `python` | python.acidgenomics.com — PEP 503 index (`/simple/`), docs (`/<name>/`), landing (`/`) |
-| `koopa` | Source tarball mirror (koopa develop mirror-src) |
+| `koopa` | koopa.acidgenomics.com Sphinx docs site (`/`) + source tarball mirror (`/src/`, koopa develop mirror-src) + install script (`/install`) |
 | `artifacts` | Pre-built binary packages + restricted installers |
 
 ## Key helpers (`lang/python/src/koopa/aws.py`)
@@ -73,6 +74,7 @@ env var with a generic fallback:
 
 - `cran.py` → `AWS_CLOUDFRONT_DISTRIBUTION_ID_R` → `AWS_CLOUDFRONT_DISTRIBUTION_ID`
 - `pypi.py` → `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON` → `AWS_CLOUDFRONT_DISTRIBUTION_ID`
+- `site.py` → `AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA` → `AWS_CLOUDFRONT_DISTRIBUTION_ID`
 
 Both call `load_dotenv()` (from `koopa.aws`) before reading the env var.
 
@@ -83,6 +85,20 @@ Both call `load_dotenv()` (from `koopa.aws`) before reading the env var.
    `koopa_s3_bucket()` which call it internally), then `os.environ.get(...)`.
 3. Raise `RuntimeError` with a clear message if the value is absent and required.
 4. Never assign at module scope — always inside a function body.
+
+## Failure modes
+
+A machine can retain a stale `[acidgenomics]` stanza in `~/.aws/credentials`
+(e.g. left over from a prior builder setup) after its `.env` (and thus
+`AWS_ACCOUNT_ID`) has been lost or never provisioned — `.env` is gitignored, so
+a fresh clone or re-provision never restores it. Before the fix,
+`_has_private_access()` in `install.py` checked only for the credentials
+stanza, so such a machine was treated as having private access, attempted a
+binary install for any app, and aborted with `AWS_ACCOUNT_ID must be set` even
+for apps (like `dotfiles`) that never touch AWS. `_has_private_access()` now
+requires **both** the credentials stanza and a resolvable `aws_account_id()`,
+emits a one-time `alert_note` when the account ID is missing, and the source
+build proceeds normally like any public machine.
 
 ## History
 

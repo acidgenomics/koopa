@@ -182,15 +182,43 @@ def can_build_binary() -> bool:
     return os.environ.get("KOOPA_BUILDER", "0") == "1"
 
 
+_warned_no_account_id = False
+
+
 def _has_private_access() -> bool:
-    """Check for the acidgenomics profile in ~/.aws/credentials."""
+    """Check for the acidgenomics profile in ~/.aws/credentials and a usable account ID.
+
+    A machine can retain a stale ``[acidgenomics]`` credentials stanza (e.g. from
+    a prior builder setup) after its ``<koopa-root>/.env`` (which carries
+    ``AWS_ACCOUNT_ID``) has been lost or never provisioned. Requiring both avoids
+    treating that machine as having private access, which previously caused
+    binary installs to be attempted and abort with "AWS_ACCOUNT_ID must be set".
+    """
+    global _warned_no_account_id  # noqa: PLW0603
     credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
     if not os.path.isfile(credentials):
         return False
     import re
 
     with open(credentials) as f:
-        return bool(re.search(r"^\[acidgenomics\]$", f.read(), re.MULTILINE))
+        if not re.search(r"^\[acidgenomics\]$", f.read(), re.MULTILINE):
+            return False
+    from koopa.aws import aws_account_id
+
+    try:
+        aws_account_id()
+    except RuntimeError:
+        if not _warned_no_account_id:
+            _warned_no_account_id = True
+            from koopa.alert import alert_note
+
+            alert_note(
+                "'AWS_ACCOUNT_ID' is unset; skipping private binary packages and"
+                f" building from source. Set it in '{koopa_prefix()}/.env' to"
+                " restore binary installs."
+            )
+        return False
+    return True
 
 
 def _can_install_binary() -> bool:
@@ -834,7 +862,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     raise RuntimeError(msg)
                 try:
                     install_app_from_binary_package(config.prefix)
-                except (FileNotFoundError, subprocess.CalledProcessError):
+                except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
                     if has_python_installer(config.name, config.platform, config.mode):
                         from koopa.alert import alert_info
 
@@ -1132,6 +1160,7 @@ def install_node_package(
     version: str = "",
     prefix: str = "",
     extra_packages: list[str] | None = None,
+    build_env: dict[str, str] | None = None,
 ) -> None:
     """Install a Node.js package using npm.
 
@@ -1151,6 +1180,8 @@ def install_node_package(
     env = os.environ.copy()
     env["NPM_CONFIG_PREFIX"] = prefix
     env["NPM_CONFIG_UPDATE_NOTIFIER"] = "false"
+    if build_env:
+        env.update(build_env)
     install_args = [
         "--build-from-source",
         f"--cache={cache_dir}",
@@ -2771,21 +2802,18 @@ def _warn_threshold() -> int | None:
 
 
 def _timeout_threshold() -> int | None:
-    """Return KOOPA_INSTALL_APP_TIMEOUT seconds, or None (disabled) if unset.
+    """Return KOOPA_INSTALL_APP_TIMEOUT seconds, default 3600 (1 hour).
 
-    When set, a running app that exceeds this threshold is killed and the
-    batch is aborted.  This is a hard abort — the entire pool is shut down,
-    not just the one app, because ProcessPoolExecutor workers cannot be
-    killed in isolation without poisoning the pool.
+    A running app that exceeds this threshold is killed and the batch is
+    aborted.  This is a hard abort: the entire pool is shut down, not just
+    the one app, because ProcessPoolExecutor workers cannot be killed in
+    isolation without poisoning the pool.  Set to 0 to disable entirely.
     """
-    raw = os.environ.get("KOOPA_INSTALL_APP_TIMEOUT", "")
-    if not raw:
-        return None
     try:
-        val = int(raw)
+        val = int(os.environ.get("KOOPA_INSTALL_APP_TIMEOUT", "3600"))
         return val if val > 0 else None
     except ValueError:
-        return None
+        return 3600
 
 
 def _run_install_plan(  # noqa: C901, PLR0912, PLR0915

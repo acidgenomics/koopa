@@ -1,9 +1,9 @@
 """Update koopa documentation files."""
 
 import json
-import re
+import os
 import sys
-from os.path import isfile, join
+from os.path import join
 
 _STATIC_REFS: dict[str, str] = {
     "acid genomics": "https://acidgenomics.com/",
@@ -82,7 +82,12 @@ def _wrap_bullet(category: str, names: list[str], width: int = 72) -> str:
 
 
 def _render_default_apps_section(apps: list[str]) -> str:
-    """Render the '### Default application stack' markdown section."""
+    """Render the default application stack as a bulleted markdown list.
+
+    No heading -- this is included into ``docs/applications.md`` under an
+    existing '## Default application stack' heading via a MyST
+    ``{include}`` directive, so a duplicate heading here would double up.
+    """
     from koopa.io import import_app_json
 
     json_data = import_app_json()
@@ -106,10 +111,7 @@ def _render_default_apps_section(apps: list[str]) -> str:
             file=sys.stderr,
         )
 
-    lines = [
-        "### Default application stack",
-        "",
-    ]
+    lines = []
     for cat, cat_apps in bucketed.items():
         if not cat_apps:
             continue
@@ -140,43 +142,19 @@ def _render_refs(apps: list[str]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def update_website_index(apps: list[str]) -> None:
-    """Update the default app stack section in the website index.md."""
-    from koopa.prefix import website_prefix
+def write_app_stack_include(apps: list[str]) -> None:
+    """Write the generated app-stack include consumed by docs/applications.md."""
+    from koopa.prefix import koopa_prefix
 
-    index_file = join(website_prefix(), "index.md")
-    if not isfile(index_file):
-        print(
-            f"Error: website index.md not found: {index_file!r}",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    out_dir = join(koopa_prefix(), "docs", "_generated")
+    os.makedirs(out_dir, exist_ok=True)
+    out_file = join(out_dir, "app-stack.md")
 
     section = _render_default_apps_section(apps)
-    with open(index_file, encoding="utf-8") as fh:
-        content = fh.read()
-
-    pattern = re.compile(
-        r"### Default application stack\n.*?\n(?=## )",
-        re.DOTALL,
-    )
-    if not pattern.search(content):
-        print(
-            "Error: could not find '### Default application stack' section in index.md.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    new_content = pattern.sub(section, content)
-
-    ref_pattern = re.compile(
-        r"\n\n(\[[^\]]+\]: [^\n]*\n)+\Z",
-    )
     refs_section = _render_refs(apps)
-    new_content = ref_pattern.sub("\n\n" + refs_section, new_content)
-
-    with open(index_file, "w", encoding="utf-8") as fh:
-        fh.write(new_content)
+    content = section + "\n" + refs_section
+    with open(out_file, "w", encoding="utf-8") as fh:
+        fh.write(content)
 
 
 def update_docs() -> None:
@@ -184,5 +162,5 @@ def update_docs() -> None:
     from koopa.generate_man import write_man
 
     apps = default_app_names()
-    update_website_index(apps)
+    write_app_stack_include(apps)
     write_man()

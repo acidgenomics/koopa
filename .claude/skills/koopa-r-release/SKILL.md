@@ -136,35 +136,35 @@ Alias for `reindex` — kept for CLI symmetry and AcidDevTools compatibility.
 
 ### `koopa app r archive [--no-invalidate]`
 
-Move superseded source tarballs from `src/contrib/` to `src/contrib/Archive/<Pkg>/`.
-Keeps only the latest version flat in `src/contrib/`. Regenerates manifests.
+Reconciles superseded versions across both `src/contrib/` and every active
+sonoma-arm64 binary prefix. Source: superseded tarballs are S3-mv'd from
+`src/contrib/` to `src/contrib/Archive/<Pkg>/`. Binaries: superseded `.tgz`
+files are S3-rm'd outright, not archived, since binary contrib dirs mirror
+CRAN convention (current version only, no `Archive/`) and nothing consumes an
+archived binary. Regenerates manifests for whichever side actually changed.
 
 ```sh
 koopa app r archive
 ```
 
-**Binaries have no equivalent.** `_archive_old_source()` (called from `publish()`)
-only ever touches `src/contrib/`. There is no `_archive_old_binary()`, so
-superseded `.tgz` files pile up under `bin/macosx/sonoma-arm64/contrib/<Rver>/`
-forever — cosmetic only, since R always resolves the highest version, but it
-means the binary manifest carries dead entries that `clean-orphan-binaries`
-(below) will never touch. Confirmed live: `AcidDevTools_0.7.10.tgz` sat next to
-`0.7.11.tgz` until manually deleted. Fixing this is still open — see `todo.org`.
+`publish()` also calls the binary-pruning step (`_delete_superseded_binaries()`)
+directly for the package it just published, so a normal release never leaves a
+stale `.tgz` behind. Order matters there: the delete runs **after** the new
+binary uploads successfully, because the R bucket has S3 versioning disabled,
+so a failed upload must leave the old binary in place rather than lose both.
+`archive_src()` (the function behind this command) is the batch/backfill path
+for whatever accumulated before this existed, or from a `--no-deploy` history.
+Confirmed live before the fix: `AcidDevTools_0.7.10.tgz` sat next to `0.7.11.tgz`
+until manually deleted, and the binary `PACKAGES` manifest carried two entries
+each for `pipette` and `Cellosaurus` at once.
 
 ### `koopa app r clean-orphan-binaries [--no-invalidate]`
 
 Deletes a binary `.tgz` only when its **package name** is entirely absent from
-`src/contrib` — i.e. the source package was fully retired. **It does not catch
-a superseded version of a still-published package** (that's the `archive` gap
-above); `clean_orphan_binaries()`'s docstring excludes this case explicitly.
-For a one-off superseded binary, delete the exact S3 key by hand and re-run
-`reindex`:
-
-```sh
-aws s3 rm "s3://<r-bucket>/bin/macosx/sonoma-arm64/contrib/<Rver>/<Pkg>_<old-ver>.tgz" \
-  --profile=acidgenomics
-koopa app r reindex
-```
+`src/contrib` (i.e. the source package was fully retired). It does **not**
+catch a superseded version of a still-published package: that's `archive`'s
+job (above). `clean_orphan_binaries()`'s docstring excludes this case
+explicitly.
 
 ### `koopa app r publish-docs <package-dir> [--no-invalidate]`
 

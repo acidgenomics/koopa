@@ -1,6 +1,7 @@
 """Tests for koopa.brew helpers — non-interactive invariants."""
 
 import subprocess
+import sys
 from collections.abc import Callable
 from unittest.mock import MagicMock, patch
 
@@ -138,3 +139,65 @@ def test_brew_upgrade_casks_reinstall_is_noninteractive() -> None:
         kwargs = c.kwargs
         assert kwargs.get("stdin") is subprocess.DEVNULL
         assert kwargs.get("env", {}).get("NONINTERACTIVE") == "1"
+
+
+# ---------------------------------------------------------------------------
+# brew_upgrade_brews: one reinstall call per formula, each non-interactive
+# ---------------------------------------------------------------------------
+
+
+def test_brew_upgrade_brews_reinstalls_one_formula_at_a_time() -> None:
+    """brew_upgrade_brews must issue one reinstall call per outdated formula.
+
+    A single batched ``brew reinstall --force a b c`` call cannot report a
+    live [n/total] counter, since brew only emits progress after every
+    formula finishes. Looping gives koopa an exact index to drive the status
+    line without parsing brew's output.
+    """
+
+    def _side_effect(cmd: list[str], **_kwargs: object) -> MagicMock:
+        result = MagicMock()
+        if "outdated" in cmd and "--formula" in cmd:
+            result.stdout = "gh\njq\nripgrep\n"
+        else:
+            result.stdout = ""
+        result.stderr = ""
+        result.returncode = 0
+        return result
+
+    with patch("koopa.brew.subprocess.run", side_effect=_side_effect) as mock_run:
+        from koopa.brew import brew_upgrade_brews
+
+        brew_upgrade_brews()
+
+    reinstall_calls = [c for c in mock_run.call_args_list if "reinstall" in c.args[0]]
+    assert len(reinstall_calls) == 3, "Expected one reinstall call per outdated formula"
+    formulae = [c.args[0][-1] for c in reinstall_calls]
+    assert formulae == ["gh", "jq", "ripgrep"]
+    for c in reinstall_calls:
+        kwargs = c.kwargs
+        assert kwargs.get("stdin") is subprocess.DEVNULL
+        assert kwargs.get("env", {}).get("NONINTERACTIVE") == "1"
+
+
+# ---------------------------------------------------------------------------
+# koopa.progress.set_status / note: safe with no active BuildProgress
+# ---------------------------------------------------------------------------
+
+
+def test_set_status_and_note_noop_without_active_progress() -> None:
+    """set_status/note must not raise when no BuildProgress context is active.
+
+    Guards the `koopa app brew-upgrade` CLI path, which calls brew_upgrade()
+    directly with no surrounding BuildProgress.
+    """
+    from koopa.progress import get_active_progress, note, set_status
+
+    assert get_active_progress() is None
+    set_status("upgrading brews [1/3] gh")  # must not raise
+    with patch("koopa.progress.print") as mock_print:
+        note("3 outdated brew(s): gh, jq, ripgrep")
+    mock_print.assert_called_once()
+    args, kwargs = mock_print.call_args
+    assert args[0] == "3 outdated brew(s): gh, jq, ripgrep"
+    assert kwargs.get("file") is sys.stderr

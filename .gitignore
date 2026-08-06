@@ -8,6 +8,9 @@
 /bin/
 /bootstrap/
 /coverage/
+!/docs/
+!/docs/reference/
+/docs/_generated/
 /etc/koopa/build-times.json
 /etc/koopa/vendor.json
 /libexec/

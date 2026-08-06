@@ -1,7 +1,10 @@
 """Build progress tracking with historical timing."""
 
+import contextlib
 import json
 import os
+import re
+import shutil
 import sys
 import tempfile
 import threading
@@ -15,6 +18,25 @@ _last_failure_tail: str | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
 _LOG_TAIL_LINES = 100
+
+_ANSI_RE = re.compile(r"\033\[[0-9;]*[A-Za-z]")
+
+
+def _visible_len(s: str) -> int:
+    """Return the printable length of *s*, ignoring ANSI escapes and carriage returns."""
+    return len(_ANSI_RE.sub("", s).replace("\r", ""))
+
+
+def _terminal_width(tty: int) -> int | None:
+    """Return the terminal column width for *tty*, or None if undeterminable."""
+    try:
+        return os.get_terminal_size(tty).columns
+    except OSError:
+        pass
+    try:
+        return shutil.get_terminal_size().columns
+    except OSError:
+        return None
 
 
 def _use_color() -> bool:
@@ -36,6 +58,29 @@ def _styled_time(elapsed: str, *, seconds: float | None = None) -> str:
 def get_active_progress() -> "BuildProgress | None":
     """Return the currently active build progress context, if any."""
     return _active_progress
+
+
+def set_status(text: str) -> None:
+    """Set the transient status suffix on the active build spinner, if any.
+
+    No-ops when no ``BuildProgress`` context is active, so callers need no
+    conditional boilerplate.
+    """
+    progress = get_active_progress()
+    if progress is not None:
+        progress.set_status(text)
+
+
+def note(text: str) -> None:
+    """Print a persistent line above the active build spinner.
+
+    Falls back to stderr when no build progress context is active.
+    """
+    progress = get_active_progress()
+    if progress is not None:
+        progress.note(text)
+    else:
+        print(text, file=sys.stderr)
 
 
 def get_last_failure_tail() -> str | None:
@@ -159,6 +204,8 @@ class BuildProgress:
         self._spinner_thread: threading.Thread | None = None
         self._tty_fd: int = -1
         self._steps_finished: bool = False
+        self._status: str = ""
+        self._tty_lock = threading.Lock()
 
     @property
     def saved_log_path(self) -> str | None:
@@ -273,6 +320,31 @@ class BuildProgress:
                 sys.stderr.write("\n")
                 self._steps_finished = True
 
+    def set_status(self, text: str) -> None:
+        """Set the transient status suffix shown after the spinner's elapsed time.
+
+        Picked up by the spinner thread on its next 0.2s tick; this method
+        performs no write of its own, so callers cannot race ahead of the
+        spinner.
+        """
+        self._status = text
+
+    def note(self, text: str) -> None:
+        """Print a persistent line above the spinner without disturbing it.
+
+        When capturing to a tty, clears the current spinner line, writes
+        *text*, and lets the spinner redraw beneath it on its next tick. When
+        not capturing (verbose/quiet) or noninteractive, falls through to
+        stderr, which already targets the right destination (the terminal or
+        the redirected log file).
+        """
+        if self.capturing and self._tty_fd >= 0:
+            line = f"\r\033[K   {text}\n"
+            with self._tty_lock, contextlib.suppress(OSError):
+                os.write(self._tty_fd, line.encode())
+        else:
+            print(text, file=sys.stderr)
+
     # -- Output capture and spinner -------------------------------------------
 
     def _start_capture(self) -> None:
@@ -354,11 +426,43 @@ class BuildProgress:
             label = self._styled_label()
             time_str = _styled_time(elapsed, seconds=elapsed_secs)
             line = f"\r\033[K   {label} {frame} {time_str}"
-            try:
-                os.write(tty, line.encode())
-            except OSError:
-                break
+            status = self._status
+            if status:
+                line += f" {status}"
+            width = _terminal_width(tty)
+            if width is not None and _visible_len(line) > width:
+                line = self._truncate_to_width(line, width)
+            with self._tty_lock:
+                try:
+                    os.write(tty, line.encode())
+                except OSError:
+                    break
             idx += 1
+
+    @staticmethod
+    def _truncate_to_width(line: str, width: int) -> str:
+        """Truncate *line* to *width* printable columns, preserving ANSI escapes.
+
+        Walks the string, copying escape sequences through untouched while
+        counting only printable characters against *width*.
+        """
+        out: list[str] = []
+        visible = 0
+        i = 0
+        while i < len(line) and visible < width:
+            m = _ANSI_RE.match(line, i)
+            if m:
+                out.append(m.group())
+                i = m.end()
+                continue
+            if line[i] == "\r":
+                out.append(line[i])
+                i += 1
+                continue
+            out.append(line[i])
+            visible += 1
+            i += 1
+        return "".join(out)
 
     def _format_log_tail(self) -> str:
         """Return error lines and the last N lines of the build log as a string."""
