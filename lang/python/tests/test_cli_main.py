@@ -5,10 +5,11 @@ from __future__ import annotations
 import argparse
 from unittest.mock import patch
 
-import koopa.cli_main as cli_main
+import pytest
+from koopa import cli_main
 
 
-def test_handle_update_skips_system_updates_by_default(monkeypatch) -> None:
+def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
     """Default update should not trigger system upgrades."""
     monkeypatch.setattr(cli_main, "_require_supported_platform", lambda: None)
     monkeypatch.setattr(cli_main, "_require_git_managed_install", lambda: None)
