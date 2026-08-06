@@ -16,6 +16,11 @@ classifiers = [
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12",
 ]
+optional-dependencies.docs = [
+  "myst-parser",
+  "pydata-sphinx-theme",
+  "sphinx",
+]
 optional-dependencies.extra = [
   "syntactic>=0.1",
   "tqdm",

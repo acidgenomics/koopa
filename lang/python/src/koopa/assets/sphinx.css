@@ -1,6 +1,20 @@
 @import url("https://steinbaugh.com/css/fonts.css");
 @import url("https://steinbaugh.com/css/colors.css") screen;
 
+/* Match steinbaugh.com's root font-size (responsive.css) so text reads at
+ * the same size as koopa.acidgenomics.com, acidgenomics.com, and
+ * mike.steinbaugh.com. pydata-sphinx-theme defaults to the browser's 16px
+ * (~12pt) root with no override, which reads noticeably smaller. */
+html {
+    font-size: 12pt;
+}
+
+@media screen and (min-width: 640px) {
+    html {
+        font-size: 14pt;
+    }
+}
+
 html[data-theme="light"] {
     --pst-color-primary: var(--purple-color);
     --pst-color-primary-text: var(--bw-color-2);
@@ -51,13 +65,102 @@ html[data-theme="dark"] {
     color-scheme: dark;
 }
 
-body {
-    font-family: monospace-web, monospace;
-}
-
+/* Match steinbaugh.com's convention: sans-serif for body text, monospace
+ * reserved for code/pre/nav -- not a blanket monospace body. */
+html, body,
 h1, h2, h3, h4, h5, h6,
 .bd-header__inner .navbar-brand {
     font-family: sans-serif-web, sans-serif;
+}
+
+pre,
+code,
+kbd,
+var,
+.bd-sidebar-primary,
+.bd-header__inner .navbar-nav {
+    font-family: monospace-web, monospace;
+}
+
+/* Flatten the header/footer chrome: no sticky/frozen navbar (behave like a
+ * plain page on scroll), no drop shadow, no rule line above the footer, and
+ * a tighter navbar height. Both border-top rules are scoped to theme
+ * classes (.bd-header, .bd-footer), which outrank a bare-tag override --
+ * match the same specificity here. */
+.bd-header {
+    box-shadow: none;
+    position: static;
+}
+
+.navbar {
+    --bs-navbar-padding-y: 0.25rem;
+}
+
+.bd-footer {
+    border-top: none;
+}
+
+/* Both the header nav and the footer center themselves to the theme's full
+ * page width (88rem), while the article body is capped at 60em and centered
+ * inside that -- so the header/footer content's left edge doesn't line up
+ * with the article text's left edge. Cap both inner containers to the same
+ * width so everything shares one left margin. Using rem (not em) here is
+ * required: the article's 60em resolves against the root/body font-size,
+ * but footer{font-size:.875em} shrinks the em context inside the footer, so
+ * an em value here would compute to a narrower, misaligned box. rem always
+ * resolves against the root regardless of local font-size overrides. */
+.bd-header__inner,
+.bd-footer__inner {
+    margin: auto;
+    max-width: 60rem;
+}
+
+/* html_sidebars = {"**": []} leaves the primary sidebar content empty, but
+ * pydata-sphinx-theme still renders its 25%-wide flex column with a
+ * border-right -- an invisible gutter that pushes the article's centered
+ * content to the right of where the header/footer center themselves.
+ * !important is required: .hide-on-wide's own display:none only applies
+ * above the theme's 960px breakpoint, and a plain override here loses to
+ * that scoped rule's higher specificity below it -- this forces the
+ * sidebar out of the layout at every width, not just "wide" ones. */
+.bd-sidebar-primary {
+    display: none !important;
+    width: 0 !important;
+}
+
+/* Force the article column to fill the row and self-center on its own,
+ * rather than trusting bd-main's flex-basis (which still reserves space as
+ * if the sidebar were present). This guarantees the article's left edge
+ * lands at the same place as the header/footer regardless of any leftover
+ * sidebar-driven flex math. */
+.bd-main {
+    width: 100%;
+}
+
+.bd-article-container {
+    margin: 0 auto !important;
+    max-width: 60rem !important;
+}
+
+/* .bd-article-container has 1rem padding (matching the header/footer), but
+ * the <article> element nested one level inside it adds its OWN extra
+ * padding-left: 2rem on top -- normally reserved for a "reader" reveal
+ * button that doesn't exist here. That stacked padding (1rem + 2rem = 3rem)
+ * is what actually held the article text 2rem right of the header/footer
+ * text, even though the containers' own left edges lined up. */
+.bd-article {
+    padding-left: 0;
+}
+
+/* Inline code: steinbaugh.com colors the text and adds no box (no
+ * background, border, or radius) -- pydata-sphinx-theme's code.literal
+ * defaults to a bordered surface chip, which reads as too heavy here. */
+code.literal {
+    background: none;
+    border: none;
+    border-radius: 0;
+    color: var(--code-color);
+    padding: 0;
 }
 
 a.navbar-brand.logo {
@@ -66,6 +169,31 @@ a.navbar-brand.logo {
     background-repeat: no-repeat;
     background-size: 1.5rem;
     padding-left: 2rem;
+}
+
+/* ASCII-art logo block on the index page: plain text, not a code sample --
+ * strip the surface background/border chrome and copy button that
+ * pydata-sphinx-theme puts on every code block. The theme sets background,
+ * border, and border-radius directly on <pre> (not just the wrapping divs),
+ * so <pre> itself must be overridden too, not just div.koopa-logo. */
+div.koopa-logo,
+div.koopa-logo .highlight {
+    background: none;
+    border: none;
+    border-radius: 0;
+}
+
+div.koopa-logo pre {
+    background: none;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+}
+
+div.koopa-logo button.copybtn {
+    display: none;
 }
 
 /* Syntax highlighting: same token-class -> color mapping as rouge.css,

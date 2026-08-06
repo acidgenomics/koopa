@@ -262,8 +262,8 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "wget": f"{_M}._gnu",
     "wget2": f"{_M}._gnu",
     "antigravity-cli": f"{_M}.antigravity_cli",
-    # -- node-package (7) ------------------------------------------------
-    "aws-azure-login": f"{_M}._node_pkg",
+    "aws-azure-login": f"{_M}.aws_azure_login",
+    # -- node-package (6) ------------------------------------------------
     "claude-code": f"{_M}._node_pkg",
     "codex": f"{_M}._node_pkg",
     "copilot-cli": f"{_M}._node_pkg",
