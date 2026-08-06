@@ -1,3 +1,5 @@
+** TODO Review this code:
+    ⋮ 682│    system_updates = mode == "system"
 ** TODO Publish all our packages at bioconda. Consider including koopa too.
 ** TODO Resume koopa Sphinx docs site theming (koopa.acidgenomics.com)
    New Sphinx CLI reference site is built (docs/, generate_docs.py,
