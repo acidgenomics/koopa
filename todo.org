@@ -1,3 +1,5 @@
+** TODO Review this code:
+    ⋮ 682│    system_updates = mode == "system"
 ** TODO Need to fix this weird error message too:
     koopa install dotfiles
     Build failed.
