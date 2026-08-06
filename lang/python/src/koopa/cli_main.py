@@ -679,7 +679,8 @@ def _handle_update(args: argparse.Namespace) -> None:
     )
 
     mode = args.mode
-    if mode == "system":
+    system_updates = mode == "system"
+    if system_updates:
         from koopa.system import is_admin
 
         if not is_admin():
@@ -698,7 +699,7 @@ def _handle_update(args: argparse.Namespace) -> None:
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             return
-        if mode == "system":
+        if system_updates:
             update_system_apps(verbose=args.verbose)
             return
         from koopa.alert import alert_success, stop, styled_name, warn
@@ -742,10 +743,11 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             if install_error is None:
                 install_error = str(exc)
-        try:
-            update_system_apps(verbose=args.verbose)
-        except Exception as exc:
-            warn(f"System updates failed: {exc}")
+        if system_updates:
+            try:
+                update_system_apps(verbose=args.verbose)
+            except Exception as exc:
+                warn(f"System updates failed: {exc}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:

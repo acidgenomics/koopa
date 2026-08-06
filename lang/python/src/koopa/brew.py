@@ -102,6 +102,40 @@ def brew_upgrade_casks() -> None:
         if not line or "(latest)" in line:
             continue
         casks.append(line.split()[0])
+
+    if not casks:
+        return
+
+    # Some casks such as font-fira-mono are reported as outdated by brew even
+    # though they are effectively versionless and already at the current release.
+    # Reinstalling those repeatedly produces churn without a real upgrade, so skip
+    # them when Homebrew's structured JSON confirms the installed and current
+    # versions are identical.
+    json_result = subprocess.run(
+        ["brew", "outdated", "--cask", "--greedy", "--json=v2"],
+        capture_output=True,
+        text=True,
+        check=False,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
+    )
+    try:
+        import json
+
+        payload = json.loads(json_result.stdout or "{}")
+    except (TypeError, ValueError):
+        payload = {}
+
+    skipped_casks = {
+        entry.get("name")
+        for entry in payload.get("casks", [])
+        if isinstance(entry, dict)
+        and entry.get("name")
+        and entry.get("installed_versions") == [entry.get("current_version")]
+        and entry.get("current_version") in {"latest", None}
+    }
+    if skipped_casks:
+        casks = [cask for cask in casks if cask not in skipped_casks]
     if not casks:
         return
     from koopa.system import has_sudo
