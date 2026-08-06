@@ -141,6 +141,37 @@ def test_brew_upgrade_casks_reinstall_is_noninteractive() -> None:
         assert kwargs.get("env", {}).get("NONINTERACTIVE") == "1"
 
 
+def test_brew_upgrade_casks_skips_versionless_casks_with_same_version() -> None:
+    """Casks with a versionless install should not be force-reinstalled repeatedly."""
+
+    def _side_effect(cmd: list[str], **_kwargs: object) -> MagicMock:
+        result = MagicMock()
+        if "outdated" in cmd and "--cask" in cmd and "--json=v2" in cmd:
+            result.stdout = (
+                '{"formulae":[],"casks":[{"name":"font-fira-mono",'
+                '"installed_versions":["latest"],"current_version":"latest",'
+                '"pinned":false,"pinned_version":null}]}'
+            )
+        else:
+            result.stdout = "font-fira-mono\n"
+        result.stderr = ""
+        result.returncode = 0
+        return result
+
+    with (
+        patch("koopa.brew.subprocess.run", side_effect=_side_effect) as mock_run,
+        patch("koopa.system.has_sudo", return_value=True),
+    ):
+        from koopa.brew import brew_upgrade_casks
+
+        brew_upgrade_casks()
+
+    reinstall_calls = [
+        c for c in mock_run.call_args_list if "reinstall" in c.args[0] and "--cask" in c.args[0]
+    ]
+    assert not reinstall_calls
+
+
 # ---------------------------------------------------------------------------
 # brew_upgrade_brews: one reinstall call per formula, each non-interactive
 # ---------------------------------------------------------------------------

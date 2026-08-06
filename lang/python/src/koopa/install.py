@@ -3396,10 +3396,10 @@ def _run_system_update(name: str, *, verbose: bool) -> None:
     """Dispatch a single system update by name."""
     if name == "homebrew":
         _update_system_homebrew(verbose=verbose)
-    elif name == "r":
-        _update_system_r(verbose=verbose)
     elif name == "python":
         _update_system_python(verbose=verbose)
+    elif name == "r":
+        _update_system_r(verbose=verbose)
     elif name == "tex-packages":
         _update_system_tex_packages(verbose=verbose)
 
