@@ -1,6 +1,5 @@
 """Upstream version checking for apps in app.json."""
 
-import contextlib
 import importlib
 import inspect
 import json
@@ -18,6 +17,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from koopa.installers import PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
@@ -486,52 +486,90 @@ def _check_repology(project: str) -> str:
     return max(newest, key=_version_key)
 
 
+# GNU project's own hosts (ftpmirror.gnu.org, ftp.gnu.org) and Savannah's own hosts
+# (download.savannah.nongnu.org, download-mirror.savannah.gnu.org) are unreachable
+# from behind some corporate firewalls. These third-party mirrors were verified
+# reachable and serve identical directory listings.
+_GNU_DIR_BASES = (
+    "https://mirrors.kernel.org/gnu/{name}/",
+    "https://ftp.wayne.edu/gnu/{name}/",
+    "https://mirrors.ocf.berkeley.edu/gnu/{name}/",
+    "https://mirror.csclub.uwaterloo.ca/gnu/{name}/",
+)
+_NONGNU_DIR_BASES = (
+    "https://mirror.csclub.uwaterloo.ca/nongnu/{name}/",
+    "https://mirrors.ocf.berkeley.edu/nongnu/{name}/",
+    "https://nongnu.uib.no/{name}/",
+    "https://download.savannah.nongnu.org/releases/{name}/",
+)
+
+# Hosts that have already timed out this process. A host that is firewalled stays
+# firewalled for the run's duration, so once one attempt times out there is no
+# reason to spend another timeout on it for the next 30+ apps. Only populated on
+# connect/handshake timeouts, never on HTTP error responses (a 404 for one package
+# says nothing about the host's reachability for another).
+_dead_hosts: set[str] = set()
+_dead_hosts_lock = threading.Lock()
+
+
+def _is_dead_host(base: str) -> bool:
+    with _dead_hosts_lock:
+        return urlparse(base).hostname in _dead_hosts
+
+
+def _mark_dead_host(base: str) -> None:
+    hostname = urlparse(base).hostname
+    if hostname is None:
+        return
+    with _dead_hosts_lock:
+        _dead_hosts.add(hostname)
+
+
+def _fetch_first_reachable(bases: list[str]) -> str:
+    """Fetch the first base URL that resolves, skipping hosts already marked dead."""
+    last_exc: Exception | None = None
+    for base in bases:
+        if _is_dead_host(base):
+            continue
+        try:
+            return _http_get_text(base, timeout=8, _retries=1)
+        except TimeoutError as exc:
+            _mark_dead_host(base)
+            last_exc = exc
+        except (urllib.error.URLError, OSError) as exc:
+            if isinstance(exc, urllib.error.URLError) and isinstance(
+                exc.reason, (TimeoutError, ssl.SSLError)
+            ):
+                _mark_dead_host(base)
+            last_exc = exc
+    _raise_network_unavailable(last_exc)
+    raise AssertionError("unreachable")  # for type checker
+
+
 def _check_nongnu(package: str) -> str:
-    """Check version from savannah non-GNU mirror, with repology fallback."""
-    url = f"https://download.savannah.nongnu.org/releases/{package}/"
-    html: str | None = None
-    with contextlib.suppress(urllib.error.URLError, OSError, TimeoutError):
-        html = _http_get_text(url, timeout=5, _retries=0)
-    if html is not None:
-        pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
-        versions = pattern.findall(html)
-        if not versions:
-            msg = f"No versions found for {package}"
-            raise RuntimeError(msg)
-        return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
-    # Savannah unreachable — fall back to repology.
+    """Check version from a Savannah non-GNU mirror, with repology fallback."""
+    bases = [b.format(name=package) for b in _NONGNU_DIR_BASES]
     try:
-        return _check_repology(package)
-    except (urllib.error.URLError, OSError, TimeoutError) as exc:
-        _raise_network_unavailable(exc)
-        raise AssertionError("unreachable") from exc
+        html = _fetch_first_reachable(bases)
+    except _NetworkUnavailableError:
+        # All nongnu mirrors unreachable — fall back to repology.
+        try:
+            return _check_repology(package)
+        except (urllib.error.URLError, OSError, TimeoutError) as exc:
+            _raise_network_unavailable(exc)
+            raise AssertionError("unreachable") from exc
+    pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
+    versions = pattern.findall(html)
+    if not versions:
+        msg = f"No versions found for {package}"
+        raise RuntimeError(msg)
+    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
 def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) -> str:
     name = parent or package
-    if non_gnu_mirror:
-        bases = [
-            f"https://download.savannah.nongnu.org/releases/{name}/",
-            f"https://download-mirror.savannah.gnu.org/releases/{name}/",
-        ]
-    else:
-        bases = [
-            f"https://mirrors.kernel.org/gnu/{name}/",
-            f"https://ftpmirror.gnu.org/gnu/{name}/",
-            f"https://ftp.gnu.org/gnu/{name}/",
-        ]
-    last_exc: Exception | None = None
-    html: str | None = None
-    for base in bases:
-        try:
-            html = _http_get_text(base, timeout=5, _retries=0)
-            break
-        except (urllib.error.URLError, OSError) as exc:
-            last_exc = exc
-            continue
-    if html is None:
-        _raise_network_unavailable(last_exc)
-        raise AssertionError("unreachable")  # for type checker
+    bases = [b.format(name=name) for b in (_NONGNU_DIR_BASES if non_gnu_mirror else _GNU_DIR_BASES)]
+    html = _fetch_first_reachable(bases)
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
     versions: list[str] = pattern.findall(html)
     if not versions:
@@ -1633,6 +1671,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "man-db": _AppCheckSpec("gitlab", _check_man_db, ()),
     "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
+    "aws-azure-login": _AppCheckSpec("npm", _check_npm, ("aws-azure-login",)),
     "aws-cli": _AppCheckSpec(
         "conda",
         lambda: _check_conda("awscli", "conda-forge", subdirs=("linux-64", "osx-arm64")),

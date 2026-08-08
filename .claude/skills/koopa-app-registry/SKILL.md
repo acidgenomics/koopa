@@ -1,11 +1,13 @@
 ---
 name: koopa-app-registry
-description: >
+description: >-
   koopa command syntax, app.json registry semantics, tool-inclusion scope, and
   installer/version-check machinery. Use when composing koopa commands, reasoning
   about successor/default/completions semantics, importing atuin history, deciding
-  whether a tool belongs in koopa, writing a new installer, or wiring auto-update
-  for apps with non-version metadata (build IDs, per-platform hashes).
+  whether a tool belongs in koopa, writing a new installer, wiring auto-update
+  for apps with non-version metadata (build IDs, per-platform hashes), or
+  debugging GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths,
+  the dead-host circuit breaker) in version-check or source-download code.
 ---
 
 # koopa App Registry & Command Conventions
@@ -136,6 +138,50 @@ are intentionally not matched. The guard lives in `_run_check`, before `cache.pu
 
 Boost is the canonical example: boostorg publishes betas as GitHub's non-prerelease
 "latest" release, so GitHub's own `prerelease` flag doesn't filter them.
+
+### GNU/Savannah host unreliability (version-check + download)
+
+The GNU project's own infrastructure — `ftpmirror.gnu.org`, `ftp.gnu.org`,
+`download.savannah.nongnu.org`, `download-mirror.savannah.gnu.org` — is
+unreliable from many corporate networks (firewall-blocked outright, or subject
+to intermittent SSL handshake timeouts under concurrent load). This affects two
+independent code paths that both needed the same fix:
+
+- **`version_check.py`**: `_check_gnu()` / `_check_nongnu()` scrape a directory
+  listing for the newest tarball. Both route through the shared
+  `_fetch_first_reachable(bases)` helper, which tries `_GNU_DIR_BASES` /
+  `_NONGNU_DIR_BASES` in order — verified-reachable third-party mirrors
+  (`mirrors.kernel.org/gnu/`, `ftp.wayne.edu/gnu/`, `mirrors.ocf.berkeley.edu/gnu/`,
+  `mirror.csclub.uwaterloo.ca/gnu/` and the `/nongnu/` equivalents) come before the
+  GNU/Savannah hosts themselves.
+- **`download.py`**: `_gnu_mirrors()` / `_savannah_mirrors()` build the fallback
+  URL list for the actual source-tarball download (used by `install_gnu_app()`
+  and the S3 mirror-upload path). These derive the mirror-relative path from the
+  **primary URL's own path** (stripping a leading `gnu/` or `releases/` segment),
+  not by composing `f"{name}/{filename}"`. Composing from `name`/`filename` breaks
+  any app whose real tarball path isn't flat — `gcc` lives at
+  `gcc/gcc-{version}/gcc-{version}.tar.xz` (versioned subdirectory) and `wget2`
+  lives under the `wget/` parent directory, so the naive form 404s on every
+  mirror. `mirror.rit.edu` was dropped from the list entirely — its TLS cert
+  doesn't match its own hostname, so it fails for everyone, not just behind a
+  firewall.
+
+**Dead-host circuit breaker** (`version_check.py`, module-level `_dead_hosts`
+set + `_dead_hosts_lock`): a host that times out on connect/handshake is
+recorded and skipped for the rest of the process — a blocked host would
+otherwise burn a full timeout on every one of the 30+ GNU-installer apps in a
+single `check-app-versions` run. Only a `TimeoutError` or a `URLError` whose
+`.reason` is `TimeoutError`/`ssl.SSLError` trips the breaker; an HTTP error
+status (404, etc.) never does, since a 404 for one package says nothing about
+the host's reachability for another. Reuse `_fetch_first_reachable()` for any
+new multi-host-fallback check rather than re-deriving this logic.
+
+**Verifying a src_url change actually reaches a mirror**: `koopa develop
+mirror-src <app>` runs the same `download_with_mirror()` + S3-upload path used
+by `check-app-versions` after a version bump, with `strict=True` so a failed
+download raises instead of silently printing "Mirror upload skipped". Use it to
+confirm a `src_url` or mirror-list fix actually resolves before trusting the
+next full `check-app-versions` run.
 
 ## Tool-Inclusion Scope
 

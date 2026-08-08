@@ -1021,7 +1021,7 @@ def install_gnu_app(
     version: str = "",
     prefix: str = "",
     compress_ext: str = "gz",
-    mirror: str = "https://ftpmirror.gnu.org",
+    mirror: str = "https://mirrors.kernel.org/gnu",
     package_name: str = "",
     parent_name: str = "",
     non_gnu_mirror: bool = False,
