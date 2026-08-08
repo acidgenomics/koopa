@@ -1,3 +1,7 @@
+!/docs/
+!/docs/_templates/
+!/docs/_templates/*.html
+!/docs/reference/
 .env
 .koopa-binary
 .koopa-install.log
@@ -8,15 +12,11 @@
 /bin/
 /bootstrap/
 /coverage/
-!/docs/
-!/docs/reference/
-!/docs/_templates/
-!/docs/_templates/*.html
 /docs/_generated/
 /etc/koopa/build-times.json
 /etc/koopa/vendor.json
 /libexec/
 /opt/
+/output/
 /share/
 __pycache__/
-
