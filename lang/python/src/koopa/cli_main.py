@@ -54,19 +54,21 @@ def _require_supported_platform() -> None:
 
 
 def _require_git_managed_install() -> None:
-    """Abort if koopa was not installed via the native git-managed installer.
+    """Abort if koopa was not installed via the native installer.
 
-    App install/uninstall/update write into and self-update koopa's own
-    prefix via 'git pull' (see 'koopa.install.update_koopa'), which conflicts
-    with a package manager's (e.g. conda) relocatable, externally-managed
-    prefix. A packaged koopa is detected the same way 'update_koopa' already
-    detects a pinned release: not a git repo, or a detached HEAD.
+    App install/uninstall/update write into koopa's own prefix and
+    self-update it via 'git pull' (see 'koopa.install.update_koopa'), which
+    conflicts with a package manager's (e.g. conda) relocatable, externally-
+    managed prefix. A pinned release installed by the native installer (a
+    tarball extraction, no '.git') still owns a full koopa tree and must be
+    allowed to manage apps; only a site-packages/conda install -- detected
+    the same way 'koopa.prefix.koopa_prefix()' detects the packaged-data
+    fallback -- is refused.
     """
-    from koopa.git import git_branch, is_git_repo
     from koopa.prefix import koopa_prefix
 
     prefix = koopa_prefix()
-    if is_git_repo(prefix) and git_branch(prefix) != "HEAD":
+    if os.path.isdir(os.path.join(prefix, "lang", "python", "src")):
         return
     print(
         "Error: app management is unavailable in this koopa install.\n"

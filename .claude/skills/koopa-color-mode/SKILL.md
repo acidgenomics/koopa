@@ -181,6 +181,73 @@ directly. Never invoke `opt/dotfiles/install` or any path that calls
 `_sync_launchd_agent`/`_sync_systemd_user_agent`. Leave agent lifecycle to the full
 `koopa configure user dotfiles`.
 
+## On-Disk-Only Target Check Wedges the Whole Apply (One Unmanaged File Blocks All)
+
+**Symptom:** `~/.cache/koopa/color-mode-applied` permanently disagrees with
+`KOOPA_COLOR_MODE`/`~/.cache/koopa/color-mode` (which are correct), and
+`~/.cache/koopa/logs/color-mode.log` shows the same failure repeating on every
+shell activation, hours or days apart, never converging:
+
+```
+▸ [...] Applying color mode: light
+chezmoi: ~/.claude/settings.json: not managed
+Error: Command '[... apply ... 31 target paths ...]' returned non-zero exit status 1
+```
+
+Every file-driven consumer (bat, starship, delta) stays on the stale palette
+indefinitely — this is the permanent-wedge shape, not a one-off transient failure.
+
+**Root cause:** `_discover_color_mode_targets()` in
+[color_mode.py](lang/python/src/koopa/configurers/color_mode.py) used
+`os.path.exists(target)` as its inclusion test — "does a rendered file already
+sit at this path." That is not equivalent to "does the main tree currently manage
+this target." `.chezmoiignore` can exclude a target conditionally (here:
+`.claude/settings.json` is ignored by the main tree whenever the work-tree marker
+`~/.config/koopa/dotfiles-work` is present) while the file still exists on disk,
+rendered instead by another tree (the work tree, in this case). The file passes
+the exists() check and gets added to the target list anyway.
+
+The reason this is fatal rather than merely wrong: chezmoi validates **every**
+target argument passed to `apply` up front and aborts the **entire** call —
+applying nothing — if even one is unmanaged. One ignored file blocks all ~29
+legitimate color-mode targets in the same invocation. Confirmed by experiment:
+
+```sh
+# managed target alone -> applies cleanly
+chezmoi apply --dry-run --force ~/.config/bat/config
+
+# same target plus one unmanaged target -> nothing applies, exit 1
+chezmoi apply --dry-run --force ~/.config/bat/config ~/.claude/settings.json
+# chezmoi: ~/.claude/settings.json: not managed
+```
+
+Because `configurers/color_mode.py` writes the applied-marker only *after* a
+successful apply (correctly — see "Do not mask a real apply failure" pattern
+elsewhere in this codebase), the marker never advances. Every subsequent shell
+sees the mismatch and respawns the job via `_koopa_activate_color_mode`, which
+fails identically — a permanent self-heal-proof loop, structurally the same
+failure shape as the Linux gdbus bug below, reached by a different route.
+
+**Fix:** discovery must filter against the tree's actual `chezmoi managed`
+output, not disk existence. Reuse `_chezmoi_managed()` from
+[dotfiles.py](lang/python/src/koopa/configurers/dotfiles.py) (already used by the
+`dotfiles` configurer for cross-tree overlap warnings) rather than adding a new
+probe helper. Two guardrails matter as much as the filter itself:
+- An empty managed set means the probe itself failed (`_chezmoi_managed()`
+  degrades to `set()` on subprocess error by design) — treat that as "can't apply
+  safely, skip" rather than inverting it into "nothing is managed, so apply
+  everything," which would silently resurrect the original bug under the exact
+  failure condition the fix exists to guard against.
+- Dropped (discovered-but-unmanaged) targets must be `warn()`-ed by name, not
+  silently excluded. The entire reason this survived undetected for a day is that
+  the background job's failure produced no signal outside a log file nobody was
+  watching.
+
+**Diagnostic:** compare the discovered set against `chezmoi managed
+--path-style=absolute --source=<main-tree>`; any discovered target absent from
+that list is the culprit. `grep KOOPA_COLOR_MODE -rl <chezmoi-tree> --include='*.tmpl'`
+enumerates every template that could theoretically produce one.
+
 ## Targeted chezmoi apply (color-mode switch)
 
 A color-mode flip must re-render only the ~32 templates that branch on

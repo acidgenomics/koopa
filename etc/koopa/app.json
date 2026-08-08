@@ -1738,6 +1738,26 @@
     ],
     "version": "26.5.3-1"
   },
+  "conda-build": {
+    "bin": [
+      "conda-build"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Python",
+    "conda_channel": "conda-forge",
+    "date": "2026-08-06",
+    "default": false,
+    "description": "tools for building conda packages",
+    "installer": "conda-package",
+    "type": "build_tool",
+    "url": [
+      "https://docs.conda.io/projects/conda-build/",
+      "https://github.com/conda/conda-build"
+    ],
+    "version": "26.7.0"
+  },
   "convmv": {
     "bin": [
       "convmv"
@@ -8076,6 +8096,26 @@
       "https://github.com/ranger/ranger/"
     ],
     "version": "1.9.3"
+  },
+  "rattler-build": {
+    "bin": [
+      "rattler-build"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Python",
+    "conda_channel": "conda-forge",
+    "date": "2026-08-06",
+    "default": false,
+    "description": "universal conda package builder",
+    "installer": "conda-package",
+    "type": "build_tool",
+    "url": [
+      "https://rattler.build/",
+      "https://github.com/prefix-dev/rattler-build"
+    ],
+    "version": "0.72.2"
   },
   "rbenv": {
     "bin": [
