@@ -1,0 +1,81 @@
+# Draft recipe for conda-forge/staged-recipes. NOT submitted anywhere yet.
+#
+# v1 (CEP 13) format: staged-recipes now requires new recipes to use
+# recipe.yaml over the deprecated v0 meta.yaml.
+# See: https://github.com/conda-forge/staged-recipes#getting-started
+#
+# Package name is "koopa". Note: an unrelated, more domain-appropriate
+# project (https://github.com/bbquercus/koopa, cellular microscopy) holds
+# the bare name "koopa" on PyPI. This does not block using "koopa" here --
+# conda-forge does not share PyPI's namespace, and PyPI publication is not
+# planned for this package -- but it was a deliberate call, not an
+# oversight: someone searching conda-forge for the microscopy tool will
+# find this package instead.
+#
+# This ships a read-only CLI subset only: `install`/`reinstall`/`uninstall`/
+# `update` refuse cleanly on a packaged (non-koopa-tree) install and point at
+# the native installer instead. koopa's app-management model -- 516 apps
+# installed into and self-updated via `git pull` on its own prefix, plus 451
+# `bin/` symlinks including `git`, `python3`, `R`, `bash`, `openssl` -- does
+# not fit a package manager's relocatable, externally-managed prefix.
+#
+# Not yet done:
+#   - Never built with conda-build or rattler-build. Smoke-tested manually
+#     against a local venv (see the verification section of the plan that
+#     introduced this recipe) but not through an actual recipe build.
+
+context:
+  version: "0.24.0"
+
+package:
+  name: koopa
+  version: ${{ version }}
+
+source:
+  url: https://github.com/acidgenomics/koopa/archive/v${{ version }}.tar.gz
+  sha256: 2a138121ef8c9188f82eadb4be10f047e343218960b218c19c977a62122aa5e6
+
+build:
+  number: 0
+  noarch: python
+  script: build.sh
+  python:
+    entry_points:
+      - koopa = koopa.cli_main:main
+
+requirements:
+  host:
+    - python 3.12.*
+    - pip
+    - setuptools
+  run:
+    - python 3.12.*
+    # koopa's mandatory dependency set is empty. tqdm and syntactic are
+    # optional (project.optional-dependencies "extra") and out of scope for
+    # this read-only CLI subset. syntactic is unavailable outside
+    # python.acidgenomics.com and must stay excluded regardless.
+
+tests:
+  - python:
+      imports:
+        - koopa
+      pip_check: true
+  - script:
+      - koopa --version
+      # Exercises import_app_json() against etc/koopa/app.json, proving
+      # build.sh's data-file copy into $PREFIX actually ran.
+      - koopa list
+
+about:
+  homepage: https://koopa.acidgenomics.com/
+  repository: https://github.com/acidgenomics/koopa
+  summary: >-
+    Shell bootloader for data science (read-only CLI subset; app management
+    requires the native installer)
+  license: Apache-2.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - acidgenomics
+    - mjsteinbaugh

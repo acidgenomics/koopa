@@ -10,6 +10,8 @@
 /coverage/
 !/docs/
 !/docs/reference/
+!/docs/_templates/
+!/docs/_templates/*.html
 /docs/_generated/
 /etc/koopa/build-times.json
 /etc/koopa/vendor.json

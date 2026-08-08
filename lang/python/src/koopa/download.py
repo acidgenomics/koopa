@@ -151,7 +151,12 @@ def download_with_mirror(
     Tries the primary URL first, then the vendor mirror (if configured with
     vendor_first priority), then GNU mirrors (if applicable), then Savannah
     mirrors (if applicable), then any extra_urls, then the koopa mirror at
-    https://koopa.acidgenomics.com/src/{name}/{filename} (unless vendor_only).
+    https://koopa.acidgenomics.com/src/{name}/{filename}.
+
+    When the vendor backend is configured with vendor_only priority, no
+    public host is contacted at all: the vendor mirror is the sole URL tried,
+    matching the binary-download path in
+    koopa.install.install_app_from_binary_package.
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
@@ -160,23 +165,28 @@ def download_with_mirror(
 
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     is_archive_payload = filename.lower().endswith(_ARCHIVE_EXTS)
-    urls = [primary_url]
-
-    # Insert vendor mirror URL at position 1 (right after the primary URL).
     vendor_url = vendor_download_src(name, filename)
-    if vendor_url:
-        urls.append(vendor_url)
+    vendor_only = vendor_config() is not None and vendor_pull_priority() == "vendor_only"
 
-    urls.extend(_gnu_mirrors(primary_url, name, filename))
-    urls.extend(_savannah_mirrors(primary_url, name, filename))
-    urls.extend(extra_urls or [])
+    if vendor_only:
+        if not vendor_url:
+            msg = (
+                "vendor_only is configured but no vendor mirror URL is"
+                f" available for {name!r} ({filename!r})."
+            )
+            raise FileNotFoundError(msg)
+        urls = [vendor_url]
+    else:
+        urls = [primary_url]
+        if vendor_url:
+            urls.append(vendor_url)
+        urls.extend(_gnu_mirrors(primary_url, name, filename))
+        urls.extend(_savannah_mirrors(primary_url, name, filename))
+        urls.extend(extra_urls or [])
+        if not skip_koopa_mirror:
+            urls.append(koopa_mirror)
 
-    # Skip the default koopa mirror when vendor is configured as vendor_only.
-    _skip_koopa = skip_koopa_mirror or (
-        vendor_config() is not None and vendor_pull_priority() == "vendor_only"
-    )
-    if not _skip_koopa:
-        urls.append(koopa_mirror)
+    _skip_koopa = skip_koopa_mirror or vendor_only
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:

@@ -90,6 +90,102 @@ def test_download_with_mirror_still_validates_archive_payload(
         )
 
 
+def test_download_with_mirror_vendor_only_skips_public_hosts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_only tries only the vendor mirror, never the primary URL.
+
+    Regression test: download_with_mirror() used to try primary_url (and the
+    GNU/Savannah/koopa mirrors) before falling back to the vendor mirror even
+    under vendor_only priority, defeating the point of an airgapped mirror.
+    """
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        assert out is not None
+        with open(out, "wb") as f:
+            f.write(b"\x1f\x8b" + b"\x00" * 8)  # minimal gzip magic bytes
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_only")
+    monkeypatch.setattr(
+        "koopa.vendor.vendor_download_src",
+        lambda _name, _filename: "https://mirror.example.com/pkg-1.0.tar.gz",
+    )
+    result = download_with_mirror(
+        "https://example.com/pkg-1.0.tar.gz",
+        "pkg",
+        "pkg-1.0.tar.gz",
+        output=str(output),
+    )
+    assert result == str(output)
+    assert attempted == ["https://mirror.example.com/pkg-1.0.tar.gz"]
+
+
+def test_download_with_mirror_vendor_only_without_vendor_url_raises(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_only with no vendor mirror URL available raises, contacting nothing."""
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        return out or ""
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_only")
+    monkeypatch.setattr("koopa.vendor.vendor_download_src", lambda _name, _filename: None)
+    with pytest.raises(FileNotFoundError, match="vendor_only"):
+        download_with_mirror(
+            "https://example.com/pkg-1.0.tar.gz",
+            "pkg",
+            "pkg-1.0.tar.gz",
+            output=str(output),
+        )
+    assert attempted == []
+
+
+def test_download_with_mirror_vendor_first_tries_primary_before_vendor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_first (the default) still tries the primary URL before the vendor mirror."""
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        if url == "https://example.com/pkg-1.0.tar.gz":
+            raise RuntimeError("primary unreachable")
+        assert out is not None
+        with open(out, "wb") as f:
+            f.write(b"\x1f\x8b" + b"\x00" * 8)
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_first")
+    monkeypatch.setattr(
+        "koopa.vendor.vendor_download_src",
+        lambda _name, _filename: "https://mirror.example.com/pkg-1.0.tar.gz",
+    )
+    result = download_with_mirror(
+        "https://example.com/pkg-1.0.tar.gz",
+        "pkg",
+        "pkg-1.0.tar.gz",
+        output=str(output),
+        skip_koopa_mirror=True,
+    )
+    assert result == str(output)
+    assert attempted[0] == "https://example.com/pkg-1.0.tar.gz"
+    assert "https://mirror.example.com/pkg-1.0.tar.gz" in attempted
+
+
 @pytest.mark.parametrize(
     "url",
     [

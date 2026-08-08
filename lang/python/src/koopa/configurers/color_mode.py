@@ -4,10 +4,12 @@ import fcntl
 import os
 import re
 import subprocess
+import sys
 from datetime import datetime
 
-from koopa.alert import alert_info, alert_note
+from koopa.alert import alert_info, alert_note, warn
 from koopa.build import locate
+from koopa.configurers.dotfiles import _chezmoi_managed
 from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import os_appearance_mode
 from koopa.tmux import reload_tmux_config, warn_tmux_stale
@@ -40,19 +42,29 @@ def _chezmoi_source_to_target(source_root: str, source_path: str) -> str:
     return os.path.join(os.path.expanduser("~"), *target_parts)
 
 
-def _discover_color_mode_targets(chezmoi_prefix: str) -> list[str]:
+def _discover_color_mode_targets(chezmoi_prefix: str, managed: set[str]) -> list[str]:
     """Return target paths of main-tree templates that branch on KOOPA_COLOR_MODE.
 
     Discovers templates dynamically (self-maintaining — new color-mode templates
     are picked up automatically).  Returns target paths so chezmoi can look each
-    file up by its index entry; unknown/unmanaged templates are silently skipped
-    since their target paths simply won't exist on disk.
+    file up by its index entry.
+
+    ``managed`` is the tree's ``chezmoi managed`` output (target paths relative to
+    ``~``), as returned by ``_chezmoi_managed()``.  A template's target existing on
+    disk is NOT sufficient: ``.chezmoiignore`` can exclude a target conditionally
+    (e.g. when a work-tree marker is present) while the file still exists on disk,
+    managed instead by another tree.  chezmoi's ``apply`` validates every target
+    argument up front and aborts the entire call -- applying nothing -- if even one
+    is unmanaged, so an on-disk-only check silently blocks every other target.
+    Filtering against ``managed`` is required, not just tidier.
 
     The launchd plist and systemd unit are naturally excluded because they don't
     reference KOOPA_COLOR_MODE.
     """
+    home = os.path.expanduser("~")
     needle = b"KOOPA_COLOR_MODE"
     targets = []
+    dropped = []
     for dirpath, _dirnames, filenames in os.walk(chezmoi_prefix):
         for name in filenames:
             if not name.endswith(".tmpl"):
@@ -65,10 +77,14 @@ def _discover_color_mode_targets(chezmoi_prefix: str) -> list[str]:
             except OSError:
                 continue
             target = _chezmoi_source_to_target(chezmoi_prefix, src_path)
-            # Only include targets that exist on disk (i.e. previously deployed
-            # by chezmoi and therefore in its index).
-            if os.path.exists(target):
+            if os.path.relpath(target, home) in managed:
                 targets.append(target)
+            else:
+                dropped.append(target)
+    if dropped:
+        warn(f"{len(dropped)} color-mode target(s) not managed by the main tree; skipping:")
+        for target in sorted(dropped):
+            print(f"  {target}", file=sys.stderr)
     return targets
 
 
@@ -144,11 +160,6 @@ def main(
         chezmoi_prefix = os.path.join(opt_prefix(), "dotfiles", "chezmoi")
         chezmoi = locate("chezmoi")
 
-        target_files = _discover_color_mode_targets(chezmoi_prefix)
-        if not target_files:
-            alert_note("No color-mode targets found; nothing to apply.")
-            return
-
         env = os.environ.copy()
         koopa_bin = os.path.join(koopa_prefix(), "bin")
         env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
@@ -156,6 +167,26 @@ def main(
         # Sentinel suppresses nested sync spawns in any koopa shell activated
         # during chezmoi apply (prevents deadlock on the held flock).
         env["KOOPA_COLOR_MODE_SYNCING"] = "1"
+
+        # Probe which targets the main tree actually manages before discovering
+        # candidates.  chezmoi's 'apply' validates every target argument up front
+        # and aborts the whole call -- applying nothing -- if even one is
+        # unmanaged (e.g. .chezmoiignore'd because a work-tree marker is
+        # present, while the file still exists on disk under a different
+        # tree's management).  An empty result here means the probe itself
+        # failed (_chezmoi_managed degrades to set() rather than raising, by
+        # design); treat that as "can't apply safely" rather than as
+        # "nothing is managed," since a real chezmoi tree always manages
+        # hundreds of targets.
+        managed = _chezmoi_managed(chezmoi, chezmoi_prefix, env)
+        if not managed:
+            warn("chezmoi managed probe returned nothing for the main tree; skipping apply.")
+            return
+
+        target_files = _discover_color_mode_targets(chezmoi_prefix, managed)
+        if not target_files:
+            alert_note("No color-mode targets found; nothing to apply.")
+            return
 
         # Targeted apply by target paths.  Never invokes opt/dotfiles/install,
         # so _sync_launchd_agent is never called and this launchd job cannot

@@ -59,5 +59,9 @@ hand-maintained.
 - Derive `KOOPA_COLOR_MODE` from `os_appearance_mode()` at apply time — never from
   `os.environ` (session env is stale in long-running processes).
 - Re-apply all trees in order: main → work → private.
+- A discovered `chezmoi apply` target must be filtered against `_chezmoi_managed()`
+  output, never `os.path.exists()`. `chezmoi apply` aborts entirely if any one
+  target argument is unmanaged — one `.chezmoiignore`'d-but-on-disk file blocks
+  every other target in the same call.
 
 See skill `koopa-color-mode` for full context.

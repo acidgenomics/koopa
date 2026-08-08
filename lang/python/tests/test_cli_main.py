@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -42,3 +43,28 @@ def test_update_parser_accepts_system_mode() -> None:
 
     assert args.command == "update"
     assert args.mode == "system"
+
+
+def test_require_git_managed_install_permits_pinned_release(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A pinned-release (tarball, no '.git') koopa tree still permits app management.
+
+    Regression test: the gate used to require a git repo on a non-detached
+    branch, which also rejected a tarball-extracted pinned release -- exactly
+    what 'koopa.acidgenomics.com/install --version=X' produces.
+    """
+    (tmp_path / "lang" / "python" / "src").mkdir(parents=True)
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
+
+    cli_main._require_git_managed_install()  # must not raise or exit
+
+
+def test_require_git_managed_install_refuses_packaged_install(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A site-packages/conda install (no 'lang/python/src' tree) is refused."""
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
+
+    with pytest.raises(SystemExit):
+        cli_main._require_git_managed_install()

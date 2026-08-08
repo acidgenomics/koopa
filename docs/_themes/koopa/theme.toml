@@ -1,0 +1,10 @@
+[theme]
+inherit = "basic"
+# Sphinx theme inheritance replaces `stylesheets` rather than merging it, so
+# basic.css (headerlink hover-hide, table/admonition/pre defaults, etc.)
+# must be listed explicitly here, loaded before koopa.css so our overrides
+# still win on equal specificity.
+stylesheets = ["basic.css", "koopa.css"]
+sidebars = []
+
+[options]
