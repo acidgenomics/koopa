@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "6423386432339968",
+    "build_id": "4956531888881664",
     "category": "AI",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "623f9fbbd9069a1ad0d71ab7e6235b5b286e19b1067e4164d1f9bb7a5ce866d21e4a955dba8ee397feaf8b076789cd9664da26169985efb5ac7d429018680bd1",
-      "darwin_amd64": "0ed95197ea6c503e60fc9f65d0352fce733b3d6f5b8a16dae971bfe917fe984cc7dacac8feb02ba71ab6adaba59f99f1ff7407f95ebbcaf8fec30407d3e8fbb0",
-      "linux_amd64": "e64d4e58ede0f8440f2b3dc021f9d6d36b05f5c2f74d5a9215c1f11b20d536c8c2e020f4ce5257aa67e940e94c94d5a16d3aa6461cda18ee7f3e74d3a20ca1ac",
-      "linux_arm64": "2d64c4e09eb22c824bc298ca61e48cb0e62688353db4122996b2e4bba8c9a1570d2cbf6e6452ed7ef30df0940bf8f058789e466aed5264c1ae2e4613eca5b573"
+      "darwin_arm64": "8a410e20350a5d225526fde43168a3742625dad30f43d254423df8d947a4b6f879ead126801a527e3ff255c508ed2d5edc6352cefb488a849c8885c0895cd21f",
+      "darwin_amd64": "1222bd04db54e8d407f58041e459c5c674ce13350b33b62eaed942d46016db14224ad524b32433ac2bd6c310c95193f94f32cd67d663b252ad4f5697729ac9ba",
+      "linux_amd64": "32d64529cf035ab9790352069dd0df4525d7c920b42872de1775e65455e77fd983b37a6dee81a6345b060c98d5f350729bb5e2ae881bbda80f46b7487af4588d",
+      "linux_arm64": "fb1acacdbde606a60a8002b6dc0a8c9800bb84aef3add069f843f6ffa3efaafe4a52fce440505c6f16aebd6b1257cce5ecfaec2dbab21732c625943422318cdb"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.1.10"
+    "version": "1.1.11"
   },
   "apache-airflow": {
     "bin": [
@@ -306,7 +306,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2023-02-08",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "apr",
@@ -319,7 +319,7 @@
     "url": [
       "https://apr.apache.org/"
     ],
-    "version": "1.6.3"
+    "version": "1.6.4"
   },
   "aria2": {
     "bin": [
@@ -423,7 +423,7 @@
     ],
     "category": "Text",
     "conda_channel": "conda-forge",
-    "date": "2026-07-24",
+    "date": "2026-08-08",
     "default": false,
     "description": "AST-aware structural code search and replace tool",
     "installer": "conda-package",
@@ -432,7 +432,7 @@
       "https://ast-grep.github.io/",
       "https://github.com/ast-grep/ast-grep/"
     ],
-    "version": "0.45.0"
+    "version": "0.45.1"
   },
   "attr": {
     "build_dependencies": [
@@ -504,7 +504,7 @@
     ],
     "description": "generates configure scripts for build systems",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/autoconf/autoconf-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/autoconf/autoconf-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/autoconf/?C=M;O=D"
@@ -589,7 +589,7 @@
     ],
     "description": "generates Makefiles from simple descriptions",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/automake/automake-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/automake/automake-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/automake/?C=M;O=D"
@@ -627,7 +627,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -639,7 +639,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.15"
+    "version": "2.36.17"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -788,7 +788,7 @@
       "bash.1"
     ],
     "revision": 3,
-    "src_url": "https://ftpmirror.gnu.org/bash/bash-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/bash/bash-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/bash/",
@@ -903,7 +903,7 @@
     "soft_dependencies": [
       "ed"
     ],
-    "src_url": "https://ftpmirror.gnu.org/bc/bc-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/bc/bc-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://mirrors.kernel.org/gnu/bc/?C=M;O=D"
@@ -1039,7 +1039,7 @@
     ],
     "description": "GNU binary file utilities (ld, as, objdump, etc.)",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/binutils/binutils-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/binutils/binutils-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://mirrors.kernel.org/gnu/binutils/?C=M;O=D"
@@ -1089,7 +1089,7 @@
     ],
     "description": "GNU parser generator (YACC-compatible)",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/bison/bison-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/bison/bison-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/bison/",
@@ -1595,7 +1595,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": [
       "node"
@@ -1609,7 +1609,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.221"
+    "version": "2.1.226"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1621,7 +1621,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1629,7 +1629,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.7.2.59"
+    "version": "26.7.3.19"
   },
   "cloud-sql-proxy": {
     "bin": [
@@ -1681,7 +1681,7 @@
       "codex"
     ],
     "category": "AI",
-    "date": "2026-07-30",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": [
       "node"
@@ -1695,7 +1695,7 @@
     "url": [
       "https://www.npmjs.com/package/@openai/codex"
     ],
-    "version": "0.146.0"
+    "version": "0.147.0"
   },
   "colorls": {
     "date": "2024-07-12",
@@ -2024,7 +2024,7 @@
       "gwhoami.1",
       "gyes.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/coreutils/coreutils-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/coreutils/coreutils-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/coreutils/",
@@ -2190,14 +2190,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-07-30",
+    "date": "2026-08-08",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.10.0"
+    "version": "1.11.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2443,7 +2443,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2453,7 +2453,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "001a7ce6b8aaaf2b2b0403d2431a0bdb4d6de5b3"
+    "version": "ad55ed08df3a1d3398d136d07b60ba2ad00fb91b"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -2539,7 +2539,7 @@
     "man1": [
       "ed.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/ed/ed-{version}.tar.lz",
+    "src_url": "https://mirrors.kernel.org/gnu/ed/ed-{version}.tar.lz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/ed/ed.html",
@@ -2929,7 +2929,7 @@
       "gupdatedb.1",
       "gxargs.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/findutils/findutils-{version}.tar.xz",
+    "src_url": "https://mirrors.kernel.org/gnu/findutils/findutils-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/findutils/",
@@ -3199,7 +3199,7 @@
     "man1": [
       "gawk.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/gawk/gawk-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/gawk/gawk-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/gawk/?C=M;O=D"
@@ -3214,7 +3214,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2026-05-02",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "gmp",
@@ -3226,8 +3226,7 @@
     ],
     "description": "GNU Compiler Collection (C, C++, Fortran, and more)",
     "installer_platform": "linux",
-    "revision": 1,
-    "src_url": "https://ftpmirror.gnu.org/gcc/gcc-{version}/gcc-{version}.tar.xz",
+    "src_url": "https://mirrors.kernel.org/gnu/gcc/gcc-{version}/gcc-{version}.tar.xz",
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -3237,7 +3236,7 @@
     "url": [
       "https://gcc.gnu.org/"
     ],
-    "version": "16.1.0"
+    "version": "16.2.0"
   },
   "gdal": {
     "date": "2026-04-29",
@@ -3256,7 +3255,7 @@
     ],
     "description": "GNU dbm key-value database library",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/gdbm/gdbm-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/gdbm/gdbm-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org.ua/software/gdbm/download.html"
@@ -3289,7 +3288,7 @@
       "gemini"
     ],
     "category": "AI",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "node"
@@ -3305,7 +3304,7 @@
       "https://geminicli.com/",
       "https://www.npmjs.com/package/@google/gemini-cli"
     ],
-    "version": "0.53.1"
+    "version": "0.54.4"
   },
   "genomepy": {
     "bin": [
@@ -3397,7 +3396,7 @@
       "without-git": ""
     },
     "revision": 3,
-    "src_url": "https://ftpmirror.gnu.org/gettext/gettext-{version}.tar.xz",
+    "src_url": "https://mirrors.kernel.org/gnu/gettext/gettext-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gettext/",
@@ -3785,7 +3784,7 @@
     "default": false,
     "description": "perfect hash function generator",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/gperf/gperf-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/gperf/gperf-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/gperf/",
@@ -3842,7 +3841,7 @@
     "man1": [
       "ggrep.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/grep/grep-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/grep/grep-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://www.gnu.org/software/grep/",
@@ -3986,7 +3985,7 @@
       "gznew.1"
     ],
     "revision": 1,
-    "src_url": "https://ftpmirror.gnu.org/gzip/gzip-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/gzip/gzip-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/gzip/",
@@ -4313,7 +4312,7 @@
       "hf"
     ],
     "category": "AI",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "python"
@@ -4329,7 +4328,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "1.26.0"
+    "version": "1.27.0"
   },
   "hugo": {
     "bin": [
@@ -4547,7 +4546,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4555,7 +4554,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.117.0"
+    "version": "2.119.0"
   },
   "jj": {
     "bin": [
@@ -4566,7 +4565,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-07-14",
+    "date": "2026-08-08",
     "default": false,
     "description": "Git-compatible version control system with conflict resolution",
     "installer": "conda-package",
@@ -4575,7 +4574,7 @@
       "https://jj-vcs.github.io/jj/",
       "https://github.com/jj-vcs/jj/"
     ],
-    "version": "0.43.0"
+    "version": "0.44.0"
   },
   "jless": {
     "date": "2026-06-02",
@@ -5175,7 +5174,7 @@
     "default": false,
     "description": "character set conversion library",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/libiconv/libiconv-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/libiconv/libiconv-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libiconv/",
@@ -5380,7 +5379,7 @@
     "default": false,
     "description": "ASN.1 parsing library",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/libtasn1/libtasn1-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/libtasn1/libtasn1-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libtasn1/",
@@ -5435,7 +5434,7 @@
       "glibtool.1",
       "glibtoolize.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/libtool/libtool-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/libtool/libtool-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/libtool/?C=M;O=D"
@@ -5451,7 +5450,7 @@
     "default": false,
     "description": "Unicode string processing library",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/libunistring/libunistring-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/libunistring/libunistring-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.gnu.org/software/libunistring/",
@@ -5656,7 +5655,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-01-02",
+    "date": "2026-08-08",
     "default": false,
     "description": "lightweight embeddable scripting language",
     "mirror": true,
@@ -5666,7 +5665,7 @@
       "http://www.lua.org/",
       "https://github.com/lua/lua/"
     ],
-    "version": "5.5.0"
+    "version": "5.5.1"
   },
   "luajit": {
     "bin": [
@@ -5802,7 +5801,7 @@
     "default": false,
     "description": "GNU macro processor",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/m4/m4-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/m4/m4-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/m4/",
@@ -5825,7 +5824,7 @@
     "man1": [
       "gmake.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/make/make-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/make/make-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/make/?C=M;O=D"
@@ -5841,7 +5840,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-06-08",
+    "date": "2026-08-08",
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
@@ -5850,7 +5849,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.8.1"
+    "version": "2.9.0"
   },
   "man-db": {
     "bin": [
@@ -6027,7 +6026,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6037,7 +6036,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.8.1"
+    "version": "2026.8.2"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6081,7 +6080,7 @@
     ],
     "description": "C library for arbitrary-precision complex arithmetic",
     "installer": "gnu-app",
-    "src_url": "https://ftp.gnu.org/gnu/mpc/mpc-{version}.tar.xz",
+    "src_url": "https://mirrors.kernel.org/gnu/mpc/mpc-{version}.tar.xz",
     "type": "library",
     "url": [
       "http://www.multiprecision.org/mpc/"
@@ -6116,7 +6115,7 @@
     ],
     "description": "C library for multiple-precision floating-point arithmetic",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/mpfr/mpfr-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/mpfr/mpfr-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.mpfr.org/"
@@ -6359,7 +6358,7 @@
     ],
     "description": "low-level cryptographic library",
     "installer": "gnu-app",
-    "src_url": "https://ftpmirror.gnu.org/nettle/nettle-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/nettle/nettle-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://mirrors.kernel.org/gnu/nettle/?C=M;O=D"
@@ -6466,7 +6465,7 @@
       "make"
     ],
     "category": "Security",
-    "date": "2026-05-02",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "liblinear",
@@ -6482,7 +6481,7 @@
     "src_url": "https://nmap.org/dist/nmap-{version}.tar.bz2",
     "type": "cli",
     "url": "https://nmap.org/",
-    "version": "7.99"
+    "version": "7.991"
   },
   "node": {
     "bin": [
@@ -6641,20 +6640,19 @@
       "make"
     ],
     "category": "Library",
-    "date": "2026-05-04",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "openssl3"
     ],
     "description": "open-source LDAP directory service",
     "mirror": true,
-    "revision": 1,
     "src_url": "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-{version}.tgz",
     "type": "library",
     "url": [
       "https://www.openldap.org/software/"
     ],
-    "version": "2.6.13"
+    "version": "2.7.0"
   },
   "openssh": {
     "build_dependencies": [
@@ -6884,7 +6882,7 @@
     "man1": [
       "patch.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/patch/patch-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/patch/patch-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/patch/?C=M;O=D"
@@ -7373,7 +7371,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7384,7 +7382,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.2"
+    "version": "2.8.3"
   },
   "pyflakes": {
     "bin": [
@@ -7787,7 +7785,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-06-11",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": {
       "default": [],
@@ -7829,7 +7827,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.13.14"
+    "version": "3.13.15"
   },
   "python3.14": {
     "bin": [
@@ -7859,7 +7857,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-06-11",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": {
       "default": [],
@@ -7903,7 +7901,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.14.6"
+    "version": "3.14.7"
   },
   "quarto": {
     "bin": [
@@ -8166,7 +8164,7 @@
       "ncurses"
     ],
     "description": "library for editing command-line input",
-    "src_url": "https://ftpmirror.gnu.org/readline/readline-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/readline/readline-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://tiswww.cwru.edu/php/chet/readline/rltop.html"
@@ -8435,7 +8433,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": [
       "python"
@@ -8446,7 +8444,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.16.1"
+    "version": "0.16.2"
   },
   "ruff-lsp": {
     "bin": [
@@ -8683,7 +8681,7 @@
     "man1": [
       "gsed.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/sed/sed-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/sed/sed-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/sed/",
@@ -8866,7 +8864,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-07-30",
+    "date": "2026-08-08",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -8876,14 +8874,14 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.24.0"
+    "version": "9.25.1"
   },
   "snowflake-cli": {
     "bin": [
       "snow"
     ],
     "category": "Cloud",
-    "date": "2026-07-20",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -8899,7 +8897,7 @@
       "https://docs.snowflake.com/en/developer-guide/snowflake-cli/index",
       "https://github.com/snowflakedb/snowflake-cli"
     ],
-    "version": "3.23.0"
+    "version": "3.24.1"
   },
   "sox": {
     "bin": [
@@ -8933,7 +8931,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "emacs"
@@ -8943,7 +8941,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "f9fabff508cc0899cff72b54afd597e1ceb0c885"
+    "version": "47c09c5777a33ecd59ea0456829041464883135a"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -8982,7 +8980,7 @@
       "sqlfluff"
     ],
     "category": "Python",
-    "date": "2026-06-05",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": [
       "python"
@@ -8994,7 +8992,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.2.2"
+    "version": "4.3.0"
   },
   "sqlite": {
     "bin": [
@@ -9111,7 +9109,7 @@
       "streamlit"
     ],
     "category": "Python",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "python"
@@ -9124,7 +9122,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.61.0"
+    "version": "1.61.1"
   },
   "subread": {
     "bin": [
@@ -9207,7 +9205,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2026-05-02",
+    "date": "2026-08-08",
     "default": false,
     "dependencies": [
       "pcre2"
@@ -9218,7 +9216,7 @@
     "url": [
       "http://www.swig.org/"
     ],
-    "version": "4.4.1"
+    "version": "4.5.0"
   },
   "tabcmd": {
     "bin": [
@@ -9277,7 +9275,7 @@
     "man1": [
       "gtar.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/tar/tar-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/tar/tar-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/tar/",
@@ -9414,7 +9412,7 @@
       "texi2pdf.1",
       "texindex.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/texinfo/texinfo-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/texinfo/texinfo-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/texinfo/?C=M;O=D"
@@ -9604,7 +9602,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-08-04",
+    "date": "2026-08-08",
     "default": true,
     "dependencies": [
       "python"
@@ -9616,7 +9614,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.66"
+    "version": "0.0.69"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9655,7 +9653,7 @@
     "man1": [
       "gunits.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/units/units-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/units/units-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/units/",
@@ -9716,14 +9714,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.12.1"
+    "version": "0.12.3"
   },
   "valkey": {
     "bin": [
@@ -9914,7 +9912,7 @@
     "man1": [
       "wget.1"
     ],
-    "src_url": "https://ftpmirror.gnu.org/wget/wget-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/wget/wget-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/wget/",
@@ -9955,7 +9953,7 @@
     "installer_args": {
       "disable-nls": ""
     },
-    "src_url": "https://ftpmirror.gnu.org/wget/wget2-{version}.tar.gz",
+    "src_url": "https://mirrors.kernel.org/gnu/wget/wget2-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://gitlab.com/gnuwget/wget2"
@@ -10550,7 +10548,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-08-03",
+    "date": "2026-08-08",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10559,7 +10557,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.13.2"
+    "version": "1.14.2"
   },
   "zellij": {
     "bin": [
