@@ -1,5 +1,71 @@
 # Changelog
 
+## koopa 0.25.0 (2026-08-08)
+
+Major changes:
+
+- Added a full Sphinx-generated CLI reference docs site, published to
+  `koopa.acidgenomics.com` via `koopa develop`. `cli_docs.py` is a shared
+  source of truth for command descriptions and argument synopses, consumed
+  by both the new Sphinx reference (`generate_docs.py`) and the existing
+  `koopa.1` man page (`generate_man.py`), so the two no longer drift
+  independently. `site.py` handles the build/publish/prune pipeline; the
+  bucket root also serves `/install` and `/src/<app>/<tarball>` (the
+  bootstrap source mirror), so the docs sync never uses a blanket
+  `--delete` — stale-content pruning is a separate, explicit,
+  dry-run-by-default step that skips both reserved prefixes.
+- CRAN/R package publishing now automatically cleans up superseded
+  versions: uploading a new binary deletes any other binary tarball for
+  that package (contrib dirs mirror CRAN convention and hold only the
+  current version), and a new source tarball moves the prior version to
+  `Archive/<pkg>/` instead of leaving it in the live contrib listing.
+- GNU and Savannah's own infrastructure (`ftpmirror.gnu.org`,
+  `ftp.gnu.org`, `download.savannah.nongnu.org`,
+  `download-mirror.savannah.gnu.org`) is unreliable from many corporate
+  networks — outright firewalled, or subject to intermittent SSL handshake
+  timeouts under concurrent load. Version checks and source downloads now
+  both route through verified-reachable third-party mirrors first
+  (`mirrors.kernel.org`, `ftp.wayne.edu`, `mirrors.ocf.berkeley.edu`,
+  `mirror.csclub.uwaterloo.ca`, `nongnu.uib.no`), with a dead-host circuit
+  breaker in `version_check.py` so a single blocked host doesn't burn a
+  full timeout on every one of the 30+ GNU-installer apps in a
+  `check-app-versions` run. `download.py`'s mirror-fallback URLs are now
+  derived from the primary URL's own path rather than assumed flat, fixing
+  apps whose real tarball lives in a versioned subdirectory (`gcc`) or
+  under a different parent name (`wget2`). `mirror.rit.edu` was dropped
+  entirely — its TLS cert doesn't match its own hostname.
+- `koopa` now has draft (unsubmitted) conda-forge and bioconda recipe
+  groundwork: the packaged-install gate (`_require_git_managed_install`)
+  now permits app management on any tree containing `lang/python/src`,
+  not just a git checkout, so a pinned-release tarball install works
+  correctly; `vendor_only` mirror priority now skips public hosts entirely
+  instead of trying them first; and `conda-build`/`rattler-build` are new
+  koopa-managed apps for exercising the recipe locally.
+
+Minor changes:
+
+- `koopa system check` no longer runs the macOS iCloud Drive sync check,
+  which produced a spurious warning unrelated to koopa's own health.
+- The TeX Live installer now points at a reliable CTAN mirror, updates the
+  local package database before installing, and skips packages already
+  present instead of unconditionally reinstalling every package on every
+  run.
+- `aws-azure-login`'s installer pre-seeds puppeteer's bundled Chromium
+  using koopa's own `download()` (which has stall detection and retries)
+  instead of puppeteer's postinstall downloader, which has no socket
+  timeout and hangs forever behind a corporate proxy that silently drops
+  the connection.
+- `brew_upgrade_casks()` no longer repeatedly reinstalls versionless casks
+  (e.g. `font-fira-mono`) that Homebrew reports as outdated even though the
+  installed and current versions are identical.
+- Removed the unused `website_prefix()` helper (superseded by the new docs
+  site pipeline).
+
+New apps:
+
+- `conda-build` 26.7.0 — tools for building conda packages (non-default)
+- `rattler-build` 0.72.2 — universal conda package builder (non-default)
+
 ## koopa 0.24.0 (2026-08-04)
 
 Major changes:
