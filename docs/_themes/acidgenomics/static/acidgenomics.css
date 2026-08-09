@@ -1,13 +1,14 @@
 /*
- * koopa Sphinx theme.
+ * Shared acidgenomics Sphinx theme, used by koopa.acidgenomics.com and every
+ * python.acidgenomics.com package.
  *
  * Built directly on Sphinx's "basic" theme (no Bootstrap, no JS framework,
  * no sidebar/flex layout to fight) and styled from steinbaugh.com's own CSS
  * -- the same base.css/fonts.css/colors.css/responsive.css the live koopa
  * Jekyll site and steinbaugh.com's own posts use, imported directly rather
- * than re-derived. The custom layout.html template renders a real
- * `body > nav` (breadcrumb + search) and `body > header` (title + in-page
- * toc) as direct children of <body>, matching base.css's own selectors
+ * than re-derived. The layout.html template renders a real `body > nav`
+ * (breadcrumb + search) and `body > header` (title + in-page toc) as direct
+ * children of <body>, matching base.css's own selectors
  * (https://steinbaugh.com/posts/vim.html is the reference page).
  *
  * colors.css switches light/dark purely via
@@ -41,18 +42,14 @@ nav {
 
 /* base.css's nav/header mechanism (negative margins, absolute positioning,
  * paired top/bottom borders on <header>, the >=1000px bleed-wider effect in
- * responsive.css) is left entirely as-is: layout.html now always renders a
- * real <header> immediately after <nav> with the page title inside, which
- * is the invariant that mechanism assumes. No overrides needed here --
- * earlier attempts patched around a missing <header> instead of fixing
- * the template to provide one, which is why they kept fighting new
- * symptoms (double borders, mismatched widths, misaligned search box)
- * every round. Position/spacing are untouched; koopa has no logo asset of
- * its own, so this points the same background-image slot at the
- * acidgenomics.com brand mark instead of steinbaugh.com's personal one. */
-body > nav #breadcrumb {
-    background-image: url("https://acidgenomics.com/images/logo.svg");
-}
+ * responsive.css) is left entirely as-is: layout.html renders a real
+ * <header> immediately after <nav> with the page title inside, which is the
+ * invariant that mechanism assumes. Position/spacing are untouched; the
+ * breadcrumb's background image itself is set inline by layout.html from
+ * the theme's `logo_url` option, not hardcoded here, since it differs per
+ * site (koopa vs. each python.acidgenomics.com package). The optional repo
+ * link (theme's `repo_url` option) renders inside #breadcrumb itself, so it
+ * inherits that div's positioning with no extra rule needed here. */
 
 /* -- map Sphinx/basic-theme class names onto base.css's selectors --------
  * base.css was written for hand-rolled Jekyll HTML (article, div.highlighter-
@@ -71,8 +68,8 @@ div.footer {
 }
 
 /* Every docs/*.md file opens with a MyST `# Title` heading, which docutils
- * renders as this h1. body > header (see layout.html) now always carries
- * the same title, so hide the body's copy rather than duplicate it. */
+ * renders as this h1. body > header (see layout.html) always carries the
+ * same title, so hide the body's copy rather than duplicate it. */
 div.body > section > h1:first-child {
     display: none;
 }
@@ -99,14 +96,14 @@ code {
  * colored via --bullet-color) positions itself with
  * `display: inline-block; margin-left: -1.5em`, an inline-flow trick that
  * only works when <li>'s first child is inline text. docutils/Sphinx
- * always wraps list item content in `<li><p>...</p></li>`, so against a
- * block-level first child that trick forces a line break before the
- * marker even renders, dropping it onto its own line above the text.
- * A first attempt at this fix reset lists to plain browser bullets,
- * losing the site's actual colored/custom marker -- switch the
- * positioning mechanism instead: position:absolute doesn't care whether
- * the sibling content is inline or block, so the marker keeps base.css's
- * own color/content, just anchored differently. */
+ * always wraps list item content in `<li><p>...</p></li>` (autodoc/
+ * numpydoc output included), so against a block-level first child that
+ * trick forces a line break before the marker even renders, dropping it
+ * onto its own line above the text. A first attempt at this fix reset
+ * lists to plain browser bullets, losing the site's actual colored/custom
+ * marker -- switch the positioning mechanism instead: position:absolute
+ * doesn't care whether the sibling content is inline or block, so the
+ * marker keeps base.css's own color/content, just anchored differently. */
 div.body li {
     margin-bottom: 0.25rem;
     padding-left: 1.5em;
@@ -138,6 +135,54 @@ a.headerlink {
 div.koopa-logo pre {
     border: none;
     padding: 0;
+}
+
+/* -- API reference: autodoc/autosummary/numpydoc output -------------------
+ * basic.css already supplies the structure (dl.py, .sig, dl.field-list,
+ * table.field-list) for sphinx.ext.autodoc + numpydoc output -- this is
+ * color/border theming against the steinbaugh.com custom properties, not
+ * new layout. */
+
+dl.py > dt.sig {
+    background: var(--current-line-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+}
+
+dl.py > dt.sig .sig-name,
+dl.py > dt.sig code.descname {
+    color: var(--header-color);
+}
+
+dl.py > dt.sig .sig-prename,
+dl.py > dt.sig code.descclassname,
+dl.py > dt.sig .sig-param {
+    color: var(--comment-color);
+}
+
+/* numpydoc renders Parameters/Returns/etc. as dl.field-list; base.css's
+ * blanket dl margin/line-height rules already apply, this just colors the
+ * field name column. */
+dl.field-list > dt .field-name,
+dl.field-list > dt {
+    color: var(--header-color);
+}
+
+/* autosummary tables (docs/reference/index.rst listings): collapse to
+ * base.css's plain look instead of Sphinx's default cell shading. */
+table.autosummary,
+table.longtable {
+    border-collapse: collapse;
+}
+
+table.autosummary td,
+table.autosummary th,
+table.longtable td,
+table.longtable th {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.25rem 0.5rem;
 }
 
 /* -- syntax highlighting: same token-class -> color mapping as rouge.css,

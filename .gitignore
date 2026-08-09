@@ -1,7 +1,8 @@
 !/docs/
-!/docs/_templates/
-!/docs/_templates/*.html
+!/docs/_themes/
+!/docs/_themes/**/*.html
 !/docs/reference/
+!/lang/python/src/koopa/assets/sphinx_theme/*.html
 .env
 .koopa-binary
 .koopa-install.log

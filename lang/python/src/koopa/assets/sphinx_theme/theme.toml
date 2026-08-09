@@ -1,0 +1,19 @@
+[theme]
+inherit = "basic"
+# Sphinx theme inheritance replaces `stylesheets` rather than merging it, so
+# basic.css (headerlink hover-hide, table/admonition/pre defaults, etc.)
+# must be listed explicitly here, loaded before acidgenomics.css so our
+# overrides still win on equal specificity.
+stylesheets = ["basic.css", "acidgenomics.css"]
+sidebars = []
+
+[options]
+# Google "sitesearch" scoping value for the search box in nav, e.g.
+# "koopa.acidgenomics.com" or "python.acidgenomics.com". Set per-project via
+# html_theme_options in conf.py; empty renders an unscoped search box.
+sitesearch = ""
+# Background image for the body > nav breadcrumb, matching the
+# acidgenomics.com brand mark by default.
+logo_url = "https://acidgenomics.com/images/logo.svg"
+# Optional repo link rendered in nav alongside the breadcrumb. Empty omits it.
+repo_url = ""

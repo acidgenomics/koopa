@@ -1,0 +1,260 @@
+/*
+ * Shared acidgenomics Sphinx theme, used by koopa.acidgenomics.com and every
+ * python.acidgenomics.com package.
+ *
+ * Built directly on Sphinx's "basic" theme (no Bootstrap, no JS framework,
+ * no sidebar/flex layout to fight) and styled from steinbaugh.com's own CSS
+ * -- the same base.css/fonts.css/colors.css/responsive.css the live koopa
+ * Jekyll site and steinbaugh.com's own posts use, imported directly rather
+ * than re-derived. The layout.html template renders a real `body > nav`
+ * (breadcrumb + search) and `body > header` (title + in-page toc) as direct
+ * children of <body>, matching base.css's own selectors
+ * (https://steinbaugh.com/posts/vim.html is the reference page).
+ *
+ * colors.css switches light/dark purely via
+ * `@media (prefers-color-scheme: dark)` on `:root` -- no data-theme
+ * attribute, no JS toggle needed.
+ */
+
+@import url("https://steinbaugh.com/css/base.css");
+@import url("https://steinbaugh.com/css/fonts.css");
+@import url("https://steinbaugh.com/css/colors.css") screen;
+@import url("https://steinbaugh.com/css/responsive.css") screen;
+
+/* responsive.css (imported above) already sets html { font-size: 12pt }
+ * below 640px and 14pt at/above it. 14pt renders at ~18.7px -- comfortably
+ * above the 14px minimum -- so no override is needed here; a literal
+ * `font-size: 14px` would have SHRUNK text below what responsive.css
+ * already provides, since 14pt != 14px (1pt = 4/3px). */
+
+html, body,
+h1, h2, h3, h4, h5, h6 {
+    font-family: sans-serif-web, sans-serif;
+}
+
+pre,
+code,
+kbd,
+var,
+nav {
+    font-family: monospace-web, monospace;
+}
+
+/* base.css's nav/header mechanism (negative margins, absolute positioning,
+ * paired top/bottom borders on <header>, the >=1000px bleed-wider effect in
+ * responsive.css) is left entirely as-is: layout.html renders a real
+ * <header> immediately after <nav> with the page title inside, which is the
+ * invariant that mechanism assumes. Position/spacing are untouched; the
+ * breadcrumb's background image itself is set inline by layout.html from
+ * the theme's `logo_url` option, not hardcoded here, since it differs per
+ * site (koopa vs. each python.acidgenomics.com package). The optional repo
+ * link (theme's `repo_url` option) renders inside #breadcrumb itself, so it
+ * inherits that div's positioning with no extra rule needed here. */
+
+/* -- map Sphinx/basic-theme class names onto base.css's selectors --------
+ * base.css was written for hand-rolled Jekyll HTML (article, div.highlighter-
+ * rouge); basic theme emits its own class names for the equivalent content. */
+
+div.document {
+    /* basic theme's own wrapper around <div class="body">; base.css already
+     * constrains and centers <body> itself, so this is just a passthrough. */
+    margin: 0;
+    max-width: none;
+    padding: 0;
+}
+
+div.footer {
+    font-size: 0.875em;
+}
+
+/* Every docs/*.md file opens with a MyST `# Title` heading, which docutils
+ * renders as this h1. body > header (see layout.html) always carries the
+ * same title, so hide the body's copy rather than duplicate it. */
+div.body > section > h1:first-child {
+    display: none;
+}
+
+div.related {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+pre {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+code {
+    background: none;
+    padding: 0;
+}
+
+/* base.css's custom bullet marker (li:before { content: "❯"/counter(li) },
+ * colored via --bullet-color) positions itself with
+ * `display: inline-block; margin-left: -1.5em`, an inline-flow trick that
+ * only works when <li>'s first child is inline text. docutils/Sphinx
+ * always wraps list item content in `<li><p>...</p></li>` (autodoc/
+ * numpydoc output included), so against a block-level first child that
+ * trick forces a line break before the marker even renders, dropping it
+ * onto its own line above the text. A first attempt at this fix reset
+ * lists to plain browser bullets, losing the site's actual colored/custom
+ * marker -- switch the positioning mechanism instead: position:absolute
+ * doesn't care whether the sibling content is inline or block, so the
+ * marker keeps base.css's own color/content, just anchored differently. */
+div.body li {
+    margin-bottom: 0.25rem;
+    padding-left: 1.5em;
+    position: relative;
+}
+
+div.body li::before {
+    left: 0;
+    margin-left: 0;
+    position: absolute;
+    width: 1em;
+}
+
+/* base.css's blanket `p { margin: 1rem 0 }` also applies to the <p> docutils
+ * wraps around simple list-item text; keep list items visually tight
+ * instead of full paragraph gaps between every bullet. */
+div.body li > p {
+    margin: 0;
+}
+
+/* No "¶" permalink markers next to headings, on hover or otherwise. */
+
+a.headerlink {
+    display: none;
+}
+
+/* ASCII-art logo on the index page: plain text, not a code sample. */
+
+div.koopa-logo pre {
+    border: none;
+    padding: 0;
+}
+
+/* -- API reference: autodoc/autosummary/numpydoc output -------------------
+ * basic.css already supplies the structure (dl.py, .sig, dl.field-list,
+ * table.field-list) for sphinx.ext.autodoc + numpydoc output -- this is
+ * color/border theming against the steinbaugh.com custom properties, not
+ * new layout. */
+
+dl.py > dt.sig {
+    background: var(--current-line-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+}
+
+dl.py > dt.sig .sig-name,
+dl.py > dt.sig code.descname {
+    color: var(--header-color);
+}
+
+dl.py > dt.sig .sig-prename,
+dl.py > dt.sig code.descclassname,
+dl.py > dt.sig .sig-param {
+    color: var(--comment-color);
+}
+
+/* numpydoc renders Parameters/Returns/etc. as dl.field-list; base.css's
+ * blanket dl margin/line-height rules already apply, this just colors the
+ * field name column. */
+dl.field-list > dt .field-name,
+dl.field-list > dt {
+    color: var(--header-color);
+}
+
+/* autosummary tables (docs/reference/index.rst listings): collapse to
+ * base.css's plain look instead of Sphinx's default cell shading. */
+table.autosummary,
+table.longtable {
+    border-collapse: collapse;
+}
+
+table.autosummary td,
+table.autosummary th,
+table.longtable td,
+table.longtable th {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.25rem 0.5rem;
+}
+
+/* -- syntax highlighting: same token-class -> color mapping as rouge.css,
+ * since Sphinx (Pygments) and Jekyll (Rouge) share Pygments-derived short
+ * codes for tokens. colors.css already swaps the --*-color variables these
+ * rules reference on prefers-color-scheme, so no light/dark duplication is
+ * needed here. */
+.highlight { background: var(--background-color); color: var(--foreground-color); }
+.highlight .bp,
+.highlight .c,
+.highlight .c1,
+.highlight .cd,
+.highlight .cm,
+.highlight .cp,
+.highlight .cs { color: var(--comment-color); }
+.highlight .o,
+.highlight .ow,
+.highlight .p,
+.highlight .pi,
+.highlight .w { color: var(--foreground-color); }
+.highlight .k,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kv { color: var(--keyword-color); }
+.highlight .err { color: var(--error-color); }
+.highlight .gd { color: var(--pink-color); }
+.highlight .ge { color: var(--bright-color); }
+.highlight .gh,
+.highlight .gi,
+.highlight .go,
+.highlight .gp,
+.highlight .gu { color: var(--gray-color); }
+.highlight .gr,
+.highlight .gt { color: var(--red-color); }
+.highlight .il { color: var(--cyan-color); }
+.highlight .kc,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr { color: var(--bright-color); }
+.highlight .kt { color: var(--purple-color); }
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .mx,
+.highlight .na,
+.highlight .no,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi { color: var(--cyan-color); }
+.highlight .nb,
+.highlight .nt { color: var(--blue-color); }
+.highlight .nc,
+.highlight .ni { color: var(--purple-color); }
+.highlight .nd,
+.highlight .nn { color: var(--gray-color); }
+.highlight .ne,
+.highlight .nf,
+.highlight .nl { color: var(--red-color); }
+.highlight .s,
+.highlight .s1,
+.highlight .s2,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .se,
+.highlight .sh,
+.highlight .si,
+.highlight .sx { color: var(--red-color); }
+.highlight .sr { color: var(--green-color); }
+.highlight .ss { color: var(--pink-color); }

@@ -451,9 +451,9 @@ APP_DESCRIPTIONS: dict[str, str] = {
     "photos-rename-with-exiftool": "Rename photos and videos by capture date using exiftool.",
     # python
     "python-publish": "Build and publish a Python package to python.acidgenomics.com.",
-    "python-publish-assets": "Upload shared static assets to python.acidgenomics.com.",
     "python-publish-docs": "Build and publish a package's Sphinx docs to python.acidgenomics.com.",
     "python-reindex": "Regenerate the PEP 503 index and landing page for python.acidgenomics.com.",
+    "python-sync-docs-theme": "Sync koopa's shared Sphinx theme into one or more doc trees.",
     # r
     "r-archive": "Archive stale R package source tarballs.",
     "r-bioconda-check": "Check R package versions against bioconda-recipes.",

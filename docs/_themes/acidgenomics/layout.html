@@ -1,7 +1,12 @@
-{# koopa theme layout, matching steinbaugh.com's own page shape:
+{# acidgenomics theme layout, matching steinbaugh.com's own page shape:
    body > nav (site breadcrumb + search) followed by body > header
    (page <h1> + in-page table of contents), both direct children of <body>.
-   See https://steinbaugh.com/posts/vim.html for the reference structure. #}
+   See https://steinbaugh.com/posts/vim.html for the reference structure.
+
+   Shared by koopa.acidgenomics.com and every python.acidgenomics.com
+   package; per-site values (sitesearch scope, breadcrumb logo, optional
+   repo link) come from html_theme_options in each site's conf.py rather
+   than being hardcoded here. #}
 {%- extends "basic/layout.html" %}
 
 {#- base.css's nav/header CSS (negative margins, absolute positioning,
@@ -17,11 +22,16 @@
    the header. #}
 {%- block header %}
 <nav>
-<div id="breadcrumb"><a href="{{ pathto(root_doc)|e }}">{{ shorttitle|e }}</a></div>
+<div id="breadcrumb" style="background-image: url('{{ theme_logo_url|e }}');">
+<a href="{{ pathto(root_doc)|e }}">{{ shorttitle|e }}</a>
+{%- if theme_repo_url %}
+&middot; <a href="{{ theme_repo_url|e }}">Source</a>
+{%- endif %}
+</div>
 <form method="get" action="https://www.google.com/search">
 <div>
 <input type="text" name="q" maxlength="255" placeholder="search" value="" />
-<input type="hidden" name="sitesearch" value="koopa.acidgenomics.com" />
+<input type="hidden" name="sitesearch" value="{{ theme_sitesearch|e }}" />
 </div>
 </form>
 </nav>
