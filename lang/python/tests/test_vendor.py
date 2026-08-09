@@ -66,21 +66,21 @@ def test_vendor_config_invalid_json_returns_none(
     assert vendor_config() is None
 
 
-def test_vendor_config_valid_artifactory_config_returns_dict(
+def test_vendor_config_valid_http_config_returns_dict(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """A valid, enabled config with a recognized backend is returned as-is."""
     _write_vendor_json(
         tmp_path,
-        '{"enabled": true, "backend": "artifactory",'
-        ' "artifactory": {"base_url": "https://artifacts.example.com",'
+        '{"enabled": true, "backend": "http",'
+        ' "http": {"base_url": "https://artifacts.example.com",'
         ' "src_repo": "koopa-src", "binary_repo": "koopa-binaries"}}',
     )
     monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
 
     cfg = vendor_config()
     assert cfg is not None
-    assert cfg["backend"] == "artifactory"
+    assert cfg["backend"] == "http"
 
 
 def test_vendor_pull_priority_defaults_to_vendor_first(

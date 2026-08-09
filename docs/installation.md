@@ -158,7 +158,7 @@ Installing apps normally downloads source tarballs and prebuilt binaries from
 upstream hosts (GitHub, GNU/Savannah mirrors, `koopa.acidgenomics.com/src`, and
 similar) directly. On a network that restricts outbound traffic to an approved
 allowlist, or where every artifact must be reviewed before it reaches a host,
-route these downloads through an internal mirror instead: a JFrog Artifactory
+route these downloads through an internal mirror instead: a generic HTTP(S)
 repository or an S3 bucket that you control and populate.
 
 Copy the example config and edit it in place:
@@ -170,12 +170,12 @@ cp etc/koopa/vendor.json.example etc/koopa/vendor.json
 ```json
 {
   "enabled": true,
-  "backend": "artifactory",
-  "artifactory": {
+  "backend": "http",
+  "http": {
     "base_url": "https://artifacts.example.com",
     "src_repo": "generic-team-koopa-src",
     "binary_repo": "generic-team-koopa-binaries",
-    "token_env_var": "JFROG_ACCESS_TOKEN"
+    "token_env_var": "HTTP_ACCESS_TOKEN"
   },
   "pull_priority": "vendor_only"
 }
@@ -183,9 +183,9 @@ cp etc/koopa/vendor.json.example etc/koopa/vendor.json
 
 Fields:
 
-- `backend`: `"artifactory"` or `"s3"`. Only one backend section (`artifactory`
+- `backend`: `"http"` or `"s3"`. Only one backend section (`http`
   or `s3`) is read, matching `backend`.
-- `artifactory.token_env_var`: the name of an environment variable holding a
+- `http.token_env_var`: the name of an environment variable holding a
   Bearer token, read at request time. Never put the token itself in
   `vendor.json` — anonymous read access needs no token at all.
 - `s3.profile`: a named AWS CLI profile used for `aws s3 cp` /
