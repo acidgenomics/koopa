@@ -248,18 +248,40 @@ probe helper. Two guardrails matter as much as the filter itself:
 that list is the culprit. `grep KOOPA_COLOR_MODE -rl <chezmoi-tree> --include='*.tmpl'`
 enumerates every template that could theoretically produce one.
 
+**Follow-on lesson (2026-08):** filtering an unmanaged target out of one tree's
+apply is only half a fix. `.claude/settings.json`'s original filter fix stopped
+here — it correctly warned and dropped the target from the main-tree apply, but
+nothing then applied it from the tree that *does* manage it (the work tree). The
+file silently froze at whatever `custom:dracula-pro`/`custom:dracula-pro-alucard`
+value it had at the last full `koopa configure user dotfiles`, and every flip
+after that quietly no-op'd it while every other file-driven consumer re-rendered.
+See "Re-Apply All Trees in Order" below for the fix. The diagnostic that catches
+this class of bug: compare mtimes across color-mode targets (`stat -f '%Sm %N'`)
+after a flip — one file lagging days behind its siblings (e.g.
+`~/.config/bat/config` at today's date, `~/.claude/settings.json` three days
+stale) is the signature, even when every env-driven signal
+(`$KOOPA_COLOR_MODE`, `~/.cache/koopa/color-mode(-applied)`) agrees and looks
+correct.
+
 ## Targeted chezmoi apply (color-mode switch)
 
-A color-mode flip must re-render only the ~32 templates that branch on
-`KOOPA_COLOR_MODE`, via `chezmoi apply <target>...` against the main tree.
+A color-mode flip must re-render only the templates that branch on
+`KOOPA_COLOR_MODE`, via `chezmoi apply <target>...`, run separately against each
+of the three chezmoi trees (main, work, private) — see "Re-Apply All Trees in
+Order" below. It is not a single apply against the main tree alone: a target can
+be `.chezmoiignore`'d out of one tree and managed by another (e.g.
+`.claude/settings.json` moves to the work tree whenever the work-tree marker is
+present), and only a per-tree apply picks that up.
 
-Discovery pattern: walk the main chezmoi source for `*.tmpl` files containing
-`KOOPA_COLOR_MODE`; derive target paths using chezmoi naming conventions (`dot_` → `.`,
-strip `.tmpl`, strip attribute prefixes); filter to targets that exist on disk.
+Discovery pattern (per tree): walk that tree's chezmoi source for `*.tmpl` files
+containing `KOOPA_COLOR_MODE`; derive target paths using chezmoi naming
+conventions (`dot_` → `.`, strip `.tmpl`, strip attribute prefixes); filter
+against that tree's own `chezmoi managed` output, never disk existence (see
+above).
 
-Never route a theme switch through the heavy installer or the work/private trees —
-they contain zero `KOOPA_COLOR_MODE` logic and add unnecessary age/git/network
-dependency in a background context.
+Never route a theme switch through the heavy installer (`opt/dotfiles/install`
+or any tree's own `install` script) — only the targeted `chezmoi apply` per
+tree, which needs no age/git/network dependency in a background context.
 
 ## Render from OS, Never from Inherited Env
 
@@ -275,11 +297,24 @@ plists) carry the mode from when they started, not the current OS state.
 ## Re-Apply All Trees in Order
 
 A color-mode switch must re-apply **main → work → private** dotfiles, in that order,
-every time. Applying only the main tree can re-assert a main-tree file over a work
-override (e.g. npm, pip, claude configs), silently clobbering work config.
+every time. Applying only the main tree can leave a work-tree-managed target (e.g.
+`.claude/settings.json`, `.config/pip/pip.conf`, `.npmrc` whenever the work-tree
+marker is present) permanently stale, since the main tree never touches it and
+nothing else does either.
 
-`configurers/color_mode.py` delegates to `dotfiles.py`'s `main()` with
-`KOOPA_DOTFILES_SKIP_PULL=1` — never runs its own standalone `chezmoi apply`.
+`configurers/color_mode.py` runs its own targeted `chezmoi apply` per tree — main
+required (a probe or apply failure there aborts the whole run without writing the
+applied-marker), work/private best-effort (a failure warns and continues, marker
+still written, so a permanently broken overlay tree never wedges every future
+shell in the documented infinite-respawn loop). It does **not** delegate to
+`dotfiles.py`'s `main()` — that function's install-script path
+(`_sync_launchd_agent`) is exactly what a background sync job must never invoke
+(see "launchd/systemd: Never Re-Bootstrap the Own Agent" above). Each tree's
+color-mode candidates are discovered independently (own `*.tmpl` scan, own
+`chezmoi managed` probe, own `--config` when the tree defines one); a candidate
+dropped by one tree is warned about only if *no* tree ends up claiming it —
+warning per-tree here would be a permanent false alarm every time a target
+legitimately lives in an overlay tree.
 
 ## Stale Session Env Contaminates chezmoi status and diff
 
