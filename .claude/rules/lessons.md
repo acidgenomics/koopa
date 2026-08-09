@@ -40,6 +40,7 @@
 | `koopa-rust` | Rust/cargo conventions for koopa installers — hermetic `CARGO_HOME` (always `tempfile.mkdtemp(prefix="koopa-cargo-")`), `"rust"` in `build_dependencies`, `NO_RUST` opt-out policy, offline crate check |
 | `koopa-vscode` | VS Code terminal font + Nerd Font glyph debugging (CoreText family names, `mdls` lookup, App Support symlink bridge, write-race prevention via `autoDetectColorScheme`), Quarto VS Code plugin + LuaLS `.luarc.json` — portable path pattern, remove `Generator` key, LuaLS placeholder support |
 | `license` | Apache-2.0 LICENSE file conventions — canonical sources per repo type (Python/koopa/dotfiles: `gh api /licenses/apache-2.0`; R packages: usethis template), how GitHub licensee detection works, corruption history, badge wiring |
+| `koopa-distribution` | install/distribution mechanics outside `curl \| sh` — pinned (non-git) tree already supports app management + update detection via `_require_git_managed_install()`/`update_koopa()`, why conda-forge/package-manager distribution doesn't fit (prefix self-management conflict, seed-package update-divergence bug), `git archive` reads `.gitattributes` from the committed tree (`--worktree-attributes` for uncommitted testing), `KOOPA_FORCE=1` needed to test activation non-interactively, bootstrap.sh has no vendor-mirror awareness |
 
 ## Path-scoped rules (load when matching file is opened)
 

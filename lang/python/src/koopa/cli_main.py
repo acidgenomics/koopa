@@ -745,11 +745,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             if install_error is None:
                 install_error = str(exc)
-        if system_updates:
-            try:
-                update_system_apps(verbose=args.verbose)
-            except Exception as exc:
-                warn(f"System updates failed: {exc}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:

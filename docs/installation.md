@@ -99,6 +99,59 @@ curl -LSs https://koopa.acidgenomics.com/install \
     | sh -s -- --non-interactive
 ```
 
+## Offline / pinned install (restricted networks)
+
+The install script above fetches and executes code from
+`koopa.acidgenomics.com` in one step. On a corporate build that requires every
+artifact to be reviewed and sourced from an approved host before it runs,
+install from a pinned release tarball instead.
+
+**What this secures:** ingress. The artifact is pinned to a specific tag (an
+immutable commit, not a moving branch), mirrorable through an internal proxy,
+and reviewable before it ever runs, unlike `curl | sh`, which fetches and
+executes in the same step.
+
+**What this does not secure:** the ~500 third-party apps koopa can install
+(compilers, language runtimes, CLI tools). Those are downloaded and, in many
+cases, compiled at `koopa install` time from their own upstream hosts. Use the
+[internal mirror](#internal-mirror-restricted-networks) below, with
+`pull_priority` set to `"vendor_only"`, to route those through the same
+review gate.
+
+```sh
+# Fetch a specific tagged release (or pull the same tarball from an internal
+# mirror that proxies GitHub tag archives). GitHub's codeload URLs are
+# content-addressed by tag, so re-fetching the same tag always returns the
+# same bytes -- this is what makes the artifact reviewable ahead of use.
+version=0.25.0
+curl -LSs -o "koopa-${version}.tar.gz" \
+    "https://github.com/acidgenomics/koopa/archive/refs/tags/v${version}.tar.gz"
+
+# Extract into the standard koopa data directory.
+data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
+mkdir -p "$data_home"
+tar -xzf "koopa-${version}.tar.gz" -C "$data_home"
+mv "${data_home}/koopa-${version}" "${data_home}/koopa"
+
+# Activate, e.g. by adding this line to the shell profile.
+. "${data_home}/koopa/activate.sh"
+```
+
+This is a pinned, non-git release: `koopa install`/`uninstall`/`configure`
+work normally against it, but `koopa update` recognizes the tree as a pinned
+release and reports as much instead of attempting a `git pull`. To update,
+fetch and extract the next tagged release the same way.
+
+The first `koopa` invocation needs a Python 3.12 interpreter to run its own
+CLI. It looks for one at `/usr/bin/python3` first; if that isn't exactly
+3.12, it runs `bootstrap.sh`, which downloads a Python 3.12 build directly
+from `python.org` or `koopa.acidgenomics.com/src` into
+`~/.local/share/koopa-bootstrap`. `bootstrap.sh` does not consult the
+internal mirror described below, so on a `vendor_only` network this
+download will fail. Install a system Python 3.12 at `/usr/bin/python3`
+before activating koopa on such a network; there is currently no way to
+route the bootstrap download itself through the mirror.
+
 ## Internal mirror (restricted networks)
 
 Installing apps normally downloads source tarballs and prebuilt binaries from

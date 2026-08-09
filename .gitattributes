@@ -1,0 +1,13 @@
+# Exclude agentic-coding and IDE tooling from 'git archive' output (GitHub release
+# tarballs). These are developer/contributor tooling, not part of the shell
+# bootloader koopa ships to end users. Does not affect 'git clone' -- contributors
+# still get the full tree.
+.claude/             export-ignore
+.agents/             export-ignore
+.idea/               export-ignore
+.github/             export-ignore
+CLAUDE.md            export-ignore
+AGENTS.md            export-ignore
+.claudeignore        export-ignore
+todo.org             export-ignore
+koopa.code-workspace export-ignore
