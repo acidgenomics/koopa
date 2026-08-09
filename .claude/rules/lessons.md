@@ -10,6 +10,10 @@
   `YYYY-MM-DD-` prefix. VS Code's plan review UI requires the exact system filename.
 - **Plans / TODOs**: write to `todo.org` (Org mode) at the repo root —
   NOT `.claude/todo.md`.
+- **Never run `find /` or any filesystem-root search.** Scope every `find`/search
+  to a known root: the repo, `~/git`, an app prefix, or a specific cache dir (e.g.
+  `~/.cache/uv/...`). A root-wide search is slow, noisy, and reaches unrelated
+  trees the task never asked about.
 
 ## Skills (load body on invocation)
 
@@ -18,7 +22,7 @@
 | `koopa-atuin` | bash hook architecture (bash-preexec requirement), activation files, installer patterns, DB reset + re-import, config.toml inventory |
 | `koopa-app-registry` | `koopa install` syntax, atuin import, successor/default, completions, zsh version format, tool-inclusion scope, installer `main()` contract (only name/version/prefix/passthrough_args passed), `import_app_json()` pattern for extra fields, `extra_fields_fn` in `_AppCheckSpec` for auto-update of non-version metadata, GNU/Savannah host unreliability + mirror-relative-path derivation (`_gnu_mirrors`/`_savannah_mirrors` in `download.py`), dead-host circuit breaker (`_fetch_first_reachable` in `version_check.py`), `koopa develop mirror-src` verification |
 | `koopa-release` | CHANGELOG format, bumpver contract (tag=false/push=false), pre-release gate (pytest+ruff+pyright), what's user-owned (tag/push/merge) |
-| `koopa-python-release` | Acid Genomics Python package release — python.acidgenomics.com PEP 503 index at `/simple/`, same-domain docs at `/<name>/`, generated landing page, `koopa app python publish/publish-docs/reindex`, quality gate config (ty/pyright exclude tests, pythonpath src), CHANGELOG format, verification smoke-test, `uv run` venv-shebang gotcha, Sphinx docs-build RST/numpydoc gotchas, acidgenomics CSS theming for pydata-sphinx-theme docs. See `koopa-r-release` for the R analog. |
+| `koopa-python-release` | Acid Genomics Python package release — python.acidgenomics.com PEP 503 index at `/simple/`, same-domain docs at `/<name>/`, generated landing page, `koopa app python publish/publish-docs/sync-docs-theme/reindex`, quality gate config (ty/pyright exclude tests, pythonpath src), CHANGELOG format, verification smoke-test, `uv run` venv-shebang gotcha, Sphinx docs-build RST/numpydoc gotchas, shared acidgenomics Sphinx theme vendored from koopa (basic-theme based, no pydata-sphinx-theme). See `koopa-r-release` for the R analog. |
 | `koopa-aws-env` | `.env` design — `load_dotenv()`/`aws_account_id()`/`koopa_s3_bucket()` helpers in `aws.py`, required vars (`AWS_ACCOUNT_ID`, `AWS_CLOUDFRONT_DISTRIBUTION_ID_*`), bucket naming convention, lazy-eval rule (never module scope), how to add new secrets, history-scrub provenance |
 | `koopa-r-release` | Acid Genomics R package release — cloud-native S3 + CloudFront, profile `acidgenomics`, CF distribution ID in `.env` (IDs/bucket via `koopa_s3_bucket('r')` in `cran.py`), `koopa app r publish/publish-from-github/reindex/archive/publish-docs`, sonoma-arm64 only active binaries, dep auto-install for binary builds, `_SKELETON_BINARY_PREFIXES` for big-sur-arm64 warning suppression, 16 packages still need Apache-2 relicense, pre-release gate via `AcidDevtools::check()`, impl in `cran.py`, pkgdown NEWS.md/reference-index/one_page silent-failure traps |
 | `acid-r-package` | Acid Genomics R package dev conventions — per-project `air.toml` required (no global config), `~/.lintr` global only (no per-project files), `object_usage_linter = NULL` for S4, roxygen2 8.x single-line `@importFrom` split pattern (never `# nolint` on `#'` lines), `keyword_quote_linter` unquote list names, `leftJoin` type coercion before join, `future::plan("multicore")` not `"multiprocess"`, `AcidDevtools::check()` gate |

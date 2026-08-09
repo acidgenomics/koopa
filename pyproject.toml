@@ -18,7 +18,6 @@ classifiers = [
 ]
 optional-dependencies.docs = [
   "myst-parser",
-  "pydata-sphinx-theme",
   "sphinx",
 ]
 optional-dependencies.extra = [

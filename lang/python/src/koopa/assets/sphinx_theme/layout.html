@@ -1,0 +1,65 @@
+{# acidgenomics theme layout, matching steinbaugh.com's own page shape:
+   body > nav (site breadcrumb + search) followed by body > header
+   (page <h1> + in-page table of contents), both direct children of <body>.
+   See https://steinbaugh.com/posts/vim.html for the reference structure.
+
+   Shared by koopa.acidgenomics.com and every python.acidgenomics.com
+   package; per-site values (sitesearch scope, breadcrumb logo, optional
+   repo link) come from html_theme_options in each site's conf.py rather
+   than being hardcoded here. #}
+{%- extends "basic/layout.html" %}
+
+{#- base.css's nav/header CSS (negative margins, absolute positioning,
+   paired top/bottom borders) is tuned assuming EVERY page has a <header>
+   immediately following <nav> -- true on every steinbaugh.com post. Only
+   rendering <header> conditionally (as an earlier version of this template
+   did) breaks that invariant on single-heading pages and was the real
+   source of every nav/border bug fixed this session. Always render it,
+   with the real page title inside (matching the reference page's actual
+   structure -- https://steinbaugh.com/posts/vim.html has title, excerpt,
+   and toc all inside one <header>), and hide the content body's own
+   redundant MyST-rendered h1 in CSS instead of conditionally omitting
+   the header. #}
+{%- block header %}
+<nav>
+<div id="breadcrumb" style="background-image: url('{{ theme_logo_url|e }}');">
+<a href="{{ pathto(root_doc)|e }}">{{ shorttitle|e }}</a>
+{%- if theme_repo_url %}
+&middot; <a href="{{ theme_repo_url|e }}">Source</a>
+{%- endif %}
+</div>
+<form method="get" action="https://www.google.com/search">
+<div>
+<input type="text" name="q" maxlength="255" placeholder="search" value="" />
+<input type="hidden" name="sitesearch" value="{{ theme_sitesearch|e }}" />
+</div>
+</form>
+</nav>
+{#- display_toc is Sphinx's "more than 1 heading" rule -- true for any page
+   with even a single subsection, which renders a near-empty one-item toc
+   with no real navigational value (e.g. applications.md: just "Default
+   application stack"). toc_num_entries itself isn't exposed to templates,
+   so count rendered <li> as a proxy: only show the toc once there are
+   at least 3 entries (this heading + 2 more) worth jumping around. #}
+<header>
+<h1>{{ title }}</h1>
+{%- if display_toc and toc.count('<li>') >= 3 %}
+{{ toc }}
+{%- endif %}
+</header>
+{%- endblock %}
+
+{%- block relbar1 %}{% endblock %}
+
+{%- block relbar2 %}
+{#- Plain <div>/<a>, not <ul>/<li>: base.css's custom li:before bullet
+   marker is unscoped and would otherwise apply here too. #}
+<div class="related" role="navigation" aria-label="Related">
+    {%- if prev %}
+    <div class="related-prev"><a href="{{ prev.link|e }}">&larr; {{ prev.title }}</a></div>
+    {%- endif %}
+    {%- if next %}
+    <div class="related-next"><a href="{{ next.link|e }}">{{ next.title }} &rarr;</a></div>
+    {%- endif %}
+</div>
+{%- endblock %}

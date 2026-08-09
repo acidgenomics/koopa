@@ -145,9 +145,9 @@ _APP_TREE: dict[str, Any] = {
     },
     "python": {
         "publish": "python-publish",
-        "publish-assets": "python-publish-assets",
         "publish-docs": "python-publish-docs",
         "reindex": "python-reindex",
+        "sync-docs-theme": "python-sync-docs-theme",
     },
     "r": {
         "archive": "r-archive",
@@ -382,10 +382,22 @@ def _handle_python_reindex(_: list[str]) -> None:
     reindex()
 
 
-def _handle_python_publish_assets(_: list[str]) -> None:
-    from koopa.pypi import publish_assets
+def _handle_python_sync_docs_theme(args: list[str]) -> None:
+    import argparse
 
-    publish_assets()
+    parser = argparse.ArgumentParser(prog="koopa app python sync-docs-theme")
+    parser.add_argument("package_dirs", nargs="+", help="Package (or koopa) repo root(s).")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Compare instead of writing; exit non-zero on drift.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.pypi import sync_docs_theme
+
+    up_to_date = sync_docs_theme(parsed.package_dirs, check=parsed.check)
+    if parsed.check and not up_to_date:
+        sys.exit(1)
 
 
 # -- koopa (site) handlers ----------------------------------------------------
@@ -2655,9 +2667,9 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "koopa-publish-docs": _handle_koopa_publish_docs,
     # python
     "python-publish": _handle_python_publish,
-    "python-publish-assets": _handle_python_publish_assets,
     "python-publish-docs": _handle_python_publish_docs,
     "python-reindex": _handle_python_reindex,
+    "python-sync-docs-theme": _handle_python_sync_docs_theme,
     # r
     "r-archive": _handle_r_archive,
     "r-bioconda-check": _handle_r_bioconda_check,

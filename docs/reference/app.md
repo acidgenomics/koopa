@@ -638,11 +638,6 @@ python.acidgenomics.com package index and docs publishing.
 
 Build and publish a Python package to python.acidgenomics.com.
 
-(koopa-app-python-publish-assets)=
-### `app python publish-assets`
-
-Upload shared static assets to python.acidgenomics.com.
-
 (koopa-app-python-publish-docs)=
 ### `app python publish-docs`
 
@@ -652,6 +647,13 @@ Build and publish a package's Sphinx docs to python.acidgenomics.com.
 ### `app python reindex`
 
 Regenerate the PEP 503 index and landing page for python.acidgenomics.com.
+
+(koopa-app-python-sync-docs-theme)=
+### `app python sync-docs-theme`
+
+Sync koopa's shared Sphinx theme into one or more doc trees.
+
+- `--check`
 
 ## r
 
