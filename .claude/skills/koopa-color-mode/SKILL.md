@@ -7,8 +7,9 @@ description: >
   editing the chezmoi color-mode apply path, investigating why bat/starship/delta
   renders the wrong theme while fzf/LS_COLORS look correct, diagnosing a Linux
   host stuck on the wrong palette over SSH (gdbus/XDG-portal parsing, `read`
-  clobbering, or dead in-tmux re-derive logic), or confirming whether a fix that
-  touches opt/dotfiles/chezmoi has actually rolled out to a host.
+  clobbering, or dead in-tmux re-derive logic), confirming whether a fix that
+  touches opt/dotfiles/chezmoi has actually rolled out to a host, or a code fix
+  to color_mode.py appearing to have no effect even after relaunching an app.
 ---
 
 # koopa Color Mode
@@ -487,3 +488,38 @@ the installer from that session clobbers the user's files to the wrong palette.
 
 To verify rendering without risk: check rendered files' content with `grep` or `cat`.
 Do not trigger a re-render.
+
+## A Code Fix to color_mode.py Doesn't Apply Itself — the Marker Still Gates It
+
+**Symptom:** after fixing a real bug in `configurers/color_mode.py` (e.g. the
+multi-tree gap in "Re-Apply All Trees in Order" above), the wrong palette
+persists even after a full app relaunch (quitting and restarting Claude Code, a
+new terminal tab, a fresh shell). It looks like the fix didn't land, or landed
+somewhere else.
+
+**Visual signature:** a Dracula Pro *dark*-mode accent color (bright cyan/purple)
+rendering on a *light* terminal background reads as washed-out, low-contrast
+text — that combination alone (dark-palette accent colors, light background) is
+enough to recognize this class of bug from a screenshot, no logs required.
+
+**Cause:** `koopa` runs from an editable install (`koopa` resolves straight to
+`lang/python/src/koopa/...`, not a built/copied package), so an edited
+`color_mode.py` is live on the very next invocation — the code fix itself is not
+the missing piece. What's missing is a *trigger*. `main()`'s fast path
+(`color_mode.py`, near the top) returns immediately whenever
+`~/.cache/koopa/color-mode-applied` already equals the current OS mode, before
+any apply logic — fixed or not — runs. If the marker was already caught up to
+the current mode (written by the *old*, buggy code's last incomplete run), the
+fixed code never gets invoked at all until something changes the marker or the
+OS mode actually flips. A relaunch of the app reads whatever's already on disk;
+it does not re-invoke the configurer.
+
+**Fix:** force one real re-run, then re-check:
+```sh
+rm ~/.cache/koopa/color-mode-applied
+koopa configure user color-mode --verbose
+grep '"theme"' ~/.claude/settings.json
+```
+Per "Never Verify by Re-Running the Installer from an Agent Session" above, this
+must be run by the user in a normal terminal, never from inside the agent
+session that produced the fix — the same stale-`KOOPA_COLOR_MODE` risk applies.
