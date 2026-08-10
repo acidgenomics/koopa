@@ -100,6 +100,16 @@ requires **both** the credentials stanza and a resolvable `aws_account_id()`,
 emits a one-time `alert_note` when the account ID is missing, and the source
 build proceeds normally like any public machine.
 
+`koopa app koopa publish-docs` can fail on the *last* step only: the S3 sync
+succeeds (content is live) but the CloudFront invalidation raises
+`AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must
+be set` if neither var is in `.env`. This leaves the new content uploaded but
+still served from cache until an invalidation runs. Add the missing var to
+`.env` for next time; to unblock the current publish without it, invalidate
+directly with the distribution ID (`aws cloudfront list-distributions
+--query 'DistributionList.Items[?Aliases.Items[0]==`koopa.acidgenomics.com`].Id'`)
+rather than re-running the whole publish.
+
 ## History
 
 The account ID `REDACTED_AWS_ACCOUNT_ID` and CloudFront ID `REDACTED_CF_DISTRIBUTION_ID` were removed from
