@@ -386,6 +386,13 @@ block a real release, not just lint:
   ```python
   numpydoc_show_class_members = False
   ```
+- **An in-page Markdown link like `[text](#some-heading)` fails with `'myst'
+  cross-reference target not found`** unless `myst_heading_anchors` is set in
+  `conf.py`. MyST does not emit an `id` on every heading by default, so the
+  href has nothing to resolve to even when the slug matches the heading text
+  exactly. Fix: `myst_heading_anchors = 3` (or whatever depth covers the
+  deepest heading linked to) in `conf.py` — enables real anchor IDs sitewide
+  rather than reworking the one link.
 
 ## Privacy leaks in published docs: local paths reaching S3
 
@@ -528,6 +535,25 @@ does not re-sync. A `.gitignore` negation for the theme's `layout.html` is
 required in each package repo — the global `~/.config/git/ignore` has a
 blanket `*.html` rule, so `!docs/_themes/**/*.html` (alongside the existing
 `!docs/` negation) is needed or the file silently won't track.
+
+### Footer copyright/license clause
+
+Renders as ONE line, copyright first: `© <year>-pres. Acid Genomics LLC ·
+<license> (LICENSE)`. Two shapes to avoid, both real regressions caught in
+review:
+
+- **Don't spell out "license" before the `(LICENSE)` file link.**
+  `Apache 2.0 license (LICENSE)` says it twice — once in prose, once as the
+  link text. Just `Apache 2.0 (LICENSE)`.
+- **Don't shrink `div.footer`'s `font-size`.** An earlier revision set
+  `font-size: 0.875em` on it, rendering the copyright/license line smaller
+  than the surrounding body text for no reason. It should inherit the
+  page's own font size.
+
+Implemented in the shared theme's `footer` block
+(`lang/python/src/koopa/assets/sphinx_theme/layout.html`) — copyright and
+license form one Jinja clause list joined with `&middot;`, not two
+disconnected fragments.
 
 API-reference output (`sphinx.ext.autosummary` + `numpydoc`, written to
 `docs/reference/generated/`) is styled in `acidgenomics.css` against

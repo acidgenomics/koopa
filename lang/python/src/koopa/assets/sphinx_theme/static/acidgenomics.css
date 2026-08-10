@@ -47,9 +47,38 @@ nav {
  * invariant that mechanism assumes. Position/spacing are untouched; the
  * breadcrumb's background image itself is set inline by layout.html from
  * the theme's `logo_url` option, not hardcoded here, since it differs per
- * site (koopa vs. each python.acidgenomics.com package). The optional repo
- * link (theme's `repo_url` option) renders inside #breadcrumb itself, so it
- * inherits that div's positioning with no extra rule needed here. */
+ * site (koopa vs. each python.acidgenomics.com package). */
+
+/* The Acid Genomics/GitHub icons and the search form are one flex row
+ * (div.nav-tools), not independently absolute-positioned siblings each
+ * guessing the others' width -- that guessing is what let the repo-link
+ * icon overlap the search input at some viewport widths. Take over
+ * base.css's usual `body > nav form` slot (bottom:0; right:0) on the
+ * group itself; the <form> inside is de-positioned back to static so it
+ * participates in the row instead of also trying to self-place. */
+nav div.nav-tools {
+    align-items: center;
+    bottom: 0;
+    column-gap: 0.75rem;
+    display: flex;
+    position: absolute;
+    right: 0;
+}
+
+nav div.nav-tools form {
+    position: static;
+}
+
+nav #acidgenomics-link,
+nav #repo-link {
+    color: var(--foreground-color);
+    line-height: 0;
+}
+
+nav #acidgenomics-link svg,
+nav #repo-link svg {
+    display: block;
+}
 
 /* -- map Sphinx/basic-theme class names onto base.css's selectors --------
  * base.css was written for hand-rolled Jekyll HTML (article, div.highlighter-
@@ -61,10 +90,6 @@ div.document {
     margin: 0;
     max-width: none;
     padding: 0;
-}
-
-div.footer {
-    font-size: 0.875em;
 }
 
 /* Every docs/*.md file opens with a MyST `# Title` heading, which docutils

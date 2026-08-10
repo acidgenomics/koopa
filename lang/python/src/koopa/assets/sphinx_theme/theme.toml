@@ -15,5 +15,17 @@ sitesearch = ""
 # Background image for the body > nav breadcrumb, matching the
 # acidgenomics.com brand mark by default.
 logo_url = "https://acidgenomics.com/images/logo.svg"
-# Optional repo link rendered in nav alongside the breadcrumb. Empty omits it.
+# Optional repo link (rendered as a GitHub icon in nav alongside the
+# breadcrumb). Empty omits it.
 repo_url = ""
+# First year of development, for the "(c) <year>-pres. Acid Genomics LLC."
+# footer line. Required -- there is no sane default across sites.
+copyright_start_year = ""
+# Optional license clause in the footer: license_name (e.g. "Apache 2.0")
+# links to license_url (e.g. the SPDX/apache.org license text);
+# license_file_url is a second, optional link to this repo's actual
+# LICENSE file (e.g. its GitHub blob URL) for the "see LICENSE" part. All
+# empty omits the license clause entirely.
+license_name = ""
+license_url = ""
+license_file_url = ""

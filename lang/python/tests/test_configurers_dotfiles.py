@@ -8,8 +8,10 @@ import pytest
 from koopa.configurers import get_python_configurer, has_python_configurer
 from koopa.configurers.dotfiles import (
     _chezmoi_managed,
+    _chezmoiremove_targets,
     _print_chezmoi_status,
     _warn_cross_tree_overlap,
+    _warn_remove_manage_conflict,
     main,
 )
 
@@ -160,6 +162,156 @@ def test_chezmoi_managed_omits_config_when_none(
     monkeypatch.setattr(subprocess, "run", fake_run)
     _chezmoi_managed("/usr/bin/chezmoi", str(source), {}, config=None)
     assert not any("--config" in a for a in captured_args[0])
+
+
+# ---------------------------------------------------------------------------
+# _chezmoiremove_targets
+# ---------------------------------------------------------------------------
+
+
+def test_chezmoiremove_targets_absent_file(tmp_path: Path) -> None:
+    """Returns empty set without calling subprocess when .chezmoiremove is absent."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    result = _chezmoiremove_targets("/usr/bin/chezmoi", str(source), {})
+    assert result == set()
+
+
+def test_chezmoiremove_targets_parses_stdout(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Parses rendered stdout into a set; blanks, comments, and negations handled."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    (source / ".chezmoiremove").write_text(".claude/skills/todo-org\n")
+    fake_output = ".claude/skills/todo-org\n\n# a comment\n!.claude/skills/keep\n"
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        return subprocess.CompletedProcess(args, returncode=0, stdout=fake_output, stderr="")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    result = _chezmoiremove_targets("/usr/bin/chezmoi", str(source), {})
+    assert result == {".claude/skills/todo-org", ".claude/skills/keep"}
+
+
+def test_chezmoiremove_targets_subprocess_error(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Returns empty set on CalledProcessError — never raises."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    (source / ".chezmoiremove").write_text(".claude/skills/todo-org\n")
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        raise subprocess.CalledProcessError(1, args)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    result = _chezmoiremove_targets("/usr/bin/chezmoi", str(source), {})
+    assert result == set()
+
+
+def test_chezmoiremove_targets_oserror(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Returns empty set on OSError — never raises."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    (source / ".chezmoiremove").write_text(".claude/skills/todo-org\n")
+
+    def fake_run(_args: list[str], **__: object) -> subprocess.CompletedProcess:
+        raise OSError("not found")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    result = _chezmoiremove_targets("/usr/bin/chezmoi", str(source), {})
+    assert result == set()
+
+
+def test_chezmoiremove_targets_passes_config(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Passes --config= to argv when config is provided."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    (source / ".chezmoiremove").write_text(".claude/skills/todo-org\n")
+    captured_args: list[list[str]] = []
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        captured_args.append(list(args))
+        return subprocess.CompletedProcess(args, returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    _chezmoiremove_targets("/usr/bin/chezmoi", str(source), {}, config="/some/chezmoi.toml")
+    assert any("--config=/some/chezmoi.toml" in a for a in captured_args[0])
+
+
+def test_chezmoiremove_targets_omits_config_when_none(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Does not include --config= in argv when config is None."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    (source / ".chezmoiremove").write_text(".claude/skills/todo-org\n")
+    captured_args: list[list[str]] = []
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        captured_args.append(list(args))
+        return subprocess.CompletedProcess(args, returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    _chezmoiremove_targets("/usr/bin/chezmoi", str(source), {}, config=None)
+    assert not any("--config" in a for a in captured_args[0])
+
+
+# ---------------------------------------------------------------------------
+# _warn_remove_manage_conflict
+# ---------------------------------------------------------------------------
+
+
+def test_warn_remove_manage_conflict_empty(capsys: pytest.CaptureFixture[str]) -> None:
+    """No warning when the removal list does not collide with managed targets."""
+    _warn_remove_manage_conflict(
+        "work", {".claude/skills/todo-org/SKILL.md"}, {".claude/skills/other"}
+    )
+    captured = capsys.readouterr()
+    assert "Warning" not in captured.err
+    assert "Warning" not in captured.out
+
+
+def test_warn_remove_manage_conflict_directory_ancestor(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Warns when a removed directory is an ancestor of a managed file.
+
+    This is the real-world case: chezmoi managed lists the file
+    (.claude/skills/todo-org/SKILL.md), while .chezmoiremove names the
+    directory (.claude/skills/todo-org). A plain set intersection would miss it.
+    """
+    _warn_remove_manage_conflict(
+        "work",
+        {".claude/skills/todo-org/SKILL.md"},
+        {".claude/skills/todo-org"},
+    )
+    captured = capsys.readouterr()
+    combined = captured.err + captured.out
+    assert "Warning" in combined
+    assert "work" in combined
+    assert ".claude/skills/todo-org/SKILL.md" in combined
+
+
+def test_warn_remove_manage_conflict_prefix_near_miss(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Does not warn on a same-prefix path that is not a true ancestor.
+
+    ".claude/skills/todo" is a string-prefix of the managed path but not a
+    path-ancestor (no separator boundary) — must not false-positive.
+    """
+    _warn_remove_manage_conflict(
+        "work",
+        {".claude/skills/todo-org/SKILL.md"},
+        {".claude/skills/todo"},
+    )
+    captured = capsys.readouterr()
+    assert "Warning" not in captured.err
+    assert "Warning" not in captured.out
 
 
 # ---------------------------------------------------------------------------
