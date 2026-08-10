@@ -146,9 +146,23 @@ code {
  * base.css never resets the browser's default ~40px ul/ol padding (it
  * relies on that space for its own inline hanging-indent trick); this
  * self-contained absolute marker needs none of it, so zero it here or every
- * list reads as double-indented (40px browser default + our own 1.5em). */
+ * list reads as double-indented (40px browser default + our own 1.5em).
+ * On the reference page, base.css's negative margin pulls the marker back
+ * INTO the gutter responsive.css's `ul { margin-left: 2rem/1rem }` already
+ * reserves, so list text lands flush with that margin -- the marker
+ * borrows the gutter rather than adding to it. padding-left here reserves
+ * an equivalent gutter for the absolute marker, but as real, additive
+ * space nothing was pulling back out of the ul's own margin, so text sat
+ * a full 1.5em past the reference's position. margin-left: -1.5em pulls
+ * the whole <li> box (and, since position:absolute descendants are placed
+ * from the nearest positioned ancestor's padding edge, its marker with
+ * it) back by the same amount the padding adds forward, so the marker
+ * ends up inside the ul's margin and the text flush with its edge --
+ * matching the reference exactly at both breakpoints, since the pull-back
+ * tracks whichever margin responsive.css has active. */
 div.body li {
     margin-bottom: 0.25rem;
+    margin-left: -1.5em;
     padding-left: 1.5em;
     position: relative;
 }
