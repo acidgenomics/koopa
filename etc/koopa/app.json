@@ -7166,6 +7166,25 @@
     ],
     "version": "3.0.5"
   },
+  "playwright": {
+    "bin": [
+      "playwright"
+    ],
+    "category": "Python",
+    "date": "2026-08-10",
+    "default": false,
+    "dependencies": [
+      "python"
+    ],
+    "description": "browser automation library and CLI, bundled Chromium",
+    "installer": "playwright",
+    "type": "cli",
+    "url": [
+      "https://playwright.dev/",
+      "https://pypi.org/project/playwright/"
+    ],
+    "version": "1.62.0"
+  },
   "poetry": {
     "bin": [
       "poetry"

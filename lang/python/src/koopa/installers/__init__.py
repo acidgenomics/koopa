@@ -227,6 +227,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "dbt-postgres": f"{_M}._python_plugin",
     "dbt-redshift": f"{_M}._python_plugin",
     "dbt-snowflake": f"{_M}._python_plugin",
+    "playwright": f"{_M}.playwright",
     # -- gnu-app (35) ----------------------------------------------------
     "attr": f"{_M}._gnu",
     "autoconf": f"{_M}._gnu",

@@ -142,11 +142,20 @@ code {
  * lists to plain browser bullets, losing the site's actual colored/custom
  * marker -- switch the positioning mechanism instead: position:absolute
  * doesn't care whether the sibling content is inline or block, so the
- * marker keeps base.css's own color/content, just anchored differently. */
+ * marker keeps base.css's own color/content, just anchored differently.
+ * base.css never resets the browser's default ~40px ul/ol padding (it
+ * relies on that space for its own inline hanging-indent trick); this
+ * self-contained absolute marker needs none of it, so zero it here or every
+ * list reads as double-indented (40px browser default + our own 1.5em). */
 div.body li {
     margin-bottom: 0.25rem;
     padding-left: 1.5em;
     position: relative;
+}
+
+div.body ul,
+div.body ol {
+    padding-left: 0;
 }
 
 div.body li::before {
@@ -169,15 +178,36 @@ a.headerlink {
     display: none;
 }
 
+/* Sphinx's generated in-page TOC (body > header > ul, see layout.html's
+ * `toc` block) always wraps the whole thing in one extra <li> linking back
+ * to the current page itself (href="#") -- redundant with the <h1> right
+ * above it, and it adds a full nesting level that responsive.css's
+ * `ul { margin-left: 2rem }` compounds into on every page below it too.
+ * display: contents drops the wrapper <li> from the box model entirely so
+ * its own link (hidden) contributes nothing and its <ul> of real entries
+ * becomes the toc's true top level. */
+body > header > ul > li > a[href="#"] {
+    display: none;
+}
+
+body > header > ul > li {
+    display: contents;
+}
+
 /* ASCII-art mark in body > header (theme's `header_ascii` option, root page
  * only, see layout.html): plain text, not a code sample -- undo acidgenomics.
  * css's own `pre` rule (border/radius/padding) below. colors.css colors
  * body > header h1..h7 but not pre, so set the color explicitly. overflow:
  * hidden clips rather than horizontally scrolls the whole page on viewports
- * narrower than the art itself. */
+ * narrower than the art itself. margin: 0 undoes base.css's blanket
+ * `pre { margin: 1rem 0 }`, which would otherwise stack on top of the
+ * header's own `padding: 2rem 0` and float the art away from the title.
+ * The header's border/margin/padding are deliberately left to base.css so
+ * the root page's header matches every subpage. */
 body > header > pre {
     border: none;
     color: var(--header-color);
+    margin: 0;
     overflow: hidden;
     padding: 0;
 }
