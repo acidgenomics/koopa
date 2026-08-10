@@ -45,6 +45,49 @@ grep -iE '<THE_HEX>' ~/.local/share/dracula-pro/themes/ghostty/pro
 ```
 If it matches, the code must read it at runtime.
 
+### Synthesizing a Theme When No Upstream Dracula Pro File Exists
+
+Most terminal tools (kitty, alacritty, wezterm, atuin) have an official Dracula
+Pro theme file to parse. Some don't — no `find ~/.local/share/dracula-pro
+-ipath '*<tool>*'` hit anywhere in the vendor tree (btop, in the 2026-08 case:
+`btop`/`bpytop`/`bashtop` share a `.theme` key=value grammar, but Dracula Pro
+never shipped one). The generator has to build the file from a parsed palette
+rather than transform an existing one.
+
+**Palette source: prefer `_parse_vim_palette()` over
+`_parse_ghostty_palette()`** when the target format needs more than the 16 raw
+ANSI slots. `_parse_ghostty_palette()` only gives ANSI red/green/yellow/etc.
+`_parse_vim_palette()` additionally names `orange`/`pink`/`purple` explicitly
+and provides a 5-step background ramp (`bg`/`bgdark`/`bgdarker`/`bglight`/
+`bglighter`) — exactly what a system-monitor theme's `main_bg`/`meter_bg`/
+`selected_bg`/`div_line` roles need and the ANSI-only palette can't supply.
+
+**Gradient stops: derive with `_hex_lerp()`, never hand-pick intermediate hex.**
+When the target format wants a 3-stop gradient (`theme[foo_start]`/`_mid`/
+`_end`) but the palette only names one color per role, blend that named role
+toward `bg` (for the pale `start`) and toward `fg` (for the saturated `end`)
+with the existing `_hex_lerp()` helper — same shape the free `dracula.theme`
+uses for its `free_start`/`free_mid`/`free_end` ramps. This keeps every value
+runtime-derived (passes the proprietary-hex audit) instead of inventing a
+plausible-looking literal.
+
+**A `removed: true` predecessor is a ready-made porting reference.** If the
+new tool has a predecessor in `etc/koopa/app.json` marked
+`{"removed": true, "successor": "<tool>"}` that used the same config grammar
+(`bpytop` → `btop`: both are the `.theme` format), that predecessor's existing
+`.tmpl` — even though dead code and not installed — is the fastest way to find
+the working non-color settings to seed the new template from, and its dark/light
+branching (however primitive) shows which lines actually need to vary.
+
+**Verify per-variant legibility before shipping**, not just per-role existence:
+compute WCAG contrast of every candidate foreground role against that variant's
+`bg` (reuse `_wcag_relative_luminance()`/`_contrast_ratio()`, already in
+`install`). A role that reads fine on `pro`'s near-black `bg` can fail on
+`alucard`'s near-white `bg` — this is a broader case of the documented
+Alucard-`comment`-is-white quirk in `_generate_atuin_dracula_pro_toml`/
+`_fzf_color_opts`: assume nothing about legibility carries between variants,
+check both.
+
 ## Fish Color Pipeline
 
 ### Architecture
