@@ -1,16 +1,11 @@
 # koopa
 
-```{code-block} text
-:class: koopa-logo
-               __
-    .,-;-;-,. /'_\
-  _/_/_/_|_\_\) /
-'-<_><_><_><_>=/\
-  `/_/====/_/-'\_\
-   ""     ""    ""
-```
-
-Shell bootloader for data science.
+<p>
+<picture>
+<source srcset="_static/screenshot-dark.png" media="(prefers-color-scheme: dark)" />
+<img class="screenshot" src="_static/screenshot-light.png" alt="koopa terminal session" />
+</picture>
+</p>
 
 Source code is available on [GitHub](https://github.com/acidgenomics/koopa).
 

@@ -1,4 +1,5 @@
 !/docs/
+!/docs/_static/*.png
 !/docs/_themes/
 !/docs/_themes/**/*.html
 !/docs/reference/

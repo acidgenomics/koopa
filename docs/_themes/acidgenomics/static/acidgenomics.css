@@ -92,6 +92,16 @@ div.document {
     padding: 0;
 }
 
+/* basic.css's 360px floor exists for its 230px-sidebar layout, which
+ * theme.toml's `sidebars = []` disables here. Below ~424px of viewport,
+ * that floor exceeds the content box responsive.css allows (e.g. 311px at a
+ * 375px iPhone width) and scrolls the whole page sideways instead of
+ * wrapping text. max-width: 800px on the same basic.css rule is left as-is --
+ * it agrees with base.css's own body max-width. */
+div.body {
+    min-width: 0;
+}
+
 /* Every docs/*.md file opens with a MyST `# Title` heading, which docutils
  * renders as this h1. body > header (see layout.html) always carries the
  * same title, so hide the body's copy rather than duplicate it. */
@@ -155,11 +165,29 @@ a.headerlink {
     display: none;
 }
 
-/* ASCII-art logo on the index page: plain text, not a code sample. */
-
-div.koopa-logo pre {
+/* ASCII-art mark in body > header (theme's `header_ascii` option, root page
+ * only, see layout.html): plain text, not a code sample -- undo acidgenomics.
+ * css's own `pre` rule (border/radius/padding) below. colors.css colors
+ * body > header h1..h7 but not pre, so set the color explicitly. overflow:
+ * hidden clips rather than horizontally scrolls the whole page on viewports
+ * narrower than the art itself. */
+body > header > pre {
     border: none;
+    color: var(--header-color);
+    overflow: hidden;
     padding: 0;
+}
+
+/* Home-page screenshot (theme's `header_ascii`/`tagline` sibling content --
+ * see docs/index.md's <picture> pair). Ported from the previous Jekyll
+ * site's `html#front img` rule. max-width: 100% and centering already come
+ * from basic.css's `img` rule and base.css's `p img`. */
+div.body p img.screenshot {
+    background: var(--border-color);
+    border-radius: 1rem;
+    margin-left: -2px;
+    margin-right: -2px;
+    padding: 2px;
 }
 
 /* -- API reference: autodoc/autosummary/numpydoc output -------------------
