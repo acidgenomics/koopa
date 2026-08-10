@@ -182,6 +182,52 @@ directly. Never invoke `opt/dotfiles/install` or any path that calls
 `_sync_launchd_agent`/`_sync_systemd_user_agent`. Leave agent lifecycle to the full
 `koopa configure user dotfiles`.
 
+## A Tool Can Be Invisible to the Whole Pipeline: No Template Means No Candidate
+
+**Symptom:** a terminal tool (btop, in the 2026-08 case) renders the wrong
+palette in every mode, with no drift in `chezmoi status`, no mismatch between
+`KOOPA_COLOR_MODE` and `~/.cache/koopa/color-mode-applied`, and nothing in
+`~/.cache/koopa/logs/color-mode.log`. Every other file-driven consumer (bat,
+starship, htop, bottom) is correct. This looks like nothing is wrong anywhere
+in the pipeline, because *nothing is* — the tool's config was never made a
+target in the first place.
+
+**Root cause:** `_scan_color_mode_candidates()` in
+[color_mode.py](lang/python/src/koopa/configurers/color_mode.py) discovers
+targets by walking the chezmoi source for `*.tmpl` files that contain the
+literal string `KOOPA_COLOR_MODE`. A config file that is not chezmoi-managed at
+all — no `.tmpl` exists anywhere in any tree — produces no candidate, so it is
+never inspected, never warned about, and never flipped. Every other documented
+failure in this skill (unmanaged-target abort, gdbus substring bug, dead
+in-tmux re-derive, ...) presupposes a template exists and something *downstream*
+of that template breaks. This is the zeroth case: the template was never
+written, so the tool was invisible to the pipeline from the start.
+
+**Diagnostic — before assuming a sync-logic bug, check onboarding first:**
+```sh
+grep -ril <tool> ~/.local/share/koopa/opt/dotfiles/chezmoi/     # any hits at all?
+ls ~/.config/<tool>/                                            # themes/ dir empty?
+```
+If the git tree has zero hits and the live config carries stock/default
+values (not a rendered template's output), the tool was never onboarded — this
+is a missing-template gap, not a broken-sync bug. Check whether a `removed:
+true, successor: <tool>` predecessor in `etc/koopa/app.json` used the identical
+config format (e.g. `bpytop` → `btop`, both read the same `.theme` file
+grammar) — its `.tmpl` is often a ready-made porting reference even though it
+is otherwise dead code.
+
+**Fix:** write the missing `.tmpl` following the nearest sibling's pattern
+(see `koopa-theming`'s Dracula Pro sections for the branch structure). Verify
+the new candidate is picked up by both halves of discovery before trusting it:
+```sh
+python3 -c "
+from koopa.configurers.color_mode import _scan_color_mode_candidates
+print([t for t in _scan_color_mode_candidates('opt/dotfiles/chezmoi') if '<tool>' in t])"
+chezmoi managed --path-style=absolute --source=opt/dotfiles/chezmoi | grep <tool>
+```
+Present in the first list but absent from the second is the pre-existing
+"On-Disk-Only Target Check" bug below, now applied to a brand-new target.
+
 ## On-Disk-Only Target Check Wedges the Whole Apply (One Unmanaged File Blocks All)
 
 **Symptom:** `~/.cache/koopa/color-mode-applied` permanently disagrees with

@@ -194,6 +194,14 @@ body > header > ul > li {
     display: contents;
 }
 
+/* display: contents drops the <li>'s own box, but per spec its pseudo-
+ * elements still generate -- base.css's unscoped `ul li:before { content:
+ * "❯" }` still fires here, and with the link above hidden, the bullet was
+ * left rendering on its own with no text beside it. */
+body > header > ul > li::before {
+    content: none;
+}
+
 /* ASCII-art mark in body > header (theme's `header_ascii` option, root page
  * only, see layout.html): plain text, not a code sample -- undo acidgenomics.
  * css's own `pre` rule (border/radius/padding) below. colors.css colors
