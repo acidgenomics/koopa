@@ -29,3 +29,9 @@ copyright_start_year = ""
 license_name = ""
 license_url = ""
 license_file_url = ""
+# Optional preformatted mark (e.g. ASCII art) rendered above the page title in
+# body > header, root page only. Empty omits it.
+header_ascii = ""
+# Optional one-line description rendered under the title in body > header,
+# root page only. Empty omits it.
+tagline = ""

@@ -70,7 +70,13 @@
    so count rendered <li> as a proxy: only show the toc once there are
    at least 3 entries (this heading + 2 more) worth jumping around. #}
 <header>
+{%- if pagename == root_doc and theme_header_ascii %}
+<pre>{{ theme_header_ascii|e }}</pre>
+{%- endif %}
 <h1>{{ title }}</h1>
+{%- if pagename == root_doc and theme_tagline %}
+<div>{{ theme_tagline|e }}</div>
+{%- endif %}
 {%- if display_toc and toc.count('<li>') >= 3 %}
 {{ toc }}
 {%- endif %}
