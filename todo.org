@@ -1,3 +1,13 @@
+** TODO Need to update 'koopa update system' autocompletion and organization
+    ❌2 $ koopa update system
+    homebrew      python        r             tex-packages
+
+    ~
+    ❌2 $ koopa update system homebrew
+    usage: koopa [-h]
+                 {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header}
+                 ...
+    koopa: error: unrecognized arguments: homebrew
 ** TODO Need to improve version checking for playwright
     Unsupported (1):
       playwright: 1.62.0
