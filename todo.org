@@ -1,3 +1,6 @@
+** TODO Need to improve version checking for playwright
+    Unsupported (1):
+      playwright: 1.62.0
 ** TODO Hitting binary push issue for Python packages on builder machine with uv
      ● The repo here lacks the new build directories (3.13.15 and 3.14.7), so a push from this machine ┃
         would fail — the missing tarballs must be created locally before pushing.
