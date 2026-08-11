@@ -2,12 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(*)",
-      "Edit",
-      "Edit(.claude/rules/lessons.md)",
+      "Edit(**)",
+      "Edit(//**/*lessons.md)",
       "Grep",
+      "ListMcpResourcesTool",
       "Python(*)",
-      "Read",
-      "WebFetch"
+      "Read(**)",
+      "ReadMcpResourceTool",
+      "mcp__ide__*",
+      "mcp__mcp-atlassian__*",
+      "mcp__read-website-fast__*",
+      "mcp__tooluniverse__*"
     ],
     "defaultMode": "plan",
     "deny": [
@@ -19,7 +24,11 @@
       "Bash(git reset*)",
       "Read(.env)",
       "Read(.env.*)",
-      "Read(.envrc)"
+      "Read(.envrc)",
+      "Edit(**/.env*)",
+      "Edit(.env*)",
+      "Read(**/.env*)",
+      "Read(.env*)"
     ]
   }
 }
