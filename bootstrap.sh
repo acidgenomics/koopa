@@ -369,7 +369,7 @@ install_xz() {
 }
 
 install_libffi() {
-    __kvar_version='3.7.1'
+    __kvar_version='3.8.0'
     printf 'Installing libffi.\n'
     __kvar_filename="libffi-${__kvar_version}.tar.gz"
     download_with_fallback \
