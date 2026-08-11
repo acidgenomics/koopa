@@ -2,7 +2,7 @@
 
 import os
 from datetime import UTC, datetime
-from json import dumps
+from json import dumps, loads
 
 from koopa.io import import_app_json
 from koopa.prefix import opt_prefix
@@ -128,3 +128,69 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
     with open(output_file, "w") as fh:
         fh.write(dumps(info, indent=2, sort_keys=False))
         fh.write("\n")
+
+
+def scrub_install_info(
+    names: list[str] | None = None,
+    *,
+    dry_run: bool = False,
+) -> list[tuple[str, list[str]]]:
+    """Rewrite existing .install/info.json 'environ' blocks down to the allowlist.
+
+    Prefixes installed before `_ENVIRON_ALLOWLIST` landed still hold a full
+    environment dump on disk, and `koopa develop push-app-build`/`push-app-builds`
+    tar the whole prefix (including `.install/`) into the artifacts bucket.
+
+    Parameters
+    ----------
+    names
+        App names to scrub. ``None`` scans every app under `app_prefix()`.
+    dry_run
+        Report what would change without writing anything.
+
+    Returns
+    -------
+        (info.json path, removed key names) for every file that has (or, under
+        `dry_run`, would have) non-allowlisted keys removed. Key *names* only --
+        never values.
+    """
+    from koopa.prefix import app_prefix
+
+    app_dir = app_prefix()
+    if names is None:
+        try:
+            names = sorted(os.listdir(app_dir))
+        except OSError:
+            names = []
+    scrubbed: list[tuple[str, list[str]]] = []
+    for name in names:
+        name_dir = os.path.join(app_dir, name)
+        if not os.path.isdir(name_dir):
+            continue
+        try:
+            versions = sorted(os.listdir(name_dir))
+        except OSError:
+            continue
+        for version in versions:
+            info_file = os.path.join(name_dir, version, ".install", "info.json")
+            if not os.path.isfile(info_file):
+                continue
+            try:
+                with open(info_file) as f:
+                    info = loads(f.read())
+            except (ValueError, OSError):
+                continue
+            environ = info.get("environ")
+            if not isinstance(environ, dict):
+                continue
+            removed_keys = sorted(k for k in environ if k not in _ENVIRON_ALLOWLIST)
+            if not removed_keys:
+                continue
+            scrubbed.append((info_file, removed_keys))
+            if dry_run:
+                continue
+            info["environ"] = {k: v for k, v in environ.items() if k in _ENVIRON_ALLOWLIST}
+            with open(info_file, "w") as f:
+                f.write(dumps(info, indent=2, sort_keys=False))
+                f.write("\n")
+    return scrubbed

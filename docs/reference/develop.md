@@ -195,6 +195,13 @@ Tombstone an app entry in app.json.
 
 Remove the revision key from all apps in app.json.
 
+(koopa-develop-scrub-install-info)=
+## `develop scrub-install-info [name...] [--dry-run]`
+
+Rewrite .install/info.json environ blocks down to the allowlist.
+
+- `--dry-run`
+
 (koopa-develop-shellcheck)=
 ## `develop shellcheck`
 

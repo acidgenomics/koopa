@@ -421,3 +421,61 @@ def test_push_installer_errors_without_private_access(
     assert exc_info.value.code == 1
     captured = capsys.readouterr()
     assert "private access" in captured.err.lower() or "acidgenomics" in captured.err
+
+
+# -- scrub-install-info ---------------------------------------------------
+
+
+_DUMMY_SECRET_VALUE = "super-secret-token-value-should-never-print"
+
+
+def _write_scrubbable_info(tmp_path: Path) -> Path:
+    import json
+
+    install_dir = tmp_path / "app" / "myapp" / "1.0" / ".install"
+    install_dir.mkdir(parents=True)
+    info_file = install_dir / "info.json"
+    info_file.write_text(
+        json.dumps(
+            {
+                "name": "myapp",
+                "environ": {"PATH": "/usr/bin", "SOME_TOKEN": _DUMMY_SECRET_VALUE},
+            },
+        ),
+    )
+    return info_file
+
+
+def test_scrub_install_info_reports_and_writes(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """scrub-install-info rewrites the file and reports only the removed key name."""
+    import json
+
+    info_file = _write_scrubbable_info(tmp_path)
+
+    with patch("koopa.prefix.app_prefix", return_value=str(tmp_path / "app")):
+        _DEVELOP_HANDLERS["scrub-install-info"](["myapp"])
+
+    captured = capsys.readouterr()
+    assert "SOME_TOKEN" in captured.err
+    assert _DUMMY_SECRET_VALUE not in captured.err
+    written = json.loads(info_file.read_text())
+    assert written["environ"] == {"PATH": "/usr/bin"}
+
+
+def test_scrub_install_info_dry_run_reports_without_writing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """scrub-install-info --dry-run reports without modifying the file."""
+    info_file = _write_scrubbable_info(tmp_path)
+    original_text = info_file.read_text()
+
+    with patch("koopa.prefix.app_prefix", return_value=str(tmp_path / "app")):
+        _DEVELOP_HANDLERS["scrub-install-info"](["myapp", "--dry-run"])
+
+    captured = capsys.readouterr()
+    assert "Would scrub" in captured.err
+    assert info_file.read_text() == original_text

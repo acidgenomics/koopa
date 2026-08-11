@@ -512,6 +512,24 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 # -- Push build helper --------------------------------------------------------
 
 
+def _active_app_version(name: str) -> str | None:
+    """Get the version of *name* currently linked under opt/, or None.
+
+    Reads the opt/<name> symlink target rather than sorting sibling version
+    directories under app/<name>/ with `sorted()`: that's a string sort, so
+    e.g. "3.13.9" sorts after "3.13.15" and would silently be picked as the
+    version to push once a single-digit patch release exists alongside a
+    two-digit one.
+    """
+    link = os.path.join(opt_prefix(), name)
+    if not os.path.islink(link):
+        return None
+    target = os.path.realpath(link)
+    if not os.path.isdir(target):
+        return None
+    return os.path.basename(target)
+
+
 def push_app_build(name: str) -> None:
     """Push completed build to S3 and/or vendor backend."""
     from koopa.aws import koopa_s3_bucket
@@ -520,16 +538,14 @@ def push_app_build(name: str) -> None:
     arch = arch2()
     os_str = os_slug()
     s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
-    app_dir = os.path.join(app_prefix(), name)
-    if not os.path.isdir(app_dir):
-        msg = f"App directory does not exist: {app_dir}"
+    version = _active_app_version(name)
+    if version is None:
+        msg = f"'{name}' is not linked under opt/; nothing to push."
         raise FileNotFoundError(msg)
-    versions = sorted(os.listdir(app_dir))
-    if not versions:
-        msg = f"No version found for app: {name}"
+    prefix = os.path.join(app_prefix(), name, version)
+    if not os.path.isdir(prefix):
+        msg = f"App directory does not exist: {prefix}"
         raise FileNotFoundError(msg)
-    version = versions[-1]
-    prefix = os.path.join(app_dir, version)
     tarball_name = _binary_tarball_basename(name, version)
     fd, tar_file = tempfile.mkstemp(suffix=".tar.gz", prefix="koopa-push-")
     os.close(fd)
@@ -571,7 +587,6 @@ def push_missing_app_builds() -> None:
     os_str = os_slug()
     s3_bucket_bare = koopa_s3_bucket("artifacts")
     opt = opt_prefix()
-    app_dir = app_prefix()
     aws = shutil.which("aws")
     if aws is None:
         return
@@ -586,17 +601,12 @@ def push_missing_app_builds() -> None:
         link = os.path.join(opt, entry)
         if not os.path.islink(link):
             continue
-        name_dir = os.path.join(app_dir, entry)
-        if not os.path.isdir(name_dir):
+        # Read the linked target directly rather than sorting sibling version
+        # dirs under app_dir/<entry>/ -- see _active_app_version.
+        prefix = os.path.realpath(link)
+        if not os.path.isdir(prefix):
             continue
-        try:
-            versions = sorted(os.listdir(name_dir))
-        except OSError:
-            continue
-        if not versions:
-            continue
-        version = versions[-1]
-        prefix = os.path.join(name_dir, version)
+        version = os.path.basename(prefix)
         # Skip binaries installed from S3 (not built locally).
         if os.path.isfile(os.path.join(prefix, ".koopa-binary")):
             continue
@@ -966,8 +976,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if os.path.isdir(parent) and not os.listdir(parent):
                 os.rmdir(parent)
         raise
-    if config.mode == "shared" and config.push:
-        push_app_build(config.name)
     # -- Post-install: success marker ------------------------------------------
     # Written after linking so a failed link = failed install = retried.
     if config.prefix:
@@ -984,6 +992,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             name=config.name,
             version=config.version,
         )
+        # Push after .install/revision and .install/info.json are written, so
+        # the pushed tarball carries build provenance instead of a bare prefix.
+        if config.mode == "shared" and config.push:
+            push_app_build(config.name)
         if progress.saved_log_path:
             shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
     if not config.quiet and config.verbose:
@@ -3239,11 +3251,10 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     label = "app" if n == 1 else "apps"
     display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
-    if verbose:
-        from koopa.alert import dl
+    from koopa.alert import dl
 
-        for app, reason in plan:
-            dl(app, reason or "missing dependency")
+    for app, reason in plan:
+        dl(app, reason or "missing dependency")
     _save_pending_plan(plan, source="update")
     acquired = _acquire_install_lock()
     _binary = _can_install_binary()

@@ -185,6 +185,36 @@ download raises instead of silently printing "Mirror upload skipped". Use it to
 confirm a `src_url` or mirror-list fix actually resolves before trusting the
 next full `check-app-versions` run.
 
+## Private Staged-Artifact Apps (cellranger, bcl-convert)
+
+Apps gated behind a `private: true` + `installer_artifact` app.json entry (10x
+Genomics tools currently: `cellranger`, `bcl-convert`) require the vendor's
+EULA-gated tarball to be staged in the private artifacts S3 bucket before
+install works — koopa has no rights to redistribute or mirror it automatically.
+
+### Maintainer upgrade path
+
+1. `koopa develop check-app-versions <app>` reports the new upstream version
+   but does **not** bump `app.json`. `update_app_json()` (`version_check.py`)
+   checks `installer_artifact_key()` (`app.py`) against `s3_object_exists()`
+   and holds the pin, printing "artifact not staged" — this gate runs
+   regardless of `--no-update`.
+2. Download the vendor's Linux tarball from the `url` in `app.json` (accepting
+   their terms-of-service page).
+3. Stage it: `koopa develop push-installer <app> <file>` uploads to the S3 key
+   the `installer_artifact` template names (e.g.
+   `installers/cellranger/{version}.tar.xz`).
+4. Re-run `koopa develop check-app-versions --reset-cache <app>` — the artifact
+   is now staged, so the pin bumps.
+5. `koopa install <app>` extracts the tarball and asserts a top-level `bin/`
+   directory before linking (`installers/cellranger.py`,
+   `installers/bcl_convert.py`) — if the vendor changes their archive layout,
+   this raises explicitly instead of leaving a dangling `bin -> libexec/bin`
+   symlink.
+
+Covered by `tests/test_installers.py`: the staged-artifact pin-hold, the
+missing-`installer_artifact`-field case, and the archive-layout assertion.
+
 ## Tool-Inclusion Scope
 
 koopa includes AI agentic coding tools from **major vendors only**: Anthropic, Google,

@@ -177,6 +177,7 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "push-installer": "Stage a downloaded vendor installer tarball to the artifacts bucket.",
     "pytest": "Run the Python test suite.",
     "remove-app": "Tombstone an app entry in app.json.",
+    "scrub-install-info": "Rewrite .install/info.json environ blocks down to the allowlist.",
     "shellcheck": "Run shellcheck on all shell scripts.",
     "update-docs": "Update generated documentation files.",
     "activation-fork-audit": "Static analysis of subprocess forks in the shell activation path.",
@@ -199,6 +200,7 @@ DEVELOP_SYNOPSIS: dict[str, str] = {
     "push-app-build": "name...",
     "push-installer": "app file [--version version] [--force]",
     "remove-app": "name",
+    "scrub-install-info": "[name...] [--dry-run]",
     "app-deps": "name",
     "app-revdeps": "name [--all]",
 }

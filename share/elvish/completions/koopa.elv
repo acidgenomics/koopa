@@ -172,6 +172,8 @@ set edit:completion:arg-completer[koopa] = {|@args|
             put --force --help --version
         } elif (eq $path 'develop/remove-app') {
             put --help --revdeps
+        } elif (eq $path 'develop/scrub-install-info') {
+            put --dry-run --help
         } elif (eq $path 'install') {
             put --all --help --no-dependencies --reinstall --verbose
         } elif (eq $path 'list') {
@@ -195,7 +197,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
         if (eq $args[1] 'app') {
             put aws bioconda bowtie2 brew claude conda current docker file ftp git gpg hisat2 jekyll kallisto koopa md5sum miso photos python r rnaeditingindexer rsem salmon sra ssh star sys wget
         } elif (eq $args[1] 'develop') {
-            put activation-fork-audit activation-speed-test app-deps app-revdeps audit-src-mirror bump-bootstrap bump-revision bump-venv-version cache-functions check-app-versions check-skills circular-dependencies color-mode-audit conda-candidates edit-app-json find-ignored-bin-files format-app-json generate-completion generate-docs generate-man log mirror-src orphan-apps prune-app-binaries push-all-app-builds push-app-build push-app-builds push-installer pyright pytest remove-app reset-revisions shellcheck update-docs
+            put activation-fork-audit activation-speed-test app-deps app-revdeps audit-src-mirror bump-bootstrap bump-revision bump-venv-version cache-functions check-app-versions check-skills circular-dependencies color-mode-audit conda-candidates edit-app-json find-ignored-bin-files format-app-json generate-completion generate-docs generate-man log mirror-src orphan-apps prune-app-binaries push-all-app-builds push-app-build push-app-builds push-installer pyright pytest remove-app reset-revisions scrub-install-info shellcheck update-docs
         } elif (eq $args[1] 'run') {
             put autopad-zeros clone convert-svg-to-png convert-utf8-nfd-to-nfc create-dmg delete-broken-symlinks delete-empty-dirs delete-named-subdirs detab df2 dns dot-clean download download-cran-latest download-github-latest entab eol-lf extract extract-all file-count find-and-move-in-sequence find-and-replace find-broken-symlinks find-empty-dirs find-files-without-line-ending find-large-dirs find-large-files ifactive ip-address ip-info line-count merge-pdf move-files-in-batch move-files-up-1-level move-into-dated-dirs-by-filename move-into-dated-dirs-by-timestamp nfiletypes rename-camel-case rename-from-csv rename-kebab-case rename-lowercase rename-snake-case reset-terminal rg-sort rg-unique sort-lines spotlight tar-multiple-dirs update-today-bucket
         } elif (eq $args[1] 'system') {

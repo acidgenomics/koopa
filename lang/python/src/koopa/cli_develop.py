@@ -431,6 +431,38 @@ def _handle_push_installer(args: list[str]) -> None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
+def _handle_scrub_install_info(args: list[str]) -> None:
+    """Handle ``koopa develop scrub-install-info [--dry-run] [<name>...]``."""
+    import argparse
+
+    from koopa.alert import alert, alert_success
+    from koopa.install_info import scrub_install_info
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop scrub-install-info",
+        description="Rewrite existing .install/info.json 'environ' blocks down to the allowlist.",
+    )
+    parser.add_argument(
+        "names", nargs="*", help="app name(s) to scrub (default: every installed app)"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="report what would change without writing",
+    )
+    parsed = parser.parse_args(args)
+
+    scrubbed = scrub_install_info(parsed.names or None, dry_run=parsed.dry_run)
+    if not scrubbed:
+        alert_success("No non-allowlisted environ keys found.")
+        return
+    verb = "Would scrub" if parsed.dry_run else "Scrubbed"
+    for info_file, removed_keys in scrubbed:
+        alert(f"{verb} '{info_file}': removed {', '.join(removed_keys)}")
+    if not parsed.dry_run:
+        alert_success(f"Scrubbed {len(scrubbed)} info.json file(s).")
+
+
 def _collect_shell_files() -> dict[str, list[str]]:
     """Collect shell files grouped by shell type (posix, bash, zsh).
 
@@ -1972,6 +2004,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "push-app-build": _handle_push_app_build,
     "push-app-builds": lambda _: _handle_push_app_builds(),
     "push-installer": _handle_push_installer,
+    "scrub-install-info": _handle_scrub_install_info,
     "shellcheck": lambda _: _handle_shellcheck(),
     "check-skills": _handle_check_skills,
     "check-app-versions": _handle_check_app_versions,

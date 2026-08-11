@@ -636,6 +636,7 @@ _koopa_develop() {
         orphan-apps) _arguments '*--all[--all]' '*--help[--help]' ;;
         push-installer) _arguments '*--force[--force]' '*--help[--help]' '*--version[--version]' ;;
         remove-app) _arguments '*--help[--help]' '*--revdeps[--revdeps]' ;;
+        scrub-install-info) _arguments '*--dry-run[--dry-run]' '*--help[--help]' ;;
     esac
 }
 
@@ -674,6 +675,7 @@ _koopa_develop_cmds() {
         'pytest'
         'remove-app'
         'reset-revisions'
+        'scrub-install-info'
         'shellcheck'
         'update-docs'
     )

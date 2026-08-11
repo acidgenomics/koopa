@@ -87,6 +87,7 @@ _koopa_complete() {
         ['develop/orphan-apps']='--help --all'
         ['develop/push-installer']='--help --version --force'
         ['develop/remove-app']='--help --revdeps'
+        ['develop/scrub-install-info']='--help --dry-run'
         ['install']='--all --help --no-dependencies --reinstall --verbose'
         ['list']='--all --help'
         ['reinstall']='--all --all-revdeps --help --no-revdeps --only-revdeps --verbose'
@@ -185,6 +186,7 @@ _koopa_complete() {
                         'pytest'
                         'remove-app'
                         'reset-revisions'
+                        'scrub-install-info'
                         'shellcheck'
                         'update-docs'
                     )

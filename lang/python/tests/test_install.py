@@ -8,6 +8,8 @@ from types import TracebackType
 from typing import TYPE_CHECKING
 from unittest.mock import patch
 
+import pytest
+
 if TYPE_CHECKING:
     import concurrent.futures
     from collections.abc import Callable
@@ -40,6 +42,7 @@ def test_apps_with_missing_runtime_deps_clean(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -62,6 +65,7 @@ def test_apps_with_missing_runtime_deps_missing(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -90,6 +94,7 @@ def test_apps_with_missing_runtime_deps_skips_removed(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -120,6 +125,7 @@ def test_apps_with_missing_runtime_deps_alias_resolved(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -476,3 +482,85 @@ def test_load_pending_plan_keeps_app_with_no_info_json(tmp_path: Path) -> None:
         plan = _load_pending_plan(source="update")
 
     assert plan == [("stale-app", "outdated")]
+
+
+# ── push_app_build / push_missing_app_builds ─────────────────────────────────
+
+
+def _link_python_versions(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
+    """Build app/python3.13/{3.13.9,3.13.15} with opt/python3.13 -> 3.13.15.
+
+    3.13.9 sorts *after* 3.13.15 as a string, so a `sorted(listdir)[-1]` version
+    pick lands on the wrong (unlinked) directory.
+    """
+    app_dir = tmp_path / "app"
+    opt_dir = tmp_path / "opt"
+    linked = app_dir / "python3.13" / "3.13.15"
+    older = app_dir / "python3.13" / "3.13.9"
+    linked.mkdir(parents=True)
+    older.mkdir(parents=True)
+    opt_dir.mkdir()
+    (opt_dir / "python3.13").symlink_to(linked)
+    return app_dir, opt_dir, linked, older
+
+
+def test_push_app_build_uses_linked_version_not_string_max(tmp_path: Path) -> None:
+    """push_app_build tars the version linked under opt/, not the string-max sibling."""
+    from koopa.install import push_app_build
+
+    app_dir, opt_dir, linked, older = _link_python_versions(tmp_path)
+    json_data = {"python3.13": {"version": "3.13.15"}}
+
+    with (
+        patch("koopa.install.app_prefix", return_value=str(app_dir)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.install.arch2", return_value="arm64"),
+        patch("koopa.install.os_slug", return_value="macos"),
+        patch("koopa.install.import_app_json", return_value=json_data),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-bucket"),
+        patch("koopa.vendor.vendor_config", return_value=None),
+        patch("koopa.install.run") as mock_run,
+    ):
+        push_app_build("python3.13")
+
+    tar_args = mock_run.call_args_list[0].args
+    assert tar_args[-1] == str(linked)
+    assert str(older) not in tar_args
+
+    cp_args = mock_run.call_args_list[1].args
+    assert cp_args[-1].endswith("python3.13/3.13.15.tar.gz")
+
+
+def test_push_app_build_raises_when_not_linked(tmp_path: Path) -> None:
+    """push_app_build refuses to guess a version when opt/<name> isn't linked."""
+    from koopa.install import push_app_build
+
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+
+    with (
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        pytest.raises(FileNotFoundError),
+    ):
+        push_app_build("python3.13")
+
+
+def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
+    """push_missing_app_builds queries S3 for the linked version, not the string-max sibling."""
+    from koopa.install import push_missing_app_builds
+
+    _app_dir, opt_dir, _linked, _older = _link_python_versions(tmp_path)
+
+    with (
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.install.arch2", return_value="arm64"),
+        patch("koopa.install.os_slug", return_value="macos"),
+        patch("shutil.which", return_value="/usr/bin/aws"),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-bucket"),
+        patch("koopa.aws.s3_object_exists", return_value=True) as mock_exists,
+    ):
+        push_missing_app_builds()
+
+    key = mock_exists.call_args.args[1]
+    assert key.endswith("python3.13/3.13.15.tar.gz")
+    assert "3.13.9" not in key
