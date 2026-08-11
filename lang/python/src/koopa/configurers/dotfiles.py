@@ -90,6 +90,68 @@ def _warn_cross_tree_overlap(
         print(f"  {target}", file=sys.stderr)
 
 
+def _chezmoiremove_targets(
+    chezmoi: str,
+    source: str,
+    env: dict[str, str],
+    config: str | None = None,
+) -> set[str]:
+    """Return the set of target paths a tree's ``.chezmoiremove`` deletes.
+
+    Read-only.  ``.chezmoiremove`` supports Go templates (e.g. an OS-gated
+    block), so it must be rendered via ``chezmoi execute-template`` rather than
+    read raw.  Returns an empty set if the file is absent or the probe fails —
+    a probe must never block the configure run.
+    """
+    remove_file = os.path.join(source, ".chezmoiremove")
+    if not os.path.isfile(remove_file):
+        return set()
+    args = [chezmoi, "execute-template", "--file", f"--source={source}"]
+    if config is not None:
+        args.append(f"--config={config}")
+    args.append(remove_file)
+    try:
+        result = subprocess.run(args, env=env, capture_output=True, text=True, check=True)
+    except (subprocess.CalledProcessError, OSError):
+        return set()
+    targets: set[str] = set()
+    for line in result.stdout.splitlines():
+        entry = line.strip()
+        if not entry or entry.startswith("#"):
+            continue
+        targets.add(entry.removeprefix("!"))
+    return targets
+
+
+def _warn_remove_manage_conflict(
+    tree_label: str,
+    main_targets: set[str],
+    remove_targets: set[str],
+) -> None:
+    """Warn when a later tree's removal list targets a main-managed path.
+
+    A ``.chezmoiremove`` entry is often a directory (e.g. ``.claude/skills/foo``)
+    while ``chezmoi managed`` lists the files under it (e.g.
+    ``.claude/skills/foo/SKILL.md``), so matching must include directory-ancestor
+    hits, not just exact equality — a plain set intersection misses this.  Left
+    unresolved, the main tree recreates the target on every run and the later
+    tree deletes it again, an unbroken tug-of-war.
+    """
+    conflicts: list[tuple[str, str]] = []
+    for removed in sorted(remove_targets):
+        for managed in sorted(main_targets):
+            if managed == removed or managed.startswith(removed + "/"):
+                conflicts.append((removed, managed))
+    if not conflicts:
+        return
+    warn(
+        f"{tree_label} tree's .chezmoiremove deletes {len(conflicts)} target(s) "
+        f"the main tree manages; this can never converge:"
+    )
+    for removed, managed in conflicts:
+        print(f"  {tree_label} removes {removed!r}, main manages {managed!r}", file=sys.stderr)
+
+
 def _check_broken_symlink(tree_label: str, prefix: str) -> None:
     """Raise when a tree's prefix is a symlink whose target no longer exists.
 
@@ -171,6 +233,8 @@ def main(
         wcfg = work_config if os.path.isfile(work_config) else None
         work_targets = _chezmoi_managed(chezmoi, work_source, env, config=wcfg)
         _warn_cross_tree_overlap("work", main_targets, work_targets)
+        work_removes = _chezmoiremove_targets(chezmoi, work_source, env, config=wcfg)
+        _warn_remove_manage_conflict("work", main_targets, work_removes)
         _print_chezmoi_status(chezmoi, work_source, env, config=wcfg)
         subprocess.run([work_install_script], check=True, env=env)
     private_install_script = os.path.join(dotfiles_private_prefix, "install")
@@ -180,6 +244,8 @@ def main(
         pcfg = private_config if os.path.isfile(private_config) else None
         private_targets = _chezmoi_managed(chezmoi, private_source, env, config=pcfg)
         _warn_cross_tree_overlap("private", main_targets, private_targets)
+        private_removes = _chezmoiremove_targets(chezmoi, private_source, env, config=pcfg)
+        _warn_remove_manage_conflict("private", main_targets, private_removes)
         _print_chezmoi_status(chezmoi, private_source, env, config=pcfg)
         subprocess.run([private_install_script], check=True, env=env)
     # Hot-reload any running tmux server so rewritten color confs take effect

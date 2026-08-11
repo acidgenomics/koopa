@@ -1,0 +1,37 @@
+[theme]
+inherit = "basic"
+# Sphinx theme inheritance replaces `stylesheets` rather than merging it, so
+# basic.css (headerlink hover-hide, table/admonition/pre defaults, etc.)
+# must be listed explicitly here, loaded before acidgenomics.css so our
+# overrides still win on equal specificity.
+stylesheets = ["basic.css", "acidgenomics.css"]
+sidebars = []
+
+[options]
+# Google "sitesearch" scoping value for the search box in nav, e.g.
+# "koopa.acidgenomics.com" or "python.acidgenomics.com". Set per-project via
+# html_theme_options in conf.py; empty renders an unscoped search box.
+sitesearch = ""
+# Background image for the body > nav breadcrumb, matching the
+# acidgenomics.com brand mark by default.
+logo_url = "https://acidgenomics.com/images/logo.svg"
+# Optional repo link (rendered as a GitHub icon in nav alongside the
+# breadcrumb). Empty omits it.
+repo_url = ""
+# First year of development, for the "(c) <year>-pres. Acid Genomics LLC."
+# footer line. Required -- there is no sane default across sites.
+copyright_start_year = ""
+# Optional license clause in the footer: license_name (e.g. "Apache 2.0")
+# links to license_url (e.g. the SPDX/apache.org license text);
+# license_file_url is a second, optional link to this repo's actual
+# LICENSE file (e.g. its GitHub blob URL) for the "see LICENSE" part. All
+# empty omits the license clause entirely.
+license_name = ""
+license_url = ""
+license_file_url = ""
+# Optional preformatted mark (e.g. ASCII art) rendered above the page title in
+# body > header, root page only. Empty omits it.
+header_ascii = ""
+# Optional one-line description rendered under the title in body > header,
+# root page only. Empty omits it.
+tagline = ""

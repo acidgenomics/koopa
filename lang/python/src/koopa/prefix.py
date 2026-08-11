@@ -117,14 +117,6 @@ def scripts_private_prefix() -> str:
     )
 
 
-def website_prefix() -> str:
-    """Return koopa website prefix."""
-    return os.environ.get(
-        "KOOPA_WEBSITE_PREFIX",
-        os.path.expanduser("~/git/github/acidgenomics/koopa-acidgenomics-com"),
-    )
-
-
 def bash_prefix() -> str:
     """Return bash language prefix."""
     return os.path.join(koopa_prefix(), "lang", "bash")

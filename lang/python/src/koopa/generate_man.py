@@ -14,114 +14,30 @@ Usage::
 import os
 from datetime import date
 
-# ---------------------------------------------------------------------------
-# Descriptions and synopsis hints — the only data that lives exclusively here.
-# Keys must match the plain (un-escaped) command name in the source tables.
-# ---------------------------------------------------------------------------
-
-_SYSTEM_DESCRIPTIONS: dict[str, str] = {
-    "check": (
-        "Run system checks, including dependency versions, broken app installs,"
-        " bootstrap version, and disk usage."
-    ),
-    "hostname": "Print the system hostname.",
-    "info": "Show system information.",
-    "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
-    "os-slug": "Print the operating system identifier slug.",
-    "prefix": "Print the installation prefix for koopa or a named application.",
-    "prune-apps": "Remove stale application versions.",
-    "switch-to-develop": "Switch koopa installation to the development branch.",
-    "version": "Print the installed version of an application.",
-    "which": "Print the real path of an application.",
-}
-
-_ADMIN_DESCRIPTIONS: dict[str, str] = {
-    "clean-launch-services": "Clean the macOS Launch Services database.",
-    "delete-cache": "Delete cache, log, and temporary files (Docker images only).",
-    "disable-passwordless-sudo": "Disable passwordless sudo for the current user.",
-    "disable-touch-id-sudo": "Disable Touch ID for sudo authentication.",
-    "enable-passwordless-sudo": "Enable passwordless sudo for the current user.",
-    "enable-touch-id-sudo": "Enable Touch ID for sudo authentication.",
-    "fix-sudo-setrlimit-error": "Fix the sudo setrlimit error on Linux.",
-    "flush-dns": "Flush the DNS cache.",
-    "force-eject": "Force eject a mounted volume.",
-    "reload-autofs": "Reload the autofs automount daemon.",
-    "zsh-compaudit-set-permissions": "Fix Zsh compaudit permissions.",
-}
-
-# Optional argument synopsis shown after the command name.
-_SYSTEM_SYNOPSIS: dict[str, str] = {
-    "list": "subcommand",
-    "prefix": "[name]",
-    "spotlight": "query",
-    "version": "name",
-    "which": "name...",
-}
-
-_DEVELOP_DESCRIPTIONS: dict[str, str] = {
-    "audit-src-mirror": "Audit S3 source mirror for missing or stale tarballs.",
-    "bump-revision": "Bump the revision of one or more apps in app.json.",
-    "bump-venv-version": "Bump the Python venv version.",
-    "cache-functions": "Regenerate the cached Bash function library.",
-    "check-app-versions": "Check upstream versions for all apps in app.json.",
-    "circular-dependencies": "Detect circular dependency chains in app.json.",
-    "edit-app-json": "Open app.json in the default editor.",
-    "format-app-json": "Sort and format app.json.",
-    "generate-completion": "Regenerate shell tab-completion scripts.",
-    "generate-man": "Regenerate the koopa(1) man page.",
-    "log": "View the latest temporary log file.",
-    "mirror-src": "Mirror source tarballs to S3.",
-    "prune-app-binaries": "Remove stale application binaries from the cache.",
-    "push-all-app-builds": "Push all application builds to the binary cache.",
-    "push-app-build": "Push a specific application build to the binary cache.",
-    "push-app-builds": "Push all stale application builds to the binary cache.",
-    "pytest": "Run the Python test suite.",
-    "remove-app": "Tombstone an app entry in app.json.",
-    "shellcheck": "Run shellcheck on all shell scripts.",
-    "update-docs": "Update generated documentation files.",
-}
-
-_DEVELOP_SYNOPSIS: dict[str, str] = {
-    "bump-revision": "name...",
-    "mirror-src": "name...",
-    "push-app-build": "name...",
-    "remove-app": "name",
-}
-
-# ---------------------------------------------------------------------------
-# Static top-level command table.
-# cli_main.py uses argparse subparsers, so there is no importable list there.
-# ---------------------------------------------------------------------------
-
-_TOP_COMMANDS: list[tuple[str, str, str]] = [
-    ("install", "[app...]", "Install applications. No args installs defaults; --all installs all."),
-    ("reinstall", "app...", "Reinstall applications, with optional reverse dependency rebuilds."),
-    (
-        "uninstall",
-        "[app...]",
-        "Remove installed applications. Defaults to uninstalling koopa itself.",
-    ),
-    ("update", "[app...]", "Update applications to latest versions. Defaults to updating koopa."),
-    ("list", "[--all]", "List available apps. No args lists defaults; --all lists all."),
-    ("configure", "app...", "Run post-install configuration for applications."),
-    ("app", "subcommand", "Application-specific utilities (e.g. koopa app salmon quant)."),
-    ("run", "command", "Run a utility command (e.g. koopa run rename-snake-case)."),
-    ("system", "subcommand", "System information and koopa management."),
-    ("admin", "subcommand", "System administration commands (require sudo)."),
-    ("develop", "subcommand", "Developer and maintenance utilities."),
-]
-
-_INSTALL_FLAGS: list[tuple[str, str]] = [
-    ("--all", "Install all registered applications."),
-    ("--no-dependencies", "Skip dependency installation."),
-    ("--reinstall", "Force reinstall even if already installed."),
-    ("-D arg", "Pass additional arguments through to the installer. Can be repeated."),
-]
-
-_REINSTALL_FLAGS: list[tuple[str, str]] = [
-    ("--all-revdeps", "Reinstall the specified apps and all of their reverse dependencies."),
-    ("--only-revdeps", "Reinstall only the reverse dependencies, not the specified apps."),
-]
+from koopa.cli_docs import (
+    ADMIN_DESCRIPTIONS as _ADMIN_DESCRIPTIONS,
+)
+from koopa.cli_docs import (
+    DEVELOP_DESCRIPTIONS as _DEVELOP_DESCRIPTIONS,
+)
+from koopa.cli_docs import (
+    DEVELOP_SYNOPSIS as _DEVELOP_SYNOPSIS,
+)
+from koopa.cli_docs import (
+    INSTALL_FLAGS as _INSTALL_FLAGS,
+)
+from koopa.cli_docs import (
+    REINSTALL_FLAGS as _REINSTALL_FLAGS,
+)
+from koopa.cli_docs import (
+    SYSTEM_DESCRIPTIONS as _SYSTEM_DESCRIPTIONS,
+)
+from koopa.cli_docs import (
+    SYSTEM_SYNOPSIS as _SYSTEM_SYNOPSIS,
+)
+from koopa.cli_docs import (
+    TOP_COMMANDS as _TOP_COMMANDS,
+)
 
 # ---------------------------------------------------------------------------
 # roff helpers

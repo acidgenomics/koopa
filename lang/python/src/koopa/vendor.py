@@ -1,4 +1,4 @@
-"""Vendor backend support for custom S3 and JFrog Artifactory mirrors.
+"""Vendor backend support for custom S3 and HTTP(S) repository mirrors.
 
 Configure via etc/koopa/vendor.json. When ``enabled`` is false (the default)
 all functions return None/False and callers behave as if this module does not
@@ -31,7 +31,7 @@ def vendor_config() -> dict[str, Any] | None:
     if not data.get("enabled", False):
         return None
     backend = data.get("backend", "")
-    if backend not in ("s3", "artifactory"):
+    if backend not in ("s3", "http"):
         print(
             f"vendor.json: unknown backend {backend!r}, ignoring.",
             file=sys.stderr,
@@ -40,26 +40,24 @@ def vendor_config() -> dict[str, Any] | None:
     return data
 
 
-def _artifactory_token(cfg: dict[str, Any]) -> str | None:
-    """Resolve the Artifactory Bearer token from the configured env var."""
-    af = cfg.get("artifactory", {})
-    env_var = af.get("token_env_var", "JFROG_ACCESS_TOKEN")
+def _http_token(cfg: dict[str, Any]) -> str | None:
+    """Resolve the HTTP Bearer token from the configured env var."""
+    hc = cfg.get("http", {})
+    env_var = hc.get("token_env_var", "HTTP_ACCESS_TOKEN")
     return os.environ.get(env_var) or None
 
 
-def _artifactory_src_url(cfg: dict[str, Any], name: str, filename: str) -> str:
-    af = cfg["artifactory"]
-    base = af["base_url"].rstrip("/")
-    repo = af["src_repo"]
+def _http_src_url(cfg: dict[str, Any], name: str, filename: str) -> str:
+    hc = cfg["http"]
+    base = hc["base_url"].rstrip("/")
+    repo = hc["src_repo"]
     return f"{base}/{repo}/src/{name}/{filename}"
 
 
-def _artifactory_binary_url(
-    cfg: dict[str, Any], os_str: str, arch: str, name: str, tarball: str
-) -> str:
-    af = cfg["artifactory"]
-    base = af["base_url"].rstrip("/")
-    repo = af["binary_repo"]
+def _http_binary_url(cfg: dict[str, Any], os_str: str, arch: str, name: str, tarball: str) -> str:
+    hc = cfg["http"]
+    base = hc["base_url"].rstrip("/")
+    repo = hc["binary_repo"]
     return f"{base}/{repo}/binaries/{os_str}/{arch}/{name}/{tarball}"
 
 
@@ -83,22 +81,22 @@ def vendor_download_src(name: str, filename: str) -> str | None:
     if cfg is None:
         return None
     backend = cfg["backend"]
-    if backend == "artifactory":
-        return _artifactory_src_url(cfg, name, filename)
+    if backend == "http":
+        return _http_src_url(cfg, name, filename)
     # S3 backend — return None; callers use aws s3 cp directly via vendor_pull_src
     return None
 
 
 def vendor_download_binary(os_str: str, arch: str, name: str, tarball: str) -> str | None:
-    """Return HTTPS URL for binary tarball from vendor Artifactory backend, or None.
+    """Return HTTPS URL for binary tarball from vendor HTTP backend, or None.
 
     For S3 backend returns None (callers use vendor_pull_binary instead).
     """
     cfg = vendor_config()
     if cfg is None:
         return None
-    if cfg["backend"] == "artifactory":
-        return _artifactory_binary_url(cfg, os_str, arch, name, tarball)
+    if cfg["backend"] == "http":
+        return _http_binary_url(cfg, os_str, arch, name, tarball)
     return None
 
 
@@ -108,10 +106,10 @@ def vendor_has_src(name: str, filename: str) -> bool:
     if cfg is None:
         return False
     backend = cfg["backend"]
-    if backend == "artifactory":
-        url = _artifactory_src_url(cfg, name, filename)
-        token = _artifactory_token(cfg)
-        return _artifactory_head(url, token)
+    if backend == "http":
+        url = _http_src_url(cfg, name, filename)
+        token = _http_token(cfg)
+        return _http_head(url, token)
     # S3
     uri = _s3_src_uri(cfg, name, filename)
     return _s3_head(uri, cfg["s3"].get("profile", ""))
@@ -123,10 +121,10 @@ def vendor_has_binary(os_str: str, arch: str, name: str, tarball: str) -> bool:
     if cfg is None:
         return False
     backend = cfg["backend"]
-    if backend == "artifactory":
-        url = _artifactory_binary_url(cfg, os_str, arch, name, tarball)
-        token = _artifactory_token(cfg)
-        return _artifactory_head(url, token)
+    if backend == "http":
+        url = _http_binary_url(cfg, os_str, arch, name, tarball)
+        token = _http_token(cfg)
+        return _http_head(url, token)
     uri = _s3_binary_uri(cfg, os_str, arch, name, tarball)
     return _s3_head(uri, cfg["s3"].get("profile", ""))
 
@@ -138,10 +136,10 @@ def vendor_pull_binary(os_str: str, arch: str, name: str, tarball: str, dest: st
         msg = "No vendor config."
         raise RuntimeError(msg)
     backend = cfg["backend"]
-    if backend == "artifactory":
-        url = _artifactory_binary_url(cfg, os_str, arch, name, tarball)
-        token = _artifactory_token(cfg)
-        _artifactory_download(url, dest, token)
+    if backend == "http":
+        url = _http_binary_url(cfg, os_str, arch, name, tarball)
+        token = _http_token(cfg)
+        _http_download(url, dest, token)
     else:
         uri = _s3_binary_uri(cfg, os_str, arch, name, tarball)
         profile = cfg["s3"].get("profile", "")
@@ -154,10 +152,10 @@ def vendor_push_src(local_path: str, name: str, filename: str) -> None:
     if cfg is None:
         return
     backend = cfg["backend"]
-    if backend == "artifactory":
-        url = _artifactory_src_url(cfg, name, filename)
-        token = _artifactory_token(cfg)
-        _artifactory_upload(local_path, url, token)
+    if backend == "http":
+        url = _http_src_url(cfg, name, filename)
+        token = _http_token(cfg)
+        _http_upload(local_path, url, token)
     else:
         uri = _s3_src_uri(cfg, name, filename)
         profile = cfg["s3"].get("profile", "")
@@ -170,10 +168,10 @@ def vendor_push_binary(local_path: str, os_str: str, arch: str, name: str, tarba
     if cfg is None:
         return
     backend = cfg["backend"]
-    if backend == "artifactory":
-        url = _artifactory_binary_url(cfg, os_str, arch, name, tarball)
-        token = _artifactory_token(cfg)
-        _artifactory_upload(local_path, url, token)
+    if backend == "http":
+        url = _http_binary_url(cfg, os_str, arch, name, tarball)
+        token = _http_token(cfg)
+        _http_upload(local_path, url, token)
     else:
         uri = _s3_binary_uri(cfg, os_str, arch, name, tarball)
         profile = cfg["s3"].get("profile", "")
@@ -185,7 +183,7 @@ def vendor_can_pull() -> bool:
     cfg = vendor_config()
     if cfg is None:
         return False
-    if cfg["backend"] == "artifactory":
+    if cfg["backend"] == "http":
         # Anonymous read is allowed; token only needed for private repos.
         return True
     # S3 — just needs aws CLI
@@ -197,8 +195,8 @@ def vendor_can_push() -> bool:
     cfg = vendor_config()
     if cfg is None:
         return False
-    if cfg["backend"] == "artifactory":
-        return bool(_artifactory_token(cfg))
+    if cfg["backend"] == "http":
+        return bool(_http_token(cfg))
     # S3 — needs aws CLI and a named profile
     if not _find_aws():
         return False
@@ -254,7 +252,7 @@ def _s3_head(uri: str, profile: str) -> bool:
     return result.returncode == 0
 
 
-def _artifactory_head(url: str, token: str | None) -> bool:
+def _http_head(url: str, token: str | None) -> bool:
     cmd = ["curl", "-sI", "--fail", "-o", "/dev/null"]
     if token:
         cmd += ["-H", f"Authorization: Bearer {token}"]
@@ -263,7 +261,7 @@ def _artifactory_head(url: str, token: str | None) -> bool:
     return result.returncode == 0
 
 
-def _artifactory_download(url: str, dest: str, token: str | None) -> None:
+def _http_download(url: str, dest: str, token: str | None) -> None:
     cmd = ["curl", "-fsSL", "-o", dest]
     if token:
         cmd += ["-H", f"Authorization: Bearer {token}"]
@@ -271,7 +269,7 @@ def _artifactory_download(url: str, dest: str, token: str | None) -> None:
     subprocess.run(cmd, check=True)
 
 
-def _artifactory_upload(local_path: str, url: str, token: str | None) -> None:
+def _http_upload(local_path: str, url: str, token: str | None) -> None:
     cmd = ["curl", "-fsSL", "-T", local_path]
     if token:
         cmd += ["-H", f"Authorization: Bearer {token}"]

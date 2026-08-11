@@ -272,7 +272,7 @@ def _handle_push_app_builds() -> None:
     if not _can_push_binary():
         print(
             "Error: push requires KOOPA_BUILDER=1, acidgenomics AWS profile, "
-            "AWS_CLOUDFRONT_DISTRIBUTION_ID, and aws CLI.",
+            "AWS_ACCOUNT_ID, AWS_CLOUDFRONT_DISTRIBUTION_ID, and aws CLI.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -1145,6 +1145,13 @@ def _handle_generate_man(args: list[str]) -> None:
     write_man()
 
 
+def _handle_generate_docs(_: list[str]) -> None:
+    """Handle ``koopa develop generate-docs``."""
+    from koopa.generate_docs import generate_docs
+
+    generate_docs()
+
+
 def _handle_update_docs(_: list[str]) -> None:
     """Handle ``koopa develop update-docs``."""
     from koopa.alert import alert_success
@@ -1689,6 +1696,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "update-docs": _handle_update_docs,
     "generate-completion": lambda _: _handle_generate_completion(),
     "generate-man": _handle_generate_man,
+    "generate-docs": _handle_generate_docs,
     "pytest": _handle_pytest,
     "pyright": _handle_pyright,
     "log": lambda _: _handle_view_latest_tmp_log_file(),

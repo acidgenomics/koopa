@@ -54,19 +54,21 @@ def _require_supported_platform() -> None:
 
 
 def _require_git_managed_install() -> None:
-    """Abort if koopa was not installed via the native git-managed installer.
+    """Abort if koopa was not installed via the native installer.
 
-    App install/uninstall/update write into and self-update koopa's own
-    prefix via 'git pull' (see 'koopa.install.update_koopa'), which conflicts
-    with a package manager's (e.g. conda) relocatable, externally-managed
-    prefix. A packaged koopa is detected the same way 'update_koopa' already
-    detects a pinned release: not a git repo, or a detached HEAD.
+    App install/uninstall/update write into koopa's own prefix and
+    self-update it via 'git pull' (see 'koopa.install.update_koopa'), which
+    conflicts with a package manager's (e.g. conda) relocatable, externally-
+    managed prefix. A pinned release installed by the native installer (a
+    tarball extraction, no '.git') still owns a full koopa tree and must be
+    allowed to manage apps; only a site-packages/conda install -- detected
+    the same way 'koopa.prefix.koopa_prefix()' detects the packaged-data
+    fallback -- is refused.
     """
-    from koopa.git import git_branch, is_git_repo
     from koopa.prefix import koopa_prefix
 
     prefix = koopa_prefix()
-    if is_git_repo(prefix) and git_branch(prefix) != "HEAD":
+    if os.path.isdir(os.path.join(prefix, "lang", "python", "src")):
         return
     print(
         "Error: app management is unavailable in this koopa install.\n"
@@ -679,7 +681,8 @@ def _handle_update(args: argparse.Namespace) -> None:
     )
 
     mode = args.mode
-    if mode == "system":
+    system_updates = mode == "system"
+    if system_updates:
         from koopa.system import is_admin
 
         if not is_admin():
@@ -698,7 +701,7 @@ def _handle_update(args: argparse.Namespace) -> None:
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             return
-        if mode == "system":
+        if system_updates:
             update_system_apps(verbose=args.verbose)
             return
         from koopa.alert import alert_success, stop, styled_name, warn
@@ -742,10 +745,6 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             if install_error is None:
                 install_error = str(exc)
-        try:
-            update_system_apps(verbose=args.verbose)
-        except Exception as exc:
-            warn(f"System updates failed: {exc}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:

@@ -1,12 +1,12 @@
 ---
 name: koopa-update
 description: >
-  How `koopa update` works end to end — the pull→apps→system-apps sequence and the
-  admin-gated automatic system updates (Homebrew, system R/Python, TeX). Use when
-  reasoning about what `koopa update` does, why system updates run (or silently
-  skip) on macOS, the is_admin() gate vs has_sudo(), the "System R is out of date"
-  warning, or the update-system platform matrix. For update_koopa() git merge/rebase
-  recovery see koopa-shell-internals.
+  How `koopa update` works end to end — the pull+apps default sequence, the
+  separate opt-in `koopa update system` mode, and the admin-gated system
+  updates it runs (Homebrew, system R/Python, TeX). Use when reasoning about
+  what `koopa update` does or doesn't touch, the is_admin() gate vs has_sudo(),
+  the "System R is out of date" warning, or the update-system platform matrix.
+  For update_koopa() git merge/rebase recovery see koopa-shell-internals.
 ---
 
 # koopa update
@@ -15,12 +15,25 @@ description: >
 
 | Command | What it does |
 |---|---|
-| `koopa update` | Full update — koopa pull + apps + system apps |
+| `koopa update` | Full update — koopa pull + apps. Does **not** touch system apps (see below). |
 | `koopa update koopa` | Only pull and update the koopa repo itself |
 | `koopa update system` | Only run system updates (requires admin; raises `PermissionError` if not) |
 
 All dispatched through `_handle_update()` in
-`lang/python/src/koopa/cli_main.py:633`.
+`lang/python/src/koopa/cli_main.py:665`.
+
+## System updates are opt-in only, not part of the default sequence
+
+As of the 2026-08-06 change ("System updates are no longer run by default" —
+see `CHANGELOG.md`), `update_system_apps()` runs **only** via the explicit
+`koopa update system` mode, which early-returns at `cli_main.py:704-706`
+before the rest of the function body executes. A prior version of this skill
+documented step 4 of the default sequence as an unconditional call to
+`update_system_apps()`; that call site was removed entirely (it had become
+dead code — `system_updates` could only be true when `mode == "system"`,
+which already returns earlier in the function — flagged by a code-quality
+bot in PR #1224 and deleted). Plain `koopa update` (no mode) does not touch
+Homebrew, system R, system Python, or TeX packages at all.
 
 ## Full-update sequence
 
@@ -37,13 +50,14 @@ Running `koopa update` (no mode) executes these steps in order:
    `✓ All installed apps are up to date.` (or individual app update lines if
    anything was stale).
 
-4. **`update_system_apps(verbose=...)`** at `cli_main.py:715` →
-   `=> Updating Homebrew.` / `=> Updating system R.` / etc.
-   Wrapped in try/except — a failure here `warn`s but never aborts the run.
+System apps are not part of this sequence — run `koopa update system`
+separately (requires admin) to update Homebrew, system R, system Python, or
+TeX packages. The rest of this skill (admin gate, platform matrix, Homebrew/R
+internals) describes what `update_system_apps()` does when invoked that way.
 
 ## The admin gate
 
-`update_system_apps()` (`lang/python/src/koopa/install.py:3308`) short-circuits
+`update_system_apps()` (`lang/python/src/koopa/install.py:3360`) short-circuits
 immediately unless the running user is an admin:
 
 ```python
@@ -53,7 +67,7 @@ if not is_admin():
 ```
 
 **Why this "just works" silently on macOS for admin users:**
-`is_admin()` (`lang/python/src/koopa/system.py:248`) is a **static group-membership
+`is_admin()` (`lang/python/src/koopa/system.py:290`) is a **static group-membership
 check**, not a live sudo probe:
 
 - macOS: `grp.getgrnam("admin").gr_gid in os.getgroups()` — the user is in the
@@ -66,19 +80,23 @@ check**, not a live sudo probe:
 | Function | What it checks | Used for |
 |---|---|---|
 | `is_admin()` | OS admin-group membership (static) | `update_system_apps()` gate |
-| `has_sudo()` (`system.py:274`) | Probes `sudo -v -n` — actual passwordless sudo | brew permission fixes |
-| `is_owner()` (`system.py:238`) | `stat(koopa_prefix()).st_uid == getuid()` | koopa-prefix ownership checks |
+| `has_sudo()` (`system.py:316`) | Probes `sudo -v -n` — actual passwordless sudo | brew permission fixes |
+| `is_owner()` (`system.py:280`) | `stat(koopa_prefix()).st_uid == getuid()` | koopa-prefix ownership checks |
 
-**Automatic path vs explicit mode:**
-- `koopa update` (automatic): non-admin → `alert_note` and silently skip.
-- `koopa update system` (explicit): non-admin → `PermissionError("'koopa update
-  system' requires admin/sudo access.")` (hard error at `cli_main.py:650`).
+**Only the explicit mode reaches this gate at all:** plain `koopa update`
+never calls `update_system_apps()` (see "System updates are opt-in only"
+above), so `is_admin()` is never consulted on that path — there is no
+silent-skip case to reason about there anymore. `koopa update system`
+(explicit): non-admin → `PermissionError("'koopa update system' requires
+admin/sudo access.")`, raised at `cli_main.py:689`, before
+`update_system_apps()` (and therefore its own internal `is_admin()` check)
+is ever reached.
 
 ## What updates and how it decides
 
 `update_system_apps()` iterates the `update-system` entries from
 `PYTHON_INSTALLER_MODES` (`lang/python/src/koopa/installers/__init__.py:549`),
-filtered by platform via `_platform_matches()` (`install.py:3327`).
+filtered by platform via `_platform_matches()` (`install.py:3379`).
 
 ### Platform matrix
 
@@ -90,7 +108,7 @@ filtered by platform via `_platform_matches()` (`install.py:3327`).
 | r | debian | Debian-like only | `check_system_r()` mismatch **and** `is_admin()` (extra Linux gate inside `check_system_r`) |
 | tex-packages | common | macOS + Linux | `tlmgr` on PATH |
 
-### Homebrew (`install.py:3374`)
+### Homebrew (`install.py:3426`)
 
 `_update_system_homebrew()`: runs only if `shutil.which("brew")` is not None.
 Reinstalls the `homebrew` system app → `brew update`, upgrade casks/brews,
@@ -112,7 +130,7 @@ the *implicit* pre-command auto-update, not the explicit `brew update` step.
 - Tests in `lang/python/tests/test_brew.py` lock this invariant: any future raw
   `subprocess.run(["brew", ...])` without hardening will break the regression test.
 
-### System R (`install.py:3393`, `check.py:528`)
+### System R (`install.py:3445`, `check.py:528`)
 
 `_update_system_r()` calls `check_system_r()` first. `check_system_r()`:
 

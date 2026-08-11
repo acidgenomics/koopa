@@ -10,9 +10,12 @@ import urllib.error
 import pytest
 from koopa.version import sanitize_version
 from koopa.version_check import (
+    _dead_hosts,
+    _fetch_first_reachable,
     _friendly_network_error,
     _is_prerelease,
     _is_retryable_network_error,
+    _NetworkUnavailableError,
 )
 
 # ── _is_prerelease ─────────────────────────────────────────────────────────
@@ -172,3 +175,96 @@ def test_is_retryable_connection_reset() -> None:
 def test_is_retryable_value_error() -> None:
     """A non-network exception is not retryable."""
     assert _is_retryable_network_error(ValueError()) is False
+
+
+# ── _fetch_first_reachable (dead-host circuit breaker) ──────────────────────
+
+
+@pytest.fixture(autouse=True)
+def _reset_dead_hosts() -> None:
+    """Clear the module-level dead-host set so tests don't leak state."""
+    _dead_hosts.clear()
+
+
+def test_fetch_first_reachable_falls_through_to_working_base(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A timeout on the first base falls through to the next base, which succeeds."""
+    calls: list[str] = []
+
+    def fake_get(base: str, timeout: int = 8, _retries: int = 1) -> str:
+        calls.append(base)
+        if "blocked" in base:
+            raise TimeoutError("simulated connect timeout")
+        return f"<html>{base}</html>"
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
+    html = _fetch_first_reachable(["https://blocked.example/sed/", "https://good.example/sed/"])
+    assert html == "<html>https://good.example/sed/</html>"
+    assert calls == ["https://blocked.example/sed/", "https://good.example/sed/"]
+
+
+def test_fetch_first_reachable_skips_previously_dead_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A host that timed out on a prior call is skipped entirely on the next call.
+
+    Regression test: _check_gnu() used to re-probe every unreachable GNU/Savannah
+    mirror host once per app, burning a full timeout per app across 30+ apps. The
+    circuit breaker records a dead host after one timeout and skips it on
+    subsequent calls within the same process.
+    """
+    calls: list[str] = []
+
+    def fake_get(base: str, timeout: int = 8, _retries: int = 1) -> str:
+        calls.append(base)
+        if "blocked" in base:
+            raise TimeoutError("simulated connect timeout")
+        return f"<html>{base}</html>"
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
+    _fetch_first_reachable(["https://blocked.example/sed/", "https://good.example/sed/"])
+
+    calls.clear()
+    html = _fetch_first_reachable(["https://blocked.example/gzip/", "https://good.example/gzip/"])
+    assert html == "<html>https://good.example/gzip/</html>"
+    assert calls == ["https://good.example/gzip/"]
+
+
+def test_fetch_first_reachable_does_not_blacklist_on_http_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An HTTP error response (e.g. 404) does not mark the host dead.
+
+    A 404 for one package says nothing about the host's reachability for
+    another package; only connect/handshake timeouts should trip the breaker.
+    """
+    calls: list[str] = []
+
+    def fake_get(base: str, timeout: int = 8, _retries: int = 1) -> str:
+        calls.append(base)
+        if "notfound" in base:
+            raise urllib.error.HTTPError(base, 404, "Not Found", http.client.HTTPMessage(), None)
+        return f"<html>{base}</html>"
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
+    _fetch_first_reachable(["https://host.example/notfound/", "https://host.example/good/"])
+
+    calls.clear()
+    html = _fetch_first_reachable(["https://host.example/notfound/", "https://host.example/good/"])
+    assert html == "<html>https://host.example/good/</html>"
+    # The 404'd URL is still tried on the second call: 404 is not a dead-host signal.
+    assert calls == ["https://host.example/notfound/", "https://host.example/good/"]
+
+
+def test_fetch_first_reachable_raises_network_unavailable_when_all_fail(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """All bases timing out raises _NetworkUnavailableError."""
+
+    def fake_get(_base: str, timeout: int = 8, _retries: int = 1) -> str:
+        raise TimeoutError("simulated connect timeout")
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
+    with pytest.raises(_NetworkUnavailableError):
+        _fetch_first_reachable(["https://a.example/sed/", "https://b.example/sed/"])

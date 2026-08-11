@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (137) ---------------------------------------------
+    # -- conda-package (147) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
@@ -58,6 +58,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bustools": f"{_M}._conda",
     "chezmoi": f"{_M}._conda",
     "choose": f"{_M}._conda",
+    "conda-build": f"{_M}._conda",
     "csvtk": f"{_M}._conda",
     "deeptools": f"{_M}._conda",
     "delta": f"{_M}._conda",
@@ -121,6 +122,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "r": f"{_M}._conda",
     "radian": f"{_M}._conda",
     "ranger-fm": f"{_M}._conda",
+    "rattler-build": f"{_M}._conda",
     "rclone": f"{_M}._conda",
     "ripgrep": f"{_M}._conda",
     "ripgrep-all": f"{_M}._conda",
@@ -225,6 +227,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "dbt-postgres": f"{_M}._python_plugin",
     "dbt-redshift": f"{_M}._python_plugin",
     "dbt-snowflake": f"{_M}._python_plugin",
+    "playwright": f"{_M}.playwright",
     # -- gnu-app (35) ----------------------------------------------------
     "attr": f"{_M}._gnu",
     "autoconf": f"{_M}._gnu",
@@ -262,8 +265,8 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "wget": f"{_M}._gnu",
     "wget2": f"{_M}._gnu",
     "antigravity-cli": f"{_M}.antigravity_cli",
-    # -- node-package (7) ------------------------------------------------
-    "aws-azure-login": f"{_M}._node_pkg",
+    "aws-azure-login": f"{_M}.aws_azure_login",
+    # -- node-package (6) ------------------------------------------------
     "claude-code": f"{_M}._node_pkg",
     "codex": f"{_M}._node_pkg",
     "copilot-cli": f"{_M}._node_pkg",

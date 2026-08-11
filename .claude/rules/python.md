@@ -58,6 +58,17 @@ hand-maintained.
 `configurers/dotfiles.py`, `configurers/color_mode.py`, `opt/dotfiles/install`:
 - Derive `KOOPA_COLOR_MODE` from `os_appearance_mode()` at apply time — never from
   `os.environ` (session env is stale in long-running processes).
-- Re-apply all trees in order: main → work → private.
+- Re-apply all trees in order: main → work → private. Each non-main tree needs its
+  own `--config=<prefix>/chezmoi.toml` when that file exists — the work tree sets a
+  non-default `persistentState` (and age encryption), so omitting `--config` reads
+  the wrong state DB. `color_mode.py` applies each tree independently (own
+  discovery, own `chezmoi managed` probe, own `--config`); it never delegates to
+  `dotfiles.py`'s `main()` and never invokes any tree's `install` script.
+- A discovered `chezmoi apply` target must be filtered against `_chezmoi_managed()`
+  output, never `os.path.exists()`. `chezmoi apply` aborts entirely if any one
+  target argument is unmanaged — one `.chezmoiignore`'d-but-on-disk file blocks
+  every other target in the same call. In a multi-tree apply, warn about a
+  dropped target only once no tree has claimed it — a target one tree drops may
+  be legitimately managed by a later tree.
 
 See skill `koopa-color-mode` for full context.

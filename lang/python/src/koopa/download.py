@@ -110,26 +110,71 @@ def download(
     return output
 
 
-def _gnu_mirrors(primary_url: str, name: str, filename: str) -> list[str]:
+_GNU_HOSTS = ("ftpmirror.gnu.org", "ftp.gnu.org", "mirrors.kernel.org")
+_GNU_MIRROR_BASES = (
+    "https://mirrors.kernel.org/gnu/",
+    "https://ftp.wayne.edu/gnu/",
+    "https://mirrors.ocf.berkeley.edu/gnu/",
+    "https://mirror.csclub.uwaterloo.ca/gnu/",
+)
+
+_NONGNU_HOSTS = ("download.savannah.nongnu.org", "mirror.csclub.uwaterloo.ca")
+_NONGNU_MIRROR_BASES = (
+    "https://mirror.csclub.uwaterloo.ca/nongnu/",
+    "https://mirrors.ocf.berkeley.edu/nongnu/",
+    "https://nongnu.uib.no/",
+)
+
+
+def _gnu_relative_path(primary_url: str) -> str | None:
+    """Return the GNU-tree-relative path (e.g. 'gcc/gcc-16.2.0/gcc-16.2.0.tar.xz').
+
+    ftp.gnu.org URLs are rooted at '/gnu/<path>'; ftpmirror.gnu.org and
+    mirrors.kernel.org URLs are rooted at '/<path>' and '/gnu/<path>' respectively.
+    Stripping any leading 'gnu/' segment normalizes all three to the same relative
+    path, which is what every mirror host expects after its own '/gnu/' prefix.
+    """
+    hostname = urlparse(primary_url).hostname or ""
+    if not any(host in hostname for host in _GNU_HOSTS):
+        return None
+    path = urlparse(primary_url).path.lstrip("/")
+    if path.startswith("gnu/"):
+        path = path[len("gnu/") :]
+    return path
+
+
+def _gnu_mirrors(primary_url: str) -> list[str]:
     """Return alternative GNU mirror URLs if primary is a GNU source."""
-    if "ftpmirror.gnu.org" not in primary_url and "ftp.gnu.org" not in primary_url:
+    rel = _gnu_relative_path(primary_url)
+    if rel is None:
         return []
-    return [
-        f"https://ftp.gnu.org/gnu/{name}/{filename}",
-        f"https://mirrors.kernel.org/gnu/{name}/{filename}",
-        f"https://mirror.rit.edu/gnu/{name}/{filename}",
-    ]
+    return [f"{base}{rel}" for base in _GNU_MIRROR_BASES]
 
 
-def _savannah_mirrors(primary_url: str, name: str, filename: str) -> list[str]:
+def _savannah_relative_path(primary_url: str) -> str | None:
+    """Return the nongnu-tree-relative path (e.g. 'lzip/lzip-1.26.tar.gz').
+
+    download.savannah.nongnu.org URLs are rooted at '/releases/<path>'; the mirror
+    hosts are rooted at '/nongnu/<path>' or '/<path>'. Stripping the leading
+    'releases/' segment normalizes to the path every mirror expects.
+    """
+    hostname = urlparse(primary_url).hostname or ""
+    if not any(host in hostname for host in _NONGNU_HOSTS):
+        return None
+    path = urlparse(primary_url).path.lstrip("/")
+    if path.startswith("releases/"):
+        path = path[len("releases/") :]
+    elif path.startswith("nongnu/"):
+        path = path[len("nongnu/") :]
+    return path
+
+
+def _savannah_mirrors(primary_url: str) -> list[str]:
     """Return alternative Savannah mirror URLs if primary is a Savannah source."""
-    if "download.savannah.nongnu.org" not in primary_url:
+    rel = _savannah_relative_path(primary_url)
+    if rel is None:
         return []
-    return [
-        f"https://nongnu.uib.no/{name}/{filename}",
-        f"https://mirror.csclub.uwaterloo.ca/nongnu/{name}/{filename}",
-        f"https://mirrors.ocf.berkeley.edu/nongnu/{name}/{filename}",
-    ]
+    return [f"{base}{rel}" for base in _NONGNU_MIRROR_BASES]
 
 
 def download_with_mirror(
@@ -151,7 +196,12 @@ def download_with_mirror(
     Tries the primary URL first, then the vendor mirror (if configured with
     vendor_first priority), then GNU mirrors (if applicable), then Savannah
     mirrors (if applicable), then any extra_urls, then the koopa mirror at
-    https://koopa.acidgenomics.com/src/{name}/{filename} (unless vendor_only).
+    https://koopa.acidgenomics.com/src/{name}/{filename}.
+
+    When the vendor backend is configured with vendor_only priority, no
+    public host is contacted at all: the vendor mirror is the sole URL tried,
+    matching the binary-download path in
+    koopa.install.install_app_from_binary_package.
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
@@ -160,23 +210,33 @@ def download_with_mirror(
 
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     is_archive_payload = filename.lower().endswith(_ARCHIVE_EXTS)
-    urls = [primary_url]
-
-    # Insert vendor mirror URL at position 1 (right after the primary URL).
     vendor_url = vendor_download_src(name, filename)
-    if vendor_url:
-        urls.append(vendor_url)
+    vendor_only = vendor_config() is not None and vendor_pull_priority() == "vendor_only"
 
-    urls.extend(_gnu_mirrors(primary_url, name, filename))
-    urls.extend(_savannah_mirrors(primary_url, name, filename))
-    urls.extend(extra_urls or [])
+    if vendor_only:
+        if not vendor_url:
+            msg = (
+                "vendor_only is configured but no vendor mirror URL is"
+                f" available for {name!r} ({filename!r})."
+            )
+            raise FileNotFoundError(msg)
+        urls = [vendor_url]
+    else:
+        urls = [primary_url]
+        if vendor_url:
+            urls.append(vendor_url)
+        urls.extend(_gnu_mirrors(primary_url))
+        urls.extend(_savannah_mirrors(primary_url))
+        urls.extend(extra_urls or [])
+        if not skip_koopa_mirror:
+            urls.append(koopa_mirror)
+        # primary_url is now itself one of the GNU/Savannah mirror hosts (e.g.
+        # mirrors.kernel.org), so it can reappear as the first entry from
+        # _gnu_mirrors()/_savannah_mirrors(). Dedup, preserving order, so a failed
+        # host is not retried immediately with the exact same URL.
+        urls = list(dict.fromkeys(urls))
 
-    # Skip the default koopa mirror when vendor is configured as vendor_only.
-    _skip_koopa = skip_koopa_mirror or (
-        vendor_config() is not None and vendor_pull_priority() == "vendor_only"
-    )
-    if not _skip_koopa:
-        urls.append(koopa_mirror)
+    _skip_koopa = skip_koopa_mirror or vendor_only
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:

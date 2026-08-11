@@ -489,43 +489,68 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     alert(f"Docs published: https://python.acidgenomics.com/{name}/")
 
 
-def publish_assets(*, invalidate: bool = True) -> None:
-    """Upload shared static assets to python.acidgenomics.com.
+def sync_docs_theme(package_dirs: list[str], *, check: bool = False) -> bool:
+    """Sync koopa's tracked Sphinx theme into one or more package doc trees.
 
-    Uploads koopa's tracked copy of assets/sphinx.css to s3://<python-bucket>/css/sphinx.css.
-    Every package's docs/conf.py references this file by absolute URL, so a single
-    upload updates the theme for all published docs sites at once.
+    Copies assets/sphinx_theme/ to <package_dir>/docs/_themes/acidgenomics/ for
+    every target. koopa's own repo root is a valid target too, so its own
+    docs/_themes/acidgenomics/ is a synced copy like every other consumer and
+    there is exactly one master. Each package's docs/conf.py points at the
+    synced copy with html_theme = "acidgenomics" and html_theme_path =
+    ["_themes"]; nothing is published to python.acidgenomics.com by this
+    function, unlike publish_docs.
 
     Parameters
     ----------
-    invalidate
-        Whether to invalidate the CloudFront cache after uploading.
+    package_dirs
+        Paths to package or koopa repo roots (each must contain a docs/
+        directory).
+    check
+        If True, compare instead of writing: return whether every target
+        already matches the source tree, without modifying anything.
+
+    Returns
+    -------
+    bool
+        True if every target's theme dir matches the source tree (always True
+        when check=False, since a mismatch is corrected by writing).
     """
     from koopa.alert import alert
 
-    css_path = Path(__file__).parent / "assets" / "sphinx.css"
-    if not css_path.is_file():
-        msg = f"Asset not found: '{css_path}'."
+    src_dir = Path(__file__).parent / "assets" / "sphinx_theme"
+    if not src_dir.is_dir():
+        msg = f"Theme source not found: '{src_dir}'."
         raise FileNotFoundError(msg)
+    src_files = {f.relative_to(src_dir) for f in src_dir.rglob("*") if f.is_file()}
 
-    dest = f"{_s3_uri()}/css/sphinx.css"
-    alert(f"Uploading '{css_path}' to '{dest}'.")
-    subprocess.run(
-        [
-            _aws(),
-            "s3",
-            f"--profile={_PROFILE}",
-            "cp",
-            "--content-type",
-            "text/css",
-            str(css_path),
-            dest,
-        ],
-        check=True,
-    )
+    all_match = True
+    for package_dir in package_dirs:
+        pkg_path = Path(package_dir).resolve()
+        docs_dir = pkg_path / "docs"
+        if not docs_dir.is_dir():
+            msg = f"No docs/ directory found in '{pkg_path}'."
+            raise FileNotFoundError(msg)
+        dest_dir = docs_dir / "_themes" / "acidgenomics"
 
-    if invalidate:
-        alert("Invalidating CloudFront cache.")
-        _invalidate_cloudfront()
+        if check:
+            dest_files = (
+                {f.relative_to(dest_dir) for f in dest_dir.rglob("*") if f.is_file()}
+                if dest_dir.is_dir()
+                else set()
+            )
+            matches = dest_files == src_files and all(
+                (dest_dir / rel).read_bytes() == (src_dir / rel).read_bytes() for rel in src_files
+            )
+            if matches:
+                alert(f"Up to date: '{dest_dir}'.")
+            else:
+                alert(f"Out of date: '{dest_dir}'.")
+                all_match = False
+            continue
 
-    alert(f"Assets published: {dest}")
+        alert(f"Syncing theme to '{dest_dir}'.")
+        if dest_dir.is_dir():
+            shutil.rmtree(dest_dir)
+        shutil.copytree(src_dir, dest_dir)
+
+    return all_match

@@ -3,13 +3,13 @@ name: koopa-python-release
 description: >-
   Acid Genomics Python package release — python.acidgenomics.com PEP 503
   S3+CloudFront index at /simple/, same-domain docs at /<name>/, categorized
-  landing page at /, koopa app python publish/publish-docs/publish-assets/
+  landing page at /, koopa app python publish/publish-docs/sync-docs-theme/
   reindex, quality gate (ruff/pyright/ty/pytest/numpydoc lint), pytest
   --doctest-modules wiring, pkgdown-shaped docs/ structure (index.md +
   reference/index.rst + changelog.md), CHANGELOG format, smoke test, uv run
-  venv-shebang gotcha, Sphinx docs-build RST/numpydoc pitfalls, tracked
-  acidgenomics CSS theme for pydata-sphinx-theme (dark mode +
-  specificity fixes). See koopa-r-release for the R analog.
+  venv-shebang gotcha, Sphinx docs-build RST/numpydoc pitfalls, shared
+  acidgenomics Sphinx theme vendored from koopa (basic-theme based, no
+  pydata-sphinx-theme). See koopa-r-release for the R analog.
 ---
 
 # Acid Genomics Python Package Release
@@ -386,6 +386,13 @@ block a real release, not just lint:
   ```python
   numpydoc_show_class_members = False
   ```
+- **An in-page Markdown link like `[text](#some-heading)` fails with `'myst'
+  cross-reference target not found`** unless `myst_heading_anchors` is set in
+  `conf.py`. MyST does not emit an `id` on every heading by default, so the
+  href has nothing to resolve to even when the slug matches the heading text
+  exactly. Fix: `myst_heading_anchors = 3` (or whatever depth covers the
+  deepest heading linked to) in `conf.py` — enables real anchor IDs sitewide
+  rather than reworking the one link.
 
 ## Privacy leaks in published docs: local paths reaching S3
 
@@ -474,60 +481,86 @@ aws s3 sync s3://python-<acct>-us-east-1-an /tmp/s3-audit --profile acidgenomics
 grep -rla "$(whoami)" /tmp/s3-audit/   # must be empty
 ```
 
-## Same-domain acidgenomics CSS theme for Sphinx docs
+## Shared acidgenomics Sphinx theme
 
-`pydata_sphinx_theme`'s default look doesn't match the site's minimalist,
-monospace-first Dracula-derived aesthetic (same one used by
-`r.acidgenomics.com`'s pkgdown sites, sourced from `steinbaugh.com/css/`).
-pkgdown and Sphinx render completely different DOM/class structures
-(Bootstrap navbar classes differ, Pygments vs. pandoc/Rouge syntax-highlight
-token conventions), so the two can't share one literal CSS file — the fix is
-a purpose-written stylesheet that maps `pydata-sphinx-theme`'s own
-`--pst-color-*` CSS variables onto the site's `--foreground-color` /
-`--purple-color` / etc. palette (from `steinbaugh.com/css/colors.css`), plus
-a Pygments token-class → color mapping that reuses the same short-code
-convention (`.k` keyword, `.s` string, `.c` comment, ...) that Rouge/pandoc
-also use — see `steinbaugh.com/css/rouge.css` + `rouge-light.css` for the
-canonical mapping to replicate.
+Packages no longer use `pydata-sphinx-theme`. Its Bootstrap chrome (dual
+sidebars, breadcrumb bar, Ctrl+K search widget, light/dark switcher, "Built
+with Sphinx" footer) can only be fought with CSS `!important` overrides, not
+removed, and read as generic/cluttered next to the rest of the
+`acidgenomics.com` family. Every package instead uses a real Sphinx theme,
+`acidgenomics`, built on Sphinx's own `basic` theme (no Bootstrap, no JS,
+no sidebar) and styled directly from `steinbaugh.com/css/` — the same
+`base.css`/`fonts.css`/`colors.css`/`responsive.css` chain koopa's own docs
+and `mike.steinbaugh.com` use. `colors.css` flips light/dark purely via
+`@media (prefers-color-scheme: dark)` on `:root`, so there is no
+`data-theme` attribute, no JS toggle, and no separate dark-mode CSS block to
+maintain.
 
-This stylesheet is tracked at `lang/python/src/koopa/assets/sphinx.css` in the
-koopa repo (not hand-uploaded blind — it's reviewable in git like any other
-source file) and published to
-`s3://python-<acct>-us-east-1-an/css/sphinx.css` via:
+The theme (`theme.toml` + `layout.html` + `static/acidgenomics.css`) is
+tracked once, at `lang/python/src/koopa/assets/sphinx_theme/` in the koopa
+repo — reviewable in git like any other source file — and vendored into
+each package's `docs/_themes/acidgenomics/`:
 
 ```sh
-koopa app python publish-assets
+koopa app python sync-docs-theme ~/git/personal/py-*
+koopa app python sync-docs-theme --check ~/git/personal/py-*  # drift check, exits non-zero
 ```
 
-Implementation: `publish_assets()` in `pypi.py`. Every package's `conf.py`
-references the S3 URL:
+Implementation: `sync_docs_theme()` in `pypi.py`. Every package's `conf.py`
+points at the synced copy:
 
 ```python
-html_css_files = ["https://python.acidgenomics.com/css/sphinx.css"]
+html_theme = "acidgenomics"
+html_theme_path = ["_themes"]
+html_theme_options = {
+    "sitesearch": "python.acidgenomics.com",
+    "repo_url": "https://github.com/acidgenomics/py-<name>",
+}
+html_show_sourcelink = False
+html_show_sphinx = False
 ```
 
-One shared file, one absolute URL per package — no local `docs/_static/`
-duplication, and a future palette change propagates to all packages' docs on
-their next `publish-docs` run without touching any package repo. Re-run
-`publish-assets` after editing the tracked CSS file; `publish-docs` does not
-re-upload it.
+`sitesearch` scopes the nav search box's Google query (differs per site:
+`koopa.acidgenomics.com` vs. `python.acidgenomics.com`); `repo_url` is
+optional and renders a plain link beside the nav breadcrumb. Do **not**
+carry over `pydata`'s own `html_theme_options` keys (`github_url`, `logo`,
+...) — `basic` warns on unknown theme options and every doc build runs
+`sphinx-build -W`, so a stale pydata option turns a warning into a failed
+`publish-docs`. Also drop `pydata-sphinx-theme` from
+`optional-dependencies.docs` in `pyproject.toml`.
 
-**Two failure modes to check for whenever editing this file**, since a
-passing `sphinx-build` says nothing about which CSS rule actually wins in
-the browser — verify visually (toggle OS dark/light mode) after publishing:
+Re-run `sync-docs-theme` after editing the tracked theme files in koopa;
+`publish-docs` builds whatever is already vendored in the package repo, it
+does not re-sync. A `.gitignore` negation for the theme's `layout.html` is
+required in each package repo — the global `~/.config/git/ignore` has a
+blanket `*.html` rule, so `!docs/_themes/**/*.html` (alongside the existing
+`!docs/` negation) is needed or the file silently won't track.
 
-- **Dark mode requires its own `--pst-color-*` block.** `colors.css` flips
-  its palette via `@media (prefers-color-scheme: dark)` on `:root`, so a
-  `html[data-theme="dark"] { --pst-color-primary: var(--purple-color); ... }`
-  block (mirroring the light one) is required — without it, dark mode falls
-  back to pydata's own unmapped defaults.
-- **Syntax-highlight selectors must match Sphinx's own specificity, not just
-  exist.** Sphinx's generated `_static/pygments.css` emits
-  `html[data-theme="light"] .highlight .k { ... }` (specificity 0,3,1). A
-  bare `.highlight .k { ... }` (0,2,0) in the shared stylesheet loses
-  regardless of load order — the whole highlighting block silently becomes
-  dead code. Scope every `.highlight .<tok>` rule under
-  `html[data-theme="light"]`/`html[data-theme="dark"]` to match.
+### Footer copyright/license clause
+
+Renders as ONE line, copyright first: `© <year>-pres. Acid Genomics LLC ·
+<license> (LICENSE)`. Two shapes to avoid, both real regressions caught in
+review:
+
+- **Don't spell out "license" before the `(LICENSE)` file link.**
+  `Apache 2.0 license (LICENSE)` says it twice — once in prose, once as the
+  link text. Just `Apache 2.0 (LICENSE)`.
+- **Don't shrink `div.footer`'s `font-size`.** An earlier revision set
+  `font-size: 0.875em` on it, rendering the copyright/license line smaller
+  than the surrounding body text for no reason. It should inherit the
+  page's own font size.
+
+Implemented in the shared theme's `footer` block
+(`lang/python/src/koopa/assets/sphinx_theme/layout.html`) — copyright and
+license form one Jinja clause list joined with `&middot;`, not two
+disconnected fragments.
+
+API-reference output (`sphinx.ext.autosummary` + `numpydoc`, written to
+`docs/reference/generated/`) is styled in `acidgenomics.css` against
+`basic.css`'s own structural selectors (`dl.py`, `.sig`, `dl.field-list`,
+`table.autosummary`) — color/border theming, not new layout, since `basic`
+never needed API-reference styling before this theme picked up autodoc
+consumers.
 
 ## Landing page
 

@@ -1,3 +1,9 @@
+!/docs/
+!/docs/_static/*.png
+!/docs/_themes/
+!/docs/_themes/**/*.html
+!/docs/reference/
+!/lang/python/src/koopa/assets/sphinx_theme/*.html
 .env
 .koopa-binary
 .koopa-install.log
@@ -8,10 +14,11 @@
 /bin/
 /bootstrap/
 /coverage/
+/docs/_generated/
 /etc/koopa/build-times.json
 /etc/koopa/vendor.json
 /libexec/
 /opt/
+/output/
 /share/
 __pycache__/
-

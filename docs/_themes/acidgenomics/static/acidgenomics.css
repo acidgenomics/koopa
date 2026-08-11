@@ -1,0 +1,369 @@
+/*
+ * Shared acidgenomics Sphinx theme, used by koopa.acidgenomics.com and every
+ * python.acidgenomics.com package.
+ *
+ * Built directly on Sphinx's "basic" theme (no Bootstrap, no JS framework,
+ * no sidebar/flex layout to fight) and styled from steinbaugh.com's own CSS
+ * -- the same base.css/fonts.css/colors.css/responsive.css the live koopa
+ * Jekyll site and steinbaugh.com's own posts use, imported directly rather
+ * than re-derived. The layout.html template renders a real `body > nav`
+ * (breadcrumb + search) and `body > header` (title + in-page toc) as direct
+ * children of <body>, matching base.css's own selectors
+ * (https://steinbaugh.com/posts/vim.html is the reference page).
+ *
+ * colors.css switches light/dark purely via
+ * `@media (prefers-color-scheme: dark)` on `:root` -- no data-theme
+ * attribute, no JS toggle needed.
+ */
+
+@import url("https://steinbaugh.com/css/base.css");
+@import url("https://steinbaugh.com/css/fonts.css");
+@import url("https://steinbaugh.com/css/colors.css") screen;
+@import url("https://steinbaugh.com/css/responsive.css") screen;
+
+/* responsive.css (imported above) already sets html { font-size: 12pt }
+ * below 640px and 14pt at/above it. 14pt renders at ~18.7px -- comfortably
+ * above the 14px minimum -- so no override is needed here; a literal
+ * `font-size: 14px` would have SHRUNK text below what responsive.css
+ * already provides, since 14pt != 14px (1pt = 4/3px). */
+
+html, body,
+h1, h2, h3, h4, h5, h6 {
+    font-family: sans-serif-web, sans-serif;
+}
+
+pre,
+code,
+kbd,
+var,
+nav {
+    font-family: monospace-web, monospace;
+}
+
+/* base.css's nav/header mechanism (negative margins, absolute positioning,
+ * paired top/bottom borders on <header>, the >=1000px bleed-wider effect in
+ * responsive.css) is left entirely as-is: layout.html renders a real
+ * <header> immediately after <nav> with the page title inside, which is the
+ * invariant that mechanism assumes. Position/spacing are untouched; the
+ * breadcrumb's background image itself is set inline by layout.html from
+ * the theme's `logo_url` option, not hardcoded here, since it differs per
+ * site (koopa vs. each python.acidgenomics.com package). */
+
+/* The Acid Genomics/GitHub icons and the search form are one flex row
+ * (div.nav-tools), not independently absolute-positioned siblings each
+ * guessing the others' width -- that guessing is what let the repo-link
+ * icon overlap the search input at some viewport widths. Take over
+ * base.css's usual `body > nav form` slot (bottom:0; right:0) on the
+ * group itself; the <form> inside is de-positioned back to static so it
+ * participates in the row instead of also trying to self-place. */
+nav div.nav-tools {
+    align-items: center;
+    bottom: 0;
+    column-gap: 0.75rem;
+    display: flex;
+    position: absolute;
+    right: 0;
+}
+
+nav div.nav-tools form {
+    position: static;
+}
+
+nav #acidgenomics-link,
+nav #repo-link {
+    color: var(--foreground-color);
+    line-height: 0;
+}
+
+nav #acidgenomics-link svg,
+nav #repo-link svg {
+    display: block;
+}
+
+/* -- map Sphinx/basic-theme class names onto base.css's selectors --------
+ * base.css was written for hand-rolled Jekyll HTML (article, div.highlighter-
+ * rouge); basic theme emits its own class names for the equivalent content. */
+
+div.document {
+    /* basic theme's own wrapper around <div class="body">; base.css already
+     * constrains and centers <body> itself, so this is just a passthrough. */
+    margin: 0;
+    max-width: none;
+    padding: 0;
+}
+
+/* basic.css's 360px floor exists for its 230px-sidebar layout, which
+ * theme.toml's `sidebars = []` disables here. Below ~424px of viewport,
+ * that floor exceeds the content box responsive.css allows (e.g. 311px at a
+ * 375px iPhone width) and scrolls the whole page sideways instead of
+ * wrapping text. max-width: 800px on the same basic.css rule is left as-is --
+ * it agrees with base.css's own body max-width. */
+div.body {
+    min-width: 0;
+}
+
+/* Every docs/*.md file opens with a MyST `# Title` heading, which docutils
+ * renders as this h1. body > header (see layout.html) always carries the
+ * same title, so hide the body's copy rather than duplicate it. */
+div.body > section > h1:first-child {
+    display: none;
+}
+
+/* basic.css sets font-size: 90% on div.related for its own relbar (meant to
+ * read as a secondary strip below a full-size heading); this theme reuses
+ * the class for the prev/next links, which should read at normal body size. */
+div.related {
+    display: flex;
+    font-size: 1em;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+pre {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+code {
+    background: none;
+    padding: 0;
+}
+
+/* base.css's custom bullet marker (li:before { content: "❯"/counter(li) },
+ * colored via --bullet-color) positions itself with
+ * `display: inline-block; margin-left: -1.5em`, an inline-flow trick that
+ * only works when <li>'s first child is inline text. docutils/Sphinx
+ * always wraps list item content in `<li><p>...</p></li>` (autodoc/
+ * numpydoc output included), so against a block-level first child that
+ * trick forces a line break before the marker even renders, dropping it
+ * onto its own line above the text. A first attempt at this fix reset
+ * lists to plain browser bullets, losing the site's actual colored/custom
+ * marker -- switch the positioning mechanism instead: position:absolute
+ * doesn't care whether the sibling content is inline or block, so the
+ * marker keeps base.css's own color/content, just anchored differently.
+ * base.css never resets the browser's default ~40px ul/ol padding (it
+ * relies on that space for its own inline hanging-indent trick); this
+ * self-contained absolute marker needs none of it, so zero it here or every
+ * list reads as double-indented (40px browser default + our own 1.5em).
+ * On the reference page, base.css's negative margin pulls the marker back
+ * INTO the gutter responsive.css's `ul { margin-left: 2rem/1rem }` already
+ * reserves, so list text lands flush with that margin -- the marker
+ * borrows the gutter rather than adding to it. padding-left here reserves
+ * an equivalent gutter for the absolute marker, but as real, additive
+ * space nothing was pulling back out of the ul's own margin, so text sat
+ * a full 1.5em past the reference's position. margin-left: -1.5em pulls
+ * the whole <li> box (and, since position:absolute descendants are placed
+ * from the nearest positioned ancestor's padding edge, its marker with
+ * it) back by the same amount the padding adds forward, so the marker
+ * ends up inside the ul's margin and the text flush with its edge --
+ * matching the reference exactly at both breakpoints, since the pull-back
+ * tracks whichever margin responsive.css has active. */
+div.body li {
+    margin-bottom: 0.25rem;
+    margin-left: -1.5em;
+    padding-left: 1.5em;
+    position: relative;
+}
+
+div.body ul,
+div.body ol {
+    padding-left: 0;
+}
+
+div.body li::before {
+    left: 0;
+    margin-left: 0;
+    position: absolute;
+    width: 1em;
+}
+
+/* base.css's blanket `p { margin: 1rem 0 }` also applies to the <p> docutils
+ * wraps around simple list-item text; keep list items visually tight
+ * instead of full paragraph gaps between every bullet. */
+div.body li > p {
+    margin: 0;
+}
+
+/* No "¶" permalink markers next to headings, on hover or otherwise. */
+
+a.headerlink {
+    display: none;
+}
+
+/* Sphinx's generated in-page TOC (body > header > ul, see layout.html's
+ * `toc` block) always wraps the whole thing in one extra <li> linking back
+ * to the current page itself (href="#") -- redundant with the <h1> right
+ * above it, and it adds a full nesting level that responsive.css's
+ * `ul { margin-left: 2rem }` compounds into on every page below it too.
+ * display: contents drops the wrapper <li> from the box model entirely so
+ * its own link (hidden) contributes nothing and its <ul> of real entries
+ * becomes the toc's true top level. */
+body > header > ul > li > a[href="#"] {
+    display: none;
+}
+
+body > header > ul > li {
+    display: contents;
+}
+
+/* display: contents drops the <li>'s own box, but per spec its pseudo-
+ * elements still generate -- base.css's unscoped `ul li:before { content:
+ * "❯" }` still fires here, and with the link above hidden, the bullet was
+ * left rendering on its own with no text beside it. */
+body > header > ul > li::before {
+    content: none;
+}
+
+/* ASCII-art mark in body > header (theme's `header_ascii` option, root page
+ * only, see layout.html): plain text, not a code sample -- undo acidgenomics.
+ * css's own `pre` rule (border/radius/padding) below. colors.css colors
+ * body > header h1..h7 but not pre, so set the color explicitly. overflow:
+ * hidden clips rather than horizontally scrolls the whole page on viewports
+ * narrower than the art itself. margin: 0 undoes base.css's blanket
+ * `pre { margin: 1rem 0 }`, which would otherwise stack on top of the
+ * header's own `padding: 2rem 0` and float the art away from the title.
+ * The header's border/margin/padding are deliberately left to base.css so
+ * the root page's header matches every subpage. */
+body > header > pre {
+    border: none;
+    color: var(--header-color);
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* Home-page screenshot (theme's `header_ascii`/`tagline` sibling content --
+ * see docs/index.md's <picture> pair). Ported from the previous Jekyll
+ * site's `html#front img` rule. max-width: 100% and centering already come
+ * from basic.css's `img` rule and base.css's `p img`. */
+div.body p img.screenshot {
+    background: var(--border-color);
+    border-radius: 1rem;
+    margin-left: -2px;
+    margin-right: -2px;
+    padding: 2px;
+}
+
+/* -- API reference: autodoc/autosummary/numpydoc output -------------------
+ * basic.css already supplies the structure (dl.py, .sig, dl.field-list,
+ * table.field-list) for sphinx.ext.autodoc + numpydoc output -- this is
+ * color/border theming against the steinbaugh.com custom properties, not
+ * new layout. */
+
+dl.py > dt.sig {
+    background: var(--current-line-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+}
+
+dl.py > dt.sig .sig-name,
+dl.py > dt.sig code.descname {
+    color: var(--header-color);
+}
+
+dl.py > dt.sig .sig-prename,
+dl.py > dt.sig code.descclassname,
+dl.py > dt.sig .sig-param {
+    color: var(--comment-color);
+}
+
+/* numpydoc renders Parameters/Returns/etc. as dl.field-list; base.css's
+ * blanket dl margin/line-height rules already apply, this just colors the
+ * field name column. */
+dl.field-list > dt .field-name,
+dl.field-list > dt {
+    color: var(--header-color);
+}
+
+/* autosummary tables (docs/reference/index.rst listings): collapse to
+ * base.css's plain look instead of Sphinx's default cell shading. */
+table.autosummary,
+table.longtable {
+    border-collapse: collapse;
+}
+
+table.autosummary td,
+table.autosummary th,
+table.longtable td,
+table.longtable th {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.25rem 0.5rem;
+}
+
+/* -- syntax highlighting: same token-class -> color mapping as rouge.css,
+ * since Sphinx (Pygments) and Jekyll (Rouge) share Pygments-derived short
+ * codes for tokens. colors.css already swaps the --*-color variables these
+ * rules reference on prefers-color-scheme, so no light/dark duplication is
+ * needed here. */
+.highlight { background: var(--background-color); color: var(--foreground-color); }
+.highlight .bp,
+.highlight .c,
+.highlight .c1,
+.highlight .cd,
+.highlight .cm,
+.highlight .cp,
+.highlight .cs { color: var(--comment-color); }
+.highlight .o,
+.highlight .ow,
+.highlight .p,
+.highlight .pi,
+.highlight .w { color: var(--foreground-color); }
+.highlight .k,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kv { color: var(--keyword-color); }
+.highlight .err { color: var(--error-color); }
+.highlight .gd { color: var(--pink-color); }
+.highlight .ge { color: var(--bright-color); }
+.highlight .gh,
+.highlight .gi,
+.highlight .go,
+.highlight .gp,
+.highlight .gu { color: var(--gray-color); }
+.highlight .gr,
+.highlight .gt { color: var(--red-color); }
+.highlight .il { color: var(--cyan-color); }
+.highlight .kc,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr { color: var(--bright-color); }
+.highlight .kt { color: var(--purple-color); }
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .mx,
+.highlight .na,
+.highlight .no,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi { color: var(--cyan-color); }
+.highlight .nb,
+.highlight .nt { color: var(--blue-color); }
+.highlight .nc,
+.highlight .ni { color: var(--purple-color); }
+.highlight .nd,
+.highlight .nn { color: var(--gray-color); }
+.highlight .ne,
+.highlight .nf,
+.highlight .nl { color: var(--red-color); }
+.highlight .s,
+.highlight .s1,
+.highlight .s2,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .se,
+.highlight .sh,
+.highlight .si,
+.highlight .sx { color: var(--red-color); }
+.highlight .sr { color: var(--green-color); }
+.highlight .ss { color: var(--pink-color); }

@@ -7,7 +7,9 @@ import pytest
 from koopa.download import (
     _derive_filename,
     _download_curl,
+    _gnu_mirrors,
     _is_sourceforge_url,
+    _savannah_mirrors,
     download,
     download_with_mirror,
 )
@@ -88,6 +90,102 @@ def test_download_with_mirror_still_validates_archive_payload(
             output=str(output),
             skip_koopa_mirror=True,
         )
+
+
+def test_download_with_mirror_vendor_only_skips_public_hosts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_only tries only the vendor mirror, never the primary URL.
+
+    Regression test: download_with_mirror() used to try primary_url (and the
+    GNU/Savannah/koopa mirrors) before falling back to the vendor mirror even
+    under vendor_only priority, defeating the point of an airgapped mirror.
+    """
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        assert out is not None
+        with open(out, "wb") as f:
+            f.write(b"\x1f\x8b" + b"\x00" * 8)  # minimal gzip magic bytes
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_only")
+    monkeypatch.setattr(
+        "koopa.vendor.vendor_download_src",
+        lambda _name, _filename: "https://mirror.example.com/pkg-1.0.tar.gz",
+    )
+    result = download_with_mirror(
+        "https://example.com/pkg-1.0.tar.gz",
+        "pkg",
+        "pkg-1.0.tar.gz",
+        output=str(output),
+    )
+    assert result == str(output)
+    assert attempted == ["https://mirror.example.com/pkg-1.0.tar.gz"]
+
+
+def test_download_with_mirror_vendor_only_without_vendor_url_raises(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_only with no vendor mirror URL available raises, contacting nothing."""
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        return out or ""
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_only")
+    monkeypatch.setattr("koopa.vendor.vendor_download_src", lambda _name, _filename: None)
+    with pytest.raises(FileNotFoundError, match="vendor_only"):
+        download_with_mirror(
+            "https://example.com/pkg-1.0.tar.gz",
+            "pkg",
+            "pkg-1.0.tar.gz",
+            output=str(output),
+        )
+    assert attempted == []
+
+
+def test_download_with_mirror_vendor_first_tries_primary_before_vendor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_first (the default) still tries the primary URL before the vendor mirror."""
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        if url == "https://example.com/pkg-1.0.tar.gz":
+            raise RuntimeError("primary unreachable")
+        assert out is not None
+        with open(out, "wb") as f:
+            f.write(b"\x1f\x8b" + b"\x00" * 8)
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_first")
+    monkeypatch.setattr(
+        "koopa.vendor.vendor_download_src",
+        lambda _name, _filename: "https://mirror.example.com/pkg-1.0.tar.gz",
+    )
+    result = download_with_mirror(
+        "https://example.com/pkg-1.0.tar.gz",
+        "pkg",
+        "pkg-1.0.tar.gz",
+        output=str(output),
+        skip_koopa_mirror=True,
+    )
+    assert result == str(output)
+    assert attempted[0] == "https://example.com/pkg-1.0.tar.gz"
+    assert "https://mirror.example.com/pkg-1.0.tar.gz" in attempted
 
 
 @pytest.mark.parametrize(
@@ -210,3 +308,79 @@ def test_download_reports_url_when_falling_back(
     err = capsys.readouterr().err
     assert "pkg-1.0.tar.gz" in err
     assert "/usr/bin/curl" in err
+
+
+def test_gnu_mirrors_preserves_versioned_subdirectory() -> None:
+    """The gcc tarball lives in a versioned subdirectory, not flat under its name.
+
+    Regression test: _gnu_mirrors() used to compose 'gcc/gcc-16.2.0.tar.xz'
+    (name/filename), 404ing on every mirror, because gcc's real path is
+    'gcc/gcc-16.2.0/gcc-16.2.0.tar.xz'. Deriving the relative path from the
+    primary URL instead preserves the subdirectory.
+    """
+    mirrors = _gnu_mirrors("https://mirrors.kernel.org/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz")
+    assert mirrors
+    for url in mirrors:
+        assert url.endswith("/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz")
+
+
+def test_gnu_mirrors_maps_wget2_to_wget_parent_directory() -> None:
+    """wget2's tarball lives under the 'wget' parent directory, not 'wget2'.
+
+    Regression test: composing 'wget2/wget2-2.2.1.tar.gz' 404s; the real path is
+    'wget/wget2-2.2.1.tar.gz'.
+    """
+    mirrors = _gnu_mirrors("https://mirrors.kernel.org/gnu/wget/wget2-2.2.1.tar.gz")
+    assert mirrors
+    for url in mirrors:
+        assert url.endswith("/wget/wget2-2.2.1.tar.gz")
+
+
+def test_gnu_mirrors_flat_app_unchanged() -> None:
+    """A flat app (no versioned subdirectory) still resolves correctly."""
+    mirrors = _gnu_mirrors("https://mirrors.kernel.org/gnu/sed/sed-4.10.tar.gz")
+    assert mirrors
+    for url in mirrors:
+        assert url.endswith("/sed/sed-4.10.tar.gz")
+
+
+def test_gnu_mirrors_ftp_gnu_org_prefix_not_doubled() -> None:
+    """ftp.gnu.org URLs are rooted at '/gnu/<path>'; the leading 'gnu/' must be stripped once."""
+    mirrors = _gnu_mirrors("https://ftp.gnu.org/gnu/mpc/mpc-1.4.1.tar.xz")
+    assert mirrors
+    for url in mirrors:
+        assert url.endswith("/mpc/mpc-1.4.1.tar.xz")
+        assert "/gnu/gnu/" not in url
+
+
+def test_gnu_mirrors_excludes_blocked_and_broken_hosts() -> None:
+    """No generated mirror URL points at a host known to be blocked or TLS-broken.
+
+    ftpmirror.gnu.org and ftp.gnu.org are unreachable from behind some corporate
+    firewalls; mirror.rit.edu serves a certificate that does not match its own
+    hostname. None of the three belong in the fallback list.
+    """
+    mirrors = _gnu_mirrors("https://ftpmirror.gnu.org/sed/sed-4.10.tar.gz")
+    joined = " ".join(mirrors)
+    assert "mirror.rit.edu" not in joined
+    assert "ftp.gnu.org" not in joined
+    assert "ftpmirror.gnu.org" not in joined
+
+
+def test_gnu_mirrors_ignores_non_gnu_url() -> None:
+    """A non-GNU primary URL yields no GNU mirror candidates."""
+    assert _gnu_mirrors("https://example.com/pkg-1.0.tar.gz") == []
+
+
+def test_savannah_mirrors_strips_releases_prefix() -> None:
+    """download.savannah.nongnu.org URLs are rooted at '/releases/<path>'."""
+    mirrors = _savannah_mirrors("https://download.savannah.nongnu.org/releases/lzip/lzip-1.26.tar.gz")
+    assert mirrors
+    for url in mirrors:
+        assert url.endswith("/lzip/lzip-1.26.tar.gz")
+        assert "/releases/" not in url
+
+
+def test_savannah_mirrors_ignores_non_savannah_url() -> None:
+    """A non-Savannah primary URL yields no Savannah mirror candidates."""
+    assert _savannah_mirrors("https://example.com/pkg-1.0.tar.gz") == []

@@ -392,6 +392,38 @@ def _reindex_prefix(s3_prefix: str, *, binary: bool = False) -> list[dict[str, s
     return entries
 
 
+def _superseded_filenames(filenames: list[str], suffix: str) -> list[str]:
+    """Return the filenames that are not the highest version for their package.
+
+    Filenames are expected in "<Pkg>_<X.Y.Z><suffix>" form. Entries whose
+    version does not parse as a dotted integer tuple are skipped (never
+    reported as superseded).
+    """
+    from collections import defaultdict
+
+    groups: dict[str, list[tuple[tuple[int, ...], str]]] = defaultdict(list)
+    for filename in filenames:
+        stem = filename[: -len(suffix)]
+        parts = stem.rsplit("_", 1)
+        if len(parts) != 2:
+            continue
+        pkg_name, ver_str = parts
+        try:
+            ver_tuple = tuple(int(x) for x in ver_str.split("."))
+        except ValueError:
+            continue
+        groups[pkg_name].append((ver_tuple, filename))
+
+    superseded = []
+    for versions in groups.values():
+        if len(versions) <= 1:
+            continue
+        # Sort descending; keep the first (latest), report the rest as superseded.
+        versions.sort(key=lambda t: t[0], reverse=True)
+        superseded.extend(filename for _, filename in versions[1:])
+    return superseded
+
+
 def _archive_old_source(pkg_name: str, new_filename: str) -> None:
     """Move any existing source tarball for pkg_name to Archive/<pkg_name>/.
 
@@ -438,6 +470,57 @@ def _archive_old_source(pkg_name: str, new_filename: str) -> None:
                 "mv",
                 f"{_s3_uri()}/{key}",
                 f"{_s3_uri()}/{archive_key}",
+            ],
+            check=True,
+        )
+
+
+def _delete_superseded_binaries(pkg_name: str, bin_prefix: str, new_filename: str) -> None:
+    """Delete any existing binary tarball for pkg_name other than new_filename.
+
+    Called after uploading a new binary version, so a failed upload leaves the
+    old binary in place. Unlike _archive_old_source(), this deletes rather than
+    moves to Archive/: binary contrib dirs mirror CRAN convention and hold only
+    the current version; nothing consumes an archived binary.
+    """
+    from koopa.alert import alert
+
+    aws = _aws()
+    # List current tarballs for this package in bin_prefix/ (exact prefix match)
+    result = subprocess.run(
+        [
+            aws,
+            "s3api",
+            "list-objects-v2",
+            "--bucket",
+            _bucket(),
+            "--prefix",
+            f"{bin_prefix}/{pkg_name}_",
+            f"--profile={_PROFILE}",
+            "--output",
+            "json",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    data = json.loads(result.stdout)
+    for obj in data.get("Contents", []):
+        key = obj["Key"]
+        filename = key.removeprefix(f"{bin_prefix}/")
+        # Only delete .tgz files in the flat contrib dir (skip Archive/ entries)
+        if "/" in filename or not filename.endswith(".tgz"):
+            continue
+        if filename == new_filename:
+            continue
+        alert(f"Removing superseded binary '{filename}'.")
+        subprocess.run(
+            [
+                aws,
+                "s3",
+                f"--profile={_PROFILE}",
+                "rm",
+                f"{_s3_uri()}/{key}",
             ],
             check=True,
         )
@@ -654,6 +737,9 @@ def publish(
             alert(f"Uploading '{bin_base}' to s3://{_bucket()}/{bin_key}.")
             _upload_package(bin_path, bin_key)
 
+            alert(f"Removing superseded binaries of '{pkg_name}' in {bin_subpath}.")
+            _delete_superseded_binaries(pkg_name, bin_subpath, bin_base)
+
             alert("Regenerating src/contrib PACKAGES manifests.")
             src_entries = _reindex_prefix("src/contrib", binary=False)
 
@@ -758,12 +844,15 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
 
 
 def archive_src(*, invalidate: bool = True) -> None:
-    """Move superseded source tarballs in src/contrib/ to Archive/<Pkg>/.
+    """Reconcile superseded R package versions across src/contrib/ and bin/.
 
-    Groups tarballs by package name, keeps only the latest version of each
-    in the flat src/contrib/ directory, and S3-mv's superseded versions to
-    src/contrib/Archive/<Pkg>/<filename>. Regenerates PACKAGES manifests
-    and optionally invalidates CloudFront.
+    Source: keeps only the latest version of each package flat in
+    src/contrib/, S3-mv'ing superseded versions to src/contrib/Archive/<Pkg>/.
+    Binaries: keeps only the latest version of each package in every active
+    sonoma-arm64 prefix, S3-rm'ing superseded .tgz files outright (binary
+    contrib dirs mirror CRAN convention and have no Archive/; nothing consumes
+    an archived binary). Regenerates PACKAGES manifests for whichever side
+    changed and optionally invalidates CloudFront.
 
     Parameters
     ----------
@@ -772,60 +861,67 @@ def archive_src(*, invalidate: bool = True) -> None:
     """
     from koopa.alert import alert
 
-    alert("Listing src/contrib packages.")
-    objects = _s3_list_packages("src/contrib")
-    if not objects:
-        alert("No packages found in src/contrib.")
-        return
-
-    # Group by package name, collect (version_tuple, filename, key) per package.
-    from collections import defaultdict
-
-    groups: dict[str, list[tuple[tuple[int, ...], str, str]]] = defaultdict(list)
-    for obj in objects:
-        filename = obj["Filename"]
-        # Parse "PkgName_X.Y.Z.tar.gz" → name="PkgName", ver=(X,Y,Z)
-        stem = filename[: -len(".tar.gz")]
-        parts = stem.rsplit("_", 1)
-        if len(parts) != 2:
-            continue
-        pkg_name, ver_str = parts
-        try:
-            ver_tuple = tuple(int(x) for x in ver_str.split("."))
-        except ValueError:
-            continue
-        groups[pkg_name].append((ver_tuple, filename, obj["Key"]))
-
     aws = _aws()
+
+    alert("Listing src/contrib packages.")
+    src_objects = _s3_list_packages("src/contrib")
+    src_superseded = _superseded_filenames([obj["Filename"] for obj in src_objects], ".tar.gz")
+    src_keys = {obj["Filename"]: obj["Key"] for obj in src_objects}
+
     archived = 0
-    for pkg_name, versions in groups.items():
-        if len(versions) <= 1:
-            continue
-        # Sort descending; keep the first (latest), archive the rest.
-        versions.sort(key=lambda t: t[0], reverse=True)
-        for _, filename, key in versions[1:]:
-            archive_key = f"src/contrib/Archive/{pkg_name}/{filename}"
-            alert(f"Archiving '{filename}' → Archive/{pkg_name}/.")
+    for filename in src_superseded:
+        pkg_name = filename.rsplit("_", 1)[0]
+        key = src_keys[filename]
+        archive_key = f"src/contrib/Archive/{pkg_name}/{filename}"
+        alert(f"Archiving '{filename}' → Archive/{pkg_name}/.")
+        subprocess.run(
+            [
+                aws,
+                "s3",
+                f"--profile={_PROFILE}",
+                "mv",
+                f"{_s3_uri()}/{key}",
+                f"{_s3_uri()}/{archive_key}",
+            ],
+            check=True,
+        )
+        archived += 1
+
+    active_prefixes = [
+        p.rstrip("/") for p in _s3_list_binary_prefixes() if _ACTIVE_BINARY_PREFIX in p
+    ]
+
+    deleted = 0
+    for prefix in active_prefixes:
+        alert(f"Listing '{prefix}' binaries.")
+        bin_objects = _s3_list_packages(prefix)
+        bin_superseded = _superseded_filenames([obj["Filename"] for obj in bin_objects], ".tgz")
+        bin_keys = {obj["Filename"]: obj["Key"] for obj in bin_objects}
+        for filename in bin_superseded:
+            key = bin_keys[filename]
+            alert(f"Removing superseded binary '{filename}'.")
             subprocess.run(
-                [
-                    aws,
-                    "s3",
-                    f"--profile={_PROFILE}",
-                    "mv",
-                    f"{_s3_uri()}/{key}",
-                    f"{_s3_uri()}/{archive_key}",
-                ],
+                [aws, "s3", f"--profile={_PROFILE}", "rm", f"{_s3_uri()}/{key}"],
                 check=True,
             )
-            archived += 1
+            deleted += 1
 
     if archived:
-        alert(f"Archived {archived} superseded tarball(s). Regenerating manifests.")
-        _reindex_prefix("src/contrib", binary=False)
+        alert(f"Archived {archived} superseded source tarball(s).")
+    if deleted:
+        alert(f"Removed {deleted} superseded binary/binaries.")
+
+    if archived or deleted:
+        alert("Regenerating PACKAGES manifests.")
+        if archived:
+            _reindex_prefix("src/contrib", binary=False)
+        if deleted:
+            for prefix in active_prefixes:
+                _reindex_prefix(prefix, binary=True)
         if invalidate:
             _invalidate_cloudfront()
     else:
-        alert("src/contrib is already clean — no superseded versions found.")
+        alert("src/contrib and binary prefixes are already clean.")
 
 
 def clean_orphan_binaries(*, invalidate: bool = True) -> None:
