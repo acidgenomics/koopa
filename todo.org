@@ -8,6 +8,8 @@
                  {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header}
                  ...
     koopa: error: unrecognized arguments: homebrew
+
+    For homebrew, 'koopa app brew upgrade' is the answer
 ** TODO Need to improve version checking for playwright
     Unsupported (1):
       playwright: 1.62.0
