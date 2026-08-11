@@ -1,3 +1,8 @@
+** TODO Hitting binary push issue for Python packages on builder machine with uv
+     ● The repo here lacks the new build directories (3.13.15 and 3.14.7), so a push from this machine ┃
+        would fail — the missing tarballs must be created locally before pushing.
+** TODO We need to fix indentation of TOC for Python packages
+    https://python.acidgenomics.com/pipette/
 ** TODO Review this code:
     ⋮ 682│    system_updates = mode == "system"
 ** TODO Publish all our packages at bioconda. Consider including koopa too.
@@ -21,3 +26,15 @@
    of reasoning from theme source alone. Local preview: `uv run --extra
    docs sphinx-build -b html docs/ /tmp/koopa-docs-preview && cd
    /tmp/koopa-docs-preview && python3 -m http.server 8765`.
+** TODO Work on a better way to handle bootstrap python
+    ## Bootstrap Python has no restricted-network awareness
+
+    `bin/koopa` requires `/usr/bin/python3` to exactly match `.python-version`
+    (currently `3.12`); anything else (including a newer or older system Python)
+    falls through to running `bootstrap.sh`. `bootstrap.sh` downloads a Python
+    build directly from `python.org` or `koopa.acidgenomics.com/src` — it does
+    not consult `etc/koopa/vendor.json` or any mirror config at all. On a
+    `pull_priority: "vendor_only"` network this download fails outright. The only
+    workaround today is ensuring a matching system Python 3.12 is already at
+    `/usr/bin/python3` before koopa's first invocation; there's no way to route
+    the bootstrap step itself through an internal mirror.
