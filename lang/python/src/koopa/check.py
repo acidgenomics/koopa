@@ -17,6 +17,45 @@ from koopa.prefix import (
 )
 
 
+def _short_ver(version: str) -> str:
+    """Shorten a 40-char git SHA to its 7-char short form; otherwise unchanged."""
+    if len(version) == 40:
+        return version[:7]
+    return version
+
+
+def _installed_dep_state(
+    opt_dir: str,
+    dep: str,
+    cache: dict[str, tuple[str, int] | None],
+) -> tuple[str, int] | None:
+    """Return (version, revision) for *dep* as actually linked under opt/.
+
+    Returns ``None`` when *dep* has no live opt/ symlink. Results are memoized
+    in *cache* since a single sweep re-checks the same dep across many
+    dependents.
+    """
+    if dep in cache:
+        return cache[dep]
+    path = join(opt_dir, dep)
+    state = None
+    if islink(path):
+        target = realpath(path)
+        if isdir(target):
+            version = basename(target)
+            revision = 0
+            rev_file = join(target, ".install", "revision")
+            if isfile(rev_file):
+                try:
+                    with open(rev_file) as f:
+                        revision = int(f.read().strip() or "0")
+                except (ValueError, OSError):
+                    revision = 0
+            state = (version, revision)
+    cache[dep] = state
+    return state
+
+
 def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, PLR0912, PLR0915
     """Return ``(app_name, reason, actionable)`` for each installed app issue.
 
@@ -32,6 +71,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     json_data = import_app_json()
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
+    dep_state_cache: dict[str, tuple[str, int] | None] = {}
     from koopa.system import os_id
 
     current_os = os_id()
@@ -94,7 +134,11 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     (name, f"{name} revision {installed_rev} != {expected_rev}", True),
                 )
                 continue
-        # Check if any dependency has been revised since this app was installed.
+        # Check if any dependency has been revised or rebuilt at a different
+        # version since this app was installed. Compares against what is
+        # actually installed under opt/, not app.json's target — otherwise a
+        # `git pull` that bumps a dep's app.json entry flags every dependent
+        # as stale before the dep itself has been rebuilt.
         # Skip isolated environments (e.g. conda-package apps) where the
         # installer tool updating doesn't break the installed app.
         info_file = join(path, ".install", "info.json")
@@ -108,11 +152,22 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             except (ValueError, OSError):
                 _info = {}
             recorded_dep_revs = _info.get("dep_revisions", {})
-            app_deps = entry.get("dependencies", [])
-            if isinstance(app_deps, dict):
-                from koopa.app import _resolve_dep_dict
+            # Prefer the dep list actually resolved at install time (recorded in
+            # info.json) over re-resolving app.json's dependency dict now. A
+            # firewall_linux/firewall_macos/default split resolves differently
+            # depending on KOOPA_BUILDER and firewall state, so re-resolving it in
+            # whatever environment this check happens to run in can invent a
+            # dependency the app never actually linked against, flagging it stale
+            # for no real reason (e.g. a plain-shell reinstall re-checked from a
+            # builder shell). Fall back to live re-resolution only for installs
+            # that predate this field.
+            app_deps = _info.get("dependencies")
+            if not isinstance(app_deps, list):
+                app_deps = entry.get("dependencies", [])
+                if isinstance(app_deps, dict):
+                    from koopa.app import _resolve_dep_dict
 
-                app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
+                    app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
             stale_dep = False
             for dep in app_deps:
                 if installer.startswith(dep):
@@ -121,12 +176,12 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 dep_entry = json_data.get(dep, {})
                 if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
                     resolved_dep = dep_entry["alias_of"]
-                resolved_entry = json_data.get(resolved_dep, {})
-                current_rev = (
-                    int(resolved_entry.get("revision", 0))
-                    if isinstance(resolved_entry, dict)
-                    else 0
-                )
+                state = _installed_dep_state(opt_dir, resolved_dep, dep_state_cache)
+                if state is None:
+                    # Dep isn't linked in opt/ at all; that's reported
+                    # separately by _apps_with_missing_runtime_deps().
+                    continue
+                _current_ver, current_rev = state
                 recorded_rev = recorded_dep_revs.get(resolved_dep, 0)
                 if current_rev > recorded_rev:
                     issues.append(
@@ -149,14 +204,16 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                         dep_entry = json_data.get(dep, {})
                         if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
                             resolved_dep = dep_entry["alias_of"]
-                        resolved_entry = json_data.get(resolved_dep, {})
-                        current_ver = (
-                            resolved_entry.get("version", "")
-                            if isinstance(resolved_entry, dict)
-                            else ""
-                        )
+                        state = _installed_dep_state(opt_dir, resolved_dep, dep_state_cache)
+                        if state is None:
+                            continue
+                        current_ver, _current_rev = state
                         recorded_ver = recorded_dep_vers.get(resolved_dep, "")
-                        if recorded_ver and current_ver and recorded_ver != current_ver:
+                        if (
+                            recorded_ver
+                            and current_ver
+                            and _short_ver(recorded_ver) != _short_ver(current_ver)
+                        ):
                             issues.append(
                                 (
                                     name,

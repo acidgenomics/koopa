@@ -115,36 +115,445 @@ cpu_count() {
     return 0
 }
 
+# ---------------------------------------------------------------------------
+# Vendor mirror support (etc/koopa/vendor.json). See docs/installation.md,
+# "Internal mirror (restricted networks)", and koopa.vendor for the Python
+# equivalent that koopa itself uses once bootstrapped. Kept in sync by hand;
+# lang/python/tests/test_bootstrap.py asserts the sh and Python helpers agree.
+# ---------------------------------------------------------------------------
+
+_vendor_parse_json() {
+    # usage: _vendor_parse_json <python3-bin> <vendor.json-path> <out-file>
+    # Writes 'key<TAB>value' lines (a 'remote' key has two tab-separated
+    # values: host and repo) to <out-file>. Any Python 3 can parse JSON, so
+    # this does not require the .python-version-pinned interpreter.
+    # NOTE: uses the '__kvpj_' prefix, not the caller vendor_load()'s
+    # '__kvar_', because vendor_load() passes its own __kvar_out as our
+    # <out-file> argument -- reusing '__kvar_' here would make our final
+    # 'unset -v' wipe that still-needed caller variable out from under it.
+    __kvpj_py_bin="${1:?}"
+    __kvpj_path="${2:?}"
+    __kvpj_out="${3:?}"
+    __kvpj_py="$(mktemp -t koopa-vendor-parse-XXXXXX.py)"
+    cat > "$__kvpj_py" << 'VENDOR_PARSE_PY_EOF'
+import json
+import sys
+
+
+def emit(key, value):
+    value = str(value).replace("\t", " ").replace("\n", " ")
+    sys.stdout.write(f"{key}\t{value}\n")
+
+
+path = sys.argv[1]
+try:
+    with open(path) as f:
+        data = json.load(f)
+except (OSError, ValueError):
+    sys.exit(0)
+if not isinstance(data, dict) or not data.get("enabled", False):
+    sys.exit(0)
+backend = data.get("backend", "")
+if backend not in ("http", "s3"):
+    sys.exit(0)
+emit("enabled", "1")
+emit("backend", backend)
+emit("pull_priority", data.get("pull_priority", "vendor_first"))
+if backend == "http":
+    hc = data.get("http", {})
+    if not isinstance(hc, dict):
+        hc = {}
+    emit("base_url", hc.get("base_url", ""))
+    emit("src_repo", hc.get("src_repo", ""))
+    emit("token_env_var", hc.get("token_env_var", "HTTP_ACCESS_TOKEN"))
+    remotes = hc.get("remotes", {})
+    if isinstance(remotes, dict):
+        for host, repo in remotes.items():
+            if isinstance(host, str) and isinstance(repo, str):
+                host = host.replace("\t", " ").replace("\n", " ")
+                repo = repo.replace("\t", " ").replace("\n", " ")
+                sys.stdout.write(f"remote\t{host}\t{repo}\n")
+else:
+    sc = data.get("s3", {})
+    if not isinstance(sc, dict):
+        sc = {}
+    emit("s3_bucket", sc.get("bucket", ""))
+    emit("s3_profile", sc.get("profile", ""))
+    emit("s3_src_prefix", sc.get("src_prefix", "src"))
+VENDOR_PARSE_PY_EOF
+    "$__kvpj_py_bin" "$__kvpj_py" "$__kvpj_path" > "$__kvpj_out" 2>/dev/null || true
+    rm -f "$__kvpj_py"
+    unset -v __kvpj_out __kvpj_path __kvpj_py __kvpj_py_bin
+}
+
+_vendor_sed_fallback() {
+    # usage: _vendor_sed_fallback <vendor.json-path>
+    # Degraded parse used only when no python3 is available at all. Handles
+    # the six flat scalar fields; the nested 'remotes' map needs a real JSON
+    # parser and is unavailable here (see vendor_load()). Every pattern
+    # anchors on the key starting the line (after whitespace), so the
+    # "_comment" field's prose -- which contains the words "enabled" and
+    # "backend" -- is never mistaken for the real keys.
+    __kvsf_f="${1:?}"
+    __kvsf_enabled="$( \
+        sed -n -E 's/^[[:space:]]*"enabled"[[:space:]]*:[[:space:]]*(true|false).*/\1/p' \
+            "$__kvsf_f" \
+        | head -1 \
+    )"
+    if [ "$__kvsf_enabled" != 'true' ]
+    then
+        unset -v __kvsf_enabled __kvsf_f
+        return 0
+    fi
+    printf 'enabled\t1\n'
+    printf 'backend\t%s\n' "$( \
+        sed -n -E 's/^[[:space:]]*"backend"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' \
+            "$__kvsf_f" \
+        | head -1 \
+    )"
+    printf 'pull_priority\t%s\n' "$( \
+        sed -n -E 's/^[[:space:]]*"pull_priority"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' \
+            "$__kvsf_f" \
+        | head -1 \
+    )"
+    printf 'base_url\t%s\n' "$( \
+        sed -n -E 's/^[[:space:]]*"base_url"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' \
+            "$__kvsf_f" \
+        | head -1 \
+    )"
+    printf 'src_repo\t%s\n' "$( \
+        sed -n -E 's/^[[:space:]]*"src_repo"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' \
+            "$__kvsf_f" \
+        | head -1 \
+    )"
+    printf 'token_env_var\t%s\n' "$( \
+        sed -n -E 's/^[[:space:]]*"token_env_var"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' \
+            "$__kvsf_f" \
+        | head -1 \
+    )"
+    unset -v __kvsf_enabled __kvsf_f
+}
+
+_vendor_env_value() {
+    # usage: _vendor_env_value <env-var-name>
+    # Prints the value of the named environment variable, or nothing if the
+    # name is not a valid identifier, printenv is unavailable, or it is
+    # unset. Never uses eval: <name> comes from vendor.json, and this keeps
+    # it from ever being interpreted as shell code.
+    __kvev_name="${1:-}"
+    case "$__kvev_name" in
+        '' | *[!A-Za-z0-9_]*)
+            unset -v __kvev_name
+            return 0
+            ;;
+    esac
+    if command -v printenv > /dev/null 2>&1
+    then
+        printenv "$__kvev_name" 2>/dev/null || true
+    fi
+    unset -v __kvev_name
+}
+
+vendor_load() {
+    # Populates the VENDOR_* globals from etc/koopa/vendor.json, once, at the
+    # top of main(). Leaves VENDOR_ENABLED=0 (all vendor lookups become
+    # no-ops) when the file is missing, disabled, or invalid, matching
+    # koopa.vendor.vendor_config()'s None case.
+    VENDOR_ENABLED=0
+    VENDOR_BACKEND=''
+    VENDOR_BASE_URL=''
+    VENDOR_SRC_REPO=''
+    VENDOR_TOKEN_ENV_VAR='HTTP_ACCESS_TOKEN'
+    VENDOR_TOKEN=''
+    VENDOR_PULL_PRIORITY='vendor_first'
+    VENDOR_S3_BUCKET=''
+    VENDOR_S3_PROFILE=''
+    VENDOR_S3_SRC_PREFIX='src'
+    VENDOR_REMOTES=''
+    __kvar_json="${KOOPA_PREFIX}/etc/koopa/vendor.json"
+    if [ ! -f "$__kvar_json" ]
+    then
+        unset -v __kvar_json
+        return 0
+    fi
+    __kvar_py_bin=''
+    if command -v python3 > /dev/null 2>&1 && python3 -c 'pass' 2>/dev/null
+    then
+        __kvar_py_bin='python3'
+    elif [ -x /usr/bin/python3 ] && /usr/bin/python3 -c 'pass' 2>/dev/null
+    then
+        __kvar_py_bin='/usr/bin/python3'
+    fi
+    __kvar_out="$(mktemp -t koopa-vendor-XXXXXX)"
+    if [ -n "$__kvar_py_bin" ]
+    then
+        _vendor_parse_json "$__kvar_py_bin" "$__kvar_json" "$__kvar_out"
+    else
+        _vendor_sed_fallback "$__kvar_json" > "$__kvar_out"
+    fi
+    while IFS='	' read -r __kvar_k __kvar_v1 __kvar_v2
+    do
+        case "$__kvar_k" in
+            enabled) VENDOR_ENABLED="$__kvar_v1" ;;
+            backend) VENDOR_BACKEND="$__kvar_v1" ;;
+            base_url) VENDOR_BASE_URL="$__kvar_v1" ;;
+            src_repo) VENDOR_SRC_REPO="$__kvar_v1" ;;
+            token_env_var)
+                [ -n "$__kvar_v1" ] && VENDOR_TOKEN_ENV_VAR="$__kvar_v1"
+                ;;
+            pull_priority) VENDOR_PULL_PRIORITY="$__kvar_v1" ;;
+            s3_bucket) VENDOR_S3_BUCKET="$__kvar_v1" ;;
+            s3_profile) VENDOR_S3_PROFILE="$__kvar_v1" ;;
+            s3_src_prefix)
+                [ -n "$__kvar_v1" ] && VENDOR_S3_SRC_PREFIX="$__kvar_v1"
+                ;;
+            remote)
+                VENDOR_REMOTES="${VENDOR_REMOTES}${__kvar_v1}	${__kvar_v2}
+"
+                ;;
+        esac
+    done < "$__kvar_out"
+    rm -f "$__kvar_out"
+    if [ -z "$__kvar_py_bin" ] && [ "$VENDOR_BACKEND" = 's3' ]
+    then
+        printf 'Warning: vendor backend is "s3" but no python3 is available to parse vendor.json fully; disabling the vendor mirror for this run.\n' >&2
+        VENDOR_ENABLED=0
+        VENDOR_BACKEND=''
+    fi
+    if [ "$VENDOR_ENABLED" = '1' ]
+    then
+        VENDOR_TOKEN="$(_vendor_env_value "$VENDOR_TOKEN_ENV_VAR")"
+    fi
+    unset -v __kvar_json __kvar_k __kvar_out __kvar_py_bin __kvar_v1 __kvar_v2
+    return 0
+}
+
+vendor_src_url() {
+    # usage: vendor_src_url <name> <filename>
+    # Mirrors koopa.vendor._http_src_url(): {base}/{repo}/src/{name}/{filename}.
+    __kvsu_name="${1:?}"
+    __kvsu_filename="${2:?}"
+    if [ "$VENDOR_ENABLED" = '1' ] && [ "$VENDOR_BACKEND" = 'http' ] \
+        && [ -n "$VENDOR_BASE_URL" ] && [ -n "$VENDOR_SRC_REPO" ]
+    then
+        printf '%s/%s/src/%s/%s\n' \
+            "${VENDOR_BASE_URL%/}" "$VENDOR_SRC_REPO" "$__kvsu_name" "$__kvsu_filename"
+    fi
+    unset -v __kvsu_filename __kvsu_name
+    return 0
+}
+
+vendor_rewrite_url() {
+    # usage: vendor_rewrite_url <url>
+    # Mirrors koopa.vendor.vendor_rewrite_url(): rewrites <url> through a
+    # vendor remote-proxy repo matched by hostname (exact, then a '.suffix'
+    # match against VENDOR_REMOTES), or prints nothing if unmatched.
+    __kvru_url="${1:?}"
+    if [ "$VENDOR_ENABLED" != '1' ] || [ "$VENDOR_BACKEND" != 'http' ] || [ -z "$VENDOR_REMOTES" ]
+    then
+        unset -v __kvru_url
+        return 0
+    fi
+    __kvru_host="$( \
+        printf '%s\n' "$__kvru_url" \
+        | sed -E 's#^[a-zA-Z][a-zA-Z0-9+.-]*://([^/]*).*#\1#' \
+    )"
+    __kvru_host="${__kvru_host#*@}"
+    __kvru_host="${__kvru_host%%:*}"
+    __kvru_repo=''
+    __kvru_rest="$VENDOR_REMOTES"
+    while [ -n "$__kvru_rest" ]
+    do
+        __kvru_line="${__kvru_rest%%
+*}"
+        case "$__kvru_rest" in
+            *"
+"*) __kvru_rest="${__kvru_rest#*
+}" ;;
+            *) __kvru_rest='' ;;
+        esac
+        __kvru_rhost="${__kvru_line%	*}"
+        __kvru_rrepo="${__kvru_line#*	}"
+        [ -n "$__kvru_rhost" ] || continue
+        if [ "$__kvru_rhost" = "$__kvru_host" ]
+        then
+            __kvru_repo="$__kvru_rrepo"
+            break
+        fi
+        case "$__kvru_rhost" in
+            .*)
+                case "$__kvru_host" in
+                    *"$__kvru_rhost")
+                        __kvru_repo="$__kvru_rrepo"
+                        break
+                        ;;
+                esac
+                ;;
+        esac
+    done
+    if [ -n "$__kvru_repo" ]
+    then
+        __kvru_path="${__kvru_url#*://}"
+        __kvru_path="${__kvru_path#*/}"
+        printf '%s/%s/%s\n' "${VENDOR_BASE_URL%/}" "$__kvru_repo" "$__kvru_path"
+    fi
+    unset -v __kvru_host __kvru_line __kvru_path __kvru_repo __kvru_rest __kvru_rhost __kvru_rrepo __kvru_url
+    return 0
+}
+
+vendor_urls_for() {
+    # usage: vendor_urls_for <name> <filename>
+    # Prints the vendor src-mirror candidate for <name>/<filename>: a URL
+    # for the http backend, or an 's3://' URI (which download_with_fallback
+    # fetches via 'aws s3 cp' instead of curl) for the s3 backend. Prints
+    # nothing if vendor is disabled or the backend lacks the needed fields.
+    __kvuf_name="${1:?}"
+    __kvuf_filename="${2:?}"
+    if [ "$VENDOR_ENABLED" = '1' ]
+    then
+        case "$VENDOR_BACKEND" in
+            http) vendor_src_url "$__kvuf_name" "$__kvuf_filename" ;;
+            s3)
+                if [ -n "$VENDOR_S3_BUCKET" ]
+                then
+                    printf 's3://%s/%s/%s/%s\n' \
+                        "$VENDOR_S3_BUCKET" "${VENDOR_S3_SRC_PREFIX:-src}" \
+                        "$__kvuf_name" "$__kvuf_filename"
+                fi
+                ;;
+        esac
+    fi
+    unset -v __kvuf_filename __kvuf_name
+    return 0
+}
+
+vendor_curl_config() {
+    # Writes a curl '--config' file with the vendor Bearer header (only if a
+    # token is available; anonymous read needs none) and prints its path.
+    # Keeping the token out of argv is what keeps it off 'ps' and out of
+    # 'set -o xtrace' output.
+    [ -n "${VENDOR_TOKEN:-}" ] || return 0
+    __kvcc_old_umask="$(umask)"
+    umask 077
+    __kvcc_file="$(mktemp -t koopa-vendor-auth-XXXXXX)"
+    umask "$__kvcc_old_umask"
+    printf 'header = "Authorization: Bearer %s"\n' "$VENDOR_TOKEN" > "$__kvcc_file"
+    printf '%s\n' "$__kvcc_file"
+    unset -v __kvcc_file __kvcc_old_umask
+}
+
 download_with_fallback() {
     # usage: download_with_fallback <name> <dirname> <url> [url...]
-    # Tries each URL in order. Validates each with 'tar -tf' before extracting.
+    # Tries each candidate in order: the primary URL, then the vendor
+    # mirror (if etc/koopa/vendor.json is configured), then a vendor
+    # remote-proxy rewrite of every URL given (if 'http.remotes' is
+    # configured; see vendor_rewrite_url()), then the remaining URLs as
+    # given. Under pull_priority 'vendor_only', no URL outside the vendor
+    # mirror and its remote-proxy rewrites is tried at all.
+    # Validates each curl-fetched candidate with 'tar -tf' before
+    # extracting; an 's3://' candidate is fetched with 'aws s3 cp' instead.
     __dwf_name="${1:?}"
     shift 1
     __dwf_dirname="${1:?}"
     shift 1
+    __dwf_primary="${1:?}"
+    __dwf_filename="${__dwf_primary##*/}"
+    __dwf_filename="${__dwf_filename%%\?*}"
+    __dwf_vendor="$(vendor_urls_for "$__dwf_name" "$__dwf_filename")"
+    # Command substitution strips the trailing newline vendor_urls_for()
+    # printed; re-add it so this joins cleanly with what follows below,
+    # instead of running on into the next URL with no separator.
+    if [ -n "$__dwf_vendor" ]
+    then
+        __dwf_vendor="${__dwf_vendor}
+"
+    fi
+    __dwf_rewritten=''
+    for __dwf_pub in "$@"
+    do
+        __dwf_rw="$(vendor_rewrite_url "$__dwf_pub")"
+        if [ -n "$__dwf_rw" ]
+        then
+            __dwf_rewritten="${__dwf_rewritten}${__dwf_rw}
+"
+        fi
+    done
+    if [ "$VENDOR_ENABLED" = '1' ] && [ "$VENDOR_PULL_PRIORITY" = 'vendor_only' ]
+    then
+        __dwf_urls="${__dwf_vendor}${__dwf_rewritten}"
+        if [ -z "$__dwf_urls" ]
+        then
+            printf 'Error: vendor_only is configured but no vendor mirror is available for %s (%s).\n' \
+                "$__dwf_name" "$__dwf_filename" >&2
+            unset -v __dwf_dirname __dwf_filename __dwf_name __dwf_primary __dwf_pub __dwf_rewritten __dwf_rw __dwf_vendor
+            return 1
+        fi
+    else
+        __dwf_urls="${__dwf_primary}
+${__dwf_vendor}${__dwf_rewritten}"
+        shift 1
+        for __dwf_pub in "$@"
+        do
+            __dwf_urls="${__dwf_urls}${__dwf_pub}
+"
+        done
+    fi
+    unset -v __dwf_filename __dwf_pub __dwf_primary __dwf_rewritten __dwf_rw __dwf_vendor
     __dwf_src_dir="${DESTDIR}${PREFIX}/src/${__dwf_name}"
     rm -fr "$__dwf_src_dir"
     mkdir -p "$__dwf_src_dir"
     __dwf_ok=0
-    for __dwf_url in "$@"
+    while IFS= read -r __dwf_url
     do
+        [ -n "$__dwf_url" ] || continue
         printf 'Trying %s.\n' "$__dwf_url"
-        if curl \
-            --fail \
-            --location \
-            --max-time 300 \
-            ${_curl_verbose:+"$_curl_verbose"} \
-            "$__dwf_url" \
-            -o "${__dwf_src_dir}/src.archive" \
-            && tar -tf "${__dwf_src_dir}/src.archive" > /dev/null 2>&1
-        then
-            __dwf_ok=1
-            break
-        else
-            printf 'Download failed or archive is incomplete, trying next source.\n'
-            rm -f "${__dwf_src_dir}/src.archive"
-        fi
-    done
+        case "$__dwf_url" in
+            s3://*)
+                if ! command -v aws > /dev/null 2>&1
+                then
+                    printf 'aws CLI not found, cannot fetch %s.\n' "$__dwf_url"
+                elif aws s3 cp --only-show-errors \
+                    ${VENDOR_S3_PROFILE:+--profile "$VENDOR_S3_PROFILE"} \
+                    "$__dwf_url" "${__dwf_src_dir}/src.archive" \
+                    && tar -tf "${__dwf_src_dir}/src.archive" > /dev/null 2>&1
+                then
+                    __dwf_ok=1
+                    break
+                fi
+                ;;
+            *)
+                __dwf_curl_cfg=''
+                if [ -n "$VENDOR_BASE_URL" ]
+                then
+                    case "$__dwf_url" in
+                        "${VENDOR_BASE_URL%/}"/*) __dwf_curl_cfg="$(vendor_curl_config)" ;;
+                    esac
+                fi
+                if curl \
+                    --fail \
+                    --location \
+                    --max-time 300 \
+                    ${_curl_verbose:+"$_curl_verbose"} \
+                    ${__dwf_curl_cfg:+--config "$__dwf_curl_cfg"} \
+                    "$__dwf_url" \
+                    -o "${__dwf_src_dir}/src.archive" \
+                    && tar -tf "${__dwf_src_dir}/src.archive" > /dev/null 2>&1
+                then
+                    [ -n "$__dwf_curl_cfg" ] && rm -f "$__dwf_curl_cfg"
+                    __dwf_ok=1
+                    unset -v __dwf_curl_cfg
+                    break
+                fi
+                [ -n "$__dwf_curl_cfg" ] && rm -f "$__dwf_curl_cfg"
+                unset -v __dwf_curl_cfg
+                ;;
+        esac
+        printf 'Download failed or archive is incomplete, trying next source.\n'
+        rm -f "${__dwf_src_dir}/src.archive"
+    done << EOF
+$__dwf_urls
+EOF
+    unset -v __dwf_urls
     if [ "$__dwf_ok" -eq 0 ]
     then
         printf 'All download sources failed for %s.\n' "$__dwf_name" >&2
@@ -188,11 +597,14 @@ install_openssl() {
     __kvar_version='3.6.3'
     printf 'Installing openssl.\n'
     __kvar_filename="openssl-${__kvar_version}.tar.gz"
+    # NOTE: mirror name is 'openssl3', matching the app.json key (and
+    # koopa.develop mirror-src's upload path), not the 'openssl' function
+    # name -- using the function name here 404s against the koopa mirror.
     download_with_fallback \
-        'openssl' \
+        'openssl3' \
         "openssl-${__kvar_version}" \
         "https://github.com/openssl/openssl/releases/download/openssl-${__kvar_version}/${__kvar_filename}" \
-        "https://koopa.acidgenomics.com/src/openssl/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/openssl3/${__kvar_filename}" \
         || return 1
     unset -v __kvar_filename
     ./config \
@@ -238,13 +650,17 @@ install_python() {
         __kvar_remove_lib_symlink=1
     fi
     __kvar_filename="Python-${__kvar_version}.tar.xz"
+    # NOTE: mirror name tracks .python-version (e.g. 'python3.12'), matching
+    # the app.json key, not the 'python' function name -- using the
+    # function name here 404s against the koopa mirror.
+    __kvar_mirror_name="python$(cat "${KOOPA_PREFIX}/.python-version")"
     download_with_fallback \
-        'python' \
+        "$__kvar_mirror_name" \
         "Python-${__kvar_version}" \
         "https://www.python.org/ftp/python/${__kvar_version}/${__kvar_filename}" \
-        "https://koopa.acidgenomics.com/src/python/${__kvar_filename}" \
+        "https://koopa.acidgenomics.com/src/${__kvar_mirror_name}/${__kvar_filename}" \
         || return 1
-    unset -v __kvar_filename
+    unset -v __kvar_filename __kvar_mirror_name
     export BZIP2_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export BZIP2_LIBS="-L${DESTDIR}${PREFIX}/lib -lbz2"
     export LIBFFI_CFLAGS="-I${DESTDIR}${PREFIX}/include"
@@ -433,29 +849,64 @@ install_python_uv() {
         unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv_version
         return 1
     fi
-    __kvar_uv_url="https://github.com/astral-sh/uv/releases/download/${__kvar_uv_version}/uv-${__kvar_platform}.tar.gz"
-    printf 'Downloading uv %s.\n' "$__kvar_uv_version"
-    if ! curl \
-        --fail \
-        --location \
-        --max-time 60 \
-        ${_curl_verbose:+"$_curl_verbose"} \
-        "$__kvar_uv_url" \
-        -o "${__kvar_tmpdir}/uv.tar.gz"
+    if [ "$VENDOR_ENABLED" = '1' ]
     then
-        printf 'Failed to download uv.\n' >&2
-        rm -fr "$__kvar_tmpdir"
-        unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv_url __kvar_uv_version
-        return 1
+        # A vendor mirror rarely hosts the uv binary itself (app.json gives
+        # uv no 'src_url', so 'koopa develop mirror-src' never populates
+        # it); take it from PATH instead of fetching it from GitHub.
+        __kvar_uv="$(command -v uv || true)"
+        if [ -z "$__kvar_uv" ]
+        then
+            printf 'uv not found on PATH; a vendor-restricted network needs a pre-installed uv.\n' >&2
+            rm -fr "$__kvar_tmpdir"
+            unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_version
+            return 1
+        fi
+    else
+        __kvar_uv_url="https://github.com/astral-sh/uv/releases/download/${__kvar_uv_version}/uv-${__kvar_platform}.tar.gz"
+        printf 'Downloading uv %s.\n' "$__kvar_uv_version"
+        if ! curl \
+            --fail \
+            --location \
+            --max-time 60 \
+            ${_curl_verbose:+"$_curl_verbose"} \
+            "$__kvar_uv_url" \
+            -o "${__kvar_tmpdir}/uv.tar.gz"
+        then
+            printf 'Failed to download uv.\n' >&2
+            rm -fr "$__kvar_tmpdir"
+            unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv_url __kvar_uv_version
+            return 1
+        fi
+        tar -xf "${__kvar_tmpdir}/uv.tar.gz" -C "$__kvar_tmpdir"
+        __kvar_uv="${__kvar_tmpdir}/uv-${__kvar_platform}/uv"
+        if [ ! -x "$__kvar_uv" ]
+        then
+            printf 'uv binary not found after extraction.\n' >&2
+            rm -fr "$__kvar_tmpdir"
+            unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
+            return 1
+        fi
     fi
-    tar -xf "${__kvar_tmpdir}/uv.tar.gz" -C "$__kvar_tmpdir"
-    __kvar_uv="${__kvar_tmpdir}/uv-${__kvar_platform}/uv"
-    if [ ! -x "$__kvar_uv" ]
+    if [ -z "${UV_PYTHON_INSTALL_MIRROR:-}" ] && [ "$VENDOR_ENABLED" = '1' ]
     then
-        printf 'uv binary not found after extraction.\n' >&2
-        rm -fr "$__kvar_tmpdir"
-        unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
-        return 1
+        # uv reads this env var natively to replace the
+        # python-build-standalone release host in the URL it constructs;
+        # confirmed empirically against uv 0.12.3 even though it carries no
+        # '[env:]' annotation in `uv python install --help`.
+        __kvar_uv_mirror="$(vendor_rewrite_url 'https://github.com/astral-sh/python-build-standalone/releases/download')"
+        if [ -n "$__kvar_uv_mirror" ]
+        then
+            UV_PYTHON_INSTALL_MIRROR="$__kvar_uv_mirror"
+            export UV_PYTHON_INSTALL_MIRROR
+        elif [ "$VENDOR_PULL_PRIORITY" = 'vendor_only' ]
+        then
+            printf 'vendor_only is configured but no remote-proxy mirror is available for python-build-standalone.\n' >&2
+            rm -fr "$__kvar_tmpdir"
+            unset -v __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_mirror __kvar_uv_url __kvar_uv_version
+            return 1
+        fi
+        unset -v __kvar_uv_mirror
     fi
     __kvar_cpython_dir="${__kvar_tmpdir}/cpython"
     printf 'Installing cpython %s via uv.\n' "$__kvar_python_version"
@@ -522,6 +973,7 @@ DESTDIR=''
 export CPU_COUNT DESTDIR PATH PREFIX
 
 main() {
+    vendor_load
     if is_macos && is_amd64
     then
         printf 'Error: Intel Mac (x86_64) is no longer supported.\n' >&2
@@ -540,7 +992,13 @@ main() {
     unset -v __kvar_prefix_parent
     rm -fr "$__kvar_destdir"
     __kvar_build_ok=0
-    if ! has_firewall
+    # A vendor mirror or an explicitly exported UV_PYTHON_INSTALL_MIRROR
+    # overrides the has_firewall veto: the fast path can resolve a CPython
+    # mirror even when the unconfigured, firewalled default cannot. If
+    # install_python_uv still cannot proceed (e.g. vendor_only with no
+    # derivable mirror, or no uv on PATH), it fails cleanly and this falls
+    # through to the source build below, same as any other fast-path failure.
+    if ! has_firewall || [ "$VENDOR_ENABLED" = '1' ] || [ -n "${UV_PYTHON_INSTALL_MIRROR:-}" ]
     then
         if (
             DESTDIR="$__kvar_destdir"

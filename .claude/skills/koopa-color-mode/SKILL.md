@@ -1,6 +1,6 @@
 ---
 name: koopa-color-mode
-description: >
+description: >-
   How koopa propagates and applies dark/light color mode across SSH, tmux, shells,
   and chezmoi-rendered theme files. Use when debugging wrong-palette or stale-theme
   symptoms after a dark↔light flip, working on color-mode sync jobs or watchers,

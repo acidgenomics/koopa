@@ -14,6 +14,7 @@ from koopa.system import (
     major_minor_version,
     major_version,
     os_appearance_mode,
+    safe_build_env,
 )
 
 
@@ -110,6 +111,30 @@ def test_cpu_count_returns_positive_int() -> None:
     result = cpu_count()
     assert isinstance(result, int)
     assert result >= 1
+
+
+def test_safe_build_env_drops_unlisted_project_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A project-scoped var (e.g. direnv-loaded) never reaches a build subprocess."""
+    monkeypatch.setenv("SOME_PROJECT_API_KEY", "fake-value")
+    assert "SOME_PROJECT_API_KEY" not in safe_build_env()
+
+
+def test_safe_build_env_regression_leaked_dsn_excluded(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Regression: the exact var name that previously leaked stays excluded."""
+    monkeypatch.setenv("MYPROJECT_SENTRY_DSN", "https://fake@example.com/1")
+    assert "MYPROJECT_SENTRY_DSN" not in safe_build_env()
+
+
+def test_safe_build_env_keeps_exact_name(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A generic build-toolchain var on the exact-name allowlist passes through."""
+    monkeypatch.setenv("CC", "clang")
+    assert safe_build_env()["CC"] == "clang"
+
+
+def test_safe_build_env_keeps_namespaced_prefix(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A var under a tool-owned prefix (e.g. koopa's own) passes through."""
+    monkeypatch.setenv("KOOPA_INSTALL_JOBS", "8")
+    assert safe_build_env()["KOOPA_INSTALL_JOBS"] == "8"
 
 
 def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) -> None:

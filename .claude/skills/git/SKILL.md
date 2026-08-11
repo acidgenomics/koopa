@@ -1,6 +1,6 @@
 ---
 name: git
-description: >
+description: >-
   Notable git features and flags introduced in git 2.55 — new builtins
   (history, format-rev, url-parse), checkout -m autostash, config set advice,
   --graph-lane-limit, push to remote groups, --max-count-oldest, Linux fsmonitor.

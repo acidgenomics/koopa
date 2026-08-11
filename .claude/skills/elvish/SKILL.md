@@ -1,6 +1,6 @@
 ---
 name: elvish
-description: >
+description: >-
   Elvish shell programming pitfalls, namespace semantics, and koopa activation
   architecture. Use when writing or debugging .elv files, editing
   lang/elvish/include/header.elv or any activate-*.elv, or porting shell logic

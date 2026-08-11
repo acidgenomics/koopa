@@ -194,53 +194,63 @@ def download_with_mirror(
     """Download from primary URL, falling back to mirrors.
 
     Tries the primary URL first, then the vendor mirror (if configured with
-    vendor_first priority), then GNU mirrors (if applicable), then Savannah
-    mirrors (if applicable), then any extra_urls, then the koopa mirror at
-    https://koopa.acidgenomics.com/src/{name}/{filename}.
+    vendor_first priority), then a vendor remote-proxy rewrite of every
+    public URL below (if 'http.remotes' is configured; see
+    koopa.vendor.vendor_rewrite_url), then GNU mirrors (if applicable), then
+    Savannah mirrors (if applicable), then any extra_urls, then the koopa
+    mirror at https://koopa.acidgenomics.com/src/{name}/{filename}.
 
     When the vendor backend is configured with vendor_only priority, no
-    public host is contacted at all: the vendor mirror is the sole URL tried,
-    matching the binary-download path in
-    koopa.install.install_app_from_binary_package.
+    public host is contacted at all: only the vendor mirror and remote-proxy
+    rewrites of the URLs above are tried, matching the binary-download path
+    in koopa.install.install_app_from_binary_package.
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
     """
-    from koopa.vendor import vendor_config, vendor_download_src, vendor_pull_priority
+    from koopa.vendor import (
+        vendor_config,
+        vendor_download_src,
+        vendor_pull_priority,
+        vendor_rewrite_url,
+    )
 
     koopa_mirror = f"https://koopa.acidgenomics.com/src/{name}/{filename}"
     is_archive_payload = filename.lower().endswith(_ARCHIVE_EXTS)
     vendor_url = vendor_download_src(name, filename)
     vendor_only = vendor_config() is not None and vendor_pull_priority() == "vendor_only"
 
+    public = [primary_url, *_gnu_mirrors(primary_url), *_savannah_mirrors(primary_url)]
+    public.extend(extra_urls or [])
+    if not skip_koopa_mirror:
+        public.append(koopa_mirror)
+    rewritten = [u for u in (vendor_rewrite_url(p) for p in public) if u]
+
     if vendor_only:
-        if not vendor_url:
+        urls = ([vendor_url] if vendor_url else []) + rewritten
+        if not urls:
             msg = (
                 "vendor_only is configured but no vendor mirror URL is"
                 f" available for {name!r} ({filename!r})."
             )
             raise FileNotFoundError(msg)
-        urls = [vendor_url]
     else:
         urls = [primary_url]
         if vendor_url:
             urls.append(vendor_url)
-        urls.extend(_gnu_mirrors(primary_url))
-        urls.extend(_savannah_mirrors(primary_url))
-        urls.extend(extra_urls or [])
-        if not skip_koopa_mirror:
-            urls.append(koopa_mirror)
+        urls.extend(rewritten)
+        urls.extend(public[1:])
         # primary_url is now itself one of the GNU/Savannah mirror hosts (e.g.
         # mirrors.kernel.org), so it can reappear as the first entry from
-        # _gnu_mirrors()/_savannah_mirrors(). Dedup, preserving order, so a failed
-        # host is not retried immediately with the exact same URL.
+        # _gnu_mirrors()/_savannah_mirrors(), and a rewritten URL can repeat a
+        # public one already tried. Dedup, preserving order, so a failed host
+        # is not retried immediately with the exact same URL.
         urls = list(dict.fromkeys(urls))
 
-    _skip_koopa = skip_koopa_mirror or vendor_only
     last_exc: Exception | None = None
     for i, url in enumerate(urls):
         try:
-            is_last = not _skip_koopa and url == koopa_mirror
+            is_last = i == len(urls) - 1
             tarball = download(
                 url,
                 output,

@@ -1,6 +1,6 @@
 ---
 name: koopa-theming
-description: >
+description: >-
   Reference for koopa theme synthesis across editors and terminals — Dracula Pro
   runtime pipeline, fish color architecture (fish_frozen_theme.fish override, _FISH_COLOR_ROLES
   generator, live sync hook), JetBrains/IntelliJ scheme delivery, atuin and mcfly color

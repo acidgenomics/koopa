@@ -4,18 +4,24 @@ Covers _is_prerelease, _friendly_network_error, and _is_retryable_network_error.
 """
 
 import http.client
+import json
 import ssl
 import urllib.error
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from koopa.version import sanitize_version
 from koopa.version_check import (
+    VersionCheckResult,
     _dead_hosts,
     _fetch_first_reachable,
     _friendly_network_error,
     _is_prerelease,
     _is_retryable_network_error,
     _NetworkUnavailableError,
+    classify_app,
+    update_app_json,
 )
 
 # ── _is_prerelease ─────────────────────────────────────────────────────────
@@ -268,3 +274,109 @@ def test_fetch_first_reachable_raises_network_unavailable_when_all_fail(
     monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
     with pytest.raises(_NetworkUnavailableError):
         _fetch_first_reachable(["https://a.example/sed/", "https://b.example/sed/"])
+
+
+# ── update_app_json artifact gate ────────────────────────────────────────────
+
+
+def _write_app_json(tmp_path: Path, data: dict) -> None:
+    etc_dir = tmp_path / "etc" / "koopa"
+    etc_dir.mkdir(parents=True)
+    (etc_dir / "app.json").write_text(json.dumps(data))
+
+
+def test_update_app_json_holds_pin_when_artifact_not_staged(tmp_path: Path) -> None:
+    """A gated app's pin is held, and reported, when its artifact isn't staged."""
+    json_data = {
+        "cellranger": {
+            "version": "7.2.0",
+            "installer_artifact": "installers/cellranger/{version}.tar.xz",
+            "url": ["https://example.test/cellranger"],
+        },
+        "ripgrep": {"version": "14.0.0"},
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [
+        VersionCheckResult("cellranger", "7.2.0", "10.0.0", "github", None),
+        VersionCheckResult("ripgrep", "14.0.0", "14.1.0", "github", None),
+    ]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.install._has_private_access", return_value=False),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=False),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["cellranger"]["version"] == "7.2.0"
+    assert written["ripgrep"]["version"] == "14.1.0"
+    assert count == 1
+
+
+def test_update_app_json_bumps_when_artifact_staged(tmp_path: Path) -> None:
+    """A gated app's pin is bumped once its artifact is confirmed staged."""
+    json_data = {
+        "cellranger": {
+            "version": "7.2.0",
+            "installer_artifact": "installers/cellranger/{version}.tar.xz",
+            "url": ["https://example.test/cellranger"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("cellranger", "7.2.0", "10.0.0", "github", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=False),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-000000000000-us-east-1-an"),
+        patch("koopa.aws.s3_object_exists", return_value=True),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["cellranger"]["version"] == "10.0.0"
+    assert count == 1
+
+
+# ── classify_app ─────────────────────────────────────────────────────────────
+
+
+def test_classify_app_registry_url_fallback_for_bespoke_installer() -> None:
+    """An app with a dedicated installer module still classifies via its PyPI URL."""
+    info = {
+        "installer": "playwright",
+        "url": ["https://playwright.dev/", "https://pypi.org/project/playwright"],
+        "version": "1.62.0",
+    }
+    spec = classify_app("playwright", info)
+    assert spec is not None
+    assert spec.source == "pypi"
+    assert spec.args == ("playwright",)
+
+
+def test_classify_app_no_unsupported_apps_in_registry() -> None:
+    """Every supported app in the real app.json classifies to a check strategy.
+
+    Regression guard: a bespoke installer module with no GitHub URL and no
+    matching known pattern silently fell through to `None` (reported as
+    'Unsupported'). Any future app hitting the same gap should fail this test
+    instead of only showing up in a 'koopa develop check-app-versions' run.
+    """
+    from koopa.app import import_app_json
+
+    json_data = import_app_json()
+    unsupported = []
+    for name, entry in json_data.items():
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("alias_of") or entry.get("removed") or entry.get("version_pin"):
+            continue
+        if not entry.get("version"):
+            continue
+        if classify_app(name, entry) is None:
+            unsupported.append(name)
+    assert unsupported == []

@@ -40,6 +40,22 @@ nav {
     font-family: monospace-web, monospace;
 }
 
+/* colors.css's own `body > header h1 { color: var(--bright-color) }` is
+ * tuned for steinbaugh.com's blog posts, where a bright/neutral title
+ * reads as a deliberate contrast against purple in-content headings. On
+ * this theme's own pages (every page's title lives in `body > header`,
+ * see layout.html), that reads as an inconsistency instead: the
+ * python.acidgenomics.com landing page's own `<h1>` isn't wrapped in a
+ * `<header>` at all (it's hand-rolled HTML, not this Sphinx theme), so it
+ * falls through to the generic `h1, h2, ... { color: var(--header-color) }`
+ * rule (purple) same as every in-content heading -- leaving every Sphinx
+ * page's own title as the only bright/white heading on either site. Same
+ * specificity as colors.css's rule, loads after its @import, so this wins
+ * outright with no !important needed. */
+body > header h1 {
+    color: var(--header-color);
+}
+
 /* base.css's nav/header mechanism (negative margins, absolute positioning,
  * paired top/bottom borders on <header>, the >=1000px bleed-wider effect in
  * responsive.css) is left entirely as-is: layout.html renders a real
@@ -192,28 +208,64 @@ a.headerlink {
     display: none;
 }
 
-/* Sphinx's generated in-page TOC (body > header > ul, see layout.html's
- * `toc` block) always wraps the whole thing in one extra <li> linking back
- * to the current page itself (href="#") -- redundant with the <h1> right
- * above it, and it adds a full nesting level that responsive.css's
- * `ul { margin-left: 2rem }` compounds into on every page below it too.
- * display: contents drops the wrapper <li> from the box model entirely so
- * its own link (hidden) contributes nothing and its <ul> of real entries
- * becomes the toc's true top level. */
-body > header > ul > li > a[href="#"] {
-    display: none;
+/* Sphinx's generated in-page TOC always wraps the real entries in one extra
+ * <li> linking back to the current page itself (href="#") -- layout.html's
+ * `toc` block unwraps that redundant level in the template (child selectors
+ * like base.css's `body > header > #toc` match the DOM, not the box model,
+ * so no CSS trick here could have promoted a grandchild <ul> up into that
+ * slot) and tags the real list `id="toc"`, so it inherits base.css's
+ * #toc-specific separator border above it. */
+
+/* #toc's own left offset is deliberately NOT the reference page's: on
+ * steinbaugh.com, base.css/responsive.css line the TOC's top level up
+ * flush with the page's own headings (margin-left forced to 0 by base.css's
+ * `body > header > #toc { margin: 2rem 0 0 0 }`, indented only via
+ * responsive.css's own padding-left: 1rem/2rem, or the >=1000px bleed
+ * pairing of margin-left:-3rem with padding-left:3rem, which nets back to
+ * 0). On this site every other bulleted list -- div.body's own content
+ * lists included -- gets its indent from responsive.css's generic
+ * `ul { margin-left: 2rem/1rem }` rule instead (div.body's own block above
+ * zeroes ul/ol padding-left and leans on that margin alone), so a TOC
+ * flush with the heading reads as offset from, not aligned with, the
+ * page's other lists.
+ *
+ * Fix the offset with padding, never margin: base.css's border-top
+ * separator lives on #toc's own border box, and margin sits outside the
+ * border box -- shrinking #toc's margin-left (an earlier attempt at this
+ * rule did, to reuse responsive.css's generic per-breakpoint margins
+ * directly) pulls the border-top in with it, so it no longer spans the
+ * same width as body > header's own border-bottom immediately below the
+ * whole title+toc block (that outer border is on a DIFFERENT element,
+ * unaffected, so the two visibly stop lining up). Padding, by contrast,
+ * only moves #toc's CONTENT edge inward, leaving the border box, and the
+ * `body > header > #toc, body > header, body > nav + *, hr` bleed pairing
+ * they otherwise share pixel-for-pixel, untouched. Below the >=1000px
+ * breakpoint, responsive.css's own padding-left (1rem/2rem) already
+ * happens to net out to the same offset div.body's own lists use at
+ * those widths (same rem constants, reused by design), so nothing needs
+ * overriding there. Only >=1000px diverges: the bleed's margin-left:-3rem/
+ * padding-left:3rem pairing nets to 0 (flush with the heading) where
+ * div.body's own un-bled lists still sit at their normal +2rem margin, so
+ * add exactly that much more padding-left on top of the bleed's existing
+ * 3rem, leaving its margin-left:-3rem (and thus the border width it
+ * shares with header) alone. Nested <ul>s inside #toc still need their
+ * own browser-default ~40px padding zeroed (div.body's own nested lists
+ * get this for free, since acidgenomics.css's div.body ul/ol rule above
+ * applies at any depth) so each further level adds exactly one more
+ * margin step, matching div.body's own nested lists rather than roughly
+ * doubling it. TOC <li> content is a bare inline <a> (not the <li><p>
+ * docutils wraps list items in inside div.body), so base.css's own
+ * inline-block marker mechanism (`li:before { margin-left: -1.5em;
+ * margin-right: 0.5em; width: 1em }`) already lands the marker and text
+ * at this corrected edge with no li-level override needed. */
+body > header > #toc ul {
+    padding-left: 0;
 }
 
-body > header > ul > li {
-    display: contents;
-}
-
-/* display: contents drops the <li>'s own box, but per spec its pseudo-
- * elements still generate -- base.css's unscoped `ul li:before { content:
- * "❯" }` still fires here, and with the link above hidden, the bullet was
- * left rendering on its own with no text beside it. */
-body > header > ul > li::before {
-    content: none;
+@media screen and (min-width: 1000px) {
+    body > header > #toc {
+        padding-left: 5rem;
+    }
 }
 
 /* ASCII-art mark in body > header (theme's `header_ascii` option, root page

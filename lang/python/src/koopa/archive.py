@@ -188,6 +188,36 @@ def tar_multiple_dirs(dirs: list[str], output_dir: str | None = None) -> list[st
     return archives
 
 
+def _copy_tar_members(tf_in: tarfile.TarFile, tf_out: tarfile.TarFile) -> None:
+    for member in tf_in.getmembers():
+        fileobj = tf_in.extractfile(member) if member.isfile() else None
+        tf_out.addfile(member, fileobj)
+
+
+def repackage_tar(path: str, output: str, *, method: str = "xz") -> str:
+    """Transcode a tar archive to a different compression method.
+
+    Preserves member names, order, and metadata (permissions, symlinks) exactly:
+    only the outer compression changes. Used to restage vendor-downloaded tarballs
+    (typically .tar.gz) as .tar.xz without disturbing the internal layout that
+    installers rely on after ``extract()``.
+    """
+    with tarfile.open(path, "r:*") as tf_in:
+        if method == "gzip":
+            with tarfile.open(output, "w:gz") as tf_out:
+                _copy_tar_members(tf_in, tf_out)
+        elif method == "bzip2":
+            with tarfile.open(output, "w:bz2") as tf_out:
+                _copy_tar_members(tf_in, tf_out)
+        elif method == "xz":
+            with tarfile.open(output, "w:xz") as tf_out:
+                _copy_tar_members(tf_in, tf_out)
+        else:
+            msg = f"Unsupported tar compression method: {method}"
+            raise ValueError(msg)
+    return output
+
+
 def compress(
     path: str,
     output: str | None = None,

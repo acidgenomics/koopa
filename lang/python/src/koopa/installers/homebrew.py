@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 from koopa.download import download
-from koopa.system import is_macos
+from koopa.system import is_macos, safe_build_env
 
 
 def _update_homebrew() -> None:
@@ -69,6 +69,6 @@ def main(
     script = download(url)
     os.chmod(script, 0o755)
     print("Installing Homebrew.", file=sys.stderr)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["NONINTERACTIVE"] = "1"
     subprocess.run(["bash", script], env=env, check=True)

@@ -133,6 +133,31 @@ def aws_s3_ls(
     return result.stdout
 
 
+def s3_object_exists(
+    bucket: str,
+    key: str,
+    *,
+    profile: str = "acidgenomics",
+) -> bool:
+    """Check whether an object exists in an S3 bucket via head-object."""
+    result = subprocess.run(
+        [
+            "aws",
+            "s3api",
+            "head-object",
+            "--bucket",
+            bucket,
+            "--key",
+            key,
+            "--profile",
+            profile,
+        ],
+        capture_output=True,
+        check=False,
+    )
+    return result.returncode == 0
+
+
 def aws_s3_cp(
     source: str,
     target: str,

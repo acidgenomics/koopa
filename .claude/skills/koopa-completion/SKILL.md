@@ -1,6 +1,6 @@
 ---
 name: koopa-completion
-description: >
+description: >-
   koopa shell completion architecture — generator, flag extraction, bash/zsh/PowerShell/elvish
   emitters, lazy-load mechanism, compdump freshness, and known bug patterns. Use when
   debugging missing completions, editing generate_completion.py, or adding flags to a
@@ -96,6 +96,63 @@ with subcommand names before this block and are unaffected.
 
 Same single-dash relaxation applied to PowerShell (`-like '-*'`) and elvish
 (`str:has-prefix $last '-'`) emitters.
+
+## Known bug pattern: completion offering args the parser rejects (fixed 2026-08-11)
+
+**Symptom:** `koopa update system` TAB-completed `homebrew python r
+tex-packages`, but running `koopa update system homebrew` was an argparse
+error ("unrecognized arguments"). The `update` subparser's `mode` positional
+had no `apps` positional to receive them (see the `koopa-update` skill for
+the CLI-side fix).
+
+**Root cause, part 1 (bash only):** the bash emitter's depth-3 block for
+`update system` (`generate_completion.py`, `_emit_platform_block(
+installer_modes["update-system"], ...)`) was already correctly deriving app
+names from the registry; it was the parser that lagged behind. No other
+shell emitted this depth-3 block at all, so bash alone offered-then-rejected.
+
+**Root cause, part 2 (bash + PowerShell + elvish): a phantom `user` mode.**
+Three emitters offered `koopa`, `system`, **and** `user` after `update` even
+though `koopa update user` has never existed:
+
+```python
+# bash (was):
+update_items = ["koopa", "system", "user"]
+# PowerShell (was):
+f"{_ps_array(['koopa', 'system', 'user'])}"
+# elvish (was):
+lines.append("            put koopa system user")
+```
+
+fish and zsh were already correct (`koopa`, `system` only) and nushell didn't
+enumerate modes at all, so the drift was bash/PowerShell/elvish-only. The `user`
+token likely leaked in by analogy with `koopa configure system|user`, which
+is a real two-mode command; `update` only ever had `koopa`/`system`.
+
+**Fix:** dropped `'user'` from all three emitters; added the equivalent
+depth-3 `update system <app>` completion to fish (the one shell that had the
+top-level `koopa`/`system` mode completion but no per-app follow-up), keyed
+off the same `installer_modes["update-system"]` list already computed by
+`_get_installer_mode_apps()`. Threaded that list into
+`_generate_fish_completion()` as a new parameter rather than re-deriving it,
+since the caller (`generate_completion()`) already has it in scope.
+
+**Trap when generating a fish app-name list from a multi-platform registry
+entry:** `PYTHON_INSTALLER_MODES` lists `r` twice (once per `("r", "macos",
+"update-system")` and `("r", "debian", "update-system")` platform variant).
+A naive `for app, _plat in entries: lines.append(...)` emits a duplicate
+`complete` line for `r`. Dedupe by name first: `sorted({name for name, _plat
+in entries})`. zsh/PowerShell/elvish's depth-3 blocks don't have this trap
+because they route through `_emit_platform_block()`, which already groups
+entries by platform tag before emitting.
+
+**Still not covered:** depth-3 `update system <app>` completion for zsh,
+PowerShell, elvish, and nushell. Those emitters would need structural changes
+(zsh's `_koopa_update` is a flat `_arguments` spec; PowerShell/elvish hardcode
+their depth-2/3 blocks to `$tokens[0] -eq 'app'`) to add it without
+over-offering app names after `koopa update koopa`. They currently offer
+nothing after `system`, which is wrong-but-harmless rather than
+offer-then-reject.
 
 ## Adding a `koopa run` command
 

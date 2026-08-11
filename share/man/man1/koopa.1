@@ -35,8 +35,8 @@ Reinstall applications, with optional reverse dependency rebuilds.
 \fBuninstall\fR \fI[app...]\fR
 Remove installed applications. Defaults to uninstalling koopa itself.
 .TP
-\fBupdate\fR \fI[app...]\fR
-Update applications to latest versions. Defaults to updating koopa.
+\fBupdate\fR \fI[mode] [app...]\fR
+Update koopa and stale apps; 'system' mode updates system apps.
 .TP
 \fBlist\fR \fI[--all]\fR
 List available apps. No args lists defaults; --all lists all.
@@ -273,6 +273,9 @@ Regenerate the cached Bash function library.
 \fBdevelop check\-app\-versions\fR
 Check upstream versions for all apps in app.json.
 .TP
+\fBdevelop check\-skills\fR \fI[path...]\fR
+Validate SKILL.md frontmatter for cross-CLI compatibility.
+.TP
 \fBdevelop circular\-dependencies\fR
 Detect circular dependency chains in app.json.
 .TP
@@ -320,6 +323,9 @@ Push a specific application build to the binary cache.
 .TP
 \fBdevelop push\-app\-builds\fR
 Push all stale application builds to the binary cache.
+.TP
+\fBdevelop push\-installer\fR \fIapp file [--version version] [--force]\fR
+Stage a downloaded vendor installer tarball to the artifacts bucket.
 .TP
 \fBdevelop pyright\fR
 Run the pyright type checker on the Python source tree.

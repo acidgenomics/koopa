@@ -5,9 +5,11 @@ description: >-
   installer/version-check machinery. Use when composing koopa commands, reasoning
   about successor/default/completions semantics, importing atuin history, deciding
   whether a tool belongs in koopa, writing a new installer, wiring auto-update
-  for apps with non-version metadata (build IDs, per-platform hashes), or
-  debugging GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths,
-  the dead-host circuit breaker) in version-check or source-download code.
+  for apps with non-version metadata (build IDs, per-platform hashes), debugging
+  GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths, the
+  dead-host circuit breaker) in version-check or source-download code, or
+  reasoning about why an app was (or wasn't) flagged as needing a rebuild —
+  dependency-staleness detection compares installed state, not app.json's target.
 ---
 
 # koopa App Registry & Command Conventions

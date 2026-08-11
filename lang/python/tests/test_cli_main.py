@@ -31,7 +31,7 @@ def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.Monke
         patch("koopa.app.prune_apps"),
         patch("koopa.install.update_system_apps") as update_system_apps,
     ):
-        cli_main._handle_update(argparse.Namespace(mode=None, verbose=False, system=False))
+        cli_main._handle_update(argparse.Namespace(mode=None, apps=[], verbose=False, system=False))
 
     update_system_apps.assert_not_called()
 
@@ -68,3 +68,25 @@ def test_require_git_managed_install_refuses_packaged_install(
 
     with pytest.raises(SystemExit):
         cli_main._require_git_managed_install()
+
+
+def test_warn_if_direnv_active_warns_with_dir(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """A warning naming the active project dir prints when DIRENV_DIR is set."""
+    monkeypatch.setenv("DIRENV_DIR", "/Users/someuser/some-project")
+
+    cli_main._warn_if_direnv_active()
+
+    assert "/Users/someuser/some-project" in capsys.readouterr().err
+
+
+def test_warn_if_direnv_active_silent_when_unset(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """No warning prints when direnv isn't active."""
+    monkeypatch.delenv("DIRENV_DIR", raising=False)
+
+    cli_main._warn_if_direnv_active()
+
+    assert capsys.readouterr().err == ""

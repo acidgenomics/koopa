@@ -376,3 +376,103 @@ def test_check_platform_support_no_note() -> None:
         _check_platform_support("some-app", app_meta)
 
     assert "\n" not in str(exc_info.value)
+
+
+# -- _load_pending_plan resume-validation tests -------------------------------
+
+
+def _write_pending_plan(cache_path: Path, created: str) -> None:
+    import json as json_mod
+
+    cache_path.write_text(
+        json_mod.dumps(
+            {
+                "created": created,
+                "source": "update",
+                "plan": [{"app": "stale-app", "reason": "outdated"}],
+            },
+        ),
+    )
+
+
+def test_load_pending_plan_drops_app_installed_after_cache(tmp_path: Path) -> None:
+    """An app installed (e.g. by hand) after the plan was cached is dropped."""
+    import json as json_mod
+    from datetime import UTC, datetime, timedelta
+
+    from koopa.install import _load_pending_plan
+
+    cache_path = tmp_path / "update-plan.json"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+
+    created = datetime.now(tz=UTC) - timedelta(hours=1)
+    _write_pending_plan(cache_path, created.isoformat())
+
+    info_dir = opt_dir / "stale-app" / ".install"
+    info_dir.mkdir(parents=True)
+    installed_at = datetime.now(tz=UTC) - timedelta(minutes=30)  # after `created`
+    info_dir.joinpath("info.json").write_text(
+        json_mod.dumps({"date": installed_at.strftime("%Y-%m-%d %H:%M:%S")}),
+    )
+
+    with (
+        patch("koopa.install._update_plan_cache_path", return_value=str(cache_path)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+    ):
+        plan = _load_pending_plan(source="update")
+
+    assert plan == []
+
+
+def test_load_pending_plan_keeps_app_installed_before_cache(tmp_path: Path) -> None:
+    """An app whose install predates the cached plan is kept for resume."""
+    import json as json_mod
+    from datetime import UTC, datetime, timedelta
+
+    from koopa.install import _load_pending_plan
+
+    cache_path = tmp_path / "update-plan.json"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+
+    created = datetime.now(tz=UTC) - timedelta(hours=1)
+    _write_pending_plan(cache_path, created.isoformat())
+
+    info_dir = opt_dir / "stale-app" / ".install"
+    info_dir.mkdir(parents=True)
+    installed_at = datetime.now(tz=UTC) - timedelta(hours=2)  # before `created`
+    info_dir.joinpath("info.json").write_text(
+        json_mod.dumps({"date": installed_at.strftime("%Y-%m-%d %H:%M:%S")}),
+    )
+
+    with (
+        patch("koopa.install._update_plan_cache_path", return_value=str(cache_path)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+    ):
+        plan = _load_pending_plan(source="update")
+
+    assert plan == [("stale-app", "outdated")]
+
+
+def test_load_pending_plan_keeps_app_with_no_info_json(tmp_path: Path) -> None:
+    """An app not (yet) installed at all is kept for resume."""
+    from datetime import UTC, datetime, timedelta
+
+    from koopa.install import _load_pending_plan
+
+    cache_path = tmp_path / "update-plan.json"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    # No opt/stale-app directory at all.
+
+    created = datetime.now(tz=UTC) - timedelta(hours=1)
+    _write_pending_plan(cache_path, created.isoformat())
+
+    with (
+        patch("koopa.install._update_plan_cache_path", return_value=str(cache_path)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+    ):
+        plan = _load_pending_plan(source="update")
+
+    assert plan == [("stale-app", "outdated")]

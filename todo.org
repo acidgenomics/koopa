@@ -1,62 +1,88 @@
-** TODO Review upgrade paths for cellranger
-** TODO Need to update 'koopa update system' autocompletion and organization
-    ❌2 $ koopa update system
-    homebrew      python        r             tex-packages
-
-    ~
-    ❌2 $ koopa update system homebrew
-    usage: koopa [-h]
-                 {install,reinstall,uninstall,update,configure,app,list,system,admin,develop,run,header}
-                 ...
-    koopa: error: unrecognized arguments: homebrew
-
-    For homebrew, 'koopa app brew upgrade' is the answer
+** DONE Need to update 'koopa update system' autocompletion and organization
+    'koopa update system [<app>...]' now accepts per-app names, validated
+    against the update-system registry (koopa.install.resolve_system_update_entries).
+    All six shells (bash, zsh, fish, PowerShell, elvish, nushell) now complete
+    'koopa update system <TAB>' with the four target apps; fixed the phantom
+    'user' mode offered by bash/PowerShell/elvish. Dispatch in
+    _run_system_update() is now a registry-keyed dict (_SYSTEM_UPDATERS)
+    instead of an if/elif chain, so an unwired registry entry warns instead
+    of silently no-opping. Docs/man 'update' synopsis corrected to match.
+    The is_admin() gate is now enforced once, inside update_system_apps()
+    itself (raises PermissionError), rather than duplicated in cli_main.py.
 ** TODO Need to improve version checking for playwright
     Unsupported (1):
       playwright: 1.62.0
 ** TODO Hitting binary push issue for Python packages on builder machine with uv
      ● The repo here lacks the new build directories (3.13.15 and 3.14.7), so a push from this machine ┃
         would fail — the missing tarballs must be created locally before pushing.
-** TODO We need to fix indentation of TOC for Python packages
+** DONE We need to fix indentation of TOC for Python packages
     https://python.acidgenomics.com/pipette/
-** TODO Review this code:
+    Fixed in the shared theme (lang/python/src/koopa/assets/sphinx_theme/):
+    layout.html now unwraps Sphinx's redundant self-link wrapper <li> from
+    the toc block and tags the real list id="toc", so it inherits base.css's
+    #toc separator/padding/bleed instead of double-nesting under two <ul>
+    levels. acidgenomics.css's nested-ul padding is zeroed so each heading
+    level steps by one clean 2rem/1rem margin. Verified with local
+    sphinx-build -W against koopa's own docs and py-pipette (the reported
+    page). Synced to koopa and all seven published py-* package doc trees
+    via `koopa app python sync-docs-theme`; publishing to the live sites is
+    left to the user.
+** DONE Review this code:
     ⋮ 682│    system_updates = mode == "system"
-** TODO Publish all our packages at bioconda. Consider including koopa too.
-** TODO Resume koopa Sphinx docs site theming (koopa.acidgenomics.com)
-   New Sphinx CLI reference site is built (docs/, generate_docs.py,
-   site.py, cli_docs.py) and passes `sphinx-build -W`, but
-   the pydata-sphinx-theme visual styling in
-   lang/python/src/koopa/assets/sphinx.css (shared with
-   python.acidgenomics.com) needs another pass. Fixed so far: no sticky
-   header, no sidebars, no breadcrumb, no "Show Source" (also disabled
-   across all 7 py-* package conf.py files, not yet republished), no
-   Sphinx/theme footer credits, copyright reads "© Copyright 2018-pres.
-   Acid Genomics LLC.", root font-size matches steinbaugh.com's 12pt/14pt,
-   inline code/ASCII-logo lost the boxed "code sample" styling, header/
-   footer/article left-edge alignment confirmed pixel-identical via
-   DevTools (article/footer both x=16, .bd-article's stray
-   padding-left:2rem removed). Still unresolved: general iteration on
-   pydata-sphinx-theme was slow and error-prone (misjudged CSS specificity
-   several times); worth a fresh look, possibly by actually screenshotting
-   the rendered page (playwright/puppeteer not currently installed) instead
-   of reasoning from theme source alone. Local preview: `uv run --extra
-   docs sphinx-build -b html docs/ /tmp/koopa-docs-preview && cd
-   /tmp/koopa-docs-preview && python3 -m http.server 8765`.
-** TODO Work on a better way to handle bootstrap python
-    ## Bootstrap Python has no restricted-network awareness
+    Removed as part of the 'koopa update system' rework above: cli_main.py's
+    _handle_update() now compares 'mode == "system"' directly instead of
+    caching it in a redundant local.
+** TODO Commit vendored acidgenomics Sphinx theme in the 7 py-* repos
+    docs/_themes/acidgenomics/{layout.html,static/acidgenomics.css,theme.toml}
+    and docs/conf.py are modified but uncommitted in every ~/git/personal/py-*
+    repo. Live on python.acidgenomics.com (published from dirty trees), so a
+    clean checkout rebuilds the older theme. Verify sync first:
+    koopa app python sync-docs-theme --check ~/git/personal/py-*
+** DONE Work on a better way to handle bootstrap python
+    `bootstrap.sh` now reads `etc/koopa/vendor.json` directly (own JSON parse via
+    whichever `python3` it finds, `sed` fallback if none exists) and routes every
+    source download through it, honoring `vendor_first`/`vendor_only`. Fixed a
+    live bug along the way: the koopa-mirror fallback URLs for openssl and python
+    were 404ing (`src/openssl/`, `src/python/`) because they didn't match the
+    app.json keys (`openssl3`, `python3.12`) that `koopa develop mirror-src`
+    actually uploads under — `install_openssl`/`install_python` now derive the
+    right name (python's tracks `.python-version` at runtime).
 
-    `bin/koopa` requires `/usr/bin/python3` to exactly match `.python-version`
-    (currently `3.12`); anything else (including a newer or older system Python)
-    falls through to running `bootstrap.sh`. `bootstrap.sh` downloads a Python
-    build directly from `python.org` or `koopa.acidgenomics.com/src` — it does
-    not consult `etc/koopa/vendor.json` or any mirror config at all. On a
-    `pull_priority: "vendor_only"` network this download fails outright. The only
-    workaround today is ensuring a matching system Python 3.12 is already at
-    `/usr/bin/python3` before koopa's first invocation; there's no way to route
-    the bootstrap step itself through an internal mirror.
+    Added a `http.remotes` map (host -> remote-proxy repo, exact then
+    `.suffix` match) so a `vendor_only` network can resolve `github.com`,
+    `koopa.acidgenomics.com`, etc. through a remote-proxy repository
+    with zero pre-population — one entry proxying
+    `koopa.acidgenomics.com` covers every source tarball koopa already
+    mirrors there. `koopa.vendor.vendor_rewrite_url()` (Python) and
+    `vendor_rewrite_url()` (the sh port in `bootstrap.sh`) implement this
+    identically; `download_with_mirror()` in `koopa.download` folds it into
+    the app-install path too, not just bootstrap.
+
+    The `uv` fast path (prebuilt CPython, skips the ~10 min source compile)
+    now takes `uv` from `PATH` under a vendor config instead of fetching it
+    from GitHub, and derives `UV_PYTHON_INSTALL_MIRROR` from `remotes` so the
+    CPython download itself can go through the mirror too (confirmed
+    empirically that uv 0.12.3 honors that env var despite no `[env:]`
+    annotation in `--help`). Known limitation: uv can't send the mirror's
+    Bearer token, so an auth-required remote falls through to the (fully
+    mirror-routable) source build automatically.
+
+    `bin/koopa` also now checks `python3.12`/`python3` on `PATH`, not just
+    `/usr/bin/python3` (mirrored in `koopa.system.find_system_python()` for
+    `_update_venv()`), so an already-installed matching interpreter avoids
+    bootstrapping at all.
+
+    Verified: `sh -n` + `shellcheck` clean on both scripts; `ruff`/`ty`/`pyright`
+    clean; full `pytest` suite (incl. new `test_bootstrap.py` anti-drift tests
+    comparing the sh and Python vendor helpers byte-for-byte, plus a lock-out
+    test for the mirror-name-vs-app.json-key bug); a real local HTTP server
+    end-to-end run confirms a `vendor_only` bootstrap contacts only the
+    mirror. Docs (`docs/installation.md`) rewritten and verified with a real
+    `sphinx-build -W`.
 ** TODO I hit a weird edge case where Python reinstalled with `koopa update` after I just installed them with `koopa reinstall` first
     $ koopa update
     => Pulling koopa on develop (d8266fd).
     => Installing 24 apps: python3.13, python3.14, doom-emacs, dotfiles, spacemacs, ruff, sqlfluff, ty, black, bumpver, ... and 14 more.
        python3.13 3.13.15 OK [7m05s]
        python3.14 3.14.7 OK [4m52s]
+** TODO Review upgrade paths for cellranger

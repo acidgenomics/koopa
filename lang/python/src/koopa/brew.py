@@ -10,6 +10,8 @@ import os
 import subprocess
 import sys
 
+from koopa.system import safe_build_env
+
 
 def _brew_env() -> dict[str, str]:
     """Return an environment that forbids interactive Homebrew prompts.
@@ -23,9 +25,10 @@ def _brew_env() -> dict[str, str]:
     Returns
     -------
     dict[str, str]
-        A copy of ``os.environ`` with the non-interactive flags set.
+        A build-safe environment (see ``koopa.system.safe_build_env``) with
+        the non-interactive flags set.
     """
-    env = os.environ.copy()
+    env = safe_build_env()
     env["NONINTERACTIVE"] = "1"
     env["HOMEBREW_NO_ENV_HINTS"] = "1"
     # Suppresses the implicit auto-update brew runs before install/reinstall/

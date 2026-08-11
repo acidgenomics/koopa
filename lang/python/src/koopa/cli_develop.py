@@ -279,6 +279,158 @@ def _handle_push_app_builds() -> None:
     push_missing_app_builds()
 
 
+_TAR_SUFFIX_METHOD: dict[str, str] = {
+    ".tar.gz": "gzip",
+    ".tgz": "gzip",
+    ".tar.bz2": "bzip2",
+    ".tbz2": "bzip2",
+    ".tar.xz": "xz",
+    ".txz": "xz",
+}
+
+
+def _tar_suffix(name: str) -> str | None:
+    """Return the known tar compression suffix at the end of *name*, if any."""
+    lname = name.lower()
+    for suffix in sorted(_TAR_SUFFIX_METHOD, key=len, reverse=True):
+        if lname.endswith(suffix):
+            return suffix
+    return None
+
+
+def _version_from_filename(app: str, path: str) -> str | None:
+    """Best-effort extraction of a version string from a vendor tarball filename."""
+    import re
+
+    base = os.path.basename(path)
+    suffix = _tar_suffix(base)
+    if suffix is not None:
+        base = base[: -len(suffix)]
+    stripped = re.sub(rf"^{re.escape(app)}[-_]?", "", base, flags=re.IGNORECASE)
+    match = re.search(r"\d+(?:\.\d+)+", stripped)
+    return match.group(0) if match else None
+
+
+def _handle_push_installer(args: list[str]) -> None:
+    """Handle ``koopa develop push-installer <app> <file>``.
+
+    Stages a manually-downloaded, EULA-gated vendor installer tarball (e.g.
+    cellranger, bcl-convert) to the private artifacts S3 bucket, at the key
+    declared by the app's 'installer_artifact' template in app.json. Recompresses
+    to the format that template requires when the input archive differs, without
+    otherwise altering the tar member layout the installer expects after
+    ``koopa.archive.extract()``.
+    """
+    import argparse
+
+    from koopa.app import installer_artifact_key
+    from koopa.archive import is_valid_archive, repackage_tar
+    from koopa.aws import koopa_s3_bucket, s3_object_exists
+    from koopa.install import _has_private_access
+    from koopa.io import import_app_json
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop push-installer",
+        description="Stage a downloaded vendor installer tarball to the private artifacts bucket.",
+    )
+    parser.add_argument("app", help="app name (must declare 'installer_artifact' in app.json)")
+    parser.add_argument("file", help="path to the downloaded installer tarball")
+    parser.add_argument(
+        "--version",
+        default=None,
+        help="version to stage (default: derived from the filename, else the app.json pin)",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite an already-staged artifact",
+    )
+    parsed = parser.parse_args(args)
+
+    if not _has_private_access():
+        print(
+            "Error: push-installer requires the 'acidgenomics' AWS profile and AWS_ACCOUNT_ID.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    aws = shutil.which("aws")
+    if aws is None:
+        msg = "aws CLI is not installed."
+        raise RuntimeError(msg)
+
+    if not os.path.isfile(parsed.file):
+        print(f"Error: file not found: {parsed.file!r}.", file=sys.stderr)
+        sys.exit(1)
+    if not is_valid_archive(parsed.file):
+        print(f"Error: {parsed.file!r} does not look like a valid archive.", file=sys.stderr)
+        sys.exit(1)
+
+    data = import_app_json()
+    if parsed.app not in data:
+        print(f"Error: {parsed.app!r} not found in app.json.", file=sys.stderr)
+        sys.exit(1)
+    entry = data[parsed.app]
+    template = entry.get("installer_artifact", "") if isinstance(entry, dict) else ""
+    if not template:
+        print(
+            f"Error: {parsed.app!r} has no 'installer_artifact' declared in app.json.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    version = (
+        parsed.version
+        or _version_from_filename(parsed.app, parsed.file)
+        or entry.get("version", "")
+    )
+    if not version:
+        print("Error: could not determine a version; pass --version explicitly.", file=sys.stderr)
+        sys.exit(1)
+
+    key = installer_artifact_key(parsed.app, version)
+    if key is None:
+        print(
+            f"Error: {parsed.app!r} has no 'installer_artifact' declared in app.json.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    key_suffix = _tar_suffix(key)
+    if key_suffix is None:
+        print(
+            f"Error: {parsed.app!r}'s 'installer_artifact' template has an unsupported extension.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    bucket = koopa_s3_bucket("artifacts")
+    if not parsed.force and s3_object_exists(bucket, key):
+        print(
+            f"Error: 's3://{bucket}/{key}' already exists. Pass --force to overwrite.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        local_path = os.path.join(tmp_dir, os.path.basename(key))
+        input_suffix = _tar_suffix(parsed.file)
+        if input_suffix == key_suffix:
+            shutil.copyfile(parsed.file, local_path)
+        else:
+            print(f"Recompressing '{parsed.file}' to match {key_suffix!r}.")
+            repackage_tar(parsed.file, local_path, method=_TAR_SUFFIX_METHOD[key_suffix])
+        remote = f"s3://{bucket}/{key}"
+        print(f"Uploading '{local_path}' to '{remote}'.")
+        subprocess.run(
+            [aws, "s3", "cp", local_path, remote, "--profile=acidgenomics"],
+            check=True,
+        )
+        print(f"Staged: {remote}")
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
 def _collect_shell_files() -> dict[str, list[str]]:
     """Collect shell files grouped by shell type (posix, bash, zsh).
 
@@ -419,6 +571,120 @@ def _handle_shellcheck() -> None:
         alert_success(f"shellcheck passed [{len(sc_files)} files].")
     else:
         sys.exit(result.returncode)
+
+
+_SKILL_DESCRIPTION_MAX_LEN = 1023
+
+
+def _skill_frontmatter_errors(path: str) -> list[str]:
+    """Validate one SKILL.md's frontmatter. Returns list of error messages.
+
+    Enforces the cross-CLI compatibility contract: ``description: >-`` (folded-strip
+    block scalar), never plain ``>`` or an inline scalar, and a 1023-char raw length
+    budget. The 1024-char cap on the *parsed* description is a spec-level constraint
+    of the open Agent Skills format (agentskills.io), not just a Copilot CLI quirk --
+    Codex CLI hardcodes the same ``MAX_DESCRIPTION_LEN=1024``. Plain ``>`` folds in a
+    trailing newline (parsed = raw + 1), silently spending 1 char of that budget for
+    nothing; an over-cap skill gets dropped by whichever CLI reads it.
+    """
+    with open(path, errors="replace") as fh:
+        lines = fh.read().split("\n")
+    if not lines or lines[0].strip() != "---":
+        return [f"{path}:1: missing opening '---' frontmatter delimiter"]
+    end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
+    if end is None:
+        return [f"{path}:1: missing closing '---' frontmatter delimiter"]
+    fm = lines[1:end]
+    errors: list[str] = []
+    if not any(line.startswith("name:") for line in fm):
+        errors.append(f"{path}:1: missing 'name:' key in frontmatter")
+    desc_idx = next((i for i, line in enumerate(fm) if line.startswith("description:")), None)
+    if desc_idx is None:
+        errors.append(f"{path}:1: missing 'description:' key in frontmatter")
+        return errors
+    lineno = desc_idx + 2  # +1 for 0-index, +1 for the opening '---' line
+    style = fm[desc_idx].split(":", 1)[1].strip()
+    if style != ">-":
+        errors.append(
+            f"{path}:{lineno}: description must use 'description: >-' "
+            f"(found {style!r}); anything else risks a parsed-length mismatch "
+            "against the Agent Skills spec's 1024-char cap"
+        )
+        errors.append(f"  {fm[desc_idx].rstrip()}")
+    body: list[str] = []
+    for line in fm[desc_idx + 1 :]:
+        if line.strip() == "" or line.startswith(" "):
+            body.append(line.strip())
+        else:
+            break
+    raw = " ".join(part for part in body if part) if style in (">-", ">", "|", "|-") else style
+    if len(raw) > _SKILL_DESCRIPTION_MAX_LEN:
+        errors.append(
+            f"{path}:{lineno}: description is {len(raw)} chars, over the "
+            f"{_SKILL_DESCRIPTION_MAX_LEN}-char budget (the Agent Skills spec caps "
+            "the parsed description at 1024 chars; over-cap skills get dropped)"
+        )
+    return errors
+
+
+def _handle_check_skills(args: list[str]) -> None:
+    """Handle ``koopa develop check-skills [path...]``.
+
+    Validates every ``SKILL.md``'s frontmatter for cross-CLI compatibility. See
+    ``_skill_frontmatter_errors`` for the exact rules enforced.
+    """
+    import argparse
+
+    from koopa.alert import alert, alert_success
+    from koopa.prefix import koopa_prefix
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop check-skills",
+        description="Validate SKILL.md frontmatter for cross-CLI compatibility.",
+    )
+    parser.add_argument(
+        "roots",
+        nargs="*",
+        metavar="PATH",
+        help=(
+            "skill-directory roots to check (default: <prefix>/.claude/skills and "
+            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills)"
+        ),
+    )
+    parsed = parser.parse_args(args)
+
+    if parsed.roots:
+        roots = [os.path.expanduser(root) for root in parsed.roots]
+    else:
+        prefix = koopa_prefix()
+        roots = [
+            os.path.join(prefix, ".claude", "skills"),
+            os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_claude", "skills"),
+        ]
+
+    skill_files: list[str] = []
+    for root in roots:
+        if not os.path.isdir(root):
+            continue
+        for name in sorted(os.listdir(root)):
+            skill_md = os.path.join(root, name, "SKILL.md")
+            if os.path.isfile(skill_md):
+                skill_files.append(skill_md)
+
+    if not skill_files:
+        print("Error: no SKILL.md files found under the given roots.", file=sys.stderr)
+        sys.exit(1)
+
+    alert(f"Checking frontmatter on {len(skill_files)} skills.")
+    errors: list[str] = []
+    for path in skill_files:
+        errors += _skill_frontmatter_errors(path)
+
+    if errors:
+        for line in errors:
+            print(line, file=sys.stderr)
+        sys.exit(1)
+    alert_success(f"check-skills passed [{len(skill_files)} skills].")
 
 
 def _handle_check_app_versions(args: list[str]) -> None:
@@ -1705,7 +1971,9 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "push-all-app-builds": lambda _: _handle_push_all_app_builds(),
     "push-app-build": _handle_push_app_build,
     "push-app-builds": lambda _: _handle_push_app_builds(),
+    "push-installer": _handle_push_installer,
     "shellcheck": lambda _: _handle_shellcheck(),
+    "check-skills": _handle_check_skills,
     "check-app-versions": _handle_check_app_versions,
     "app-deps": _handle_app_deps,
     "app-revdeps": _handle_app_revdeps,

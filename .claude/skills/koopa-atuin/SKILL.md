@@ -1,6 +1,6 @@
 ---
 name: koopa-atuin
-description: >
+description: >-
   atuin configuration, bash hook architecture, installer patterns, and DB
   maintenance for koopa. Use when debugging atuin history recording, editing
   activation functions, working on the bash-preexec dependency, or resetting

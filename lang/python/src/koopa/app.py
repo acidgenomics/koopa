@@ -7,7 +7,7 @@ from collections.abc import Callable
 from datetime import datetime
 from json import loads
 from os import chmod, getpid, rename
-from os.path import basename, isdir, islink, join, realpath
+from os.path import basename, isdir, isfile, islink, join, realpath
 from shutil import rmtree
 from subprocess import run
 
@@ -143,6 +143,24 @@ def app_json_man1(name: str) -> list[str]:
         if isinstance(man1, list):
             return man1
     return []
+
+
+def installer_artifact_key(name: str, version: str) -> str | None:
+    """Get the S3 key for a private app's staged installer artifact.
+
+    Reads the ``installer_artifact`` field (an S3 key template containing a
+    ``{version}`` placeholder) from app.json and expands it. Returns ``None``
+    when the app has no such field, which is the case for every app that isn't
+    gated on a manually-staged vendor tarball (e.g. cellranger, bcl-convert).
+    """
+    data = import_app_json()
+    entry = data.get(name, {})
+    if not isinstance(entry, dict):
+        return None
+    template = entry.get("installer_artifact", "")
+    if not template:
+        return None
+    return template.format(version=version)
 
 
 def app_deps(name: str) -> list:
@@ -315,12 +333,51 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
+def recorded_app_deps(name: str) -> list | None:
+    """Get the runtime dependency list recorded when *name* was installed.
+
+    Reads ``opt/<name>/.install/info.json``'s ``"dependencies"`` key -- the
+    dep set actually resolved at install time -- rather than re-resolving
+    app.json's dependency dict against the *current* environment. A dict-typed
+    'dependencies' entry (e.g. a ``firewall_linux``/``firewall_macos``/
+    ``default`` split) resolves differently depending on ``KOOPA_BUILDER`` and
+    firewall state, so re-resolving it now for an app installed under a
+    different environment produces a phantom dependency list that was never
+    actually linked, and callers comparing against it flag the app as stale
+    for no real reason.
+
+    Returns ``None`` (not an empty list) when nothing was recorded -- missing
+    opt/ symlink, missing or unreadable info.json, or a pre-existing install
+    from before this field was recorded -- so callers know to fall back to
+    live re-resolution. A recorded empty list is authoritative and returned
+    as-is.
+    """
+    opt_link = join(koopa_opt_prefix(), name)
+    if not islink(opt_link):
+        return None
+    target = realpath(opt_link)
+    info_file = join(target, ".install", "info.json")
+    if not isfile(info_file):
+        return None
+    try:
+        with open(info_file) as f:
+            info = loads(f.read())
+    except (ValueError, OSError):
+        return None
+    deps = info.get("dependencies")
+    if not isinstance(deps, list):
+        return None
+    return deps
+
+
 def stale_revdeps(names: list) -> list:
     """Get installed apps whose runtime dependencies are being reinstalled.
 
     Given a list of app names being installed, returns any currently installed
     apps that have one or more of those names as a runtime dependency. Only
-    considers 'dependencies', not 'build_dependencies'.
+    considers 'dependencies', not 'build_dependencies'. Prefers each candidate's
+    recorded install-time dep list (see `recorded_app_deps`) over app.json's
+    current dict, falling back only when nothing was recorded.
     """
     json_data = import_app_json()
     keys = list(json_data.keys())
@@ -335,11 +392,13 @@ def stale_revdeps(names: list) -> list:
             continue
         if key in targets:
             continue
-        deps = []
-        if "dependencies" in json_data[key]:
-            deps = json_data[key]["dependencies"]
-            if isinstance(deps, dict):
-                deps = _resolve_dep_dict(deps, sys_dict)
+        deps = recorded_app_deps(key)
+        if deps is None:
+            deps = []
+            if "dependencies" in json_data[key]:
+                deps = json_data[key]["dependencies"]
+                if isinstance(deps, dict):
+                    deps = _resolve_dep_dict(deps, sys_dict)
         triggering = set()
         for d in deps:
             resolved_d = d

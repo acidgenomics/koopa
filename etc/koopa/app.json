@@ -931,8 +931,10 @@
     "default": false,
     "description": "Illumina BCL to FASTQ conversion software",
     "install_note": "Installation requires agreement to terms of service at: https://support.illumina.com/sequencing/sequencing_software/bcl-convert/downloads.html",
+    "installer_artifact": "installers/bcl-convert/{version}.tar.xz",
     "installer_platform": "linux",
     "private": true,
+    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -1517,8 +1519,10 @@
     "default": false,
     "description": "10x Genomics single-cell RNA-seq pipeline",
     "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
+    "installer_artifact": "installers/cellranger/{version}.tar.xz",
     "installer_platform": "linux",
     "private": true,
+    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,

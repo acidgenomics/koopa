@@ -6,6 +6,7 @@ import stat
 import subprocess
 
 from koopa.download import download
+from koopa.system import safe_build_env
 
 
 def main(
@@ -16,7 +17,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install julia via juliaup."""
-    env = os.environ.copy()
+    env = safe_build_env()
     env["JULIAUP_DEPOT_PATH"] = os.path.join(os.getcwd(), "juliaup_depot")
     script = download(
         "https://install.julialang.org",

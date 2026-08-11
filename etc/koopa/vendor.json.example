@@ -6,7 +6,13 @@
     "base_url": "https://artifacts.example.com",
     "src_repo": "generic-team-koopa-src",
     "binary_repo": "generic-team-koopa-binaries",
-    "token_env_var": "HTTP_ACCESS_TOKEN"
+    "token_env_var": "HTTP_ACCESS_TOKEN",
+    "remotes": {
+      "koopa.acidgenomics.com": "koopa-remote",
+      "github.com": "github-remote",
+      "www.python.org": "python-org-remote",
+      ".gnu.org": "gnu-remote"
+    }
   },
   "s3": {
     "bucket": "my-org-koopa",

@@ -188,6 +188,79 @@ def test_download_with_mirror_vendor_first_tries_primary_before_vendor(
     assert "https://mirror.example.com/pkg-1.0.tar.gz" in attempted
 
 
+def test_download_with_mirror_vendor_only_succeeds_via_remote_rewrite(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_only with no direct src-mirror URL still succeeds via a remote-proxy rewrite.
+
+    Regression test: download_with_mirror() used to raise FileNotFoundError
+    under vendor_only whenever vendor_download_src() returned None, even if a
+    configured 'http.remotes' rewrite of a public URL was available.
+    """
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        assert out is not None
+        with open(out, "wb") as f:
+            f.write(b"\x1f\x8b" + b"\x00" * 8)
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_only")
+    monkeypatch.setattr("koopa.vendor.vendor_download_src", lambda _name, _filename: None)
+    monkeypatch.setattr(
+        "koopa.vendor.vendor_rewrite_url",
+        lambda url: url.replace("https://example.com", "https://mirror.example.com/github-remote"),
+    )
+    result = download_with_mirror(
+        "https://example.com/pkg-1.0.tar.gz",
+        "pkg",
+        "pkg-1.0.tar.gz",
+        output=str(output),
+    )
+    assert result == str(output)
+    assert attempted == ["https://mirror.example.com/github-remote/pkg-1.0.tar.gz"]
+
+
+def test_download_with_mirror_vendor_first_includes_remote_rewrite(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """vendor_first also tries a remote-proxy rewrite of the primary URL as a fallback."""
+    output = tmp_path / "pkg-1.0.tar.gz"
+    attempted: list[str] = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        attempted.append(url)
+        if url != "https://mirror.example.com/github-remote/pkg-1.0.tar.gz":
+            raise RuntimeError("unreachable")
+        assert out is not None
+        with open(out, "wb") as f:
+            f.write(b"\x1f\x8b" + b"\x00" * 8)
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: {"enabled": True})
+    monkeypatch.setattr("koopa.vendor.vendor_pull_priority", lambda: "vendor_first")
+    monkeypatch.setattr("koopa.vendor.vendor_download_src", lambda _name, _filename: None)
+    monkeypatch.setattr(
+        "koopa.vendor.vendor_rewrite_url",
+        lambda url: url.replace("https://example.com", "https://mirror.example.com/github-remote"),
+    )
+    result = download_with_mirror(
+        "https://example.com/pkg-1.0.tar.gz",
+        "pkg",
+        "pkg-1.0.tar.gz",
+        output=str(output),
+        skip_koopa_mirror=True,
+    )
+    assert result == str(output)
+    assert attempted[0] == "https://example.com/pkg-1.0.tar.gz"
+    assert "https://mirror.example.com/github-remote/pkg-1.0.tar.gz" in attempted
+
+
 @pytest.mark.parametrize(
     "url",
     [
@@ -374,7 +447,9 @@ def test_gnu_mirrors_ignores_non_gnu_url() -> None:
 
 def test_savannah_mirrors_strips_releases_prefix() -> None:
     """download.savannah.nongnu.org URLs are rooted at '/releases/<path>'."""
-    mirrors = _savannah_mirrors("https://download.savannah.nongnu.org/releases/lzip/lzip-1.26.tar.gz")
+    mirrors = _savannah_mirrors(
+        "https://download.savannah.nongnu.org/releases/lzip/lzip-1.26.tar.gz"
+    )
     assert mirrors
     for url in mirrors:
         assert url.endswith("/lzip/lzip-1.26.tar.gz")

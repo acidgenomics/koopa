@@ -495,6 +495,7 @@ def _generate_fish_completion(
     macos_apps: list[str],
     flag_map: dict[str, list[str]],
     today: str,
+    update_system_apps: list[tuple[str, str | None]],
 ) -> str:
     """Generate fish shell completion for koopa."""
     lines: list[str] = []
@@ -614,6 +615,15 @@ def _generate_fish_completion(
     lines += ["", "# update: mode completions."]
     for mode in ("koopa", "system"):
         lines.append(f"complete -c koopa -n '__fish_seen_subcommand_from update' -a '{mode}'")
+
+    lines += ["", "# update system: app names."]
+    for app in sorted({name for name, _plat in update_system_apps}):
+        lines.append(
+            "complete -c koopa"
+            " -n '__fish_seen_subcommand_from update;"
+            " and __fish_seen_subcommand_from system'"
+            f" -a '{app}'"
+        )
 
     lines += ["", "# Per-command flag completions."]
     for path_key in sorted(flag_map):
@@ -757,6 +767,7 @@ def _generate_zsh_completion(
     macos_apps: list[str],
     flag_map: dict[str, list[str]],
     today: str,
+    update_system_apps: list[tuple[str, str | None]],
 ) -> str:
     """Generate native zsh completion for koopa using _arguments/_describe."""
     lines: list[str] = []
@@ -850,10 +861,37 @@ def _generate_zsh_completion(
 
     # -- update ---------------------------------------------------------------
     update_flags_zsh = sorted(flag_map.get("update", []))
-    lines += ["_koopa_update() {", "    _arguments \\"]
+    lines += [
+        "_koopa_update() {",
+        "    local context state line",
+        "    typeset -A opt_args",
+        "    _arguments -C \\",
+    ]
     for flag in update_flags_zsh:
         lines.append(f"        '{flag}[{flag}]' \\")
-    lines += ["        '1:mode:(koopa system)'", "}", ""]
+    lines += [
+        "        '1: :_koopa_update_modes' \\",
+        "        '*:: :->subcmd'",
+        "    [[ $state == subcmd ]] || return 0",
+        "    case $words[1] in",
+        "        system) _koopa_update_system ;;",
+        "        *) return 0 ;;",
+        "    esac",
+        "}",
+        "",
+        "_koopa_update_modes() {",
+        "    local -a modes",
+        "    modes=(koopa system)",
+        "    _describe -t modes 'update mode' modes",
+        "}",
+        "",
+        "_koopa_update_system() {",
+        "    local -a apps",
+        "    apps=(",
+    ]
+    for app in sorted({name for name, _plat in update_system_apps}):
+        lines.append(f"        '{app}'")
+    lines += ["    )", "    _describe -t apps 'system app' apps", "}", ""]
 
     lines.append('_koopa "$@"')
     return "\n".join(lines) + "\n"
@@ -877,6 +915,7 @@ def _generate_powershell_completion(
     macos_apps: list[str],
     flag_map: dict[str, list[str]],
     today: str,
+    update_system_apps: list[tuple[str, str | None]],
 ) -> str:
     """Generate PowerShell tab completion for koopa via Register-ArgumentCompleter."""
     lines: list[str] = []
@@ -885,6 +924,7 @@ def _generate_powershell_completion(
     top_cmds = sorted(_TOP_CMDS)
     _system_cmds_ps = _ps_array(sorted(e[0] for e in _SYSTEM_COMMANDS if e[1] is None))
     _admin_cmds_ps = _ps_array(sorted(e[0] for e in _ADMIN_COMMANDS if e[1] is None))
+    _update_system_apps_ps = _ps_array(sorted({name for name, _plat in update_system_apps}))
 
     lines += [
         "# Koopa PowerShell completions.",
@@ -919,8 +959,7 @@ def _generate_powershell_completion(
         f"                'reinstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'uninstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'system'    {{ $completions = @({_system_cmds_ps}) }}",
-        f"                'update'    {{ $completions = @("
-        f"{_ps_array(['koopa', 'system', 'user'])}) }}",
+        f"                'update'    {{ $completions = @({_ps_array(['koopa', 'system'])}) }}",
         "            }",
         "        }",
         "        2 {",
@@ -938,6 +977,8 @@ def _generate_powershell_completion(
 
     lines += [
         "                }",
+        "            } elseif ($tokens[0] -eq 'update' -and $tokens[1] -eq 'system') {",
+        f"                $completions = @({_update_system_apps_ps})",
         "            }",
         "        }",
         "        3 {",
@@ -1007,6 +1048,7 @@ def _generate_elvish_completion(
     macos_apps: list[str],
     flag_map: dict[str, list[str]],
     today: str,
+    update_system_apps: list[tuple[str, str | None]],
 ) -> str:
     """Generate elvish shell completion for koopa."""
     lines: list[str] = []
@@ -1015,6 +1057,7 @@ def _generate_elvish_completion(
     run_cmds = _load_run_commands()
     system_cmds = sorted(e[0] for e in _SYSTEM_COMMANDS)
     admin_cmds = sorted(e[0] for e in _ADMIN_COMMANDS)
+    update_system_app_names = sorted({name for name, _plat in update_system_apps})
 
     lines += [
         "# Koopa elvish completions.",
@@ -1079,7 +1122,7 @@ def _generate_elvish_completion(
     lines.append("        } elif (eq $args[1] 'uninstall') {")
     lines.append(f"            put {' '.join(all_apps)}")
     lines.append("        } elif (eq $args[1] 'update') {")
-    lines.append("            put koopa system user")
+    lines.append("            put koopa system")
     lines.append("        } elif (eq $args[1] 'configure') {")
     lines.append("            put system user")
     lines.append("        }")
@@ -1101,6 +1144,10 @@ def _generate_elvish_completion(
             first_ns = False
     if not first_ns:
         lines.append("            }")
+    lines.append("        } elif (eq $args[1] 'update') {")
+    lines.append("            if (eq $args[2] 'system') {")
+    lines.append(f"                put {' '.join(update_system_app_names)}")
+    lines.append("            }")
     lines.append("        }")
 
     # Depth 3: app sub-namespace subcommands (depth 4 in tree).
@@ -1141,6 +1188,7 @@ def _generate_nushell_completion(
     macos_apps: list[str],
     flag_map: dict[str, list[str]],
     today: str,
+    update_system_apps: list[tuple[str, str | None]],
 ) -> str:
     """Generate nushell completion for koopa."""
     lines: list[str] = []
@@ -1149,6 +1197,7 @@ def _generate_nushell_completion(
     run_cmds = _load_run_commands()
     system_cmds = sorted(e[0] for e in _SYSTEM_COMMANDS)
     admin_cmds = sorted(e[0] for e in _ADMIN_COMMANDS)
+    update_system_app_names = sorted({name for name, _plat in update_system_apps})
 
     lines += [
         "# Koopa nushell completions.",
@@ -1165,6 +1214,7 @@ def _generate_nushell_completion(
     _nu_completer(lines, "koopa_system_cmds", system_cmds)
     _nu_completer(lines, "koopa_admin_cmds", admin_cmds)
     _nu_completer(lines, "koopa_update_modes", ["koopa", "system"])
+    _nu_completer(lines, "koopa_update_system_apps", update_system_app_names)
     _nu_completer(lines, "koopa_configure_modes", ["system", "user"])
 
     # Per-namespace completers for app sub-tree.
@@ -1208,6 +1258,7 @@ def _generate_nushell_completion(
     for f in update_flags:
         lines.append(f"    {f}")
     lines.append("    mode: string@koopa_update_modes")
+    lines.append("    ...app: string@koopa_update_system_apps")
     lines.append("]")
     lines.append("")
 
@@ -1480,7 +1531,7 @@ def generate_completion() -> None:  # noqa: PLR0915
     )
 
     # update
-    update_items = ["koopa", "system", "user"]
+    update_items = ["koopa", "system"]
     update_items_str = " ".join(f"'{x}'" for x in update_items)
     lines.extend(
         _emit_case_entry(
@@ -1709,7 +1760,14 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write fish completion.
     fish_content = _generate_fish_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
+        app_tree,
+        develop_cmds,
+        common_apps,
+        linux_apps,
+        macos_apps,
+        flag_map,
+        today,
+        installer_modes["update-system"],
     )
     fish_path = os.path.join(koopa_prefix(), "share", "fish", "vendor_completions.d", "koopa.fish")
     os.makedirs(os.path.dirname(fish_path), exist_ok=True)
@@ -1718,7 +1776,14 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write zsh native completion.
     zsh_content = _generate_zsh_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
+        app_tree,
+        develop_cmds,
+        common_apps,
+        linux_apps,
+        macos_apps,
+        flag_map,
+        today,
+        installer_modes["update-system"],
     )
     zsh_path = os.path.join(koopa_prefix(), "share", "zsh", "site-functions", "_koopa")
     os.makedirs(os.path.dirname(zsh_path), exist_ok=True)
@@ -1727,7 +1792,14 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write PowerShell completion.
     ps_content = _generate_powershell_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
+        app_tree,
+        develop_cmds,
+        common_apps,
+        linux_apps,
+        macos_apps,
+        flag_map,
+        today,
+        installer_modes["update-system"],
     )
     ps_path = os.path.join(koopa_prefix(), "share", "powershell", "completions", "koopa.ps1")
     os.makedirs(os.path.dirname(ps_path), exist_ok=True)
@@ -1736,7 +1808,14 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write elvish completion.
     elvish_content = _generate_elvish_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
+        app_tree,
+        develop_cmds,
+        common_apps,
+        linux_apps,
+        macos_apps,
+        flag_map,
+        today,
+        installer_modes["update-system"],
     )
     elvish_path = os.path.join(koopa_prefix(), "share", "elvish", "completions", "koopa.elv")
     os.makedirs(os.path.dirname(elvish_path), exist_ok=True)
@@ -1745,7 +1824,14 @@ def generate_completion() -> None:  # noqa: PLR0915
 
     # Write nushell completion.
     nushell_content = _generate_nushell_completion(
-        app_tree, develop_cmds, common_apps, linux_apps, macos_apps, flag_map, today
+        app_tree,
+        develop_cmds,
+        common_apps,
+        linux_apps,
+        macos_apps,
+        flag_map,
+        today,
+        installer_modes["update-system"],
     )
     nushell_path = os.path.join(koopa_prefix(), "share", "nushell", "completions", "koopa.nu")
     os.makedirs(os.path.dirname(nushell_path), exist_ok=True)

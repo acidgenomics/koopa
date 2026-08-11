@@ -16,6 +16,122 @@ from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
 
+# Env vars safe to pass through to build/install subprocesses (compilers,
+# package managers). Allowlist, not blocklist: a project-scoped credential a
+# direnv .envrc loaded into the shell (e.g. MYPROJECT_API_KEY) is never named
+# here, so it never reaches a build subprocess regardless of what's present
+# in the parent shell's environment.
+_SAFE_BUILD_ENV_KEYS: frozenset[str] = frozenset(
+    {
+        # Identity / shell basics tools fall back to.
+        "HOME",
+        "USER",
+        "LOGNAME",
+        "SHELL",
+        "TERM",
+        "TMPDIR",
+        "PATH",
+        # Locale.
+        "LANG",
+        "LC_ALL",
+        "LC_CTYPE",
+        # Compiler / build toolchain.
+        "CC",
+        "CXX",
+        "FC",
+        "F77",
+        "CFLAGS",
+        "CXXFLAGS",
+        "CPPFLAGS",
+        "LDFLAGS",
+        "LDLIBS",
+        "LIBRARY_PATH",
+        "LD_LIBRARY_PATH",
+        "DYLD_LIBRARY_PATH",
+        "DYLD_FALLBACK_LIBRARY_PATH",
+        "PKG_CONFIG_PATH",
+        "CMAKE_PREFIX_PATH",
+        "CPATH",
+        "C_INCLUDE_PATH",
+        "CPLUS_INCLUDE_PATH",
+        "INCLUDE",
+        "MACOSX_DEPLOYMENT_TARGET",
+        "FORCE_UNSAFE_CONFIGURE",
+        "ac_cv_func_stat64",
+        # Environment Modules (HPC clusters).
+        "LOADEDMODULES",
+        "MODULEPATH",
+        # Corporate TLS interception / proxies. Omitting these breaks every
+        # network-fetching installer running behind a corporate proxy.
+        "SSL_CERT_FILE",
+        "CURL_CA_BUNDLE",
+        "REQUESTS_CA_BUNDLE",
+        "NODE_EXTRA_CA_CERTS",
+        "GIT_SSL_CAINFO",
+        "http_proxy",
+        "https_proxy",
+        "no_proxy",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "NO_PROXY",
+        # XDG base dirs.
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME",
+        # Language toolchain homes that may be pre-set at the system level.
+        "CONDA_EXE",
+        "CONDA_PREFIX",
+        "JAVA_HOME",
+        "GOPATH",
+        "GOBIN",
+        "GOCACHE",
+        "GOFLAGS",
+        "GOPROXY",
+        "GOSUMDB",
+        "GO111MODULE",
+        "OPENSSL_DIR",
+        "PYTHONPATH",
+    },
+)
+
+# Namespaced config surfaces owned by specific build tools. Prefix-matched,
+# so e.g. every KOOPA_INSTALL_* var koopa itself sets is covered without
+# enumerating each one; a project credential would need to happen to be
+# named under one of these prefixes to slip through, which none of the
+# leaks we've seen (MYPROJECT_API_KEY, MYPROJECT_SENTRY_DSN) are.
+_SAFE_BUILD_ENV_PREFIXES: tuple[str, ...] = (
+    "KOOPA_",
+    "_KOOPA_",
+    "HOMEBREW_",
+    "CONDA_",
+    "NPM_CONFIG_",
+    "CARGO_",
+    "RUSTUP_",
+    "GHCUP_",
+    "CABAL_",
+    "STACK_",
+    "JULIAUP_",
+    "PLAYWRIGHT_",
+    "PIP_",
+)
+
+
+def safe_build_env() -> dict[str, str]:
+    """Return a copy of the environment safe to pass to build subprocesses.
+
+    Filters ``os.environ`` down to an allowlist of names and namespaced
+    prefixes that koopa's own installers rely on. Callers that redirect a
+    build tool's cache/home directory (e.g. ``CARGO_HOME``, ``GOPATH``)
+    should set that key on the returned dict afterward, same as they
+    previously did on a raw ``os.environ.copy()``.
+    """
+    return {
+        k: v
+        for k, v in os.environ.items()
+        if k in _SAFE_BUILD_ENV_KEYS or k.startswith(_SAFE_BUILD_ENV_PREFIXES)
+    }
+
 
 def arch() -> str:
     """Return system architecture string.
@@ -335,6 +451,46 @@ def has_sudo() -> bool:
 def is_installed(name: str) -> bool:
     """Check if a program is installed."""
     return shutil.which(name) is not None
+
+
+def find_system_python(version: str) -> str | None:
+    """Find a system Python interpreter matching a 'major.minor' version.
+
+    Checks '/usr/bin/python3' first, then 'python<version>' and 'python3' as
+    resolved on PATH. Kept in sync by hand with bin/koopa's own interpreter
+    probe (__koopa_python_version_matches() there does the same major.minor
+    comparison).
+
+    Parameters
+    ----------
+    version : str
+        Required 'major.minor' version, e.g. '3.12'.
+
+    Returns
+    -------
+    str | None
+        Path to a matching interpreter, or None if none is found.
+    """
+    candidates = ["/usr/bin/python3"]
+    for name in (f"python{version}", "python3"):
+        found = shutil.which(name)
+        if found:
+            candidates.append(found)
+    for candidate in candidates:
+        if not os.path.isfile(candidate):
+            continue
+        result = subprocess.run(
+            [candidate, "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            continue
+        found_version = result.stdout.strip().split()[-1]
+        if ".".join(found_version.split(".")[:2]) == version:
+            return candidate
+    return None
 
 
 def is_interactive() -> bool:

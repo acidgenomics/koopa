@@ -440,9 +440,9 @@ Major changes:
 - Added Xcode Command Line Tools version checks and improved broken RPATH
   detection in `koopa check`.
 - Added vendor backend support for downloading and pushing source mirrors and
-  binary packages from private infrastructure (custom S3 buckets or JFrog
-  Artifactory). Configure via `etc/koopa/vendor.json`. Supports `vendor_first`
-  and `vendor_only` pull strategies.
+  binary packages from private infrastructure (custom S3 buckets or a generic
+  HTTP(S) repository). Configure via `etc/koopa/vendor.json`. Supports
+  `vendor_first` and `vendor_only` pull strategies.
 - Reworked Emacs distribution support. `spacemacs`, `doom-emacs`, and
   `emacs-prelude` are now installed as shared apps under `app/` with wrapper
   scripts, replacing the per-user install model. Each distribution stores

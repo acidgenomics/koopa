@@ -41,6 +41,7 @@ from koopa.system import (
     is_macos,
     is_owner,
     os_slug,
+    safe_build_env,
 )
 from koopa.xdg import xdg_cache_home, xdg_config_home, xdg_data_home
 
@@ -563,10 +564,8 @@ def push_missing_app_builds() -> None:
     Intended as a post-update sweep to catch apps (e.g. conda, aws-cli) that
     were installed before the aws CLI was available in PATH.
     """
-    import subprocess as _subprocess
-
     from koopa.alert import alert, alert_note, alert_success
-    from koopa.aws import koopa_s3_bucket
+    from koopa.aws import koopa_s3_bucket, s3_object_exists
 
     arch = arch2()
     os_str = os_slug()
@@ -603,22 +602,7 @@ def push_missing_app_builds() -> None:
             continue
         tarball_name = _binary_tarball_basename(entry, version)
         key = f"binaries/{os_str}/{arch}/{entry}/{tarball_name}"
-        result = _subprocess.run(
-            [
-                aws,
-                "s3api",
-                "head-object",
-                "--bucket",
-                s3_bucket_bare,
-                "--key",
-                key,
-                "--profile",
-                "acidgenomics",
-            ],
-            capture_output=True,
-            check=False,
-        )
-        if result.returncode != 0:
+        if not s3_object_exists(s3_bucket_bare, key):
             missing.append(entry)
 
     if not missing:
@@ -1097,7 +1081,7 @@ def build_go_package(
     gocache = tempfile.mkdtemp(prefix="koopa-gocache-")
     gopath = tempfile.mkdtemp(prefix="koopa-gopath-")
     os.makedirs(gobin, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["GOBIN"] = gobin
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
@@ -1140,7 +1124,7 @@ def install_go_package(
     gocache = tempfile.mkdtemp(prefix="koopa-gocache-")
     gopath = tempfile.mkdtemp(prefix="koopa-gopath-")
     os.makedirs(gobin, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["GOBIN"] = gobin
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
@@ -1177,7 +1161,7 @@ def install_node_package(
         msg = "npm not found."
         raise FileNotFoundError(msg)
     cache_dir = tempfile.mkdtemp(prefix="koopa-npm-cache-")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["NPM_CONFIG_PREFIX"] = prefix
     env["NPM_CONFIG_UPDATE_NOTIFIER"] = "false"
     if build_env:
@@ -1268,7 +1252,7 @@ def install_python_package(
         pip_args.extend(extra_packages)
     pip_env: dict[str, str] | None = None
     if build_env:
-        pip_env = {**os.environ, **build_env}
+        pip_env = {**safe_build_env(), **build_env}
     subprocess.run(pip_args, check=True, env=pip_env)
     _link_pip_binaries(
         egg_name=egg_name,
@@ -1393,7 +1377,7 @@ def install_rust_package(
         msg = "cargo not found."
         raise FileNotFoundError(msg)
     cargo_home = tempfile.mkdtemp(prefix="koopa-cargo-")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CARGO_HOME"] = cargo_home
     env["CARGO_NET_GIT_FETCH_WITH_CLI"] = "true"
     env["RUST_BACKTRACE"] = "full"
@@ -1570,7 +1554,7 @@ __END__
     perl_ver = result.stdout.lstrip("v")
     perl_major = perl_ver.split(".")[0]
     lib_prefix = os.path.join(prefix, "lib", f"perl{perl_major}")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["PERL5LIB"] = lib_prefix
     try:
         if dependencies:
@@ -1728,7 +1712,7 @@ def install_conda_package(
         forge_url = _resolve_conda_channel_url("conda-forge")
         create_args.insert(-1, f"--channel={forge_url}")
     tmp_pkg_cache = tempfile.mkdtemp()
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
     try:
         subprocess.run(create_args, check=True, env=env, timeout=3600)
@@ -1838,7 +1822,7 @@ def install_haskell_package(
     ghc_prefix = tempfile.mkdtemp(prefix=f"koopa-ghc-{ghc_version}-")
     cabal_store = os.path.join(prefix, "libexec", "cabal", "store")
     os.makedirs(cabal_store, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CABAL_DIR"] = cabal_dir
     env["GHCUP_INSTALL_BASE_PREFIX"] = ghcup_prefix
     try:
@@ -2346,27 +2330,17 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         bp = bootstrap_prefix()
         target_python = os.path.join(bp, "bin", "python3")
         if not os.path.isfile(target_python):
-            _sys_python = "/usr/bin/python3"
-            _matched = False
-            if os.path.isfile(_sys_python):
-                _res = subprocess.run(
-                    [_sys_python, "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
-                if _res.returncode == 0:
-                    _ver = _res.stdout.strip().split()[-1]
-                    if ".".join(_ver.split(".")[:2]) == python_version:
-                        target_python = _sys_python
-                        _matched = True
-            if not _matched:
+            from koopa.system import find_system_python
+
+            found = find_system_python(python_version)
+            if found is None:
                 warn(
                     f"No Python {python_version} interpreter found.\n"
                     f"  Run bootstrap to install Python {python_version}:\n"
                     f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
                 )
                 return
+            target_python = found
         try:
             subprocess.run(
                 [target_python, "-m", "venv", "--symlinks", venv_dir],
@@ -2676,6 +2650,32 @@ def _update_plan_cache_path() -> str:
     return os.path.join(xdg_cache_home(), "koopa", "update-plan.json")
 
 
+def _installed_after(app: str, cutoff_ts: float) -> bool:
+    """Return True if *app*'s recorded install date is newer than *cutoff_ts*.
+
+    *cutoff_ts* is a UTC Unix timestamp. Used to drop apps from a resumed plan
+    that were already installed (e.g. by hand, via ``koopa reinstall``) after
+    the plan was cached, so a resumed ``koopa update`` doesn't redo work that
+    already happened out of band.
+    """
+    from datetime import UTC, datetime
+
+    info_file = os.path.join(opt_prefix(), app, ".install", "info.json")
+    try:
+        with open(info_file) as f:
+            info = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return False
+    date_str = info.get("date", "")
+    if not date_str:
+        return False
+    try:
+        installed_at = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
+    except ValueError:
+        return False
+    return installed_at.timestamp() > cutoff_ts
+
+
 def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     path = _update_plan_cache_path()
     if not os.path.isfile(path):
@@ -2688,17 +2688,22 @@ def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     if source and data.get("source", "") != source:
         return []
     created = data.get("created", "")
+    cutoff = None
     if created:
         from datetime import UTC, datetime
 
         try:
-            ts = datetime.fromisoformat(created)
-            if (datetime.now(tz=UTC) - ts).total_seconds() > 48 * 3600:
+            cutoff = datetime.fromisoformat(created)
+            if (datetime.now(tz=UTC) - cutoff).total_seconds() > 48 * 3600:
                 os.unlink(path)
                 return []
         except ValueError:
-            pass
-    return [(e["app"], e["reason"]) for e in data.get("plan", [])]
+            cutoff = None
+    plan = [(e["app"], e["reason"]) for e in data.get("plan", [])]
+    if cutoff is not None:
+        cutoff_ts = cutoff.timestamp()
+        plan = [(a, r) for a, r in plan if not _installed_after(a, cutoff_ts)]
+    return plan
 
 
 def _save_pending_plan(plan: list[tuple[str, str]], source: str = "") -> None:
@@ -3113,7 +3118,7 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
     cases where ``koopa develop remove-app`` was not used and no revision bump
     was recorded on the dependent.
     """
-    from koopa.app import _resolve_dep_dict, installed_apps
+    from koopa.app import _resolve_dep_dict, installed_apps, recorded_app_deps
     from koopa.system import os_id
 
     json_data = import_app_json()
@@ -3126,9 +3131,14 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
         entry = json_data[name]
         if entry.get("removed"):
             continue
-        deps = entry.get("dependencies", [])
-        if isinstance(deps, dict):
-            deps = _resolve_dep_dict(deps, sys_dict)
+        # Prefer the dep list actually resolved at install time; re-resolving
+        # app.json's dependency dict now can invent a dependency the app never
+        # linked against (see recorded_app_deps docstring).
+        deps = recorded_app_deps(name)
+        if deps is None:
+            deps = entry.get("dependencies", [])
+            if isinstance(deps, dict):
+                deps = _resolve_dep_dict(deps, sys_dict)
         for dep in deps:
             if dep not in json_data:
                 continue
@@ -3229,6 +3239,11 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     label = "app" if n == 1 else "apps"
     display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
     alert(f"Installing {n} {label}: {display}.")
+    if verbose:
+        from koopa.alert import dl
+
+        for app, reason in plan:
+            dl(app, reason or "missing dependency")
     _save_pending_plan(plan, source="update")
     acquired = _acquire_install_lock()
     _binary = _can_install_binary()
@@ -3357,23 +3372,55 @@ def remove_alias_app_dirs() -> None:
             os.unlink(opt_link)
 
 
-def update_system_apps(*, verbose: bool = False) -> None:
-    """Update system-level apps from the update-system registry."""
-    from koopa.alert import alert_note
+def resolve_system_update_entries(names: list[str] | None) -> list[tuple[str, str]]:
+    """Resolve and validate system-update app names against the registry.
+
+    With ``names=None``, returns every ``update-system`` registry entry
+    unfiltered by platform (the sweep case filters platform itself, since an
+    unsupported entry there is silently skipped rather than an error).
+    With explicit ``names``, raises ``ValueError`` for an unknown app or one
+    unsupported on this platform -- an explicit request must not fail silent.
+    """
     from koopa.installers import PYTHON_INSTALLER_MODES
 
-    if not is_admin():
-        alert_note(
-            "Skipping system updates (admin/sudo access required).",
-        )
-        return
     entries = [
         (name, plat) for name, plat, mode in PYTHON_INSTALLER_MODES if mode == "update-system"
     ]
+    if names is None:
+        return entries
+    by_name: dict[str, list[tuple[str, str]]] = {}
     for name, plat in entries:
-        if not _platform_matches(plat):
+        by_name.setdefault(name, []).append((name, plat))
+    resolved: list[tuple[str, str]] = []
+    for name in names:
+        candidates = by_name.get(name)
+        if candidates is None:
+            valid = ", ".join(sorted(by_name))
+            msg = f"Unknown system app: '{name}'. Valid: {valid}."
+            raise ValueError(msg)
+        matching = [c for c in candidates if _platform_matches(c[1])]
+        if not matching:
+            plats = ", ".join(plat for _, plat in candidates)
+            msg = f"'{name}' is not supported on this platform (requires: {plats})."
+            raise ValueError(msg)
+        resolved.extend(matching)
+    return resolved
+
+
+def update_system_apps(*, names: list[str] | None = None, verbose: bool = False) -> None:
+    """Update system-level apps from the update-system registry."""
+    from koopa.alert import alert_note
+
+    if not is_admin():
+        msg = "'koopa update system' requires admin/sudo access."
+        raise PermissionError(msg)
+    entries = resolve_system_update_entries(names)
+    for name, plat in entries:
+        if names is None and not _platform_matches(plat):
             continue
-        _run_system_update(name, verbose=verbose)
+        reason = _run_system_update(name, verbose=verbose)
+        if names is not None and reason:
+            alert_note(reason)
 
 
 def _platform_matches(plat: str) -> bool:
@@ -3392,24 +3439,23 @@ def _platform_matches(plat: str) -> bool:
     return check() if check is not None else False
 
 
-def _run_system_update(name: str, *, verbose: bool) -> None:
+def _run_system_update(name: str, *, verbose: bool) -> str | None:
     """Dispatch a single system update by name."""
-    if name == "homebrew":
-        _update_system_homebrew(verbose=verbose)
-    elif name == "python":
-        _update_system_python(verbose=verbose)
-    elif name == "r":
-        _update_system_r(verbose=verbose)
-    elif name == "tex-packages":
-        _update_system_tex_packages(verbose=verbose)
+    updater = _SYSTEM_UPDATERS.get(name)
+    if updater is None:
+        from koopa.alert import warn
+
+        warn(f"No system updater wired up for '{name}'.")
+        return None
+    return updater(verbose=verbose)
 
 
-def _update_system_tex_packages(*, verbose: bool = False) -> None:
+def _update_system_tex_packages(*, verbose: bool = False) -> str | None:
     """Update TeX packages if tlmgr is installed."""
     from koopa.alert import alert, warn
 
     if shutil.which("tlmgr") is None:
-        return
+        return "tlmgr is not installed."
     alert("Updating TeX packages.")
     try:
         config = InstallConfig(
@@ -3421,14 +3467,15 @@ def _update_system_tex_packages(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update TeX packages: {exc}")
+    return None
 
 
-def _update_system_homebrew(*, verbose: bool = False) -> None:
+def _update_system_homebrew(*, verbose: bool = False) -> str | None:
     """Update Homebrew if installed."""
     from koopa.alert import alert, warn
 
     if shutil.which("brew") is None:
-        return
+        return "Homebrew is not installed."
     alert("Updating Homebrew.")
     try:
         config = InstallConfig(
@@ -3440,16 +3487,17 @@ def _update_system_homebrew(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update Homebrew: {exc}")
+    return None
 
 
-def _update_system_r(*, verbose: bool = False) -> None:
+def _update_system_r(*, verbose: bool = False) -> str | None:
     """Update system R if installed and outdated."""
     from koopa.alert import alert, warn
     from koopa.check import check_system_r
     from koopa.system import is_macos
 
     if check_system_r():
-        return
+        return "System R is already up to date."
     alert("Updating system R.")
     platform = "macos" if is_macos() else "debian"
     try:
@@ -3463,22 +3511,23 @@ def _update_system_r(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update system R: {exc}")
+    return None
 
 
-def _update_system_python(*, verbose: bool = False) -> None:
+def _update_system_python(*, verbose: bool = False) -> str | None:
     """Update macOS system Python if installed and outdated."""
     from koopa.alert import alert, warn
     from koopa.check import check_macos_system_python
 
     if check_macos_system_python():
-        return
+        return "macOS system Python is already up to date."
     json_data = import_app_json()
     py_keys = sorted(
         (k for k in json_data if k.startswith("python3.")),
         reverse=True,
     )
     if not py_keys:
-        return
+        return "macOS system Python is already up to date."
     py_name = py_keys[0]
     alert(f"Updating macOS system Python ({py_name}).")
     try:
@@ -3492,6 +3541,15 @@ def _update_system_python(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update system Python: {exc}")
+    return None
+
+
+_SYSTEM_UPDATERS: dict[str, Callable[..., str | None]] = {
+    "homebrew": _update_system_homebrew,
+    "python": _update_system_python,
+    "r": _update_system_r,
+    "tex-packages": _update_system_tex_packages,
+}
 
 
 # -- Convenience CLI entry point ----------------------------------------------

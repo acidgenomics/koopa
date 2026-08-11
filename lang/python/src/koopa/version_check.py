@@ -858,6 +858,9 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR091
     spec = _classify_by_known_pattern(name, info)
     if spec:
         return spec
+    spec = _classify_by_registry_url(name, args, urls)
+    if spec:
+        return spec
     return None
 
 
@@ -2053,6 +2056,21 @@ def _resolve_pypi_name(name: str, args: dict, urls: list[str]) -> str:
     return name
 
 
+def _classify_by_registry_url(name: str, args: dict, urls: list[str]) -> _AppCheckSpec | None:
+    """Classify by a package-registry URL, as a last resort.
+
+    Catches apps with a bespoke installer module (so the ``_GENERIC_INSTALLER_MAP``
+    suffix match never fires) but whose ``url`` list still points at a public
+    registry, e.g. playwright: a dedicated installer downloads its Chromium build
+    after the pip install, so it doesn't route through ``_python_pkg``.
+    """
+    for url in urls:
+        if "pypi.org/project/" in url:
+            pkg = _resolve_pypi_name(name, args, urls)
+            return _AppCheckSpec("pypi", _check_pypi, (pkg,))
+    return None
+
+
 # ── Orchestrator ──────────────────────────────────────────────────────
 
 
@@ -2418,12 +2436,29 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
         return 0
+    from koopa.app import installer_artifact_key
+    from koopa.install import _has_private_access
+
     json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     data = json.loads(json_path.read_text())
     today = time.strftime("%Y-%m-%d")
     count = 0
     for r in outdated:
         if r.name in data and r.latest_version:
+            artifact_key = installer_artifact_key(r.name, r.latest_version)
+            if artifact_key is not None:
+                staged = False
+                if _has_private_access():
+                    from koopa.aws import koopa_s3_bucket, s3_object_exists
+
+                    staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
+                if not staged:
+                    print(
+                        f"{r.name}: {r.latest_version} available upstream; "
+                        f"artifact not staged, pin held at {r.current_version}",
+                        file=sys.stderr,
+                    )
+                    continue
             data[r.name]["version"] = r.latest_version
             data[r.name]["date"] = today
             data[r.name].pop("revision", None)

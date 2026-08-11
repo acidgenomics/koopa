@@ -1,6 +1,6 @@
 ---
 name: nushell
-description: >
+description: >-
   Nushell (nu) pitfalls, parse-time constraints, and koopa activation architecture.
   Use when writing or debugging .nu files, editing lang/nushell/include/header.nu or
   any activate-*.nu, sourcing prompt tools (starship, zoxide), or porting shell logic
