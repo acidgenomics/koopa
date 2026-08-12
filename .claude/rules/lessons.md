@@ -19,6 +19,12 @@
   or code comments. The backend identifier is `http` for exactly this reason.
   `base_url` examples are plain `https://artifacts.example.com`, no context
   path.
+- **Agent scratch files never land in the repo working directory or `/tmp`.**
+  `uv pip compile` has no `-` = stdout convention — `-o -` writes a literal file
+  named `-` into the cwd (this is how `-` reached commit 73ed328a). Omit `-o`
+  entirely for stdout. Put scratch inputs in a `mktemp -d` directory (respects
+  `$TMPDIR`) and delete them in the same command, so a blanket `git add ./`
+  has nothing to pick up.
 
 ## Skills (load body on invocation)
 
