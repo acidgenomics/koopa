@@ -1,76 +1,34 @@
-** DONE Need to update 'koopa update system' autocompletion and organization
-    'koopa update system [<app>...]' now accepts per-app names, validated
-    against the update-system registry (koopa.install.resolve_system_update_entries).
-    All six shells (bash, zsh, fish, PowerShell, elvish, nushell) now complete
-    'koopa update system <TAB>' with the four target apps; fixed the phantom
-    'user' mode offered by bash/PowerShell/elvish. Dispatch in
-    _run_system_update() is now a registry-keyed dict (_SYSTEM_UPDATERS)
-    instead of an if/elif chain, so an unwired registry entry warns instead
-    of silently no-opping. Docs/man 'update' synopsis corrected to match.
-    The is_admin() gate is now enforced once, inside update_system_apps()
-    itself (raises PermissionError), rather than duplicated in cli_main.py.
-** DONE Need to improve version checking for playwright
-    playwright has a dedicated installer module (downloads Chromium after the
-    pip install) instead of routing through '_python_pkg', so it never matched
-    the generic installer-suffix map in classify_app() and fell through to
-    'Unsupported'. Added a last-resort '_classify_by_registry_url()' fallback
-    in version_check.py, checked only after every existing classification path
-    (special cases, GitHub URL/source scrape, known-pattern map) comes up
-    empty, so no currently-classified app changes source. It matches a
-    'pypi.org/project/<pkg>' URL and reuses the existing '_resolve_pypi_name()'.
-    Verified playwright now classifies as pypi/'playwright' and
-    '_check_pypi("playwright")' returns 1.62.0 correctly. Added a lock-out test
-    that sweeps the real app.json and asserts zero unsupported apps, so any
-    future bespoke installer with this gap fails a test instead of only
-    showing up in a 'check-app-versions' run.
-** DONE Hitting binary push issue for Python packages on builder machine with uv
-    Root cause: 'push_app_build()' and 'push_missing_app_builds()' picked the
-    version to push with 'sorted(os.listdir(app_dir))[-1]' — a string sort over
-    sibling version directories under app/<name>/. app/python3.13/ holds
-    3.13.13/3.13.14/3.13.15 today; a single-digit patch release (e.g. 3.13.9)
-    sorts after 3.13.15 as a string, so the old logic would silently check S3
-    for and push the wrong version. Both now read the version actually linked
-    at opt/<name> (realpath + basename) via a new '_active_app_version()'
-    helper in install.py, matching what the CLI handler
-    '_handle_push_app_build()' already did correctly. 'push_app_build()' now
-    raises explicitly when opt/<name> isn't linked instead of guessing.
-    Also moved the auto-push call in 'install_app()' to after
-    '.install/revision' and '.install/info.json' are written (previously
-    before), so a pushed tarball carries build provenance instead of a bare
-    prefix. Added unit tests covering the wrong-version-picked scenario for
-    both functions and the not-linked error case.
-** DONE We need to fix indentation of TOC for Python packages
-    https://python.acidgenomics.com/pipette/
-    Fixed in the shared theme (lang/python/src/koopa/assets/sphinx_theme/):
-    layout.html now unwraps Sphinx's redundant self-link wrapper <li> from
-    the toc block and tags the real list id="toc", so it inherits base.css's
-    #toc separator/padding/bleed instead of double-nesting under two <ul>
-    levels. acidgenomics.css's nested-ul padding is zeroed so each heading
-    level steps by one clean 2rem/1rem margin. Verified with local
-    sphinx-build -W against koopa's own docs and py-pipette (the reported
-    page). Synced to koopa and all seven published py-* package doc trees
-    via `koopa app python sync-docs-theme`; publishing to the live sites is
-    left to the user.
-** DONE Review this code:
-    ⋮ 682│    system_updates = mode == "system"
-    Removed as part of the 'koopa update system' rework above: cli_main.py's
-    _handle_update() now compares 'mode == "system"' directly instead of
-    caching it in a redundant local.
-** TODO Commit vendored acidgenomics Sphinx theme in the 7 py-* repos
-    docs/_themes/acidgenomics/{layout.html,static/acidgenomics.css,theme.toml}
-    and docs/conf.py are modified but uncommitted in every ~/git/personal/py-*
-    repo. Live on python.acidgenomics.com (published from dirty trees), so a
-    clean checkout rebuilds the older theme. Verify sync first:
-    koopa app python sync-docs-theme --check ~/git/personal/py-*
+** TODO I'm not sure about best practice for updating plugins in neovim with new configuration
+** TODO Usage of tilde character in org files for neovim causes weird incorrect esaping / highlighting problems.
+    The `uv` fast path (prebuilt CPython, skips the <TILDE>10 min source compile)
+    This causes coloring issues in neovim, need to fix this
+** TODO Finish artifacts-bucket support to inspect info.json
+    Local side is DONE: 'koopa develop scrub-install-info' rewrote 253
+    .install/info.json files down to the allowlist; a re-run reports clean,
+    JSON stays valid, and the provenance fields staleness detection reads
+    (dependencies, dep_versions, dep_revisions) are preserved. Full pytest
+    (525) still passes and outdated-app reasons are all genuine version
+    bumps, no phantom dependency churn.
 
-    Re-verified: all seven report "Up to date". Left for the user to commit
-    (each repo dirty with the same four files):
-      for repo in py-acidbase py-acidgenomes py-acidplyr py-cellosaurus \
-          py-goalie py-pipette py-syntactic; do
-        git -C ~/git/personal/"$repo" add docs/_themes/acidgenomics docs/conf.py
-        git -C ~/git/personal/"$repo" commit -m "Vendor acidgenomics Sphinx theme"
-      done
+    S3 side is partially audited (read-only, binaries/macos-26/arm64/).
+
+    Note the likely reason most tarballs have no info.json: until the fix in
+    this session, install_app() called push_app_build() *before* writing
+    .install/, so auto-pushed tarballs carried no provenance. Objects pushed
+    manually via 'koopa develop push-app-build' (like dotfiles) do carry it,
+    which is why that one is dirty. Post-fix pushes will include info.json --
+    already scrubbed at write time by the allowlist, so new pushes are safe.
+
+    Also worth deciding: whether push_app_build() should exclude .install/
+    from the tarball outright, or keep it (useful provenance) and rely on the
+    allowlist. Current behavior keeps it.
 ** DONE Work on a better way to handle bootstrap python
+    FIXME Let's rework this to use `~/.config/koopa/vendor.json` instead.
+    I don't want to bake this directly in to the repo source code I think.
+
+    FIXME We need to update our installer documentation with clarification about
+    support for this new bootstrap configuration override.
+
     `bootstrap.sh` now reads `etc/koopa/vendor.json` directly (own JSON parse via
     whichever `python3` it finds, `sed` fallback if none exists) and routes every
     source download through it, honoring `vendor_first`/`vendor_only`. Fixed a
@@ -90,7 +48,7 @@
     identically; `download_with_mirror()` in `koopa.download` folds it into
     the app-install path too, not just bootstrap.
 
-    The `uv` fast path (prebuilt CPython, skips the ~10 min source compile)
+    The `uv` fast path (prebuilt CPython, skips the 10 min source compile)
     now takes `uv` from `PATH` under a vendor config instead of fetching it
     from GitHub, and derives `UV_PYTHON_INSTALL_MIRROR` from `remotes` so the
     CPython download itself can go through the mirror too (confirmed
@@ -104,6 +62,9 @@
     `_update_venv()`), so an already-installed matching interpreter avoids
     bootstrapping at all.
 
+    FIXME Need to ensure we're not hard coding against 'python3.12' here in
+    the event we bump to python3.13+ in future bootstrap.
+
     Verified: `sh -n` + `shellcheck` clean on both scripts; `ruff`/`ty`/`pyright`
     clean; full `pytest` suite (incl. new `test_bootstrap.py` anti-drift tests
     comparing the sh and Python vendor helpers byte-for-byte, plus a lock-out
@@ -111,39 +72,3 @@
     end-to-end run confirms a `vendor_only` bootstrap contacts only the
     mirror. Docs (`docs/installation.md`) rewritten and verified with a real
     `sphinx-build -W`.
-** DONE I hit a weird edge case where Python reinstalled with `koopa update` after I just installed them with `koopa reinstall` first
-    Root cause: python3.13/python3.14's app.json 'dependencies' is a dict keyed
-    'default'/'firewall_linux'/'firewall_macos'. '_resolve_dep_dict()'
-    dispatches on 'has_firewall() or can_build_binary()' — empty list in a
-    plain shell, 11 C libraries under KOOPA_BUILDER=1 or behind a firewall.
-    check.py's staleness check re-resolved this dict *now* and compared
-    against the recorded '.install/info.json', defaulting any dep never
-    recorded to revision 0 — so an app installed in one context (empty deps
-    recorded) re-checked in another (11 deps re-resolved) saw a phantom
-    'bzip2 revised: 0 -> 2' and got rebuilt from source, matching the reported
-    7m05s/4m52s timings exactly.
-    Fix: added 'recorded_app_deps()' in app.py, reading the dep list actually
-    resolved at install time from '.install/info.json' (an authoritative empty
-    list is distinguished from "nothing recorded"). check.py, 'stale_revdeps()',
-    and '_apps_with_missing_runtime_deps()' now all prefer this recorded list
-    over re-resolving app.json's dict, falling back to live re-resolution only
-    for installs that predate this field. Also made 'update_stale_apps()' print
-    per-app reasons unconditionally (previously gated behind --verbose), so a
-    future rebuild explains itself instead of looking arbitrary. Added
-    regression tests reproducing the exact phantom-dependency scenario in both
-    check.py and app.py's stale_revdeps().
-** DONE Review upgrade paths for cellranger
-    Verified the staged-artifact gate already in this tree works as intended:
-    'update_app_json()' holds the version pin and reports "artifact not
-    staged" until 'koopa develop push-installer' stages the new tarball in the
-    private artifacts bucket (checked via 'installer_artifact_key()' +
-    's3_object_exists()'); the installer itself fails with the push-installer
-    remedy when the artifact is missing, and asserts the extracted archive has
-    a top-level 'bin/' before linking, in case 10x Genomics changes their
-    tarball layout. Upstream check is correct: 10XGenomics/cellranger's latest
-    release is cellranger-10.0.0, matching app.json. Confirmed test coverage
-    already exists in tests/test_installers.py (staged-artifact pin-hold,
-    missing-'installer_artifact' case, archive-layout assertion) for both
-    cellranger and bcl-convert. Documented the maintainer upgrade path
-    (check-versions -> download -> push-installer -> re-check -> install) in
-    the koopa-app-registry skill.
