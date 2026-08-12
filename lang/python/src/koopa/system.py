@@ -4,7 +4,10 @@ Converted from POSIX shell and Bash functions for system identification,
 architecture detection, and OS-level queries.
 """
 
+import base64
 import grp
+import gzip
+import json
 import os
 import platform
 import pwd
@@ -12,9 +15,11 @@ import re
 import shutil
 import subprocess
 import sys
+import zlib
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 # Env vars safe to pass through to build/install subprocesses (compilers,
 # package managers). Allowlist, not blocklist: a project-scoped credential a
@@ -131,6 +136,66 @@ def safe_build_env() -> dict[str, str]:
         for k, v in os.environ.items()
         if k in _SAFE_BUILD_ENV_KEYS or k.startswith(_SAFE_BUILD_ENV_PREFIXES)
     }
+
+
+def _decode_direnv_diff(diff: str) -> tuple[dict[str, Any], dict[str, Any]] | None:
+    """Decode direnv's 'DIRENV_DIFF' payload into (before, after) value maps.
+
+    Format: base64url (padding may be stripped) wrapping zlib- or gzip-compressed
+    JSON '{"p": <values before the .envrc ran>, "n": <values after>}'. Returns
+    None on any malformed input -- this decodes data from an external process,
+    not koopa's own state, so a parse failure must never raise.
+    """
+    try:
+        raw = base64.urlsafe_b64decode(diff + "=" * (-len(diff) % 4))
+        try:
+            payload = zlib.decompress(raw)
+        except zlib.error:
+            payload = gzip.decompress(raw)
+        obj = json.loads(payload)
+        prev = obj["p"]
+        new = obj["n"]
+    except Exception:
+        return None
+    if not isinstance(prev, dict) or not isinstance(new, dict):
+        return None
+    return prev, new
+
+
+def revert_direnv_env() -> list[str]:
+    """Undo direnv's '.envrc'-driven mutations to 'os.environ', in place.
+
+    direnv exports 'DIRENV_DIFF' (see '_decode_direnv_diff') alongside the vars an
+    active '.envrc' loaded. A project-scoped credential or proxy setting sitting
+    in a shell's environment reaches every subprocess koopa spawns that doesn't
+    route through 'safe_build_env' -- the majority of them. Restoring the exact
+    pre-'.envrc' state removes that exposure at the source instead of filtering
+    it downstream.
+
+    Returns the names of vars changed (restored or removed), never their values,
+    so callers can report a count without risking a secret in a log line.
+    Idempotent: 'DIRENV_DIFF' itself is one of the removed names, so a second
+    call (e.g. after this process re-execs itself) is a no-op.
+    """
+    diff = os.environ.get("DIRENV_DIFF")
+    if not diff:
+        return []
+    decoded = _decode_direnv_diff(diff)
+    if decoded is None:
+        return []
+    prev, new = decoded
+    changed: list[str] = []
+    for key in sorted(set(prev) | set(new)):
+        if key in prev:
+            if not isinstance(prev[key], str):
+                continue
+            if os.environ.get(key) != prev[key]:
+                os.environ[key] = prev[key]
+                changed.append(key)
+        elif key in os.environ:
+            del os.environ[key]
+            changed.append(key)
+    return changed
 
 
 def arch() -> str:

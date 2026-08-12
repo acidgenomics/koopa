@@ -1,35 +1,119 @@
-** TODO I'm not sure about best practice for updating plugins in neovim with new configuration
-** TODO Usage of tilde character in org files for neovim causes weird incorrect esaping / highlighting problems.
-    The `uv` fast path (prebuilt CPython, skips the <TILDE>10 min source compile)
-    This causes coloring issues in neovim, need to fix this
-** TODO Finish artifacts-bucket support to inspect info.json
-    Local side is DONE: 'koopa develop scrub-install-info' rewrote 253
+** DONE I'm not sure about best practice for updating plugins in neovim with new configuration
+    lazy.nvim (opt/dotfiles/chezmoi/dot_config/nvim/lua/init.lua.tmpl) sets
+    'checker = { enabled = false }': missing plugins auto-install at startup,
+    but nothing ever checks for updates and nothing ever cleans a plugin whose
+    spec was removed. Confirmed the gap concretely: ~/.local/share/nvim/lazy/
+    had a 'copilot.lua' directory with no matching spec in lua/plugins/*.lua
+    and no entry in lazy-lock.json, an orphan from a removed spec.
+
+    Added 'koopa configure user neovim'
+    (lang/python/src/koopa/configurers/neovim.py, registered in
+    configurers/__init__.py), modeled on the existing doom-emacs/spacemacs
+    user configurers. Runs 'nvim --headless "+Lazy! sync" +qa' (install
+    missing + clean orphaned + update existing + rewrite the lockfile), then
+    diffs the deployed lazy-lock.json against the chezmoi source copy and
+    prints the exact 'chezmoi re-add' command when they differ.
+
+    lazy-lock.json is now versioned in the chezmoi source
+    (dot_config/nvim/lazy-lock.json), consistent with how etc/koopa/app.json
+    pins every other koopa-managed app -- without it every host drifted to
+    whatever commits it happened to install.
+
+    Documented the full edit -> apply -> configure -> re-add -> commit loop
+    in a new 'koopa-neovim' skill, referenced from .claude/rules/lessons.md.
+
+    Verified: ran 'koopa configure user neovim' for real -- the sync log
+    showed '[copilot.lua] clean', and 'ls ~/.local/share/nvim/lazy/' no
+    longer lists it afterward. The drift note fired and named the correct
+    command; re-ran it and confirmed the deployed and source lockfiles
+    matched byte-for-byte. 'koopa develop generate-completion' picked up the
+    new registry entry. New lang/python/tests/test_configurers_neovim.py
+    (8 tests) passes.
+** DONE Usage of tilde character in org files for neovim causes weird incorrect esaping / highlighting problems.
+    Root cause: Neovim's bundled syntax/org.vim defines the six inline
+    emphasis regions (bold/italic/strikethrough/underline/verbatim/code) with
+    'keepend' but no 'oneline'. Per ':help :syn-oneline', without 'oneline' an
+    unclosed marker (a lone '~' in prose, e.g. "skips the ~10 min compile")
+    highlights everything until the next stray marker or EOF instead of
+    failing to open -- confirmed with a headless synID() sweep of this very
+    file: 'orgItalic' was spanning lines 49-52 (opened by a stray '/' in
+    'ruff format', closing on the next '/', swallowing the '** DONE'
+    headline on line 51 along the way) and 'orgUnderline' similarly from
+    '_revert_direnv_env()' on lines 41 and 47.
+
+    Added opt/dotfiles/chezmoi/dot_config/nvim/after/syntax/org.vim, which
+    clears and redefines all six regions with 'keepend oneline' and
+    character classes based on org-emphasis-regexp-components. An unclosed
+    marker now highlights nothing instead of running away. Deliberate
+    tradeoff, recorded in the new koopa-neovim skill: real org syntax allows
+    an emphasis span to wrap one newline, 'oneline' does not support that --
+    a stray marker is far more common in freeform notes than a genuine
+    multi-line span.
+
+    Verified: re-ran the same synID() sweep against this file with the fix
+    deployed -- lines 41, 47, and 49-52 report no orgUnderline/orgItalic;
+    only orgHeadline, list markers, and genuinely paired emphasis survive. A
+    literal '~10 min' also no longer needs the '<TILDE>' placeholder that had
+    been standing in for it.
+** DONE Finish artifacts-bucket support to inspect info.json
+    Local side: 'koopa develop scrub-install-info' rewrote 253
     .install/info.json files down to the allowlist; a re-run reports clean,
     JSON stays valid, and the provenance fields staleness detection reads
-    (dependencies, dep_versions, dep_revisions) are preserved. Full pytest
-    (525) still passes and outdated-app reasons are all genuine version
-    bumps, no phantom dependency churn.
+    (dependencies, dep_versions, dep_revisions) are preserved.
 
-    S3 side is partially audited (read-only, binaries/macos-26/arm64/).
+    S3 side: full read (not just a byte-range sample) of every object under
+    binaries/macos-26/arm64/ found 2 of 31 objects carrying a pre-allowlist
+    environ dump (106 non-allowlisted keys each) -- a range-limited scan the
+    day before had only caught 1, since the second object's '.install/'
+    member fell past the range read. Remediated both:
+      - dotfiles/d602b0a.tar.gz: re-pushed via 'koopa develop push-app-build
+        dotfiles' (opt/dotfiles still links that exact revision, prefix
+        already scrubbed locally); re-downloaded and confirmed 0
+        non-allowlisted keys.
+      - spacemacs/f9fabff.tar.gz: no local prefix exists to re-push a clean
+        copy from (only 47c09c5 is installed), so deleted the object outright
+        (user-approved; bucket has no versioning/lifecycle config, so this is
+        a full removal, not a soft-delete). Binary cache now simply misses for
+        that revision.
+    Re-ran the full audit after both fixes: 0/30 dirty.
 
-    Note the likely reason most tarballs have no info.json: until the fix in
-    this session, install_app() called push_app_build() *before* writing
-    .install/, so auto-pushed tarballs carried no provenance. Objects pushed
-    manually via 'koopa develop push-app-build' (like dotfiles) do carry it,
-    which is why that one is dirty. Post-fix pushes will include info.json --
-    already scrubbed at write time by the allowlist, so new pushes are safe.
+    Root cause of most tarballs having no info.json at all: until the push-
+    ordering fix earlier this session, install_app() called push_app_build()
+    *before* .install/ was written, so auto-pushed tarballs carried no
+    provenance. Only manually-pushed objects (koopa develop push-app-build)
+    did -- which is why exactly those two were the dirty pair. New pushes are
+    scrubbed at write time by the allowlist, so this doesn't recur.
 
-    Also worth deciding: whether push_app_build() should exclude .install/
-    from the tarball outright, or keep it (useful provenance) and rely on the
-    allowlist. Current behavior keeps it.
+    Decided to keep .install/ in pushed tarballs rather than exclude it:
+    binary installs read the bundled info.json for recorded_app_deps(), which
+    is what prevents the phantom-dependency rebuild bug fixed earlier this
+    session. Dropping it would reintroduce that bug for every binary install.
+
+    Also wired 'koopa.system.revert_direnv_env()' (previously dead code --
+    zero callers) into cli_main.py's install/reinstall/update handlers via a
+    new '_revert_direnv_env()', called right after the platform/git-managed
+    guards and before any app resolution or build subprocess. Replaces the
+    old warn-only behavior: a direnv-loaded project credential is now
+    reverted in-process instead of just flagged, closing the actual source of
+    the environ-dump problem rather than only its symptom. Reports a count
+    under --verbose; silent otherwise. Added coverage for the gzip fallback
+    branch in '_decode_direnv_diff()' (only zlib was tested before).
+
+    Verified: full pytest suite (535) passes, 'ruff check'/'ruff format
+    --check' clean (340 files), 'pyright' 0 errors.
 ** DONE Work on a better way to handle bootstrap python
-    FIXME Let's rework this to use `~/.config/koopa/vendor.json` instead.
-    I don't want to bake this directly in to the repo source code I think.
+    RESOLVED: `koopa.vendor.vendor_config()` and `bootstrap.sh`'s `vendor_load()`
+    now check `${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json` first, falling
+    back to `etc/koopa/vendor.json` inside the repo only if that doesn't exist
+    (first file found wins, the two are never merged). The XDG location is
+    outside the koopa tree entirely, so it isn't baked into the repo source and
+    survives a pinned-release re-extract or `git clean`.
 
-    FIXME We need to update our installer documentation with clarification about
-    support for this new bootstrap configuration override.
+    RESOLVED: `docs/installation.md` now documents the XDG-first vendor.json
+    location and precedence, with the `cp` snippet updated to write there by
+    default.
 
-    `bootstrap.sh` now reads `etc/koopa/vendor.json` directly (own JSON parse via
+    `bootstrap.sh` now reads `vendor.json` directly (own JSON parse via
     whichever `python3` it finds, `sed` fallback if none exists) and routes every
     source download through it, honoring `vendor_first`/`vendor_only`. Fixed a
     live bug along the way: the koopa-mirror fallback URLs for openssl and python
@@ -62,8 +146,10 @@
     `_update_venv()`), so an already-installed matching interpreter avoids
     bootstrapping at all.
 
-    FIXME Need to ensure we're not hard coding against 'python3.12' here in
-    the event we bump to python3.13+ in future bootstrap.
+    RESOLVED: `bin/koopa` no longer hardcodes `python3.12` -- it derives the
+    candidate name from `.python-version` (`"python${_required_ver}"`), the
+    same value it already reads for the version-match check, so a future
+    3.13+ bump needs no code change here.
 
     Verified: `sh -n` + `shellcheck` clean on both scripts; `ruff`/`ty`/`pyright`
     clean; full `pytest` suite (incl. new `test_bootstrap.py` anti-drift tests
@@ -72,3 +158,11 @@
     end-to-end run confirms a `vendor_only` bootstrap contacts only the
     mirror. Docs (`docs/installation.md`) rewritten and verified with a real
     `sphinx-build -W`.
+
+    Follow-up verified separately: XDG vendor.json precedence covered by new
+    tests in both `test_vendor.py` and `test_bootstrap.py` (XDG file alone,
+    XDG winning over `etc/`, and `etc/` fallback when no XDG file exists, on
+    both the sh and Python sides); `bin/koopa`'s derived-name probe exercised
+    end-to-end against a scratch prefix with `KOOPA_BOOTSTRAP_PREFIX` pointed
+    at a nonexistent path, confirming it falls through to the system
+    interpreter and runs `koopa --version` successfully.

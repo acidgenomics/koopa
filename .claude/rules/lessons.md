@@ -42,6 +42,7 @@
 | `koopa-dotfiles` | opt/dotfiles standalone clone, detached-HEAD-before-commit, license metadata, SHA-pin rollout (app.json `version` field) + known "fix looks unshipped" failure mode |
 | `koopa-google-ai-cli` | Antigravity CLI (`agy`) installer — GCS versioned-URL pinning, build_id+SHA512 stored in app.json (auto-updated via `extra_fields_fn`), self-update gate, `~/.gemini/` config layout, gemini-cli successor relationship |
 | `koopa-completion` | completion generator architecture, bash lazy-load, zsh compdump freshness, flag-gate bug pattern (bare TAB on leaf commands), phantom `update user` mode + `update system <app>` completion-vs-parser drift fix, registry-entry-listed-twice dedupe trap, `generate-completion` regen workflow |
+| `koopa-neovim` | lazy.nvim architecture (checker disabled, `LazyDone` autocmd), `koopa configure user neovim` headless `:Lazy! sync`, orphaned-plugin detection (directory with no spec and no lock entry), versioned `lazy-lock.json` + `chezmoi re-add` drift note, `after/syntax/org.vim` `oneline` fix for inline emphasis bleeding past an unclosed marker |
 | `git` | git 2.55 features — `git history` (fixup/reword/split), `format-rev` (EXPERIMENTAL), `url-parse`, `checkout -m` autostash, `--graph-lane-limit`, `--max-count-oldest`, push to remote groups, Linux fsmonitor |
 | `koopa-git` | koopa develop→main PR pattern, `-X ours` conflict resolution, tag management, rebase-abort recovery |
 | `git-history-surgery` | git filter-repo identity rewrites, commit-tree replay for dedup (user-global skill) |

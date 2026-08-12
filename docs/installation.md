@@ -142,10 +142,11 @@ work normally against it, but `koopa update` recognizes the tree as a pinned
 release and reports as much instead of attempting a `git pull`. To update,
 fetch and extract the next tagged release the same way.
 
-The first `koopa` invocation needs a Python 3.12 interpreter to run its own
-CLI. It looks for one at `/usr/bin/python3` first, then `python3.12` and
-`python3` as resolved on `PATH`; if none is exactly 3.12, it runs
-`bootstrap.sh`. `bootstrap.sh` reads the same `etc/koopa/vendor.json`
+The first `koopa` invocation needs an interpreter matching the version pinned
+in `.python-version` (currently 3.12) to run its own CLI. It looks for one at
+`/usr/bin/python3` first, then the `.python-version`-derived name (e.g.
+`python3.12`) and `python3` as resolved on `PATH`; if none matches, it runs
+`bootstrap.sh`. `bootstrap.sh` reads the same `vendor.json`
 described in [Internal mirror](#internal-mirror-restricted-networks) below,
 so a `vendor_only` network routes the bootstrap Python build through the
 mirror too, the same as every other app install.
@@ -175,10 +176,13 @@ allowlist, or where every artifact must be reviewed before it reaches a host,
 route these downloads through an internal mirror instead: a generic HTTP(S)
 repository or an S3 bucket that you control and populate.
 
-Copy the example config and edit it in place:
+Copy the example config into `${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json`
+and edit it in place. This location is recommended over `etc/koopa/vendor.json`
+inside the checkout (see precedence note below):
 
 ```sh
-cp etc/koopa/vendor.json.example etc/koopa/vendor.json
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/koopa"
+cp etc/koopa/vendor.json.example "${XDG_CONFIG_HOME:-$HOME/.config}/koopa/vendor.json"
 ```
 
 ```json
@@ -232,10 +236,16 @@ Fields:
   missing from both — this is what a genuinely airgapped or allowlisted
   network needs.
 
-`vendor.json` is read from `etc/koopa/vendor.json` relative to the koopa
-prefix and is gitignored; it is not something you commit alongside the koopa
-checkout. Populating `src_repo` with the app versions your team needs is an
-operational task outside koopa itself — `koopa develop push-app-build <name>`
+`vendor.json` is checked in order, first existing file wins (the two are never
+merged): `${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json`, then
+`etc/koopa/vendor.json` relative to the koopa prefix. The `etc/koopa/` location
+is gitignored either way; it is not something you commit alongside the koopa
+checkout. The `XDG_CONFIG_HOME` location is preferred because it lives outside
+the koopa tree entirely: a pinned-release re-extract or a `git clean` in the
+checkout can never destroy it, so the mirror config the host depends on to
+install anything survives independently. Populating `src_repo` with the app
+versions your team needs is an operational task outside koopa itself —
+`koopa develop push-app-build <name>`
 uploads a locally built app to the configured backend once credentials are
 present. A `remotes` entry needs no such per-app population step: point one
 remote repository at `koopa.acidgenomics.com` and it covers every source

@@ -19,11 +19,24 @@ from urllib.parse import urlparse
 
 @lru_cache(maxsize=1)
 def vendor_config() -> dict[str, Any] | None:
-    """Load vendor.json config. Returns None if missing, disabled, or invalid."""
-    from koopa.prefix import koopa_prefix
+    """Load vendor.json config. Returns None if missing, disabled, or invalid.
 
-    path = Path(koopa_prefix()) / "etc" / "koopa" / "vendor.json"
-    if not path.is_file():
+    Checked in order, first existing file wins (not merged):
+    '${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json', then
+    '<koopa-prefix>/etc/koopa/vendor.json'. The XDG location survives a
+    pinned-release re-extract or 'git clean', since it lives outside the koopa
+    tree entirely; the 'etc/koopa/' location is kept for continuity with
+    existing setups and the shipped '.example' file.
+    """
+    from koopa.prefix import koopa_prefix
+    from koopa.xdg import xdg_config_home
+
+    candidates = [
+        Path(xdg_config_home()) / "koopa" / "vendor.json",
+        Path(koopa_prefix()) / "etc" / "koopa" / "vendor.json",
+    ]
+    path = next((c for c in candidates if c.is_file()), None)
+    if path is None:
         return None
     try:
         data = json.loads(path.read_text())

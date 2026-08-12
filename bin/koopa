@@ -82,13 +82,13 @@ fi
 if [ -z "$_python" ]; then
     _required_ver="$(cat "${_koopa_prefix}/.python-version" 2>/dev/null)"
     if [ -n "$_required_ver" ]; then
-        # /usr/bin/python3 first (matches historical behavior), then
-        # whatever python3.12 or python3 resolve to on PATH -- an
-        # already-installed matching interpreter there avoids running
-        # bootstrap.sh at all.
+        # /usr/bin/python3 first (matches historical behavior), then whatever
+        # the .python-version-derived name (e.g. python3.12) or bare python3
+        # resolve to on PATH -- an already-installed matching interpreter
+        # there avoids running bootstrap.sh at all.
         for _sys_python in \
             /usr/bin/python3 \
-            "$(command -v python3.12 2>/dev/null || true)" \
+            "$(command -v "python${_required_ver}" 2>/dev/null || true)" \
             "$(command -v python3 2>/dev/null || true)"
         do
             [ -n "$_sys_python" ] || continue

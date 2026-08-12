@@ -116,7 +116,8 @@ cpu_count() {
 }
 
 # ---------------------------------------------------------------------------
-# Vendor mirror support (etc/koopa/vendor.json). See docs/installation.md,
+# Vendor mirror support ('${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json',
+# falling back to 'etc/koopa/vendor.json'). See docs/installation.md,
 # "Internal mirror (restricted networks)", and koopa.vendor for the Python
 # equivalent that koopa itself uses once bootstrapped. Kept in sync by hand;
 # lang/python/tests/test_bootstrap.py asserts the sh and Python helpers agree.
@@ -255,10 +256,13 @@ _vendor_env_value() {
 }
 
 vendor_load() {
-    # Populates the VENDOR_* globals from etc/koopa/vendor.json, once, at the
-    # top of main(). Leaves VENDOR_ENABLED=0 (all vendor lookups become
-    # no-ops) when the file is missing, disabled, or invalid, matching
-    # koopa.vendor.vendor_config()'s None case.
+    # Populates the VENDOR_* globals, once, at the top of main(). Checked in
+    # order, first existing file wins (not merged):
+    # '${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json', then
+    # '${KOOPA_PREFIX}/etc/koopa/vendor.json' -- matching
+    # koopa.vendor.vendor_config()'s search order. Leaves VENDOR_ENABLED=0
+    # (all vendor lookups become no-ops) when neither file exists, or the one
+    # found is disabled or invalid, matching vendor_config()'s None case.
     VENDOR_ENABLED=0
     VENDOR_BACKEND=''
     VENDOR_BASE_URL=''
@@ -270,7 +274,11 @@ vendor_load() {
     VENDOR_S3_PROFILE=''
     VENDOR_S3_SRC_PREFIX='src'
     VENDOR_REMOTES=''
-    __kvar_json="${KOOPA_PREFIX}/etc/koopa/vendor.json"
+    __kvar_json="${XDG_CONFIG_HOME:-${HOME}/.config}/koopa/vendor.json"
+    if [ ! -f "$__kvar_json" ]
+    then
+        __kvar_json="${KOOPA_PREFIX}/etc/koopa/vendor.json"
+    fi
     if [ ! -f "$__kvar_json" ]
     then
         unset -v __kvar_json
@@ -445,7 +453,7 @@ vendor_curl_config() {
 download_with_fallback() {
     # usage: download_with_fallback <name> <dirname> <url> [url...]
     # Tries each candidate in order: the primary URL, then the vendor
-    # mirror (if etc/koopa/vendor.json is configured), then a vendor
+    # mirror (if a vendor.json is configured, see vendor_load()), then a vendor
     # remote-proxy rewrite of every URL given (if 'http.remotes' is
     # configured; see vendor_rewrite_url()), then the remaining URLs as
     # given. Under pull_priority 'vendor_only', no URL outside the vendor

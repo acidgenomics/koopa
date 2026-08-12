@@ -70,23 +70,32 @@ def test_require_git_managed_install_refuses_packaged_install(
         cli_main._require_git_managed_install()
 
 
-def test_warn_if_direnv_active_warns_with_dir(
+def test_revert_direnv_env_reports_count_when_verbose(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
-    """A warning naming the active project dir prints when DIRENV_DIR is set."""
-    monkeypatch.setenv("DIRENV_DIR", "/Users/someuser/some-project")
+    """A verbose note names the project dir and reports how many vars were reverted."""
+    monkeypatch.setenv("DIRENV_DIR", "-/Users/someuser/some-project")
+    with patch("koopa.system.revert_direnv_env", return_value=["FOO", "BAR"]):
+        cli_main._revert_direnv_env(verbose=True)
 
-    cli_main._warn_if_direnv_active()
+    err = capsys.readouterr().err
+    assert "/Users/someuser/some-project" in err
+    assert "2" in err
 
-    assert "/Users/someuser/some-project" in capsys.readouterr().err
+
+def test_revert_direnv_env_silent_by_default(capsys: pytest.CaptureFixture) -> None:
+    """No message prints without '--verbose', even when vars were reverted."""
+    with patch("koopa.system.revert_direnv_env", return_value=["FOO"]):
+        cli_main._revert_direnv_env(verbose=False)
+
+    assert capsys.readouterr().err == ""
 
 
-def test_warn_if_direnv_active_silent_when_unset(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+def test_revert_direnv_env_silent_when_nothing_reverted(
+    capsys: pytest.CaptureFixture,
 ) -> None:
-    """No warning prints when direnv isn't active."""
-    monkeypatch.delenv("DIRENV_DIR", raising=False)
-
-    cli_main._warn_if_direnv_active()
+    """No message prints under '--verbose' when direnv wasn't active."""
+    with patch("koopa.system.revert_direnv_env", return_value=[]):
+        cli_main._revert_direnv_env(verbose=True)
 
     assert capsys.readouterr().err == ""

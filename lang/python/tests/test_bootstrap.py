@@ -14,6 +14,7 @@ koopa.develop mirror-src uploads under the app.json keys 'openssl3' and
 """
 
 import json
+import os
 import subprocess
 from collections.abc import Generator
 from pathlib import Path
@@ -28,8 +29,15 @@ _SOURCE_BUILD_FUNCTIONS = ("perl", "openssl", "python", "bzip2", "xz", "libffi",
 
 
 @pytest.fixture(autouse=True)
-def _clear_vendor_config_cache() -> Generator[None]:
-    """Clear the vendor_config() lru_cache before and after each test."""
+def _clear_vendor_config_cache(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Generator[None]:
+    """Isolate XDG_CONFIG_HOME and clear the vendor_config() lru_cache.
+
+    Mirrors the isolation in test_vendor.py's fixture: both vendor_load() (sh)
+    and vendor_config() (Python) now check XDG_CONFIG_HOME before falling
+    back to 'etc/koopa/vendor.json', so a real '~/.config/koopa/vendor.json'
+    on the host running these tests must never be reachable.
+    """
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg-empty"))
     vendor_config.cache_clear()
     yield
     vendor_config.cache_clear()
@@ -148,15 +156,38 @@ def test_bootstrap_pinned_versions_match_app_json() -> None:
         )
 
 
-def _run_vendor_sh(script_body: str, vendor_json: dict, tmp_path: Path) -> str:
-    """Run a bootstrap.sh function-def snippet against a fixture vendor.json."""
+def _run_vendor_sh(
+    script_body: str,
+    vendor_json: dict,
+    tmp_path: Path,
+    *,
+    xdg_vendor_json: dict | None = None,
+) -> str:
+    """Run a bootstrap.sh function-def snippet against a fixture vendor.json.
+
+    Writes 'vendor_json' under '<tmp_path>/etc/koopa/vendor.json'. When
+    'xdg_vendor_json' is given, also writes it under an isolated
+    XDG_CONFIG_HOME so precedence tests can exercise vendor_load()'s
+    XDG-first lookup, matching koopa.vendor.vendor_config()'s search order.
+    """
     etc_koopa = tmp_path / "etc" / "koopa"
     etc_koopa.mkdir(parents=True)
     (etc_koopa / "vendor.json").write_text(json.dumps(vendor_json))
+    xdg_home = tmp_path / "xdg-empty"
+    if xdg_vendor_json is not None:
+        xdg_koopa = xdg_home / "koopa"
+        xdg_koopa.mkdir(parents=True)
+        (xdg_koopa / "vendor.json").write_text(json.dumps(xdg_vendor_json))
     script = (
         f'set -eu\n{_function_defs_only()}\nKOOPA_PREFIX="{tmp_path}"\nvendor_load\n{script_body}\n'
     )
-    result = subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    env = os.environ.copy()
+    # A real '~/.config/koopa/vendor.json' on the host must never be
+    # reachable here -- override, not inherit, XDG_CONFIG_HOME.
+    env["XDG_CONFIG_HOME"] = str(xdg_home)
+    result = subprocess.run(
+        ["sh", "-c", script], capture_output=True, text=True, check=True, env=env
+    )
     return result.stdout
 
 
@@ -213,6 +244,45 @@ def test_bootstrap_vendor_rewrite_url_matches_python(
     py_output = vendor_rewrite_url(url)
 
     assert sh_output == (py_output or "")
+
+
+def test_bootstrap_and_python_agree_on_xdg_precedence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Sh vendor_load() and Python vendor_config() apply the same XDG-first order.
+
+    Both prefer '$XDG_CONFIG_HOME/koopa/vendor.json' over
+    'etc/koopa/vendor.json' when both exist -- the regression this guards
+    against is one side implementing the fallback but not the precedence.
+    """
+    xdg_json = {
+        "enabled": True,
+        "backend": "http",
+        "http": {
+            "base_url": "https://xdg.example.com",
+            "src_repo": "koopa-src",
+            "remotes": {"github.com": "github-remote", ".gnu.org": "gnu-remote"},
+        },
+        "pull_priority": "vendor_first",
+    }
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
+    # Match _run_vendor_sh()'s own XDG_CONFIG_HOME so the Python-side
+    # vendor_config() call below reads the same XDG file the sh subprocess did.
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg-empty"))
+    from koopa.vendor import _http_src_url
+
+    sh_output = _run_vendor_sh(
+        "vendor_src_url perl perl-5.44.0.tar.gz",
+        _ANTI_DRIFT_VENDOR_JSON,
+        tmp_path,
+        xdg_vendor_json=xdg_json,
+    ).strip()
+    cfg = vendor_config()
+    assert cfg is not None
+    py_output = _http_src_url(cfg, "perl", "perl-5.44.0.tar.gz")
+
+    assert sh_output == py_output
+    assert py_output.startswith("https://xdg.example.com/")
 
 
 def test_vendor_sed_fallback_does_not_match_comment_line(tmp_path: Path) -> None:

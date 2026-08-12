@@ -564,3 +564,61 @@ def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
     key = mock_exists.call_args.args[1]
     assert key.endswith("python3.13/3.13.15.tar.gz")
     assert "3.13.9" not in key
+
+
+def test_link_in_bin_replaces_non_symlink_file(tmp_path: Path) -> None:
+    """A self-updater (e.g. agy) can clobber a koopa-managed link with a real file.
+
+    Regression test: this previously raised 'FileExistsError' from 'os.symlink()'
+    on the next 'koopa update', aborting the whole run.
+    """
+    from koopa.install import link_in_bin
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    source = tmp_path / "app" / "agy"
+    source.parent.mkdir()
+    source.write_text("#!/bin/sh\n")
+    target = bin_dir / "agy"
+    target.write_bytes(b"not a symlink")
+
+    with patch("koopa.install.bin_prefix", return_value=str(bin_dir)):
+        link_in_bin(name="agy", source=str(source))
+
+    assert target.is_symlink()
+    assert Path(target).resolve() == source.resolve()
+
+
+def test_link_in_bin_replaces_broken_symlink(tmp_path: Path) -> None:
+    """A stale symlink to a removed app version is replaced, not left dangling."""
+    from koopa.install import link_in_bin
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    source = tmp_path / "app" / "tool"
+    source.parent.mkdir()
+    source.write_text("#!/bin/sh\n")
+    target = bin_dir / "tool"
+    target.symlink_to(tmp_path / "app" / "gone")
+
+    with patch("koopa.install.bin_prefix", return_value=str(bin_dir)):
+        link_in_bin(name="tool", source=str(source))
+
+    assert target.resolve() == source.resolve()
+
+
+def test_link_in_opt_refuses_to_replace_a_real_directory(tmp_path: Path) -> None:
+    """A real directory at the target is never implicitly removed."""
+    from koopa.install import link_in_opt
+
+    opt_dir = tmp_path / "opt"
+    source = tmp_path / "app" / "curl" / "8.0"
+    source.mkdir(parents=True)
+    target_dir = opt_dir / "curl"
+    target_dir.mkdir(parents=True)
+
+    with (
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        pytest.raises(IsADirectoryError),
+    ):
+        link_in_opt(name="curl", source=str(source))

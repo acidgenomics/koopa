@@ -1,6 +1,11 @@
 """System module unit tests."""
 
+import base64
+import gzip
+import json
+import os
 import subprocess
+import zlib
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -14,8 +19,20 @@ from koopa.system import (
     major_minor_version,
     major_version,
     os_appearance_mode,
+    revert_direnv_env,
     safe_build_env,
 )
+
+
+def _direnv_diff(prev: dict, new: dict, *, compress: str = "zlib") -> str:
+    """Build a 'DIRENV_DIFF'-shaped payload matching direnv 2.37's own encoding.
+
+    direnv itself uses zlib; 'gzip' exercises '_decode_direnv_diff()'s fallback
+    branch for the same wire format under a different compressor.
+    """
+    raw = json.dumps({"p": prev, "n": new}).encode()
+    payload = gzip.compress(raw) if compress == "gzip" else zlib.compress(raw)
+    return base64.urlsafe_b64encode(payload).decode().rstrip("=")
 
 
 def test_arch2_x86_64() -> None:
@@ -135,6 +152,74 @@ def test_safe_build_env_keeps_namespaced_prefix(monkeypatch: pytest.MonkeyPatch)
     """A var under a tool-owned prefix (e.g. koopa's own) passes through."""
     monkeypatch.setenv("KOOPA_INSTALL_JOBS", "8")
     assert safe_build_env()["KOOPA_INSTALL_JOBS"] == "8"
+
+
+def test_revert_direnv_env_removes_added_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A var direnv added (absent from 'p') is removed entirely."""
+    monkeypatch.setenv("DIRENV_DIFF", _direnv_diff({}, {"PROJECT_API_KEY": "fake-value"}))
+    monkeypatch.setenv("PROJECT_API_KEY", "fake-value")
+
+    reverted = revert_direnv_env()
+
+    assert "PROJECT_API_KEY" not in os.environ
+    assert "PROJECT_API_KEY" in reverted
+
+
+def test_revert_direnv_env_restores_changed_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A var direnv changed (present in both 'p' and 'n') is restored to 'p'."""
+    monkeypatch.setenv(
+        "DIRENV_DIFF",
+        _direnv_diff({"PATH": "/usr/bin:/bin"}, {"PATH": "/project/venv/bin:/usr/bin:/bin"}),
+    )
+    monkeypatch.setenv("PATH", "/project/venv/bin:/usr/bin:/bin")
+
+    reverted = revert_direnv_env()
+
+    assert os.environ["PATH"] == "/usr/bin:/bin"
+    assert "PATH" in reverted
+
+
+def test_revert_direnv_env_decodes_gzip_payload(monkeypatch: pytest.MonkeyPatch) -> None:
+    """'_decode_direnv_diff()'s gzip fallback (non-zlib payload) also decodes."""
+    monkeypatch.setenv(
+        "DIRENV_DIFF",
+        _direnv_diff({}, {"PROJECT_API_KEY": "fake-value"}, compress="gzip"),
+    )
+    monkeypatch.setenv("PROJECT_API_KEY", "fake-value")
+
+    reverted = revert_direnv_env()
+
+    assert "PROJECT_API_KEY" not in os.environ
+    assert "PROJECT_API_KEY" in reverted
+
+
+def test_revert_direnv_env_noop_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No-op, no raise, when direnv isn't active."""
+    monkeypatch.delenv("DIRENV_DIFF", raising=False)
+    assert revert_direnv_env() == []
+
+
+def test_revert_direnv_env_noop_on_garbage_payload(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No-op, no raise, on a malformed 'DIRENV_DIFF' -- never a partial apply."""
+    monkeypatch.setenv("DIRENV_DIFF", "not-valid-base64!!!")
+    assert revert_direnv_env() == []
+
+
+def test_revert_direnv_env_is_idempotent(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A second call is a no-op.
+
+    'DIRENV_DIFF' itself is removed on the first call, so a second call (e.g.
+    after an os.execv restart) does nothing -- this is what stops a duplicate
+    message on a restart.
+    """
+    monkeypatch.setenv("DIRENV_DIFF", _direnv_diff({}, {"PROJECT_TOKEN": "fake"}))
+    monkeypatch.setenv("PROJECT_TOKEN", "fake")
+
+    first = revert_direnv_env()
+    second = revert_direnv_env()
+
+    assert first == ["PROJECT_TOKEN"]
+    assert second == []
 
 
 def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) -> None:

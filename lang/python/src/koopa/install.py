@@ -281,6 +281,28 @@ def _can_push_binary() -> bool:
 # -- Link helpers -------------------------------------------------------------
 
 
+def _replace_with_symlink(*, source: str, target: str) -> None:
+    """Point 'target' at 'source', replacing whatever currently occupies it.
+
+    A koopa-managed target is normally a symlink, but a self-updater (e.g.
+    'agy') can overwrite one in place with a real file, which previously made
+    the plain 'os.symlink()' call raise 'FileExistsError' on the next relink.
+    Any non-symlink file or broken symlink is unlinked and replaced; a real
+    directory is never removed, since that would require an implicit
+    'rmtree' the caller never asked for.
+    """
+    if os.path.lexists(target):
+        if os.path.isdir(target) and not os.path.islink(target):
+            msg = f"Refusing to replace directory with a symlink: {target!r}"
+            raise IsADirectoryError(msg)
+        if not os.path.islink(target):
+            from koopa.alert import alert_note
+
+            alert_note(f"Replacing non-symlink {target!r} with a symlink.")
+        os.unlink(target)
+    os.symlink(source, target)
+
+
 def link_in_opt(*, name: str, source: str) -> None:
     """Create symlink in koopa opt/ directory."""
     if not os.path.exists(source):
@@ -289,9 +311,7 @@ def link_in_opt(*, name: str, source: str) -> None:
     target = os.path.join(opt_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
-    if os.path.islink(target):
-        os.unlink(target)
-    os.symlink(source, target)
+    _replace_with_symlink(source=source, target=target)
 
 
 def link_in_bin(*, name: str, source: str) -> None:
@@ -302,9 +322,7 @@ def link_in_bin(*, name: str, source: str) -> None:
     target = os.path.join(bin_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
-    if os.path.islink(target):
-        os.unlink(target)
-    os.symlink(source, target)
+    _replace_with_symlink(source=source, target=target)
 
 
 def link_in_man1(*, name: str, source: str) -> None:
@@ -315,9 +333,7 @@ def link_in_man1(*, name: str, source: str) -> None:
     target = os.path.join(man1_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
-    if os.path.islink(target):
-        os.unlink(target)
-    os.symlink(source, target)
+    _replace_with_symlink(source=source, target=target)
 
 
 def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
@@ -382,9 +398,7 @@ def _link_completions(central_dir: str, files: list[tuple[str, str]]) -> None:
     for source, name in files:
         os.makedirs(central_dir, exist_ok=True)
         target = os.path.join(central_dir, name)
-        if os.path.islink(target):
-            os.unlink(target)
-        os.symlink(source, target)
+        _replace_with_symlink(source=source, target=target)
 
 
 def link_in_bash_completions(prefix: str) -> None:
@@ -3308,8 +3322,6 @@ def repair_app_symlinks() -> None:
                 continue
             source = os.path.join(prefix, "bin", b)
             if os.path.isfile(source):
-                if os.path.islink(link):
-                    os.unlink(link)
                 link_in_bin(name=b, source=source)
         for m in entry.get("man1", []):
             link = os.path.join(man1_dir, m)
@@ -3319,8 +3331,6 @@ def repair_app_symlinks() -> None:
             mf2 = os.path.join(prefix, "man", "man1", m)
             source = mf1 if os.path.isfile(mf1) else mf2 if os.path.isfile(mf2) else None
             if source:
-                if os.path.islink(link):
-                    os.unlink(link)
                 link_in_man1(name=m, source=source)
         link_in_bash_completions(prefix)
         link_in_fish_completions(prefix)

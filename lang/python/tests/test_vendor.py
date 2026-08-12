@@ -14,8 +14,18 @@ from koopa.vendor import vendor_config, vendor_pull_priority, vendor_rewrite_url
 
 
 @pytest.fixture(autouse=True)
-def _clear_vendor_config_cache() -> Generator[None]:
-    """Clear the vendor_config() lru_cache before and after each test."""
+def _clear_vendor_config_cache(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Generator[None]:
+    """Isolate XDG_CONFIG_HOME and clear the vendor_config() lru_cache.
+
+    vendor_config() now checks '$XDG_CONFIG_HOME/koopa/vendor.json' before
+    'etc/koopa/vendor.json'. Every test here proves behavior against a
+    koopa_prefix()-patched tmp_path; without isolating XDG_CONFIG_HOME too, a
+    real '~/.config/koopa/vendor.json' on the host running these tests would
+    silently take precedence and flip assertions that predate the XDG lookup.
+    Points at an empty directory by default -- the XDG-precedence tests below
+    override it explicitly.
+    """
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "xdg-empty"))
     vendor_config.cache_clear()
     yield
     vendor_config.cache_clear()
@@ -25,6 +35,12 @@ def _write_vendor_json(prefix: Path, content: str) -> None:
     etc_koopa = prefix / "etc" / "koopa"
     etc_koopa.mkdir(parents=True)
     (etc_koopa / "vendor.json").write_text(content)
+
+
+def _write_xdg_vendor_json(xdg_home: Path, content: str) -> None:
+    koopa_dir = xdg_home / "koopa"
+    koopa_dir.mkdir(parents=True)
+    (koopa_dir / "vendor.json").write_text(content)
 
 
 def test_vendor_config_missing_file_returns_none(
@@ -201,3 +217,63 @@ def test_vendor_rewrite_url_no_config_returns_none(
         vendor_rewrite_url("https://github.com/astral-sh/uv/releases/download/0.12.3/uv.tar.gz")
         is None
     )
+
+
+# ---------------------------------------------------------------------------
+# XDG_CONFIG_HOME precedence
+# ---------------------------------------------------------------------------
+
+
+def test_vendor_config_xdg_file_alone_is_honored(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A vendor.json under XDG_CONFIG_HOME is read when 'etc/koopa/' has none."""
+    xdg_home = tmp_path / "xdg"
+    _write_xdg_vendor_json(
+        xdg_home,
+        '{"enabled": true, "backend": "http",'
+        ' "http": {"base_url": "https://xdg.example.com", "src_repo": "koopa-src"}}',
+    )
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(xdg_home))
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
+
+    cfg = vendor_config()
+    assert cfg is not None
+    assert cfg["http"]["base_url"] == "https://xdg.example.com"
+
+
+def test_vendor_config_xdg_wins_over_etc(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """When both files exist, the XDG_CONFIG_HOME one takes precedence."""
+    xdg_home = tmp_path / "xdg"
+    _write_xdg_vendor_json(
+        xdg_home,
+        '{"enabled": true, "backend": "http",'
+        ' "http": {"base_url": "https://xdg.example.com", "src_repo": "koopa-src"}}',
+    )
+    _write_vendor_json(
+        tmp_path,
+        '{"enabled": true, "backend": "http",'
+        ' "http": {"base_url": "https://etc.example.com", "src_repo": "koopa-src"}}',
+    )
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(xdg_home))
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
+
+    cfg = vendor_config()
+    assert cfg is not None
+    assert cfg["http"]["base_url"] == "https://xdg.example.com"
+
+
+def test_vendor_config_falls_back_to_etc_when_no_xdg_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With no XDG_CONFIG_HOME file, 'etc/koopa/vendor.json' is still read."""
+    _write_vendor_json(
+        tmp_path,
+        '{"enabled": true, "backend": "http",'
+        ' "http": {"base_url": "https://etc.example.com", "src_repo": "koopa-src"}}',
+    )
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
+
+    cfg = vendor_config()
+    assert cfg is not None
+    assert cfg["http"]["base_url"] == "https://etc.example.com"

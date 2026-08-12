@@ -79,26 +79,25 @@ def _require_git_managed_install() -> None:
     sys.exit(1)
 
 
-def _warn_if_direnv_active() -> None:
-    """Warn when a direnv project context is active for this shell.
+def _revert_direnv_env(*, verbose: bool = False) -> None:
+    """Undo an active direnv project's '.envrc' mutations to this process's env.
 
-    direnv exports 'DIRENV_DIR' while a directory's '.envrc' (often a
-    'dotenv .env') is loaded. Build subprocesses koopa spawns filter to a
-    safe allowlist (see 'koopa.system.safe_build_env'), but that's a second
-    line of defense, not a reason to stay silent about the actual source: a
-    project-scoped credential sitting in this shell's environment at all.
+    A project-scoped credential or proxy setting loaded by direnv would
+    otherwise reach every subprocess koopa spawns that doesn't route through
+    'koopa.system.safe_build_env' -- most of them. Reverting in-process (see
+    'koopa.system.revert_direnv_env') removes the exposure outright instead of
+    warning about it. Silent by default; reports a count under '--verbose'.
     """
-    direnv_dir = os.environ.get("DIRENV_DIR")
-    if not direnv_dir:
-        return
-    from koopa.alert import warn
+    from koopa.system import revert_direnv_env
 
-    warn(
-        f"A direnv project is active ({direnv_dir}). Project-scoped"
-        " environment variables loaded by its '.envrc' are present in this"
-        " shell. Run from a shell that hasn't entered that directory to"
-        " avoid inheriting them.",
-    )
+    reverted = revert_direnv_env()
+    if reverted and verbose:
+        from koopa.alert import alert_note
+
+        project_dir = os.environ.get("DIRENV_DIR", "").removeprefix("-")
+        alert_note(
+            f"Reverted {len(reverted)} direnv-loaded environment variable(s) from '{project_dir}'.",
+        )
 
 
 def _exec_restart_with_bootstrap() -> None:
@@ -407,7 +406,7 @@ def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
-    _warn_if_direnv_active()
+    _revert_direnv_env(verbose=args.verbose)
 
     apps, mode = _resolve_apps_and_mode(args)
     if args.all:
@@ -470,7 +469,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
-    _warn_if_direnv_active()
+    _revert_direnv_env(verbose=args.verbose)
     from koopa.app import stale_revdeps
     from koopa.install import (
         _acquire_install_lock,
@@ -717,7 +716,7 @@ def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
-    _warn_if_direnv_active()
+    _revert_direnv_env(verbose=args.verbose)
     from koopa.install import (
         _acquire_install_lock,
         _cleanup_legacy_config,
@@ -793,7 +792,10 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             warn(f"Removing unsupported apps failed: {exc}")
         prune_broken_symlinks()
-        repair_app_symlinks()
+        try:
+            repair_app_symlinks()
+        except Exception as exc:
+            warn(f"Repairing app symlinks failed: {exc}")
         install_error: str | None = None
         try:
             update_stale_apps(verbose=args.verbose)
