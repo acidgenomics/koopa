@@ -34,7 +34,7 @@ def tmux_server_is_stale() -> bool:
             text=True,
             check=True,
         )
-    except (OSError, subprocess.CalledProcessError):
+    except OSError, subprocess.CalledProcessError:
         return False
     disk_ver = extract_version(disk_out.stdout or disk_out.stderr)
     if not disk_ver:
@@ -117,7 +117,7 @@ def warn_tmux_stale() -> bool:
             check=False,
         )
         srv_ver = extract_version(srv_out.stdout or srv_out.stderr)
-    except (OSError, subprocess.CalledProcessError):
+    except OSError, subprocess.CalledProcessError:
         return True
     warn(
         f"Running tmux server ({srv_ver}) differs from installed tmux "

@@ -33,7 +33,7 @@ def _chezmoi_managed(
     args.extend(["-i", "files,symlinks"])
     try:
         result = subprocess.run(args, env=env, capture_output=True, text=True, check=True)
-    except (subprocess.CalledProcessError, OSError):
+    except subprocess.CalledProcessError, OSError:
         return set()
     return {line.strip() for line in result.stdout.splitlines() if line.strip()}
 
@@ -57,7 +57,7 @@ def _print_chezmoi_status(
         args.append(f"--config={config}")
     try:
         result = subprocess.run(args, env=env, capture_output=True, text=True, check=True)
-    except (subprocess.CalledProcessError, OSError):
+    except subprocess.CalledProcessError, OSError:
         return
     lines = [ln for ln in result.stdout.splitlines() if ln.strip()]
     if not lines:
@@ -112,7 +112,7 @@ def _chezmoiremove_targets(
     args.append(remove_file)
     try:
         result = subprocess.run(args, env=env, capture_output=True, text=True, check=True)
-    except (subprocess.CalledProcessError, OSError):
+    except subprocess.CalledProcessError, OSError:
         return set()
     targets: set[str] = set()
     for line in result.stdout.splitlines():

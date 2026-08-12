@@ -11,10 +11,10 @@ keywords = [ "bioinformatics", "data science", "fair data", "ngs", "shell" ]
 license = "Apache-2.0"
 license-files = [ "LICENSE" ]
 authors = [ { name = "Michael Steinbaugh", email = "mike@steinbaugh.com" } ]
-requires-python = "==3.12.*"
+requires-python = "==3.14.*"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.14",
 ]
 optional-dependencies.docs = [
   "myst-parser",
@@ -34,7 +34,7 @@ sources.syntactic = { index = "acidgenomics" }
 index = [ { name = "acidgenomics", url = "https://python.acidgenomics.com/simple/" } ]
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 line-length = 100
 indent-width = 4
 format.quote-style = "double"
@@ -101,7 +101,7 @@ ignore-setters = false
 verbose = 2
 
 [tool.pyright]
-pythonVersion = "3.12"
+pythonVersion = "3.14"
 include = [ "lang/python" ]
 extraPaths = [ "opt/pytest/libexec/lib/python3.14/site-packages" ]
 reportMissingModuleSource = "error"

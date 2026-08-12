@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+Minor changes:
+
+- Bumped the bootstrap Python interpreter from 3.12 to 3.14. `.python-version`
+  and the two pinned versions in `bootstrap.sh` (`install_python()` and
+  `install_python_uv()`) now track `etc/koopa/app.json`'s `python3.14` entry
+  (3.14.7), and `pyproject.toml`'s `requires-python`, classifier,
+  `tool.ruff.target-version`, and `tool.pyright.pythonVersion` all move to
+  3.14 in lockstep.
+
 ## koopa 0.25.0 (2026-08-08)
 
 Major changes:

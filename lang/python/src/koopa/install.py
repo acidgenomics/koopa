@@ -870,7 +870,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     raise RuntimeError(msg)
                 try:
                     install_app_from_binary_package(config.prefix)
-                except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
+                except FileNotFoundError, RuntimeError, subprocess.CalledProcessError:
                     if has_python_installer(config.name, config.platform, config.mode):
                         from koopa.alert import alert_info
 
@@ -1627,7 +1627,7 @@ def _acquire_install_lock() -> bool:
                 f"'{path}' if the process is stale."
             )
             raise RuntimeError(msg)
-        except (ValueError, ProcessLookupError):
+        except ValueError, ProcessLookupError:
             pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     Path(path).write_text(str(os.getpid()))
@@ -1641,7 +1641,7 @@ def _release_install_lock() -> None:
             pid = int(Path(path).read_text().strip())
             if pid == os.getpid():
                 os.unlink(path)
-    except (ValueError, OSError):
+    except ValueError, OSError:
         pass
 
 
@@ -2434,21 +2434,21 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     from koopa.alert import styled_prefix
 
     alert(f"{verb} virtual environment at {styled_prefix(venv_dir)}{version_suffix}.")
-    if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
-        alert("Installing pip into virtual environment.")
-        subprocess.run(
-            [venv_python, "-m", "ensurepip", "--upgrade"],
-            check=True,
-        )
+    uv = shutil.which("uv")
+    if uv is None:
+        warn("uv is not installed; cannot install virtual environment extras.")
+        return
     subprocess.run(
         [
-            venv_python,
-            "-m",
+            uv,
             "pip",
             "install",
+            "--python",
+            venv_python,
             "--editable",
             f"{prefix}[extra]",
             "--upgrade",
+            "--reinstall",
             "--quiet",
         ],
         check=True,
@@ -2690,7 +2690,7 @@ def _installed_after(app: str, cutoff_ts: float) -> bool:
     try:
         with open(info_file) as f:
             info = json.load(f)
-    except (json.JSONDecodeError, OSError):
+    except json.JSONDecodeError, OSError:
         return False
     date_str = info.get("date", "")
     if not date_str:
@@ -2709,7 +2709,7 @@ def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     try:
         with open(path) as f:
             data = json.load(f)
-    except (json.JSONDecodeError, OSError):
+    except json.JSONDecodeError, OSError:
         return []
     if source and data.get("source", "") != source:
         return []
@@ -2757,7 +2757,7 @@ def _remove_from_pending_plan(app: str) -> None:
     try:
         with open(path) as f:
             data = json.load(f)
-    except (json.JSONDecodeError, OSError):
+    except json.JSONDecodeError, OSError:
         return
     data["plan"] = [e for e in data.get("plan", []) if e["app"] != app]
     if not data["plan"]:
@@ -2768,8 +2768,8 @@ def _remove_from_pending_plan(app: str) -> None:
 
 
 def _install_app_worker(
-    config: "InstallConfig",
-    pid_map: "dict[str, int] | None" = None,
+    config: InstallConfig,
+    pid_map: dict[str, int] | None = None,
 ) -> tuple[str, str, float, str | None, str | None]:
     """Run install_app in a child process and return (name, version, elapsed, error, tail).
 
@@ -2940,7 +2940,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
 
     _max_visible_apps = 3  # cap how many names fit on one spinner line
 
-    def _redraw(items: "list[tuple[str, float]]") -> None:
+    def _redraw(items: list[tuple[str, float]]) -> None:
         """Redraw the aggregate spinner line naming each in-flight app.
 
         *items* is a list of ``(app_name, dispatch_t0)`` pairs — one per

@@ -49,7 +49,7 @@ def _installed_dep_state(
                 try:
                     with open(rev_file) as f:
                         revision = int(f.read().strip() or "0")
-                except (ValueError, OSError):
+                except ValueError, OSError:
                     revision = 0
             state = (version, revision)
     cache[dep] = state
@@ -125,7 +125,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 try:
                     with open(rev_file) as f:
                         installed_rev = int(f.read().strip() or "0")
-                except (ValueError, OSError):
+                except ValueError, OSError:
                     # Treat unreadable/invalid revision metadata as unknown (0).
                     # The mismatch check below will flag this app as actionable.
                     installed_rev = 0
@@ -149,7 +149,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             try:
                 with open(info_file) as _f:
                     _info = _json_mod.load(_f)
-            except (ValueError, OSError):
+            except ValueError, OSError:
                 _info = {}
             recorded_dep_revs = _info.get("dep_revisions", {})
             # Prefer the dep list actually resolved at install time (recorded in
@@ -701,7 +701,7 @@ def _macos_xcode_clt_sdk_current() -> bool | None:
     try:
         with open(sdk_settings) as f:
             data = json.load(f)
-    except (OSError, json.JSONDecodeError):
+    except OSError, json.JSONDecodeError:
         return None
     sdk_version = data.get("Version", "")
     if not sdk_version:
@@ -737,7 +737,7 @@ def _macos_xcode_clt_installed() -> bool:
             check=False,
             timeout=5,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired):
+    except FileNotFoundError, subprocess.TimeoutExpired:
         pkg = None
     if pkg and pkg.returncode == 0 and pkg.stdout:
         # pkgutil output contains a 'version: ' line when installed.
@@ -751,7 +751,7 @@ def _macos_xcode_clt_installed() -> bool:
             check=False,
             timeout=3,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired):
+    except FileNotFoundError, subprocess.TimeoutExpired:
         return False
     return xs.returncode == 0 and bool(xs.stdout.strip())
 
@@ -777,7 +777,7 @@ def _macos_xcode_clt_update_available() -> bool:
             timeout=3,
         )
         su_out = (sw.stdout or "") + "\n" + (sw.stderr or "")
-    except (FileNotFoundError, subprocess.TimeoutExpired):
+    except FileNotFoundError, subprocess.TimeoutExpired:
         su_out = ""
     return bool(su_out) and bool(
         re.search(

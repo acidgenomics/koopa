@@ -272,7 +272,7 @@ def _handle_check(_args: list[str]) -> None:
                 f"  rm '{lock_path}'"
             )
             return
-        except (ValueError, ProcessLookupError, OSError):
+        except ValueError, ProcessLookupError, OSError:
             pass
     if not check_system():
         sys.exit(1)
@@ -317,7 +317,7 @@ def _get_glibc_version() -> str:
         )
         if result.stdout:
             return result.stdout.splitlines()[0]
-    except (FileNotFoundError, subprocess.TimeoutExpired):
+    except FileNotFoundError, subprocess.TimeoutExpired:
         # ldd unavailable or hangs; fall back to "unknown".
         pass
     return "unknown"

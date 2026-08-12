@@ -61,7 +61,7 @@ def _installed_dep_state(dep: str, fallback_entry: dict) -> tuple[str, int]:
                 try:
                     with open(rev_file) as f:
                         revision = int(f.read().strip() or "0")
-                except (ValueError, OSError):
+                except ValueError, OSError:
                     revision = 0
             return version, revision
     return fallback_entry.get("version", ""), int(fallback_entry.get("revision", 0))
@@ -178,7 +178,7 @@ def scrub_install_info(
             try:
                 with open(info_file) as f:
                     info = loads(f.read())
-            except (ValueError, OSError):
+            except ValueError, OSError:
                 continue
             environ = info.get("environ")
             if not isinstance(environ, dict):

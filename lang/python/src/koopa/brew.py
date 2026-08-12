@@ -126,7 +126,7 @@ def brew_upgrade_casks() -> None:
         import json
 
         payload = json.loads(json_result.stdout or "{}")
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         payload = {}
 
     skipped_casks = {

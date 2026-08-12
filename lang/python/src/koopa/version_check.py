@@ -47,7 +47,7 @@ class VersionCheckResult:
             cur = _version_key(sanitize_version(self.current_version))
             lat = _version_key(sanitize_version(self.latest_version))
             return lat > cur
-        except (ValueError, AttributeError):
+        except ValueError, AttributeError:
             return self.current_version != self.latest_version
 
     @property
@@ -61,7 +61,7 @@ class VersionCheckResult:
             cur = _version_key(sanitize_version(self.current_version))
             lat = _version_key(sanitize_version(self.latest_version))
             return cur > lat
-        except (ValueError, AttributeError):
+        except ValueError, AttributeError:
             return False
 
 
@@ -77,7 +77,7 @@ class _VersionCache:
         try:
             with open(self._path) as f:
                 self._data = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError, OSError):
+        except FileNotFoundError, json.JSONDecodeError, OSError:
             self._data = {}
 
     def get(self, name: str) -> str | None:
@@ -137,7 +137,7 @@ def _resolve_github_token() -> str | None:
             )
             if result.returncode == 0 and result.stdout.strip():
                 return result.stdout.strip()
-        except (subprocess.TimeoutExpired, OSError):
+        except subprocess.TimeoutExpired, OSError:
             pass
     return None
 
@@ -274,7 +274,7 @@ def _http_url_exists(url: str, *, timeout: int = 10) -> bool:
     try:
         with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
             return resp.status == 200
-    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError):
+    except urllib.error.HTTPError, urllib.error.URLError, TimeoutError:
         return False
 
 
@@ -362,7 +362,7 @@ def _check_conda(
                         timeout=30,
                         check=False,
                     )
-                except (subprocess.TimeoutExpired, OSError):
+                except subprocess.TimeoutExpired, OSError:
                     result = None
             if result is not None and result.returncode == 0:
                 try:
@@ -371,7 +371,7 @@ def _check_conda(
                     if versions:
                         best = max(versions, key=_version_key)
                         versions_per_subdir.append(best)
-                except (json.JSONDecodeError, ValueError):
+                except json.JSONDecodeError, ValueError:
                     pass
     if versions_per_subdir:
         return min(versions_per_subdir, key=_version_key)
@@ -763,7 +763,7 @@ def _check_man_db() -> str:
     """Check man-db via GitLab, falling back to repology on network failure."""
     try:
         return _check_gitlab("gitlab.com", "man-db/man-db")
-    except (urllib.error.URLError, OSError, TimeoutError, _NetworkUnavailableError):
+    except urllib.error.URLError, OSError, TimeoutError, _NetworkUnavailableError:
         return _check_repology("man-db")
 
 
@@ -2191,7 +2191,7 @@ def check_app_versions(  # noqa: C901, PLR0915
                         msg = f"{app_name}: {current} pinned too high (latest stable: {latest})"
                     else:
                         msg = f"{app_name}: {current} -> {latest}"
-                except (ValueError, AttributeError):
+                except ValueError, AttributeError:
                     msg = f"{app_name}: {current} -> {latest}"
             return VersionCheckResult(app_name, current, latest, spec.source, None), msg
         except _NetworkUnavailableError:

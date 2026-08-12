@@ -440,7 +440,7 @@ def check_platform() -> None:
                     " Run 'koopa uninstall' to remove."
                 )
                 raise RuntimeError(msg)
-        except (OSError, ValueError, AttributeError):
+        except OSError, ValueError, AttributeError:
             # glibc version undetectable; skip enforcement.
             pass
     elif sys.platform == "darwin":
@@ -757,7 +757,7 @@ def mem_gb() -> float:
                 check=True,
             )
             return round(int(result.stdout.strip()) / (1024**3), 1)
-        except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
+        except FileNotFoundError, subprocess.CalledProcessError, ValueError:
             pass
     meminfo = "/proc/meminfo"
     if os.path.isfile(meminfo):

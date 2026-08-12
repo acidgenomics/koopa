@@ -9,7 +9,7 @@
 - [POSIX](https://en.wikipedia.org/wiki/POSIX)-compliant login shell (bash, zsh, dash,
   ksh93), fish, elvish, nushell, or powershell. csh and tcsh have minimal support
   (`PATH` and environment variables only).
-- [Python](https://www.python.org/) 3.12, which will be bootstrap installed into
+- [Python](https://www.python.org/) 3.14, which will be bootstrap installed into
   `~/.local/share/koopa-bootstrap` automatically when necessary.
 - Core utilities: `curl`, `git`, `grep`, `mkdir`, `mktemp`, `rm`, `sed`, `tar`.
 
@@ -143,9 +143,9 @@ release and reports as much instead of attempting a `git pull`. To update,
 fetch and extract the next tagged release the same way.
 
 The first `koopa` invocation needs an interpreter matching the version pinned
-in `.python-version` (currently 3.12) to run its own CLI. It looks for one at
+in `.python-version` (currently 3.14) to run its own CLI. It looks for one at
 `/usr/bin/python3` first, then the `.python-version`-derived name (e.g.
-`python3.12`) and `python3` as resolved on `PATH`; if none matches, it runs
+`python3.14`) and `python3` as resolved on `PATH`; if none matches, it runs
 `bootstrap.sh`. `bootstrap.sh` reads the same `vendor.json`
 described in [Internal mirror](#internal-mirror-restricted-networks) below,
 so a `vendor_only` network routes the bootstrap Python build through the
@@ -154,7 +154,7 @@ mirror too, the same as every other app install.
 Two things to know before relying on that for a fully offline bootstrap:
 
 - Parsing `vendor.json` needs a JSON parser. `bootstrap.sh` uses whichever
-  `python3` it finds (any version; this is unrelated to the 3.12 pin) and
+  `python3` it finds (any version; this is unrelated to the 3.14 pin) and
   falls back to a `sed`-based parse of the flat HTTP fields when no `python3`
   exists at all. That fallback cannot read the nested `remotes` map below, so
   it only supports a pre-populated `src_repo` mirror, not the remote-proxy

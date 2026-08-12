@@ -65,7 +65,7 @@ def extract_cd(tarball: str) -> None:
     os.chdir("src")
 
 
-def activate_app_deps() -> "BuildEnv":
+def activate_app_deps() -> BuildEnv:
     """Activate build_dependencies and dependencies from app.json for the current app."""
     from koopa.app import _resolve_dep_dict
     from koopa.build import BuildEnv, activate_app

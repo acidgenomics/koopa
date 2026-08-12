@@ -168,7 +168,7 @@ def _extract_rpath_macos(binary: str) -> list[str]:
             text=True,
             check=True,
         )
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except subprocess.CalledProcessError, FileNotFoundError:
         return []
     paths: list[str] = []
     lines = result.stdout.splitlines()
@@ -193,7 +193,7 @@ def _extract_rpath_linux(binary: str) -> list[str]:
             text=True,
             check=True,
         )
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except subprocess.CalledProcessError, FileNotFoundError:
         return []
     paths: list[str] = []
     for line in result.stdout.splitlines():
@@ -611,7 +611,7 @@ def _macos_sdk_prefix() -> str:
             check=True,
         )
         return result.stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except subprocess.CalledProcessError, FileNotFoundError:
         return ""
 
 

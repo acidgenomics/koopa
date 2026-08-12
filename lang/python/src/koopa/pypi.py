@@ -137,7 +137,7 @@ def _read_wheel_summary(whl_path: str) -> str:
             for line in zf.read(meta_name).decode(errors="replace").splitlines():
                 if line.startswith("Summary:"):
                     return line[len("Summary:") :].strip()
-    except (OSError, zipfile.BadZipFile):
+    except OSError, zipfile.BadZipFile:
         # A corrupt/unreadable wheel shouldn't abort the whole reindex; the
         # landing page just shows no description for this package.
         pass
