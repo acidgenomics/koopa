@@ -252,7 +252,7 @@ def _can_push_binary() -> bool:
     Allows push when:
     - KOOPA_BUILDER=1 is set, AND
     - either the vendor backend can push (vendor.json configured with credentials), OR
-    - the acidgenomics profile is present with AWS_CLOUDFRONT_DISTRIBUTION_ID set
+    - acidgenomics private AWS access is available and aws CLI is installed
 
     Note: aws-cli cannot push its own binary during its own post-install
     (aws not yet in PATH at that point). Use 'koopa develop push-app-build
@@ -264,10 +264,8 @@ def _can_push_binary() -> bool:
         return False
     if vendor_can_push():
         return True
-    # Fall back to acidgenomics S3 path.
+    # Fall back to acidgenomics S3 path on designated builders.
     if not _has_private_access():
-        return False
-    if not os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", ""):
         return False
     from koopa.build import locate
 

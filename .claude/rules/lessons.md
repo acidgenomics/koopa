@@ -10,6 +10,10 @@
   `YYYY-MM-DD-` prefix. VS Code's plan review UI requires the exact system filename.
 - **Plans / TODOs**: write to `todo.org` (Org mode) at the repo root —
   NOT `.claude/todo.md`.
+- **Persistent shell env guidance must follow dotfiles+chezmoi flow.** For
+  machine-specific values (for example `KOOPA_BUILDER`), do not suggest editing
+  `~/.zshrc` / `~/.bashrc` directly; route users to their chezmoi-managed
+  sidecar files in the dotfiles source instead.
 - **Never run `find /` or any filesystem-root search.** Scope every `find`/search
   to a known root: the repo, `~/git`, an app prefix, or a specific cache dir (e.g.
   `~/.cache/uv/...`). A root-wide search is slow, noisy, and reaches unrelated

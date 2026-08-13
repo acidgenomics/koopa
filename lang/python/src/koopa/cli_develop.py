@@ -271,8 +271,8 @@ def _handle_push_app_builds() -> None:
 
     if not _can_push_binary():
         print(
-            "Error: push requires KOOPA_BUILDER=1, acidgenomics AWS profile, "
-            "AWS_ACCOUNT_ID, AWS_CLOUDFRONT_DISTRIBUTION_ID, and aws CLI.",
+            "Error: push requires KOOPA_BUILDER=1 and either (vendor push "
+            "credentials) or (acidgenomics AWS profile + AWS_ACCOUNT_ID + aws CLI).",
             file=sys.stderr,
         )
         sys.exit(1)

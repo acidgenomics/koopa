@@ -566,6 +566,45 @@ def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
     assert "3.13.9" not in key
 
 
+def test_can_push_binary_denies_private_non_builder_hosts() -> None:
+    """Private acidgenomics hosts cannot push unless KOOPA_BUILDER=1."""
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=False),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_push_binary() is False
+
+
+def test_can_push_binary_allows_private_builder_hosts() -> None:
+    """Private acidgenomics builders can push when aws CLI is available."""
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_push_binary() is True
+
+
+def test_can_push_binary_requires_aws_cli_for_private_path() -> None:
+    """Private push path is disabled when aws CLI is unavailable."""
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=False),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", side_effect=FileNotFoundError),
+    ):
+        assert _can_push_binary() is False
+
+
 def test_link_in_bin_replaces_non_symlink_file(tmp_path: Path) -> None:
     """A self-updater (e.g. agy) can clobber a koopa-managed link with a real file.
 
