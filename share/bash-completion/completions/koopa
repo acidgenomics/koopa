@@ -337,6 +337,7 @@ _koopa_complete() {
                         'csvkit'
                         'csvtk'
                         'curl'
+                        'cyto'
                         'dash'
                         'dask'
                         'databricks-cli'

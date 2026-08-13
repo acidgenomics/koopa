@@ -835,6 +835,7 @@ _koopa_install() {
         'csvkit'
         'csvtk'
         'curl'
+        'cyto'
         'dash'
         'dask'
         'databricks-cli'

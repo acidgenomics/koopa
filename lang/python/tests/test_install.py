@@ -568,6 +568,66 @@ def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
     assert "3.13.9" not in key
 
 
+def test_is_native_cpu_build_detects_target_cpu_native() -> None:
+    """_is_native_cpu_build flags an app whose rustflags target the build host's CPU."""
+    from koopa.install import _is_native_cpu_build
+
+    json_data = {
+        "cyto": {"installer_args": {"rustflags": "-C target-cpu=native"}},
+        "xsra": {"installer_args": {}},
+        "curl": {},
+    }
+
+    with patch("koopa.install.import_app_json", return_value=json_data):
+        assert _is_native_cpu_build("cyto") is True
+        assert _is_native_cpu_build("xsra") is False
+        assert _is_native_cpu_build("curl") is False
+        assert _is_native_cpu_build("missing") is False
+
+
+def test_push_app_build_raises_for_native_cpu_build() -> None:
+    """push_app_build refuses to push an app built for the host's exact CPU."""
+    from koopa.install import push_app_build
+
+    json_data = {"cyto": {"installer_args": {"rustflags": "-C target-cpu=native"}}}
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
+        patch("koopa.install.import_app_json", return_value=json_data),
+        pytest.raises(RuntimeError, match="exact CPU"),
+    ):
+        push_app_build("cyto")
+
+
+def test_install_app_disables_binary_cache_for_native_cpu_build(tmp_path: Path) -> None:
+    """install_app clears 'binary' and 'push' for an app tuned to the build host's CPU."""
+    from koopa.install import InstallConfig, install_app
+
+    prefix = tmp_path / "cyto" / "0.4.6"
+    install_marker = prefix / ".install"
+    install_marker.mkdir(parents=True)
+    (install_marker / "info.json").write_text("{}")
+
+    json_data = {
+        "cyto": {
+            "version": "0.4.6",
+            "installer_args": {"rustflags": "-C target-cpu=native"},
+        },
+    }
+    config = InstallConfig(name="cyto", prefix=str(prefix), binary=True, push=True)
+
+    with (
+        patch("koopa.install.import_app_json", return_value=json_data),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.install.is_owner", return_value=True),
+        patch("koopa.install.app_prefix", return_value=str(tmp_path)),
+    ):
+        install_app(config)
+
+    assert config.binary is False
+    assert config.push is False
+
+
 def test_can_push_binary_denies_private_non_builder_hosts() -> None:
     """Private acidgenomics hosts cannot push unless KOOPA_BUILDER=1."""
     from koopa.install import _can_push_binary

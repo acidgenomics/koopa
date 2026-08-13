@@ -209,6 +209,35 @@ def _require_binary_prefix() -> None:
         raise RuntimeError(msg)
 
 
+# Flags that tune codegen to the build host's exact CPU. A prefix built with
+# any of these is not portable to another host's CPU, so it must never enter
+# the shared binary-package cache.
+_NATIVE_CPU_FLAGS = ("target-cpu=native", "-march=native", "-mtune=native")
+_NATIVE_CPU_ARG_KEYS = ("rustflags", "cflags", "cxxflags")
+
+
+def _is_native_cpu_build(name: str) -> bool:
+    """Check whether *name*'s app.json 'installer_args' target the build host's CPU.
+
+    A binary tarball built with e.g. 'RUSTFLAGS=-C target-cpu=native' can
+    contain instructions unsupported by another host's CPU (SIGILL). Apps
+    flagged by this check must never be pushed to, or pulled from, the shared
+    binary-package cache; see 'push_app_build' and 'install_app'.
+    """
+    data = import_app_json()
+    entry = data.get(name, {})
+    if not isinstance(entry, dict):
+        return False
+    installer_args = entry.get("installer_args", {})
+    if not isinstance(installer_args, dict):
+        return False
+    for key in _NATIVE_CPU_ARG_KEYS:
+        value = installer_args.get(key, "")
+        if isinstance(value, str) and any(flag in value for flag in _NATIVE_CPU_FLAGS):
+            return True
+    return False
+
+
 _warned_no_account_id = False
 _warned_non_default_prefix = False
 
@@ -590,6 +619,12 @@ def push_app_build(name: str) -> None:
     from koopa.vendor import vendor_config, vendor_push_binary
 
     _require_binary_prefix()
+    if _is_native_cpu_build(name):
+        msg = (
+            f"'{name}' is built for the host's exact CPU (see 'installer_args' "
+            f"in app.json) and cannot be pushed to the shared binary cache."
+        )
+        raise RuntimeError(msg)
     arch = arch2()
     os_str = os_slug()
     s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
@@ -665,6 +700,10 @@ def push_missing_app_builds() -> None:
         version = os.path.basename(prefix)
         # Skip binaries installed from S3 (not built locally).
         if os.path.isfile(os.path.join(prefix, ".koopa-binary")):
+            continue
+        # Skip apps built for the host's exact CPU -- not portable, so they
+        # must never enter the shared binary cache. See '_is_native_cpu_build'.
+        if _is_native_cpu_build(entry):
             continue
         tarball_name = _binary_tarball_basename(entry, version)
         key = f"binaries/{os_str}/{arch}/{entry}/{tarball_name}"
@@ -777,6 +816,12 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         config.link_in_bin = False
         config.link_in_man1 = False
         config.link_in_opt = False
+        config.push = False
+    # A native-CPU-tuned build isn't portable across hosts, so it can never
+    # be pulled from or pushed to the shared binary cache. See
+    # '_is_native_cpu_build'.
+    if _is_native_cpu_build(config.name):
+        config.binary = False
         config.push = False
     # -- Private access check -------------------------------------------------
     if (config.binary or config.private or config.push) and not _has_private_access():
@@ -1426,6 +1471,7 @@ def install_rust_package(
     git_url: str = "",
     tag: str = "",
     with_openssl: bool = False,
+    rustflags: str = "",
     jobs: int | None = None,
 ) -> None:
     """Install a Rust package using ``cargo install``.
@@ -1449,6 +1495,8 @@ def install_rust_package(
     env["CARGO_HOME"] = cargo_home
     env["CARGO_NET_GIT_FETCH_WITH_CLI"] = "true"
     env["RUST_BACKTRACE"] = "full"
+    if rustflags:
+        env["RUSTFLAGS"] = rustflags
     if with_openssl:
         openssl_dir = os.path.join(app_prefix(), "openssl")
         if os.path.isdir(openssl_dir):

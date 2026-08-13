@@ -278,8 +278,9 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bashcov": f"{_M}._ruby_pkg",
     "rmate": f"{_M}._ruby_pkg",
     "ronn-ng": f"{_M}._ruby_pkg",
-    # -- rust-package (6) ------------------------------------------------
+    # -- rust-package (7) ------------------------------------------------
     "bandwhich": f"{_M}._rust_pkg",
+    "cyto": f"{_M}._rust_pkg",
     "gping": f"{_M}._rust_pkg",
     "hexyl": f"{_M}._rust_pkg",
     "jless": f"{_M}._rust_pkg",

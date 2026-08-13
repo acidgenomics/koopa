@@ -2140,6 +2140,32 @@
     ],
     "version": "8.21.0"
   },
+  "cyto": {
+    "bin": [
+      "cyto"
+    ],
+    "build_dependencies": [
+      "cmake",
+      "rust"
+    ],
+    "category": "Bioinformatics",
+    "date": "2026-08-13",
+    "default": false,
+    "description": "ultra high-throughput 10x Flex single-cell processing",
+    "installer": "rust-package",
+    "installer_args": {
+      "rustflags": "-C target-cpu=native"
+    },
+    "notes": [
+      "Built with '-C target-cpu=native' for SIMD, so binary packages are disabled."
+    ],
+    "type": "cli",
+    "url": [
+      "https://github.com/arcinstitute/cyto",
+      "https://crates.io/crates/cyto"
+    ],
+    "version": "0.4.6"
+  },
   "dash": {
     "bin": [
       "dash"
