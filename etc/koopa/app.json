@@ -182,8 +182,8 @@
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "6dec2eab5d3188e68b6c2c1c011bb69a9506e0a20ae575c7500f058958042fd255d0969e65e76e7928cf41395e2155803824643df8069417886d2e2218af6d9d",
       "darwin_amd64": "68b9cf8866eea7756ac94810e7af68589dfa2cac9ed190b2d0eefcebca30ceb67c91823d14b5ace944e05a1f408ef5ea486b867e827e154ce63f2c4eeb247df5",
+      "darwin_arm64": "6dec2eab5d3188e68b6c2c1c011bb69a9506e0a20ae575c7500f058958042fd255d0969e65e76e7928cf41395e2155803824643df8069417886d2e2218af6d9d",
       "linux_amd64": "c1ee7b8a02a85144142fdb942923b638c47674ecb4969c0d80f82317846c4c4c6976a430186622d6fbf5f33a827ab9c5a64950d15ff830b5cc3ce48c84ff4501",
       "linux_arm64": "fd33d449ddfc7917ab4f38968cda8356d3bca9f0b12eec9665e565af4ca44010cfb4b7a76de4e06adbef670b4863b30d75814e17dee855efcce651da22eecd95"
     },
@@ -7625,13 +7625,11 @@
     "date": "2026-04-15",
     "default": false,
     "dependencies": {
-      "default": [],
-      "firewall_linux": [
+      "macos-arm64": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
-        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7640,11 +7638,12 @@
         "xz",
         "zlib"
       ],
-      "firewall_macos": [
+      "noarch": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
+        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7659,6 +7658,7 @@
     "man1": [
       "python3.10.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7687,13 +7687,11 @@
     "date": "2026-04-15",
     "default": false,
     "dependencies": {
-      "default": [],
-      "firewall_linux": [
+      "macos-arm64": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
-        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7702,11 +7700,12 @@
         "xz",
         "zlib"
       ],
-      "firewall_macos": [
+      "noarch": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
+        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7721,6 +7720,7 @@
     "man1": [
       "python3.11.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "cli",
     "url": [
@@ -7749,13 +7749,11 @@
     "date": "2026-04-15",
     "default": true,
     "dependencies": {
-      "default": [],
-      "firewall_linux": [
+      "macos-arm64": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
-        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7764,11 +7762,12 @@
         "xz",
         "zlib"
       ],
-      "firewall_macos": [
+      "noarch": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
+        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7783,6 +7782,7 @@
     "man1": [
       "python3.12.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "cli",
     "url": [
@@ -7811,13 +7811,11 @@
     "date": "2026-08-08",
     "default": true,
     "dependencies": {
-      "default": [],
-      "firewall_linux": [
+      "macos-arm64": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
-        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7826,11 +7824,12 @@
         "xz",
         "zlib"
       ],
-      "firewall_macos": [
+      "noarch": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
+        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7845,6 +7844,7 @@
     "man1": [
       "python3.13.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7883,13 +7883,11 @@
     "date": "2026-08-08",
     "default": true,
     "dependencies": {
-      "default": [],
-      "firewall_linux": [
+      "macos-arm64": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
-        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7898,11 +7896,12 @@
         "xz",
         "zlib"
       ],
-      "firewall_macos": [
+      "noarch": [
         "bzip2",
         "expat",
         "libedit",
         "libffi",
+        "libxcrypt",
         "mpdecimal",
         "ncurses",
         "openssl3",
@@ -7919,6 +7918,7 @@
       "python3.1",
       "python3.14.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [

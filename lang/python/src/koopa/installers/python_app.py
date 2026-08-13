@@ -125,6 +125,11 @@ def _install_from_uv(*, version: str, prefix: str, env: BuildEnv) -> None:
             "--no-bin",
             "--no-cache",
             "--no-config",
+            # See the matching comment in koopa.install._update_venv: uv
+            # bundles its own TLS cert store rather than consulting the OS
+            # one, and fails with "invalid peer certificate: UnknownIssuer"
+            # on networks where the OS store trusts a cert uv's doesn't.
+            "--system-certs",
             "--verbose",
             version,
         ],

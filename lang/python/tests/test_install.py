@@ -564,7 +564,7 @@ def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
         push_missing_app_builds()
 
     key = mock_exists.call_args.args[1]
-    assert key.endswith("python3.13/3.13.15.tar.gz")
+    assert key.endswith("python3.13/3.13.15-r1.tar.gz")
     assert "3.13.9" not in key
 
 
