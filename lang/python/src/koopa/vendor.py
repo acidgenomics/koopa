@@ -40,7 +40,7 @@ def vendor_config() -> dict[str, Any] | None:
         return None
     try:
         data = json.loads(path.read_text())
-    except OSError, json.JSONDecodeError:
+    except (OSError, json.JSONDecodeError):
         return None
     if not data.get("enabled", False):
         return None

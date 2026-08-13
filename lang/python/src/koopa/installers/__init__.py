@@ -213,6 +213,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "sqlfluff": f"{_M}._python_pkg",
     "streamlit": f"{_M}._python_pkg",
     "tabcmd": f"{_M}._python_pkg",
+    "tooluniverse": f"{_M}._python_pkg",
     "tqdm": f"{_M}._python_pkg",
     "tryceratops": f"{_M}._python_pkg",
     "ty": f"{_M}._python_pkg",

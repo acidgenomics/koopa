@@ -187,7 +187,7 @@ def _build_install_config(
     verbose: bool = False,
     deps: bool = True,
     extra_passthrough: list[str] | None = None,
-) -> InstallConfig:
+) -> "InstallConfig":
     """Build an InstallConfig from app.json metadata."""
     from koopa.install import InstallConfig, _can_install_binary, _can_push_binary
 

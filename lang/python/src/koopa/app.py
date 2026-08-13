@@ -362,7 +362,7 @@ def recorded_app_deps(name: str) -> list | None:
     try:
         with open(info_file) as f:
             info = loads(f.read())
-    except ValueError, OSError:
+    except (ValueError, OSError):
         return None
     deps = info.get("dependencies")
     if not isinstance(deps, list):

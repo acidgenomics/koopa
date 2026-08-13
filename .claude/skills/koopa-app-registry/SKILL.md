@@ -89,6 +89,30 @@ and merges the result into the app.json entry atomically.
 This ensures `koopa develop check-app-versions` never writes a stale `build_id`
 when bumping the version.
 
+### Checking Python-version compatibility for a new `python-package` app
+
+Confirming that every *direct* dependency ships a `cp3XX` wheel for the target
+Python version is necessary but not sufficient. A transitive dependency pulled
+in through an extras marker can carry its own `requires-python` exclusion that
+a direct-dependency sweep never sees.
+
+Case in point: adding `tooluniverse` (pinned to `python3.14` at first) passed a
+full check of every direct dependency's PyPI wheel listing, then failed at
+`pip install` with `ResolutionImpossible`. Root cause: `tooluniverse`'s own
+`pyproject.toml` lists `markitdown[all]` as a *base* dependency (not optional),
+and `markitdown[all]==0.1.7` pins `youtube-transcript-api~=1.0.0`, whose 1.0.x
+series sets `requires-python = "<3.14,>=3.8"` — an explicit exclusion, not a
+missing wheel. No newer `markitdown` release loosens that pin. `no_binary` and
+`extra_packages` can't work around a `requires-python` exclusion.
+
+The reliable check is to attempt the actual `pip install` (or `koopa install
+<app>`) rather than inferring compatibility from wheel filenames. When it fails
+with `ResolutionImpossible`, read which package sets the offending
+`requires-python`, then pin the app below that ceiling with the minimal
+necessary version drop — see `apache-airflow`, `azure-cli`, `dbt`,
+`snowflake-cli`, `tabcmd` for the `dependencies: ["python3.13"]` +
+`installer_args.python_version` + `python_version_pin: true` pattern.
+
 ## Version Check Machinery
 
 ### Architecture

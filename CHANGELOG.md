@@ -7,9 +7,20 @@ Minor changes:
 - Bumped the bootstrap Python interpreter from 3.12 to 3.14. `.python-version`
   and the two pinned versions in `bootstrap.sh` (`install_python()` and
   `install_python_uv()`) now track `etc/koopa/app.json`'s `python3.14` entry
-  (3.14.7), and `pyproject.toml`'s `requires-python`, classifier,
-  `tool.ruff.target-version`, and `tool.pyright.pythonVersion` all move to
-  3.14 in lockstep.
+  (3.14.7), and `pyproject.toml`'s `requires-python`, classifier, and
+  `tool.pyright.pythonVersion` all move to 3.14 in lockstep.
+  `tool.ruff.target-version` stays at `py312`: a stale host's `koopa update`
+  runs under its outgoing interpreter, and that is the only path that
+  installs the new one, so koopa's own source must stay parseable and
+  importable on the previous pin. Raising the ruff floor to 3.14 alongside
+  this bump would have bricked every host still on 3.12 -- `koopa --version`
+  and `koopa update` both fail immediately, since the 3.14-only source
+  (unparenthesized `except A, B:` clauses, and one unquoted forward
+  reference in `progress.py`) can no longer be parsed or imported.
+- Fixed `bin/koopa` picking a mismatched-but-passable `.venv` or bootstrap
+  Python over a version-matching one. Both are now checked against
+  `.python-version` first, with the previous mismatch-tolerant fallback kept
+  last so a broken host can still self-heal.
 
 ## koopa 0.25.0 (2026-08-08)
 

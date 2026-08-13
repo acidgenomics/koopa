@@ -20,6 +20,30 @@ The correct fix is always `check=True`, not `check=False` and not suppressing th
 Do not add new helpers (`_has_sudo`, `can_sudo`, `check_sudo`, etc.) — import and
 reuse `has_sudo` from `koopa.system`.
 
+## Python-version floor vs. runtime version
+
+`[tool.ruff] target-version` (currently `py312`) is **not** the same thing as
+`requires-python`/`tool.pyright.pythonVersion` (currently `3.14`), and it must
+stay behind them. `koopa update` is the only path that installs a new pinned
+Python, and it runs under the *outgoing* interpreter until it finishes
+rebuilding bootstrap — so koopa's own source has to stay parseable and
+importable on that older version, not just on the new pin. Bumping
+`target-version` to match a fresh `.python-version` bricks every host still
+on the old one: `koopa --version` and `koopa update` both fail to import
+before they ever reach the code that would upgrade them.
+
+Two traps neither look version-sensitive at a glance, and ruff at the right
+`target-version` catches both:
+
+- **PEP 758** (3.14): unparenthesized `except A, B:` is a syntax error before
+  3.14. Always write `except (A, B):`.
+- **PEP 649** (3.14): annotations are evaluated lazily. An unquoted forward
+  reference (`x: Foo | None` where `Foo` is defined later in the module) is a
+  `NameError` at import time on 3.13 and earlier. Quote it (`x: "Foo | None"`)
+  instead of moving the class, unless the file already avoids forward refs.
+
+Run `ruff check lang/python/src/` before assuming new syntax is safe to use.
+
 ## Dev tools
 
 Tools like `ruff`, `ty`, `pyright`, `pytest` are standalone koopa apps installed

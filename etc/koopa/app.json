@@ -9518,6 +9518,41 @@
     ],
     "version": "14.0.0"
   },
+  "tooluniverse": {
+    "bin": [
+      "tooluniverse",
+      "tooluniverse-doctor",
+      "tooluniverse-http-api",
+      "tooluniverse-mcp",
+      "tooluniverse-smcp",
+      "tu",
+      "tu-datastore"
+    ],
+    "category": "AI",
+    "date": "2026-08-13",
+    "default": false,
+    "dependencies": [
+      "python3.13"
+    ],
+    "description": "scientific tool ecosystem and MCP server for AI agents",
+    "installer": "python-package",
+    "installer_args": {
+      "python_version": "3.13"
+    },
+    "notes": [
+      "Base install covers the API and database tools. The [graph] and [ml] extras need graphviz headers plus rdkit and admet-ai, so they are deliberately excluded.",
+      "The base install pulls the playwright Python package but no browser binaries. Web-scraping tools need a separate 'playwright install chromium'.",
+      "Pinned below python3.14: markitdown[all] (a base dependency, not optional) requires youtube-transcript-api~=1.0.0, which sets requires_python <3.14. No newer markitdown release loosens this pin."
+    ],
+    "python_version_pin": true,
+    "type": "cli",
+    "url": [
+      "https://pypi.org/project/tooluniverse/",
+      "https://github.com/mims-harvard/ToolUniverse",
+      "https://zitniklab.hms.harvard.edu/ToolUniverse/"
+    ],
+    "version": "1.4.1"
+  },
   "topgrade": {
     "bin": [
       "topgrade"

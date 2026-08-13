@@ -34,7 +34,11 @@ sources.syntactic = { index = "acidgenomics" }
 index = [ { name = "acidgenomics", url = "https://python.acidgenomics.com/simple/" } ]
 
 [tool.ruff]
-target-version = "py314"
+# Deliberately below requires-python. koopa's runtime needs 3.14, but the
+# source must stay parseable AND importable on the floor: `koopa update` is
+# the only path that installs a new interpreter, and it runs under the OLD
+# one. Raising this floor bricks every host still on an older Python.
+target-version = "py312"
 line-length = 100
 indent-width = 4
 format.quote-style = "double"

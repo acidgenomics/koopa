@@ -912,7 +912,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     raise RuntimeError(msg)
                 try:
                     install_app_from_binary_package(config.prefix)
-                except FileNotFoundError, RuntimeError, subprocess.CalledProcessError:
+                except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
                     if has_python_installer(config.name, config.platform, config.mode):
                         from koopa.alert import alert_info
 
@@ -1669,7 +1669,7 @@ def _acquire_install_lock() -> bool:
                 f"'{path}' if the process is stale."
             )
             raise RuntimeError(msg)
-        except ValueError, ProcessLookupError:
+        except (ValueError, ProcessLookupError):
             pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
     Path(path).write_text(str(os.getpid()))
@@ -1683,7 +1683,7 @@ def _release_install_lock() -> None:
             pid = int(Path(path).read_text().strip())
             if pid == os.getpid():
                 os.unlink(path)
-    except ValueError, OSError:
+    except (ValueError, OSError):
         pass
 
 
@@ -2732,7 +2732,7 @@ def _installed_after(app: str, cutoff_ts: float) -> bool:
     try:
         with open(info_file) as f:
             info = json.load(f)
-    except json.JSONDecodeError, OSError:
+    except (json.JSONDecodeError, OSError):
         return False
     date_str = info.get("date", "")
     if not date_str:
@@ -2751,7 +2751,7 @@ def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     try:
         with open(path) as f:
             data = json.load(f)
-    except json.JSONDecodeError, OSError:
+    except (json.JSONDecodeError, OSError):
         return []
     if source and data.get("source", "") != source:
         return []
@@ -2799,7 +2799,7 @@ def _remove_from_pending_plan(app: str) -> None:
     try:
         with open(path) as f:
             data = json.load(f)
-    except json.JSONDecodeError, OSError:
+    except (json.JSONDecodeError, OSError):
         return
     data["plan"] = [e for e in data.get("plan", []) if e["app"] != app]
     if not data["plan"]:

@@ -48,17 +48,34 @@ fi
 _koopa_prefix="$(__koopa_realpath "$(dirname "$_koopa_bin")/..")"
 [ -d "$_koopa_prefix" ] || exit 1
 
-_python=""
 _venv_python="${_koopa_prefix}/.venv/bin/python3"
-if __koopa_check_python "$_venv_python"; then
+if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
+    _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
+else
+    _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
+fi
+_required_ver="$(cat "${_koopa_prefix}/.python-version" 2>/dev/null)"
+
+_python=""
+# Prefer whichever of venv/bootstrap actually matches .python-version. A
+# stale interpreter left over from a prior pin still passes the module
+# probe below and would otherwise win outright, so a host can silently run
+# the wrong Python indefinitely instead of self-healing.
+if [ -n "$_required_ver" ]; then
+    if __koopa_python_version_matches "$_venv_python" "$_required_ver" && \
+        __koopa_check_python "$_venv_python"
+    then
+        _python="$_venv_python"
+    elif __koopa_python_version_matches "$_bootstrap_python" "$_required_ver" && \
+        __koopa_check_python "$_bootstrap_python"
+    then
+        _python="$_bootstrap_python"
+    fi
+fi
+if [ -z "$_python" ] && __koopa_check_python "$_venv_python"; then
     _python="$_venv_python"
 fi
 if [ -z "$_python" ]; then
-    if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
-        _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
-    else
-        _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
-    fi
     if __koopa_check_python "$_bootstrap_python"; then
         _python="$_bootstrap_python"
     elif [ -x "$_bootstrap_python" ]; then
@@ -80,7 +97,6 @@ if [ -z "$_python" ]; then
     fi
 fi
 if [ -z "$_python" ]; then
-    _required_ver="$(cat "${_koopa_prefix}/.python-version" 2>/dev/null)"
     if [ -n "$_required_ver" ]; then
         # /usr/bin/python3 first (matches historical behavior), then whatever
         # the .python-version-derived name (e.g. python3.12) or bare python3

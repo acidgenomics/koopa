@@ -13,7 +13,7 @@ from typing import IO, Self
 
 _HISTORY_FILENAME = "build-times.json"
 
-_active_progress: BuildProgress | None = None
+_active_progress: "BuildProgress | None" = None
 _last_failure_tail: str | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
@@ -55,7 +55,7 @@ def _styled_time(elapsed: str, *, seconds: float | None = None) -> str:
     return f"[{elapsed}]"
 
 
-def get_active_progress() -> BuildProgress | None:
+def get_active_progress() -> "BuildProgress | None":
     """Return the currently active build progress context, if any."""
     return _active_progress
 
@@ -141,7 +141,7 @@ def _load_history() -> dict[str, float]:
     try:
         with open(path) as f:
             return json.load(f)
-    except json.JSONDecodeError, OSError:
+    except (json.JSONDecodeError, OSError):
         return {}
 
 
