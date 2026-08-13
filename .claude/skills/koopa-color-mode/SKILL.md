@@ -569,3 +569,69 @@ grep '"theme"' ~/.claude/settings.json
 Per "Never Verify by Re-Running the Installer from an Agent Session" above, this
 must be run by the user in a normal terminal, never from inside the agent
 session that produced the fix — the same stale-`KOOPA_COLOR_MODE` risk applies.
+
+## Ghostty: Symlink Creation Must Run Pre-Chezmoi, Not Post
+
+**Symptom:** a Ghostty window renders the wrong palette, or a hardcoded
+selection color, no matter how many times color mode flips. `koopa configure
+user color-mode` and `koopa configure user dotfiles` both report success. No
+error appears anywhere.
+
+**Root cause (2026-08):** `_configure_dracula_pro_post()` in
+[opt/dotfiles/install](../../../opt/dotfiles/install) used to build the
+`~/.config/ghostty/themes/` symlinks (`Dracula Pro`, `Dracula Pro Alucard`,
+etc.) in the **post**-chezmoi phase, alongside kitty/wezterm/atuin/btop. That
+placement is correct for those four tools, because their own templates never
+read the symlinks back. It is wrong for Ghostty, because
+`chezmoi/dot_config/ghostty/config.tmpl` `stat`s
+`~/.config/ghostty/themes/Dracula Pro` **during the chezmoi apply that runs
+before `_post`** to decide which theme names to emit. Every install therefore
+rendered `config.tmpl` against the symlink state left by the *previous*
+install, one full cycle behind. On the very first install on a machine, the
+pre-render `stat` sees nothing at all and silently falls back to free
+`Dracula`/`Atom One Light` — no error, because the `stat` guard is designed to
+fail open.
+
+**Fix:** move the Ghostty symlink block into `_configure_dracula_pro()` (the
+pre-chezmoi phase), so the render that reads the directory always sees the
+current cycle's links. General rule for this installer: any block whose
+*output* is read back by a chezmoi template belongs in the pre-chezmoi phase;
+blocks whose output nothing reads back (the common case) belong in `_post`,
+where they can rely on chezmoi-created parent directories already existing.
+
+**A second, independent defect found in the same file:** `config.tmpl` also
+emitted a static `selection-background = #5B5575` whenever the Dracula Pro
+symlinks were present. Ghostty applies main-config keys over theme-file values,
+so that one static hex won and was visibly wrong in one of the two modes.
+Ghostty accepts `light:`/`dark:` conditional values only for the `theme` key
+itself; any other static color key in the main config is wrong in one mode by
+construction. Fix: delete the override and let each theme file's own
+`selection-background`/`selection-foreground` pair apply. The literal was also
+a `theme-colors.md` violation — a Dracula-Pro-context hex with no allowlisted
+match and no runtime derivation.
+
+## Ghostty Caches Theme Resolution Per-Window; `reload_config` Cannot Fix an Already-Open Window
+
+**Symptom:** after fixing a real Ghostty config bug (see above, or any fix to
+`config.tmpl`), one specific long-lived window stays on the old, wrong palette
+even after `koopa configure user dotfiles` re-renders the file correctly on
+disk and `grep` confirms the fix landed. Pressing Ghostty's `reload_config`
+keybind (default `⌘⇧,` on macOS) in that window visibly does nothing. A **new**
+window or a fresh session opened in the same running Ghostty binary picks up
+the fix immediately and correctly follows the OS's current light/dark state.
+
+**Cause:** Ghostty resolves the `theme = "light:X,dark:Y"` directive once, at
+the time a given window/surface is created. `reload_config` re-parses the
+config file and applies most keys live, but the light/dark theme resolution
+for that window's already-existing surface is not among them. The window keeps
+whatever it resolved at creation time, correct or not, indefinitely.
+
+**This is a Ghostty-side limitation, not a koopa bug.** No koopa code sets or
+caches this state. Confirming it does not require more digging: open a new
+window (`⌘N`, not a new tab) in the same running Ghostty process. If the new
+window is correct while the old one is not, the fix already works; only the
+stale window needs to catch up.
+
+**Fix:** quit and relaunch the stuck window, or the whole Ghostty app. There is
+no config-only or koopa-side remedy for a window that already resolved the
+wrong theme before the fix landed.
