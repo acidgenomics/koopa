@@ -512,6 +512,7 @@ def test_push_app_build_uses_linked_version_not_string_max(tmp_path: Path) -> No
     json_data = {"python3.13": {"version": "3.13.15"}}
 
     with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
         patch("koopa.install.app_prefix", return_value=str(app_dir)),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
         patch("koopa.install.arch2", return_value="arm64"),
@@ -539,6 +540,7 @@ def test_push_app_build_raises_when_not_linked(tmp_path: Path) -> None:
     opt_dir.mkdir()
 
     with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
         pytest.raises(FileNotFoundError),
     ):
@@ -585,6 +587,7 @@ def test_can_push_binary_allows_private_builder_hosts() -> None:
 
     with (
         patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
         patch("koopa.vendor.vendor_can_push", return_value=False),
         patch("koopa.install._has_private_access", return_value=True),
         patch("koopa.build.locate", return_value="/usr/bin/aws"),
@@ -603,6 +606,38 @@ def test_can_push_binary_requires_aws_cli_for_private_path() -> None:
         patch("koopa.build.locate", side_effect=FileNotFoundError),
     ):
         assert _can_push_binary() is False
+
+
+def test_can_push_binary_denies_non_default_prefix() -> None:
+    """A builder with private access still can't push from a non-'/opt/koopa' prefix.
+
+    Pushed tarballs record absolute paths ('tar -Pcz'), so a tarball built
+    against any other prefix can never be extracted by a puller.
+    """
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.install.koopa_prefix", return_value="/home/u/.local/share/koopa"),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_push_binary() is False
+
+
+def test_push_app_build_rejects_non_default_prefix(tmp_path: Path) -> None:
+    """push_app_build refuses to build a tarball outside '/opt/koopa'."""
+    from koopa.install import push_app_build
+
+    _app_dir, opt_dir, _linked, _older = _link_python_versions(tmp_path)
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/home/u/.local/share/koopa"),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        pytest.raises(RuntimeError, match="/opt/koopa"),
+    ):
+        push_app_build("python3.13")
 
 
 def test_link_in_bin_replaces_non_symlink_file(tmp_path: Path) -> None:

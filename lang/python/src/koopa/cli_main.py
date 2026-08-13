@@ -90,11 +90,14 @@ def _revert_direnv_env(*, verbose: bool = False) -> None:
     """
     from koopa.system import revert_direnv_env
 
+    # Read 'DIRENV_DIR' before reverting: it's itself one of the vars direnv
+    # sets on entering a project, so it's absent from the pre-'.envrc' state
+    # and 'revert_direnv_env' removes it -- reading it afterward always gets ''.
+    project_dir = os.environ.get("DIRENV_DIR", "").removeprefix("-")
     reverted = revert_direnv_env()
     if reverted and verbose:
         from koopa.alert import alert_note
 
-        project_dir = os.environ.get("DIRENV_DIR", "").removeprefix("-")
         alert_note(
             f"Reverted {len(reverted)} direnv-loaded environment variable(s) from '{project_dir}'.",
         )

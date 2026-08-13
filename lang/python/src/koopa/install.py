@@ -183,7 +183,34 @@ def can_build_binary() -> bool:
     return os.environ.get("KOOPA_BUILDER", "0") == "1"
 
 
+# Binary tarballs are built with absolute paths (see push_app_build's
+# 'tar -Pcz'), so a pushed tarball is only ever extractable back into this
+# exact prefix (see install_app_from_binary_package's 'tar -Pxz' and its own
+# matching check). Named once here and reused everywhere this rule is
+# enforced or asserted, instead of repeating the '/opt/koopa' literal.
+_BINARY_PREFIX = "/opt/koopa"
+
+
+def _require_binary_prefix() -> None:
+    """Raise if the current koopa install isn't the canonical binary-build prefix.
+
+    Called at the top of 'push_app_build', the single choke point that creates
+    a push tarball, so no caller (including 'koopa develop push-app-build',
+    which has its own tar/upload code) can push an absolute-path tarball built
+    against the wrong prefix into the shared bucket.
+    """
+    kp = koopa_prefix()
+    if kp != _BINARY_PREFIX:
+        msg = (
+            f"Binary push is not supported for the koopa install at '{kp}'. "
+            f"Tarballs record absolute paths, so they must be built against "
+            f"'{_BINARY_PREFIX}'."
+        )
+        raise RuntimeError(msg)
+
+
 _warned_no_account_id = False
+_warned_non_default_prefix = False
 
 
 def _has_private_access() -> bool:
@@ -239,7 +266,7 @@ def _can_install_binary() -> bool:
         return False
     if flag == "1":
         return True
-    if koopa_prefix() != "/opt/koopa":
+    if koopa_prefix() != _BINARY_PREFIX:
         return False
     if can_build_binary():
         return False
@@ -251,6 +278,9 @@ def _can_push_binary() -> bool:
 
     Allows push when:
     - KOOPA_BUILDER=1 is set, AND
+    - koopa is installed at the canonical '/opt/koopa' prefix (see
+      '_BINARY_PREFIX'; a pushed tarball records absolute paths, so a build
+      from any other prefix can never be extracted by a puller), AND
     - either the vendor backend can push (vendor.json configured with credentials), OR
     - acidgenomics private AWS access is available and aws CLI is installed
 
@@ -258,9 +288,21 @@ def _can_push_binary() -> bool:
     (aws not yet in PATH at that point). Use 'koopa develop push-app-build
     aws-cli' after installation completes.
     """
+    global _warned_non_default_prefix  # noqa: PLW0603
     from koopa.vendor import vendor_can_push
 
     if not can_build_binary():
+        return False
+    kp = koopa_prefix()
+    if kp != _BINARY_PREFIX:
+        if not _warned_non_default_prefix:
+            _warned_non_default_prefix = True
+            from koopa.alert import alert_note
+
+            alert_note(
+                f"Binary push is disabled for the koopa install at '{kp}'. "
+                f"Tarballs must be built against '{_BINARY_PREFIX}'."
+            )
         return False
     if vendor_can_push():
         return True
@@ -467,15 +509,14 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     from koopa.aws import koopa_s3_bucket
 
     aws_profile = "acidgenomics"
-    binary_prefix = "/opt/koopa"
     kp = koopa_prefix()
     os_str = os_slug()
     s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
-    if kp != binary_prefix:
+    if kp != _BINARY_PREFIX:
         msg = (
             f"Binary package installation not supported for koopa install "
             f"located at '{kp}'. Koopa must be installed at "
-            f"default '{binary_prefix}' location."
+            f"default '{_BINARY_PREFIX}' location."
         )
         raise RuntimeError(msg)
     use_vendor = vendor_config() is not None
@@ -544,9 +585,11 @@ def _active_app_version(name: str) -> str | None:
 
 def push_app_build(name: str) -> None:
     """Push completed build to S3 and/or vendor backend."""
+    from koopa.alert import alert_success
     from koopa.aws import koopa_s3_bucket
     from koopa.vendor import vendor_config, vendor_push_binary
 
+    _require_binary_prefix()
     arch = arch2()
     os_str = os_slug()
     s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
@@ -577,6 +620,7 @@ def push_app_build(name: str) -> None:
         )
         if vendor_config() is not None:
             vendor_push_binary(tar_file, os_str, arch, name, tarball_name)
+        alert_success(f"Pushed '{name}' {version} to '{tar_url}'.")
     finally:
         if os.path.isfile(tar_file):
             os.unlink(tar_file)

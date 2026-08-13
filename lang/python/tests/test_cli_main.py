@@ -83,6 +83,31 @@ def test_revert_direnv_env_reports_count_when_verbose(
     assert "2" in err
 
 
+def test_revert_direnv_env_reports_project_dir_when_it_is_itself_reverted(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """The note still names the project dir when 'DIRENV_DIR' is one of the reverted vars.
+
+    'DIRENV_DIR' is itself absent from direnv's pre-'.envrc' state, so the real
+    'revert_direnv_env' removes it from 'os.environ' along with every other var
+    direnv set. A mock that doesn't reproduce that removal (see
+    'test_revert_direnv_env_reports_count_when_verbose') can't catch a read
+    that happens after the removal instead of before it.
+    """
+    monkeypatch.setenv("DIRENV_DIR", "-/Users/someuser/some-project")
+
+    def _fake_revert() -> list[str]:
+        monkeypatch.delenv("DIRENV_DIR", raising=False)
+        return ["DIRENV_DIR", "FOO"]
+
+    with patch("koopa.system.revert_direnv_env", side_effect=_fake_revert):
+        cli_main._revert_direnv_env(verbose=True)
+
+    err = capsys.readouterr().err
+    assert "/Users/someuser/some-project" in err
+    assert "2" in err
+
+
 def test_revert_direnv_env_silent_by_default(capsys: pytest.CaptureFixture) -> None:
     """No message prints without '--verbose', even when vars were reverted."""
     with patch("koopa.system.revert_direnv_env", return_value=["FOO"]):

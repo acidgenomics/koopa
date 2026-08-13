@@ -174,8 +174,11 @@ def revert_direnv_env() -> list[str]:
 
     Returns the names of vars changed (restored or removed), never their values,
     so callers can report a count without risking a secret in a log line.
-    Idempotent: 'DIRENV_DIFF' itself is one of the removed names, so a second
-    call (e.g. after this process re-execs itself) is a no-op.
+    Idempotent by convergence, not by clearing state: 'DIRENV_DIFF' itself is
+    left in 'os.environ' (it names vars *inside* the diff payload, and direnv
+    never lists itself there), but after the first call every diffed key
+    already matches its pre-'.envrc' value, so a second call (e.g. after this
+    process re-execs itself) finds nothing left to change and returns [].
     """
     diff = os.environ.get("DIRENV_DIFF")
     if not diff:

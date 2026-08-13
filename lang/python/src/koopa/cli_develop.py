@@ -173,9 +173,15 @@ def _handle_push_app_build(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.alert import alert, alert_note
-    from koopa.install import _binary_tarball_basename
+    from koopa.install import _binary_tarball_basename, _require_binary_prefix
     from koopa.prefix import opt_prefix
     from koopa.system import arch2, os_slug
+
+    try:
+        _require_binary_prefix()
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     aws = shutil.which("aws")
     tar = shutil.which("tar")

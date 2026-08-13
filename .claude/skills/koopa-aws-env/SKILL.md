@@ -48,7 +48,7 @@ All private koopa buckets follow: `<role>-<account-id>-us-east-1-an`
 | `r` | r.acidgenomics.com R package repo |
 | `python` | python.acidgenomics.com — PEP 503 index (`/simple/`), docs (`/<name>/`), landing (`/`) |
 | `koopa` | koopa.acidgenomics.com Sphinx docs site (`/`) + source tarball mirror (`/src/`, koopa develop mirror-src) + install script (`/install`) |
-| `artifacts` | Pre-built binary packages + restricted installers |
+| `artifacts` | Pre-built binary packages (`binaries/<os_slug>/<arch>/<name>/<version>.tar.gz`) + restricted installers |
 
 ## Key helpers (`lang/python/src/koopa/aws.py`)
 
@@ -109,6 +109,13 @@ still served from cache until an invalidation runs. Add the missing var to
 directly with the distribution ID (`aws cloudfront list-distributions
 --query 'DistributionList.Items[?Aliases.Items[0]==`koopa.acidgenomics.com`].Id'`)
 rather than re-running the whole publish.
+
+A push into the `artifacts` bucket's `binaries/` prefix must run from koopa
+installed at `/opt/koopa` — tarballs are archived with absolute paths
+(`tar -Pcz`), so a push from any other prefix uploads an object no
+`/opt/koopa` host can ever extract. See the "Binary Package Cache" section of
+the `koopa-app-registry` skill for the full enforcement list and an audit
+recipe for finding an already-poisoned object.
 
 ## History
 

@@ -208,9 +208,10 @@ def test_revert_direnv_env_noop_on_garbage_payload(monkeypatch: pytest.MonkeyPat
 def test_revert_direnv_env_is_idempotent(monkeypatch: pytest.MonkeyPatch) -> None:
     """A second call is a no-op.
 
-    'DIRENV_DIFF' itself is removed on the first call, so a second call (e.g.
-    after an os.execv restart) does nothing -- this is what stops a duplicate
-    message on a restart.
+    'DIRENV_DIFF' is left in 'os.environ' by the first call, but every diffed
+    key already matches its pre-'.envrc' value by then, so a second call
+    (e.g. after an os.execv restart) finds nothing left to change -- this is
+    what stops a duplicate message on a restart.
     """
     monkeypatch.setenv("DIRENV_DIFF", _direnv_diff({}, {"PROJECT_TOKEN": "fake"}))
     monkeypatch.setenv("PROJECT_TOKEN", "fake")

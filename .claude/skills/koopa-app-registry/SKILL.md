@@ -9,7 +9,10 @@ description: >-
   GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths, the
   dead-host circuit breaker) in version-check or source-download code, or
   reasoning about why an app was (or wasn't) flagged as needing a rebuild —
-  dependency-staleness detection compares installed state, not app.json's target.
+  dependency-staleness detection compares installed state, not app.json's target,
+  or debugging a binary-package push/pull issue (why a push must run from the
+  canonical '/opt/koopa' prefix, KOOPA_BUILDER gating, or a tarball uploaded from
+  the wrong prefix that a puller can never extract).
 ---
 
 # koopa App Registry & Command Conventions
@@ -214,6 +217,81 @@ install works — koopa has no rights to redistribute or mirror it automatically
 
 Covered by `tests/test_installers.py`: the staged-artifact pin-hold, the
 missing-`installer_artifact`-field case, and the archive-layout assertion.
+
+## Binary Package Cache (push/pull)
+
+Pre-built binary tarballs (a Homebrew-bottle equivalent) let non-builder hosts
+skip compiling from source. Push and pull are two independent code paths in
+`install.py`, gated separately — there is no single shared helper that
+enforces their common invariant for free.
+
+### The `/opt/koopa` absolute-path invariant
+
+A tarball is archived with `tar -Pcz` (absolute paths preserved) and extracted
+with `tar -Pxz`. A tarball built from any prefix other than `/opt/koopa`
+embeds that other prefix's path, so it can never be extracted correctly
+anywhere else — a pull would try to write into `/Users/someone/...` instead of
+`/opt/koopa/...`. `_BINARY_PREFIX = "/opt/koopa"` in `install.py` names this
+invariant once; every site below checks it independently:
+
+| Function | File | Enforcement |
+|---|---|---|
+| `_can_install_binary()` | `install.py` | soft gate, returns `False` off-prefix |
+| `install_app_from_binary_package()` | `install.py` | hard `RuntimeError` at pull time |
+| `_can_push_binary()` | `install.py` | soft gate, returns `False` off-prefix, one-shot `alert_note` |
+| `push_app_build()` | `install.py` | hard `RuntimeError` via `_require_binary_prefix()` |
+| `_handle_push_app_build()` (`koopa develop push-app-build`) | `cli_develop.py` | hard `RuntimeError` via the same `_require_binary_prefix()` |
+
+**Gotcha:** `push_app_build()` and `_handle_push_app_build()` are two
+independent tar-and-upload implementations of "push one app's build." A guard
+added to one does not cover the other — there is no single choke point both
+pass through, so both call `_require_binary_prefix()` explicitly. When adding
+a new push code path, check for this invariant explicitly; don't assume
+`_can_push_binary() is True` means the tarball being built is safe.
+
+### KOOPA_BUILDER gating
+
+`can_build_binary()` = `KOOPA_BUILDER=1` in the environment. `_can_push_binary()`
+requires: `can_build_binary()` AND the `/opt/koopa` prefix AND (a configured
+vendor push backend OR (`_has_private_access()` AND the `aws` CLI on PATH)).
+`KOOPA_BUILDER=1` set in a shell profile survives koopa's own direnv-revert
+step (`cli_main._revert_direnv_env`, see `koopa.system.revert_direnv_env`) if
+it's exported *before* direnv runs — it lands in direnv's pre-`.envrc`
+baseline, which gets restored on every `koopa install`/`reinstall`/`update`,
+not stripped.
+
+### S3 key layout
+
+`s3://<artifacts-bucket>/binaries/<os_slug>/<arch>/<name>/<version>.tar.gz`,
+or `<version>-r<revision>.tar.gz` when the app.json entry's `revision > 0`
+(`_binary_tarball_basename()`). A `.koopa-binary` marker file inside an
+installed app's prefix means it was pulled as a binary, not built locally —
+`push_missing_app_builds()`'s sweep skips any app carrying that marker.
+
+### Silent-success trap
+
+`push_app_build()` runs `aws s3 cp --only-show-errors` with `capture=True` and
+used to have no success message at all — a push that ran and succeeded
+looked identical to one that silently did nothing, even under `--verbose`.
+Fixed with one `alert_success()` line after the upload. When debugging "it
+looks like nothing happened," confirm whether the operation actually ran
+before assuming it didn't: `--only-show-errors` on any `aws s3` call makes
+success silent by design.
+
+### Auditing a bucket for a wrong-prefix tarball
+
+Stream an object and read its first tar entry without extracting anything to
+disk:
+
+```sh
+aws s3 cp --profile acidgenomics --only-show-errors \
+  "s3://<bucket>/binaries/<os_slug>/<arch>/<name>/<version>.tar.gz" - \
+  | tar -tzf - | head -1
+```
+
+Expect a line starting `/opt/koopa/app/...`. Anything else means the object
+was pushed from a non-canonical prefix and must be deleted — no `/opt/koopa`
+host can ever extract it.
 
 ## Tool-Inclusion Scope
 
