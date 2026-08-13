@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (147) ---------------------------------------------
+    # -- conda-package (148) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
@@ -141,6 +141,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "star-fusion": f"{_M}._conda",
     "starship": f"{_M}._conda",
     "subread": f"{_M}._conda",
+    "synapseclient": f"{_M}._conda",
     "tealdeer": f"{_M}._conda",
     "television": f"{_M}._conda",
     "texlive-core": f"{_M}._conda",

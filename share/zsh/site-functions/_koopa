@@ -1188,6 +1188,7 @@ _koopa_install() {
         'subversion'
         'surrealdb'
         'swig'
+        'synapseclient'
         'tabcmd'
         'taglib'
         'tar'
