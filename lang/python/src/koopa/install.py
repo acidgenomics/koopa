@@ -2491,6 +2491,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
+            # uv bundles its own TLS cert store rather than consulting the OS
+            # one. On networks where the OS store trusts a cert uv's bundled
+            # store doesn't (observed against python.acidgenomics.com), uv
+            # fails with "invalid peer certificate: UnknownIssuer" even
+            # though curl and git (both OS-native TLS) reach the same host.
+            "--system-certs",
             "--quiet",
         ],
         check=True,

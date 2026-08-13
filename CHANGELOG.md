@@ -15,8 +15,11 @@ Minor changes:
   importable on the previous pin. Raising the ruff floor to 3.14 alongside
   this bump would have bricked every host still on 3.12 -- `koopa --version`
   and `koopa update` both fail immediately, since the 3.14-only source
-  (unparenthesized `except A, B:` clauses, and one unquoted forward
-  reference in `progress.py`) can no longer be parsed or imported.
+  (42 unparenthesized `except A, B:` clauses across 15 modules, plus three
+  unquoted forward references relying on PEP 649 deferred evaluation, in
+  `progress.py`, `cli_main.py`, and `installers/_build_helper.py`) can no
+  longer be parsed or imported. The `_build_helper.py` one alone broke every
+  installer module, since all of them import it.
 - Fixed `bin/koopa` picking a mismatched-but-passable `.venv` or bootstrap
   Python over a version-matching one. Both are now checked against
   `.python-version` first, with the previous mismatch-tolerant fallback kept

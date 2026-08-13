@@ -38,11 +38,27 @@ Two traps neither look version-sensitive at a glance, and ruff at the right
 - **PEP 758** (3.14): unparenthesized `except A, B:` is a syntax error before
   3.14. Always write `except (A, B):`.
 - **PEP 649** (3.14): annotations are evaluated lazily. An unquoted forward
-  reference (`x: Foo | None` where `Foo` is defined later in the module) is a
-  `NameError` at import time on 3.13 and earlier. Quote it (`x: "Foo | None"`)
-  instead of moving the class, unless the file already avoids forward refs.
+  reference (`x: Foo | None` where `Foo` is defined later in the module, or
+  `-> Foo:` where `Foo` is only imported under `if TYPE_CHECKING:`) is a
+  `NameError` at import time on 3.13 and earlier. Quote it (`x: "Foo | None"`,
+  `-> "Foo":`) instead of moving the class or hoisting the import.
 
-Run `ruff check lang/python/src/` before assuming new syntax is safe to use.
+`ruff check lang/python/src/` catches PEP 758 reliably, but **not** the
+`TYPE_CHECKING` form of the PEP 649 trap -- ruff treats a name imported only
+under `if TYPE_CHECKING:` as valid in an unquoted annotation regardless of
+`target-version`, since that guard is normally paired with
+`from __future__ import annotations` (which koopa does not use). The only
+reliable check is actually importing every module under the floor
+interpreter:
+```sh
+PYTHONPATH=lang/python/src <floor-python> -c "
+import importlib, pkgutil, koopa
+for m in pkgutil.walk_packages(koopa.__path__, prefix='koopa.'):
+    importlib.import_module(m.name)
+"
+```
+This caught two instances (`cli_main.py`, `installers/_build_helper.py`) that
+`ruff check` reported as clean.
 
 ## Dev tools
 
