@@ -1630,14 +1630,6 @@ def _check_boost() -> str:
     return re.sub(r"^boost-", "", tag)
 
 
-def _check_isl() -> str:
-    if not _has_acidgenomics_aws():
-        raise RuntimeError(
-            "isl version bump requires acidgenomics AWS access to mirror src tarball"
-        )
-    return _check_directory_listing("https://libisl.sourceforge.io/", "isl")
-
-
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
     "antigravity-cli": _AppCheckSpec(
@@ -1662,7 +1654,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
-    "isl": _AppCheckSpec("dirlist", _check_isl, ()),
+    "isl": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing("https://libisl.sourceforge.io/", "isl"),
+        (),
+    ),
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),

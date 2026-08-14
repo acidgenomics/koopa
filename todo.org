@@ -1,2 +1,5 @@
-** TODO Check if this is still true:
+** DONE Check if this is still true:
     isl: error: isl version bump requires acidgenomics AWS access to mirror src tarball
+   Not true. Removed the guard in version_check.py: upstream keeps every isl
+   tarball back to 0.07, and update_app_json() already mirrors src tarballs for
+   every outdated app generically, so isl needed no special case.
