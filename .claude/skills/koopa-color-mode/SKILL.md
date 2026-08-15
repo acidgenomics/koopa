@@ -236,7 +236,7 @@ Present in the first list but absent from the second is the pre-existing
 shell activation, hours or days apart, never converging:
 
 ```
-▸ [...] Applying color mode: light
+   [...] Applying color mode: light
 chezmoi: ~/.claude/settings.json: not managed
 Error: Command '[... apply ... 31 target paths ...]' returned non-zero exit status 1
 ```

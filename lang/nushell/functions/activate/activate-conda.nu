@@ -3,7 +3,7 @@
 #
 # Nushell doesn't have a native conda shell hook, so we use a PATH-only
 # approach to make conda commands available in the base environment.
-export def _koopa_activate_conda [] {
+export def --env _koopa_activate_conda [] {
     let prefix = $"((_koopa_opt_prefix))/conda"
     if not ($prefix | path exists) {
         return

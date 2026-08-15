@@ -173,7 +173,7 @@ def _handle_push_app_build(args: list[str]) -> None:
         )
         sys.exit(1)
     from koopa.alert import alert, alert_note
-    from koopa.install import _binary_tarball_basename, _is_native_cpu_build, _require_binary_prefix
+    from koopa.install import _binary_tarball_basename, _require_binary_prefix
     from koopa.prefix import opt_prefix
     from koopa.system import arch2, os_slug
 
@@ -209,9 +209,6 @@ def _handle_push_app_build(args: list[str]) -> None:
             binary_marker = os.path.join(app_prefix, ".koopa-binary")
             if os.path.isfile(binary_marker):
                 alert_note(f"'{name}' was installed as a binary.")
-                continue
-            if _is_native_cpu_build(name):
-                alert_note(f"'{name}' is built for the host's exact CPU; skipping push.")
                 continue
             version = os.path.basename(app_prefix)
             tarball_name = _binary_tarball_basename(name, version)

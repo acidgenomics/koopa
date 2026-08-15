@@ -1,12 +1,21 @@
 # Export environment variables for nushell.
 # @note Updated 2026-05-01.
 # @note Requires nushell 0.90+.
-export def _koopa_export_env [] {
+export def --env _koopa_export_env [] {
     # KOOPA_SHELL.
     $env.KOOPA_SHELL = (which nu | get 0.path)
 
     # KOOPA_CPU_COUNT.
-    if (_koopa_is_macos) {
+    # An explicit Slurm allocation (SLURM_CPUS_PER_TASK, then
+    # SLURM_CPUS_ON_NODE) beats a fresh nproc/sysctl probe -- srun can
+    # constrain a job below what a bare probe reports.
+    let slurm_cpus_per_task = ($env.SLURM_CPUS_PER_TASK? | default "")
+    let slurm_cpus_on_node = ($env.SLURM_CPUS_ON_NODE? | default "")
+    if ($slurm_cpus_per_task =~ '^[0-9]+$') {
+        $env.KOOPA_CPU_COUNT = $slurm_cpus_per_task
+    } else if ($slurm_cpus_on_node =~ '^[0-9]+$') {
+        $env.KOOPA_CPU_COUNT = $slurm_cpus_on_node
+    } else if (_koopa_is_macos) {
         $env.KOOPA_CPU_COUNT = (sysctl -n hw.ncpu | str trim)
     } else {
         $env.KOOPA_CPU_COUNT = (nproc | str trim)

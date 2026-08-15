@@ -119,6 +119,65 @@ PATH additions, conda, direnv, fzf, color-mode sync, and aliases. It calls
 `_koopa_activate_starship` + `_koopa_activate_zoxide` to *regenerate* stale caches —
 the env.nu bootstrap and the runtime regeneration work together.
 
+## `def --env` Required for Any `$env` Mutation to Escape the Caller
+
+`$env.X = ...`, `hide-env`, and `load-env` only affect the calling function's *own*
+scope unless that function is declared `def --env`. This is not limited to the one
+function doing the mutation — **every function in the call chain**, from the
+top-level call site down to the mutation, must be `def --env`, or the change is
+silently discarded the moment the innermost function returns:
+
+```nu
+def inner [] { $env.FOO = "bar" }
+def outer [] { inner }
+outer
+$env.FOO?                              # null -- inner's own scope only
+
+def --env inner [] { $env.FOO = "bar" }
+def --env outer [] { inner }           # outer must ALSO be --env
+outer
+$env.FOO?                              # "bar"
+```
+
+**Regression found in koopa** (2026-08): none of `_koopa_export_env`, any
+`_koopa_activate_*`, `_koopa_add_to_path_start`/`_end`, `_koopa_activate_koopa`, or
+`_koopa_run_activation` were `def --env`. Every variable koopa's nushell activation
+was supposed to set (`KOOPA_SHELL`, `KOOPA_CPU_COUNT`, `XDG_*`, `EDITOR`,
+`KOOPA_COLOR_MODE`, ...) was silently discarded on return — the activation ran,
+looked correct top to bottom, and did nothing. Fixed by adding `--env` to every
+function in the chain.
+
+**Which functions need it?** Only ones that mutate `$env` themselves, or call
+another `--env` function and need that mutation to reach *their own* caller. Pure
+readers (`_koopa_is_macos`, `_koopa_bin_prefix`, `_koopa_xdg_config_home`, etc.)
+never need it.
+
+**Verification.** This class of bug is invisible from reading any single function in
+isolation — each one looks correct. The only reliable check is running the real
+top-level entry point, not an isolated snippet:
+```sh
+KOOPA_ACTIVATE=1 KOOPA_PREFIX=<repo> nu -c '
+    use <repo>/lang/nushell/include/header.nu *
+    _koopa_run_activation
+    print $env.KOOPA_CPU_COUNT   # must NOT be null
+'
+```
+
+## `header.nu` Must `export use` Every File Whose Functions Are Called Elsewhere
+
+`export use ../functions/X/Y.nu *` makes `Y.nu`'s functions visible across the whole
+flattened `header.nu` namespace — but only for files actually listed. A file that is
+never `export use`'d is invisible even to code that calls it, and the failure is a
+hard runtime error (`Command 'foo' not found`), not a silent no-op.
+
+**Regression found in koopa** (2026-08): `functions/core/is-light-mode.nu` and
+`functions/core/terminal-is-light-background.nu` existed and were called from
+`_koopa_export_env`, but neither had an `export use` line in `header.nu` — so
+`_koopa_export_env` (and therefore all of `_koopa_activate_koopa`) crashed outright
+the moment it reached the color-mode block. Adding a new `core/`-style helper file
+requires adding its own `export use` line in `header.nu` — nothing does this
+automatically, and there's no test that catches an omission.
+
 ## Inclusive vs Exclusive Ranges (`str substring`)
 
 nushell ranges are **inclusive** by default. `0..N` includes index N; `0..<N` excludes

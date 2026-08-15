@@ -1,6 +1,6 @@
 # Activate difftastic.
 # @note Updated 2026-05-31.
-export def _koopa_activate_difftastic [] {
+export def --env _koopa_activate_difftastic [] {
     let difft = $"($env.KOOPA_PREFIX)/bin/difft"
     if not ($difft | path exists) {
         return

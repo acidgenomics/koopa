@@ -7,6 +7,7 @@ import subprocess
 from koopa.build import locate
 from koopa.download import download_with_mirror
 from koopa.installers._build_helper import _resolve_src_url, activate_app_deps, extract_cd
+from koopa.system import cpu_count
 
 
 def main(
@@ -43,7 +44,7 @@ def main(
         f"--prefix={prefix}",
         "--with-curses",
     ]
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         ["./configure", *conf_args],
         env=subprocess_env,

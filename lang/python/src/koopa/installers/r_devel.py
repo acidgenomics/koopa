@@ -7,6 +7,7 @@ import sys
 
 from koopa.build import app_prefix, locate
 from koopa.installers._build_helper import activate_app_deps
+from koopa.system import cpu_count
 
 
 def main(
@@ -153,7 +154,7 @@ def main(
     with open("SVNINFO", "w") as fh:
         fh.write(f"Revision: {version}\n")
     subprocess_env["r_cv_have_curl728"] = "yes"
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         ["./configure", *conf_args],
         env=subprocess_env,

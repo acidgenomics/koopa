@@ -1,12 +1,12 @@
 """Install p7zip."""
 
-import os
 import shutil
 import subprocess
 import sys
 
 from koopa.build import locate
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 
 
 def main(
@@ -29,7 +29,7 @@ def main(
     cxx = shutil.which("g++") or "g++"
     subprocess_env["CC"] = cc
     subprocess_env["CXX"] = cxx
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     cflags = subprocess_env.get("CFLAGS", "")
     cxxflags = subprocess_env.get("CXXFLAGS", "")
     ldflags = subprocess_env.get("LDFLAGS", "")

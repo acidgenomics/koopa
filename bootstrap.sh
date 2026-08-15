@@ -37,31 +37,31 @@ is_arm64() {
     esac
 }
 
-has_firewall() {
-    __kvar_ssl_cert="${SSL_CERT_FILE:-}"
-    if [ -z "$__kvar_ssl_cert" ]
-    then
-        unset -v __kvar_ssl_cert
-        return 1
-    fi
-    case "$__kvar_ssl_cert" in
-        "${KOOPA_PREFIX}/"*)
-            unset -v __kvar_ssl_cert
-            return 1
-            ;;
-    esac
-    unset -v __kvar_ssl_cert
-    return 0
-}
-
 cpu_count() {
-    __kvar_num="${KOOPA_CPU_COUNT:-}"
-    if [ -n "$__kvar_num" ]
-    then
-        printf '%s\n' "$__kvar_num"
-        unset -v __kvar_num
-        return 0
-    fi
+    # Precedence: an explicit Slurm allocation (SLURM_CPUS_PER_TASK, then
+    # SLURM_CPUS_ON_NODE) beats a possibly stale inherited KOOPA_CPU_COUNT,
+    # which beats an affinity-aware nproc probe, which beats getconf/sysctl/
+    # python. Each candidate is accepted only when it parses as a positive
+    # integer -- Slurm also exports 'SLURM_JOB_CPUS_PER_NODE', but in a
+    # compressed multi-node form such as '4(x2)' that must never reach
+    # 'make --jobs' verbatim, so that name is deliberately not read here.
+    #
+    # The affinity-aware nproc result also clamps the final value: koopa must
+    # never spawn more build jobs than the current CPU allocation, even when
+    # a Slurm variable or KOOPA_CPU_COUNT claims otherwise.
+    __kvar_num=''
+    for __kvar_candidate in \
+        "${SLURM_CPUS_PER_TASK:-}" \
+        "${SLURM_CPUS_ON_NODE:-}" \
+        "${KOOPA_CPU_COUNT:-}"
+    do
+        case "$__kvar_candidate" in
+            '' | *[!0-9]*) continue ;;
+        esac
+        __kvar_num="$__kvar_candidate"
+        break
+    done
+    unset -v __kvar_candidate
     if [ -d "${KOOPA_PREFIX:-}" ]
     then
         __kvar_bin_prefix="${KOOPA_PREFIX:?}/bin"
@@ -85,27 +85,46 @@ cpu_count() {
         __kvar_python=''
     fi
     __kvar_sysctl='/usr/sbin/sysctl'
+    __kvar_avail=''
     if [ -x "$__kvar_nproc" ]
     then
-        __kvar_num="$("$__kvar_nproc" --all)"
-    elif [ -x "$__kvar_getconf" ]
+        # No '--all': bare nproc honors the CPU affinity mask (e.g. a Slurm
+        # cgroup), which is exactly the value 'make --jobs' must respect.
+        __kvar_avail="$("$__kvar_nproc")"
+        case "$__kvar_avail" in
+            '' | *[!0-9]*) __kvar_avail='' ;;
+        esac
+    fi
+    if [ -n "$__kvar_num" ] && [ -n "$__kvar_avail" ] \
+        && [ "$__kvar_num" -gt "$__kvar_avail" ]
     then
-        __kvar_num="$("$__kvar_getconf" '_NPROCESSORS_ONLN')"
-    elif [ -x "$__kvar_sysctl" ] && is_macos
+        __kvar_num="$__kvar_avail"
+    fi
+    if [ -z "$__kvar_num" ]
     then
-        __kvar_num="$("$__kvar_sysctl" -n 'hw.ncpu')"
-    elif [ -x "$__kvar_python" ]
-    then
-        __kvar_num="$( \
-            "$__kvar_python" -c \
-                "import multiprocessing; print(multiprocessing.cpu_count())" \
-            2>/dev/null \
-            || true \
-        )"
+        if [ -n "$__kvar_avail" ]
+        then
+            __kvar_num="$__kvar_avail"
+        elif [ -x "$__kvar_getconf" ]
+        then
+            __kvar_num="$("$__kvar_getconf" '_NPROCESSORS_ONLN')"
+        elif [ -x "$__kvar_sysctl" ] && is_macos
+        then
+            __kvar_num="$("$__kvar_sysctl" -n 'hw.ncpu')"
+        elif [ -x "$__kvar_python" ]
+        then
+            __kvar_num="$( \
+                "$__kvar_python" -c \
+                    "import multiprocessing; print(multiprocessing.cpu_count())" \
+                2>/dev/null \
+                || true \
+            )"
+        fi
     fi
     [ -z "$__kvar_num" ] && __kvar_num=1
     printf '%d\n' "$__kvar_num"
     unset -v \
+        __kvar_avail \
         __kvar_bin_prefix \
         __kvar_getconf \
         __kvar_nproc \
@@ -916,6 +935,14 @@ install_python_uv() {
         fi
         unset -v __kvar_uv_mirror
     fi
+    if [ -z "${UV_HTTP_TIMEOUT:-}" ]
+    then
+        # Bound the fast-path attempt: a firewall that blackholes the CDN
+        # (rather than actively refusing it) must fail quickly and fall
+        # through to the source build, not hang.
+        UV_HTTP_TIMEOUT=60
+        export UV_HTTP_TIMEOUT
+    fi
     __kvar_cpython_dir="${__kvar_tmpdir}/cpython"
     printf 'Installing cpython %s via uv.\n' "$__kvar_python_version"
     if ! "$__kvar_uv" python install \
@@ -1000,26 +1027,23 @@ main() {
     unset -v __kvar_prefix_parent
     rm -fr "$__kvar_destdir"
     __kvar_build_ok=0
-    # A vendor mirror or an explicitly exported UV_PYTHON_INSTALL_MIRROR
-    # overrides the has_firewall veto: the fast path can resolve a CPython
-    # mirror even when the unconfigured, firewalled default cannot. If
-    # install_python_uv still cannot proceed (e.g. vendor_only with no
-    # derivable mirror, or no uv on PATH), it fails cleanly and this falls
-    # through to the source build below, same as any other fast-path failure.
-    if ! has_firewall || [ "$VENDOR_ENABLED" = '1' ] || [ -n "${UV_PYTHON_INSTALL_MIRROR:-}" ]
+    # Always try the uv fast path first: a prebuilt CPython download takes
+    # seconds versus minutes to compile from source, and this is safe on a
+    # genuinely firewalled host too -- install_python_uv fails cleanly (e.g.
+    # vendor_only with no derivable mirror, no uv on PATH, or an unreachable
+    # CDN) and this falls through to the source build below, same as any
+    # other fast-path failure.
+    if (
+        DESTDIR="$__kvar_destdir"
+        export DESTDIR
+        install_python_uv
+    )
     then
-        if (
-            DESTDIR="$__kvar_destdir"
-            export DESTDIR
-            install_python_uv
-        )
-        then
-            __kvar_build_ok=1
-        else
-            printf 'uv fast path failed, falling back to source build.\n' >&2
-            rm -fr "$__kvar_destdir"
-            mkdir -p "$__kvar_destdir"
-        fi
+        __kvar_build_ok=1
+    else
+        printf 'uv fast path failed, falling back to source build.\n' >&2
+        rm -fr "$__kvar_destdir"
+        mkdir -p "$__kvar_destdir"
     fi
     if [ "$__kvar_build_ok" -eq 0 ]
     then

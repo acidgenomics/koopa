@@ -5,6 +5,7 @@ import gzip
 import json
 import os
 import subprocess
+import sys
 import zlib
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -128,6 +129,52 @@ def test_cpu_count_returns_positive_int() -> None:
     result = cpu_count()
     assert isinstance(result, int)
     assert result >= 1
+
+
+def test_cpu_count_slurm_cpus_on_node_overrides_koopa_cpu_count(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Regression: a Slurm allocation must win over a stale inherited KOOPA_CPU_COUNT.
+
+    Observed on a real Slurm GPU node: KOOPA_CPU_COUNT was inherited as 96 (the
+    node's total core count) from the login node, while SLURM_CPUS_ON_NODE
+    correctly reported the 1-CPU allocation. Trusting KOOPA_CPU_COUNT there
+    made 'make --jobs=96' run on a single allocated CPU.
+    """
+    monkeypatch.setenv("SLURM_CPUS_ON_NODE", "1")
+    monkeypatch.setenv("KOOPA_CPU_COUNT", "96")
+    monkeypatch.delenv("SLURM_CPUS_PER_TASK", raising=False)
+    assert cpu_count() == 1
+
+
+def test_cpu_count_clamps_to_affinity_mask(monkeypatch: pytest.MonkeyPatch) -> None:
+    """KOOPA_CPU_COUNT must never exceed the process's CPU affinity mask.
+
+    koopa must never spawn more build jobs than the current CPU allocation,
+    even when KOOPA_CPU_COUNT itself claims a larger number.
+    """
+    monkeypatch.delenv("SLURM_CPUS_PER_TASK", raising=False)
+    monkeypatch.delenv("SLURM_CPUS_ON_NODE", raising=False)
+    monkeypatch.setenv("KOOPA_CPU_COUNT", "999999")
+    # cpu_count() gates sched_getaffinity behind sys.platform == "linux" (the
+    # attribute genuinely does not exist elsewhere); force that branch so the
+    # clamp is exercised on every dev platform, not just Linux.
+    monkeypatch.setattr(sys, "platform", "linux")
+    monkeypatch.setattr(os, "sched_getaffinity", lambda _pid: {0, 1, 2, 3}, raising=False)
+    assert cpu_count() == 4
+
+
+def test_cpu_count_rejects_malformed_slurm_value(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A malformed Slurm variable must fall through, never reach a build subprocess.
+
+    Slurm's compressed multi-node form (e.g. '4(x2)' for SLURM_JOB_CPUS_PER_NODE)
+    must never parse as a job count -- this simulates that shape landing on the
+    wrong variable name.
+    """
+    monkeypatch.setenv("SLURM_CPUS_PER_TASK", "4(x2)")
+    monkeypatch.setenv("SLURM_CPUS_ON_NODE", "2")
+    monkeypatch.delenv("KOOPA_CPU_COUNT", raising=False)
+    assert cpu_count() == 2
 
 
 def test_safe_build_env_drops_unlisted_project_var(monkeypatch: pytest.MonkeyPatch) -> None:

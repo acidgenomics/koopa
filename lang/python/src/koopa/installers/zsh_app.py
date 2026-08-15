@@ -5,11 +5,11 @@ import os
 import re
 import subprocess
 import sys
-from multiprocessing import cpu_count
 
 from koopa.build import locate
 from koopa.download import download
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 
 # Debian cherry-picks to migrate the pcre module to pcre2 (backported from zsh master).
 # https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/z/zsh.rb

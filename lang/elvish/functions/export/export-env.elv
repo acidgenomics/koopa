@@ -1,6 +1,7 @@
 # Export environment variables for Elvish.
 # @note Updated 2026-05-01.
 use platform
+use re
 
 fn export-env {
     # HOME.
@@ -16,7 +17,18 @@ fn export-env {
     }
 
     # KOOPA_CPU_COUNT.
-    if (eq $platform:os 'darwin') {
+    # An explicit Slurm allocation (SLURM_CPUS_PER_TASK, then
+    # SLURM_CPUS_ON_NODE) beats a fresh nproc/sysctl probe -- srun can
+    # constrain a job below what a bare probe reports.
+    var slurm-cpus = ''
+    if (and (has-env SLURM_CPUS_PER_TASK) (re:match '^[0-9]+$' $E:SLURM_CPUS_PER_TASK)) {
+        set slurm-cpus = $E:SLURM_CPUS_PER_TASK
+    } elif (and (has-env SLURM_CPUS_ON_NODE) (re:match '^[0-9]+$' $E:SLURM_CPUS_ON_NODE)) {
+        set slurm-cpus = $E:SLURM_CPUS_ON_NODE
+    }
+    if (not-eq $slurm-cpus '') {
+        set-env KOOPA_CPU_COUNT $slurm-cpus
+    } elif (eq $platform:os 'darwin') {
         set-env KOOPA_CPU_COUNT (str:trim-space (sysctl -n hw.ncpu 2>/dev/null))
     } else {
         try {

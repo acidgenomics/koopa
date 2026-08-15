@@ -1,11 +1,11 @@
 """Install lua."""
 
-import os
 import subprocess
 import sys
 
 from koopa.build import locate
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 
 
 def main(
@@ -21,7 +21,7 @@ def main(
     download_extract_cd()
     platform = "macosx" if sys.platform == "darwin" else "linux"
     subprocess_env = env.to_env_dict()
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [make, f"--jobs={jobs}", platform],
         env=subprocess_env,

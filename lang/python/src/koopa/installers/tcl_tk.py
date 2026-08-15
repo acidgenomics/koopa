@@ -13,6 +13,7 @@ from koopa.installers._build_helper import (
     _resolve_src_url,
     activate_app_deps,
 )
+from koopa.system import cpu_count
 from koopa.version import major_minor_version
 
 
@@ -28,7 +29,7 @@ def main(
     make = locate("make")
     maj_min_ver = major_minor_version(version)
     subprocess_env = env.to_env_dict()
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     tcl_url = _resolve_src_url(name, version)
     tcl_tarball = download_with_mirror(tcl_url, name, f"tcl{version}-src.tar.gz")
     extra_urls = _resolve_extra_src_urls(name, version)

@@ -9,6 +9,37 @@ from koopa.install import _app_json_installer
 from koopa.installers import bcl_convert, cellranger, has_python_installer
 from koopa.io import import_app_json
 
+_BANNED_CPU_COUNT_PATTERNS = (
+    "os.cpu_count(",
+    "multiprocessing.cpu_count(",
+    "from multiprocessing import cpu_count",
+)
+
+
+def test_no_installer_bypasses_koopa_cpu_count() -> None:
+    """No installer computes a job count from os.cpu_count()/multiprocessing directly.
+
+    koopa.system.cpu_count() is the single source of truth for how many build
+    jobs koopa may spawn: it reads the current Slurm allocation
+    (SLURM_CPUS_PER_TASK / SLURM_CPUS_ON_NODE) and clamps to the CPU affinity
+    mask, so a stale KOOPA_CPU_COUNT can never oversubscribe a constrained
+    allocation. An installer that reaches for os.cpu_count() or
+    multiprocessing.cpu_count() instead silently loses all of that -- this is
+    exactly the pattern that had 18 installers running 'make --jobs=96' on a
+    single allocated Slurm CPU. Use 'from koopa.system import cpu_count'.
+    """
+    installers_dir = Path(cellranger.__file__).parent
+    offenders = []
+    for path in sorted(installers_dir.glob("*.py")):
+        text = path.read_text()
+        hits = [pattern for pattern in _BANNED_CPU_COUNT_PATTERNS if pattern in text]
+        if hits:
+            offenders.append(f"{path.name}: {hits}")
+    assert not offenders, (
+        "installer(s) bypass koopa.system.cpu_count() -- use"
+        " 'from koopa.system import cpu_count' instead:\n" + "\n".join(offenders)
+    )
+
 
 def test_every_app_has_an_installer() -> None:
     """Every non-tombstoned app.json entry resolves to a Python installer."""

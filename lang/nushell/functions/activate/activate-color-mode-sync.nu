@@ -3,7 +3,7 @@
 #
 # Registers a pre-prompt hook that detects terminal appearance changes and
 # updates KOOPA_COLOR_MODE, FZF_DEFAULT_OPTS, and DFT_BACKGROUND accordingly.
-export def _koopa_activate_color_mode_sync [] {
+export def --env _koopa_activate_color_mode_sync [] {
     $env.config = ($env.config | upsert hooks.pre_prompt (
         ($env.config.hooks.pre_prompt? | default []) | append { ||
             let new_mode = if (_koopa_is_light_mode) { "light" } else { "dark" }

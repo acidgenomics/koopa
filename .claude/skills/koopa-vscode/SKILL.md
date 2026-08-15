@@ -1,10 +1,13 @@
 ---
 name: koopa-vscode
 description: >-
-  VS Code terminal font configuration, Nerd Font glyph debugging, and Quarto/LuaLS
-  setup for koopa. Use when debugging missing terminal glyphs (tofu), changing the
-  VS Code terminal or editor font, understanding the App Support symlink bridge for
-  editor settings, editing .luarc.json, or making VS Code config portable across
+  VS Code terminal font configuration, Nerd Font glyph debugging, the shared
+  settings.json.tmpl partial architecture across Code/Antigravity/Cursor/Positron,
+  and Quarto/LuaLS setup for koopa. Use when debugging missing terminal glyphs
+  (tofu), changing the VS Code terminal or editor font, understanding the App
+  Support symlink bridge for editor settings, adding or moving a setting across
+  the VS Code-family templates, checking whether a setting name is real before
+  adding it, editing .luarc.json, or making VS Code config portable across
   machines.
 ---
 
@@ -71,8 +74,11 @@ grep "fontFamily" ~/Library/Application\ Support/Code/User/settings.json
 
 ### Font configuration in chezmoi templates
 
-The four VS Code-family editor templates all live under
+The four VS Code-family editor templates live under
 `opt/dotfiles/chezmoi/dot_config/{Code,Cursor,Positron,Antigravity}/User/settings.json.tmpl`.
+The font keys below are NOT written out in each file — they live once in
+`.chezmoitemplates/vscode-universal-common.tmpl` (see "Shared settings.json
+architecture" below). Don't add a fourth copy; edit the partial.
 
 Correct font settings (no ligatures, Nerd Font Mono for glyph coverage):
 ```json
@@ -84,6 +90,33 @@ Correct font settings (no ligatures, Nerd Font Mono for glyph coverage):
 `NL` = No-Ligatures build. `NFM` = Nerd Font Mono (single-width glyphs, correct
 for terminals). The fallback `'JetBrains Mono'` ensures the editor stays usable
 if the Nerd Font is not installed.
+
+### Shared settings.json architecture
+
+Code, Antigravity, and Cursor overlap by ~85%; Positron is structured
+differently by design (its file started at 46 lines and has only grown since —
+verify with `git log --follow -- .../Positron/User/settings.json.tmpl` before
+assuming a gap is drift). Three `.chezmoitemplates/` partials hold the overlap
+instead of four flat files:
+
+| Partial | Covers | Called by |
+|---|---|---|
+| `vscode-fork-common.tmpl` | ~130 settings byte-identical across Code/Antigravity/Cursor | Code, Antigravity, Cursor — always LAST (its final line has no trailing comma) |
+| `vscode-universal-common.tmpl` | 17 settings verified byte-identical across all four apps | Code, Antigravity, Cursor, Positron |
+| `dracula-pro-theme.tmpl` | Theme-name detection, parameterized by each app's own extension-glob path via `list` | all four |
+
+Each app's own `settings.json.tmpl` keeps only its real deltas: Code's
+`chat.*`/`claudeCode.*`/`github.copilot.*`/`githubPullRequests.*`, Antigravity's
+`antigravity.*` keys, Positron's independent structure. `[json]`/`[python]`/`[r]`/
+`[toml]`/`air.*` stay duplicated inline in Code/Antigravity/Cursor rather than
+going in a partial — `[toml]` differs by one line between them, and keeping the
+language blocks together at the top of each file reads better than the few
+duplicated lines would cost.
+
+See `koopa-chezmoi-dotfiles` for the two general mechanisms this relies on
+(`.chezmoi.sourceFile` for symlinked-source targets, `.chezmoitemplates` for
+structurally-shared content) and for how to verify a setting name is real
+before adding it to any of these files.
 
 ### Avoiding a write race on settings.json
 

@@ -1529,12 +1529,17 @@ _koopa_color_mode() {
 
 _koopa_cpu_count() {
     local num
-    num="${KOOPA_CPU_COUNT:-}"
-    if [[ -n "$num" ]]
-    then
-        _koopa_print "$num"
-        return 0
-    fi
+    num=''
+    local candidate
+    for candidate in \
+        "${SLURM_CPUS_PER_TASK:-}" \
+        "${SLURM_CPUS_ON_NODE:-}" \
+        "${KOOPA_CPU_COUNT:-}"
+    do
+        [[ "$candidate" =~ ^[0-9]+$ ]] || continue
+        num="$candidate"
+        break
+    done
     local bin_prefix
     bin_prefix="$(_koopa_bin_prefix)"
     local getconf
@@ -1558,26 +1563,40 @@ _koopa_cpu_count() {
     fi
     local sysctl
     sysctl='/usr/sbin/sysctl'
+    local avail
+    avail=''
     if [[ -x "$nproc" ]]
     then
-        num="$("$nproc" --all)"
-    elif [[ -x "$getconf" ]]
+        avail="$("$nproc")"
+        [[ "$avail" =~ ^[0-9]+$ ]] || avail=''
+    fi
+    if [[ -n "$num" ]] && [[ -n "$avail" ]] && [[ "$num" -gt "$avail" ]]
     then
-        num="$("$getconf" '_NPROCESSORS_ONLN')"
-    elif [[ -x "$sysctl" ]] && _koopa_is_macos
+        num="$avail"
+    fi
+    if [[ -z "$num" ]]
     then
-        num="$( \
-            "$sysctl" -n 'hw.ncpu' \
-            | cut -d ' ' -f 2 \
-        )"
-    elif [[ -x "$python" ]]
-    then
-        num="$( \
-            "$python" -c \
-                "import multiprocessing; print(multiprocessing.cpu_count())" \
-            2>/dev/null \
-            || true \
-        )"
+        if [[ -n "$avail" ]]
+        then
+            num="$avail"
+        elif [[ -x "$getconf" ]]
+        then
+            num="$("$getconf" '_NPROCESSORS_ONLN')"
+        elif [[ -x "$sysctl" ]] && _koopa_is_macos
+        then
+            num="$( \
+                "$sysctl" -n 'hw.ncpu' \
+                | cut -d ' ' -f 2 \
+            )"
+        elif [[ -x "$python" ]]
+        then
+            num="$( \
+                "$python" -c \
+                    "import multiprocessing; print(multiprocessing.cpu_count())" \
+                2>/dev/null \
+                || true \
+            )"
+        fi
     fi
     [[ -z "$num" ]] && num=1
     _koopa_print "$num"

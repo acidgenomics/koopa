@@ -285,6 +285,68 @@ def test_bootstrap_and_python_agree_on_xdg_precedence(
     assert py_output.startswith("https://xdg.example.com/")
 
 
+def test_bootstrap_cpu_count_respects_slurm_allocation(tmp_path: Path) -> None:
+    """Regression: a stale/oversized KOOPA_CPU_COUNT must not win over Slurm.
+
+    Observed on a real Slurm GPU node: KOOPA_CPU_COUNT was inherited as 96
+    (the node's total core count, from a login-node activation propagated by
+    srun) while SLURM_CPUS_ON_NODE correctly reported the 1-CPU allocation.
+    Trusting KOOPA_CPU_COUNT there made 'make --jobs=96' run on one core.
+    """
+    script = f'set -eu\n{_function_defs_only()}\nKOOPA_PREFIX="{tmp_path}"\ncpu_count\n'
+    env = os.environ.copy()
+    env["SLURM_CPUS_ON_NODE"] = "1"
+    env["KOOPA_CPU_COUNT"] = "96"
+    env.pop("SLURM_CPUS_PER_TASK", None)
+    result = subprocess.run(
+        ["sh", "-c", script], capture_output=True, text=True, check=True, env=env
+    )
+    assert result.stdout.strip() == "1"
+
+
+def test_bootstrap_cpu_count_rejects_malformed_slurm_value(tmp_path: Path) -> None:
+    """A malformed Slurm variable must fall through, never reach 'make --jobs'.
+
+    Simulates Slurm's compressed multi-node form (e.g. '4(x2)', the real shape
+    of SLURM_JOB_CPUS_PER_NODE) landing on a name cpu_count() does read.
+    """
+    script = f'set -eu\n{_function_defs_only()}\nKOOPA_PREFIX="{tmp_path}"\ncpu_count\n'
+    env = os.environ.copy()
+    env["SLURM_CPUS_PER_TASK"] = "4(x2)"
+    env["SLURM_CPUS_ON_NODE"] = "2"
+    env.pop("KOOPA_CPU_COUNT", None)
+    result = subprocess.run(
+        ["sh", "-c", script], capture_output=True, text=True, check=True, env=env
+    )
+    assert result.stdout.strip() == "2"
+
+
+def test_bootstrap_uv_fast_path_is_unconditional() -> None:
+    """Regression: the uv fast path must run on every host, not just some.
+
+    has_firewall() previously vetoed the fast path whenever SSL_CERT_FILE was
+    set to koopa's own CA bundle sitting outside $KOOPA_PREFIX -- exactly what
+    koopa's own shell activation exports -- forcing a source compile even
+    when the CDN was reachable. Measured cost on a real host: 16m42s.
+    install_python_uv() already fails cleanly and falls back to a source
+    build on any real failure, so the attempt itself must never be gated.
+    """
+    text = _BOOTSTRAP_SH.read_text()
+    assert "has_firewall" not in text
+    after_marker = text[text.index("__kvar_build_ok=0") :]
+    before_then = after_marker[: after_marker.index("\n    then\n")]
+    code_lines = [
+        line.strip()
+        for line in before_then.splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    ]
+    assert code_lines[0] == "__kvar_build_ok=0"
+    assert code_lines[1] == "if (", (
+        f"expected the uv fast path to open unconditionally right after"
+        f" '__kvar_build_ok=0', found: {code_lines[1]!r}"
+    )
+
+
 def test_vendor_sed_fallback_does_not_match_comment_line(tmp_path: Path) -> None:
     """The sed fallback parser never mistakes '_comment' prose for real keys.
 

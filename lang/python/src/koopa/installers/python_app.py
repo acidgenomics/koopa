@@ -9,6 +9,7 @@ from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
 from koopa.install import can_build_binary
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 from koopa.version import major_minor_version
 
 
@@ -90,7 +91,7 @@ def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
         env=subprocess_env,
         check=True,
     )
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [
             make,

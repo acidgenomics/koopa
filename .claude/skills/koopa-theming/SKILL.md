@@ -88,6 +88,40 @@ Alucard-`comment`-is-white quirk in `_generate_atuin_dracula_pro_toml`/
 `_fzf_color_opts`: assume nothing about legibility carries between variants,
 check both.
 
+### ANSI 8 is unreadable as a dim/comment color in every variant
+
+`ansi.get(8)`/`black_bright` is too low-contrast against its own background in
+every Dracula Pro variant, not just Alucard: CR ranges 1.84-2.35:1 in the dark
+variants, 1.09:1 in Alucard. Any consumer that treats ANSI 8 as a dim/comment/
+shadow color renders invisible text, confirmed for htop's meter-shadow color
+pair (decoded straight out of the shipped binary's `_CRT_colorSchemes` table),
+kitty's `color8`, WezTerm's `brights[0]`, and RStudio's ANSI-8 terminal remap.
+
+**Fix: `_dracula_dim_color(dp_dir, variant, fallback_fg, fallback_bg)`.** Reads
+the variant's named Vim `comment` role, which clears 3.5-5.6:1 in every
+variant, instead of the raw ANSI-8 sentinel. Falls back to a `_hex_lerp()`
+blend only if the Vim palette is unavailable. `_parse_ghostty_palette()`'s
+`"comment"` key now returns this. `"black_bright"` is left as the raw ANSI-8
+value and stays safe only as a background (e.g. an inactive tab panel); never
+route it to a text/foreground role again.
+
+**Ghostty's own theme file is generated, not symlinked.** Every other Dracula
+Pro consumer in `install` parses the upstream file and writes a different
+generated file elsewhere. Ghostty is the one exception: htop, and any other
+app that resolves ANSI 8 straight from the terminal, reads Ghostty's palette
+directly, and there is no koopa-owned config downstream to intercept.
+`_generate_ghostty_dracula_pro_theme()` rewrites just the `palette = 8=` line
+of the upstream file, and `_configure_dracula_pro()` writes that as a real
+file under `~/.config/ghostty/themes/`. If an older install symlinked that
+path, clear the symlink before writing: `open(dest, "w")` on a stale symlink
+writes through it into the upstream vendor file.
+
+**`_parse_vim_palette()` variant slugs are hyphenated, filenames are not.**
+`van-helsing`'s Vim colorscheme file is `dracula_pro_van_helsing.vim`, so the
+naive `f"dracula_pro_{variant}.vim"` never matches: that variant silently got
+no named palette (fell through to the `_hex_lerp()` fallback) until fixed with
+`variant.replace("-", "_")`.
+
 ## Fish Color Pipeline
 
 ### Architecture
@@ -125,6 +159,12 @@ Never edit or delete `fish_frozen_theme.fish` — the fix is always to override 
 conf.d file that loads later (alphabetically after `f`).
 
 ### Alucard quirk: ANSI 8 = white
+
+Not Alucard-specific: see "ANSI 8 is unreadable as a dim/comment color in
+every variant" above. `_parse_ghostty_palette()`'s `"comment"` key is now
+`_dracula_dim_color()`-derived everywhere, so this predates that fix and is
+redundant for alucard, but still correct (cursor and the Vim comment role
+both clear contrast there). Kept as the fish-specific implementation record.
 
 In the Dracula Pro Alucard palette, ANSI 8 (the `comment` role from
 `_parse_ghostty_palette`) is white — invisible on the light background. The fish
@@ -214,8 +254,28 @@ or values:
 - **Values**: `_parse_ghostty_palette(dp_dir, "<light-variant>")`, aligned by ANSI
   index. Non-ANSI roles (orange, etc.) from the Fleet experimental palette JSON at
   `~/.local/share/<theme>/themes/jetbrains/experimental/fleet/`.
-- Tokens with no named-palette equivalent: lightened algorithmically via
-  luminance-flip (`colorsys`).
+
+**Unmapped tokens need a role-aware transform, not a blind luminance-flip.**
+A flat "lighten anything unmapped" pass (`_lightify_hex()`, forces lightness
+>= 0.88) is correct for background/decoration roles but wrong for foreground/
+text roles. Checked against the actual vendor `DraculaPro.xml`: 34 of 45
+distinct colors fell through to it, and all 34 landed between 1.04:1 and
+1.32:1 against the light editor background. Classify by the enclosing
+`<option name="...">`: `BACKGROUND`/`CARET_ROW_COLOR`/`*_STRIPE_COLOR` roles
+still use `_lightify_hex()`; everything else (including `FOREGROUND`,
+`EFFECT_COLOR`, and the various `FILESTATUS_*`/`VCS_ANNOTATIONS_*` text-tint
+roles) needs `_darken_for_light_bg()` instead. It preserves hue/saturation and
+binary-searches HLS lightness against `_contrast_ratio()` until it clears the
+threshold, since a fixed HLS-lightness constant doesn't track WCAG luminance
+for green/yellow hues.
+
+**The named ANSI map itself can collide with a text role.** Pro's dark
+`selection_bg` hex was also reused by the vendor XML for
+`LINE_NUMBERS_COLOR`/`INDENT_GUIDE`/separator roles, and Alucard's
+`selection_bg` is deliberately near the editor background, so trusting the map
+blindly left those at 1.48:1. Gate every non-background named-map hit on
+`_contrast_ratio(...) >= 3.0` and fall back to `_darken_for_light_bg()` when it
+fails.
 
 **Mandatory verification asserts (add permanently in the synthesis function):**
 
@@ -227,6 +287,13 @@ assert not survivors, f"Dark tokens survived: {sorted(survivors)}"
 # All background values are light (luminance ≥ 0.55)
 for m in re.finditer(r'name="[A-Z_]*BACKGROUND[^"]*"\s+value="([0-9A-Fa-f]{6})"', xml):
     assert _relative_luminance("#" + m.group(1)) >= 0.55
+
+# All foreground/text values are actually readable -- the background
+# check above doesn't cover this.
+for m in _option_hex_re.finditer(xml):
+    if _bg_role_re.search(m.group(1)):
+        continue
+    assert _contrast_ratio("#" + m.group(2), bg) >= 3.0
 ```
 
 ## macOS Sandboxed App Containers

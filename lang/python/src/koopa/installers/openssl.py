@@ -12,6 +12,7 @@ from koopa.installers._build_helper import (
     download_extract_cd,
     remove_static_libs,
 )
+from koopa.system import cpu_count
 
 
 def main(
@@ -60,7 +61,7 @@ def main(
         env=subprocess_env,
         check=True,
     )
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [make, f"--jobs={jobs}"],
         env=subprocess_env,

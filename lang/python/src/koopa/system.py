@@ -238,12 +238,43 @@ def arch2() -> str:
 def cpu_count() -> int:
     """Return number of available CPUs.
 
+    Precedence: an explicit Slurm allocation (``SLURM_CPUS_PER_TASK``, then
+    ``SLURM_CPUS_ON_NODE``) beats a possibly stale inherited
+    ``KOOPA_CPU_COUNT``, which beats the process's CPU affinity mask, which
+    beats the raw system CPU count. Each candidate is accepted only when it
+    parses as a positive integer -- Slurm also exports
+    ``SLURM_JOB_CPUS_PER_NODE``, but in a compressed multi-node form such as
+    ``'4(x2)'`` that must never reach a build subprocess's ``--jobs``
+    argument verbatim, so that name is deliberately not read here.
+
+    The affinity mask, when available, also clamps the final value: koopa
+    must never spawn more build jobs than the current CPU allocation, even
+    when a Slurm variable or ``KOOPA_CPU_COUNT`` claims otherwise. macOS has
+    no affinity mask (``os.sched_getaffinity`` does not exist there), so the
+    clamp is a no-op on that platform.
+
     Returns
     -------
     int
         CPU count.
     """
-    return os.cpu_count() or 1
+    num = 0
+    for name in ("SLURM_CPUS_PER_TASK", "SLURM_CPUS_ON_NODE", "KOOPA_CPU_COUNT"):
+        value = os.environ.get(name, "")
+        if value.isdigit() and int(value) > 0:
+            num = int(value)
+            break
+    avail = 0
+    # Guard on sys.platform (not hasattr) so pyright and ty resolve
+    # sched_getaffinity without ignores; runtime result is identical, since
+    # the attribute genuinely does not exist outside Linux.
+    if sys.platform == "linux":
+        avail = len(os.sched_getaffinity(0))
+    if num and avail and num > avail:
+        num = avail
+    if not num:
+        num = avail or os.cpu_count() or 1
+    return num
 
 
 def group_id() -> int:

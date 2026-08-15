@@ -119,12 +119,18 @@ def test_detect_color_mode_thrash_stabilization_resets_run() -> None:
 
 
 def test_detect_color_mode_thrash_tolerates_prefixes() -> None:
-    """Lines with ▸/** alert prefixes and plain lines both parse correctly."""
+    """Lines with ▸/indented alert prefixes and plain lines all parse correctly."""
     lines_with_prefix = [
         "▸ Applying color mode: dark\n",
         "▸ Applying color mode: light\n",
         "▸ Applying color mode: dark\n",
         "▸ Applying color mode: light\n",
+    ]
+    lines_indented = [
+        "   Applying color mode: dark\n",
+        "   Applying color mode: light\n",
+        "   Applying color mode: dark\n",
+        "   Applying color mode: light\n",
     ]
     lines_plain = [
         "Applying color mode: dark\n",
@@ -133,8 +139,10 @@ def test_detect_color_mode_thrash_tolerates_prefixes() -> None:
         "Applying color mode: light\n",
     ]
     longest_prefix, _ = _detect_color_mode_thrash(lines_with_prefix)
+    longest_indented, _ = _detect_color_mode_thrash(lines_indented)
     longest_plain, _ = _detect_color_mode_thrash(lines_plain)
     assert longest_prefix == 4
+    assert longest_indented == 4
     assert longest_plain == 4
 
 

@@ -8,6 +8,8 @@ import os
 import sys
 from typing import TextIO
 
+_INDENT = "   "
+
 
 def _supports_color() -> bool:
     """Check if terminal supports color."""
@@ -78,8 +80,21 @@ def alert(message: str) -> None:
 
 
 def alert_info(message: str) -> None:
-    """Print an info message."""
-    msg(message, prefix="▸", color="36")
+    """Print an indented detail line beneath a primary alert."""
+    print(f"{_INDENT}{message}", file=sys.stderr)
+
+
+def alert_detail(text: str) -> None:
+    """Print each non-blank line of captured output as an indented detail line.
+
+    Carriage returns are treated as line breaks so progress output captured
+    from a subprocess renders one line per update instead of one long line.
+    Leading whitespace within *text* is preserved, so git's own indented
+    ref-update lines keep their structure.
+    """
+    for line in text.replace("\r", "\n").splitlines():
+        if line.strip():
+            print(f"{_INDENT}{line.rstrip()}", file=sys.stderr)
 
 
 def alert_note(message: str) -> None:
@@ -234,9 +249,7 @@ def h7(message: str) -> None:
 
 def dl(key: str, value: str) -> None:
     """Print a definition list entry (key: value)."""
-    c = _magenta()
-    r = _reset()
-    print(f"  {c}{key}{r}: {value}", file=sys.stderr)
+    print(f"{_INDENT}{key}: {value}", file=sys.stderr)
 
 
 def stop(message: str) -> None:

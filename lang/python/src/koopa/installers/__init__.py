@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (148) ---------------------------------------------
+    # -- conda-package (149) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
@@ -22,6 +22,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "autodock-vina": f"{_M}._conda",
     "axel": f"{_M}._conda",
     "cloud-sql-proxy": f"{_M}._conda",
+    "cyto": f"{_M}._conda",
     "docker-credential-helpers": f"{_M}._conda",
     "ghostscript": f"{_M}._conda",
     "git-lfs": f"{_M}._conda",
@@ -279,9 +280,8 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bashcov": f"{_M}._ruby_pkg",
     "rmate": f"{_M}._ruby_pkg",
     "ronn-ng": f"{_M}._ruby_pkg",
-    # -- rust-package (7) ------------------------------------------------
+    # -- rust-package (6) ------------------------------------------------
     "bandwhich": f"{_M}._rust_pkg",
-    "cyto": f"{_M}._rust_pkg",
     "gping": f"{_M}._rust_pkg",
     "hexyl": f"{_M}._rust_pkg",
     "jless": f"{_M}._rust_pkg",

@@ -2145,24 +2145,19 @@
       "cyto"
     ],
     "build_dependencies": [
-      "cmake",
-      "rust"
+      "conda"
     ],
     "category": "Bioinformatics",
-    "date": "2026-08-13",
+    "conda_channel": "bioconda",
+    "date": "2026-08-15",
     "default": false,
     "description": "ultra high-throughput 10x Flex single-cell processing",
-    "installer": "rust-package",
-    "installer_args": {
-      "rustflags": "-C target-cpu=native"
-    },
-    "notes": [
-      "Built with '-C target-cpu=native' for SIMD, so binary packages are disabled."
-    ],
+    "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
-      "https://github.com/arcinstitute/cyto",
-      "https://crates.io/crates/cyto"
+      "https://bioconda.github.io/recipes/cyto/README.html",
+      "https://github.com/arcinstitute/cyto"
     ],
     "version": "0.4.6"
   },

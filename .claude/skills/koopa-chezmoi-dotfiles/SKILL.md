@@ -3,11 +3,14 @@ name: koopa-chezmoi-dotfiles
 description: >-
   How koopa manages home dotfiles via chezmoi — source-of-truth layout, the
   explicit --source flag, template-vs-generator ordering, XDG path derivation in
-  templates, symlink_ source files for App Support bridges, diagnosing chezmoi
-  status contamination from stale env, and the correct re-run command. Use when
-  editing a dotfile, working in opt/dotfiles/chezmoi/, debugging a file that
-  reverts on chezmoi apply, wiring a chezmoi template, or bridging XDG paths to
-  macOS Library/Application Support.
+  templates, symlink_ source files for App Support bridges, sharing one template
+  body across several deployed targets (.chezmoi.sourceFile, .chezmoitemplates
+  partials), verifying a config setting name is real before trusting it,
+  diagnosing chezmoi status contamination from stale env, and the correct re-run
+  command. Use when editing a dotfile, working in opt/dotfiles/chezmoi/, debugging
+  a file that reverts on chezmoi apply, wiring a chezmoi template, deduplicating
+  near-identical config templates, or bridging XDG paths to macOS
+  Library/Application Support.
 ---
 
 # koopa Chezmoi Dotfiles
@@ -173,6 +176,108 @@ KOOPA_COLOR_MODE=dark chezmoi diff --source="${HOME}/.local/share/koopa/opt/dotf
   ~/Library/Application\ Support/Code/User/settings.json
 # mode 120000 in diff = symlink — correct
 ```
+
+## Sharing One Template Body Across Multiple Targets
+
+Two distinct mechanisms — easy to conflate:
+
+- `symlink_` source-file prefix → the **deployed target** becomes a symlink
+  (App Support bridge, above).
+- A plain OS symlink **inside the source tree** → several deployed targets
+  share one physical template file, each still rendered independently.
+
+### `.chezmoi.sourceFile` distinguishes the caller
+
+When N deployed targets are backed by one real file via plain symlinks in the
+source tree (not `symlink_`), chezmoi renders each target from its own source
+path — `.chezmoi.sourceFile` reports the **symlink's own path**, not the file
+it resolves to. This lets one shared template add a line for only one target:
+
+```
+{{- if hasSuffix "code-server-posit/User/settings.json.tmpl" .chezmoi.sourceFile }}
+  "terminal.integrated.sendKeybindingsToShell": true,
+{{- end }}
+```
+
+**Trap:** run `ls -la`, not `cat`/`Read`, before deciding a file is
+independent. `cat` follows a symlink transparently and shows correct-looking
+content for a file that is actually an alias. Deleting what looks like "the
+duplicate" without checking `ls -la` first can delete the one real file
+backing several targets. Recoverable with `git restore --source=HEAD -- <path>`,
+but cheaper to check first than to fix after.
+
+### `.chezmoitemplates/` partials for structurally-shared content
+
+When several independent template files share a large block but each also has
+real content of its own (not just "these targets are byte-identical," which is
+the plain-symlink case above), use a chezmoi partial:
+
+```
+.chezmoitemplates/<name>.tmpl
+```
+```
+{{ template "<name>.tmpl" . }}
+```
+
+Passing `.` gives the partial the caller's root context (`.chezmoi.os`,
+`lookPath`, etc.). **Named templates do not inherit the caller's `$var`
+scope** — a partial can't read a variable the caller declared with `:=`.
+Pass what it needs through the dot argument instead, using sprig's `list`/`dict`
+(bundled with chezmoi):
+
+```
+{{ template "dracula-pro-theme.tmpl" (list (joinPath .chezmoi.homeDir ".vscode" "extensions" "dracula-theme-pro.theme-dracula-pro-*")) }}
+```
+Inside the partial, `range .` iterates the passed list.
+
+If a partial's last line is written with no trailing comma (because it's meant
+to sit last, right before the closing `}`), every caller must place that
+`{{ template }}` call last — document this in the partial's own header
+comment, since it isn't visible from the call site.
+
+**Verify semantic equivalence, not text equivalence.** Render each affected
+target before and after with `chezmoi execute-template --file`, parse both as
+JSON, and diff the *parsed objects* — not the raw text. This ignores harmless
+key reordering while still catching a real dropped line. See `koopa-vscode`
+for a worked example (three partial tiers across four VS Code-family apps).
+
+## Verifying a Setting Name Is Real Before Trusting It
+
+A config renders as valid JSON even when a key is fake — the app just
+silently ignores what it doesn't recognize. Never trust a setting ID because
+it looks right or was already there; a fake key found in one file is a sign
+worth re-checking anything copied from it.
+
+Verification order, most to least authoritative:
+1. The extension's own installed `package.json`:
+   `contributes.configuration.properties`.
+2. Core app settings: grep the app's own bundled JS
+   (e.g. `workbench.desktop.main.js`) for the literal full setting ID.
+3. Extension not installed locally — fetch its manifest without installing it:
+   ```sh
+   curl -fsSL --compressed \
+     "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/<publisher>/vsextensions/<name>/latest/vspackage" \
+     -o ext.vsix
+   unzip -p ext.vsix extension/package.json
+   ```
+   `--compressed` is required — the endpoint gzips its response, and a bare
+   `curl -o` saves the raw gzip bytes as a broken `.vsix`.
+4. Core editor.* options often do **not** appear as a full literal string in
+   `workbench.desktop.main.js` (the `editor.` prefix gets added at a different
+   layer) — a miss there is inconclusive, not proof of absence. Check upstream:
+   ```sh
+   curl -fsSL "https://raw.githubusercontent.com/microsoft/vscode/<version-tag>/src/vs/editor/common/config/editorOptions.ts"
+   ```
+   and grep for the short name, without the `editor.` prefix.
+
+A grep **hit** is strong positive evidence. A grep **miss** is weak negative
+evidence — confirm against a second source before reporting a setting as fake.
+
+**"Not installed on this machine" ≠ "not a real setting."** A key for an
+extension that just isn't installed here (`github.copilot.*` when Copilot
+isn't installed) is still correct to keep in dotfiles meant to apply across
+machines. Only remove a key when the ID itself is wrong for its own product —
+confirmed by one of the sources above, never by the extension's absence alone.
 
 ## Diagnosing Spurious chezmoi status / diff Output
 
