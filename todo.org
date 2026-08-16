@@ -14,3 +14,36 @@
       ────────────────────────────────────────
       fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
       ────────────────────────────────────────
+** TODO The problem is machine is trying to use binary installs:
+    $ koopa reinstall python3.12 --verbose
+    ** Reverted 12 direnv-loaded environment variable(s) from '/opt/koopa'.
+    ** python3.12 3.12.14: reinstalling with dependencies: make, pkg-config, bzip2, expat, libedit, libffi, mpdecimal, ncurses, openssl3, readline, sqlite, xz, zlib
+    fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
+    Error: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-i1076scx/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
+    Traceback (most recent call last):
+      File "/opt/koopa/lang/python/src/koopa/cli_main.py", line 968, in main
+        handler(args)
+        ~~~~~~~^^^^^^
+      File "/opt/koopa/lang/python/src/koopa/cli_main.py", line 510, in _handle_reinstall
+        install_app(config)
+        ~~~~~~~~~~~^^^^^^^^
+      File "/opt/koopa/lang/python/src/koopa/install.py", line 914, in install_app
+        install_app_from_binary_package(config.prefix)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+      File "/opt/koopa/lang/python/src/koopa/install.py", line 541, in install_app_from_binary_package
+        run(
+        ~~~^
+            "aws",
+            ^^^^^^
+        ...<6 lines>...
+            tar_file,
+            ^^^^^^^^^
+        )
+        ^
+      File "/opt/koopa/lang/python/src/koopa/exec.py", line 17, in run
+        return subprocess.run(cmd, capture_output=capture, text=True, check=check, cwd=cwd)
+               ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/opt/koopa-bootstrap/lib/python3.14/subprocess.py", line 578, in run
+        raise CalledProcessError(retcode, process.args,
+                                 output=stdout, stderr=stderr)
+    subprocess.CalledProcessError: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-i1076scx/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
