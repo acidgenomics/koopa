@@ -29,6 +29,15 @@
   entirely for stdout. Put scratch inputs in a `mktemp -d` directory (respects
   `$TMPDIR`) and delete them in the same command, so a blanket `git add ./`
   has nothing to pick up.
+- **`uv python install --install-dir` output has hidden entries; never `find
+  | head -1` for the real subdir.** The directory also holds `.lock`, `.temp`,
+  and `.gitignore`, plus a minor-version alias (a symlink, so `-type d`
+  already excludes it). `find` gives no ordering guarantee, so a bare
+  `-mindepth 1 -maxdepth 1 -type d | head -1` can pick the empty `.temp`
+  instead of the real `cpython-<version>-...` directory — reproduced live in
+  `install_python_uv()` in `bootstrap.sh`, where it silently copied nothing,
+  produced no `bin/python3`, and fell through to the much slower source
+  build. Fix: add `! -name '.*'` to the `find`.
 
 ## Skills (load body on invocation)
 

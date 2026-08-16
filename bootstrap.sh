@@ -957,7 +957,12 @@ install_python_uv() {
         unset -v __kvar_cpython_dir __kvar_platform __kvar_python_version __kvar_tmpdir __kvar_uv __kvar_uv_url __kvar_uv_version
         return 1
     fi
-    __kvar_cpython_subdir="$(find "$__kvar_cpython_dir" -mindepth 1 -maxdepth 1 -type d | head -1)"
+    # '--install-dir' also creates hidden housekeeping entries ('.lock',
+    # '.temp', '.gitignore') alongside the real install directory; 'find'
+    # gives no ordering guarantee, so 'head -1' could pick one of those
+    # (observed picking the empty '.temp') instead of the real directory.
+    # Exclude dotfiles/dot-dirs to always land on the real one.
+    __kvar_cpython_subdir="$(find "$__kvar_cpython_dir" -mindepth 1 -maxdepth 1 -type d ! -name '.*' | head -1)"
     if [ -z "$__kvar_cpython_subdir" ]
     then
         printf 'No cpython directory found after install.\n' >&2
