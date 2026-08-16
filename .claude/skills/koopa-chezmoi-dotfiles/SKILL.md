@@ -14,7 +14,7 @@ description: >-
   near-identical config templates, bridging XDG paths to macOS
   Library/Application Support, a rendered file has a stray blank line or a
   line missing its indent right after a `{{ ... }}` action, or a rendered JSON
-  file has a key that looks duplicated but is really just out of sort order.
+  key looks duplicated but is only out of sort order.
 ---
 
 # koopa Chezmoi Dotfiles
@@ -289,8 +289,29 @@ comment, since it isn't visible from the call site.
 **Verify semantic equivalence, not text equivalence.** Render each affected
 target before and after with `chezmoi execute-template --file`, parse both as
 JSON, and diff the *parsed objects* — not the raw text. This ignores harmless
-key reordering while still catching a real dropped line. See `koopa-vscode`
-for a worked example (three partial tiers across four VS Code-family apps).
+key reordering while still catching a real dropped line. When "before" means
+the last committed state rather than an uncommitted edit still on disk, get it
+from a throwaway worktree instead of trusting memory of what HEAD looked like:
+```sh
+tmp="$(mktemp -d)"
+git worktree add --detach "$tmp/head" HEAD
+chezmoi execute-template --source="$tmp/head/chezmoi" --file "$tmp/head/chezmoi/<target>.tmpl" > before.json
+git worktree remove "$tmp/head"
+```
+Pair this with a duplicate-key guard, since `json.load`/`JSON.parse` silently
+keep only the last occurrence of a repeated key — a real collision (see "Two
+partials cannot each own the same top-level JSON key" below) parses cleanly
+and diffs clean, and disappears from view precisely when you need to see it:
+```python
+import collections, json
+def hook(pairs):
+    c = collections.Counter(k for k, _ in pairs)
+    assert not [k for k, v in c.items() if v > 1], c
+    return dict(pairs)
+json.loads(rendered_text, object_pairs_hook=hook)
+```
+See `koopa-vscode` for a worked example (three partial tiers across four
+VS Code-family apps).
 
 **A bare `list` argument breaks any partial that also needs `.chezmoi.*`.**
 `dracula-pro-theme.tmpl`'s convention (`(list (joinPath .chezmoi.homeDir ...))`)
@@ -327,6 +348,31 @@ A config renders as valid JSON even when a key is fake — the app just
 silently ignores what it doesn't recognize. Never trust a setting ID because
 it looks right or was already there; a fake key found in one file is a sign
 worth re-checking anything copied from it.
+
+**If the app is open on the rendered file, its own inline diagnostics
+outrank every source below for an enum-constrained value.** A live audit
+of a rendered `settings.json` in Positron caught
+`"python.analysis.diagnosticsSource": "Pyright"` as genuinely invalid —
+Pylance's own hover gave the exact current valid set
+(`Pylance`/`Pylance + Pyright`/`Pylance + Pyrefly`) directly, no grepping
+required. A bundle grep for `Pyright` would have been a false-negative-proof
+trap here: the string is all over the bundle as the underlying engine name,
+which looks like positive evidence for a value the schema no longer accepts
+standalone. When the editor hands you the valid values, use them verbatim —
+don't re-derive them from a grep.
+
+**The mirror case — a bare "Property X is not allowed" for a key that *is*
+real — is not equally trustworthy.** The same audit flagged
+`diffEditor.removedLineBackground` as disallowed in a settings.json that
+chezmoi had just written from outside the editor; a bundle grep and an
+upstream source check (`src/vs/platform/theme/common/colors/editorColors.ts`)
+both confirmed the color is currently registered. Unlike an enum's explicit
+value list, a plain "not allowed" on an `additionalProperties`-style schema
+carries no such self-evidencing detail, and the editor's JSON language
+service can lag an external file write. Cross-check a bare "not allowed"
+against a second source (tiers below, or a reload of the window) before
+concluding the key is fake — don't take it at face value the way an enum's
+"Valid values: ..." can be.
 
 Verification order, most to least authoritative:
 1. The extension's own installed `package.json`:
@@ -635,3 +681,59 @@ the four VS Code-family files already covered, and confirmed a second,
 smaller chezmoi tree (a private work-tree source with no `.chezmoitemplates`
 partials at all) was clean. Run the same sweep against any other chezmoi tree
 under management — the recipe generalizes.
+
+## Canonicalizing an Assembled JSON Template: `fromJson | toPrettyJson`
+
+When a JSON target is assembled from several `.chezmoitemplates` calls back to
+back, the result is a series of independently-sorted blocks, not one globally
+sorted file — a key family split across two blocks (`editor.autoClosing*`
+appearing once per block) reads as duplication even though every key is
+unique. This is a *different* symptom from the whitespace-trim family above:
+nothing is malformed, the file just isn't canonically ordered.
+
+**Fix:** move the whole assembled body into its own partial, and reduce the
+deployed target to one line that re-serializes it:
+```
+{{ includeTemplate "<name>-body.tmpl" . | fromJson | toPrettyJson | trimAll "\n" }}
+```
+chezmoi 2.72's `toPrettyJson` parses the string and re-emits it 2-space
+indented, with every key sorted byte-wise (`enableFileLinks` before
+`enableMultiLinePasteWarning`; capital letters before lowercase at the same
+position) and without HTML-escaping `&`/`<`/`>`. This sidesteps the entire
+whitespace-trim bug family for that file: blank lines and lost indent at a
+partial boundary stop mattering, because the layout is regenerated from the
+parsed object rather than concatenated as text.
+
+**The `| trimAll "\n"` at the end is not optional, and its absence is a new,
+easy-to-miss bug shape.** `toPrettyJson`'s own output already ends in `\n`; a
+one-line wrapper file on disk carries its own trailing `\n` too. Omit
+`trimAll "\n"` and every rendered target ends `}\n\n` — a trailing blank line,
+same defect as the header-comment and inline-`if` variants above, just at
+EOF instead of a boundary. This is the fourth variant of the trim-marker
+family: the first three are all about `-}}`/`{{-` eating whitespace at
+render time; this one is two independently-correct trailing newlines
+stacking after render. `chezmoi execute-template --file` plus `tail -c 3 |
+od -c` (not a var-captured `$(...)`, which bash strips trailing newlines
+from) catches it.
+
+**Trade-offs this introduces**, beyond the ones already accepted for any
+`.chezmoitemplates` partial:
+- JSON comments become impossible in the file. Confirm none exist first
+  (`grep -n '^\s*//'` across the affected `.tmpl` files).
+- A duplicate key becomes invisible in the output — `fromJson` silently keeps
+  the last occurrence. Guard with the `object_pairs_hook` counter above; do
+  not rely on eyeballing the render.
+- A malformed partial (bad trailing comma, etc.) now raises a hard template
+  error at render time instead of deploying a silently broken file. This is
+  an improvement, not a regression.
+- A source partial that must open/close a JSON object spanning an
+  `includeTemplate` boundary (for example, a partial wrapping
+  `dracula-pro-diff-colors.tmpl` inside its own
+  `"workbench.colorCustomizations": { ... }`) still can't have every one of
+  its *own* lines in alphabetical order in the source — `toPrettyJson` fixes
+  the *output* order regardless, so don't try to "fix" the source order in a
+  case like this; it's structural, not a mistake.
+
+See `koopa-vscode`, "Global key sort via `fromJson | toPrettyJson`", for the
+worked example (four apps, one genuine two-key ordering mistake caught by
+review, and the doubled-trailing-newline bug caught separately after apply).

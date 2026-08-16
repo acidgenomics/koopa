@@ -174,7 +174,7 @@ table above), and the deployed `dot_config/<App>/User/settings.json.tmpl` is
 now exactly one line:
 
 ```
-{{ includeTemplate "vscode-app-positron.tmpl" . | fromJson | toPrettyJson }}
+{{ includeTemplate "vscode-app-positron.tmpl" . | fromJson | toPrettyJson | trimAll "\n" }}
 ```
 
 chezmoi 2.72's `toPrettyJson` parses the partial's JSON output and re-emits it
@@ -210,6 +210,35 @@ Verify with the technique in the next section (parsed-JSON equality against the
 prior render), plus a regex scan of the *output* for sort breaks — the source
 partials are allowed to be out of order at block boundaries; the rendered file
 is not.
+
+**Two follow-up defects found only after the first apply, both real:**
+
+1. **A source-order mistake in `vscode-fork-common.tmpl`, caught in review.**
+   `terminal.integrated.enableFileLinks` was moved to the wrong side of
+   `terminal.integrated.enableMultiLinePasteWarning` (`enableF` sorts before
+   `enableM`; the edit put it after). `toPrettyJson` still produced correct
+   *output*, since it re-sorts regardless of source order, but the source
+   itself was momentarily wrong. Re-running the case-sensitive-break audit
+   script over every `.chezmoitemplates/vscode-*.tmpl` file (not just the one
+   file being edited) after any manual reordering is what catches this —
+   eyeballing whether two adjacent lines are alphabetical is not reliable
+   even when the person doing it wrote the sort-order explanation two
+   paragraphs above.
+2. **All four apps rendered `}\n\n` — a doubled trailing newline at EOF.**
+   `toPrettyJson`'s own output already ends in `\n`; the one-line wrapper file
+   on disk carries its own trailing `\n` too, so the two stack. Missed by the
+   semantic-equivalence check (which parses JSON and ignores whitespace) and
+   by `chezmoi status`/`diff` review (a `diff --git` hunk showing one deleted
+   blank line at EOF is easy to skim past). Caught only when the user reviewed
+   the actual rendered output. Fix: add `| trimAll "\n"` to the wrapper line
+   (already reflected above) — the same convention every other
+   `includeTemplate` call site in this file already follows, extended to
+   cover `toPrettyJson`'s own trailing newline rather than just a partial's.
+   See `koopa-chezmoi-dotfiles`, "Canonicalizing an Assembled JSON Template,"
+   for this as the fourth general variant of the whitespace-trim bug family.
+   Verify with `tail -c 3 <file> | od -c`, not `$(chezmoi execute-template
+   ...)` — command substitution strips exactly the trailing newlines this bug
+   is about, silently hiding it from the check meant to catch it.
 
 ### Avoiding a write race on settings.json
 
@@ -248,6 +277,41 @@ exists; leave it absent otherwise, rather than substituting a second value
 about the machine's PATH changes. See `koopa-chezmoi-dotfiles`, "A `stat`-Gated
 Fallback Branch Causes Perpetual Drift If the Stat Target Is Transient", for
 the general principle this is one instance of.
+
+### Worked example: a live in-editor audit found one real bug and one false alarm (2026-08)
+
+After the sort fix above shipped, reading the rendered `settings.json` directly
+in the editor (not `cat`/`Read`) surfaced VS Code's own inline JSON-schema
+diagnostics — a different, more authoritative signal than any grep, per
+`koopa-chezmoi-dotfiles`, "Verifying a Setting Name Is Real Before Trusting
+It." Two flags came out of it:
+
+- `"python.analysis.diagnosticsSource": "Pyright"` — genuinely invalid.
+  Pylance's own hover gave the current valid set directly:
+  `Pylance`/`Pylance + Pyright`/`Pylance + Pyrefly`. Fixed in
+  `vscode-fork-common.tmpl` to `"Pylance"`. A bundle grep for `Pyright` would
+  have been misleading here — the string is all over
+  `workbench.desktop.main.js` as the underlying engine name, which looks like
+  confirmation for a value the schema no longer accepts on its own.
+- `diffEditor.removedLineBackground` flagged "Property ... is not allowed" —
+  a false alarm. The color is registered in
+  `src/vs/platform/theme/common/colors/editorColors.ts` upstream, and present
+  in both installed apps' own bundles here (Code 1.133.0, Positron 1.118.0).
+  Not a real incompatibility; most likely a JSON-schema cache in the editor
+  session that hadn't refreshed after chezmoi wrote the file externally.
+
+Two other flags in the same pass turned out to be expected, not bugs:
+`path-autocomplete.pathMappings` → "Unknown Configuration Setting" (that
+extension isn't installed in the app being viewed — the same "not installed
+here ≠ fake key" case already documented for `github.copilot.*`), and a
+`python.analysis.typeCheckingMode` note about `pyrightconfig.json`/
+`pyproject.toml` taking precedence (expected, per-workspace, not a global
+settings problem).
+
+Net lesson: an enum's "Valid values: ..." is ground truth, worth fixing on
+sight. A bare "not allowed" or "unknown setting" needs a second source before
+you touch anything — it can be a stale cache or a not-installed extension
+just as easily as a real dead key.
 
 # koopa VS Code Plugin Configuration
 
