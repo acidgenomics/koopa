@@ -1,3 +1,8 @@
+** TODO I don't like that `koopa configure user dotfiles` can still trigger this system config prompt:
+    Configure system files? [y/N] n
+    ✓ Successfully configured dotfiles.
+    Do you have any suggestions for ways we can enhance this without the nag prompt?
+    I don't want to trigger system configuration every time.
 ** TODO Our Julia version checker is getting confused by LTS channel
     julia: 1.12.7 pinned too high (latest stable: 1.10.12)
 ** TODO Does it make more sense for the koopa builder machine to just bundle python from uv?
