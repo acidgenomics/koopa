@@ -122,6 +122,71 @@ naive `f"dracula_pro_{variant}.vim"` never matches: that variant silently got
 no named palette (fell through to the `_hex_lerp()` fallback) until fixed with
 `variant.replace("-", "_")`.
 
+## Colorblind-Safe Diff and Git-Status Colors
+
+`_generate_diff_colorblind_palette(dp_dir, variant)` in `install` derives a
+blue/orange/cyan palette for git-related coloring across three surfaces:
+delta (terminal), git's own `[color "diff"/"status"/"branch"]`, and VS Code's
+`workbench.colorCustomizations`. This is a **deliberate override**, not an
+adopted vendor convention: the Dracula Pro VS Code extension, its vim
+colorscheme, and koopa's own generators all use plain green=added/red=removed
+with no exception. Confirm the distinction before touching any of this again:
+check `contributes.colors`/`tokenColors` in the installed `.vsix`'s theme
+JSON, and `DiffAdd`/`DiffDelete`/`DiffChange` in
+`themes/vim/colors/dracula_pro_base.vim` — every one of them is red/green,
+never blue/orange.
+
+**What *is* adopted from the vendor:** orange for a "modified/changed" role.
+Confirmed independently in three places: `gitDecoration.modifiedResourceForeground`
+in the theme JSON, `DiffChange`/`DiffText` in the vim colorscheme's base
+file, and the Vim palette's own named `orange` role are the same hex.
+`status.changed` uses this, unmodified, on purpose — treat it as vendor-exact,
+not koopa-derived, when reasoning about it. `status.deleted` is cyan, not
+orange, specifically *because* orange is spoken for: `modified:` and
+`deleted:` entries co-occur in the same `git status` output, so they can't
+share a hue. Also adopted from the vendor: VS Code's alpha suffixes (`20`
+line background, `40` text background, `80` gutter) — read directly from the
+installed `.vsix`'s `colors.diffEditor.*` keys, not invented.
+
+**Deriving mutual separation for background tints.** Two colors that are each
+individually legible against a background can still read as near-identical
+to each other if derived the same way: blending both toward `bg` to hit the
+*same* target contrast ratio converges them to nearly the same luminance
+regardless of hue (measured: 1.01:1 mutual contrast). Deliberately picking
+two *different* target ratios (1.3 for added, 2.2 for removed) forces them
+apart in lightness as well as hue. This only matters for backgrounds/washes;
+for plain text (git status labels, gitDecoration foregrounds), hue-only
+separation is enough, because each entry is always paired with its own
+English word ("modified:", "deleted:") — the same standard the vendor's own
+theme uses for that specific distinction.
+
+**A vendor-exact color can still fail on user taste even when it's not a
+contrast bug.** Alucard's `orange` (`#A34D14`) measures a fine 5.3:1 against
+its background as text, but its HLS hue angle is ~24 degrees, closer to pure
+red (0 degrees) than to a hue most people would call orange (30-40 degrees)
+— it reads as "reddish" even though it passes every contrast check. This is
+real and measurable (compute hue via `colorsys.rgb_to_hls`), not merely
+subjective, and it is the vendor's own value (confirmed identical in the
+Fleet experimental palette) — not a koopa derivation bug to "fix" by changing
+the source. `_nudge_hue_toward(hexcolor, target_hex, min_hue_deg)` blends
+toward another real, already-verified palette color (the Vim `yellow` role,
+in this case) only as far as needed to clear a hue floor, and is a no-op when
+the input already clears it (Pro's orange, hue ~35, is untouched). Never
+invent a replacement hex to fix a "looks wrong" complaint — derive the
+correction from another real color in the same palette, the same way every
+other value in this pipeline is derived.
+
+**Terminal (pre-composited) vs VS Code (live-composited) need opposite math
+for the *same* visual role.** A terminal has no alpha compositing, so a
+background tint has to be a real, final, opaque hex, pre-blended toward `bg`
+via `_hex_lerp` at generation time (used for delta's `plus-style`/`minus-style`
+and nothing else needs this). VS Code composites `colorCustomizations`
+values live over the actual syntax-highlighted text underneath, so the same
+visual effect there is the *raw* saturated color plus an alpha suffix, with
+no pre-blending at all — pre-blending toward `bg` for VS Code would produce
+an opaque wash that hides syntax highlighting entirely, the opposite of what
+alpha compositing is for.
+
 ## Fish Color Pipeline
 
 ### Architecture

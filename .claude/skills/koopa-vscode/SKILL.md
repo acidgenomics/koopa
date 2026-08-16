@@ -7,8 +7,9 @@ description: >-
   (tofu), changing the VS Code terminal or editor font, understanding the App
   Support symlink bridge for editor settings, adding or moving a setting across
   the VS Code-family templates, checking whether a setting name is real before
-  adding it, editing .luarc.json, or making VS Code config portable across
-  machines.
+  adding it, editing .luarc.json, making VS Code config portable across
+  machines, or debugging a rendered settings.json that has a stray blank line
+  or a key missing its 2-space indent right at a partial boundary.
 ---
 
 # koopa VS Code Configuration
@@ -104,6 +105,45 @@ instead of four flat files:
 | `vscode-fork-common.tmpl` | ~130 settings byte-identical across Code/Antigravity/Cursor | Code, Antigravity, Cursor — always LAST (its final line has no trailing comma) |
 | `vscode-universal-common.tmpl` | 17 settings verified byte-identical across all four apps | Code, Antigravity, Cursor, Positron |
 | `dracula-pro-theme.tmpl` | Theme-name detection, parameterized by each app's own extension-glob path via `list` | all four |
+| `dracula-pro-diff-colors.tmpl` | Colorblind-safe `workbench.colorCustomizations` content (no outer key/braces of its own) | all four, but spliced differently per app: inside `vscode-fork-common.tmpl`'s existing `colorCustomizations` object for Code/Antigravity/Cursor, inside a fresh one opened in Positron's own file (it has no other `colorCustomizations` source) |
+
+`dracula-pro-diff-colors.tmpl` is called with a bare `.` (needs
+`.chezmoi.homeDir` directly), unlike `dracula-pro-theme.tmpl`'s `list`
+convention — see `koopa-chezmoi-dotfiles`, "Sharing One Template Body", for
+why a partial needing more than one thing from the caller must use `dict`
+instead of `list`, and why two partials can never both emit their own
+top-level `"workbench.colorCustomizations": { ... }` in the same file. Full
+derivation of the actual colors (why blue/orange, why cyan and not orange for
+`gitDecoration.deletedResourceForeground`, the vendor's own alpha values) is
+in `koopa-theming`, "Colorblind-Safe Diff and Git-Status Colors".
+
+### Worked example: blank line + lost indent at every partial boundary (2026-08)
+
+All four apps' rendered `settings.json` had the same two cosmetic defects at
+every one of the four partial-call boundaries above: a stray blank line, and
+the partial's first key landing at column 0 instead of 2-space indent (e.g.
+`workbench.preferredDarkColorTheme` in Positron). JSON still parsed, so nothing
+broke functionally — only formatting.
+
+Root cause: each partial's header comment closed with `*/ -}}`, and every call
+site used the bare `{{ template "x" . }}` action. `-}}` trims the following
+newline *and* the next line's leading spaces (killing the indent); a bare
+`template` action can't be piped, so its own trailing newline plus the
+caller's line break stacked into a blank line.
+
+Fix: `*/}}` (no space, no dash) on each partial's header close, and
+`{{ includeTemplate "x" ARG | trimAll "\n" }}` at every call site in place of
+`{{ template "x" ARG }}`. Full whitespace mechanics — why `*/ }}` with a space
+is a lexer error, why `trimAll` only fixes the call site and not the partial's
+own first line, and two more variants of this same trim-marker family found in
+non-JSON `.tmpl` files elsewhere in koopa — live in `koopa-chezmoi-dotfiles`
+("`-}}` on a Partial's Own Header Comment...", "Inline `if`/`else` With No
+Downstream `trimAll`...").
+
+Verified with `chezmoi execute-template --file` (before/after), `grep -n -e
+'^$' -e '^"'` for leftover artifacts, and a parsed-JSON diff to confirm no key
+was dropped — see `koopa-chezmoi-dotfiles`, "Verify semantic equivalence, not
+text equivalence," for the general technique.
 
 Each app's own `settings.json.tmpl` keeps only its real deltas: Code's
 `chat.*`/`claudeCode.*`/`github.copilot.*`/`githubPullRequests.*`, Antigravity's
@@ -141,6 +181,20 @@ grep -l "KOOPA_COLOR_MODE" \
   opt/dotfiles/chezmoi/dot_config/*/User/settings.json.tmpl
 # expect: no output
 ```
+
+### `python.defaultInterpreterPath`: drop the fallback branch, don't add one
+
+`Positron/User/settings.json.tmpl` and `dot_vscode-server/data/Machine/settings.json.tmpl`
+both had `{{ if stat ~/.venv/bin/python3 }}...{{ else if lookPath "python3" }}...{{ end }}`
+for this key. `~/.venv` is a per-project thing that comes and goes; every
+render after its existence changes disagrees with whatever is currently
+deployed, showing up as unexplained `chezmoi status` drift on a file nobody
+touched. Fix: no `else` branch. Set the key only when `~/.venv/bin/python3`
+exists; leave it absent otherwise, rather than substituting a second value
+(`lookPath "python3"`) that's just as likely to drift the next time anything
+about the machine's PATH changes. See `koopa-chezmoi-dotfiles`, "A `stat`-Gated
+Fallback Branch Causes Perpetual Drift If the Stat Target Is Transient", for
+the general principle this is one instance of.
 
 # koopa VS Code Plugin Configuration
 
