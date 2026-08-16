@@ -556,10 +556,21 @@ ${__dwf_vendor}${__dwf_rewritten}"
                         "${VENDOR_BASE_URL%/}"/*) __dwf_curl_cfg="$(vendor_curl_config)" ;;
                     esac
                 fi
+                # '--retry' covers curl's own transient-timeout error (28),
+                # which is what a TLS-inspecting corporate proxy that stalls
+                # a connection instead of closing it produces once a
+                # '~/.curlrc' 'speed-limit'/'speed-time' guard (or
+                # '--max-time') aborts the attempt -- retrying the same URL
+                # a couple of times often succeeds. This runs before any
+                # '~/.curlrc' exists (bootstrap.sh is the first script run
+                # on a new machine), so it cannot rely on a dotfiles-managed
+                # curlrc for this.
                 if curl \
                     --fail \
                     --location \
                     --max-time 300 \
+                    --retry 2 \
+                    --retry-delay 5 \
                     ${_curl_verbose:+"$_curl_verbose"} \
                     ${__dwf_curl_cfg:+--config "$__dwf_curl_cfg"} \
                     "$__dwf_url" \
@@ -896,6 +907,8 @@ install_python_uv() {
             --fail \
             --location \
             --max-time 60 \
+            --retry 2 \
+            --retry-delay 5 \
             ${_curl_verbose:+"$_curl_verbose"} \
             "$__kvar_uv_url" \
             -o "${__kvar_tmpdir}/uv.tar.gz"
