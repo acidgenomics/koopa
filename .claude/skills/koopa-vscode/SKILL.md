@@ -97,8 +97,9 @@ if the Nerd Font is not installed.
 Code, Antigravity, and Cursor overlap by ~85%; Positron is structured
 differently by design (its file started at 46 lines and has only grown since —
 verify with `git log --follow -- .../Positron/User/settings.json.tmpl` before
-assuming a gap is drift). Three `.chezmoitemplates/` partials hold the overlap
-instead of four flat files:
+assuming a gap is drift). Four `.chezmoitemplates/` partials hold the overlap
+instead of four flat files, plus one `vscode-app-*.tmpl` partial per app that
+holds that app's own deltas:
 
 | Partial | Covers | Called by |
 |---|---|---|
@@ -106,6 +107,7 @@ instead of four flat files:
 | `vscode-universal-common.tmpl` | 17 settings verified byte-identical across all four apps | Code, Antigravity, Cursor, Positron |
 | `dracula-pro-theme.tmpl` | Theme-name detection, parameterized by each app's own extension-glob path via `list` | all four |
 | `dracula-pro-diff-colors.tmpl` | Colorblind-safe `workbench.colorCustomizations` content (no outer key/braces of its own) | all four, but spliced differently per app: inside `vscode-fork-common.tmpl`'s existing `colorCustomizations` object for Code/Antigravity/Cursor, inside a fresh one opened in Positron's own file (it has no other `colorCustomizations` source) |
+| `vscode-app-code.tmpl`, `vscode-app-cursor.tmpl`, `vscode-app-positron.tmpl`, `vscode-app-antigravity.tmpl` | That app's own deltas, plus the `includeTemplate` calls into the four partials above | that app's `dot_config/<App>/User/settings.json.tmpl` only |
 
 `dracula-pro-diff-colors.tmpl` is called with a bare `.` (needs
 `.chezmoi.homeDir` directly), unlike `dracula-pro-theme.tmpl`'s `list`
@@ -145,18 +147,69 @@ Verified with `chezmoi execute-template --file` (before/after), `grep -n -e
 was dropped — see `koopa-chezmoi-dotfiles`, "Verify semantic equivalence, not
 text equivalence," for the general technique.
 
-Each app's own `settings.json.tmpl` keeps only its real deltas: Code's
+Each app's own deltas live in its `vscode-app-*.tmpl` partial, not in the
+deployed `dot_config/<App>/User/settings.json.tmpl` file: Code's
 `chat.*`/`claudeCode.*`/`github.copilot.*`/`githubPullRequests.*`, Antigravity's
 `antigravity.*` keys, Positron's independent structure. `[json]`/`[python]`/`[r]`/
-`[toml]`/`air.*` stay duplicated inline in Code/Antigravity/Cursor rather than
-going in a partial — `[toml]` differs by one line between them, and keeping the
-language blocks together at the top of each file reads better than the few
-duplicated lines would cost.
+`[toml]`/`air.*` stay duplicated inline in the Code/Antigravity/Cursor partials
+rather than going in a shared partial — `[toml]` differs by one line between
+them, and keeping the language blocks together at the top of each file reads
+better than the few duplicated lines would cost.
 
 See `koopa-chezmoi-dotfiles` for the two general mechanisms this relies on
 (`.chezmoi.sourceFile` for symlinked-source targets, `.chezmoitemplates` for
 structurally-shared content) and for how to verify a setting name is real
 before adding it to any of these files.
+
+### Global key sort via `fromJson | toPrettyJson` (2026-08)
+
+Each `includeTemplate` call emits a contiguous block of keys, so a file built
+from several calls back to back is a series of sorted runs, not one sorted
+list. A key family such as `editor.autoClosing*` ends up split across two
+blocks, which reads as duplication even though every key is unique — this is
+what triggered the investigation below.
+
+Fix: each app's body moved into its own `vscode-app-*.tmpl` partial (see the
+table above), and the deployed `dot_config/<App>/User/settings.json.tmpl` is
+now exactly one line:
+
+```
+{{ includeTemplate "vscode-app-positron.tmpl" . | fromJson | toPrettyJson }}
+```
+
+chezmoi 2.72's `toPrettyJson` parses the partial's JSON output and re-emits it
+2-space indented, with keys sorted byte-wise (`enableFileLinks` before
+`enableMultiLinePasteWarning`, capital letters before lowercase at the same
+position), and without HTML-escaping `&`/`<`/`>`. That makes every rendered
+file globally sorted, not just sorted within each block.
+
+What this changes about the partials themselves:
+
+- Blank lines and lost indent at a partial-call boundary (the defect in the
+  worked example above) stop mattering. `toPrettyJson` regenerates the layout
+  from the parsed object, so the raw concatenation's whitespace is discarded.
+- Trailing-comma discipline still matters at the source level, because
+  `fromJson` rejects invalid JSON outright — a stray or missing comma is now a
+  hard template error instead of a silently malformed file.
+- The "call `vscode-fork-common.tmpl` LAST" convention still matters for the
+  same reason: its final line has no trailing comma.
+- A duplicate key becomes invisible in the rendered output — `fromJson` keeps
+  the last occurrence silently. Guard this in review with a parsed-JSON
+  duplicate-key check (an `object_pairs_hook` counting repeats), not by eyeballing
+  the render.
+- Positron's `vscode-app-positron.tmpl` keeps 2 source-order breaks that
+  `toPrettyJson` will still sort correctly in the output: `workbench.colorCustomizations`
+  opens an object that wraps the `dracula-pro-diff-colors.tmpl` call, and
+  `window.autoDetectColorScheme` is the final literal line with no trailing
+  comma. A single partial spanning `editor.*` through `workbench.startupEditor`
+  cannot occupy one alphabetically correct slot in the source — don't try to
+  "fix" this.
+- JSON comments are no longer possible in any of these files. None exist today.
+
+Verify with the technique in the next section (parsed-JSON equality against the
+prior render), plus a regex scan of the *output* for sort breaks — the source
+partials are allowed to be out of order at block boundaries; the rendered file
+is not.
 
 ### Avoiding a write race on settings.json
 

@@ -12,8 +12,9 @@ description: >-
   when editing a dotfile, working in opt/dotfiles/chezmoi/, debugging a file
   that reverts on chezmoi apply, wiring a chezmoi template, deduplicating
   near-identical config templates, bridging XDG paths to macOS
-  Library/Application Support, or a rendered file has a stray blank line or a
-  line missing its indent right after a `{{ ... }}` action.
+  Library/Application Support, a rendered file has a stray blank line or a
+  line missing its indent right after a `{{ ... }}` action, or a rendered JSON
+  file has a key that looks duplicated but is really just out of sort order.
 ---
 
 # koopa Chezmoi Dotfiles
