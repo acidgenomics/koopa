@@ -1,3 +1,7 @@
+** TODO I don't know how to fix this for 1Password update in Ghostty with Homebrew:
+    ==> Quitting application 'com.1password.1password'...
+    Warning: Application 'com.1password.1password' did not quit. Enable Automation access for "Terminal → System Events" in:
+      System Settings → Privacy & Security → Automation
 ** TODO This error message isn't very good:
     $ koopa system check
     Warning: Disk usage at '/' is 91%.
