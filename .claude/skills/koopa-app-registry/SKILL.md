@@ -319,7 +319,14 @@ host can ever extract it.
 
 ## Tool-Inclusion Scope
 
-koopa includes AI agentic coding tools from **major vendors only**: Anthropic, Google,
-OpenAI, Microsoft (GitHub), and Amazon. OSS community tools (aider, goose, OpenHands,
-etc.) are out of scope regardless of popularity — the scope is intentionally narrow to
-vendor-backed products.
+koopa includes AI agentic coding **CLI assistants** from **major vendors only**:
+Anthropic, Google, OpenAI, Microsoft (GitHub), and Amazon. OSS community assistants
+(aider, goose, OpenHands, etc.) are out of scope regardless of popularity — the
+scope is intentionally narrow to vendor-backed products.
+
+This limit does not extend to **agent-adjacent tooling** — software that drives
+or reviews the output of the agent CLIs koopa already installs, rather than acting
+as an agent CLI itself. `roborev` (category `AI`, `default: false`) is the first
+example: it runs a git post-commit hook and feeds findings back to whichever agent
+CLI is installed. Vendor is irrelevant for this class of tool; judge each on
+whether it operates on top of the existing agent CLIs, not on who publishes it.

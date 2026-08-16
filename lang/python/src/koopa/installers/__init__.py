@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (149) ---------------------------------------------
+    # -- conda-package (150) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
@@ -128,6 +128,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "ripgrep": f"{_M}._conda",
     "ripgrep-all": f"{_M}._conda",
     "rmats": f"{_M}._conda",
+    "roborev": f"{_M}._conda",
     "rsem": f"{_M}._conda",
     "ruby": f"{_M}.ruby_app",
     "salmon": f"{_M}._conda",
