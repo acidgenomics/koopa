@@ -15,6 +15,7 @@ _HISTORY_FILENAME = "build-times.json"
 
 _active_progress: "BuildProgress | None" = None
 _last_failure_tail: str | None = None
+_last_push_message: str | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
 _LOG_TAIL_LINES = 100
@@ -86,6 +87,24 @@ def note(text: str) -> None:
 def get_last_failure_tail() -> str | None:
     """Return the failure log tail stashed by the most recent noninteractive build, if any."""
     return _last_failure_tail
+
+
+def get_last_push_message() -> str | None:
+    """Return the S3 push confirmation stashed by the most recent noninteractive install, if any."""
+    return _last_push_message
+
+
+def set_last_push_message(message: str | None) -> None:
+    """Stash *message* for the parent process to print after the spinner clears.
+
+    A noninteractive install worker cannot safely print its own push
+    confirmation: the parent process owns the live terminal spinner, and a
+    direct write from the worker races with it, corrupting the display. The
+    worker calls this instead, then returns the message so the parent can
+    print it after redrawing.
+    """
+    global _last_push_message  # noqa: PLW0603
+    _last_push_message = message
 
 
 def format_completion_line(name: str, version: str, *, failed: bool, elapsed_secs: float) -> str:

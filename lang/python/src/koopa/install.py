@@ -591,8 +591,17 @@ def _active_app_version(name: str) -> str | None:
     return os.path.basename(target)
 
 
-def push_app_build(name: str) -> None:
-    """Push completed build to S3 and/or vendor backend."""
+def push_app_build(name: str, *, quiet: bool = False) -> str:
+    """Push completed build to S3 and/or vendor backend.
+
+    Returns the push confirmation message. When *quiet* is False (the
+    default), also prints it immediately via ``alert_success``. Callers
+    running inside a noninteractive worker process (see
+    ``_install_app_worker``) must pass ``quiet=True`` and forward the
+    returned message to ``koopa.progress.set_last_push_message`` instead,
+    since the worker does not own the terminal and printing directly would
+    race with the parent's live spinner.
+    """
     from koopa.alert import alert_success
     from koopa.aws import koopa_s3_bucket
     from koopa.vendor import vendor_config, vendor_push_binary
@@ -628,7 +637,10 @@ def push_app_build(name: str) -> None:
         )
         if vendor_config() is not None:
             vendor_push_binary(tar_file, os_str, arch, name, tarball_name)
-        alert_success(f"Pushed '{name}' {version} to '{tar_url}'.")
+        message = f"Pushed '{name}' {version} to '{tar_url}'."
+        if not quiet:
+            alert_success(message)
+        return message
     finally:
         if os.path.isfile(tar_file):
             os.unlink(tar_file)
@@ -854,11 +866,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 
                 version_suffix = f" {styled_version(config.version)}" if config.version else ""
                 if config.reinstall_reason:
-                    reason_str = config.reinstall_reason
-                    prefix_to_strip = f"{config.name} "
-                    if reason_str.startswith(prefix_to_strip):
-                        reason_str = reason_str[len(prefix_to_strip) :]
-                    reason_suffix = f" {styled_reason(reason_str)}"
+                    reason_suffix = f" {styled_reason(config.reinstall_reason)}"
                 else:
                     reason_suffix = ""
                 verb = "reinstalling" if config.reinstall else "installing"
@@ -901,12 +909,9 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
         version_suffix = f" {styled_version(config.version)}" if config.version else ""
-        reason_str = config.reinstall_reason
-        prefix_to_strip = f"{config.name} "
-        if reason_str.startswith(prefix_to_strip):
-            reason_str = reason_str[len(prefix_to_strip) :]
         alert_note(
-            f"Reinstalling {styled_name(config.name)}{version_suffix} {styled_reason(reason_str)}."
+            f"Reinstalling {styled_name(config.name)}{version_suffix}"
+            f" {styled_reason(config.reinstall_reason)}."
         )
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
@@ -1046,7 +1051,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         # Push after .install/revision and .install/info.json are written, so
         # the pushed tarball carries build provenance instead of a bare prefix.
         if config.mode == "shared" and config.push:
-            push_app_build(config.name)
+            push_message = push_app_build(config.name, quiet=config.noninteractive)
+            if config.noninteractive:
+                from koopa.progress import set_last_push_message
+
+                set_last_push_message(push_message)
         if progress.saved_log_path:
             shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
     if not config.quiet and config.verbose:
@@ -1993,6 +2002,50 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     alert_success("All missing default apps installed.")
 
 
+def retry_failed_apps(names: list[str], *, verbose: bool = False) -> None:
+    """Retry a specific list of apps that failed earlier in the same update run.
+
+    A binary pull can 404 transiently (e.g. a brand-new OS/arch slug with no
+    binary pushed yet, or a build dependency that finishes rebuilding only
+    later in the same run) and then succeed once retried. Unlike
+    ``install_missing_default_apps``, *names* is retried unconditionally,
+    regardless of whether the app's ``opt/`` symlink still exists from its
+    prior (older) install -- an existence check would silently exclude an
+    already-installed app that merely failed to update.
+    """
+    from koopa.alert import alert, alert_success
+
+    if not names or not is_owner():
+        return
+    apps_with_reasons = [(a, "retry after failure") for a in names]
+    plan, dep_map = _compute_install_plan(apps_with_reasons)
+    apps = [a for a, _ in plan]
+    n = len(apps)
+    label = "app" if n == 1 else "apps"
+    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
+    alert(f"Retrying {n} failed {label}: {display}.")
+    acquired = _acquire_install_lock()
+    _binary = _can_install_binary()
+    _push = _can_push_binary()
+    try:
+        _run_install_plan(
+            plan,
+            dep_map,
+            make_config=lambda app, _reason: InstallConfig(
+                name=app,
+                deps=False,
+                verbose=verbose,
+                binary=_binary,
+                push=_push,
+                passthrough_args=_build_passthrough_args(app),
+            ),
+        )
+    finally:
+        if acquired:
+            _release_install_lock()
+    alert_success(f"All {n} retried {label} installed.")
+
+
 def install_shared_apps(mode: str = "default") -> None:
     """Build and install shared apps from source.
 
@@ -2820,14 +2873,17 @@ def _remove_from_pending_plan(app: str) -> None:
 def _install_app_worker(
     config: InstallConfig,
     pid_map: dict[str, int] | None = None,
-) -> tuple[str, str, float, str | None, str | None]:
-    """Run install_app in a child process and return (name, version, elapsed, error, tail).
+) -> tuple[str, str, float, str | None, str | None, str | None]:
+    """Run install_app in a child process; return (name, version, elapsed, error, tail, push_msg).
 
     Must be a module-level function so multiprocessing.spawn can pickle it.
     Sets noninteractive=True so the child captures output to a per-app log
     without touching the terminal; the parent owns all progress output.
     Returns a structured tuple so the parent can surface the log tail on failure
-    without embedding multi-line text in an exception message.
+    without embedding multi-line text in an exception message. *push_msg* is the
+    S3 push confirmation (if any), stashed via ``set_last_push_message`` instead
+    of being printed directly by the child, since the child does not own the
+    terminal and a direct print would race with the parent's live spinner.
 
     When *pid_map* is provided (a Manager dict), the worker registers its PID so
     the parent scheduler can target the process tree for a hard-abort kill.
@@ -2835,7 +2891,7 @@ def _install_app_worker(
     import contextlib
     import time
 
-    from koopa.progress import get_last_failure_tail
+    from koopa.progress import get_last_failure_tail, get_last_push_message, set_last_push_message
 
     # Become a session leader so the parent can os.killpg() the full process
     # tree (compiler sub-processes, linkers, etc.) on a hard timeout abort.
@@ -2847,6 +2903,9 @@ def _install_app_worker(
     config.noninteractive = True
     if pid_map is not None:
         pid_map[config.name] = os.getpid()
+    # Reset: a ProcessPoolExecutor worker process handles multiple apps over
+    # its lifetime, so a stale message from a prior app must not leak here.
+    set_last_push_message(None)
     t0 = time.monotonic()
     try:
         install_app(config)
@@ -2857,8 +2916,16 @@ def _install_app_worker(
             time.monotonic() - t0,
             str(exc),
             get_last_failure_tail(),
+            get_last_push_message(),
         )
-    return config.name, config.version, time.monotonic() - t0, None, None
+    return (
+        config.name,
+        config.version,
+        time.monotonic() - t0,
+        None,
+        None,
+        get_last_push_message(),
+    )
 
 
 def _io_cap() -> int:
@@ -2897,6 +2964,20 @@ def _timeout_threshold() -> int | None:
         return 3600
 
 
+class InstallPlanError(RuntimeError):
+    """Raised when one or more root apps fail during a batch install plan.
+
+    Carries the specific app names that failed at the plan's root (excluding
+    apps skipped only because a dependency failed), so a caller can retry
+    exactly those apps instead of re-deriving the failure set by parsing the
+    formatted message text.
+    """
+
+    def __init__(self, message: str, failed_apps: list[str]) -> None:
+        super().__init__(message)
+        self.failed_apps = failed_apps
+
+
 def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     plan: list[tuple[str, str]],
     dep_map: dict[str, set[str]],
@@ -2919,7 +3000,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     import time
     from typing import cast
 
-    from koopa.alert import _supports_color, alert
+    from koopa.alert import _supports_color, alert, alert_success
     from koopa.app import is_cpu_bound_app
     from koopa.io import import_app_json
     from koopa.progress import (
@@ -3139,7 +3220,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                 else:
                     io_running -= 1
                 try:
-                    _app, _ver, _elapsed, _error, _tail = fut.result()
+                    _app, _ver, _elapsed, _error, _tail, _push_msg = fut.result()
                 except Exception as exc:
                     # Worker crashed (e.g. pickling error or OOM — including
                     # BrokenProcessPool after a hard-abort kill).
@@ -3168,6 +3249,8 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                         format_completion_line(_app, _ver, failed=False, elapsed_secs=_elapsed)
                     )
                     sys.stderr.flush()
+                    if _push_msg:
+                        alert_success(_push_msg)
 
             _dispatch()
             if use_live and running:
@@ -3182,7 +3265,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         parts = [f"{len(root_failures)} app(s) failed: {', '.join(root_failures)}."]
         if skipped:
             parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
-        raise RuntimeError(" ".join(parts))
+        raise InstallPlanError(" ".join(parts), root_failures)
     _save_pending_plan([], source=source)
 
 
@@ -3313,12 +3396,13 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
-    alert(f"Installing {n} {label}: {display}.")
+    verb = "is" if n == 1 else "are"
+    alert(f"{n} {label} {verb} stale or missing:")
     from koopa.alert import dl
 
     for app, reason in plan:
         dl(app, reason or "missing dependency")
+    alert(f"Installing {n} {label}.")
     _save_pending_plan(plan, source="update")
     acquired = _acquire_install_lock()
     _binary = _can_install_binary()

@@ -77,7 +77,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     current_os = os_id()
     for name in names:
         if name not in json_data:
-            issues.append((name, f"{name} is an unsupported app", False))
+            issues.append((name, "unsupported app", False))
             continue
         entry = json_data[name]
         if entry.get("alias_of"):
@@ -87,34 +87,34 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 name = target  # noqa: PLW2901
             else:
                 issues.append(
-                    (name, f"{name} alias target '{target}' not found", False),
+                    (name, f"alias target '{target}' not found", False),
                 )
                 continue
         supported = entry.get("supported", {})
         if current_os in supported and not supported[current_os]:
-            issues.append((name, f"{name} is not supported on {current_os}", False))
+            issues.append((name, f"not supported on {current_os}", False))
             continue
         path = join(opt_dir, name)
         if not islink(path):
-            issues.append((name, f"{name} is not linked at {path}", True))
+            issues.append((name, f"not linked at {path}", True))
             continue
         path = realpath(path)
         if not isdir(path):
             issues.append(
-                (name, f"{name} is not a directory at {path}", True),
+                (name, f"not a directory at {path}", True),
             )
             continue
         assert isdir(path)
         linked_ver = basename(path)
         if json_data[name].get("removed"):
-            issues.append((name, f"{name} is a removed app", False))
+            issues.append((name, "removed app", False))
             continue
         current_ver = json_data[name]["version"]
         if len(current_ver) == 40:
             current_ver = current_ver[:7]
         if linked_ver != current_ver:
             issues.append(
-                (name, f"{name} {linked_ver} != {current_ver}", True),
+                (name, f"{linked_ver} -> {current_ver}", True),
             )
             continue
         expected_rev = entry.get("revision", 0)
@@ -131,7 +131,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     installed_rev = 0
             if installed_rev != expected_rev:
                 issues.append(
-                    (name, f"{name} revision {installed_rev} != {expected_rev}", True),
+                    (name, f"revision {installed_rev} -> {expected_rev}", True),
                 )
                 continue
         # Check if any dependency has been revised or rebuilt at a different
@@ -187,8 +187,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     issues.append(
                         (
                             name,
-                            f"{name} dependency {resolved_dep} revised:"
-                            f" {recorded_rev} -> {current_rev}",
+                            f"dependency {resolved_dep} revised: {recorded_rev} -> {current_rev}",
                             True,
                         ),
                     )
@@ -217,7 +216,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                             issues.append(
                                 (
                                     name,
-                                    f"{name} dependency {resolved_dep} version"
+                                    f"dependency {resolved_dep} version"
                                     f" changed: {recorded_ver} -> {current_ver}",
                                     True,
                                 ),
@@ -241,7 +240,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 missing = [d for d in rpath_dirs if not isdir(d)]
                 if missing:
                     issues.append(
-                        (name, f"{name} broken RPATH: {missing[0]}", True),
+                        (name, f"broken RPATH: {missing[0]}", True),
                     )
                     broken_rpath = True
                     break
@@ -252,7 +251,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             link = join(bin_dir, b)
             if islink(link) and not os.path.exists(link):
                 issues.append(
-                    (name, f"{name} broken bin symlink: {b}", True),
+                    (name, f"broken bin symlink: {b}", True),
                 )
                 broken_bin = True
                 break
@@ -263,7 +262,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             link = join(man1_dir, m)
             if islink(link) and not os.path.exists(link):
                 issues.append(
-                    (name, f"{name} (broken man1 symlink: {m})", True),
+                    (name, f"broken man1 symlink: {m}", True),
                 )
                 break
         # Check for missing shell completion symlinks (bash, fish, zsh).
@@ -284,7 +283,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     issues.append(
                         (
                             name,
-                            f"{name} (missing {shell} completion: {completion_name})",
+                            f"missing {shell} completion: {completion_name}",
                             True,
                         ),
                     )
@@ -312,8 +311,8 @@ def unsupported_apps() -> list[str]:
 def check_installed_apps() -> bool:
     """Check system integrity."""
     issues = _iter_installed_app_issues()
-    for _name, reason, _actionable in issues:
-        print(reason)
+    for name, reason, _actionable in issues:
+        print(f"{name}: {reason}")
     return not issues
 
 
@@ -335,27 +334,27 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
             linked_path = realpath(opt_link)
             if not isfile(join(linked_path, ".install", "info.json")):
                 issues.append(
-                    (name, f"{name}: failed install (empty .install directory)"),
+                    (name, "failed install (empty .install directory)"),
                 )
             continue
         versions = [v for v in os.listdir(app_path) if isdir(join(app_path, v))]
         if not versions:
-            issues.append((name, f"{name}: failed install (empty app directory)"))
+            issues.append((name, "failed install (empty app directory)"))
             continue
         for ver in versions:
             ver_path = join(app_path, ver)
             if isdir(join(ver_path, ".install")):
                 if not isfile(join(ver_path, ".install", "info.json")):
                     issues.append(
-                        (name, f"{name}/{ver}: failed install (empty .install directory)"),
+                        (name, f"failed install at {ver} (empty .install directory)"),
                     )
                 else:
                     issues.append(
-                        (name, f"{name}/{ver}: installed but not linked in opt"),
+                        (name, f"{ver} installed but not linked in opt"),
                     )
             else:
                 issues.append(
-                    (name, f"{name}/{ver}: failed install (no .install marker)"),
+                    (name, f"failed install at {ver} (no .install marker)"),
                 )
     return issues
 
@@ -376,8 +375,8 @@ def check_broken_app_installs() -> bool:
     """
     already_reported = {name for name, _r, a in _iter_installed_app_issues() if a}
     issues = [(n, r) for n, r in _iter_broken_app_installs() if n not in already_reported]
-    for _name, reason in issues:
-        print(reason)
+    for name, reason in issues:
+        print(f"{name}: {reason}")
     return not issues
 
 
@@ -577,7 +576,7 @@ def check_disk(path: str = "/") -> bool:
     if pct > 90:
         from koopa.alert import warn
 
-        warn(f"Disk usage at '{path}' is {pct:.0f}%.")
+        warn(f"Disk usage at '{path}' is {pct:.0f}%. Free up disk space on '{path}'.")
         return False
     return True
 
@@ -977,8 +976,6 @@ def check_system() -> bool:
     if needs_update or needs_system_update or needs_disk_space or needs_tmux_restart:
         if needs_update or needs_system_update:
             alert_note("Run 'koopa update' to resolve these issues.")
-        if needs_disk_space:
-            alert_note("Free up disk space on '/'.")
         return False
     alert_success("System passed all checks.")
     return True

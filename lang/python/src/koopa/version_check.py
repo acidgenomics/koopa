@@ -1164,6 +1164,32 @@ def _check_libsolv() -> str:
     )
 
 
+def _check_julia() -> str:
+    """Return the latest stable Julia release, ignoring the parallel LTS train.
+
+    GitHub's ``/releases/latest`` picks whichever non-prerelease was published
+    most recently, with no concept of version ordering. Julia tags LTS patches
+    (e.g. 1.10.x) and regular stable releases (e.g. 1.12.x) as independent
+    trains, so an LTS patch published after a newer stable release makes
+    ``/releases/latest`` return the older LTS version instead. Fetch a page of
+    tags instead and pick the highest by semver among clean ``vX.Y.Z`` tags,
+    which reflects the true latest stable release regardless of channel.
+    """
+    data = _http_get_json(
+        "https://api.github.com/repos/JuliaLang/julia/tags?per_page=30",
+        github=True,
+    )
+    versions: list[str] = []
+    for tag in data:
+        m = re.match(r"v(\d+\.\d+\.\d+)$", tag["name"])
+        if m:
+            versions.append(m.group(1))
+    if not versions:
+        msg = "No julia version tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
+
+
 def _check_msgpack() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/msgpack/msgpack-c/releases/latest",
@@ -1773,6 +1799,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
     "libheif": _AppCheckSpec("github", _check_github, ("strukturag", "libheif")),
     "libsolv": _AppCheckSpec("github", _check_libsolv, ()),
+    "julia": _AppCheckSpec("github", _check_julia, ()),
     "llvm": _AppCheckSpec(
         "conda",
         lambda: _check_conda("llvm", "conda-forge", subdirs=("linux-64", "osx-arm64")),

@@ -183,17 +183,17 @@ def _make_scheduler_config(
 def _noop_worker(
     config: InstallConfig,
     pid_map: dict[str, int] | None = None,
-) -> tuple[str, str, float, None, None]:
+) -> tuple[str, str, float, None, None, None]:
     """Worker that succeeds immediately."""
-    return config.name, config.version, 0.0, None, None
+    return config.name, config.version, 0.0, None, None, None
 
 
 def _fail_worker(
     config: InstallConfig,
     pid_map: dict[str, int] | None = None,
-) -> tuple[str, str, float, str, None]:
+) -> tuple[str, str, float, str, None, None]:
     """Worker that always returns a structured failure tuple."""
-    return config.name, config.version, 0.0, f"injected failure: {config.name}", None
+    return config.name, config.version, 0.0, f"injected failure: {config.name}", None, None
 
 
 def test_run_install_plan_single_app() -> None:
@@ -206,7 +206,7 @@ def test_run_install_plan_single_app() -> None:
 
     def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         calls.append(config.name)
-        return config.name, config.version, 0.0, None, None
+        return config.name, config.version, 0.0, None, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -233,10 +233,10 @@ def test_run_install_plan_dep_order() -> None:
         if config.name == "dep":
             dispatch_order.append("dep")
             dep_done.set()
-            return config.name, config.version, 0.0, None, None
+            return config.name, config.version, 0.0, None, None, None
         dep_done.wait(timeout=5)
         dispatch_order.append("app")
-        return config.name, config.version, 0.0, None, None
+        return config.name, config.version, 0.0, None, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -272,7 +272,7 @@ def test_run_install_plan_cpu_serialized() -> None:
         time.sleep(0.05)
         with lock:
             concurrent_cpu[0] -= 1
-        return config.name, config.version, 0.05, None, None
+        return config.name, config.version, 0.05, None, None, None
 
     # Both are CPU-bound (gnu-app installer)
     json_data = {"gcc": {"installer": "gnu-app"}, "llvm": {"installer": "gnu-app"}}
@@ -314,7 +314,7 @@ def test_run_install_plan_io_parallel() -> None:
         time.sleep(0.05)
         with lock:
             current[0] -= 1
-        return config.name, config.version, 0.05, None, None
+        return config.name, config.version, 0.05, None, None, None
 
     json_data = {f"app{i}": {} for i in range(4)}
 
@@ -342,8 +342,8 @@ def test_run_install_plan_failure_aborts() -> None:
 
     def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         if config.name == "bad":
-            return config.name, config.version, 0.0, "injected", None
-        return config.name, config.version, 0.0, None, None
+            return config.name, config.version, 0.0, "injected", None, None
+        return config.name, config.version, 0.0, None, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),

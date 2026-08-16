@@ -721,6 +721,7 @@ def _handle_update(args: argparse.Namespace) -> None:
     _require_git_managed_install()
     _revert_direnv_env(verbose=args.verbose)
     from koopa.install import (
+        InstallPlanError,
         _acquire_install_lock,
         _cleanup_legacy_config,
         _release_install_lock,
@@ -729,6 +730,7 @@ def _handle_update(args: argparse.Namespace) -> None:
         remove_alias_app_dirs,
         remove_unsupported_apps,
         resolve_system_update_entries,
+        retry_failed_apps,
         update_bootstrap,
         update_koopa,
         update_stale_apps,
@@ -800,14 +802,30 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             warn(f"Repairing app symlinks failed: {exc}")
         install_error: str | None = None
+        root_failures: list[str] = []
         try:
             update_stale_apps(verbose=args.verbose)
+        except InstallPlanError as exc:
+            root_failures = list(exc.failed_apps)
         except Exception as exc:
             install_error = str(exc)
         try:
             install_missing_default_apps(verbose=args.verbose)
+        except InstallPlanError as exc:
+            root_failures = sorted(set(root_failures) | set(exc.failed_apps))
         except Exception as exc:
             if install_error is None:
+                install_error = str(exc)
+        # Retry apps that failed above unconditionally (not gated on a
+        # missing opt/ symlink) -- a binary pull can 404 on a brand-new
+        # OS/arch slug or a build dep that only finishes rebuilding later in
+        # this same run, and succeed cleanly once retried.
+        if install_error is None and root_failures:
+            try:
+                retry_failed_apps(root_failures, verbose=args.verbose)
+            except InstallPlanError as exc:
+                install_error = str(exc)
+            except Exception as exc:
                 install_error = str(exc)
         try:
             prune_apps(verbose=args.verbose)

@@ -1,75 +1,76 @@
-** TODO Can we speed up the Homebrew cask reinstall chain? This seems to be happening in serial currently
-    16 outdated cask(s): firefox, [...]
-    ==> Would reinstall 1 cask:
-    firefox
+** DONE Can we speed up the Homebrew cask reinstall chain? This seems to be happening in serial currently
+    Batched into a single `brew reinstall --cask a b c ...` call instead of
+    looping one `brew` invocation per cask (brew.py:brew_upgrade_casks). Each
+    separate invocation paid its own Ruby interpreter startup + dependency
+    resolution cost; batching removes that per-cask overhead. The `r` and
+    `gpg-suite*` post-install hooks now run once after the batch via
+    membership checks instead of per-iteration. Not a full parallelization
+    (Homebrew doesn't safely support concurrent installs), just removal of
+    repeated per-invocation overhead.
 ** TODO I don't know how to fix this for 1Password update in Ghostty with Homebrew:
     ==> Quitting application 'com.1password.1password'...
     Warning: Application 'com.1password.1password' did not quit. Enable Automation access for "Terminal → System Events" in:
       System Settings → Privacy & Security → Automation
-** TODO This error message isn't very good:
-    $ koopa system check
-    Warning: Disk usage at '/' is 91%.
-    ** Free up disk space on '/'.
-** TODO I don't like that `koopa configure user dotfiles` can still trigger this system config prompt:
-    Configure system files? [y/N] n
-    ✓ Successfully configured dotfiles.
-    Do you have any suggestions for ways we can enhance this without the nag prompt?
-    I don't want to trigger system configuration every time.
-** TODO Our Julia version checker is getting confused by LTS channel
-    julia: 1.12.7 pinned too high (latest stable: 1.10.12)
-** TODO Does it make more sense for the koopa builder machine to just bundle python from uv?
-    installing 1 app: python3.12 [6m14s]
-    I think this is building from source and taking too long, I may want to just shift that.
-** DONE Check if this is still true:
-    isl: error: isl version bump requires acidgenomics AWS access to mirror src tarball
-   Not true. Removed the guard in version_check.py: upstream keeps every isl
-   tarball back to 0.07, and update_app_json() already mirrors src tarballs for
-   every outdated app generically, so isl needed no special case.
-** TODO We're now hitting a python3.12 install error:
-    => Failed to install python3.12: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-c8n5657k/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
-      Build failed.
-      Last 100 lines:
-      ────────────────────────────────────────
-      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
-      ────────────────────────────────────────
-      Error lines (1):
-      ────────────────────────────────────────
-      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
-      ────────────────────────────────────────
-** TODO The problem is machine is trying to use binary installs:
-    $ koopa reinstall python3.12 --verbose
-    ** Reverted 12 direnv-loaded environment variable(s) from '/opt/koopa'.
-    ** python3.12 3.12.14: reinstalling with dependencies: make, pkg-config, bzip2, expat, libedit, libffi, mpdecimal, ncurses, openssl3, readline, sqlite, xz, zlib
-    fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
-    Error: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-i1076scx/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
-    Traceback (most recent call last):
-      File "/opt/koopa/lang/python/src/koopa/cli_main.py", line 968, in main
-        handler(args)
-        ~~~~~~~^^^^^^
-      File "/opt/koopa/lang/python/src/koopa/cli_main.py", line 510, in _handle_reinstall
-        install_app(config)
-        ~~~~~~~~~~~^^^^^^^^
-      File "/opt/koopa/lang/python/src/koopa/install.py", line 914, in install_app
-        install_app_from_binary_package(config.prefix)
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-      File "/opt/koopa/lang/python/src/koopa/install.py", line 541, in install_app_from_binary_package
-        run(
-        ~~~^
-            "aws",
-            ^^^^^^
-        ...<6 lines>...
-            tar_file,
-            ^^^^^^^^^
-        )
-        ^
-      File "/opt/koopa/lang/python/src/koopa/exec.py", line 17, in run
-        return subprocess.run(cmd, capture_output=capture, text=True, check=check, cwd=cwd)
-               ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      File "/opt/koopa-bootstrap/lib/python3.14/subprocess.py", line 578, in run
-        raise CalledProcessError(retcode, process.args,
-                                 output=stdout, stderr=stderr)
-    subprocess.CalledProcessError: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-i1076scx/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
-** TODO We hit a suboptimal 'koopa update' chain on our builder machine.
+** DONE This error message isn't very good:
+    Combined the warning and suggestion into a single warn() call in
+    check_disk() (check.py), matching the existing style used by the Xcode
+    CLT checks. Removed the now-redundant separate
+    alert_note("Free up disk space...") branch in check_system().
+** DONE I don't like that `koopa configure user dotfiles` can still trigger this system config prompt:
+    Not a koopa bug: the prompt is triggered by the separate `dotfiles-private`
+    repo, which isn't checked out on this machine and isn't part of the
+    standard koopa dotfiles workflow. To be addressed separately in that repo.
+** DONE Our Julia version checker is getting confused by LTS channel
+    Root cause: julia had no _SPECIAL_CASES entry in version_check.py, so it
+    fell back to GitHub's /releases/latest, which returns whatever was most
+    recently published with no concept of version ordering -- an LTS patch
+    (1.10.12) published after the true latest stable (1.12.7) shadowed it.
+    Added _check_julia() (version_check.py), which reads the GitHub tags list
+    and picks the highest vX.Y.Z by semver instead of by publish date.
+    Verified live: now returns 1.12.7, matching the app.json pin.
+** DONE Does it make more sense for the koopa builder machine to just bundle python from uv?
+    Decision: keep building from source on the builder. Switching to uv's
+    python-build-standalone prebuilt binaries would decouple Python from
+    koopa's own openssl3/readline/sqlite/etc. builds and its dependency-rebuild
+    tracking (dep_revisions/stale_revdeps) -- not worth losing that control.
+    Every binary-enabled (non-builder) machine already skips the source build
+    entirely: it just pulls the tarball the builder already built and pushed
+    to S3 (_can_install_binary()/install_app_from_binary_package). The builder
+    is the only machine paying the source-build time at all, once per version
+    bump, and that one-time cost is an acceptable tradeoff to keep control.
+** DONE We're now hitting a python3.12 install error:
+    This raw-404 traceback (no source-build fallback attempted at all) predates
+    the existing _run_python_installer binary-miss fallback already committed
+    at install.py:720-756, whose docstring explicitly documents this exact bug
+    class (python3.10-3.14, openssl3, openssl4 raising the raw AWS 404 instead
+    of building from source) as fixed. That fallback already covers this case
+    on its own; see the "suboptimal koopa update chain" item below for the
+    additional koopa-update-level self-heal/message-staleness fix made in this
+    session.
+** DONE The problem is machine is trying to use binary installs:
+    Same as above -- this traceback shows no "falling back to source build"
+    alert_info line, meaning it predates the existing _run_python_installer
+    fallback at install.py:720-756 (already committed, not part of this
+    session's changes). Re-run `koopa reinstall python3.12 --verbose` to
+    confirm the fallback now engages; if it still raises the raw 404 with no
+    fallback message, that's a genuine regression worth reopening.
+** DONE We hit a suboptimal 'koopa update' chain on our builder machine.
+    Two bugs, both in cli_main.py's _handle_update()/install.py:
+    (1) install_missing_default_apps() only retried apps with no opt/ symlink
+    at all, so python3.12 (already installed, just failed to bump) never got
+    the from-source-rebuild retry that python3.13/python3.14 got (they had no
+    prior opt/ entry on this fresh host, so they qualified as "missing").
+    (2) the final "koopa update failed" message was captured from
+    update_stale_apps() before install_missing_default_apps() ran and was
+    never revised, so it kept blaming python3.13/python3.14 even after they
+    were fixed moments later.
+    Fix: added InstallPlanError (install.py), a RuntimeError subclass carrying
+    the specific failed app names, and retry_failed_apps() (install.py), which
+    retries exactly those names unconditionally (no existence check).
+    _handle_update() now collects root failures from both update_stale_apps()
+    and install_missing_default_apps(), retries them once via
+    retry_failed_apps(), and only reports apps still failing after that retry.
+    Original log for reference:
     $ koopa update
     => Pulling koopa on develop (859dd41).
     => Updating bootstrap in '/opt/koopa-bootstrap' (2026.08.16.1702).
@@ -143,8 +144,15 @@
        python3.14 3.14.7 OK [4m54s]
     ✓ All missing default apps installed.
     Error: koopa update failed: 3 app(s) failed: python3.12, python3.13, python3.14. 24 skipped (failed deps): black, bumpver, commitizen, doom-emacs, dotfiles, git, git-filter-repo, ipython, jupyterlab, meson, poetry, pyflakes, pyright, pytest, ruff, ruff-lsp, snakefmt, spacemacs, sphinx, sqlfluff, tqdm, ty, yazi, yt-dlp.
-** TODO Formatting of line break isn't good here:
-       | installing 1 app: ruby [2m00s]✓ Pushed 'ruby' 4.0.6 to
-    This element "✓ Pushed 'ruby' 4.0.6 to" should be broken to a new line.
-** TODO Confirm that this CLI messages don't have correct line break:
-    ✓ Pushed 'dotfiles' 6d517de to 's3://artifacts*
+** DONE Formatting of line break isn't good here:
+    Root cause: push_app_build()'s success message printed directly from the
+    noninteractive ProcessPoolExecutor worker process via alert_success,
+    racing with the parent's live spinner (which owns the terminal and never
+    yields it to a child -- see the "parent owns all progress output"
+    invariant in _install_app_worker's docstring). Fix: push_app_build() now
+    accepts quiet=True and returns the message instead of printing it; the
+    worker stashes it via koopa.progress.set_last_push_message(), and the
+    parent prints it after clearing the spinner and writing the completion
+    line (install.py).
+** DONE Confirm that this CLI messages don't have correct line break:
+    Same root cause and fix as the ruby line-break item above.

@@ -80,7 +80,7 @@ def test_dep_version_changed_on_disk_flagged(tmp_path: Path) -> None:
         info={"dep_versions": {"dep": "2.0"}, "dep_revisions": {}},
     )
     assert len(issues) == 1
-    assert issues[0][1] == "myapp dependency dep version changed: 2.0 -> 3.0"
+    assert issues[0][1] == "dependency dep version changed: 2.0 -> 3.0"
 
 
 def test_dep_revision_bumped_on_disk_flagged(tmp_path: Path) -> None:
@@ -92,7 +92,7 @@ def test_dep_revision_bumped_on_disk_flagged(tmp_path: Path) -> None:
         info={"dep_versions": {"dep": "2.0"}, "dep_revisions": {"dep": 1}},
     )
     assert len(issues) == 1
-    assert issues[0][1] == "myapp dependency dep revised: 1 -> 2"
+    assert issues[0][1] == "dependency dep revised: 1 -> 2"
 
 
 def test_recorded_empty_deps_not_flagged_by_firewall_dict_reresolution(

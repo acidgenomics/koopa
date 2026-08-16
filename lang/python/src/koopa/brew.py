@@ -269,27 +269,39 @@ def brew_upgrade_casks() -> None:
     _sudo_authenticate()
     keepalive = _sudo_keepalive_start()
     try:
-        for i, cask in enumerate(casks, start=1):
-            set_status(f"upgrading casks [{i}/{n}] {cask}")
-            _brew("reinstall", "--cask", "--force", cask, capture=False)
-            if cask == "r":
-                try:
-                    from koopa.r import configure_r_environ, configure_r_makevars
+        # Reinstall every cask in a single brew invocation instead of looping
+        # one-by-one: each separate `brew` call pays its own Ruby interpreter
+        # startup and dependency-resolution cost, which dominates wall-clock
+        # time on a long cask list. Homebrew still attempts every cask in the
+        # list even if one fails partway through, so this is not a regression
+        # in failure isolation -- if anything the old per-cask loop was worse,
+        # since check=True aborted the whole remaining list on the first
+        # failure instead of continuing to the rest.
+        set_status(f"reinstalling {n} cask(s)")
+        _brew("reinstall", "--cask", "--force", *casks, capture=False)
+    finally:
+        # Run cask-specific post-hooks regardless of the batch's overall exit
+        # status: Homebrew attempts every cask in the list even if another one
+        # in the batch fails, and both hooks are idempotent/harmless to run
+        # against an unchanged install if the targeted cask itself failed.
+        if "r" in casks:
+            try:
+                from koopa.r import configure_r_environ, configure_r_makevars
 
-                    configure_r_environ()
-                    configure_r_makevars()
-                except Exception as exc:
-                    print(
-                        f"Warning: failed to configure R environment after cask upgrade: {exc}",
-                        file=sys.stderr,
-                    )
-            elif cask.startswith("gpg-suite"):
+                configure_r_environ()
+                configure_r_makevars()
+            except Exception as exc:
+                print(
+                    f"Warning: failed to configure R environment after cask upgrade: {exc}",
+                    file=sys.stderr,
+                )
+        for cask in casks:
+            if cask.startswith("gpg-suite"):
                 plist = os.path.expanduser(
                     "~/Library/LaunchAgents/org.gpgtools.updater.plist",
                 )
                 if os.path.isfile(plist):
                     subprocess.run(["launchctl", "unload", "-w", plist], check=False)
-    finally:
         _sudo_keepalive_stop(keepalive)
 
 
