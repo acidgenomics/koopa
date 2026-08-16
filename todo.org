@@ -47,3 +47,81 @@
         raise CalledProcessError(retcode, process.args,
                                  output=stdout, stderr=stderr)
     subprocess.CalledProcessError: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-i1076scx/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
+** TODO We hit a suboptimal 'koopa update' chain on our builder machine.
+    $ koopa update
+    => Pulling koopa on develop (859dd41).
+    => Updating bootstrap in '/opt/koopa-bootstrap' (2026.08.16.1702).
+       bootstrap OK [8s]
+    => Pulling koopa on develop (859dd41).
+    => Installing 28 apps: python3.12, python3.13, python3.14, git, doom-emacs, dotfiles, jupyterlab, meson, ruby, ruff, ... and 18 more.
+       python3.12: python3.12 3.12.13 != 3.12.14
+       python3.13: python3.13 revision 0 != 1
+       python3.14: python3.14 revision 0 != 1
+       git: git dependency expat version changed: 2.8.2 -> 2.8.3
+       doom-emacs: doom-emacs ad55ed0 != 0deceec
+       dotfiles: dotfiles 70c0e8c != 6d517de
+       jupyterlab: jupyterlab 4.6.2 != 4.6.3
+       meson: meson 1.11.2 != 1.12.0
+       ruby: ruby dependency libffi version changed: 3.7.1 -> 3.8.0
+       ruff: ruff 0.16.2 != 0.16.3
+       spacemacs: spacemacs 47c09c5 != a10be2c
+       ty: ty 0.0.69 != 0.0.72
+       yazi: yazi 26.5.6 != 26.8.15
+       black: dependency rebuilt
+       bumpver: dependency rebuilt
+       commitizen: dependency rebuilt
+       git-filter-repo: dependency rebuilt
+       ipython: dependency rebuilt
+       poetry: dependency rebuilt
+       pyflakes: dependency rebuilt
+       pyright: dependency rebuilt
+       pytest: dependency rebuilt
+       ruff-lsp: dependency rebuilt
+       snakefmt: dependency rebuilt
+       sphinx: dependency rebuilt
+       sqlfluff: dependency rebuilt
+       tqdm: dependency rebuilt
+       yt-dlp: dependency rebuilt
+    => Failed to install python3.14: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.14/3.14.7-r1.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-1lqp0hpa/python3.14-3.14.7.tar.gz']' returned non-zero exit status 1.
+      Build failed.
+      Last 100 lines:
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.14/3.14.7-r1.tar.gz" does not exist
+      ────────────────────────────────────────
+      Error lines (1):
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.14/3.14.7-r1.tar.gz" does not exist
+      ────────────────────────────────────────
+    => Failed to install python3.13: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.13/3.13.15-r1.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-iesq0bo5/python3.13-3.13.15.tar.gz']' returned non-zero exit status 1.
+      Build failed.
+      Last 100 lines:
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.13/3.13.15-r1.tar.gz" does not exist
+      ────────────────────────────────────────
+      Error lines (1):
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.13/3.13.15-r1.tar.gz" does not exist
+      ────────────────────────────────────────
+    => Failed to install python3.12: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-2wqi2ryi/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
+      Build failed.
+      Last 100 lines:
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
+      ────────────────────────────────────────
+      Error lines (1):
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
+      ────────────────────────────────────────
+       | installing 1 app: ruby [2m00s]✓ Pushed 'ruby' 4.0.6 to 's3://artifacts-XXX/binaries/macos-26/arm64/ruby/4.0.6.tar.gz'.
+       ruby 4.0.6 OK [2m00s]
+    => Installing 2 missing default apps: python3.13, python3.14.
+       | installing 1 app: python3.13 [6m52s]✓ Pushed 'python3.13' 3.13.15 to 's3://artifacts-XXX/binaries/macos-26/arm64/python3.13/3.13.15-r1.tar.gz'.
+       python3.13 3.13.15 OK [6m51s]
+       \ installing 1 app: python3.14 [4m54s]✓ Pushed 'python3.14' 3.14.7 to 's3://artifacts-XXX/binaries/macos-26/arm64/python3.14/3.14.7-r1.tar.gz'.
+       python3.14 3.14.7 OK [4m54s]
+    ✓ All missing default apps installed.
+    Error: koopa update failed: 3 app(s) failed: python3.12, python3.13, python3.14. 24 skipped (failed deps): black, bumpver, commitizen, doom-emacs, dotfiles, git, git-filter-repo, ipython, jupyterlab, meson, poetry, pyflakes, pyright, pytest, ruff, ruff-lsp, snakefmt, spacemacs, sphinx, sqlfluff, tqdm, ty, yazi, yt-dlp.
+** TODO Formatting of line break isn't good here:
+       | installing 1 app: ruby [2m00s]✓ Pushed 'ruby' 4.0.6 to
+    This element "✓ Pushed 'ruby' 4.0.6 to" should be broken to a new line.
+
