@@ -4,7 +4,7 @@
       "op"
     ],
     "category": "Security",
-    "date": "2026-08-03",
+    "date": "2026-08-16",
     "default": true,
     "description": "1Password command-line interface for secrets management",
     "type": "cli",
@@ -12,7 +12,7 @@
       "https://developer.1password.com/docs/cli/",
       "https://app-updates.agilebits.com/product_history/CLI2"
     ],
-    "version": "2.38.1"
+    "version": "2.39.0"
   },
   "ack": {
     "bin": [
@@ -1599,7 +1599,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-08-14",
+    "date": "2026-08-16",
     "default": true,
     "dependencies": [
       "node"
@@ -1613,7 +1613,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.232"
+    "version": "2.1.233"
   },
   "cli11": {
     "date": "2026-05-02",
@@ -1644,7 +1644,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-10",
+    "date": "2026-08-16",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1653,7 +1653,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.25.0"
+    "version": "2.25.2"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -2468,7 +2468,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-08",
+    "date": "2026-08-16",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2478,14 +2478,14 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "ad55ed08df3a1d3398d136d07b60ba2ad00fb91b"
+    "version": "0deceecf9edc7d4cd15db3e931452e12d762b1b1"
   },
   "dotfiles": {
     "build_dependencies": [
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-08-14",
+    "date": "2026-08-16",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2495,7 +2495,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "5291ab4672d5f6c1c1721bea1d101972ff964d2a"
+    "version": "6d517dedca0753b523c73c641313ac82202fcc2d"
   },
   "du-dust": {
     "bin": [
@@ -2605,7 +2605,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2026-05-02",
+    "date": "2026-08-16",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -2627,7 +2627,7 @@
     "url": [
       "https://fedorahosted.org/elfutils/"
     ],
-    "version": "0.195"
+    "version": "0.196"
   },
   "elvish": {
     "bin": [
@@ -2827,7 +2827,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-08-10",
+    "date": "2026-08-16",
     "default": false,
     "description": "fast system information display tool",
     "installer": "conda-package",
@@ -2835,7 +2835,7 @@
     "url": [
       "https://github.com/fastfetch-cli/fastfetch/"
     ],
-    "version": "2.67.0"
+    "version": "2.67.1"
   },
   "fastqc": {
     "bin": [
@@ -4658,7 +4658,7 @@
       "julia"
     ],
     "category": "Language",
-    "date": "2026-04-15",
+    "date": "2026-08-16",
     "default": false,
     "description": "high-performance dynamic programming language",
     "type": "cli",
@@ -4667,7 +4667,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.12.6"
+    "version": "1.12.7"
   },
   "jupyterlab": {
     "bin": [
@@ -4913,7 +4913,7 @@
       "make"
     ],
     "category": "Filesystem",
-    "date": "2026-07-20",
+    "date": "2026-08-16",
     "default": true,
     "dependencies": [
       "ncurses",
@@ -4930,7 +4930,7 @@
       "https://github.com/gwsw/less/",
       "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
     ],
-    "version": "708"
+    "version": "709"
   },
   "lesspipe": {
     "bin": [
@@ -6206,7 +6206,7 @@
       "mypyc"
     ],
     "category": "Python",
-    "date": "2026-07-14",
+    "date": "2026-08-16",
     "default": false,
     "dependencies": [
       "python"
@@ -6225,7 +6225,7 @@
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "2.3.0"
+    "version": "2.3.1"
   },
   "nano": {
     "bin": [
@@ -6565,7 +6565,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-07-14",
+    "date": "2026-08-16",
     "default": false,
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
@@ -6573,7 +6573,7 @@
     "url": [
       "https://github.com/nushell/nushell/"
     ],
-    "version": "0.114.1"
+    "version": "0.115.0"
   },
   "onefetch": {
     "bin": [
@@ -7262,14 +7262,14 @@
       "pwsh"
     ],
     "category": "Shell",
-    "date": "2026-07-23",
+    "date": "2026-08-16",
     "default": false,
     "description": "cross-platform task automation shell by Microsoft",
     "type": "cli",
     "url": [
       "https://github.com/PowerShell/PowerShell/"
     ],
-    "version": "7.6.4"
+    "version": "7.6.5"
   },
   "prettier": {
     "bin": [
@@ -7519,7 +7519,7 @@
       "pyproject-fmt"
     ],
     "category": "Python",
-    "date": "2026-08-14",
+    "date": "2026-08-16",
     "default": false,
     "dependencies": [
       "python"
@@ -7531,7 +7531,7 @@
       "https://pypi.org/project/pyproject-fmt/",
       "https://github.com/tox-dev/pyproject-fmt/"
     ],
-    "version": "2.27.1"
+    "version": "2.28.0"
   },
   "pyrefly": {
     "bin": [
@@ -9726,7 +9726,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-08-14",
+    "date": "2026-08-16",
     "default": true,
     "dependencies": [
       "python"
@@ -9738,7 +9738,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.71"
+    "version": "0.0.72"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -9838,14 +9838,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-08-14",
+    "date": "2026-08-16",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.12.4"
+    "version": "0.12.5"
   },
   "valkey": {
     "bin": [
@@ -10609,7 +10609,7 @@
     ],
     "category": "Filesystem",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-08-16",
     "default": true,
     "description": "blazing fast async terminal file manager",
     "installer": "conda-package",
@@ -10619,7 +10619,7 @@
       "https://github.com/sxyazi/yazi/",
       "https://crates.io/crates/yazi-fm"
     ],
-    "version": "26.5.6"
+    "version": "26.8.15"
   },
   "yq": {
     "bin": [
