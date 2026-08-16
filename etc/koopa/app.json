@@ -9591,6 +9591,7 @@
       "tooluniverse-http-api",
       "tooluniverse-mcp",
       "tooluniverse-smcp",
+      "tooluniverse-smcp-stdio",
       "tu",
       "tu-datastore"
     ],
