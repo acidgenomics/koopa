@@ -34,6 +34,25 @@ data). A bare `chezmoi apply` without `--source` would deploy `dot_*` files into
 
 **Never run `chezmoi apply` without `--source`** pointing at `opt/dotfiles/chezmoi/`.
 
+**This applies to every chezmoi subcommand, not just `apply`.** A read-only
+query run without `--source` (`chezmoi managed`, `chezmoi diff`, `chezmoi
+status`) silently checks the wrong tree — chezmoi's own default source dir,
+the one that "must not exist" above — instead of erroring. The result looks
+like a normal, valid answer instead of a warning, so a false negative is easy
+to trust.
+
+Concrete case: `chezmoi managed | grep -i curlrc` (no `--source`) returned
+empty, appearing to confirm `~/.curlrc` was an unmanaged, hand-maintained
+file. It is fully chezmoi-managed, generated from `dot_curlrc.tmpl` — the
+omitted `--source` flag was silently querying an empty, nonexistent default
+tree instead of the real one. Re-running with
+`--source=~/.local/share/koopa/opt/dotfiles/chezmoi` reversed the finding
+immediately, and `chezmoi diff` with the correct source came back empty
+(fully in sync), confirming it. Before concluding a file is not
+chezmoi-managed, always re-check with the explicit `--source` flag — an
+empty or negative result from any bare chezmoi command is not trustworthy
+evidence.
+
 ## Always Edit the Source First
 
 Home-directory dotfiles are managed by chezmoi. The deployed copies under `~/` will
