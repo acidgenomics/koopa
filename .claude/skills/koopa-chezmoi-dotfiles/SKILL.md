@@ -304,10 +304,14 @@ partials cannot each own the same top-level JSON key" below) parses cleanly
 and diffs clean, and disappears from view precisely when you need to see it:
 ```python
 import collections, json
+
+
 def hook(pairs):
     c = collections.Counter(k for k, _ in pairs)
     assert not [k for k, v in c.items() if v > 1], c
     return dict(pairs)
+
+
 json.loads(rendered_text, object_pairs_hook=hook)
 ```
 See `koopa-vscode` for a worked example (three partial tiers across four
