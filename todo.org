@@ -3,3 +3,14 @@
    Not true. Removed the guard in version_check.py: upstream keeps every isl
    tarball back to 0.07, and update_app_json() already mirrors src tarballs for
    every outdated app generically, so isl needed no special case.
+** TODO We're now hitting a python3.12 install error:
+    => Failed to install python3.12: Command '['aws', 's3', 'cp', '--only-show-errors', '--profile', 'acidgenomics', 's3://artifacts-XXX/binaries/macos-26/arm64/python3.12/3.12.14.tar.gz', '/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/koopa-binary-c8n5657k/python3.12-3.12.14.tar.gz']' returned non-zero exit status 1.
+      Build failed.
+      Last 100 lines:
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
+      ────────────────────────────────────────
+      Error lines (1):
+      ────────────────────────────────────────
+      fatal error: An error occurred (404) when calling the HeadObject operation: Key "binaries/macos-26/arm64/python3.12/3.12.14.tar.gz" does not exist
+      ────────────────────────────────────────
