@@ -626,6 +626,111 @@ def test_can_push_binary_denies_non_default_prefix() -> None:
         assert _can_push_binary() is False
 
 
+def test_can_build_binary_reads_dotenv(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A builder flag set only in '.env' is still recognized.
+
+    Regression test: koopa's own '.envrc' loads '<koopa-root>/.env' through
+    direnv, and 'revert_direnv_env' deletes every variable direnv added, so an
+    environment-only read demoted a '.env'-configured builder to a consumer.
+    """
+    from koopa.install import can_build_binary
+
+    monkeypatch.delenv("KOOPA_BUILDER", raising=False)
+    with patch("koopa.aws._parse_dotenv", return_value={"KOOPA_BUILDER": "1"}):
+        assert can_build_binary() is True
+
+
+def test_can_build_binary_environment_zero_overrides_dotenv(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An explicit 'KOOPA_BUILDER=0' in the environment still wins over '.env'."""
+    from koopa.install import can_build_binary
+
+    monkeypatch.setenv("KOOPA_BUILDER", "0")
+    with patch("koopa.aws._parse_dotenv", return_value={"KOOPA_BUILDER": "1"}):
+        assert can_build_binary() is False
+
+
+def test_builder_never_gets_install_and_push_both_true() -> None:
+    """A '.env'-configured builder can push but never attempts a binary install.
+
+    Regression test for the evaluation-order trap: '_can_install_binary()' used
+    to read 'can_build_binary()' before anything triggered a '.env' re-read, so
+    a builder whose flag lived only in '.env' got 'binary=True' and (correctly)
+    'push=True' at once -- the exact combination '_can_install_binary()' exists
+    to prevent.
+    """
+    from koopa.install import _can_install_binary, _can_push_binary
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
+        patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.vendor.vendor_can_pull", return_value=False),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_install_binary() is False
+        assert _can_push_binary() is True
+
+
+def test_run_python_installer_resolves_via_app_json_installer_key() -> None:
+    """A binary miss for e.g. 'python3.12' falls back through its 'installer' key.
+
+    Regression test for the binary-miss fallback, which used to check only
+    'has_python_installer(config.name, ...)'. 'python3.12' has no direct
+    registry entry, only 'installer: python' in app.json, so the fallback
+    re-raised the original binary-download error instead of building from
+    source.
+    """
+    from koopa.install import InstallConfig, _run_python_installer
+
+    config = InstallConfig(
+        name="python3.12", version="3.12.14", prefix="/opt/koopa/app/python3.12/3.12.14"
+    )
+    calls: list[dict] = []
+
+    def _fake_installer(**kwargs):  # noqa: ANN003, ANN202
+        calls.append(kwargs)
+
+    with (
+        patch(
+            "koopa.installers.has_python_installer",
+            side_effect=lambda name, *_a, **_kw: name == "python",
+        ),
+        patch("koopa.installers.get_python_installer", return_value=_fake_installer),
+        patch("koopa.install._app_json_installer", return_value="python"),
+    ):
+        result = _run_python_installer(config, fallback_note=True)
+
+    assert result is True
+    assert calls == [
+        {
+            "name": "python3.12",
+            "version": "3.12.14",
+            "prefix": "/opt/koopa/app/python3.12/3.12.14",
+            "passthrough_args": [],
+        }
+    ]
+
+
+def test_run_python_installer_returns_false_when_no_installer_exists() -> None:
+    """No installer anywhere resolves to False, not an exception.
+
+    The caller ('install_app') decides how to fail: re-raise the original
+    binary error, or raise 'FileNotFoundError' on the non-binary path.
+    """
+    from koopa.install import InstallConfig, _run_python_installer
+
+    config = InstallConfig(name="totally-unregistered-app")
+
+    with (
+        patch("koopa.installers.has_python_installer", return_value=False),
+        patch("koopa.install._app_json_installer", return_value=""),
+    ):
+        assert _run_python_installer(config) is False
+
+
 def test_push_app_build_rejects_non_default_prefix(tmp_path: Path) -> None:
     """push_app_build refuses to build a tarball outside '/opt/koopa'."""
     from koopa.install import push_app_build

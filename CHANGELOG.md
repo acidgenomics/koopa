@@ -24,6 +24,15 @@ Minor changes:
   Python over a version-matching one. Both are now checked against
   `.python-version` first, with the previous mismatch-tolerant fallback kept
   last so a broken host can still self-heal.
+- Fixed `koopa update` prompting for a sudo password on a shared `/opt/koopa`
+  install whenever bootstrap needed a rebuild. `bootstrap.sh` decided it
+  needed sudo by testing write permission on the bootstrap prefix's *parent*
+  (root-owned `/opt`), even though the prefix itself is owned by the
+  installing user. `main()` now calls a new `stage_init()`/`stage_commit()`
+  pair that swaps the prefix's *children* in place when the parent isn't
+  writable but the prefix is, which needs no elevated permission at all. A
+  single sudo call remains for the one case that still needs it: taking
+  ownership of a brand-new prefix on its very first create.
 
 ## koopa 0.25.0 (2026-08-08)
 

@@ -175,12 +175,11 @@ def _s3_uri() -> str:
 
 def _cloudfront_distribution_id() -> str:
     """Return CloudFront distribution ID from environment, raising if absent."""
-    from koopa.aws import load_dotenv
+    from koopa.aws import dotenv_value
 
-    load_dotenv()
-    dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID_R", "")
+    dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID_R")
     if not dist_id:
-        dist_id = os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", "")
+        dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID")
     if not dist_id:
         msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_R (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
         raise RuntimeError(msg)

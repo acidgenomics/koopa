@@ -275,14 +275,32 @@ a new push code path, check for this invariant explicitly; don't assume
 
 ### KOOPA_BUILDER gating
 
-`can_build_binary()` = `KOOPA_BUILDER=1` in the environment. `_can_push_binary()`
+`can_build_binary()` = `KOOPA_BUILDER=1`, read via `koopa.aws.dotenv_value()` —
+checks `os.environ` first, then `<koopa-root>/.env`. `_can_push_binary()`
 requires: `can_build_binary()` AND the `/opt/koopa` prefix AND (a configured
 vendor push backend OR (`_has_private_access()` AND the `aws` CLI on PATH)).
-`KOOPA_BUILDER=1` set in a shell profile survives koopa's own direnv-revert
-step (`cli_main._revert_direnv_env`, see `koopa.system.revert_direnv_env`) if
-it's exported *before* direnv runs — it lands in direnv's pre-`.envrc`
-baseline, which gets restored on every `koopa install`/`reinstall`/`update`,
-not stripped.
+
+Two homes for the flag, two different survival stories against koopa's own
+direnv-revert step (`cli_main._revert_direnv_env`, see
+`koopa.system.revert_direnv_env`):
+
+- Set in a shell profile *before* direnv runs: it lands in direnv's
+  pre-`.envrc` baseline, which gets restored on every
+  `koopa install`/`reinstall`/`update`, not stripped.
+- Set in `<koopa-root>/.env`: koopa's own `.envrc` loads `.env` through
+  direnv's `dotenv_if_exists`, so the flag is absent from the pre-`.envrc`
+  baseline and `revert_direnv_env()` deletes it from `os.environ` on every
+  run. `dotenv_value()`'s `.env` fallback is what makes this home work anyway
+  — without it, `can_build_binary()` reads `os.environ` only and a builder
+  configured this way is silently demoted to a consumer.
+
+Failure shape of the demotion (fixed, but worth recognizing if it recurs from
+a future refactor): the builder attempts a binary pull instead of skipping to
+a source build, gets a 404 (nothing was ever pushed for a builder), and
+`_can_install_binary()`/`_can_push_binary()` end up `True` at once — a
+combination `_can_install_binary()` exists specifically to prevent, since a
+builder is supposed to always build from source and never install a binary
+substitute. That inconsistency, not just the 404, is the tell.
 
 ### S3 key layout
 

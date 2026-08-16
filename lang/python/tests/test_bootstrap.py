@@ -347,6 +347,129 @@ def test_bootstrap_uv_fast_path_is_unconditional() -> None:
     )
 
 
+def test_bootstrap_has_no_use_sudo_flag() -> None:
+    """Regression: 'koopa update' must never trigger a sudo prompt on a healthy install.
+
+    bootstrap.sh used to decide it needed sudo by testing write permission on
+    PREFIX's *parent* -- which is never writable for a shared '/opt/koopa'
+    install, since the bootstrap prefix ('/opt/koopa-bootstrap') sits next to
+    it under root-owned '/opt'. That made every bootstrap rebuild during
+    'koopa update' prompt for a password even though the user owns the
+    prefix itself. 'stage_init'/'stage_commit' swap PREFIX's *children*
+    in place instead, which only needs PREFIX to be writable -- true for any
+    install the user actually owns. Asserts the old flag is gone outright,
+    rather than asserting behavior that could silently regress back to it.
+    """
+    text = _BOOTSTRAP_SH.read_text()
+    assert "__kvar_use_sudo" not in text
+
+
+def _stage_script(prefix: Path, extra: str = "") -> str:
+    return f'set -eu\n{_function_defs_only()}\nPREFIX="{prefix}"\n{extra}\n'
+
+
+def test_stage_init_prefers_rename_swap_when_parent_is_writable(tmp_path: Path) -> None:
+    """A writable parent stages beside PREFIX and never touches sudo."""
+    prefix = tmp_path / "koopa-bootstrap"
+    script = _stage_script(
+        prefix,
+        "stage_init\n"
+        "printf 'INPLACE\\t%s\\n' \"$__kvar_inplace\"\n"
+        "printf 'DESTDIR\\t%s\\n' \"$__kvar_destdir\"\n",
+    )
+    result = subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    fields = dict(line.split("\t", 1) for line in result.stdout.splitlines() if line)
+    assert fields["INPLACE"] == "0"
+    assert fields["DESTDIR"].startswith(f"{prefix}.staging.")
+
+
+def test_stage_init_and_commit_swap_in_place_when_parent_is_not_writable(
+    tmp_path: Path,
+) -> None:
+    """A non-writable parent with an existing, user-owned prefix swaps in place.
+
+    No sudo call is needed or made: swapping PREFIX's children requires
+    write permission on PREFIX itself, which the owning user already has,
+    not on PREFIX's parent.
+    """
+    if os.geteuid() == 0:
+        pytest.skip("root bypasses the permission bits this test relies on")
+    parent = tmp_path / "opt"
+    prefix = parent / "koopa-bootstrap"
+    prefix.mkdir(parents=True)
+    (prefix / "OLD_FILE").write_text("stale\n")
+    os.chmod(parent, 0o555)
+    try:
+        script = _stage_script(
+            prefix,
+            "stage_init\n"
+            "printf 'INPLACE\\t%s\\n' \"$__kvar_inplace\"\n"
+            'mkdir -p "${__kvar_destdir}${PREFIX}"\n'
+            'touch "${__kvar_destdir}${PREFIX}/NEW_FILE"\n'
+            "stage_commit\n",
+        )
+        result = subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    finally:
+        os.chmod(parent, 0o755)
+    fields = dict(line.split("\t", 1) for line in result.stdout.splitlines() if line)
+    assert fields["INPLACE"] == "1"
+    entries = {p.name for p in prefix.iterdir()}
+    assert entries == {"NEW_FILE"}
+    assert not (prefix / "OLD_FILE").exists()
+
+
+def test_stage_init_takes_ownership_via_sudo_on_first_create(tmp_path: Path) -> None:
+    """A non-writable parent with no existing prefix takes ownership once via sudo.
+
+    This is the one case a fresh shared install still needs a single sudo
+    call for -- everything after it, including every later 'koopa update',
+    runs unprivileged against the now user-owned prefix.
+    """
+    if os.geteuid() == 0:
+        pytest.skip("root bypasses the permission bits this test relies on")
+    parent = tmp_path / "opt"
+    parent.mkdir()
+    prefix = parent / "koopa-bootstrap"
+    os.chmod(parent, 0o555)
+    sudo_log = tmp_path / "sudo.log"
+    stub = f"""
+sudo() {{
+    printf 'SUDO\\t%s\\n' "$*" >> "{sudo_log}"
+    return 0
+}}
+"""
+    try:
+        script = _stage_script(
+            prefix,
+            f"{stub}\nstage_init\nprintf 'INPLACE\\t%s\\n' \"$__kvar_inplace\"\n",
+        )
+        result = subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    finally:
+        os.chmod(parent, 0o755)
+    fields = dict(line.split("\t", 1) for line in result.stdout.splitlines() if line)
+    assert fields["INPLACE"] == "1"
+    calls = sudo_log.read_text().splitlines()
+    assert len(calls) == 2
+    assert calls[0].split("\t", 1)[1].startswith("mkdir")
+    assert calls[1].split("\t", 1)[1].startswith("chown")
+
+
+def test_stage_move_children_moves_dotfiles_and_skips_given_paths(tmp_path: Path) -> None:
+    """Moves every top-level entry including dotfiles, except the ones told to skip."""
+    src = tmp_path / "src"
+    dst = tmp_path / "dst"
+    src.mkdir()
+    dst.mkdir()
+    (src / "regular").write_text("a\n")
+    (src / ".dotfile").write_text("b\n")
+    skip_dir = src / ".skip-me"
+    skip_dir.mkdir()
+    script = f'set -eu\n{_function_defs_only()}\nstage_move_children "{src}" "{dst}" "{skip_dir}"\n'
+    subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    assert {p.name for p in dst.iterdir()} == {"regular", ".dotfile"}
+    assert {p.name for p in src.iterdir()} == {".skip-me"}
+
+
 def test_vendor_sed_fallback_does_not_match_comment_line(tmp_path: Path) -> None:
     """The sed fallback parser never mistakes '_comment' prose for real keys.
 

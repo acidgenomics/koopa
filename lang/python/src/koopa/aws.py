@@ -17,11 +17,16 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 
-def load_dotenv() -> None:
-    """Load <koopa-root>/.env into os.environ without overriding existing vars."""
-    env_path = Path(__file__).parents[4] / ".env"
+def _parse_dotenv(env_path: Path | None = None) -> dict[str, str]:
+    """Parse '<koopa-root>/.env' into a dict, without touching 'os.environ'.
+
+    *env_path* is exposed for tests; production callers always use the default.
+    """
+    if env_path is None:
+        env_path = Path(__file__).parents[4] / ".env"
     if not env_path.is_file():
-        return
+        return {}
+    parsed: dict[str, str] = {}
     with open(env_path) as fh:
         for raw in fh:
             stripped = raw.strip()
@@ -29,15 +34,28 @@ def load_dotenv() -> None:
                 continue
             key, _, value = stripped.partition("=")
             key = key.strip()
-            value = value.strip()
-            if key and key not in os.environ:
-                os.environ[key] = value
+            if key:
+                parsed[key] = value.strip()
+    return parsed
+
+
+def dotenv_value(key: str) -> str:
+    """Return *key* from 'os.environ', else from '<koopa-root>/.env', else ''.
+
+    Never copies any other key into 'os.environ'. The whole point of
+    'koopa.system.revert_direnv_env' is that a project-scoped credential must
+    not reach koopa's subprocesses; a helper that loaded the entire file to
+    answer one lookup put every '.env' secret straight back.
+    """
+    value = os.environ.get(key, "")
+    if value:
+        return value
+    return _parse_dotenv().get(key, "")
 
 
 def aws_account_id() -> str:
     """Return the AWS account ID from AWS_ACCOUNT_ID env var, raising if absent."""
-    load_dotenv()
-    account_id = os.environ.get("AWS_ACCOUNT_ID", "")
+    account_id = dotenv_value("AWS_ACCOUNT_ID")
     if not account_id:
         msg = "AWS_ACCOUNT_ID must be set (in environment or <koopa-root>/.env)."
         raise RuntimeError(msg)

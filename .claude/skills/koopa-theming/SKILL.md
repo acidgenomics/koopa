@@ -161,7 +161,7 @@ English word ("modified:", "deleted:") — the same standard the vendor's own
 theme uses for that specific distinction.
 
 **A vendor-exact color can still fail on user taste even when it's not a
-contrast bug.** Alucard's `orange` (`#A34D14`) measures a fine 5.3:1 against
+contrast bug.** Alucard's `orange` role measures a fine 5.3:1 against
 its background as text, but its HLS hue angle is ~24 degrees, closer to pure
 red (0 degrees) than to a hue most people would call orange (30-40 degrees)
 — it reads as "reddish" even though it passes every contrast check. This is

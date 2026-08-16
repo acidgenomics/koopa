@@ -677,14 +677,11 @@ install_python() {
     __kvar_remove_lib_symlink=0
     if is_macos && [ -n "$DESTDIR" ] && [ ! -d "${PREFIX}/lib" ]
     then
-        if [ "${__kvar_use_sudo:-0}" -eq 1 ]
-        then
-            sudo /bin/mkdir -p "$PREFIX"
-            sudo /bin/ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
-        else
-            mkdir -p "$PREFIX"
-            ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
-        fi
+        # Every 'stage_init' outcome leaves PREFIX writable by this user (or
+        # its parent writable enough to create it) by the time this runs, so
+        # this never needs its own sudo call.
+        mkdir -p "$PREFIX"
+        ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
         __kvar_remove_lib_symlink=1
     fi
     __kvar_filename="Python-${__kvar_version}.tar.xz"
@@ -737,14 +734,8 @@ install_python() {
     fi
     if [ "$__kvar_remove_lib_symlink" -eq 1 ]
     then
-        if [ "${__kvar_use_sudo:-0}" -eq 1 ]
-        then
-            sudo /bin/rm -f "${PREFIX}/lib"
-            sudo /bin/rmdir "$PREFIX" 2>/dev/null || true
-        else
-            rm -f "${PREFIX}/lib"
-            rmdir "$PREFIX" 2>/dev/null || true
-        fi
+        rm -f "${PREFIX}/lib"
+        rmdir "$PREFIX" 2>/dev/null || true
     fi
     unset -v __kvar_remove_lib_symlink
     unset -v __kvar_version
@@ -1006,6 +997,101 @@ install_python_uv() {
     return 0
 }
 
+stage_move_children() {
+    # Move every top-level entry (dotfiles included) of '$1' into '$2'.
+    # Skips any path passed as a later argument -- used so a holding
+    # directory created inside its own source directory does not try to
+    # move itself.
+    __kvar_smc_src="$1"
+    __kvar_smc_dst="$2"
+    shift 2
+    for __kvar_smc_item in "$__kvar_smc_src"/* "$__kvar_smc_src"/.[!.]* "$__kvar_smc_src"/..?*
+    do
+        # An unmatched glob expands to its own literal text under sh.
+        [ -e "$__kvar_smc_item" ] || [ -L "$__kvar_smc_item" ] || continue
+        __kvar_smc_skip=0
+        for __kvar_smc_arg in "$@"
+        do
+            if [ "$__kvar_smc_item" = "$__kvar_smc_arg" ]
+            then
+                __kvar_smc_skip=1
+                break
+            fi
+        done
+        [ "$__kvar_smc_skip" -eq 1 ] && continue
+        mv -f "$__kvar_smc_item" "${__kvar_smc_dst}/" || return 1
+    done
+    unset -v __kvar_smc_arg __kvar_smc_dst __kvar_smc_item __kvar_smc_skip __kvar_smc_src
+    return 0
+}
+
+stage_init() {
+    # Pick a staging directory for the new bootstrap tree, and make sure it
+    # can be installed without sudo. Renaming PREFIX itself needs write
+    # permission on its parent (e.g. root-owned '/opt'), but swapping
+    # PREFIX's children in place needs write permission on PREFIX alone --
+    # which the installing user already has, since both 'koopa install' and
+    # this script chown the prefix they create.
+    __kvar_inplace=0
+    if [ -w "$(dirname "$PREFIX")" ]
+    then
+        __kvar_destdir="${PREFIX}.staging.$$"
+    elif [ -d "$PREFIX" ] && [ -w "$PREFIX" ] && [ -x "$PREFIX" ]
+    then
+        __kvar_inplace=1
+    else
+        # First create under a non-writable parent (e.g. a fresh shared
+        # install). Take ownership once, up front, so this run and every
+        # future update need no further sudo call.
+        sudo mkdir -p "$PREFIX" || return 1
+        sudo chown -R "$(id -u):$(id -g)" "$PREFIX" || return 1
+        __kvar_inplace=1
+    fi
+    if [ "$__kvar_inplace" -eq 1 ]
+    then
+        # Clean up any leftovers from a previous crashed run before reusing
+        # this same prefix as the staging root.
+        rm -fr "$PREFIX"/.koopa-stage.* "$PREFIX"/.koopa-old.*
+        __kvar_destdir="${PREFIX}/.koopa-stage.$$"
+    fi
+    rm -fr "$__kvar_destdir"
+    return 0
+}
+
+stage_commit() {
+    __kvar_staged="${__kvar_destdir}${PREFIX}"
+    rm -fr "${__kvar_staged}/src"
+    if [ "$__kvar_inplace" -eq 1 ]
+    then
+        # Swap PREFIX's children in place: move the current contents aside,
+        # move the staged tree in, then discard both scratch directories.
+        __kvar_old="${PREFIX}/.koopa-old.$$"
+        mkdir -p "$__kvar_old"
+        stage_move_children "$PREFIX" "$__kvar_old" "$__kvar_old" "$__kvar_destdir" || return 1
+        stage_move_children "$__kvar_staged" "$PREFIX" || return 1
+        rm -fr "$__kvar_old" "$__kvar_destdir"
+        unset -v __kvar_old __kvar_staged
+        return 0
+    fi
+    if [ -d "$PREFIX" ]
+    then
+        rm -fr "${PREFIX}.old" 2>/dev/null || true
+        if [ -d "${PREFIX}.old" ]; then
+            mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+        fi
+        mv "$PREFIX" "${PREFIX}.old"
+    else
+        rm -fr "${PREFIX}.old" 2>/dev/null || true
+        if [ -d "${PREFIX}.old" ]; then
+            mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
+        fi
+    fi
+    mv "$__kvar_staged" "$PREFIX"
+    rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
+    unset -v __kvar_staged
+    return 0
+}
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 KOOPA_PREFIX="$SCRIPT_DIR"
 BOOTSTRAP_VERSION="$(cat "${KOOPA_PREFIX}/etc/koopa/bootstrap-version.txt")"
@@ -1033,17 +1119,7 @@ main() {
         printf 'koopa requires macOS on Apple Silicon (arm64).\n' >&2
         return 1
     fi
-    __kvar_prefix_parent="$(dirname "$PREFIX")"
-    if [ -w "$__kvar_prefix_parent" ]
-    then
-        __kvar_destdir="${PREFIX}.staging.$$"
-        __kvar_use_sudo=0
-    else
-        __kvar_destdir="$(mktemp -d -t koopa-bootstrap-XXXXXX)"
-        __kvar_use_sudo=1
-    fi
-    unset -v __kvar_prefix_parent
-    rm -fr "$__kvar_destdir"
+    stage_init || return 1
     __kvar_build_ok=0
     # Always try the uv fast path first: a prebuilt CPython download takes
     # seconds versus minutes to compile from source, and this is safe on a
@@ -1094,54 +1170,19 @@ main() {
         then
             printf 'Bootstrap build failed.\n' >&2
             rm -fr "$__kvar_destdir"
-            unset -v __kvar_build_ok __kvar_destdir __kvar_use_sudo
+            # No-ops when PREFIX pre-existed with real content (rmdir fails
+            # silently on a non-empty directory); removes a first-create
+            # left empty by this failed run.
+            rmdir "$PREFIX" 2>/dev/null || true
+            unset -v __kvar_build_ok __kvar_destdir __kvar_inplace
             return 1
         fi
     fi
     unset -v __kvar_build_ok
-    __kvar_staged="${__kvar_destdir}${PREFIX}"
-    rm -fr "${__kvar_staged}/src"
-    if [ -d "$PREFIX" ]
-    then
-        if [ "$__kvar_use_sudo" -eq 1 ]
-        then
-            sudo /bin/rm -fr "${PREFIX}.old" 2>/dev/null || true
-            if [ -d "${PREFIX}.old" ]; then
-                sudo /bin/mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
-            fi
-            sudo /bin/mv "$PREFIX" "${PREFIX}.old"
-        else
-            rm -fr "${PREFIX}.old" 2>/dev/null || true
-            if [ -d "${PREFIX}.old" ]; then
-                mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
-            fi
-            mv "$PREFIX" "${PREFIX}.old"
-        fi
-    elif [ "$__kvar_use_sudo" -eq 1 ]
-    then
-        sudo /bin/rm -fr "${PREFIX}.old" 2>/dev/null || true
-        if [ -d "${PREFIX}.old" ]; then
-            sudo /bin/mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
-        fi
-    else
-        rm -fr "${PREFIX}.old" 2>/dev/null || true
-        if [ -d "${PREFIX}.old" ]; then
-            mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
-        fi
-    fi
-    if [ "$__kvar_use_sudo" -eq 1 ]
-    then
-        sudo /bin/mkdir -p "$(dirname "$PREFIX")"
-        sudo /bin/mv "$__kvar_staged" "$PREFIX"
-        sudo /usr/sbin/chown -R "$(id -u):$(id -g)" "$PREFIX"
-        sudo /bin/rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
-    else
-        mv "$__kvar_staged" "$PREFIX"
-        rm -fr "${PREFIX}.old" "${PREFIX}.old."* "$__kvar_destdir" 2>/dev/null || true
-    fi
+    stage_commit || return 1
     printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
     printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
-    unset -v __kvar_destdir __kvar_use_sudo
+    unset -v __kvar_destdir __kvar_inplace
     return 0
 }
 

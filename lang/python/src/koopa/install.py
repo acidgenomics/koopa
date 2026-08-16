@@ -179,8 +179,16 @@ def _binary_tarball_basename(name: str, version: str) -> str:
 
 
 def can_build_binary() -> bool:
-    """Check if running on a designated builder machine (KOOPA_BUILDER=1)."""
-    return os.environ.get("KOOPA_BUILDER", "0") == "1"
+    """Check if running on a designated builder machine (KOOPA_BUILDER=1).
+
+    Reads '<koopa-root>/.env' as well as the environment. koopa's own '.envrc'
+    loads '.env' through direnv, and 'revert_direnv_env' deletes every variable
+    direnv added, so an environment-only read made a builder look like a
+    consumer inside every koopa process.
+    """
+    from koopa.aws import dotenv_value
+
+    return dotenv_value("KOOPA_BUILDER") == "1"
 
 
 # Binary tarballs are built with absolute paths (see push_app_build's
@@ -697,6 +705,45 @@ def push_missing_app_builds() -> None:
         alert_success(f"Pushed {n} missing {label} to S3.")
 
 
+def _run_python_installer(config: InstallConfig, *, fallback_note: bool = False) -> bool:
+    """Resolve and run the Python installer for *config*; False if none exists.
+
+    Resolution order matches app.json: the app name first, then its 'installer'
+    key ('python3.12' -> 'python'). The binary-miss fallback used to check only
+    the app name, so a missing tarball for any app with an 'installer' key --
+    python3.10 through python3.14, openssl3, openssl4 -- raised the raw AWS 404
+    instead of building from source.
+    """
+    from koopa.installers import get_python_installer, has_python_installer
+
+    if has_python_installer(config.name, config.platform, config.mode):
+        installer_key = config.name
+    else:
+        installer_key = _app_json_installer(config.name)
+        if not installer_key or not has_python_installer(
+            installer_key, config.platform, config.mode
+        ):
+            return False
+    if fallback_note:
+        from koopa.alert import alert_info
+
+        alert_info(
+            f"Binary package not available for '{config.name}', falling back to source build."
+        )
+    installer_fn = get_python_installer(installer_key, config.platform, config.mode)
+    from koopa.installers._context import set_app_name, set_app_version
+
+    set_app_name(config.name)
+    set_app_version(config.version)
+    installer_fn(
+        name=config.name,
+        version=config.version,
+        prefix=config.prefix,
+        passthrough_args=config.passthrough_args,
+    )
+    return True
+
+
 # -- Main install function ----------------------------------------------------
 
 
@@ -865,7 +912,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     if config.prefix and not os.path.isdir(config.prefix):
         os.makedirs(config.prefix, exist_ok=True)
     # -- Dispatch to installer ------------------------------------------------
-    from koopa.installers import get_python_installer, has_python_installer
     from koopa.progress import BuildProgress
 
     orig_cwd = os.getcwd()
@@ -913,62 +959,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 try:
                     install_app_from_binary_package(config.prefix)
                 except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
-                    if has_python_installer(config.name, config.platform, config.mode):
-                        from koopa.alert import alert_info
-
-                        alert_info(
-                            f"Binary package not available for '{config.name}', "
-                            "falling back to source build."
-                        )
-                        installer_fn = get_python_installer(
-                            config.name, config.platform, config.mode
-                        )
-                        from koopa.installers._context import set_app_name, set_app_version
-
-                        set_app_name(config.name)
-                        set_app_version(config.version)
-                        installer_fn(
-                            name=config.name,
-                            version=config.version,
-                            prefix=config.prefix,
-                            passthrough_args=config.passthrough_args,
-                        )
-                    else:
+                    if not _run_python_installer(config, fallback_note=True):
                         raise
-            elif has_python_installer(config.name, config.platform, config.mode):
-                installer_fn = get_python_installer(config.name, config.platform, config.mode)
-                from koopa.installers._context import set_app_name, set_app_version
-
-                set_app_name(config.name)
-                set_app_version(config.version)
-                installer_fn(
-                    name=config.name,
-                    version=config.version,
-                    prefix=config.prefix,
-                    passthrough_args=config.passthrough_args,
-                )
-            else:
-                installer_key = _app_json_installer(config.name)
-                if installer_key and has_python_installer(
-                    installer_key, config.platform, config.mode
-                ):
-                    installer_fn = get_python_installer(installer_key, config.platform, config.mode)
-                    from koopa.installers._context import set_app_name, set_app_version
-
-                    set_app_name(config.name)
-                    set_app_version(config.version)
-                    installer_fn(
-                        name=config.name,
-                        version=config.version,
-                        prefix=config.prefix,
-                        passthrough_args=config.passthrough_args,
-                    )
-                else:
-                    msg = (
-                        f"No Python installer for '{config.name}'"
-                        f" ({config.platform}/{config.mode})."
-                    )
-                    raise FileNotFoundError(msg)
+            elif not _run_python_installer(config):
+                msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
+                raise FileNotFoundError(msg)
     except Exception:
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
