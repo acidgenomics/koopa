@@ -1,3 +1,7 @@
+** TODO This error message isn't very good:
+    $ koopa system check
+    Warning: Disk usage at '/' is 91%.
+    ** Free up disk space on '/'.
 ** TODO I don't like that `koopa configure user dotfiles` can still trigger this system config prompt:
     Configure system files? [y/N] n
     ✓ Successfully configured dotfiles.
