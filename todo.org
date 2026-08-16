@@ -1,3 +1,7 @@
+** TODO Can we speed up the Homebrew cask reinstall chain? This seems to be happening in serial currently
+    16 outdated cask(s): firefox, [...]
+    ==> Would reinstall 1 cask:
+    firefox
 ** TODO I don't know how to fix this for 1Password update in Ghostty with Homebrew:
     ==> Quitting application 'com.1password.1password'...
     Warning: Application 'com.1password.1password' did not quit. Enable Automation access for "Terminal → System Events" in:
