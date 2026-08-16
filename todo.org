@@ -124,4 +124,5 @@
 ** TODO Formatting of line break isn't good here:
        | installing 1 app: ruby [2m00s]✓ Pushed 'ruby' 4.0.6 to
     This element "✓ Pushed 'ruby' 4.0.6 to" should be broken to a new line.
-
+** TODO Confirm that this CLI messages don't have correct line break:
+    ✓ Pushed 'dotfiles' 6d517de to 's3://artifacts*
