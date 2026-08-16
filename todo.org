@@ -1,3 +1,6 @@
+** TODO Does it make more sense for the koopa builder machine to just bundle python from uv?
+    installing 1 app: python3.12 [6m14s]
+    I think this is building from source and taking too long, I may want to just shift that.
 ** DONE Check if this is still true:
     isl: error: isl version bump requires acidgenomics AWS access to mirror src tarball
    Not true. Removed the guard in version_check.py: upstream keeps every isl
