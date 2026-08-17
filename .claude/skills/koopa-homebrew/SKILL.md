@@ -102,13 +102,13 @@ first one.
 
 Fix, inside `brew_upgrade_casks()`:
 ```python
-_sudo_authenticate()                    # one real sudo -v, inherits the tty — the only intentional prompt
-keepalive = _sudo_keepalive_start()      # background thread: sudo -n -v every 50s
+_sudo_authenticate()  # one real sudo -v, inherits the tty — the only intentional prompt
+keepalive = _sudo_keepalive_start()  # background thread: sudo -n -v every 50s
 try:
     for cask in casks:
         ...
 finally:
-    _sudo_keepalive_stop(keepalive)      # always stopped, even after a failed reinstall
+    _sudo_keepalive_stop(keepalive)  # always stopped, even after a failed reinstall
 ```
 
 `_sudo_authenticate()` deliberately does not redirect stdin — Touch ID does
