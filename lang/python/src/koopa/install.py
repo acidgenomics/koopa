@@ -221,6 +221,9 @@ _warned_no_account_id = False
 _warned_non_default_prefix = False
 
 
+_warned_no_account_id = False
+
+
 def _has_private_access() -> bool:
     """Check for the acidgenomics profile in ~/.aws/credentials and a usable account ID.
 
@@ -2892,6 +2895,13 @@ def _install_app_worker(
     import time
 
     from koopa.progress import get_last_failure_tail, get_last_push_message, set_last_push_message
+
+    # Become a session leader so the parent can os.killpg() the full process
+    # tree (compiler sub-processes, linkers, etc.) on a hard timeout abort.
+    # Guard against the rare case where the spawn worker is already a session
+    # leader (os.setsid() raises OSError in that case).
+    with contextlib.suppress(OSError):
+        os.setsid()
 
     # Become a session leader so the parent can os.killpg() the full process
     # tree (compiler sub-processes, linkers, etc.) on a hard timeout abort.

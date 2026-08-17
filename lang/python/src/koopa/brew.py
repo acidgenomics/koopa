@@ -97,6 +97,29 @@ def _brew_env() -> dict[str, str]:
     return env
 
 
+def _brew_env() -> dict[str, str]:
+    """Return an environment that forbids interactive Homebrew prompts.
+
+    Homebrew blocks on tty stdin for confirmations (cask reinstalls that shell
+    out to ``sudo``, tap migrations, and similar). During a koopa update the
+    build-progress context redirects stdout and stderr to a log file, so such a
+    prompt is invisible and the process hangs forever. ``NONINTERACTIVE`` makes
+    brew refuse to prompt and fail fast instead.
+
+    Returns
+    -------
+    dict[str, str]
+        A copy of ``os.environ`` with the non-interactive flags set.
+    """
+    env = os.environ.copy()
+    env["NONINTERACTIVE"] = "1"
+    env["HOMEBREW_NO_ENV_HINTS"] = "1"
+    # Suppresses the implicit auto-update brew runs before install/reinstall/
+    # cleanup; does NOT block the explicit ``brew update`` step.
+    env["HOMEBREW_NO_AUTO_UPDATE"] = "1"
+    return env
+
+
 def _brew(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
     """Run a brew command non-interactively with no tty stdin."""
     cmd = ["brew", *args]
