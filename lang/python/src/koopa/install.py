@@ -217,8 +217,7 @@ def _require_binary_prefix() -> None:
         raise RuntimeError(msg)
 
 
-_warned_no_account_id = False
-_warned_non_default_prefix = False
+_warned_flags = {"no_account_id": False, "non_default_prefix": False}
 
 
 def _has_private_access() -> bool:
@@ -230,7 +229,6 @@ def _has_private_access() -> bool:
     treating that machine as having private access, which previously caused
     binary installs to be attempted and abort with "AWS_ACCOUNT_ID must be set".
     """
-    global _warned_no_account_id  # noqa: PLW0603
     credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
     if not os.path.isfile(credentials):
         return False
@@ -244,8 +242,8 @@ def _has_private_access() -> bool:
     try:
         aws_account_id()
     except RuntimeError:
-        if not _warned_no_account_id:
-            _warned_no_account_id = True
+        if not _warned_flags["no_account_id"]:
+            _warned_flags["no_account_id"] = True
             from koopa.alert import alert_note
 
             alert_note(
@@ -296,15 +294,14 @@ def _can_push_binary() -> bool:
     (aws not yet in PATH at that point). Use 'koopa develop push-app-build
     aws-cli' after installation completes.
     """
-    global _warned_non_default_prefix  # noqa: PLW0603
     from koopa.vendor import vendor_can_push
 
     if not can_build_binary():
         return False
     kp = koopa_prefix()
     if kp != _BINARY_PREFIX:
-        if not _warned_non_default_prefix:
-            _warned_non_default_prefix = True
+        if not _warned_flags["non_default_prefix"]:
+            _warned_flags["non_default_prefix"] = True
             from koopa.alert import alert_note
 
             alert_note(
