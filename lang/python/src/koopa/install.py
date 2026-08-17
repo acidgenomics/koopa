@@ -221,9 +221,6 @@ _warned_no_account_id = False
 _warned_non_default_prefix = False
 
 
-_warned_no_account_id = False
-
-
 def _has_private_access() -> bool:
     """Check for the acidgenomics profile in ~/.aws/credentials and a usable account ID.
 
