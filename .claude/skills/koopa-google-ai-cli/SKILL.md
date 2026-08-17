@@ -1,6 +1,6 @@
 ---
 name: koopa-google-ai-cli
-description: >
+description: >-
   Google AI CLI installer management for koopa — Antigravity CLI (agy) and Gemini CLI
   transition, versioned GCS download mechanics, self-update gate, manifest structure,
   and settings.json config path. Use when bumping the antigravity-cli version, debugging

@@ -5,7 +5,15 @@ from pathlib import Path
 from typing import Protocol
 from unittest.mock import patch
 
-from koopa.app import _PRUNE_TRASH_PREFIX, app_deps, is_cpu_bound_app, prune_apps
+from koopa.app import (
+    _PRUNE_TRASH_PREFIX,
+    app_deps,
+    installer_artifact_key,
+    is_cpu_bound_app,
+    prune_apps,
+    recorded_app_deps,
+    stale_revdeps,
+)
 
 
 def test_app_deps_coreutils_excludes_attr_on_macos() -> None:
@@ -34,6 +42,32 @@ def test_app_deps_libarchive_includes_cmake() -> None:
     with patch("koopa.app.os_id", return_value="macos-arm64"):
         deps = app_deps("libarchive")
     assert "cmake" in deps
+
+
+# -- installer_artifact_key tests ---------------------------------------------
+
+
+def test_installer_artifact_key_expands_version_template() -> None:
+    """Test that the '{version}' placeholder is expanded."""
+    json_data = {"cellranger": {"installer_artifact": "installers/cellranger/{version}.tar.xz"}}
+    with patch("koopa.app.import_app_json", return_value=json_data):
+        key = installer_artifact_key("cellranger", "10.0.0")
+    assert key == "installers/cellranger/10.0.0.tar.xz"
+
+
+def test_installer_artifact_key_returns_none_when_field_absent() -> None:
+    """Test that apps without 'installer_artifact' resolve to None."""
+    json_data = {"ripgrep": {"version": "14.1.0"}}
+    with patch("koopa.app.import_app_json", return_value=json_data):
+        key = installer_artifact_key("ripgrep", "14.1.0")
+    assert key is None
+
+
+def test_installer_artifact_key_returns_none_for_unknown_app() -> None:
+    """Test that an app missing from app.json resolves to None."""
+    with patch("koopa.app.import_app_json", return_value={}):
+        key = installer_artifact_key("nonexistent", "1.0.0")
+    assert key is None
 
 
 # -- is_cpu_bound_app classifier tests ----------------------------------------
@@ -239,3 +273,69 @@ def test_prune_apps_skips_non_cli_type(tmp_path: Path) -> None:
         for p in patches:
             p.stop()
     assert stale.exists()
+
+
+def _link_app_with_recorded_deps(app_dir: Path, opt_dir: Path, name: str, deps: list) -> None:
+    """Link app/<name>/current under opt/, recording *deps* in .install/info.json."""
+    import json
+
+    version_dir = app_dir / name / "current"
+    version_dir.mkdir(parents=True)
+    (opt_dir / name).symlink_to(version_dir)
+    install_dir = version_dir / ".install"
+    install_dir.mkdir()
+    (install_dir / "info.json").write_text(json.dumps({"dependencies": deps}))
+
+
+def test_recorded_app_deps_returns_recorded_list(tmp_path: Path) -> None:
+    """recorded_app_deps reads the dep list actually resolved at install time."""
+    app_dir = tmp_path / "app"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    _link_app_with_recorded_deps(app_dir, opt_dir, "python3.13", ["libffi"])
+    with patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)):
+        assert recorded_app_deps("python3.13") == ["libffi"]
+
+
+def test_recorded_app_deps_none_when_not_linked(tmp_path: Path) -> None:
+    """recorded_app_deps returns None (not []) when there is nothing to read."""
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    with patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)):
+        assert recorded_app_deps("nonexistent") is None
+
+
+def test_stale_revdeps_excludes_app_recorded_with_no_such_dep(tmp_path: Path) -> None:
+    """A dict-typed dep that re-resolves differently now doesn't drag in a non-dependent.
+
+    Regression test: python3.13 declares a firewall_linux/firewall_macos/default
+    dependency dict. Installed under a plain shell it recorded an empty dep list;
+    re-checking `stale_revdeps(["libffi"])` from a builder/firewall shell must not
+    re-resolve that dict to the firewall branch and drag python3.13 in as a
+    reverse dependency it was never actually built against.
+    """
+    app_dir = tmp_path / "app"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    _link_app_with_recorded_deps(app_dir, opt_dir, "python3.13", [])
+    _link_app_with_recorded_deps(app_dir, opt_dir, "ruby", ["libffi"])
+    json_data = {
+        "python3.13": {
+            "version": "current",
+            "dependencies": {
+                "default": [],
+                "firewall_linux": ["libffi"],
+                "firewall_macos": ["libffi"],
+            },
+        },
+        "ruby": {"version": "current", "dependencies": ["libffi"]},
+        "libffi": {"version": "current"},
+    }
+    with (
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.app.installed_apps", return_value=["python3.13", "ruby"]),
+    ):
+        result = stale_revdeps(["libffi"])
+    assert "python3.13" not in result
+    assert "ruby" in result

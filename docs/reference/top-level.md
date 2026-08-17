@@ -16,9 +16,9 @@ Reinstall applications, with optional reverse dependency rebuilds.
 Remove installed applications. Defaults to uninstalling koopa itself.
 
 (koopa-update)=
-## `update [app...]`
+## `update [mode] [app...]`
 
-Update applications to latest versions. Defaults to updating koopa.
+Update koopa and stale apps; 'system' mode updates system apps.
 
 (koopa-list)=
 ## `list [--all]`

@@ -63,12 +63,43 @@
 </form>
 </div>
 </nav>
-{#- display_toc is Sphinx's "more than 1 heading" rule -- true for any page
+{#- Sphinx's generated toc always wraps the real entries in one extra level --
+   a single <li> linking back to the current page itself (href="#", labelled
+   with the page's own title) whose child <ul> holds the entries that
+   actually matter. That wrapper is why steinbaugh.com/posts/vim.html's own
+   <ol id="toc"> (a direct child of <header>, matched by base.css's
+   `body > header > #toc` and responsive.css's breakpoint padding/bleed
+   rules) could never be reproduced with CSS alone: those are child
+   selectors, matching the DOM the wrapper's <li> sits inside, not the box
+   model, so no display:contents trick on the wrapper promotes its child
+   <ul> up into that slot. Unwrap it here instead, then tag the real list
+   `id="toc"` so it inherits the reference page's styling directly. A page
+   with no single root heading (rare, but toc_num_entries isn't exposed to
+   templates to check directly) has no such wrapper; toc_rest then starts
+   with `</li>` or is empty, and toc_list falls back to the raw toc
+   unchanged -- Jinja's conditional expression is lazy, so the split() above
+   it never runs unless the wrapper's marker is actually present.
+
+   Guarded by display_toc, same as the original single-line check below:
+   on pages with no `toc` context var at all (genindex, search), display_toc
+   itself is Undefined, which is falsy but safe to test -- unlike `toc`,
+   which raises UndefinedError the moment anything calls a method on it
+   (.strip(), .count(), ...). Skipping the whole block, not just the final
+   render, keeps that guarantee. #}
+{%- set toc_list = '' %}
+{%- if display_toc %}
+  {%- set toc_body = toc.strip() %}
+  {%- set toc_rest = toc_body.split('</a>', 1)[1].lstrip()
+        if '<li><a class="reference internal" href="#">' in toc_body else '' %}
+  {%- set toc_list = (toc_rest.rsplit('</li>', 1)[0].strip()
+        if toc_rest.startswith('<ul>') else toc_body)|replace('<ul>', '<ul id="toc">', 1) %}
+{%- endif %}
+{#- Sphinx's "more than 1 heading" display_toc rule is true for any page
    with even a single subsection, which renders a near-empty one-item toc
    with no real navigational value (e.g. applications.md: just "Default
-   application stack"). toc_num_entries itself isn't exposed to templates,
-   so count rendered <li> as a proxy: only show the toc once there are
-   at least 3 entries (this heading + 2 more) worth jumping around. #}
+   application stack"). Count rendered <li> in toc_list as a proxy for
+   entry count: 2 (this heading + 1 more) worth jumping around, now that
+   the wrapper <li> no longer appears in toc_list itself. #}
 <header>
 {%- if pagename == root_doc and theme_header_ascii %}
 <pre>{{ theme_header_ascii|e }}</pre>
@@ -77,8 +108,8 @@
 {%- if pagename == root_doc and theme_tagline %}
 <div>{{ theme_tagline|e }}</div>
 {%- endif %}
-{%- if display_toc and toc.count('<li>') >= 3 %}
-{{ toc }}
+{%- if toc_list.count('<li>') >= 2 %}
+{{ toc_list }}
 {%- endif %}
 </header>
 {%- endblock %}

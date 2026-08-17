@@ -1,6 +1,5 @@
 """Install serf."""
 
-import os
 import subprocess
 
 from koopa.build import app_prefix, locate
@@ -9,6 +8,7 @@ from koopa.installers._build_helper import (
     download_extract_cd,
     remove_static_libs,
 )
+from koopa.system import cpu_count
 
 
 def main(
@@ -36,7 +36,7 @@ def main(
     with open("SConstruct", "w") as fh:
         fh.write(text)
     subprocess_env = env.to_env_dict()
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [
             scons,

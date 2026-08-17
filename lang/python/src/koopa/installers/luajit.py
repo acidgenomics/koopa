@@ -7,6 +7,7 @@ import sys
 from koopa.build import locate, shared_ext
 from koopa.file_ops import ln
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 from koopa.version import major_minor_version
 
 
@@ -26,7 +27,7 @@ def main(
     subprocess_env = env.to_env_dict()
     if sys.platform == "darwin":
         subprocess_env["MACOSX_DEPLOYMENT_TARGET"] = "11.0"
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [make, f"--jobs={jobs}"],
         env=subprocess_env,

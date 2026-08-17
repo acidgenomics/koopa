@@ -1,0 +1,9 @@
+# Homebrew stall guard.
+# Used only when the machine has no personal curl config of its own to reuse
+# instead (see koopa.brew._user_curlrc_path). Without a timeout, a curl
+# transfer can block forever on a connection that stays open but stops
+# delivering bytes; this makes such a stall become an error that Homebrew's
+# own --retry can act on.
+connect-timeout = 10
+speed-limit = 1000
+speed-time = 30

@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 
 from koopa.app import resolve_alias
 from koopa.prefix import koopa_prefix, opt_prefix
-from koopa.system import cpu_count, is_macos
+from koopa.system import cpu_count, is_macos, safe_build_env
 
 
 def _shared_ext() -> str:
@@ -52,8 +52,11 @@ class BuildEnv:
         our values at the front of each path variable. PATH is rebuilt from
         KOOPA_DEFAULT_SYSTEM_PATH (minimal system paths) plus the explicitly
         activated app bins, isolating builds from the ambient environment.
+        The base environment itself is filtered to a build-safe allowlist
+        (see ``koopa.system.safe_build_env``), so e.g. a direnv-loaded
+        project credential never reaches the build subprocess.
         """
-        env = os.environ.copy()
+        env = safe_build_env()
         if env.get("LOADEDMODULES"):
             env["PATH"] = (
                 _merge_colon(self.path, env.get("PATH", "")) if self.path else env.get("PATH", "")
@@ -363,7 +366,7 @@ def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
         return
     pkg_names = [os.path.splitext(os.path.basename(f))[0] for f in pc_files]
     pc_dirs = list({os.path.dirname(f) for f in pc_files})
-    pc_env = os.environ.copy()
+    pc_env = safe_build_env()
     existing_pc = pc_env.get("PKG_CONFIG_PATH", "")
     all_pc_dirs = [*pc_dirs, *env.pkg_config_path]
     pc_env["PKG_CONFIG_PATH"] = ":".join([*all_pc_dirs, existing_pc])
@@ -465,7 +468,7 @@ def cmake_build(
         auto_build_dir = True
     else:
         os.makedirs(build_dir, exist_ok=True)
-    subprocess_env = env.to_env_dict() if env else os.environ.copy()
+    subprocess_env = env.to_env_dict() if env else safe_build_env()
     cmake_args = _cmake_std_args(
         prefix=prefix,
         generator=generator,
@@ -641,7 +644,7 @@ def make_build(
     if targets is None:
         targets = ["install"]
     make = locate("make")
-    subprocess_env = env.to_env_dict() if env else os.environ.copy()
+    subprocess_env = env.to_env_dict() if env else safe_build_env()
     if extra_env:
         subprocess_env.update(extra_env)
     all_conf_args = list(conf_args or [])
@@ -692,7 +695,7 @@ def meson_build(
         jobs = cpu_count()
     meson = locate("meson")
     ninja = locate("ninja")
-    subprocess_env = env.to_env_dict() if env else os.environ.copy()
+    subprocess_env = env.to_env_dict() if env else safe_build_env()
     meson_args = [
         "--buildtype=release",
         "--default-library=shared",

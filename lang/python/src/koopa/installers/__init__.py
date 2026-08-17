@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (147) ---------------------------------------------
+    # -- conda-package (150) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
@@ -22,6 +22,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "autodock-vina": f"{_M}._conda",
     "axel": f"{_M}._conda",
     "cloud-sql-proxy": f"{_M}._conda",
+    "cyto": f"{_M}._conda",
     "docker-credential-helpers": f"{_M}._conda",
     "ghostscript": f"{_M}._conda",
     "git-lfs": f"{_M}._conda",
@@ -127,6 +128,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "ripgrep": f"{_M}._conda",
     "ripgrep-all": f"{_M}._conda",
     "rmats": f"{_M}._conda",
+    "roborev": f"{_M}._conda",
     "rsem": f"{_M}._conda",
     "ruby": f"{_M}.ruby_app",
     "salmon": f"{_M}._conda",
@@ -141,6 +143,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "star-fusion": f"{_M}._conda",
     "starship": f"{_M}._conda",
     "subread": f"{_M}._conda",
+    "synapseclient": f"{_M}._conda",
     "tealdeer": f"{_M}._conda",
     "television": f"{_M}._conda",
     "texlive-core": f"{_M}._conda",
@@ -213,6 +216,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "sqlfluff": f"{_M}._python_pkg",
     "streamlit": f"{_M}._python_pkg",
     "tabcmd": f"{_M}._python_pkg",
+    "tooluniverse": f"{_M}._python_pkg",
     "tqdm": f"{_M}._python_pkg",
     "tryceratops": f"{_M}._python_pkg",
     "ty": f"{_M}._python_pkg",

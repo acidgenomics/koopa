@@ -21,4 +21,5 @@ def main(
         git_url=get_str(kwargs, "git_url"),
         tag=get_str(kwargs, "tag"),
         with_openssl=get_str(kwargs, "with_openssl") == "true",
+        rustflags=get_str(kwargs, "rustflags"),
     )

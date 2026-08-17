@@ -20,6 +20,46 @@ The correct fix is always `check=True`, not `check=False` and not suppressing th
 Do not add new helpers (`_has_sudo`, `can_sudo`, `check_sudo`, etc.) — import and
 reuse `has_sudo` from `koopa.system`.
 
+## Python-version floor vs. runtime version
+
+`[tool.ruff] target-version` (currently `py312`) is **not** the same thing as
+`requires-python`/`tool.pyright.pythonVersion` (currently `3.14`), and it must
+stay behind them. `koopa update` is the only path that installs a new pinned
+Python, and it runs under the *outgoing* interpreter until it finishes
+rebuilding bootstrap — so koopa's own source has to stay parseable and
+importable on that older version, not just on the new pin. Bumping
+`target-version` to match a fresh `.python-version` bricks every host still
+on the old one: `koopa --version` and `koopa update` both fail to import
+before they ever reach the code that would upgrade them.
+
+Two traps neither look version-sensitive at a glance, and ruff at the right
+`target-version` catches both:
+
+- **PEP 758** (3.14): unparenthesized `except A, B:` is a syntax error before
+  3.14. Always write `except (A, B):`.
+- **PEP 649** (3.14): annotations are evaluated lazily. An unquoted forward
+  reference (`x: Foo | None` where `Foo` is defined later in the module, or
+  `-> Foo:` where `Foo` is only imported under `if TYPE_CHECKING:`) is a
+  `NameError` at import time on 3.13 and earlier. Quote it (`x: "Foo | None"`,
+  `-> "Foo":`) instead of moving the class or hoisting the import.
+
+`ruff check lang/python/src/` catches PEP 758 reliably, but **not** the
+`TYPE_CHECKING` form of the PEP 649 trap -- ruff treats a name imported only
+under `if TYPE_CHECKING:` as valid in an unquoted annotation regardless of
+`target-version`, since that guard is normally paired with
+`from __future__ import annotations` (which koopa does not use). The only
+reliable check is actually importing every module under the floor
+interpreter:
+```sh
+PYTHONPATH=lang/python/src <floor-python> -c "
+import importlib, pkgutil, koopa
+for m in pkgutil.walk_packages(koopa.__path__, prefix='koopa.'):
+    importlib.import_module(m.name)
+"
+```
+This caught two instances (`cli_main.py`, `installers/_build_helper.py`) that
+`ruff check` reported as clean.
+
 ## Dev tools
 
 Tools like `ruff`, `ty`, `pyright`, `pytest` are standalone koopa apps installed

@@ -1,6 +1,6 @@
 ---
 name: koopa-theming
-description: >
+description: >-
   Reference for koopa theme synthesis across editors and terminals — Dracula Pro
   runtime pipeline, fish color architecture (fish_frozen_theme.fish override, _FISH_COLOR_ROLES
   generator, live sync hook), JetBrains/IntelliJ scheme delivery, atuin and mcfly color
@@ -88,6 +88,105 @@ Alucard-`comment`-is-white quirk in `_generate_atuin_dracula_pro_toml`/
 `_fzf_color_opts`: assume nothing about legibility carries between variants,
 check both.
 
+### ANSI 8 is unreadable as a dim/comment color in every variant
+
+`ansi.get(8)`/`black_bright` is too low-contrast against its own background in
+every Dracula Pro variant, not just Alucard: CR ranges 1.84-2.35:1 in the dark
+variants, 1.09:1 in Alucard. Any consumer that treats ANSI 8 as a dim/comment/
+shadow color renders invisible text, confirmed for htop's meter-shadow color
+pair (decoded straight out of the shipped binary's `_CRT_colorSchemes` table),
+kitty's `color8`, WezTerm's `brights[0]`, and RStudio's ANSI-8 terminal remap.
+
+**Fix: `_dracula_dim_color(dp_dir, variant, fallback_fg, fallback_bg)`.** Reads
+the variant's named Vim `comment` role, which clears 3.5-5.6:1 in every
+variant, instead of the raw ANSI-8 sentinel. Falls back to a `_hex_lerp()`
+blend only if the Vim palette is unavailable. `_parse_ghostty_palette()`'s
+`"comment"` key now returns this. `"black_bright"` is left as the raw ANSI-8
+value and stays safe only as a background (e.g. an inactive tab panel); never
+route it to a text/foreground role again.
+
+**Ghostty's own theme file is generated, not symlinked.** Every other Dracula
+Pro consumer in `install` parses the upstream file and writes a different
+generated file elsewhere. Ghostty is the one exception: htop, and any other
+app that resolves ANSI 8 straight from the terminal, reads Ghostty's palette
+directly, and there is no koopa-owned config downstream to intercept.
+`_generate_ghostty_dracula_pro_theme()` rewrites just the `palette = 8=` line
+of the upstream file, and `_configure_dracula_pro()` writes that as a real
+file under `~/.config/ghostty/themes/`. If an older install symlinked that
+path, clear the symlink before writing: `open(dest, "w")` on a stale symlink
+writes through it into the upstream vendor file.
+
+**`_parse_vim_palette()` variant slugs are hyphenated, filenames are not.**
+`van-helsing`'s Vim colorscheme file is `dracula_pro_van_helsing.vim`, so the
+naive `f"dracula_pro_{variant}.vim"` never matches: that variant silently got
+no named palette (fell through to the `_hex_lerp()` fallback) until fixed with
+`variant.replace("-", "_")`.
+
+## Colorblind-Safe Diff and Git-Status Colors
+
+`_generate_diff_colorblind_palette(dp_dir, variant)` in `install` derives a
+blue/orange/cyan palette for git-related coloring across three surfaces:
+delta (terminal), git's own `[color "diff"/"status"/"branch"]`, and VS Code's
+`workbench.colorCustomizations`. This is a **deliberate override**, not an
+adopted vendor convention: the Dracula Pro VS Code extension, its vim
+colorscheme, and koopa's own generators all use plain green=added/red=removed
+with no exception. Confirm the distinction before touching any of this again:
+check `contributes.colors`/`tokenColors` in the installed `.vsix`'s theme
+JSON, and `DiffAdd`/`DiffDelete`/`DiffChange` in
+`themes/vim/colors/dracula_pro_base.vim` — every one of them is red/green,
+never blue/orange.
+
+**What *is* adopted from the vendor:** orange for a "modified/changed" role.
+Confirmed independently in three places: `gitDecoration.modifiedResourceForeground`
+in the theme JSON, `DiffChange`/`DiffText` in the vim colorscheme's base
+file, and the Vim palette's own named `orange` role are the same hex.
+`status.changed` uses this, unmodified, on purpose — treat it as vendor-exact,
+not koopa-derived, when reasoning about it. `status.deleted` is cyan, not
+orange, specifically *because* orange is spoken for: `modified:` and
+`deleted:` entries co-occur in the same `git status` output, so they can't
+share a hue. Also adopted from the vendor: VS Code's alpha suffixes (`20`
+line background, `40` text background, `80` gutter) — read directly from the
+installed `.vsix`'s `colors.diffEditor.*` keys, not invented.
+
+**Deriving mutual separation for background tints.** Two colors that are each
+individually legible against a background can still read as near-identical
+to each other if derived the same way: blending both toward `bg` to hit the
+*same* target contrast ratio converges them to nearly the same luminance
+regardless of hue (measured: 1.01:1 mutual contrast). Deliberately picking
+two *different* target ratios (1.3 for added, 2.2 for removed) forces them
+apart in lightness as well as hue. This only matters for backgrounds/washes;
+for plain text (git status labels, gitDecoration foregrounds), hue-only
+separation is enough, because each entry is always paired with its own
+English word ("modified:", "deleted:") — the same standard the vendor's own
+theme uses for that specific distinction.
+
+**A vendor-exact color can still fail on user taste even when it's not a
+contrast bug.** Alucard's `orange` role measures a fine 5.3:1 against
+its background as text, but its HLS hue angle is ~24 degrees, closer to pure
+red (0 degrees) than to a hue most people would call orange (30-40 degrees)
+— it reads as "reddish" even though it passes every contrast check. This is
+real and measurable (compute hue via `colorsys.rgb_to_hls`), not merely
+subjective, and it is the vendor's own value (confirmed identical in the
+Fleet experimental palette) — not a koopa derivation bug to "fix" by changing
+the source. `_nudge_hue_toward(hexcolor, target_hex, min_hue_deg)` blends
+toward another real, already-verified palette color (the Vim `yellow` role,
+in this case) only as far as needed to clear a hue floor, and is a no-op when
+the input already clears it (Pro's orange, hue ~35, is untouched). Never
+invent a replacement hex to fix a "looks wrong" complaint — derive the
+correction from another real color in the same palette, the same way every
+other value in this pipeline is derived.
+
+**Terminal (pre-composited) vs VS Code (live-composited) need opposite math
+for the *same* visual role.** A terminal has no alpha compositing, so a
+background tint has to be a real, final, opaque hex, pre-blended toward `bg`
+via `_hex_lerp` at generation time (used for delta's `plus-style`/`minus-style`
+and nothing else needs this). VS Code composites `colorCustomizations`
+values live over the actual syntax-highlighted text underneath, so the same
+visual effect there is the *raw* saturated color plus an alpha suffix, with
+no pre-blending at all — pre-blending toward `bg` for VS Code would produce
+an opaque wash that hides syntax highlighting entirely, the opposite of what
+alpha compositing is for.
+
 ## Fish Color Pipeline
 
 ### Architecture
@@ -125,6 +224,12 @@ Never edit or delete `fish_frozen_theme.fish` — the fix is always to override 
 conf.d file that loads later (alphabetically after `f`).
 
 ### Alucard quirk: ANSI 8 = white
+
+Not Alucard-specific: see "ANSI 8 is unreadable as a dim/comment color in
+every variant" above. `_parse_ghostty_palette()`'s `"comment"` key is now
+`_dracula_dim_color()`-derived everywhere, so this predates that fix and is
+redundant for alucard, but still correct (cursor and the Vim comment role
+both clear contrast there). Kept as the fish-specific implementation record.
 
 In the Dracula Pro Alucard palette, ANSI 8 (the `comment` role from
 `_parse_ghostty_palette`) is white — invisible on the light background. The fish
@@ -214,8 +319,28 @@ or values:
 - **Values**: `_parse_ghostty_palette(dp_dir, "<light-variant>")`, aligned by ANSI
   index. Non-ANSI roles (orange, etc.) from the Fleet experimental palette JSON at
   `~/.local/share/<theme>/themes/jetbrains/experimental/fleet/`.
-- Tokens with no named-palette equivalent: lightened algorithmically via
-  luminance-flip (`colorsys`).
+
+**Unmapped tokens need a role-aware transform, not a blind luminance-flip.**
+A flat "lighten anything unmapped" pass (`_lightify_hex()`, forces lightness
+>= 0.88) is correct for background/decoration roles but wrong for foreground/
+text roles. Checked against the actual vendor `DraculaPro.xml`: 34 of 45
+distinct colors fell through to it, and all 34 landed between 1.04:1 and
+1.32:1 against the light editor background. Classify by the enclosing
+`<option name="...">`: `BACKGROUND`/`CARET_ROW_COLOR`/`*_STRIPE_COLOR` roles
+still use `_lightify_hex()`; everything else (including `FOREGROUND`,
+`EFFECT_COLOR`, and the various `FILESTATUS_*`/`VCS_ANNOTATIONS_*` text-tint
+roles) needs `_darken_for_light_bg()` instead. It preserves hue/saturation and
+binary-searches HLS lightness against `_contrast_ratio()` until it clears the
+threshold, since a fixed HLS-lightness constant doesn't track WCAG luminance
+for green/yellow hues.
+
+**The named ANSI map itself can collide with a text role.** Pro's dark
+`selection_bg` hex was also reused by the vendor XML for
+`LINE_NUMBERS_COLOR`/`INDENT_GUIDE`/separator roles, and Alucard's
+`selection_bg` is deliberately near the editor background, so trusting the map
+blindly left those at 1.48:1. Gate every non-background named-map hit on
+`_contrast_ratio(...) >= 3.0` and fall back to `_darken_for_light_bg()` when it
+fails.
 
 **Mandatory verification asserts (add permanently in the synthesis function):**
 
@@ -227,6 +352,13 @@ assert not survivors, f"Dark tokens survived: {sorted(survivors)}"
 # All background values are light (luminance ≥ 0.55)
 for m in re.finditer(r'name="[A-Z_]*BACKGROUND[^"]*"\s+value="([0-9A-Fa-f]{6})"', xml):
     assert _relative_luminance("#" + m.group(1)) >= 0.55
+
+# All foreground/text values are actually readable -- the background
+# check above doesn't cover this.
+for m in _option_hex_re.finditer(xml):
+    if _bg_role_re.search(m.group(1)):
+        continue
+    assert _contrast_ratio("#" + m.group(2), bg) >= 3.0
 ```
 
 ## macOS Sandboxed App Containers

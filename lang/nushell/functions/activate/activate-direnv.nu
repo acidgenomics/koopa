@@ -12,7 +12,7 @@
 #             }
 #         }]
 #     })
-export def _koopa_activate_direnv [] {
+export def --env _koopa_activate_direnv [] {
     let direnv = $"($env.KOOPA_PREFIX)/bin/direnv"
     if not ($direnv | path exists) {
         return

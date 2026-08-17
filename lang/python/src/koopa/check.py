@@ -17,6 +17,45 @@ from koopa.prefix import (
 )
 
 
+def _short_ver(version: str) -> str:
+    """Shorten a 40-char git SHA to its 7-char short form; otherwise unchanged."""
+    if len(version) == 40:
+        return version[:7]
+    return version
+
+
+def _installed_dep_state(
+    opt_dir: str,
+    dep: str,
+    cache: dict[str, tuple[str, int] | None],
+) -> tuple[str, int] | None:
+    """Return (version, revision) for *dep* as actually linked under opt/.
+
+    Returns ``None`` when *dep* has no live opt/ symlink. Results are memoized
+    in *cache* since a single sweep re-checks the same dep across many
+    dependents.
+    """
+    if dep in cache:
+        return cache[dep]
+    path = join(opt_dir, dep)
+    state = None
+    if islink(path):
+        target = realpath(path)
+        if isdir(target):
+            version = basename(target)
+            revision = 0
+            rev_file = join(target, ".install", "revision")
+            if isfile(rev_file):
+                try:
+                    with open(rev_file) as f:
+                        revision = int(f.read().strip() or "0")
+                except (ValueError, OSError):
+                    revision = 0
+            state = (version, revision)
+    cache[dep] = state
+    return state
+
+
 def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, PLR0912, PLR0915
     """Return ``(app_name, reason, actionable)`` for each installed app issue.
 
@@ -32,12 +71,13 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     json_data = import_app_json()
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
+    dep_state_cache: dict[str, tuple[str, int] | None] = {}
     from koopa.system import os_id
 
     current_os = os_id()
     for name in names:
         if name not in json_data:
-            issues.append((name, f"{name} is an unsupported app", False))
+            issues.append((name, "unsupported app", False))
             continue
         entry = json_data[name]
         if entry.get("alias_of"):
@@ -47,34 +87,34 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 name = target  # noqa: PLW2901
             else:
                 issues.append(
-                    (name, f"{name} alias target '{target}' not found", False),
+                    (name, f"alias target '{target}' not found", False),
                 )
                 continue
         supported = entry.get("supported", {})
         if current_os in supported and not supported[current_os]:
-            issues.append((name, f"{name} is not supported on {current_os}", False))
+            issues.append((name, f"not supported on {current_os}", False))
             continue
         path = join(opt_dir, name)
         if not islink(path):
-            issues.append((name, f"{name} is not linked at {path}", True))
+            issues.append((name, f"not linked at {path}", True))
             continue
         path = realpath(path)
         if not isdir(path):
             issues.append(
-                (name, f"{name} is not a directory at {path}", True),
+                (name, f"not a directory at {path}", True),
             )
             continue
         assert isdir(path)
         linked_ver = basename(path)
         if json_data[name].get("removed"):
-            issues.append((name, f"{name} is a removed app", False))
+            issues.append((name, "removed app", False))
             continue
         current_ver = json_data[name]["version"]
         if len(current_ver) == 40:
             current_ver = current_ver[:7]
         if linked_ver != current_ver:
             issues.append(
-                (name, f"{name} {linked_ver} != {current_ver}", True),
+                (name, f"{linked_ver} -> {current_ver}", True),
             )
             continue
         expected_rev = entry.get("revision", 0)
@@ -91,10 +131,14 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     installed_rev = 0
             if installed_rev != expected_rev:
                 issues.append(
-                    (name, f"{name} revision {installed_rev} != {expected_rev}", True),
+                    (name, f"revision {installed_rev} -> {expected_rev}", True),
                 )
                 continue
-        # Check if any dependency has been revised since this app was installed.
+        # Check if any dependency has been revised or rebuilt at a different
+        # version since this app was installed. Compares against what is
+        # actually installed under opt/, not app.json's target — otherwise a
+        # `git pull` that bumps a dep's app.json entry flags every dependent
+        # as stale before the dep itself has been rebuilt.
         # Skip isolated environments (e.g. conda-package apps) where the
         # installer tool updating doesn't break the installed app.
         info_file = join(path, ".install", "info.json")
@@ -108,11 +152,22 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             except (ValueError, OSError):
                 _info = {}
             recorded_dep_revs = _info.get("dep_revisions", {})
-            app_deps = entry.get("dependencies", [])
-            if isinstance(app_deps, dict):
-                from koopa.app import _resolve_dep_dict
+            # Prefer the dep list actually resolved at install time (recorded in
+            # info.json) over re-resolving app.json's dependency dict now. A
+            # firewall_linux/firewall_macos/default split resolves differently
+            # depending on KOOPA_BUILDER and firewall state, so re-resolving it in
+            # whatever environment this check happens to run in can invent a
+            # dependency the app never actually linked against, flagging it stale
+            # for no real reason (e.g. a plain-shell reinstall re-checked from a
+            # builder shell). Fall back to live re-resolution only for installs
+            # that predate this field.
+            app_deps = _info.get("dependencies")
+            if not isinstance(app_deps, list):
+                app_deps = entry.get("dependencies", [])
+                if isinstance(app_deps, dict):
+                    from koopa.app import _resolve_dep_dict
 
-                app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
+                    app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
             stale_dep = False
             for dep in app_deps:
                 if installer.startswith(dep):
@@ -121,19 +176,18 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 dep_entry = json_data.get(dep, {})
                 if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
                     resolved_dep = dep_entry["alias_of"]
-                resolved_entry = json_data.get(resolved_dep, {})
-                current_rev = (
-                    int(resolved_entry.get("revision", 0))
-                    if isinstance(resolved_entry, dict)
-                    else 0
-                )
+                state = _installed_dep_state(opt_dir, resolved_dep, dep_state_cache)
+                if state is None:
+                    # Dep isn't linked in opt/ at all; that's reported
+                    # separately by _apps_with_missing_runtime_deps().
+                    continue
+                _current_ver, current_rev = state
                 recorded_rev = recorded_dep_revs.get(resolved_dep, 0)
                 if current_rev > recorded_rev:
                     issues.append(
                         (
                             name,
-                            f"{name} dependency {resolved_dep} revised:"
-                            f" {recorded_rev} -> {current_rev}",
+                            f"dependency {resolved_dep} revised: {recorded_rev} -> {current_rev}",
                             True,
                         ),
                     )
@@ -149,18 +203,20 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                         dep_entry = json_data.get(dep, {})
                         if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
                             resolved_dep = dep_entry["alias_of"]
-                        resolved_entry = json_data.get(resolved_dep, {})
-                        current_ver = (
-                            resolved_entry.get("version", "")
-                            if isinstance(resolved_entry, dict)
-                            else ""
-                        )
+                        state = _installed_dep_state(opt_dir, resolved_dep, dep_state_cache)
+                        if state is None:
+                            continue
+                        current_ver, _current_rev = state
                         recorded_ver = recorded_dep_vers.get(resolved_dep, "")
-                        if recorded_ver and current_ver and recorded_ver != current_ver:
+                        if (
+                            recorded_ver
+                            and current_ver
+                            and _short_ver(recorded_ver) != _short_ver(current_ver)
+                        ):
                             issues.append(
                                 (
                                     name,
-                                    f"{name} dependency {resolved_dep} version"
+                                    f"dependency {resolved_dep} version"
                                     f" changed: {recorded_ver} -> {current_ver}",
                                     True,
                                 ),
@@ -184,7 +240,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 missing = [d for d in rpath_dirs if not isdir(d)]
                 if missing:
                     issues.append(
-                        (name, f"{name} broken RPATH: {missing[0]}", True),
+                        (name, f"broken RPATH: {missing[0]}", True),
                     )
                     broken_rpath = True
                     break
@@ -195,7 +251,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             link = join(bin_dir, b)
             if islink(link) and not os.path.exists(link):
                 issues.append(
-                    (name, f"{name} broken bin symlink: {b}", True),
+                    (name, f"broken bin symlink: {b}", True),
                 )
                 broken_bin = True
                 break
@@ -206,7 +262,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
             link = join(man1_dir, m)
             if islink(link) and not os.path.exists(link):
                 issues.append(
-                    (name, f"{name} (broken man1 symlink: {m})", True),
+                    (name, f"broken man1 symlink: {m}", True),
                 )
                 break
         # Check for missing shell completion symlinks (bash, fish, zsh).
@@ -227,7 +283,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     issues.append(
                         (
                             name,
-                            f"{name} (missing {shell} completion: {completion_name})",
+                            f"missing {shell} completion: {completion_name}",
                             True,
                         ),
                     )
@@ -255,8 +311,8 @@ def unsupported_apps() -> list[str]:
 def check_installed_apps() -> bool:
     """Check system integrity."""
     issues = _iter_installed_app_issues()
-    for _name, reason, _actionable in issues:
-        print(reason)
+    for name, reason, _actionable in issues:
+        print(f"{name}: {reason}")
     return not issues
 
 
@@ -278,27 +334,27 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
             linked_path = realpath(opt_link)
             if not isfile(join(linked_path, ".install", "info.json")):
                 issues.append(
-                    (name, f"{name}: failed install (empty .install directory)"),
+                    (name, "failed install (empty .install directory)"),
                 )
             continue
         versions = [v for v in os.listdir(app_path) if isdir(join(app_path, v))]
         if not versions:
-            issues.append((name, f"{name}: failed install (empty app directory)"))
+            issues.append((name, "failed install (empty app directory)"))
             continue
         for ver in versions:
             ver_path = join(app_path, ver)
             if isdir(join(ver_path, ".install")):
                 if not isfile(join(ver_path, ".install", "info.json")):
                     issues.append(
-                        (name, f"{name}/{ver}: failed install (empty .install directory)"),
+                        (name, f"failed install at {ver} (empty .install directory)"),
                     )
                 else:
                     issues.append(
-                        (name, f"{name}/{ver}: installed but not linked in opt"),
+                        (name, f"{ver} installed but not linked in opt"),
                     )
             else:
                 issues.append(
-                    (name, f"{name}/{ver}: failed install (no .install marker)"),
+                    (name, f"failed install at {ver} (no .install marker)"),
                 )
     return issues
 
@@ -319,8 +375,8 @@ def check_broken_app_installs() -> bool:
     """
     already_reported = {name for name, _r, a in _iter_installed_app_issues() if a}
     issues = [(n, r) for n, r in _iter_broken_app_installs() if n not in already_reported]
-    for _name, reason in issues:
-        print(reason)
+    for name, reason in issues:
+        print(f"{name}: {reason}")
     return not issues
 
 
@@ -520,7 +576,7 @@ def check_disk(path: str = "/") -> bool:
     if pct > 90:
         from koopa.alert import warn
 
-        warn(f"Disk usage at '{path}' is {pct:.0f}%.")
+        warn(f"Disk usage at '{path}' is {pct:.0f}%. Free up disk space on '{path}'.")
         return False
     return True
 
@@ -920,8 +976,6 @@ def check_system() -> bool:
     if needs_update or needs_system_update or needs_disk_space or needs_tmux_restart:
         if needs_update or needs_system_update:
             alert_note("Run 'koopa update' to resolve these issues.")
-        if needs_disk_space:
-            alert_note("Free up disk space on '/'.")
         return False
     alert_success("System passed all checks.")
     return True

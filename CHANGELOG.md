@@ -1,5 +1,317 @@
 # Changelog
 
+## koopa 0.26.0 (2026-08-16)
+
+Major changes:
+
+- Fixed koopa's nushell activation being a near-total no-op. None of
+  `_koopa_export_env`, the `_koopa_activate_*` functions,
+  `_koopa_activate_koopa`, or `_koopa_run_activation` were declared
+  `def --env`, and nushell only lets an `$env` mutation escape into the
+  caller's scope when every function in the call chain carries that flag --
+  so `KOOPA_SHELL`, `KOOPA_CPU_COUNT`, `XDG_*`, `EDITOR`,
+  `KOOPA_COLOR_MODE`, and everything else activation was supposed to set was
+  silently discarded the moment each function returned, with no error and no
+  visible symptom short of inspecting `$env` after the fact. Separately,
+  `header.nu` never `export use`'d the `is-light-mode.nu` /
+  `terminal-is-light-background.nu` helpers that `_koopa_export_env` already
+  called, so the color-mode block crashed outright with a hard
+  "Command not found" once the `def --env` fix let activation actually reach
+  it.
+- CPU-count detection used for parallel build jobs (`make --jobs`, `cargo`,
+  etc.) now honors an explicit Slurm allocation and clamps to the process's
+  CPU affinity mask, across bash, zsh, POSIX sh, fish, elvish, nushell,
+  PowerShell, and `koopa.system.cpu_count()`. Precedence: `SLURM_CPUS_PER_TASK`,
+  then `SLURM_CPUS_ON_NODE`, then a possibly stale inherited
+  `KOOPA_CPU_COUNT`, then an affinity-aware bare `nproc` probe (not
+  `--all`), then `getconf`/`sysctl`/Python as a last resort -- whichever
+  value wins is still clamped to the affinity-aware probe, since koopa must
+  never spawn more build jobs than the CPU allocation actually available.
+  `SLURM_JOB_CPUS_PER_NODE` is deliberately never read, since its compressed
+  multi-node form (e.g. `'4(x2)'`) would otherwise reach `--jobs` verbatim.
+  Several from-source installers (`boost`, `lua`, `p7zip`, and others) were
+  switched from a bare `os.cpu_count()` call to this shared helper.
+- Fixed color-mode targets moved out of the main chezmoi tree (via
+  `.chezmoiignore`) into a "work" or "private" overlay tree being permanently
+  reported "not managed by the main tree; skipping" on every dark/light flip,
+  since `color_mode.py`'s discovery only ever scanned the main tree.
+  `main()` now loops over main, work, and private trees in turn, accumulating
+  candidates and applied targets across all three and deferring the
+  "not managed" warning until every tree has had a chance to claim a target.
+  The main tree stays required (a probe or apply failure there aborts the run
+  without writing the applied-marker); work/private trees are non-required,
+  so a broken overlay tree only warns and continues rather than permanently
+  wedging every future shell's re-apply attempt.
+- `koopa update` now automatically retries, once, any app that failed to
+  install or update earlier in the same run: a new `InstallPlanError` carries
+  the failed app names up from `update_stale_apps()` /
+  `install_missing_default_apps()`, and a new `retry_failed_apps()`
+  reinstalls just those apps unconditionally (unlike the normal missing-apps
+  path, which skips anything whose `opt/` symlink already exists). This
+  matters because a binary pull can 404 transiently -- a brand-new OS/arch
+  slug with no binary pushed yet, or a dependency still rebuilding earlier in
+  the same run -- and succeed on a second attempt. Separately,
+  `push_app_build()` no longer prints its S3 confirmation directly from a
+  noninteractive worker process, which would race the parent's live progress
+  spinner; the message is now returned and stashed via
+  `koopa.progress.set_last_push_message()`/`get_last_push_message()` for the
+  parent to display.
+- Added a Neovim configurer. `koopa configure user neovim` runs
+  `nvim --headless +'Lazy! sync' +qa`, installing any plugin lazy.nvim hasn't
+  fetched yet and removing ones whose spec was deleted (lazy.nvim
+  auto-installs on startup but never auto-cleans). It then diffs the deployed
+  `~/.config/nvim/lazy-lock.json` against the chezmoi source copy and prints
+  a reminder to `chezmoi re-add` and commit the lockfile if they differ, so a
+  version bump the sync picks up doesn't silently go untracked.
+- Generalized vendor mirroring beyond koopa's own src/binary tarballs.
+  `vendor.json`'s backend was renamed to a vendor-neutral `"http"` (with
+  `HTTP_ACCESS_TOKEN`) -- existing `vendor.json` files need updating -- and
+  gained a `remotes` map from upstream hostname (exact match, or a
+  leading-dot suffix like `.gnu.org`) to a named remote-proxy repo on the
+  vendor server. A new `vendor_rewrite_url()` rewrites any matched upstream
+  URL (GitHub releases, python.org, GNU mirrors, koopa's own docs/binary
+  bucket) through that proxy, preserving the original path and query string,
+  and is now consulted by `download.py`'s fallback chain for every download,
+  not just koopa's own artifacts. `bootstrap.sh` gained a full shell port of
+  this logic (`vendor_load()`, `vendor_rewrite_url()`, `vendor_curl_config()`,
+  etc.), since it previously had no vendor-mirror awareness at all, even
+  though it's the very first thing to run, before koopa's own Python tooling
+  exists.
+- Build and install subprocesses no longer inherit a raw copy of the calling
+  shell's environment. A new `koopa.system.safe_build_env()` filters it down
+  to an explicit allowlist (compiler flags, locale, proxy/TLS vars, XDG dirs,
+  language-toolchain homes, plus any `KOOPA_`/`HOMEBREW_`/`CARGO_`/
+  `NPM_CONFIG_`-prefixed name) before handing it to a build subprocess, so a
+  project-scoped secret loaded by direnv into the interactive shell can no
+  longer leak into a compiler invocation. `koopa install`/`reinstall`/
+  `update` also gained `_revert_direnv_env()`, which decodes direnv's own
+  `DIRENV_DIFF` payload and actively restores `os.environ` to its
+  pre-`.envrc` state before running, replacing a previous helper that only
+  printed a warning and left the environment untouched. A same-week
+  follow-up fix corrected `_revert_direnv_env()` reading `DIRENV_DIR` after
+  the revert had already cleared it (always empty) instead of before.
+- Hardened Homebrew cask/formula installs against an indefinite hang:
+  Homebrew's own `curl` sets `--retry` but no connect/stall timeout, so a
+  connection through a corporate TLS-inspecting proxy or flaky network that
+  never delivers bytes never triggers a retry at all. `brew.py` now sets
+  `HOMEBREW_CURLRC` (which Homebrew's curl reads) to the user's own
+  `~/.curlrc` if one exists -- reusing the stall-guard settings koopa's own
+  dotfiles already ship there -- or else to a new koopa-managed fallback,
+  `etc/koopa/homebrew-curlrc` (`connect-timeout = 10`, `speed-limit = 1000`,
+  `speed-time = 30`, matching koopa's own download defaults).
+  `brew_upgrade_casks()` also runs `sudo -v` up front and keeps the sudo
+  timestamp alive with a background `sudo -n -v` every 50 seconds for the
+  duration of a multi-cask upgrade, so the default 5-minute sudo cache can't
+  expire mid-run and force a second password prompt; it now also reinstalls
+  all outdated casks in a single batched `brew reinstall --cask` call
+  instead of one subprocess per cask, which also fixes the previous loop
+  aborting the entire remaining list on the first single-cask failure.
+- Removed the draft (never-submitted) conda-forge recipe added as
+  groundwork in the previous release. koopa self-manages its own install
+  prefix -- writing into `app/`, creating roughly 450 `bin/` symlinks, and
+  self-updating via `git pull` -- which structurally conflicts with a
+  package manager's externally-managed, relocatable prefix; the only
+  workaround (a "seed" package that copies its payload out to
+  `$XDG_DATA_HOME/koopa` on install) creates a silent-divergence bug where
+  `conda update koopa` refreshes the staged copy while the already-extracted
+  live tree never changes. `docs/installation.md` documents the offline/
+  pinned-install path instead: fetch a tagged release's `git archive`
+  tarball from GitHub, extract it, and source `activate.sh`, which already
+  works today since `_require_git_managed_install()` only checks for
+  `lang/python/src` in the prefix and `update_koopa()` cleanly no-ops with
+  "Pinned release detected." A new `.gitattributes` adds `export-ignore`
+  rules for `.claude/`, `.agents/`, `.idea/`, `.github/`, `CLAUDE.md`,
+  `AGENTS.md`, and `todo.org`, so a tag-tarball download excludes
+  contributor/agent tooling.
+
+Minor changes:
+
+- Bumped the bootstrap Python interpreter from 3.12 to 3.14. `.python-version`
+  and the two pinned versions in `bootstrap.sh` (`install_python()` and
+  `install_python_uv()`) now track `etc/koopa/app.json`'s `python3.14` entry
+  (3.14.7), and `pyproject.toml`'s `requires-python`, classifier, and
+  `tool.pyright.pythonVersion` all move to 3.14 in lockstep.
+  `tool.ruff.target-version` stays at `py312`: a stale host's `koopa update`
+  runs under its outgoing interpreter, and that is the only path that
+  installs the new one, so koopa's own source must stay parseable and
+  importable on the previous pin. Raising the ruff floor to 3.14 alongside
+  this bump would have bricked every host still on 3.12 -- `koopa --version`
+  and `koopa update` both fail immediately, since the 3.14-only source
+  (42 unparenthesized `except A, B:` clauses across 15 modules, plus three
+  unquoted forward references relying on PEP 649 deferred evaluation, in
+  `progress.py`, `cli_main.py`, and `installers/_build_helper.py`) can no
+  longer be parsed or imported. The `_build_helper.py` one alone broke every
+  installer module, since all of them import it.
+- Fixed `bin/koopa` picking a mismatched-but-passable `.venv` or bootstrap
+  Python over a version-matching one. Both are now checked against
+  `.python-version` first, with the previous mismatch-tolerant fallback kept
+  last so a broken host can still self-heal.
+- Fixed `koopa update` prompting for a sudo password on a shared `/opt/koopa`
+  install whenever bootstrap needed a rebuild. `bootstrap.sh` decided it
+  needed sudo by testing write permission on the bootstrap prefix's *parent*
+  (root-owned `/opt`), even though the prefix itself is owned by the
+  installing user. `main()` now calls a new `stage_init()`/`stage_commit()`
+  pair that swaps the prefix's *children* in place when the parent isn't
+  writable but the prefix is, which needs no elevated permission at all. A
+  single sudo call remains for the one case that still needs it: taking
+  ownership of a brand-new prefix on its very first create.
+- Fixed Python-package app installs and the venv self-upgrade path
+  (`koopa update`) failing with `invalid peer certificate: UnknownIssuer`
+  against `python.acidgenomics.com` on networks where the OS trust store
+  includes a certificate `uv`'s own bundled store doesn't. Both
+  `installers/python_app.py`'s `uv pip install` invocation and
+  `install.py`'s `_update_venv()` now pass `--system-certs`, telling `uv` to
+  defer to the OS certificate store.
+- `bin/koopa`'s last-resort system-Python check -- used only when neither
+  `.venv` nor the bootstrap prefix has a `.python-version`-matching
+  interpreter -- now also tries `python<version>` (e.g. `python3.14`) and
+  bare `python3` resolved via `PATH`, not just the hardcoded
+  `/usr/bin/python3`, so an already-installed matching interpreter from
+  Homebrew or a system package manager is used instead of unconditionally
+  falling through to a slow `bootstrap.sh` build.
+- `koopa check-app-versions` no longer requires acidgenomics AWS access just
+  to check `isl`'s upstream version. The check itself only reads
+  `libisl.sourceforge.io`'s public directory listing and needs no
+  credentials; the AWS-access gate belonged to a separate, unrelated
+  tarball-mirroring step and was mistakenly applied to the version check too.
+- `bootstrap.sh`'s own downloads (it runs before any dotfiles, including
+  `~/.curlrc`, exist) now retry with `--retry 2 --retry-delay 5` on both the
+  generic fallback-download path and the `uv`-based CPython tarball fetch,
+  so a stalling proxy connection doesn't abort the whole bootstrap on one
+  transient timeout.
+- Fixed `bootstrap.sh`'s `install_python_uv()` sometimes copying nothing and
+  silently falling through to the much slower source build. It located the
+  freshly-installed CPython directory with
+  `find "$dir" -mindepth 1 -maxdepth 1 -type d | head -1`, but `uv`'s
+  `--install-dir` also creates hidden housekeeping entries (`.lock`,
+  `.temp`, `.gitignore`); `find` gives no ordering guarantee, so `head -1`
+  could select the empty `.temp` directory instead of the real
+  `cpython-<version>-...` one. Fixed by excluding dotfile entries
+  (`! -name '.*'`).
+- `bootstrap.sh` now always attempts the fast `uv`-based Python install path
+  first, regardless of firewall detection. The previous `has_firewall()`
+  veto (skip straight to the slow source build unless a vendor mirror or an
+  explicit `UV_PYTHON_INSTALL_MIRROR` was set) was unnecessary, since
+  `install_python_uv()` already fails cleanly and falls through to the
+  source build on any failure. A new `UV_HTTP_TIMEOUT=60` bounds the attempt
+  so a network that silently drops packets rather than actively refusing
+  them can't hang instead of failing fast.
+- Fixed spurious "needs rebuild" flags from `koopa check`. `stale_revdeps()`
+  now reads an app's actually-resolved dependency list from its own
+  `.install/info.json` (via a new `recorded_app_deps()`) instead of
+  re-resolving app.json's dependency dict against the *current* environment
+  -- a dict-typed dependency entry can resolve differently depending on
+  `KOOPA_BUILDER`/firewall state, so re-resolving it later for an app
+  installed under different conditions produced a phantom dependency that
+  was never actually linked.
+- Added two maintainer-only `koopa develop` subcommands. `push-installer
+  <app> <file> [--version] [--force]` stages a manually-downloaded,
+  EULA-gated vendor tarball (`cellranger`, `bcl-convert`) to the private
+  artifacts bucket at the key app.json's `installer_artifact` template
+  declares, auto-detecting the version from the filename and transparently
+  recompressing to match. `scrub-install-info [--dry-run] [<name>...]`
+  retroactively strips any non-allowlisted key out of an already-installed
+  app's `.install/info.json` "environ" block, for prefixes installed before
+  that allowlist existed -- necessary because `push-app-build(s)` tars the
+  whole prefix, `.install/` included, into the shared bucket. `bcl_convert.py`
+  and `cellranger.py` now resolve their vendor tarball's S3 key via a new
+  `installer_artifact_key()` with an existence pre-check, raising a clear
+  error pointing at `push-installer` instead of a raw 404; `cellranger.py`
+  additionally verifies the extracted archive has a top-level `bin/`
+  directory before linking.
+- Fixed `push_app_build()`/`push_missing_app_builds()` picking the wrong
+  "latest" installed version via a plain lexical sort of
+  `os.listdir(app_dir)` -- `"3.13.9"` sorts after `"3.13.15"`, so a
+  two-digit patch release could be silently skipped in favor of an older
+  one. Both now read the `opt/<name>` symlink target directly. Separately,
+  the push inside `install_app()` now runs after `.install/revision` and
+  `.install/info.json` are written, so a pushed tarball carries build
+  provenance instead of a bare prefix.
+- Hardened `koopa develop push-app-build`'s eligibility checks. The S3
+  fallback path no longer requires `AWS_CLOUDFRONT_DISTRIBUTION_ID` -- that
+  variable only matters for docs-publishing cache invalidation, and
+  requiring it produced false negatives on builder hosts with working AWS
+  credentials but no CloudFront ID configured. A new
+  `_require_binary_prefix()` (checking a `_BINARY_PREFIX = "/opt/koopa"`
+  constant) is now enforced at both push call sites -- `install.py`'s
+  `push_app_build()` and `cli_develop.py`'s separate maintainer tar/upload
+  path -- since tarballs are archived with `tar -Pcz` (absolute paths) and
+  can never be extracted by a puller if built from any other prefix. Also
+  fixed a silent-success bug: `aws s3 cp --only-show-errors` suppresses all
+  output on success, so a successful push looked identical to a no-op;
+  `push_app_build()` now calls `alert_success()` explicitly afterward.
+- The Sphinx docs theme koopa publishes to every Acid Genomics Python/R
+  package is now a proper theme package instead of one CSS file bolted onto
+  Sphinx's default theme. `koopa app python sync-docs-theme
+  <package_dirs...> [--check]` (replacing the old `publish-assets`) copies
+  koopa's tracked `assets/sphinx_theme/` (`layout.html` +
+  `static/acidgenomics.css` + `theme.toml`) into each target package's
+  `docs/_themes/acidgenomics/`, so every consumer -- including koopa's own
+  docs build -- gets an identical, offline copy instead of fetching a single
+  CSS file over the network at build time. `--check` compares byte-for-byte
+  instead of writing, for CI drift detection.
+- `update_koopa()`'s force-push recovery path (`git fetch` + `git reset
+  --hard` against the remote branch, when a normal pull fails because the
+  remote history was rewritten) previously ran with output inherited
+  straight to the terminal, unformatted. `git.py`'s `git_fetch()` and
+  `git_reset()` gained a `capture` option, routed through a new
+  `koopa.alert.alert_detail()` (indented, one line per update,
+  carriage-return-aware) alongside the rest of `update_koopa()`'s output.
+- The five pinned CPython build entries (3.10-3.14) in app.json now carry
+  an explicit `revision` field, and their `dependencies` keys moved from the
+  old `default`/`firewall_linux`/`firewall_macos` scheme to
+  `macos-arm64`/`noarch` (with `libxcrypt` reclassified from Linux-only to
+  shared). The binary tarball naming now encodes the revision suffix (e.g.
+  `3.13.15-r1.tar.gz`), so a dependency-only rebuild no longer collides with
+  the previous binary's cache key.
+- `koopa develop generate-completion` now emits real per-app completions for
+  `koopa update system <app>` across fish, zsh, PowerShell, elvish, and
+  nushell, and drops a phantom `update user` mode from the PowerShell and
+  elvish completions that didn't correspond to any real CLI mode.
+- The dotfiles configurer now warns about an otherwise-unresolvable class of
+  drift between overlapping chezmoi trees: if a "work" or "private" tree's
+  `.chezmoiremove` deletes a path the main tree still manages via `chezmoi
+  managed`, every `chezmoi apply` would loop forever (the main tree
+  recreates the file, the later tree deletes it again). A new
+  `_chezmoiremove_targets()` renders `.chezmoiremove` through `chezmoi
+  execute-template` (required since it supports Go template conditionals)
+  and `_warn_remove_manage_conflict()` cross-checks the result against the
+  main tree's managed set by directory-ancestor prefix, not just exact path
+  equality.
+
+New apps:
+
+- `cyto` 0.4.6: ultra high-throughput 10x Flex single-cell processing
+  (conda-package via bioconda, non-default). Started this cycle as a
+  `rust-package` built with `-C target-cpu=native` (requiring a whole
+  native-CPU-build push/pull exemption in `install.py`), then was switched
+  to the bioconda recipe instead, making that exemption dead code -- it was
+  added and fully removed again within the same cycle, so the shipped
+  behavior is the plain conda-package path.
+- `playwright` 1.62.0: browser automation library and CLI (custom
+  `playwright` installer, non-default). A new `installers/playwright.py`
+  runs `install_python_package()` then a dedicated Chromium install step
+  that sets `PLAYWRIGHT_BROWSERS_PATH` to the app's own koopa-managed prefix
+  (`<prefix>/libexec/browsers`) instead of the shared `~/.cache/ms-playwright`
+  default.
+- `roborev` 0.64.0: continuous code review for AI coding agents
+  (conda-package via conda-forge, non-default). First example under a new
+  app-registry policy carve-out for "agent-adjacent" tooling (drives or
+  reviews agent-CLI output rather than being an agent CLI itself),
+  vendor-agnostic by design.
+- `synapseclient` 4.13.0: command-line client for the Synapse research data
+  platform (conda-package via bioconda, non-default; bin name `synapse`).
+  Scoped to downloads only -- `synapse get -r <synID>` works, but `synapse
+  sync` (upload) and the curator subcommands don't, since the bioconda
+  recipe carries no `pandas` dependency.
+- `tooluniverse` 1.4.1: scientific tool ecosystem and MCP server for AI
+  agents (python-package, non-default, pinned to python3.13 via
+  `python_version_pin`). Pinned below 3.14 because a base dependency,
+  `markitdown[all]`, requires `youtube-transcript-api~=1.0.0`, which
+  excludes Python 3.14+; ships eight bin entries including `tu`,
+  `tooluniverse-mcp`, and `tooluniverse-smcp-stdio` (the last added in a
+  same-day follow-up fix after the initial entry missed it).
+
 ## koopa 0.25.0 (2026-08-08)
 
 Major changes:
@@ -440,9 +752,9 @@ Major changes:
 - Added Xcode Command Line Tools version checks and improved broken RPATH
   detection in `koopa check`.
 - Added vendor backend support for downloading and pushing source mirrors and
-  binary packages from private infrastructure (custom S3 buckets or JFrog
-  Artifactory). Configure via `etc/koopa/vendor.json`. Supports `vendor_first`
-  and `vendor_only` pull strategies.
+  binary packages from private infrastructure (custom S3 buckets or a generic
+  HTTP(S) repository). Configure via `etc/koopa/vendor.json`. Supports
+  `vendor_first` and `vendor_only` pull strategies.
 - Reworked Emacs distribution support. `spacemacs`, `doom-emacs`, and
   `emacs-prelude` are now installed as shared apps under `app/` with wrapper
   scripts, replacing the per-user install model. Each distribution stores

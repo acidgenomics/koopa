@@ -1,6 +1,12 @@
 """System module unit tests."""
 
+import base64
+import gzip
+import json
+import os
 import subprocess
+import sys
+import zlib
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -14,7 +20,20 @@ from koopa.system import (
     major_minor_version,
     major_version,
     os_appearance_mode,
+    revert_direnv_env,
+    safe_build_env,
 )
+
+
+def _direnv_diff(prev: dict, new: dict, *, compress: str = "zlib") -> str:
+    """Build a 'DIRENV_DIFF'-shaped payload matching direnv 2.37's own encoding.
+
+    direnv itself uses zlib; 'gzip' exercises '_decode_direnv_diff()'s fallback
+    branch for the same wire format under a different compressor.
+    """
+    raw = json.dumps({"p": prev, "n": new}).encode()
+    payload = gzip.compress(raw) if compress == "gzip" else zlib.compress(raw)
+    return base64.urlsafe_b64encode(payload).decode().rstrip("=")
 
 
 def test_arch2_x86_64() -> None:
@@ -110,6 +129,145 @@ def test_cpu_count_returns_positive_int() -> None:
     result = cpu_count()
     assert isinstance(result, int)
     assert result >= 1
+
+
+def test_cpu_count_slurm_cpus_on_node_overrides_koopa_cpu_count(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Regression: a Slurm allocation must win over a stale inherited KOOPA_CPU_COUNT.
+
+    Observed on a real Slurm GPU node: KOOPA_CPU_COUNT was inherited as 96 (the
+    node's total core count) from the login node, while SLURM_CPUS_ON_NODE
+    correctly reported the 1-CPU allocation. Trusting KOOPA_CPU_COUNT there
+    made 'make --jobs=96' run on a single allocated CPU.
+    """
+    monkeypatch.setenv("SLURM_CPUS_ON_NODE", "1")
+    monkeypatch.setenv("KOOPA_CPU_COUNT", "96")
+    monkeypatch.delenv("SLURM_CPUS_PER_TASK", raising=False)
+    assert cpu_count() == 1
+
+
+def test_cpu_count_clamps_to_affinity_mask(monkeypatch: pytest.MonkeyPatch) -> None:
+    """KOOPA_CPU_COUNT must never exceed the process's CPU affinity mask.
+
+    koopa must never spawn more build jobs than the current CPU allocation,
+    even when KOOPA_CPU_COUNT itself claims a larger number.
+    """
+    monkeypatch.delenv("SLURM_CPUS_PER_TASK", raising=False)
+    monkeypatch.delenv("SLURM_CPUS_ON_NODE", raising=False)
+    monkeypatch.setenv("KOOPA_CPU_COUNT", "999999")
+    # cpu_count() gates sched_getaffinity behind sys.platform == "linux" (the
+    # attribute genuinely does not exist elsewhere); force that branch so the
+    # clamp is exercised on every dev platform, not just Linux.
+    monkeypatch.setattr(sys, "platform", "linux")
+    monkeypatch.setattr(os, "sched_getaffinity", lambda _pid: {0, 1, 2, 3}, raising=False)
+    assert cpu_count() == 4
+
+
+def test_cpu_count_rejects_malformed_slurm_value(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A malformed Slurm variable must fall through, never reach a build subprocess.
+
+    Slurm's compressed multi-node form (e.g. '4(x2)' for SLURM_JOB_CPUS_PER_NODE)
+    must never parse as a job count -- this simulates that shape landing on the
+    wrong variable name.
+    """
+    monkeypatch.setenv("SLURM_CPUS_PER_TASK", "4(x2)")
+    monkeypatch.setenv("SLURM_CPUS_ON_NODE", "2")
+    monkeypatch.delenv("KOOPA_CPU_COUNT", raising=False)
+    assert cpu_count() == 2
+
+
+def test_safe_build_env_drops_unlisted_project_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A project-scoped var (e.g. direnv-loaded) never reaches a build subprocess."""
+    monkeypatch.setenv("SOME_PROJECT_API_KEY", "fake-value")
+    assert "SOME_PROJECT_API_KEY" not in safe_build_env()
+
+
+def test_safe_build_env_regression_leaked_dsn_excluded(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Regression: the exact var name that previously leaked stays excluded."""
+    monkeypatch.setenv("MYPROJECT_SENTRY_DSN", "https://fake@example.com/1")
+    assert "MYPROJECT_SENTRY_DSN" not in safe_build_env()
+
+
+def test_safe_build_env_keeps_exact_name(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A generic build-toolchain var on the exact-name allowlist passes through."""
+    monkeypatch.setenv("CC", "clang")
+    assert safe_build_env()["CC"] == "clang"
+
+
+def test_safe_build_env_keeps_namespaced_prefix(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A var under a tool-owned prefix (e.g. koopa's own) passes through."""
+    monkeypatch.setenv("KOOPA_INSTALL_JOBS", "8")
+    assert safe_build_env()["KOOPA_INSTALL_JOBS"] == "8"
+
+
+def test_revert_direnv_env_removes_added_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A var direnv added (absent from 'p') is removed entirely."""
+    monkeypatch.setenv("DIRENV_DIFF", _direnv_diff({}, {"PROJECT_API_KEY": "fake-value"}))
+    monkeypatch.setenv("PROJECT_API_KEY", "fake-value")
+
+    reverted = revert_direnv_env()
+
+    assert "PROJECT_API_KEY" not in os.environ
+    assert "PROJECT_API_KEY" in reverted
+
+
+def test_revert_direnv_env_restores_changed_var(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A var direnv changed (present in both 'p' and 'n') is restored to 'p'."""
+    monkeypatch.setenv(
+        "DIRENV_DIFF",
+        _direnv_diff({"PATH": "/usr/bin:/bin"}, {"PATH": "/project/venv/bin:/usr/bin:/bin"}),
+    )
+    monkeypatch.setenv("PATH", "/project/venv/bin:/usr/bin:/bin")
+
+    reverted = revert_direnv_env()
+
+    assert os.environ["PATH"] == "/usr/bin:/bin"
+    assert "PATH" in reverted
+
+
+def test_revert_direnv_env_decodes_gzip_payload(monkeypatch: pytest.MonkeyPatch) -> None:
+    """'_decode_direnv_diff()'s gzip fallback (non-zlib payload) also decodes."""
+    monkeypatch.setenv(
+        "DIRENV_DIFF",
+        _direnv_diff({}, {"PROJECT_API_KEY": "fake-value"}, compress="gzip"),
+    )
+    monkeypatch.setenv("PROJECT_API_KEY", "fake-value")
+
+    reverted = revert_direnv_env()
+
+    assert "PROJECT_API_KEY" not in os.environ
+    assert "PROJECT_API_KEY" in reverted
+
+
+def test_revert_direnv_env_noop_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No-op, no raise, when direnv isn't active."""
+    monkeypatch.delenv("DIRENV_DIFF", raising=False)
+    assert revert_direnv_env() == []
+
+
+def test_revert_direnv_env_noop_on_garbage_payload(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No-op, no raise, on a malformed 'DIRENV_DIFF' -- never a partial apply."""
+    monkeypatch.setenv("DIRENV_DIFF", "not-valid-base64!!!")
+    assert revert_direnv_env() == []
+
+
+def test_revert_direnv_env_is_idempotent(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A second call is a no-op.
+
+    'DIRENV_DIFF' is left in 'os.environ' by the first call, but every diffed
+    key already matches its pre-'.envrc' value by then, so a second call
+    (e.g. after an os.execv restart) finds nothing left to change -- this is
+    what stops a duplicate message on a restart.
+    """
+    monkeypatch.setenv("DIRENV_DIFF", _direnv_diff({}, {"PROJECT_TOKEN": "fake"}))
+    monkeypatch.setenv("PROJECT_TOKEN", "fake")
+
+    first = revert_direnv_env()
+    second = revert_direnv_env()
+
+    assert first == ["PROJECT_TOKEN"]
+    assert second == []
 
 
 def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) -> None:

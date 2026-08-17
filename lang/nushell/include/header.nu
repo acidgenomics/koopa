@@ -26,7 +26,9 @@
 export use ../functions/core/add-to-path-start.nu *
 export use ../functions/core/add-to-path-end.nu *
 export use ../functions/core/is-installed.nu *
+export use ../functions/core/is-light-mode.nu *
 export use ../functions/core/is-macos.nu *
+export use ../functions/core/terminal-is-light-background.nu *
 export use ../functions/prefix/koopa-prefix.nu *
 export use ../functions/prefix/bin-prefix.nu *
 export use ../functions/prefix/opt-prefix.nu *
@@ -46,7 +48,7 @@ export use ../functions/activate/activate-aliases.nu *
 
 # Main activation function.
 # @note Updated 2026-05-01.
-export def _koopa_activate_koopa [] {
+export def --env _koopa_activate_koopa [] {
     let koopa_minimal = ($env.KOOPA_MINIMAL? | default "0")
 
     _koopa_activate_bootstrap
@@ -93,7 +95,7 @@ export def _koopa_activate_koopa [] {
 }
 
 # Run activation if KOOPA_ACTIVATE is set.
-export def _koopa_run_activation [] {
+export def --env _koopa_run_activation [] {
     let koopa_activate = ($env.KOOPA_ACTIVATE? | default "0")
     if $koopa_activate == "1" {
         _koopa_activate_koopa

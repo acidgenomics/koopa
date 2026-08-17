@@ -3,7 +3,10 @@
 import subprocess
 import sys
 from collections.abc import Callable
+from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -47,6 +50,152 @@ def test_brew_env_is_a_copy() -> None:
     before = os.environ.get("NONINTERACTIVE")
     _brew_env()
     assert os.environ.get("NONINTERACTIVE") == before
+
+
+def test_brew_env_sets_curlrc() -> None:
+    """_brew_env must point HOMEBREW_CURLRC at an existing absolute path.
+
+    An absolute path is required: HOMEBREW_CURLRC's own semantics only pass
+    ``--disable`` (which suppresses the user's ~/.curlrc) when the value
+    starts with '/'. A relative value would fall back to loading ~/.curlrc.
+    """
+    import os
+
+    from koopa.brew import _brew_env
+
+    env = _brew_env()
+    curlrc = env["HOMEBREW_CURLRC"]
+    assert os.path.isabs(curlrc)
+    assert os.path.isfile(curlrc)
+
+
+def test_brew_curlrc_fallback_content() -> None:
+    """The fallback curlrc must set a stall guard, not just a retry count."""
+    from koopa.brew import _brew_curlrc_fallback
+
+    with open(_brew_curlrc_fallback(), encoding="utf-8") as f:
+        content = f.read()
+    assert "connect-timeout" in content
+    assert "speed-limit" in content
+    assert "speed-time" in content
+
+
+def test_brew_env_respects_user_curlrc() -> None:
+    """_brew_env must not override a HOMEBREW_CURLRC the caller already set."""
+    from koopa.brew import _brew_env
+
+    with patch.dict("os.environ", {"HOMEBREW_CURLRC": "/custom/path"}):
+        env = _brew_env()
+    assert env["HOMEBREW_CURLRC"] == "/custom/path"
+
+
+def test_brew_env_prefers_user_curlrc_when_present() -> None:
+    """_brew_env must reuse the user's own curlrc rather than generating one.
+
+    koopa's own dotfiles ship the stall guard directly in ~/.curlrc (see
+    opt/dotfiles/chezmoi/dot_curlrc.tmpl), so Homebrew should read that file
+    instead of a separate koopa-generated copy.
+    """
+    from koopa.brew import _brew_env
+
+    with (
+        patch("koopa.brew._user_curlrc_path", return_value="/home/user/.curlrc"),
+        patch("koopa.brew._brew_curlrc_fallback") as mock_fallback,
+    ):
+        env = _brew_env()
+
+    assert env["HOMEBREW_CURLRC"] == "/home/user/.curlrc"
+    mock_fallback.assert_not_called()
+
+
+def test_brew_env_falls_back_when_no_user_curlrc() -> None:
+    """_brew_env must generate a minimal stall guard when the user has no curlrc."""
+    import os
+
+    from koopa.brew import _brew_env
+
+    with patch("koopa.brew._user_curlrc_path", return_value=None):
+        env = _brew_env()
+
+    curlrc = env["HOMEBREW_CURLRC"]
+    assert os.path.isabs(curlrc)
+    assert os.path.isfile(curlrc)
+    with open(curlrc, encoding="utf-8") as f:
+        content = f.read()
+    assert "connect-timeout" in content
+    assert "speed-limit" in content
+    assert "speed-time" in content
+
+
+# ---------------------------------------------------------------------------
+# Unit tests for _user_curlrc_path: locating the user's own curl config
+# ---------------------------------------------------------------------------
+
+
+def test_user_curlrc_path_prefers_curl_home(tmp_path: Path) -> None:
+    """CURL_HOME/.curlrc must win over XDG_CONFIG_HOME/curlrc and ~/.curlrc."""
+    from koopa.brew import _user_curlrc_path
+
+    curl_home = tmp_path / "curl_home"
+    curl_home.mkdir()
+    (curl_home / ".curlrc").write_text("# curl_home\n")
+    xdg_config = tmp_path / "xdg_config"
+    xdg_config.mkdir()
+    (xdg_config / "curlrc").write_text("# xdg\n")
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".curlrc").write_text("# home\n")
+
+    with patch.dict(
+        "os.environ",
+        {"CURL_HOME": str(curl_home), "XDG_CONFIG_HOME": str(xdg_config), "HOME": str(home)},
+        clear=True,
+    ):
+        assert _user_curlrc_path() == str(curl_home / ".curlrc")
+
+
+def test_user_curlrc_path_falls_back_to_xdg_config_home(tmp_path: Path) -> None:
+    """<xdg_config_home>/curlrc must win over ~/.curlrc when CURL_HOME is unset."""
+    from koopa.brew import _user_curlrc_path
+
+    xdg_config = tmp_path / "xdg_config"
+    xdg_config.mkdir()
+    (xdg_config / "curlrc").write_text("# xdg\n")
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".curlrc").write_text("# home\n")
+
+    with patch.dict(
+        "os.environ", {"XDG_CONFIG_HOME": str(xdg_config), "HOME": str(home)}, clear=True
+    ):
+        assert _user_curlrc_path() == str(xdg_config / "curlrc")
+
+
+def test_user_curlrc_path_falls_back_to_home_curlrc(tmp_path: Path) -> None:
+    """~/.curlrc must be used when neither CURL_HOME nor XDG_CONFIG_HOME/curlrc exist."""
+    from koopa.brew import _user_curlrc_path
+
+    xdg_config = tmp_path / "xdg_config"
+    xdg_config.mkdir()
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".curlrc").write_text("# home\n")
+
+    with patch.dict(
+        "os.environ", {"XDG_CONFIG_HOME": str(xdg_config), "HOME": str(home)}, clear=True
+    ):
+        assert _user_curlrc_path() == str(home / ".curlrc")
+
+
+def test_user_curlrc_path_returns_none_when_nothing_exists(tmp_path: Path) -> None:
+    """No curl config anywhere must yield None, not raise."""
+    from koopa.brew import _user_curlrc_path
+
+    home = tmp_path / "home"
+    home.mkdir()
+
+    with patch.dict("os.environ", {"HOME": str(home)}, clear=True):
+        assert _user_curlrc_path() is None
 
 
 # ---------------------------------------------------------------------------
@@ -170,6 +319,101 @@ def test_brew_upgrade_casks_skips_versionless_casks_with_same_version() -> None:
         c for c in mock_run.call_args_list if "reinstall" in c.args[0] and "--cask" in c.args[0]
     ]
     assert not reinstall_calls
+
+
+# ---------------------------------------------------------------------------
+# Sudo keep-alive guard around cask reinstalls
+# ---------------------------------------------------------------------------
+
+
+def test_sudo_authenticate_raises_permission_error_on_failure() -> None:
+    """_sudo_authenticate must turn a failed/cancelled sudo prompt into PermissionError."""
+    from koopa.brew import _sudo_authenticate
+
+    with (
+        patch(
+            "koopa.brew.subprocess.run",
+            side_effect=subprocess.CalledProcessError(1, ["sudo", "-v"]),
+        ),
+        pytest.raises(PermissionError),
+    ):
+        _sudo_authenticate()
+
+
+def test_sudo_keepalive_stops_before_first_refresh() -> None:
+    """_sudo_keepalive_stop must join the thread promptly with no refresh call fired.
+
+    The refresh interval is 50s; stopping right after start (as this test does)
+    must not block for anywhere close to that.
+    """
+    from koopa.brew import _sudo_keepalive_start, _sudo_keepalive_stop
+
+    with patch("koopa.brew.subprocess.run") as mock_run:
+        handle = _sudo_keepalive_start()
+        _sudo_keepalive_stop(handle)
+
+    mock_run.assert_not_called()
+    assert not handle[1].is_alive()
+
+
+def test_brew_upgrade_casks_authenticates_before_reinstalling() -> None:
+    """brew_upgrade_casks must authenticate sudo once and keep it alive around the loop."""
+
+    def _side_effect(cmd: list[str], **_kwargs: object) -> MagicMock:
+        result = MagicMock()
+        if "outdated" in cmd and "--cask" in cmd:
+            result.stdout = "firefox (128.0 < 129.0)\n"
+        else:
+            result.stdout = ""
+        result.stderr = ""
+        result.returncode = 0
+        return result
+
+    with (
+        patch("koopa.brew.subprocess.run", side_effect=_side_effect),
+        patch("koopa.system.has_sudo", return_value=True),
+        patch("koopa.brew._sudo_authenticate") as mock_auth,
+        patch("koopa.brew._sudo_keepalive_start", return_value="handle") as mock_start,
+        patch("koopa.brew._sudo_keepalive_stop") as mock_stop,
+    ):
+        from koopa.brew import brew_upgrade_casks
+
+        brew_upgrade_casks()
+
+    mock_auth.assert_called_once()
+    mock_start.assert_called_once()
+    mock_stop.assert_called_once_with("handle")
+
+
+def test_brew_upgrade_casks_stops_keepalive_even_if_reinstall_fails() -> None:
+    """A failed cask reinstall must not leave the sudo keep-alive thread running."""
+
+    def _side_effect(cmd: list[str], **_kwargs: object) -> MagicMock:
+        if "reinstall" in cmd:
+            raise subprocess.CalledProcessError(1, cmd)
+        result = MagicMock()
+        if "outdated" in cmd and "--cask" in cmd:
+            result.stdout = "firefox (128.0 < 129.0)\n"
+        else:
+            result.stdout = ""
+        result.stderr = ""
+        result.returncode = 0
+        return result
+
+    with (
+        patch("koopa.brew.subprocess.run", side_effect=_side_effect),
+        patch("koopa.system.has_sudo", return_value=True),
+        patch("koopa.brew._sudo_authenticate"),
+        patch("koopa.brew._sudo_keepalive_start", return_value="handle") as mock_start,
+        patch("koopa.brew._sudo_keepalive_stop") as mock_stop,
+    ):
+        from koopa.brew import brew_upgrade_casks
+
+        with pytest.raises(subprocess.CalledProcessError):
+            brew_upgrade_casks()
+
+    mock_start.assert_called_once()
+    mock_stop.assert_called_once_with("handle")
 
 
 # ---------------------------------------------------------------------------

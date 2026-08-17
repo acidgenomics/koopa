@@ -31,7 +31,7 @@ def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.Monke
         patch("koopa.app.prune_apps"),
         patch("koopa.install.update_system_apps") as update_system_apps,
     ):
-        cli_main._handle_update(argparse.Namespace(mode=None, verbose=False, system=False))
+        cli_main._handle_update(argparse.Namespace(mode=None, apps=[], verbose=False, system=False))
 
     update_system_apps.assert_not_called()
 
@@ -68,3 +68,59 @@ def test_require_git_managed_install_refuses_packaged_install(
 
     with pytest.raises(SystemExit):
         cli_main._require_git_managed_install()
+
+
+def test_revert_direnv_env_reports_count_when_verbose(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """A verbose note names the project dir and reports how many vars were reverted."""
+    monkeypatch.setenv("DIRENV_DIR", "-/Users/someuser/some-project")
+    with patch("koopa.system.revert_direnv_env", return_value=["FOO", "BAR"]):
+        cli_main._revert_direnv_env(verbose=True)
+
+    err = capsys.readouterr().err
+    assert "/Users/someuser/some-project" in err
+    assert "2" in err
+
+
+def test_revert_direnv_env_reports_project_dir_when_it_is_itself_reverted(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """The note still names the project dir when 'DIRENV_DIR' is one of the reverted vars.
+
+    'DIRENV_DIR' is itself absent from direnv's pre-'.envrc' state, so the real
+    'revert_direnv_env' removes it from 'os.environ' along with every other var
+    direnv set. A mock that doesn't reproduce that removal (see
+    'test_revert_direnv_env_reports_count_when_verbose') can't catch a read
+    that happens after the removal instead of before it.
+    """
+    monkeypatch.setenv("DIRENV_DIR", "-/Users/someuser/some-project")
+
+    def _fake_revert() -> list[str]:
+        monkeypatch.delenv("DIRENV_DIR", raising=False)
+        return ["DIRENV_DIR", "FOO"]
+
+    with patch("koopa.system.revert_direnv_env", side_effect=_fake_revert):
+        cli_main._revert_direnv_env(verbose=True)
+
+    err = capsys.readouterr().err
+    assert "/Users/someuser/some-project" in err
+    assert "2" in err
+
+
+def test_revert_direnv_env_silent_by_default(capsys: pytest.CaptureFixture) -> None:
+    """No message prints without '--verbose', even when vars were reverted."""
+    with patch("koopa.system.revert_direnv_env", return_value=["FOO"]):
+        cli_main._revert_direnv_env(verbose=False)
+
+    assert capsys.readouterr().err == ""
+
+
+def test_revert_direnv_env_silent_when_nothing_reverted(
+    capsys: pytest.CaptureFixture,
+) -> None:
+    """No message prints under '--verbose' when direnv wasn't active."""
+    with patch("koopa.system.revert_direnv_env", return_value=[]):
+        cli_main._revert_direnv_env(verbose=True)
+
+    assert capsys.readouterr().err == ""

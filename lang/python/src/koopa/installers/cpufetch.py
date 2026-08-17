@@ -6,6 +6,7 @@ import subprocess
 
 from koopa.build import locate
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 
 
 def main(
@@ -19,7 +20,7 @@ def main(
     env = activate_app_deps()
     make = locate("make")
     download_extract_cd()
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [make, f"--jobs={jobs}"],
         env=env.to_env_dict(),

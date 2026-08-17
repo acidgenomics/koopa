@@ -6,6 +6,7 @@ import stat
 import subprocess
 
 from koopa.download import download
+from koopa.system import safe_build_env
 
 
 def main(
@@ -20,7 +21,7 @@ def main(
     cargo_home = tmp_prefix
     rustup_home = tmp_prefix
     os.makedirs(rustup_home, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CARGO_HOME"] = cargo_home
     env["RUSTUP_HOME"] = rustup_home
     env["RUSTUP_INIT_SKIP_PATH_CHECK"] = "yes"

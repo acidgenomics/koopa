@@ -43,7 +43,7 @@ lang/python/
 - Dotfiles: chezmoi-managed, source at `opt/dotfiles/chezmoi/`. Always edit the
   source file, never the deployed copy under `~`.
 - Platform: macOS arm64 and Linux x86_64/arm64. Intel Mac not supported.
-- Line length: 100 chars. Python 3.12+. NumPy-style docstrings.
+- Line length: 100 chars. Python 3.14+. NumPy-style docstrings.
 
 ## Key Conventions
 

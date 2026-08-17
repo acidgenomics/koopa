@@ -16,7 +16,14 @@ function _koopa_export_env {
     }
 
     # KOOPA_CPU_COUNT.
-    if (_koopa_is_macos) {
+    # An explicit Slurm allocation (SLURM_CPUS_PER_TASK, then
+    # SLURM_CPUS_ON_NODE) beats a fresh nproc/sysctl probe -- srun can
+    # constrain a job below what a bare probe reports.
+    if ($env:SLURM_CPUS_PER_TASK -match '^[0-9]+$') {
+        $env:KOOPA_CPU_COUNT = $env:SLURM_CPUS_PER_TASK
+    } elseif ($env:SLURM_CPUS_ON_NODE -match '^[0-9]+$') {
+        $env:KOOPA_CPU_COUNT = $env:SLURM_CPUS_ON_NODE
+    } elseif (_koopa_is_macos) {
         $env:KOOPA_CPU_COUNT = (sysctl -n hw.ncpu 2>$null)
     } elseif (_koopa_is_windows) {
         $env:KOOPA_CPU_COUNT = $env:NUMBER_OF_PROCESSORS

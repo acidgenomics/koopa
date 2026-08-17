@@ -1202,13 +1202,19 @@ _koopa_color_mode() {
 }
 
 _koopa_cpu_count() {
-    __kvar_num="${KOOPA_CPU_COUNT:-}"
-    if [ -n "$__kvar_num" ]
-    then
-        _koopa_print "$__kvar_num"
-        unset -v __kvar_num
-        return 0
-    fi
+    __kvar_num=''
+    for __kvar_candidate in \
+        "${SLURM_CPUS_PER_TASK:-}" \
+        "${SLURM_CPUS_ON_NODE:-}" \
+        "${KOOPA_CPU_COUNT:-}"
+    do
+        case "$__kvar_candidate" in
+            '' | *[!0-9]*) continue ;;
+        esac
+        __kvar_num="$__kvar_candidate"
+        break
+    done
+    unset -v __kvar_candidate
     __kvar_bin_prefix="$(_koopa_bin_prefix)"
     __kvar_getconf='/usr/bin/getconf'
     if [ -d "$__kvar_bin_prefix" ] && [ -x "${__kvar_bin_prefix}/gnproc" ]
@@ -1227,30 +1233,47 @@ _koopa_cpu_count() {
         __kvar_python=''
     fi
     __kvar_sysctl='/usr/sbin/sysctl'
+    __kvar_avail=''
     if [ -x "$__kvar_nproc" ]
     then
-        __kvar_num="$("$__kvar_nproc" --all)"
-    elif [ -x "$__kvar_getconf" ]
+        __kvar_avail="$("$__kvar_nproc")"
+        case "$__kvar_avail" in
+            '' | *[!0-9]*) __kvar_avail='' ;;
+        esac
+    fi
+    if [ -n "$__kvar_num" ] && [ -n "$__kvar_avail" ] \
+        && [ "$__kvar_num" -gt "$__kvar_avail" ]
     then
-        __kvar_num="$("$__kvar_getconf" '_NPROCESSORS_ONLN')"
-    elif [ -x "$__kvar_sysctl" ] && _koopa_is_macos
+        __kvar_num="$__kvar_avail"
+    fi
+    if [ -z "$__kvar_num" ]
     then
-        __kvar_num="$( \
-            "$__kvar_sysctl" -n 'hw.ncpu' \
-            | cut -d ' ' -f 2 \
-        )"
-    elif [ -x "$__kvar_python" ]
-    then
-        __kvar_num="$( \
-            "$__kvar_python" -c \
-                "import multiprocessing; print(multiprocessing.cpu_count())" \
-            2>/dev/null \
-            || true \
-        )"
+        if [ -n "$__kvar_avail" ]
+        then
+            __kvar_num="$__kvar_avail"
+        elif [ -x "$__kvar_getconf" ]
+        then
+            __kvar_num="$("$__kvar_getconf" '_NPROCESSORS_ONLN')"
+        elif [ -x "$__kvar_sysctl" ] && _koopa_is_macos
+        then
+            __kvar_num="$( \
+                "$__kvar_sysctl" -n 'hw.ncpu' \
+                | cut -d ' ' -f 2 \
+            )"
+        elif [ -x "$__kvar_python" ]
+        then
+            __kvar_num="$( \
+                "$__kvar_python" -c \
+                    "import multiprocessing; print(multiprocessing.cpu_count())" \
+                2>/dev/null \
+                || true \
+            )"
+        fi
     fi
     [ -z "$__kvar_num" ] && __kvar_num=1
     _koopa_print "$__kvar_num"
     unset -v \
+        __kvar_avail \
         __kvar_bin_prefix \
         __kvar_getconf \
         __kvar_nproc \

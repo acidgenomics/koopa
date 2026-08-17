@@ -14,15 +14,29 @@ import sys
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 
 @lru_cache(maxsize=1)
 def vendor_config() -> dict[str, Any] | None:
-    """Load vendor.json config. Returns None if missing, disabled, or invalid."""
-    from koopa.prefix import koopa_prefix
+    """Load vendor.json config. Returns None if missing, disabled, or invalid.
 
-    path = Path(koopa_prefix()) / "etc" / "koopa" / "vendor.json"
-    if not path.is_file():
+    Checked in order, first existing file wins (not merged):
+    '${XDG_CONFIG_HOME:-~/.config}/koopa/vendor.json', then
+    '<koopa-prefix>/etc/koopa/vendor.json'. The XDG location survives a
+    pinned-release re-extract or 'git clean', since it lives outside the koopa
+    tree entirely; the 'etc/koopa/' location is kept for continuity with
+    existing setups and the shipped '.example' file.
+    """
+    from koopa.prefix import koopa_prefix
+    from koopa.xdg import xdg_config_home
+
+    candidates = [
+        Path(xdg_config_home()) / "koopa" / "vendor.json",
+        Path(koopa_prefix()) / "etc" / "koopa" / "vendor.json",
+    ]
+    path = next((c for c in candidates if c.is_file()), None)
+    if path is None:
         return None
     try:
         data = json.loads(path.read_text())
@@ -59,6 +73,17 @@ def _http_binary_url(cfg: dict[str, Any], os_str: str, arch: str, name: str, tar
     base = hc["base_url"].rstrip("/")
     repo = hc["binary_repo"]
     return f"{base}/{repo}/binaries/{os_str}/{arch}/{name}/{tarball}"
+
+
+def _remote_repo_for_host(cfg: dict[str, Any], host: str) -> str | None:
+    """Return the remote-proxy repo name for a host, or None if unmapped."""
+    remotes = cfg.get("http", {}).get("remotes") or {}
+    if host in remotes:
+        return remotes[host]
+    for key, repo in remotes.items():
+        if key.startswith(".") and host.endswith(key):
+            return repo
+    return None
 
 
 def _s3_src_uri(cfg: dict[str, Any], name: str, filename: str) -> str:
@@ -98,6 +123,30 @@ def vendor_download_binary(os_str: str, arch: str, name: str, tarball: str) -> s
     if cfg["backend"] == "http":
         return _http_binary_url(cfg, os_str, arch, name, tarball)
     return None
+
+
+def vendor_rewrite_url(url: str) -> str | None:
+    """Rewrite an upstream URL through a vendor remote-proxy repo, or None.
+
+    Requires backend 'http' and a configured 'http.remotes' host -> repo map
+    (e.g. {"github.com": "github-remote"}). The URL's hostname is matched
+    exactly first, then against 'remotes' keys beginning with '.' as a
+    suffix match (e.g. '.gnu.org' matches 'ftpmirror.gnu.org'). A remote
+    repo's root mirrors the proxied host's root, so the rewritten URL keeps
+    the original path and query string.
+    """
+    cfg = vendor_config()
+    if cfg is None or cfg.get("backend") != "http":
+        return None
+    parsed = urlparse(url)
+    repo = _remote_repo_for_host(cfg, parsed.hostname or "")
+    if repo is None:
+        return None
+    base = cfg["http"]["base_url"].rstrip("/")
+    path = parsed.path
+    if parsed.query:
+        path = f"{path}?{parsed.query}"
+    return f"{base}/{repo}{path}"
 
 
 def vendor_has_src(name: str, filename: str) -> bool:

@@ -1,6 +1,6 @@
 ---
 name: koopa-shell-internals
-description: >
+description: >-
   Internals of koopa shell activation and update recovery. Use when optimizing
   shell startup, editing activation-path functions, caching plugin init output,
   debugging lazy-load wrappers, fixing update_koopa() merge/rebase recovery, or

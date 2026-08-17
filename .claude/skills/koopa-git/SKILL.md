@@ -1,6 +1,6 @@
 ---
 name: koopa-git
-description: >
+description: >-
   koopa git workflow — develop→main PR pattern, merge conflict resolution,
   tag management, and how to avoid rebase hell. Use when dealing with PR
   conflicts, moving tags, or pushing a release branch.

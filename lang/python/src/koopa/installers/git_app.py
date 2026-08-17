@@ -13,6 +13,7 @@ from koopa.installers._build_helper import (
     activate_app_deps,
     download_extract_cd,
 )
+from koopa.system import cpu_count
 
 
 def main(
@@ -52,7 +53,7 @@ def main(
     download_extract_cd()
     subprocess_env = env.to_env_dict()
     subprocess_env["CARGO_HOME"] = tempfile.mkdtemp(prefix="koopa-cargo-")
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     conf_args = [
         "--disable-nls",
         f"--prefix={prefix}",

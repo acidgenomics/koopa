@@ -96,9 +96,10 @@ def git_clone(
         _git("checkout", "--quiet", commit, cwd=cwd, capture=False)
 
 
-def git_fetch(path: str = ".") -> None:
+def git_fetch(path: str = ".", *, capture: bool = False) -> subprocess.CompletedProcess | None:
     """Fetch from remote."""
-    _git("fetch", "--all", cwd=path, capture=False)
+    result = _git("fetch", "--all", cwd=path, capture=capture)
+    return result if capture else None
 
 
 def git_checkout(path: str = ".", *, ref: str = "HEAD") -> None:
@@ -248,14 +249,17 @@ def git_rebase_abort(path: str = ".") -> None:
         _git("rebase", "--abort", cwd=path, capture=False)
 
 
-def git_reset(path: str = ".", *, ref: str | None = None, hard: bool = False) -> None:
+def git_reset(
+    path: str = ".", *, ref: str | None = None, hard: bool = False, capture: bool = False
+) -> subprocess.CompletedProcess | None:
     """Reset git repository."""
     args = ["reset"]
     if hard:
         args.append("--hard")
     if ref:
         args.append(ref)
-    _git(*args, cwd=path, capture=False)
+    result = _git(*args, cwd=path, capture=capture)
+    return result if capture else None
 
 
 def git_rm_untracked(path: str = ".") -> None:

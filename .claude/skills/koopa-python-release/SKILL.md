@@ -562,6 +562,67 @@ API-reference output (`sphinx.ext.autosummary` + `numpydoc`, written to
 never needed API-reference styling before this theme picked up autodoc
 consumers.
 
+### In-page TOC (`body > header > ul`/`#toc`)
+
+Sphinx always wraps a page's real TOC entries in one extra `<li>` linking
+back to the page itself (`href="#"`). `layout.html`'s `header` block unwraps
+that wrapper and tags the real list `id="toc"` so it can pick up base.css's
+own `body > header > #toc` styling (border-top separator, per-breakpoint
+padding) — a `display:contents` CSS trick on the wrapper `<li>` cannot do
+this instead, since `body > header > #toc` is a child selector matching the
+DOM, not the box model; the grandchild `<ul>` never becomes a match no
+matter what display value the wrapper gets.
+
+Two box-model traps hit while getting this pixel-correct, both worth
+avoiding on the first pass elsewhere in this theme:
+
+- **Nested `<ul>`s need their own `padding-left: 0`.** Only `#toc` itself
+  gets an explicit padding rule from base.css/responsive.css; a plain
+  nested `<ul>` falls back to the browser's own ~40px default, stacking
+  with responsive.css's `ul { margin-left: 2rem/1rem }` for roughly double
+  the intended per-level step.
+- **Indent `#toc` with `padding-left`, never `margin-left`.** base.css's
+  border-top separator lives on `#toc`'s own border box; margin sits
+  outside the border box, so shrinking `#toc`'s margin-left to reuse
+  responsive.css's generic list margin directly pulls the border-top in
+  with it — it stops spanning the same width as `body > header`'s own
+  border-bottom immediately below the whole title+toc block, since that
+  border is on a different element (`body > header` itself, via
+  responsive.css's `>=1000px` bleed selector list, which is left
+  untouched). Padding only moves the content edge; the border box, and the
+  width it shares with `body > header`, stays put. On this theme, div.body's
+  own bulleted lists are anchored 2rem/1rem (per breakpoint) off the page
+  edge via that same generic margin rule (with padding zeroed — see the
+  `div.body li` block above) rather than flush with headings the way
+  steinbaugh.com's own unmodified `#toc` is; matching that on the *shared*
+  `#toc` needs an extra `padding-left` on top of whatever base.css/
+  responsive.css already set — worked out per breakpoint, not copied
+  wholesale from responsive.css's own numbers, since the `>=1000px` bleed
+  pairing (`margin-left:-3rem` / `padding-left:3rem`) already nets to 0
+  before any override.
+
+### Page title color (`body > header h1`)
+
+colors.css sets `h1..h7 { color: var(--header-color) }` (purple in dark
+mode) but overrides it back down to `body > header h1 { color:
+var(--bright-color) }` (white in dark mode) — correct for steinbaugh.com's
+own blog, where a bright/neutral post title is a deliberate contrast
+against purple in-content headings, but every page's *own* title lives in
+`body > header` on this theme (see the `#toc` section above), so this made
+every Sphinx-built page's title the one white heading on either site. The
+python.acidgenomics.com *landing* page's `<h1>` isn't part of this Sphinx
+theme at all (hand-rolled HTML, no `<header>` wrapper — see "Landing page"
+below), so it fell through to the generic purple rule instead, making it
+look inconsistent with every package's own page one level down. Fixed with
+a same-specificity `body > header h1 { color: var(--header-color) }`
+override in acidgenomics.css (loads after colors.css's `@import`, so it
+wins outright). No light-mode effect: light mode's `--header-color` and
+`--bright-color` both resolve to `--bw-color-1` (black) already, so this
+is a dark-mode-only change. Affects every page on both sites, koopa's own
+root title included — there's exactly one shared theme, no per-site override
+mechanism (see `sync_docs_theme()`'s own docstring), so a color fix here is
+never scoped to one site's pages without a structural change to the theme.
+
 ## Landing page
 
 `reindex` auto-generates `index.html` at the bucket root from each wheel's

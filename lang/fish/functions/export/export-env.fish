@@ -14,11 +14,23 @@ function _koopa_export_env
     end
 
     # KOOPA_CPU_COUNT.
-    if _koopa_is_macos
+    # An explicit Slurm allocation (SLURM_CPUS_PER_TASK, then
+    # SLURM_CPUS_ON_NODE) beats a fresh nproc/sysctl probe -- srun can
+    # constrain a job below what a bare probe reports.
+    set -l __koopa_cpu_count
+    if set -q SLURM_CPUS_PER_TASK; and string match -qr '^[0-9]+$' -- $SLURM_CPUS_PER_TASK
+        set __koopa_cpu_count $SLURM_CPUS_PER_TASK
+    else if set -q SLURM_CPUS_ON_NODE; and string match -qr '^[0-9]+$' -- $SLURM_CPUS_ON_NODE
+        set __koopa_cpu_count $SLURM_CPUS_ON_NODE
+    end
+    if test -n "$__koopa_cpu_count"
+        set -gx KOOPA_CPU_COUNT $__koopa_cpu_count
+    else if _koopa_is_macos
         set -gx KOOPA_CPU_COUNT (sysctl -n hw.ncpu 2>/dev/null; or echo 1)
     else
         set -gx KOOPA_CPU_COUNT (nproc 2>/dev/null; or echo 1)
     end
+    set -e __koopa_cpu_count
 
     # XDG base directories.
     if not set -q XDG_CACHE_HOME

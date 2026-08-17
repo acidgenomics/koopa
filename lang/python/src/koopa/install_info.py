@@ -1,25 +1,70 @@
 """Install metadata functions."""
 
 import os
-import re
 from datetime import UTC, datetime
-from json import dumps
+from json import dumps, loads
 
 from koopa.io import import_app_json
+from koopa.prefix import opt_prefix
 from koopa.system import os_id
 
-_SENSITIVE_KEY_RE = re.compile(
-    r"(_KEY|_TOKEN|_SECRET|_PASSWORD|_CREDENTIAL|_AUTH|_PAT)$"
-    r"|(_KEY_|_TOKEN_|_SECRET_|_PASSWORD_|_CREDENTIAL_|_AUTH_|_PAT_)"
-    r"|(API_KEY|API_TOKEN|API_SECRET|API_PAT|ACCESS_TOKEN|REFRESH_TOKEN)"
-    r"|(AUTH_SOCK|AUTH_BASE64)",
-    re.IGNORECASE,
+# Build-diagnostic variables only. This is an allowlist, not a blocklist:
+# info.json is packaged into pushed binary tarballs, so anything not named
+# here never reaches disk. Do not add credential-shaped names (tokens, keys,
+# DSNs) even if they look build-relevant.
+_ENVIRON_ALLOWLIST = (
+    "CC",
+    "CXX",
+    "CFLAGS",
+    "CXXFLAGS",
+    "CPPFLAGS",
+    "LDFLAGS",
+    "LD_LIBRARY_PATH",
+    "DYLD_LIBRARY_PATH",
+    "PATH",
+    "PYTHONPATH",
+    "GOPATH",
+    "CONDA_PREFIX",
+    "CONDA_EXE",
+    "MACOSX_DEPLOYMENT_TARGET",
+    "TMPDIR",
+    "TERM",
+    "KOOPA_PREFIX",
+    "KOOPA_BUILDER",
+    "KOOPA_IS_DOCKER",
+    "KOOPA_VERBOSE",
+    "KOOPA_INSTALL_JOBS",
+    "KOOPA_INSTALL_APP_TIMEOUT",
+    "KOOPA_INSTALL_APP_WARN",
 )
 
 
-def _filter_environ() -> dict[str, str]:
-    """Filter sensitive variables from environment before serialization."""
-    return {k: v for k, v in sorted(os.environ.items()) if not _SENSITIVE_KEY_RE.search(k)}
+def _capture_build_environ() -> dict[str, str]:
+    """Capture a fixed allowlist of build-diagnostic variables for info.json."""
+    return {k: os.environ[k] for k in _ENVIRON_ALLOWLIST if k in os.environ}
+
+
+def _installed_dep_state(dep: str, fallback_entry: dict) -> tuple[str, int]:
+    """Return (version, revision) for *dep* as actually installed under opt/.
+
+    Falls back to *fallback_entry* (the app.json entry) when the dep isn't
+    linked in opt/ yet, so recording never fails outright.
+    """
+    opt_link = os.path.join(opt_prefix(), dep)
+    if os.path.islink(opt_link):
+        target = os.path.realpath(opt_link)
+        if os.path.isdir(target):
+            version = os.path.basename(target)
+            revision = 0
+            rev_file = os.path.join(target, ".install", "revision")
+            if os.path.isfile(rev_file):
+                try:
+                    with open(rev_file) as f:
+                        revision = int(f.read().strip() or "0")
+                except (ValueError, OSError):
+                    revision = 0
+            return version, revision
+    return fallback_entry.get("version", ""), int(fallback_entry.get("revision", 0))
 
 
 def write_install_info(output_file: str, name: str, version: str) -> None:
@@ -60,13 +105,14 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
         if isinstance(d_entry, dict) and d_entry.get("alias_of"):
             resolved_d = d_entry["alias_of"]
         resolved_entry = json_data.get(resolved_d, {})
-        if isinstance(resolved_entry, dict):
-            rev = int(resolved_entry.get("revision", 0))
-            if rev > 0:
-                dep_revisions[resolved_d] = rev
-            ver = resolved_entry.get("version", "")
-            if ver:
-                dep_versions[resolved_d] = ver
+        ver, rev = _installed_dep_state(
+            resolved_d,
+            resolved_entry if isinstance(resolved_entry, dict) else {},
+        )
+        if rev > 0:
+            dep_revisions[resolved_d] = rev
+        if ver:
+            dep_versions[resolved_d] = ver
     info = {
         "name": name,
         "version": version,
@@ -77,8 +123,74 @@ def write_install_info(output_file: str, name: str, version: str) -> None:
         "soft_dependencies": soft_deps,
         "dep_revisions": dep_revisions,
         "dep_versions": dep_versions,
-        "environ": _filter_environ(),
+        "environ": _capture_build_environ(),
     }
     with open(output_file, "w") as fh:
         fh.write(dumps(info, indent=2, sort_keys=False))
         fh.write("\n")
+
+
+def scrub_install_info(
+    names: list[str] | None = None,
+    *,
+    dry_run: bool = False,
+) -> list[tuple[str, list[str]]]:
+    """Rewrite existing .install/info.json 'environ' blocks down to the allowlist.
+
+    Prefixes installed before `_ENVIRON_ALLOWLIST` landed still hold a full
+    environment dump on disk, and `koopa develop push-app-build`/`push-app-builds`
+    tar the whole prefix (including `.install/`) into the artifacts bucket.
+
+    Parameters
+    ----------
+    names
+        App names to scrub. ``None`` scans every app under `app_prefix()`.
+    dry_run
+        Report what would change without writing anything.
+
+    Returns
+    -------
+        (info.json path, removed key names) for every file that has (or, under
+        `dry_run`, would have) non-allowlisted keys removed. Key *names* only --
+        never values.
+    """
+    from koopa.prefix import app_prefix
+
+    app_dir = app_prefix()
+    if names is None:
+        try:
+            names = sorted(os.listdir(app_dir))
+        except OSError:
+            names = []
+    scrubbed: list[tuple[str, list[str]]] = []
+    for name in names:
+        name_dir = os.path.join(app_dir, name)
+        if not os.path.isdir(name_dir):
+            continue
+        try:
+            versions = sorted(os.listdir(name_dir))
+        except OSError:
+            continue
+        for version in versions:
+            info_file = os.path.join(name_dir, version, ".install", "info.json")
+            if not os.path.isfile(info_file):
+                continue
+            try:
+                with open(info_file) as f:
+                    info = loads(f.read())
+            except (ValueError, OSError):
+                continue
+            environ = info.get("environ")
+            if not isinstance(environ, dict):
+                continue
+            removed_keys = sorted(k for k in environ if k not in _ENVIRON_ALLOWLIST)
+            if not removed_keys:
+                continue
+            scrubbed.append((info_file, removed_keys))
+            if dry_run:
+                continue
+            info["environ"] = {k: v for k, v in environ.items() if k in _ENVIRON_ALLOWLIST}
+            with open(info_file, "w") as f:
+                f.write(dumps(info, indent=2, sort_keys=False))
+                f.write("\n")
+    return scrubbed

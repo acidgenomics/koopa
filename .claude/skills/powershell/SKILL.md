@@ -1,6 +1,6 @@
 ---
 name: powershell
-description: >
+description: >-
   PowerShell (pwsh 7+) activation architecture, starship integration, and color-mode
   sync in koopa. Use when writing or debugging lang/powershell/ files, editing
   activate-*.ps1 functions, adding prompt-tool support (starship, zoxide), integrating

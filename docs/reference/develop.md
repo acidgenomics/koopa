@@ -69,6 +69,11 @@ Check upstream versions for all apps in app.json.
 - `--s3-upload`
 - `--reset-cache`
 
+(koopa-develop-check-skills)=
+## `develop check-skills [path...]`
+
+Validate SKILL.md frontmatter for cross-CLI compatibility.
+
 (koopa-develop-circular-dependencies)=
 ## `develop circular-dependencies`
 
@@ -160,6 +165,14 @@ Push a specific application build to the binary cache.
 
 Push all stale application builds to the binary cache.
 
+(koopa-develop-push-installer)=
+## `develop push-installer app file [--version version] [--force]`
+
+Stage a downloaded vendor installer tarball to the artifacts bucket.
+
+- `--version`
+- `--force`
+
 (koopa-develop-pyright)=
 ## `develop pyright`
 
@@ -181,6 +194,13 @@ Tombstone an app entry in app.json.
 ## `develop reset-revisions`
 
 Remove the revision key from all apps in app.json.
+
+(koopa-develop-scrub-install-info)=
+## `develop scrub-install-info [name...] [--dry-run]`
+
+Rewrite .install/info.json environ blocks down to the allowlist.
+
+- `--dry-run`
 
 (koopa-develop-shellcheck)=
 ## `develop shellcheck`

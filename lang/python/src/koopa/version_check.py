@@ -858,6 +858,9 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR091
     spec = _classify_by_known_pattern(name, info)
     if spec:
         return spec
+    spec = _classify_by_registry_url(name, args, urls)
+    if spec:
+        return spec
     return None
 
 
@@ -1159,6 +1162,32 @@ def _check_libsolv() -> str:
         versions,
         key=lambda v: tuple(int(x) for x in v.split(".")),
     )
+
+
+def _check_julia() -> str:
+    """Return the latest stable Julia release, ignoring the parallel LTS train.
+
+    GitHub's ``/releases/latest`` picks whichever non-prerelease was published
+    most recently, with no concept of version ordering. Julia tags LTS patches
+    (e.g. 1.10.x) and regular stable releases (e.g. 1.12.x) as independent
+    trains, so an LTS patch published after a newer stable release makes
+    ``/releases/latest`` return the older LTS version instead. Fetch a page of
+    tags instead and pick the highest by semver among clean ``vX.Y.Z`` tags,
+    which reflects the true latest stable release regardless of channel.
+    """
+    data = _http_get_json(
+        "https://api.github.com/repos/JuliaLang/julia/tags?per_page=30",
+        github=True,
+    )
+    versions: list[str] = []
+    for tag in data:
+        m = re.match(r"v(\d+\.\d+\.\d+)$", tag["name"])
+        if m:
+            versions.append(m.group(1))
+    if not versions:
+        msg = "No julia version tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
 def _check_msgpack() -> str:
@@ -1627,14 +1656,6 @@ def _check_boost() -> str:
     return re.sub(r"^boost-", "", tag)
 
 
-def _check_isl() -> str:
-    if not _has_acidgenomics_aws():
-        raise RuntimeError(
-            "isl version bump requires acidgenomics AWS access to mirror src tarball"
-        )
-    return _check_directory_listing("https://libisl.sourceforge.io/", "isl")
-
-
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
     "antigravity-cli": _AppCheckSpec(
@@ -1659,7 +1680,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
-    "isl": _AppCheckSpec("dirlist", _check_isl, ()),
+    "isl": _AppCheckSpec(
+        "dirlist",
+        lambda: _check_directory_listing("https://libisl.sourceforge.io/", "isl"),
+        (),
+    ),
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),
@@ -1774,6 +1799,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
     "libheif": _AppCheckSpec("github", _check_github, ("strukturag", "libheif")),
     "libsolv": _AppCheckSpec("github", _check_libsolv, ()),
+    "julia": _AppCheckSpec("github", _check_julia, ()),
     "llvm": _AppCheckSpec(
         "conda",
         lambda: _check_conda("llvm", "conda-forge", subdirs=("linux-64", "osx-arm64")),
@@ -2051,6 +2077,21 @@ def _resolve_pypi_name(name: str, args: dict, urls: list[str]) -> str:
         if m:
             return m.group(1)
     return name
+
+
+def _classify_by_registry_url(name: str, args: dict, urls: list[str]) -> _AppCheckSpec | None:
+    """Classify by a package-registry URL, as a last resort.
+
+    Catches apps with a bespoke installer module (so the ``_GENERIC_INSTALLER_MAP``
+    suffix match never fires) but whose ``url`` list still points at a public
+    registry, e.g. playwright: a dedicated installer downloads its Chromium build
+    after the pip install, so it doesn't route through ``_python_pkg``.
+    """
+    for url in urls:
+        if "pypi.org/project/" in url:
+            pkg = _resolve_pypi_name(name, args, urls)
+            return _AppCheckSpec("pypi", _check_pypi, (pkg,))
+    return None
 
 
 # ── Orchestrator ──────────────────────────────────────────────────────
@@ -2418,12 +2459,29 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
         return 0
+    from koopa.app import installer_artifact_key
+    from koopa.install import _has_private_access
+
     json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     data = json.loads(json_path.read_text())
     today = time.strftime("%Y-%m-%d")
     count = 0
     for r in outdated:
         if r.name in data and r.latest_version:
+            artifact_key = installer_artifact_key(r.name, r.latest_version)
+            if artifact_key is not None:
+                staged = False
+                if _has_private_access():
+                    from koopa.aws import koopa_s3_bucket, s3_object_exists
+
+                    staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
+                if not staged:
+                    print(
+                        f"{r.name}: {r.latest_version} available upstream; "
+                        f"artifact not staged, pin held at {r.current_version}",
+                        file=sys.stderr,
+                    )
+                    continue
             data[r.name]["version"] = r.latest_version
             data[r.name]["date"] = today
             data[r.name].pop("revision", None)

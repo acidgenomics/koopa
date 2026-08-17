@@ -41,6 +41,7 @@ from koopa.system import (
     is_macos,
     is_owner,
     os_slug,
+    safe_build_env,
 )
 from koopa.xdg import xdg_cache_home, xdg_config_home, xdg_data_home
 
@@ -178,11 +179,45 @@ def _binary_tarball_basename(name: str, version: str) -> str:
 
 
 def can_build_binary() -> bool:
-    """Check if running on a designated builder machine (KOOPA_BUILDER=1)."""
-    return os.environ.get("KOOPA_BUILDER", "0") == "1"
+    """Check if running on a designated builder machine (KOOPA_BUILDER=1).
+
+    Reads '<koopa-root>/.env' as well as the environment. koopa's own '.envrc'
+    loads '.env' through direnv, and 'revert_direnv_env' deletes every variable
+    direnv added, so an environment-only read made a builder look like a
+    consumer inside every koopa process.
+    """
+    from koopa.aws import dotenv_value
+
+    return dotenv_value("KOOPA_BUILDER") == "1"
 
 
-_warned_no_account_id = False
+# Binary tarballs are built with absolute paths (see push_app_build's
+# 'tar -Pcz'), so a pushed tarball is only ever extractable back into this
+# exact prefix (see install_app_from_binary_package's 'tar -Pxz' and its own
+# matching check). Named once here and reused everywhere this rule is
+# enforced or asserted, instead of repeating the '/opt/koopa' literal.
+_BINARY_PREFIX = "/opt/koopa"
+
+
+def _require_binary_prefix() -> None:
+    """Raise if the current koopa install isn't the canonical binary-build prefix.
+
+    Called at the top of 'push_app_build', the single choke point that creates
+    a push tarball, so no caller (including 'koopa develop push-app-build',
+    which has its own tar/upload code) can push an absolute-path tarball built
+    against the wrong prefix into the shared bucket.
+    """
+    kp = koopa_prefix()
+    if kp != _BINARY_PREFIX:
+        msg = (
+            f"Binary push is not supported for the koopa install at '{kp}'. "
+            f"Tarballs record absolute paths, so they must be built against "
+            f"'{_BINARY_PREFIX}'."
+        )
+        raise RuntimeError(msg)
+
+
+_warned_flags = {"no_account_id": False, "non_default_prefix": False}
 
 
 def _has_private_access() -> bool:
@@ -194,7 +229,6 @@ def _has_private_access() -> bool:
     treating that machine as having private access, which previously caused
     binary installs to be attempted and abort with "AWS_ACCOUNT_ID must be set".
     """
-    global _warned_no_account_id  # noqa: PLW0603
     credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
     if not os.path.isfile(credentials):
         return False
@@ -208,8 +242,8 @@ def _has_private_access() -> bool:
     try:
         aws_account_id()
     except RuntimeError:
-        if not _warned_no_account_id:
-            _warned_no_account_id = True
+        if not _warned_flags["no_account_id"]:
+            _warned_flags["no_account_id"] = True
             from koopa.alert import alert_note
 
             alert_note(
@@ -238,7 +272,7 @@ def _can_install_binary() -> bool:
         return False
     if flag == "1":
         return True
-    if koopa_prefix() != "/opt/koopa":
+    if koopa_prefix() != _BINARY_PREFIX:
         return False
     if can_build_binary():
         return False
@@ -250,8 +284,11 @@ def _can_push_binary() -> bool:
 
     Allows push when:
     - KOOPA_BUILDER=1 is set, AND
+    - koopa is installed at the canonical '/opt/koopa' prefix (see
+      '_BINARY_PREFIX'; a pushed tarball records absolute paths, so a build
+      from any other prefix can never be extracted by a puller), AND
     - either the vendor backend can push (vendor.json configured with credentials), OR
-    - the acidgenomics profile is present with AWS_CLOUDFRONT_DISTRIBUTION_ID set
+    - acidgenomics private AWS access is available and aws CLI is installed
 
     Note: aws-cli cannot push its own binary during its own post-install
     (aws not yet in PATH at that point). Use 'koopa develop push-app-build
@@ -261,12 +298,21 @@ def _can_push_binary() -> bool:
 
     if not can_build_binary():
         return False
+    kp = koopa_prefix()
+    if kp != _BINARY_PREFIX:
+        if not _warned_flags["non_default_prefix"]:
+            _warned_flags["non_default_prefix"] = True
+            from koopa.alert import alert_note
+
+            alert_note(
+                f"Binary push is disabled for the koopa install at '{kp}'. "
+                f"Tarballs must be built against '{_BINARY_PREFIX}'."
+            )
+        return False
     if vendor_can_push():
         return True
-    # Fall back to acidgenomics S3 path.
+    # Fall back to acidgenomics S3 path on designated builders.
     if not _has_private_access():
-        return False
-    if not os.environ.get("AWS_CLOUDFRONT_DISTRIBUTION_ID", ""):
         return False
     from koopa.build import locate
 
@@ -280,6 +326,28 @@ def _can_push_binary() -> bool:
 # -- Link helpers -------------------------------------------------------------
 
 
+def _replace_with_symlink(*, source: str, target: str) -> None:
+    """Point 'target' at 'source', replacing whatever currently occupies it.
+
+    A koopa-managed target is normally a symlink, but a self-updater (e.g.
+    'agy') can overwrite one in place with a real file, which previously made
+    the plain 'os.symlink()' call raise 'FileExistsError' on the next relink.
+    Any non-symlink file or broken symlink is unlinked and replaced; a real
+    directory is never removed, since that would require an implicit
+    'rmtree' the caller never asked for.
+    """
+    if os.path.lexists(target):
+        if os.path.isdir(target) and not os.path.islink(target):
+            msg = f"Refusing to replace directory with a symlink: {target!r}"
+            raise IsADirectoryError(msg)
+        if not os.path.islink(target):
+            from koopa.alert import alert_note
+
+            alert_note(f"Replacing non-symlink {target!r} with a symlink.")
+        os.unlink(target)
+    os.symlink(source, target)
+
+
 def link_in_opt(*, name: str, source: str) -> None:
     """Create symlink in koopa opt/ directory."""
     if not os.path.exists(source):
@@ -288,9 +356,7 @@ def link_in_opt(*, name: str, source: str) -> None:
     target = os.path.join(opt_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
-    if os.path.islink(target):
-        os.unlink(target)
-    os.symlink(source, target)
+    _replace_with_symlink(source=source, target=target)
 
 
 def link_in_bin(*, name: str, source: str) -> None:
@@ -301,9 +367,7 @@ def link_in_bin(*, name: str, source: str) -> None:
     target = os.path.join(bin_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
-    if os.path.islink(target):
-        os.unlink(target)
-    os.symlink(source, target)
+    _replace_with_symlink(source=source, target=target)
 
 
 def link_in_man1(*, name: str, source: str) -> None:
@@ -314,9 +378,7 @@ def link_in_man1(*, name: str, source: str) -> None:
     target = os.path.join(man1_prefix(), name)
     target_dir = os.path.dirname(target)
     os.makedirs(target_dir, exist_ok=True)
-    if os.path.islink(target):
-        os.unlink(target)
-    os.symlink(source, target)
+    _replace_with_symlink(source=source, target=target)
 
 
 def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
@@ -381,9 +443,7 @@ def _link_completions(central_dir: str, files: list[tuple[str, str]]) -> None:
     for source, name in files:
         os.makedirs(central_dir, exist_ok=True)
         target = os.path.join(central_dir, name)
-        if os.path.islink(target):
-            os.unlink(target)
-        os.symlink(source, target)
+        _replace_with_symlink(source=source, target=target)
 
 
 def link_in_bash_completions(prefix: str) -> None:
@@ -454,15 +514,14 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     from koopa.aws import koopa_s3_bucket
 
     aws_profile = "acidgenomics"
-    binary_prefix = "/opt/koopa"
     kp = koopa_prefix()
     os_str = os_slug()
     s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
-    if kp != binary_prefix:
+    if kp != _BINARY_PREFIX:
         msg = (
             f"Binary package installation not supported for koopa install "
             f"located at '{kp}'. Koopa must be installed at "
-            f"default '{binary_prefix}' location."
+            f"default '{_BINARY_PREFIX}' location."
         )
         raise RuntimeError(msg)
     use_vendor = vendor_config() is not None
@@ -511,24 +570,51 @@ def install_app_from_binary_package(*prefixes: str) -> None:
 # -- Push build helper --------------------------------------------------------
 
 
-def push_app_build(name: str) -> None:
-    """Push completed build to S3 and/or vendor backend."""
+def _active_app_version(name: str) -> str | None:
+    """Get the version of *name* currently linked under opt/, or None.
+
+    Reads the opt/<name> symlink target rather than sorting sibling version
+    directories under app/<name>/ with `sorted()`: that's a string sort, so
+    e.g. "3.13.9" sorts after "3.13.15" and would silently be picked as the
+    version to push once a single-digit patch release exists alongside a
+    two-digit one.
+    """
+    link = os.path.join(opt_prefix(), name)
+    if not os.path.islink(link):
+        return None
+    target = os.path.realpath(link)
+    if not os.path.isdir(target):
+        return None
+    return os.path.basename(target)
+
+
+def push_app_build(name: str, *, quiet: bool = False) -> str:
+    """Push completed build to S3 and/or vendor backend.
+
+    Returns the push confirmation message. When *quiet* is False (the
+    default), also prints it immediately via ``alert_success``. Callers
+    running inside a noninteractive worker process (see
+    ``_install_app_worker``) must pass ``quiet=True`` and forward the
+    returned message to ``koopa.progress.set_last_push_message`` instead,
+    since the worker does not own the terminal and printing directly would
+    race with the parent's live spinner.
+    """
+    from koopa.alert import alert_success
     from koopa.aws import koopa_s3_bucket
     from koopa.vendor import vendor_config, vendor_push_binary
 
+    _require_binary_prefix()
     arch = arch2()
     os_str = os_slug()
     s3_bucket = f"s3://{koopa_s3_bucket('artifacts')}/binaries"
-    app_dir = os.path.join(app_prefix(), name)
-    if not os.path.isdir(app_dir):
-        msg = f"App directory does not exist: {app_dir}"
+    version = _active_app_version(name)
+    if version is None:
+        msg = f"'{name}' is not linked under opt/; nothing to push."
         raise FileNotFoundError(msg)
-    versions = sorted(os.listdir(app_dir))
-    if not versions:
-        msg = f"No version found for app: {name}"
+    prefix = os.path.join(app_prefix(), name, version)
+    if not os.path.isdir(prefix):
+        msg = f"App directory does not exist: {prefix}"
         raise FileNotFoundError(msg)
-    version = versions[-1]
-    prefix = os.path.join(app_dir, version)
     tarball_name = _binary_tarball_basename(name, version)
     fd, tar_file = tempfile.mkstemp(suffix=".tar.gz", prefix="koopa-push-")
     os.close(fd)
@@ -548,6 +634,10 @@ def push_app_build(name: str) -> None:
         )
         if vendor_config() is not None:
             vendor_push_binary(tar_file, os_str, arch, name, tarball_name)
+        message = f"Pushed '{name}' {version} to '{tar_url}'."
+        if not quiet:
+            alert_success(message)
+        return message
     finally:
         if os.path.isfile(tar_file):
             os.unlink(tar_file)
@@ -563,16 +653,13 @@ def push_missing_app_builds() -> None:
     Intended as a post-update sweep to catch apps (e.g. conda, aws-cli) that
     were installed before the aws CLI was available in PATH.
     """
-    import subprocess as _subprocess
-
     from koopa.alert import alert, alert_note, alert_success
-    from koopa.aws import koopa_s3_bucket
+    from koopa.aws import koopa_s3_bucket, s3_object_exists
 
     arch = arch2()
     os_str = os_slug()
     s3_bucket_bare = koopa_s3_bucket("artifacts")
     opt = opt_prefix()
-    app_dir = app_prefix()
     aws = shutil.which("aws")
     if aws is None:
         return
@@ -587,38 +674,18 @@ def push_missing_app_builds() -> None:
         link = os.path.join(opt, entry)
         if not os.path.islink(link):
             continue
-        name_dir = os.path.join(app_dir, entry)
-        if not os.path.isdir(name_dir):
+        # Read the linked target directly rather than sorting sibling version
+        # dirs under app_dir/<entry>/ -- see _active_app_version.
+        prefix = os.path.realpath(link)
+        if not os.path.isdir(prefix):
             continue
-        try:
-            versions = sorted(os.listdir(name_dir))
-        except OSError:
-            continue
-        if not versions:
-            continue
-        version = versions[-1]
-        prefix = os.path.join(name_dir, version)
+        version = os.path.basename(prefix)
         # Skip binaries installed from S3 (not built locally).
         if os.path.isfile(os.path.join(prefix, ".koopa-binary")):
             continue
         tarball_name = _binary_tarball_basename(entry, version)
         key = f"binaries/{os_str}/{arch}/{entry}/{tarball_name}"
-        result = _subprocess.run(
-            [
-                aws,
-                "s3api",
-                "head-object",
-                "--bucket",
-                s3_bucket_bare,
-                "--key",
-                key,
-                "--profile",
-                "acidgenomics",
-            ],
-            capture_output=True,
-            check=False,
-        )
-        if result.returncode != 0:
+        if not s3_object_exists(s3_bucket_bare, key):
             missing.append(entry)
 
     if not missing:
@@ -645,6 +712,45 @@ def push_missing_app_builds() -> None:
         )
     else:
         alert_success(f"Pushed {n} missing {label} to S3.")
+
+
+def _run_python_installer(config: InstallConfig, *, fallback_note: bool = False) -> bool:
+    """Resolve and run the Python installer for *config*; False if none exists.
+
+    Resolution order matches app.json: the app name first, then its 'installer'
+    key ('python3.12' -> 'python'). The binary-miss fallback used to check only
+    the app name, so a missing tarball for any app with an 'installer' key --
+    python3.10 through python3.14, openssl3, openssl4 -- raised the raw AWS 404
+    instead of building from source.
+    """
+    from koopa.installers import get_python_installer, has_python_installer
+
+    if has_python_installer(config.name, config.platform, config.mode):
+        installer_key = config.name
+    else:
+        installer_key = _app_json_installer(config.name)
+        if not installer_key or not has_python_installer(
+            installer_key, config.platform, config.mode
+        ):
+            return False
+    if fallback_note:
+        from koopa.alert import alert_info
+
+        alert_info(
+            f"Binary package not available for '{config.name}', falling back to source build."
+        )
+    installer_fn = get_python_installer(installer_key, config.platform, config.mode)
+    from koopa.installers._context import set_app_name, set_app_version
+
+    set_app_name(config.name)
+    set_app_version(config.version)
+    installer_fn(
+        name=config.name,
+        version=config.version,
+        prefix=config.prefix,
+        passthrough_args=config.passthrough_args,
+    )
+    return True
 
 
 # -- Main install function ----------------------------------------------------
@@ -757,11 +863,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 
                 version_suffix = f" {styled_version(config.version)}" if config.version else ""
                 if config.reinstall_reason:
-                    reason_str = config.reinstall_reason
-                    prefix_to_strip = f"{config.name} "
-                    if reason_str.startswith(prefix_to_strip):
-                        reason_str = reason_str[len(prefix_to_strip) :]
-                    reason_suffix = f" {styled_reason(reason_str)}"
+                    reason_suffix = f" {styled_reason(config.reinstall_reason)}"
                 else:
                     reason_suffix = ""
                 verb = "reinstalling" if config.reinstall else "installing"
@@ -804,18 +906,14 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         from koopa.alert import alert_note, styled_name, styled_reason, styled_version
 
         version_suffix = f" {styled_version(config.version)}" if config.version else ""
-        reason_str = config.reinstall_reason
-        prefix_to_strip = f"{config.name} "
-        if reason_str.startswith(prefix_to_strip):
-            reason_str = reason_str[len(prefix_to_strip) :]
         alert_note(
-            f"Reinstalling {styled_name(config.name)}{version_suffix} {styled_reason(reason_str)}."
+            f"Reinstalling {styled_name(config.name)}{version_suffix}"
+            f" {styled_reason(config.reinstall_reason)}."
         )
     # Create prefix directory.
     if config.prefix and not os.path.isdir(config.prefix):
         os.makedirs(config.prefix, exist_ok=True)
     # -- Dispatch to installer ------------------------------------------------
-    from koopa.installers import get_python_installer, has_python_installer
     from koopa.progress import BuildProgress
 
     orig_cwd = os.getcwd()
@@ -863,62 +961,11 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 try:
                     install_app_from_binary_package(config.prefix)
                 except (FileNotFoundError, RuntimeError, subprocess.CalledProcessError):
-                    if has_python_installer(config.name, config.platform, config.mode):
-                        from koopa.alert import alert_info
-
-                        alert_info(
-                            f"Binary package not available for '{config.name}', "
-                            "falling back to source build."
-                        )
-                        installer_fn = get_python_installer(
-                            config.name, config.platform, config.mode
-                        )
-                        from koopa.installers._context import set_app_name, set_app_version
-
-                        set_app_name(config.name)
-                        set_app_version(config.version)
-                        installer_fn(
-                            name=config.name,
-                            version=config.version,
-                            prefix=config.prefix,
-                            passthrough_args=config.passthrough_args,
-                        )
-                    else:
+                    if not _run_python_installer(config, fallback_note=True):
                         raise
-            elif has_python_installer(config.name, config.platform, config.mode):
-                installer_fn = get_python_installer(config.name, config.platform, config.mode)
-                from koopa.installers._context import set_app_name, set_app_version
-
-                set_app_name(config.name)
-                set_app_version(config.version)
-                installer_fn(
-                    name=config.name,
-                    version=config.version,
-                    prefix=config.prefix,
-                    passthrough_args=config.passthrough_args,
-                )
-            else:
-                installer_key = _app_json_installer(config.name)
-                if installer_key and has_python_installer(
-                    installer_key, config.platform, config.mode
-                ):
-                    installer_fn = get_python_installer(installer_key, config.platform, config.mode)
-                    from koopa.installers._context import set_app_name, set_app_version
-
-                    set_app_name(config.name)
-                    set_app_version(config.version)
-                    installer_fn(
-                        name=config.name,
-                        version=config.version,
-                        prefix=config.prefix,
-                        passthrough_args=config.passthrough_args,
-                    )
-                else:
-                    msg = (
-                        f"No Python installer for '{config.name}'"
-                        f" ({config.platform}/{config.mode})."
-                    )
-                    raise FileNotFoundError(msg)
+            elif not _run_python_installer(config):
+                msg = f"No Python installer for '{config.name}' ({config.platform}/{config.mode})."
+                raise FileNotFoundError(msg)
     except Exception:
         if config.prefix and os.path.isdir(config.prefix):
             shutil.rmtree(config.prefix, ignore_errors=True)
@@ -982,8 +1029,6 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             if os.path.isdir(parent) and not os.listdir(parent):
                 os.rmdir(parent)
         raise
-    if config.mode == "shared" and config.push:
-        push_app_build(config.name)
     # -- Post-install: success marker ------------------------------------------
     # Written after linking so a failed link = failed install = retried.
     if config.prefix:
@@ -1000,6 +1045,14 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
             name=config.name,
             version=config.version,
         )
+        # Push after .install/revision and .install/info.json are written, so
+        # the pushed tarball carries build provenance instead of a bare prefix.
+        if config.mode == "shared" and config.push:
+            push_message = push_app_build(config.name, quiet=config.noninteractive)
+            if config.noninteractive:
+                from koopa.progress import set_last_push_message
+
+                set_last_push_message(push_message)
         if progress.saved_log_path:
             shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
     if not config.quiet and config.verbose:
@@ -1097,7 +1150,7 @@ def build_go_package(
     gocache = tempfile.mkdtemp(prefix="koopa-gocache-")
     gopath = tempfile.mkdtemp(prefix="koopa-gopath-")
     os.makedirs(gobin, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["GOBIN"] = gobin
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
@@ -1140,7 +1193,7 @@ def install_go_package(
     gocache = tempfile.mkdtemp(prefix="koopa-gocache-")
     gopath = tempfile.mkdtemp(prefix="koopa-gopath-")
     os.makedirs(gobin, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["GOBIN"] = gobin
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
@@ -1177,7 +1230,7 @@ def install_node_package(
         msg = "npm not found."
         raise FileNotFoundError(msg)
     cache_dir = tempfile.mkdtemp(prefix="koopa-npm-cache-")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["NPM_CONFIG_PREFIX"] = prefix
     env["NPM_CONFIG_UPDATE_NOTIFIER"] = "false"
     if build_env:
@@ -1268,7 +1321,7 @@ def install_python_package(
         pip_args.extend(extra_packages)
     pip_env: dict[str, str] | None = None
     if build_env:
-        pip_env = {**os.environ, **build_env}
+        pip_env = {**safe_build_env(), **build_env}
     subprocess.run(pip_args, check=True, env=pip_env)
     _link_pip_binaries(
         egg_name=egg_name,
@@ -1374,6 +1427,7 @@ def install_rust_package(
     git_url: str = "",
     tag: str = "",
     with_openssl: bool = False,
+    rustflags: str = "",
     jobs: int | None = None,
 ) -> None:
     """Install a Rust package using ``cargo install``.
@@ -1393,10 +1447,12 @@ def install_rust_package(
         msg = "cargo not found."
         raise FileNotFoundError(msg)
     cargo_home = tempfile.mkdtemp(prefix="koopa-cargo-")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CARGO_HOME"] = cargo_home
     env["CARGO_NET_GIT_FETCH_WITH_CLI"] = "true"
     env["RUST_BACKTRACE"] = "full"
+    if rustflags:
+        env["RUSTFLAGS"] = rustflags
     if with_openssl:
         openssl_dir = os.path.join(app_prefix(), "openssl")
         if os.path.isdir(openssl_dir):
@@ -1570,7 +1626,7 @@ __END__
     perl_ver = result.stdout.lstrip("v")
     perl_major = perl_ver.split(".")[0]
     lib_prefix = os.path.join(prefix, "lib", f"perl{perl_major}")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["PERL5LIB"] = lib_prefix
     try:
         if dependencies:
@@ -1728,7 +1784,7 @@ def install_conda_package(
         forge_url = _resolve_conda_channel_url("conda-forge")
         create_args.insert(-1, f"--channel={forge_url}")
     tmp_pkg_cache = tempfile.mkdtemp()
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CONDA_PKGS_DIRS"] = tmp_pkg_cache
     try:
         subprocess.run(create_args, check=True, env=env, timeout=3600)
@@ -1838,7 +1894,7 @@ def install_haskell_package(
     ghc_prefix = tempfile.mkdtemp(prefix=f"koopa-ghc-{ghc_version}-")
     cabal_store = os.path.join(prefix, "libexec", "cabal", "store")
     os.makedirs(cabal_store, exist_ok=True)
-    env = os.environ.copy()
+    env = safe_build_env()
     env["CABAL_DIR"] = cabal_dir
     env["GHCUP_INSTALL_BASE_PREFIX"] = ghcup_prefix
     try:
@@ -1941,6 +1997,50 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
         if acquired:
             _release_install_lock()
     alert_success("All missing default apps installed.")
+
+
+def retry_failed_apps(names: list[str], *, verbose: bool = False) -> None:
+    """Retry a specific list of apps that failed earlier in the same update run.
+
+    A binary pull can 404 transiently (e.g. a brand-new OS/arch slug with no
+    binary pushed yet, or a build dependency that finishes rebuilding only
+    later in the same run) and then succeed once retried. Unlike
+    ``install_missing_default_apps``, *names* is retried unconditionally,
+    regardless of whether the app's ``opt/`` symlink still exists from its
+    prior (older) install -- an existence check would silently exclude an
+    already-installed app that merely failed to update.
+    """
+    from koopa.alert import alert, alert_success
+
+    if not names or not is_owner():
+        return
+    apps_with_reasons = [(a, "retry after failure") for a in names]
+    plan, dep_map = _compute_install_plan(apps_with_reasons)
+    apps = [a for a, _ in plan]
+    n = len(apps)
+    label = "app" if n == 1 else "apps"
+    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
+    alert(f"Retrying {n} failed {label}: {display}.")
+    acquired = _acquire_install_lock()
+    _binary = _can_install_binary()
+    _push = _can_push_binary()
+    try:
+        _run_install_plan(
+            plan,
+            dep_map,
+            make_config=lambda app, _reason: InstallConfig(
+                name=app,
+                deps=False,
+                verbose=verbose,
+                binary=_binary,
+                push=_push,
+                passthrough_args=_build_passthrough_args(app),
+            ),
+        )
+    finally:
+        if acquired:
+            _release_install_lock()
+    alert_success(f"All {n} retried {label} installed.")
 
 
 def install_shared_apps(mode: str = "default") -> None:
@@ -2205,6 +2305,7 @@ def update_koopa(*, verbose: bool = False) -> bool:
     """
     from koopa.alert import (
         alert,
+        alert_detail,
         alert_info,
         alert_note,
         ansi_escape,
@@ -2274,8 +2375,11 @@ def update_koopa(*, verbose: bool = False) -> bool:
             alert_note("Pull failed (remote may have been force-pushed). Resetting to remote.")
             try:
                 git_rebase_abort(prefix)
-                git_fetch(prefix)
-                git_reset(prefix, ref=f"origin/{branch}", hard=True)
+                fetch_result = git_fetch(prefix, capture=True)
+                reset_result = git_reset(prefix, ref=f"origin/{branch}", hard=True, capture=True)
+                for proc in (fetch_result, reset_result):
+                    if proc is not None:
+                        alert_detail((proc.stdout or "") + (proc.stderr or ""))
                 result = None
             except Exception as recovery_err:
                 from koopa.alert import warn
@@ -2304,7 +2408,7 @@ def update_koopa(*, verbose: bool = False) -> bool:
         python_changed = bool(diff.stdout.strip())
     stdout = (result.stdout or "").strip() if result else ""
     if verbose and stdout and "Already up to date" not in stdout:
-        print(stdout, file=sys.stderr)
+        alert_detail(stdout)
     _zsh_compaudit_set_permissions()
     return python_changed
 
@@ -2346,27 +2450,17 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         bp = bootstrap_prefix()
         target_python = os.path.join(bp, "bin", "python3")
         if not os.path.isfile(target_python):
-            _sys_python = "/usr/bin/python3"
-            _matched = False
-            if os.path.isfile(_sys_python):
-                _res = subprocess.run(
-                    [_sys_python, "--version"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
-                if _res.returncode == 0:
-                    _ver = _res.stdout.strip().split()[-1]
-                    if ".".join(_ver.split(".")[:2]) == python_version:
-                        target_python = _sys_python
-                        _matched = True
-            if not _matched:
+            from koopa.system import find_system_python
+
+            found = find_system_python(python_version)
+            if found is None:
                 warn(
                     f"No Python {python_version} interpreter found.\n"
                     f"  Run bootstrap to install Python {python_version}:\n"
                     f"    sh '{os.path.join(prefix, 'bootstrap.sh')}'"
                 )
                 return
+            target_python = found
         try:
             subprocess.run(
                 [target_python, "-m", "venv", "--symlinks", venv_dir],
@@ -2434,21 +2528,27 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     from koopa.alert import styled_prefix
 
     alert(f"{verb} virtual environment at {styled_prefix(venv_dir)}{version_suffix}.")
-    if not os.path.isfile(os.path.join(venv_dir, "bin", "pip3")):
-        alert("Installing pip into virtual environment.")
-        subprocess.run(
-            [venv_python, "-m", "ensurepip", "--upgrade"],
-            check=True,
-        )
+    uv = shutil.which("uv")
+    if uv is None:
+        warn("uv is not installed; cannot install virtual environment extras.")
+        return
     subprocess.run(
         [
-            venv_python,
-            "-m",
+            uv,
             "pip",
             "install",
+            "--python",
+            venv_python,
             "--editable",
             f"{prefix}[extra]",
             "--upgrade",
+            "--reinstall",
+            # uv bundles its own TLS cert store rather than consulting the OS
+            # one. On networks where the OS store trusts a cert uv's bundled
+            # store doesn't (observed against python.acidgenomics.com), uv
+            # fails with "invalid peer certificate: UnknownIssuer" even
+            # though curl and git (both OS-native TLS) reach the same host.
+            "--system-certs",
             "--quiet",
         ],
         check=True,
@@ -2676,6 +2776,32 @@ def _update_plan_cache_path() -> str:
     return os.path.join(xdg_cache_home(), "koopa", "update-plan.json")
 
 
+def _installed_after(app: str, cutoff_ts: float) -> bool:
+    """Return True if *app*'s recorded install date is newer than *cutoff_ts*.
+
+    *cutoff_ts* is a UTC Unix timestamp. Used to drop apps from a resumed plan
+    that were already installed (e.g. by hand, via ``koopa reinstall``) after
+    the plan was cached, so a resumed ``koopa update`` doesn't redo work that
+    already happened out of band.
+    """
+    from datetime import UTC, datetime
+
+    info_file = os.path.join(opt_prefix(), app, ".install", "info.json")
+    try:
+        with open(info_file) as f:
+            info = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return False
+    date_str = info.get("date", "")
+    if not date_str:
+        return False
+    try:
+        installed_at = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
+    except ValueError:
+        return False
+    return installed_at.timestamp() > cutoff_ts
+
+
 def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     path = _update_plan_cache_path()
     if not os.path.isfile(path):
@@ -2688,17 +2814,22 @@ def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     if source and data.get("source", "") != source:
         return []
     created = data.get("created", "")
+    cutoff = None
     if created:
         from datetime import UTC, datetime
 
         try:
-            ts = datetime.fromisoformat(created)
-            if (datetime.now(tz=UTC) - ts).total_seconds() > 48 * 3600:
+            cutoff = datetime.fromisoformat(created)
+            if (datetime.now(tz=UTC) - cutoff).total_seconds() > 48 * 3600:
                 os.unlink(path)
                 return []
         except ValueError:
-            pass
-    return [(e["app"], e["reason"]) for e in data.get("plan", [])]
+            cutoff = None
+    plan = [(e["app"], e["reason"]) for e in data.get("plan", [])]
+    if cutoff is not None:
+        cutoff_ts = cutoff.timestamp()
+        plan = [(a, r) for a, r in plan if not _installed_after(a, cutoff_ts)]
+    return plan
 
 
 def _save_pending_plan(plan: list[tuple[str, str]], source: str = "") -> None:
@@ -2737,16 +2868,19 @@ def _remove_from_pending_plan(app: str) -> None:
 
 
 def _install_app_worker(
-    config: "InstallConfig",
-    pid_map: "dict[str, int] | None" = None,
-) -> tuple[str, str, float, str | None, str | None]:
-    """Run install_app in a child process and return (name, version, elapsed, error, tail).
+    config: InstallConfig,
+    pid_map: dict[str, int] | None = None,
+) -> tuple[str, str, float, str | None, str | None, str | None]:
+    """Run install_app in a child process; return (name, version, elapsed, error, tail, push_msg).
 
     Must be a module-level function so multiprocessing.spawn can pickle it.
     Sets noninteractive=True so the child captures output to a per-app log
     without touching the terminal; the parent owns all progress output.
     Returns a structured tuple so the parent can surface the log tail on failure
-    without embedding multi-line text in an exception message.
+    without embedding multi-line text in an exception message. *push_msg* is the
+    S3 push confirmation (if any), stashed via ``set_last_push_message`` instead
+    of being printed directly by the child, since the child does not own the
+    terminal and a direct print would race with the parent's live spinner.
 
     When *pid_map* is provided (a Manager dict), the worker registers its PID so
     the parent scheduler can target the process tree for a hard-abort kill.
@@ -2754,7 +2888,14 @@ def _install_app_worker(
     import contextlib
     import time
 
-    from koopa.progress import get_last_failure_tail
+    from koopa.progress import get_last_failure_tail, get_last_push_message, set_last_push_message
+
+    # Become a session leader so the parent can os.killpg() the full process
+    # tree (compiler sub-processes, linkers, etc.) on a hard timeout abort.
+    # Guard against the rare case where the spawn worker is already a session
+    # leader (os.setsid() raises OSError in that case).
+    with contextlib.suppress(OSError):
+        os.setsid()
 
     # Become a session leader so the parent can os.killpg() the full process
     # tree (compiler sub-processes, linkers, etc.) on a hard timeout abort.
@@ -2766,6 +2907,9 @@ def _install_app_worker(
     config.noninteractive = True
     if pid_map is not None:
         pid_map[config.name] = os.getpid()
+    # Reset: a ProcessPoolExecutor worker process handles multiple apps over
+    # its lifetime, so a stale message from a prior app must not leak here.
+    set_last_push_message(None)
     t0 = time.monotonic()
     try:
         install_app(config)
@@ -2776,8 +2920,16 @@ def _install_app_worker(
             time.monotonic() - t0,
             str(exc),
             get_last_failure_tail(),
+            get_last_push_message(),
         )
-    return config.name, config.version, time.monotonic() - t0, None, None
+    return (
+        config.name,
+        config.version,
+        time.monotonic() - t0,
+        None,
+        None,
+        get_last_push_message(),
+    )
 
 
 def _io_cap() -> int:
@@ -2816,6 +2968,20 @@ def _timeout_threshold() -> int | None:
         return 3600
 
 
+class InstallPlanError(RuntimeError):
+    """Raised when one or more root apps fail during a batch install plan.
+
+    Carries the specific app names that failed at the plan's root (excluding
+    apps skipped only because a dependency failed), so a caller can retry
+    exactly those apps instead of re-deriving the failure set by parsing the
+    formatted message text.
+    """
+
+    def __init__(self, message: str, failed_apps: list[str]) -> None:
+        super().__init__(message)
+        self.failed_apps = failed_apps
+
+
 def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     plan: list[tuple[str, str]],
     dep_map: dict[str, set[str]],
@@ -2838,7 +3004,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     import time
     from typing import cast
 
-    from koopa.alert import _supports_color, alert
+    from koopa.alert import _supports_color, alert, alert_success
     from koopa.app import is_cpu_bound_app
     from koopa.io import import_app_json
     from koopa.progress import (
@@ -2909,7 +3075,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
 
     _max_visible_apps = 3  # cap how many names fit on one spinner line
 
-    def _redraw(items: "list[tuple[str, float]]") -> None:
+    def _redraw(items: list[tuple[str, float]]) -> None:
         """Redraw the aggregate spinner line naming each in-flight app.
 
         *items* is a list of ``(app_name, dispatch_t0)`` pairs — one per
@@ -3058,7 +3224,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                 else:
                     io_running -= 1
                 try:
-                    _app, _ver, _elapsed, _error, _tail = fut.result()
+                    _app, _ver, _elapsed, _error, _tail, _push_msg = fut.result()
                 except Exception as exc:
                     # Worker crashed (e.g. pickling error or OOM — including
                     # BrokenProcessPool after a hard-abort kill).
@@ -3087,6 +3253,8 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                         format_completion_line(_app, _ver, failed=False, elapsed_secs=_elapsed)
                     )
                     sys.stderr.flush()
+                    if _push_msg:
+                        alert_success(_push_msg)
 
             _dispatch()
             if use_live and running:
@@ -3101,7 +3269,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         parts = [f"{len(root_failures)} app(s) failed: {', '.join(root_failures)}."]
         if skipped:
             parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
-        raise RuntimeError(" ".join(parts))
+        raise InstallPlanError(" ".join(parts), root_failures)
     _save_pending_plan([], source=source)
 
 
@@ -3113,7 +3281,7 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
     cases where ``koopa develop remove-app`` was not used and no revision bump
     was recorded on the dependent.
     """
-    from koopa.app import _resolve_dep_dict, installed_apps
+    from koopa.app import _resolve_dep_dict, installed_apps, recorded_app_deps
     from koopa.system import os_id
 
     json_data = import_app_json()
@@ -3126,9 +3294,14 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
         entry = json_data[name]
         if entry.get("removed"):
             continue
-        deps = entry.get("dependencies", [])
-        if isinstance(deps, dict):
-            deps = _resolve_dep_dict(deps, sys_dict)
+        # Prefer the dep list actually resolved at install time; re-resolving
+        # app.json's dependency dict now can invent a dependency the app never
+        # linked against (see recorded_app_deps docstring).
+        deps = recorded_app_deps(name)
+        if deps is None:
+            deps = entry.get("dependencies", [])
+            if isinstance(deps, dict):
+                deps = _resolve_dep_dict(deps, sys_dict)
         for dep in deps:
             if dep not in json_data:
                 continue
@@ -3227,8 +3400,13 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     apps = [a for a, _ in plan]
     n = len(apps)
     label = "app" if n == 1 else "apps"
-    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
-    alert(f"Installing {n} {label}: {display}.")
+    verb = "is" if n == 1 else "are"
+    alert(f"{n} {label} {verb} stale or missing:")
+    from koopa.alert import dl
+
+    for app, reason in plan:
+        dl(app, reason or "missing dependency")
+    alert(f"Installing {n} {label}.")
     _save_pending_plan(plan, source="update")
     acquired = _acquire_install_lock()
     _binary = _can_install_binary()
@@ -3282,8 +3460,6 @@ def repair_app_symlinks() -> None:
                 continue
             source = os.path.join(prefix, "bin", b)
             if os.path.isfile(source):
-                if os.path.islink(link):
-                    os.unlink(link)
                 link_in_bin(name=b, source=source)
         for m in entry.get("man1", []):
             link = os.path.join(man1_dir, m)
@@ -3293,8 +3469,6 @@ def repair_app_symlinks() -> None:
             mf2 = os.path.join(prefix, "man", "man1", m)
             source = mf1 if os.path.isfile(mf1) else mf2 if os.path.isfile(mf2) else None
             if source:
-                if os.path.islink(link):
-                    os.unlink(link)
                 link_in_man1(name=m, source=source)
         link_in_bash_completions(prefix)
         link_in_fish_completions(prefix)
@@ -3357,23 +3531,55 @@ def remove_alias_app_dirs() -> None:
             os.unlink(opt_link)
 
 
-def update_system_apps(*, verbose: bool = False) -> None:
-    """Update system-level apps from the update-system registry."""
-    from koopa.alert import alert_note
+def resolve_system_update_entries(names: list[str] | None) -> list[tuple[str, str]]:
+    """Resolve and validate system-update app names against the registry.
+
+    With ``names=None``, returns every ``update-system`` registry entry
+    unfiltered by platform (the sweep case filters platform itself, since an
+    unsupported entry there is silently skipped rather than an error).
+    With explicit ``names``, raises ``ValueError`` for an unknown app or one
+    unsupported on this platform -- an explicit request must not fail silent.
+    """
     from koopa.installers import PYTHON_INSTALLER_MODES
 
-    if not is_admin():
-        alert_note(
-            "Skipping system updates (admin/sudo access required).",
-        )
-        return
     entries = [
         (name, plat) for name, plat, mode in PYTHON_INSTALLER_MODES if mode == "update-system"
     ]
+    if names is None:
+        return entries
+    by_name: dict[str, list[tuple[str, str]]] = {}
     for name, plat in entries:
-        if not _platform_matches(plat):
+        by_name.setdefault(name, []).append((name, plat))
+    resolved: list[tuple[str, str]] = []
+    for name in names:
+        candidates = by_name.get(name)
+        if candidates is None:
+            valid = ", ".join(sorted(by_name))
+            msg = f"Unknown system app: '{name}'. Valid: {valid}."
+            raise ValueError(msg)
+        matching = [c for c in candidates if _platform_matches(c[1])]
+        if not matching:
+            plats = ", ".join(plat for _, plat in candidates)
+            msg = f"'{name}' is not supported on this platform (requires: {plats})."
+            raise ValueError(msg)
+        resolved.extend(matching)
+    return resolved
+
+
+def update_system_apps(*, names: list[str] | None = None, verbose: bool = False) -> None:
+    """Update system-level apps from the update-system registry."""
+    from koopa.alert import alert_note
+
+    if not is_admin():
+        msg = "'koopa update system' requires admin/sudo access."
+        raise PermissionError(msg)
+    entries = resolve_system_update_entries(names)
+    for name, plat in entries:
+        if names is None and not _platform_matches(plat):
             continue
-        _run_system_update(name, verbose=verbose)
+        reason = _run_system_update(name, verbose=verbose)
+        if names is not None and reason:
+            alert_note(reason)
 
 
 def _platform_matches(plat: str) -> bool:
@@ -3392,24 +3598,23 @@ def _platform_matches(plat: str) -> bool:
     return check() if check is not None else False
 
 
-def _run_system_update(name: str, *, verbose: bool) -> None:
+def _run_system_update(name: str, *, verbose: bool) -> str | None:
     """Dispatch a single system update by name."""
-    if name == "homebrew":
-        _update_system_homebrew(verbose=verbose)
-    elif name == "python":
-        _update_system_python(verbose=verbose)
-    elif name == "r":
-        _update_system_r(verbose=verbose)
-    elif name == "tex-packages":
-        _update_system_tex_packages(verbose=verbose)
+    updater = _SYSTEM_UPDATERS.get(name)
+    if updater is None:
+        from koopa.alert import warn
+
+        warn(f"No system updater wired up for '{name}'.")
+        return None
+    return updater(verbose=verbose)
 
 
-def _update_system_tex_packages(*, verbose: bool = False) -> None:
+def _update_system_tex_packages(*, verbose: bool = False) -> str | None:
     """Update TeX packages if tlmgr is installed."""
     from koopa.alert import alert, warn
 
     if shutil.which("tlmgr") is None:
-        return
+        return "tlmgr is not installed."
     alert("Updating TeX packages.")
     try:
         config = InstallConfig(
@@ -3421,14 +3626,15 @@ def _update_system_tex_packages(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update TeX packages: {exc}")
+    return None
 
 
-def _update_system_homebrew(*, verbose: bool = False) -> None:
+def _update_system_homebrew(*, verbose: bool = False) -> str | None:
     """Update Homebrew if installed."""
     from koopa.alert import alert, warn
 
     if shutil.which("brew") is None:
-        return
+        return "Homebrew is not installed."
     alert("Updating Homebrew.")
     try:
         config = InstallConfig(
@@ -3440,16 +3646,17 @@ def _update_system_homebrew(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update Homebrew: {exc}")
+    return None
 
 
-def _update_system_r(*, verbose: bool = False) -> None:
+def _update_system_r(*, verbose: bool = False) -> str | None:
     """Update system R if installed and outdated."""
     from koopa.alert import alert, warn
     from koopa.check import check_system_r
     from koopa.system import is_macos
 
     if check_system_r():
-        return
+        return "System R is already up to date."
     alert("Updating system R.")
     platform = "macos" if is_macos() else "debian"
     try:
@@ -3463,22 +3670,23 @@ def _update_system_r(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update system R: {exc}")
+    return None
 
 
-def _update_system_python(*, verbose: bool = False) -> None:
+def _update_system_python(*, verbose: bool = False) -> str | None:
     """Update macOS system Python if installed and outdated."""
     from koopa.alert import alert, warn
     from koopa.check import check_macos_system_python
 
     if check_macos_system_python():
-        return
+        return "macOS system Python is already up to date."
     json_data = import_app_json()
     py_keys = sorted(
         (k for k in json_data if k.startswith("python3.")),
         reverse=True,
     )
     if not py_keys:
-        return
+        return "macOS system Python is already up to date."
     py_name = py_keys[0]
     alert(f"Updating macOS system Python ({py_name}).")
     try:
@@ -3492,6 +3700,15 @@ def _update_system_python(*, verbose: bool = False) -> None:
         install_app(config)
     except Exception as exc:
         warn(f"Failed to update system Python: {exc}")
+    return None
+
+
+_SYSTEM_UPDATERS: dict[str, Callable[..., str | None]] = {
+    "homebrew": _update_system_homebrew,
+    "python": _update_system_python,
+    "r": _update_system_r,
+    "tex-packages": _update_system_tex_packages,
+}
 
 
 # -- Convenience CLI entry point ----------------------------------------------

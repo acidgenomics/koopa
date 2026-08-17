@@ -1,11 +1,15 @@
 ---
 name: koopa-vscode
 description: >-
-  VS Code terminal font configuration, Nerd Font glyph debugging, and Quarto/LuaLS
-  setup for koopa. Use when debugging missing terminal glyphs (tofu), changing the
-  VS Code terminal or editor font, understanding the App Support symlink bridge for
-  editor settings, editing .luarc.json, or making VS Code config portable across
-  machines.
+  VS Code terminal font configuration, Nerd Font glyph debugging, the shared
+  settings.json.tmpl partial architecture across Code/Antigravity/Cursor/Positron,
+  and Quarto/LuaLS setup for koopa. Use when debugging missing terminal glyphs
+  (tofu), changing the VS Code terminal or editor font, understanding the App
+  Support symlink bridge for editor settings, adding or moving a setting across
+  the VS Code-family templates, checking whether a setting name is real before
+  adding it, editing .luarc.json, making VS Code config portable across
+  machines, or debugging a rendered settings.json that has a stray blank line
+  or a key missing its 2-space indent right at a partial boundary.
 ---
 
 # koopa VS Code Configuration
@@ -71,8 +75,11 @@ grep "fontFamily" ~/Library/Application\ Support/Code/User/settings.json
 
 ### Font configuration in chezmoi templates
 
-The four VS Code-family editor templates all live under
+The four VS Code-family editor templates live under
 `opt/dotfiles/chezmoi/dot_config/{Code,Cursor,Positron,Antigravity}/User/settings.json.tmpl`.
+The font keys below are NOT written out in each file — they live once in
+`.chezmoitemplates/vscode-universal-common.tmpl` (see "Shared settings.json
+architecture" below). Don't add a fourth copy; edit the partial.
 
 Correct font settings (no ligatures, Nerd Font Mono for glyph coverage):
 ```json
@@ -84,6 +91,154 @@ Correct font settings (no ligatures, Nerd Font Mono for glyph coverage):
 `NL` = No-Ligatures build. `NFM` = Nerd Font Mono (single-width glyphs, correct
 for terminals). The fallback `'JetBrains Mono'` ensures the editor stays usable
 if the Nerd Font is not installed.
+
+### Shared settings.json architecture
+
+Code, Antigravity, and Cursor overlap by ~85%; Positron is structured
+differently by design (its file started at 46 lines and has only grown since —
+verify with `git log --follow -- .../Positron/User/settings.json.tmpl` before
+assuming a gap is drift). Four `.chezmoitemplates/` partials hold the overlap
+instead of four flat files, plus one `vscode-app-*.tmpl` partial per app that
+holds that app's own deltas:
+
+| Partial | Covers | Called by |
+|---|---|---|
+| `vscode-fork-common.tmpl` | ~130 settings byte-identical across Code/Antigravity/Cursor | Code, Antigravity, Cursor — always LAST (its final line has no trailing comma) |
+| `vscode-universal-common.tmpl` | 17 settings verified byte-identical across all four apps | Code, Antigravity, Cursor, Positron |
+| `dracula-pro-theme.tmpl` | Theme-name detection, parameterized by each app's own extension-glob path via `list` | all four |
+| `dracula-pro-diff-colors.tmpl` | Colorblind-safe `workbench.colorCustomizations` content (no outer key/braces of its own) | all four, but spliced differently per app: inside `vscode-fork-common.tmpl`'s existing `colorCustomizations` object for Code/Antigravity/Cursor, inside a fresh one opened in Positron's own file (it has no other `colorCustomizations` source) |
+| `vscode-app-code.tmpl`, `vscode-app-cursor.tmpl`, `vscode-app-positron.tmpl`, `vscode-app-antigravity.tmpl` | That app's own deltas, plus the `includeTemplate` calls into the four partials above | that app's `dot_config/<App>/User/settings.json.tmpl` only |
+
+`dracula-pro-diff-colors.tmpl` is called with a bare `.` (needs
+`.chezmoi.homeDir` directly), unlike `dracula-pro-theme.tmpl`'s `list`
+convention — see `koopa-chezmoi-dotfiles`, "Sharing One Template Body", for
+why a partial needing more than one thing from the caller must use `dict`
+instead of `list`, and why two partials can never both emit their own
+top-level `"workbench.colorCustomizations": { ... }` in the same file. Full
+derivation of the actual colors (why blue/orange, why cyan and not orange for
+`gitDecoration.deletedResourceForeground`, the vendor's own alpha values) is
+in `koopa-theming`, "Colorblind-Safe Diff and Git-Status Colors".
+
+### Worked example: blank line + lost indent at every partial boundary (2026-08)
+
+All four apps' rendered `settings.json` had the same two cosmetic defects at
+every one of the four partial-call boundaries above: a stray blank line, and
+the partial's first key landing at column 0 instead of 2-space indent (e.g.
+`workbench.preferredDarkColorTheme` in Positron). JSON still parsed, so nothing
+broke functionally — only formatting.
+
+Root cause: each partial's header comment closed with `*/ -}}`, and every call
+site used the bare `{{ template "x" . }}` action. `-}}` trims the following
+newline *and* the next line's leading spaces (killing the indent); a bare
+`template` action can't be piped, so its own trailing newline plus the
+caller's line break stacked into a blank line.
+
+Fix: `*/}}` (no space, no dash) on each partial's header close, and
+`{{ includeTemplate "x" ARG | trimAll "\n" }}` at every call site in place of
+`{{ template "x" ARG }}`. Full whitespace mechanics — why `*/ }}` with a space
+is a lexer error, why `trimAll` only fixes the call site and not the partial's
+own first line, and two more variants of this same trim-marker family found in
+non-JSON `.tmpl` files elsewhere in koopa — live in `koopa-chezmoi-dotfiles`
+("`-}}` on a Partial's Own Header Comment...", "Inline `if`/`else` With No
+Downstream `trimAll`...").
+
+Verified with `chezmoi execute-template --file` (before/after), `grep -n -e
+'^$' -e '^"'` for leftover artifacts, and a parsed-JSON diff to confirm no key
+was dropped — see `koopa-chezmoi-dotfiles`, "Verify semantic equivalence, not
+text equivalence," for the general technique.
+
+Each app's own deltas live in its `vscode-app-*.tmpl` partial, not in the
+deployed `dot_config/<App>/User/settings.json.tmpl` file: Code's
+`chat.*`/`claudeCode.*`/`github.copilot.*`/`githubPullRequests.*`, Antigravity's
+`antigravity.*` keys, Positron's independent structure. `[json]`/`[python]`/`[r]`/
+`[toml]`/`air.*` stay duplicated inline in the Code/Antigravity/Cursor partials
+rather than going in a shared partial — `[toml]` differs by one line between
+them, and keeping the language blocks together at the top of each file reads
+better than the few duplicated lines would cost.
+
+See `koopa-chezmoi-dotfiles` for the two general mechanisms this relies on
+(`.chezmoi.sourceFile` for symlinked-source targets, `.chezmoitemplates` for
+structurally-shared content) and for how to verify a setting name is real
+before adding it to any of these files.
+
+### Global key sort via `fromJson | toPrettyJson` (2026-08)
+
+Each `includeTemplate` call emits a contiguous block of keys, so a file built
+from several calls back to back is a series of sorted runs, not one sorted
+list. A key family such as `editor.autoClosing*` ends up split across two
+blocks, which reads as duplication even though every key is unique — this is
+what triggered the investigation below.
+
+Fix: each app's body moved into its own `vscode-app-*.tmpl` partial (see the
+table above), and the deployed `dot_config/<App>/User/settings.json.tmpl` is
+now exactly one line:
+
+```
+{{ includeTemplate "vscode-app-positron.tmpl" . | fromJson | toPrettyJson | trimAll "\n" }}
+```
+
+chezmoi 2.72's `toPrettyJson` parses the partial's JSON output and re-emits it
+2-space indented, with keys sorted byte-wise (`enableFileLinks` before
+`enableMultiLinePasteWarning`, capital letters before lowercase at the same
+position), and without HTML-escaping `&`/`<`/`>`. That makes every rendered
+file globally sorted, not just sorted within each block.
+
+What this changes about the partials themselves:
+
+- Blank lines and lost indent at a partial-call boundary (the defect in the
+  worked example above) stop mattering. `toPrettyJson` regenerates the layout
+  from the parsed object, so the raw concatenation's whitespace is discarded.
+- Trailing-comma discipline still matters at the source level, because
+  `fromJson` rejects invalid JSON outright — a stray or missing comma is now a
+  hard template error instead of a silently malformed file.
+- The "call `vscode-fork-common.tmpl` LAST" convention still matters for the
+  same reason: its final line has no trailing comma.
+- A duplicate key becomes invisible in the rendered output — `fromJson` keeps
+  the last occurrence silently. Guard this in review with a parsed-JSON
+  duplicate-key check (an `object_pairs_hook` counting repeats), not by eyeballing
+  the render.
+- Positron's `vscode-app-positron.tmpl` keeps 2 source-order breaks that
+  `toPrettyJson` will still sort correctly in the output: `workbench.colorCustomizations`
+  opens an object that wraps the `dracula-pro-diff-colors.tmpl` call, and
+  `window.autoDetectColorScheme` is the final literal line with no trailing
+  comma. A single partial spanning `editor.*` through `workbench.startupEditor`
+  cannot occupy one alphabetically correct slot in the source — don't try to
+  "fix" this.
+- JSON comments are no longer possible in any of these files. None exist today.
+
+Verify with the technique in the next section (parsed-JSON equality against the
+prior render), plus a regex scan of the *output* for sort breaks — the source
+partials are allowed to be out of order at block boundaries; the rendered file
+is not.
+
+**Two follow-up defects found only after the first apply, both real:**
+
+1. **A source-order mistake in `vscode-fork-common.tmpl`, caught in review.**
+   `terminal.integrated.enableFileLinks` was moved to the wrong side of
+   `terminal.integrated.enableMultiLinePasteWarning` (`enableF` sorts before
+   `enableM`; the edit put it after). `toPrettyJson` still produced correct
+   *output*, since it re-sorts regardless of source order, but the source
+   itself was momentarily wrong. Re-running the case-sensitive-break audit
+   script over every `.chezmoitemplates/vscode-*.tmpl` file (not just the one
+   file being edited) after any manual reordering is what catches this —
+   eyeballing whether two adjacent lines are alphabetical is not reliable
+   even when the person doing it wrote the sort-order explanation two
+   paragraphs above.
+2. **All four apps rendered `}\n\n` — a doubled trailing newline at EOF.**
+   `toPrettyJson`'s own output already ends in `\n`; the one-line wrapper file
+   on disk carries its own trailing `\n` too, so the two stack. Missed by the
+   semantic-equivalence check (which parses JSON and ignores whitespace) and
+   by `chezmoi status`/`diff` review (a `diff --git` hunk showing one deleted
+   blank line at EOF is easy to skim past). Caught only when the user reviewed
+   the actual rendered output. Fix: add `| trimAll "\n"` to the wrapper line
+   (already reflected above) — the same convention every other
+   `includeTemplate` call site in this file already follows, extended to
+   cover `toPrettyJson`'s own trailing newline rather than just a partial's.
+   See `koopa-chezmoi-dotfiles`, "Canonicalizing an Assembled JSON Template,"
+   for this as the fourth general variant of the whitespace-trim bug family.
+   Verify with `tail -c 3 <file> | od -c`, not `$(chezmoi execute-template
+   ...)` — command substitution strips exactly the trailing newlines this bug
+   is about, silently hiding it from the check meant to catch it.
 
 ### Avoiding a write race on settings.json
 
@@ -108,6 +263,55 @@ grep -l "KOOPA_COLOR_MODE" \
   opt/dotfiles/chezmoi/dot_config/*/User/settings.json.tmpl
 # expect: no output
 ```
+
+### `python.defaultInterpreterPath`: drop the fallback branch, don't add one
+
+`Positron/User/settings.json.tmpl` and `dot_vscode-server/data/Machine/settings.json.tmpl`
+both had `{{ if stat ~/.venv/bin/python3 }}...{{ else if lookPath "python3" }}...{{ end }}`
+for this key. `~/.venv` is a per-project thing that comes and goes; every
+render after its existence changes disagrees with whatever is currently
+deployed, showing up as unexplained `chezmoi status` drift on a file nobody
+touched. Fix: no `else` branch. Set the key only when `~/.venv/bin/python3`
+exists; leave it absent otherwise, rather than substituting a second value
+(`lookPath "python3"`) that's just as likely to drift the next time anything
+about the machine's PATH changes. See `koopa-chezmoi-dotfiles`, "A `stat`-Gated
+Fallback Branch Causes Perpetual Drift If the Stat Target Is Transient", for
+the general principle this is one instance of.
+
+### Worked example: a live in-editor audit found one real bug and one false alarm (2026-08)
+
+After the sort fix above shipped, reading the rendered `settings.json` directly
+in the editor (not `cat`/`Read`) surfaced VS Code's own inline JSON-schema
+diagnostics — a different, more authoritative signal than any grep, per
+`koopa-chezmoi-dotfiles`, "Verifying a Setting Name Is Real Before Trusting
+It." Two flags came out of it:
+
+- `"python.analysis.diagnosticsSource": "Pyright"` — genuinely invalid.
+  Pylance's own hover gave the current valid set directly:
+  `Pylance`/`Pylance + Pyright`/`Pylance + Pyrefly`. Fixed in
+  `vscode-fork-common.tmpl` to `"Pylance"`. A bundle grep for `Pyright` would
+  have been misleading here — the string is all over
+  `workbench.desktop.main.js` as the underlying engine name, which looks like
+  confirmation for a value the schema no longer accepts on its own.
+- `diffEditor.removedLineBackground` flagged "Property ... is not allowed" —
+  a false alarm. The color is registered in
+  `src/vs/platform/theme/common/colors/editorColors.ts` upstream, and present
+  in both installed apps' own bundles here (Code 1.133.0, Positron 1.118.0).
+  Not a real incompatibility; most likely a JSON-schema cache in the editor
+  session that hadn't refreshed after chezmoi wrote the file externally.
+
+Two other flags in the same pass turned out to be expected, not bugs:
+`path-autocomplete.pathMappings` → "Unknown Configuration Setting" (that
+extension isn't installed in the app being viewed — the same "not installed
+here ≠ fake key" case already documented for `github.copilot.*`), and a
+`python.analysis.typeCheckingMode` note about `pyrightconfig.json`/
+`pyproject.toml` taking precedence (expected, per-workspace, not a global
+settings problem).
+
+Net lesson: an enum's "Valid values: ..." is ground truth, worth fixing on
+sight. A bare "not allowed" or "unknown setting" needs a second source before
+you touch anything — it can be a stale cache or a not-installed extension
+just as easily as a real dead key.
 
 # koopa VS Code Plugin Configuration
 

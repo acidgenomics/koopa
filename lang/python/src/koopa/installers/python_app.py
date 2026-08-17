@@ -9,6 +9,7 @@ from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
 from koopa.install import can_build_binary
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 from koopa.version import major_minor_version
 
 
@@ -90,7 +91,7 @@ def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
         env=subprocess_env,
         check=True,
     )
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     subprocess.run(
         [
             make,
@@ -125,6 +126,11 @@ def _install_from_uv(*, version: str, prefix: str, env: BuildEnv) -> None:
             "--no-bin",
             "--no-cache",
             "--no-config",
+            # See the matching comment in koopa.install._update_venv: uv
+            # bundles its own TLS cert store rather than consulting the OS
+            # one, and fails with "invalid peer certificate: UnknownIssuer"
+            # on networks where the OS store trusts a cert uv's doesn't.
+            "--system-certs",
             "--verbose",
             version,
         ],

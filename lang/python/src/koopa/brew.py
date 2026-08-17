@@ -9,6 +9,58 @@ brew-list-formulae, brew-list-casks, brew-info, etc.
 import os
 import subprocess
 import sys
+import threading
+
+from koopa.prefix import koopa_prefix
+from koopa.system import safe_build_env
+from koopa.xdg import xdg_config_home
+
+_SUDO_KEEPALIVE_INTERVAL_SECONDS = 50
+
+
+def _user_curlrc_path() -> str | None:
+    """Return the first curl config curl itself would load, if any exists.
+
+    Mirrors curl's own lookup order: ``$CURL_HOME/.curlrc``, then
+    ``<xdg_config_home>/curlrc``, then ``~/.curlrc``.
+    """
+    candidates = []
+    curl_home = os.environ.get("CURL_HOME")
+    if curl_home:
+        candidates.append(os.path.join(curl_home, ".curlrc"))
+    candidates.append(os.path.join(xdg_config_home(), "curlrc"))
+    candidates.append(os.path.expanduser("~/.curlrc"))
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return candidate
+    return None
+
+
+def _brew_curlrc_fallback() -> str:
+    """Return the path to koopa's own curlrc, shipped with the repo.
+
+    Used only when the user has no curl config of their own (see
+    ``_user_curlrc_path``). A curl transfer with no timeout can block forever
+    on a connection that stays open but stops delivering bytes -- not just
+    behind a corporate TLS-inspecting proxy, but on any network path where a
+    connection can go silently idle without a RST or FIN (a home router NAT
+    timeout, a flaky wifi drop). Homebrew's own curl invocation passes
+    ``--retry`` but no timeout, so a stall never becomes an error for
+    ``--retry`` to act on.
+
+    ``etc/koopa/homebrew-curlrc`` sets the same ``connect_timeout``/
+    ``speed_limit``/``speed_time`` defaults koopa already uses for its own
+    downloads (see ``koopa.download.download_with_mirror``), so both download
+    paths share one stall policy. It is a static file checked into the repo,
+    the same way ``etc/koopa/app.json`` is -- not written or regenerated at
+    runtime.
+
+    Returns
+    -------
+    str
+        Absolute path to the curlrc file.
+    """
+    return os.path.join(koopa_prefix(), "etc", "koopa", "homebrew-curlrc")
 
 
 def _brew_env() -> dict[str, str]:
@@ -20,17 +72,28 @@ def _brew_env() -> dict[str, str]:
     prompt is invisible and the process hangs forever. ``NONINTERACTIVE`` makes
     brew refuse to prompt and fail fast instead.
 
+    Also points ``HOMEBREW_CURLRC`` at the user's own curl config when one
+    exists (see ``_user_curlrc_path``). koopa's own dotfiles ship a
+    ``connect-timeout``/``speed-limit``/``speed-time`` stall guard in
+    ``~/.curlrc`` (``opt/dotfiles/chezmoi/dot_curlrc.tmpl``), so this reuses
+    that file directly rather than duplicating its settings. Falls back to a
+    minimal koopa-generated config (see ``_brew_curlrc_fallback``) only when no
+    user curl config exists, so the stall guard still applies unconditionally.
+    Does nothing if the caller already set ``HOMEBREW_CURLRC`` themselves.
+
     Returns
     -------
     dict[str, str]
-        A copy of ``os.environ`` with the non-interactive flags set.
+        A build-safe environment (see ``koopa.system.safe_build_env``) with
+        the non-interactive flags set.
     """
-    env = os.environ.copy()
+    env = safe_build_env()
     env["NONINTERACTIVE"] = "1"
     env["HOMEBREW_NO_ENV_HINTS"] = "1"
     # Suppresses the implicit auto-update brew runs before install/reinstall/
     # cleanup; does NOT block the explicit ``brew update`` step.
     env["HOMEBREW_NO_AUTO_UPDATE"] = "1"
+    env.setdefault("HOMEBREW_CURLRC", _user_curlrc_path() or _brew_curlrc_fallback())
     return env
 
 
@@ -45,6 +108,59 @@ def _brew(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
         stdin=subprocess.DEVNULL,
         env=_brew_env(),
     )
+
+
+def _sudo_authenticate() -> None:
+    """Prompt for sudo authentication once, up front.
+
+    Raises
+    ------
+    PermissionError
+        If authentication fails or is cancelled.
+    """
+    try:
+        subprocess.run(["sudo", "-v"], check=True)
+    except subprocess.CalledProcessError as exc:
+        msg = "Sudo authentication failed or was cancelled; aborting cask upgrade."
+        raise PermissionError(msg) from exc
+
+
+def _sudo_keepalive_start() -> tuple[threading.Event, threading.Thread]:
+    """Start a background thread that refreshes the sudo timestamp.
+
+    Homebrew shells out to ``sudo`` separately for each cask's uninstall and
+    install steps. The default sudo timestamp cache lasts 5 minutes, which a
+    multi-cask upgrade run can easily exceed, so later casks would otherwise
+    re-trigger authentication (Touch ID or a password prompt) instead of
+    reusing the credential from ``_sudo_authenticate``. This refreshes that
+    timestamp non-interactively, so it never prompts on its own.
+
+    Returns
+    -------
+    tuple[threading.Event, threading.Thread]
+        A handle to pass to ``_sudo_keepalive_stop`` when the run is done.
+    """
+    stop_event = threading.Event()
+
+    def _refresh() -> None:
+        while not stop_event.wait(_SUDO_KEEPALIVE_INTERVAL_SECONDS):
+            subprocess.run(
+                ["sudo", "-n", "-v"],
+                check=False,
+                capture_output=True,
+                stdin=subprocess.DEVNULL,
+            )
+
+    thread = threading.Thread(target=_refresh, daemon=True)
+    thread.start()
+    return stop_event, thread
+
+
+def _sudo_keepalive_stop(handle: tuple[threading.Event, threading.Thread]) -> None:
+    """Stop a background refresher started by ``_sudo_keepalive_start``."""
+    stop_event, thread = handle
+    stop_event.set()
+    thread.join(timeout=2)
 
 
 def brew_prefix() -> str:
@@ -150,10 +266,25 @@ def brew_upgrade_casks() -> None:
 
     note(f"{len(casks)} outdated cask(s): {', '.join(casks)}")
     n = len(casks)
-    for i, cask in enumerate(casks, start=1):
-        set_status(f"upgrading casks [{i}/{n}] {cask}")
-        _brew("reinstall", "--cask", "--force", cask, capture=False)
-        if cask == "r":
+    _sudo_authenticate()
+    keepalive = _sudo_keepalive_start()
+    try:
+        # Reinstall every cask in a single brew invocation instead of looping
+        # one-by-one: each separate `brew` call pays its own Ruby interpreter
+        # startup and dependency-resolution cost, which dominates wall-clock
+        # time on a long cask list. Homebrew still attempts every cask in the
+        # list even if one fails partway through, so this is not a regression
+        # in failure isolation -- if anything the old per-cask loop was worse,
+        # since check=True aborted the whole remaining list on the first
+        # failure instead of continuing to the rest.
+        set_status(f"reinstalling {n} cask(s)")
+        _brew("reinstall", "--cask", "--force", *casks, capture=False)
+    finally:
+        # Run cask-specific post-hooks regardless of the batch's overall exit
+        # status: Homebrew attempts every cask in the list even if another one
+        # in the batch fails, and both hooks are idempotent/harmless to run
+        # against an unchanged install if the targeted cask itself failed.
+        if "r" in casks:
             try:
                 from koopa.r import configure_r_environ, configure_r_makevars
 
@@ -164,12 +295,14 @@ def brew_upgrade_casks() -> None:
                     f"Warning: failed to configure R environment after cask upgrade: {exc}",
                     file=sys.stderr,
                 )
-        elif cask.startswith("gpg-suite"):
-            plist = os.path.expanduser(
-                "~/Library/LaunchAgents/org.gpgtools.updater.plist",
-            )
-            if os.path.isfile(plist):
-                subprocess.run(["launchctl", "unload", "-w", plist], check=False)
+        for cask in casks:
+            if cask.startswith("gpg-suite"):
+                plist = os.path.expanduser(
+                    "~/Library/LaunchAgents/org.gpgtools.updater.plist",
+                )
+                if os.path.isfile(plist):
+                    subprocess.run(["launchctl", "unload", "-w", plist], check=False)
+        _sudo_keepalive_stop(keepalive)
 
 
 def brew_upgrade_brews() -> None:

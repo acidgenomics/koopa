@@ -79,6 +79,30 @@ def _require_git_managed_install() -> None:
     sys.exit(1)
 
 
+def _revert_direnv_env(*, verbose: bool = False) -> None:
+    """Undo an active direnv project's '.envrc' mutations to this process's env.
+
+    A project-scoped credential or proxy setting loaded by direnv would
+    otherwise reach every subprocess koopa spawns that doesn't route through
+    'koopa.system.safe_build_env' -- most of them. Reverting in-process (see
+    'koopa.system.revert_direnv_env') removes the exposure outright instead of
+    warning about it. Silent by default; reports a count under '--verbose'.
+    """
+    from koopa.system import revert_direnv_env
+
+    # Read 'DIRENV_DIR' before reverting: it's itself one of the vars direnv
+    # sets on entering a project, so it's absent from the pre-'.envrc' state
+    # and 'revert_direnv_env' removes it -- reading it afterward always gets ''.
+    project_dir = os.environ.get("DIRENV_DIR", "").removeprefix("-")
+    reverted = revert_direnv_env()
+    if reverted and verbose:
+        from koopa.alert import alert_note
+
+        alert_note(
+            f"Reverted {len(reverted)} direnv-loaded environment variable(s) from '{project_dir}'.",
+        )
+
+
 def _exec_restart_with_bootstrap() -> None:
     """Replace the current process with a fresh koopa invocation.
 
@@ -244,13 +268,30 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_common_flags(uninstall_p)
 
     # -- update ---------------------------------------------------------------
-    update_p = subparsers.add_parser("update")
+    update_p = subparsers.add_parser(
+        "update",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Update koopa and installed applications.",
+        epilog=(
+            "usage:\n"
+            "  koopa update                       Pull koopa, then update stale apps\n"
+            "  koopa update koopa                 Pull the koopa repo only\n"
+            "  koopa update system [<app>...]     Update system apps (requires admin)\n"
+            "\n"
+            "system apps:\n"
+            "  homebrew       Homebrew (lighter alternative: 'koopa app brew upgrade')\n"
+            "  python         macOS system Python (macOS only)\n"
+            "  r              System R (macOS, Debian)\n"
+            "  tex-packages   TeX Live packages via tlmgr"
+        ),
+    )
     update_p.add_argument(
         "mode",
         nargs="?",
         choices=["system", "koopa"],
         default=None,
     )
+    update_p.add_argument("apps", nargs="*", metavar="app")
     _add_common_flags(update_p)
 
     # -- configure ------------------------------------------------------------
@@ -368,6 +409,7 @@ def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
+    _revert_direnv_env(verbose=args.verbose)
 
     apps, mode = _resolve_apps_and_mode(args)
     if args.all:
@@ -393,6 +435,7 @@ def _handle_install(args: argparse.Namespace) -> None:
     from koopa.install import (
         _acquire_install_lock,
         _release_install_lock,
+        _remove_from_pending_plan,
         install_app,
         install_koopa,
     )
@@ -419,6 +462,7 @@ def _handle_install(args: argparse.Namespace) -> None:
                 extra_passthrough=extra,
             )
             install_app(config)
+            _remove_from_pending_plan(app)
     finally:
         if acquired:
             _release_install_lock()
@@ -428,8 +472,14 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
+    _revert_direnv_env(verbose=args.verbose)
     from koopa.app import stale_revdeps
-    from koopa.install import _acquire_install_lock, _release_install_lock, install_app
+    from koopa.install import (
+        _acquire_install_lock,
+        _release_install_lock,
+        _remove_from_pending_plan,
+        install_app,
+    )
 
     apps = list(args.apps) if args.apps else []
     if args.all:
@@ -458,6 +508,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
         for app in apps:
             config = _build_install_config(app, reinstall=True, verbose=args.verbose)
             install_app(config)
+            _remove_from_pending_plan(app)
         if not args.no_revdeps:
             stale = stale_revdeps(apps)
             if stale:
@@ -468,6 +519,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
                 for dep in stale:
                     config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
                     install_app(config)
+                    _remove_from_pending_plan(dep)
     finally:
         if acquired:
             _release_install_lock()
@@ -559,7 +611,7 @@ def _reinstall_with_revdeps(
 ) -> None:
     """Reinstall apps with reverse dependency handling."""
     from koopa.app import app_revdeps
-    from koopa.install import install_app
+    from koopa.install import _remove_from_pending_plan, install_app
 
     all_targets: list[str] = []
     if mode != "only":
@@ -577,6 +629,7 @@ def _reinstall_with_revdeps(
     for app in all_targets:
         config = _build_install_config(app, reinstall=True, verbose=verbose)
         install_app(config)
+        _remove_from_pending_plan(app)
 
 
 def _confirm_destructive(prompt: str, yes: bool) -> bool:
@@ -666,7 +719,9 @@ def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
+    _revert_direnv_env(verbose=args.verbose)
     from koopa.install import (
+        InstallPlanError,
         _acquire_install_lock,
         _cleanup_legacy_config,
         _release_install_lock,
@@ -674,6 +729,8 @@ def _handle_update(args: argparse.Namespace) -> None:
         install_missing_default_apps,
         remove_alias_app_dirs,
         remove_unsupported_apps,
+        resolve_system_update_entries,
+        retry_failed_apps,
         update_bootstrap,
         update_koopa,
         update_stale_apps,
@@ -681,13 +738,19 @@ def _handle_update(args: argparse.Namespace) -> None:
     )
 
     mode = args.mode
-    system_updates = mode == "system"
-    if system_updates:
-        from koopa.system import is_admin
-
-        if not is_admin():
-            msg = "'koopa update system' requires admin/sudo access."
-            raise PermissionError(msg)
+    apps = args.apps
+    if apps and mode != "system":
+        print(
+            "Error: app names are only valid with 'koopa update system'.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if mode == "system":
+        try:
+            resolve_system_update_entries(apps or None)
+        except ValueError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
     try:
         acquired = _acquire_install_lock()
     except RuntimeError as exc:
@@ -701,8 +764,8 @@ def _handle_update(args: argparse.Namespace) -> None:
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             return
-        if system_updates:
-            update_system_apps(verbose=args.verbose)
+        if mode == "system":
+            update_system_apps(names=apps or None, verbose=args.verbose)
             return
         from koopa.alert import alert_success, stop, styled_name, warn
         from koopa.app import prune_apps
@@ -734,16 +797,35 @@ def _handle_update(args: argparse.Namespace) -> None:
         except Exception as exc:
             warn(f"Removing unsupported apps failed: {exc}")
         prune_broken_symlinks()
-        repair_app_symlinks()
+        try:
+            repair_app_symlinks()
+        except Exception as exc:
+            warn(f"Repairing app symlinks failed: {exc}")
         install_error: str | None = None
+        root_failures: list[str] = []
         try:
             update_stale_apps(verbose=args.verbose)
+        except InstallPlanError as exc:
+            root_failures = list(exc.failed_apps)
         except Exception as exc:
             install_error = str(exc)
         try:
             install_missing_default_apps(verbose=args.verbose)
+        except InstallPlanError as exc:
+            root_failures = sorted(set(root_failures) | set(exc.failed_apps))
         except Exception as exc:
             if install_error is None:
+                install_error = str(exc)
+        # Retry apps that failed above unconditionally (not gated on a
+        # missing opt/ symlink) -- a binary pull can 404 on a brand-new
+        # OS/arch slug or a build dep that only finishes rebuilding later in
+        # this same run, and succeed cleanly once retried.
+        if install_error is None and root_failures:
+            try:
+                retry_failed_apps(root_failures, verbose=args.verbose)
+            except InstallPlanError as exc:
+                install_error = str(exc)
+            except Exception as exc:
                 install_error = str(exc)
         try:
             prune_apps(verbose=args.verbose)

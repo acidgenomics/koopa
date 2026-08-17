@@ -1,6 +1,6 @@
 # Activate CA certificates for OpenSSL.
 # @note Updated 2026-05-12.
-export def _koopa_activate_ca_certificates [] {
+export def --env _koopa_activate_ca_certificates [] {
     mut prefix = $"((_koopa_xdg_data_home))/ca-certificates"
     mut file = $"($prefix)/cacert.pem"
     if not ($file | path exists) and not (_koopa_is_macos) {

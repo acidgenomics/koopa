@@ -6,6 +6,7 @@ import sys
 
 from koopa.build import app_prefix
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 
 
 def main(
@@ -24,7 +25,7 @@ def main(
     if sys.platform == "darwin" and toolset == "gcc":
         toolset = "clang"
     download_extract_cd()
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     bootstrap_args = [
         f"--libdir={prefix}/lib",
         f"--prefix={prefix}",

@@ -1,11 +1,11 @@
 """Install unzip."""
 
-import os
 import subprocess
 import sys
 
 from koopa.build import locate
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import cpu_count
 
 
 def main(
@@ -37,7 +37,7 @@ def main(
     if sys.platform != "darwin":
         cflags += "-DNO_SETLOCALE "
     subprocess_env["CFLAGS"] = cflags
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     target = "macosx" if sys.platform == "darwin" else "generic"
     subprocess.run(
         [make, f"--jobs={jobs}", "-f", "unix/Makefile", target],

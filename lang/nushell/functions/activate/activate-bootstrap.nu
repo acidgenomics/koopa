@@ -1,6 +1,6 @@
 # Conditionally activate koopa bootstrap in current path.
 # @note Updated 2026-05-01.
-export def _koopa_activate_bootstrap [] {
+export def --env _koopa_activate_bootstrap [] {
     let bootstrap_prefix = $"((_koopa_xdg_data_home))/koopa-bootstrap"
     if not ($bootstrap_prefix | path exists) {
         return

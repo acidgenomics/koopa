@@ -13,6 +13,7 @@ import subprocess
 
 from koopa.install import install_python_package
 from koopa.installers._args import get_list, parse_passthrough
+from koopa.system import safe_build_env
 
 
 def main(
@@ -34,5 +35,5 @@ def _install_chromium(prefix: str) -> None:
     browsers_dir = os.path.join(prefix, "libexec", "browsers")
     os.makedirs(browsers_dir, exist_ok=True)
     playwright = os.path.join(prefix, "bin", "playwright")
-    env = {**os.environ, "PLAYWRIGHT_BROWSERS_PATH": browsers_dir}
+    env = {**safe_build_env(), "PLAYWRIGHT_BROWSERS_PATH": browsers_dir}
     subprocess.run([playwright, "install", "chromium"], env=env, check=True)

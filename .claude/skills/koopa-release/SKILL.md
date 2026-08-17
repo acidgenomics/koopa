@@ -1,6 +1,6 @@
 ---
 name: koopa-release
-description: >
+description: >-
   koopa release procedure — CHANGELOG authoring, bumpver contract, pre-release
   gate, and what stays with the user. Use when preparing a release, writing
   release notes, or understanding what "prepare the release" entails.

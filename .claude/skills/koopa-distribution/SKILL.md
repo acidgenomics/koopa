@@ -1,6 +1,6 @@
 ---
 name: koopa-distribution
-description: >
+description: >-
   koopa's install/distribution mechanics outside the default `curl | sh` path —
   pinned (non-git) release tree semantics, `git archive`/`export-ignore`
   behavior, and why packaging koopa through conda-forge or another package

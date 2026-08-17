@@ -7,7 +7,7 @@ import sys
 
 from koopa.archive import extract
 from koopa.download import download
-from koopa.system import arch
+from koopa.system import arch, cpu_count, safe_build_env
 
 
 def main(
@@ -38,9 +38,9 @@ def main(
                 break
     shutil.copy2(stack_bin, os.path.join(bin_dir, "stack"))
     os.chmod(os.path.join(bin_dir, "stack"), 0o755)
-    jobs = os.cpu_count() or 1
+    jobs = cpu_count()
     stack = os.path.join(bin_dir, "stack")
-    env = os.environ.copy()
+    env = safe_build_env()
     env["STACK_ROOT"] = os.path.join(os.getcwd(), "stack-root")
     subprocess.run(
         [stack, "setup", f"-j{jobs}", "--verbose"],

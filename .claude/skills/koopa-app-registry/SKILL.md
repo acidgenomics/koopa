@@ -5,9 +5,14 @@ description: >-
   installer/version-check machinery. Use when composing koopa commands, reasoning
   about successor/default/completions semantics, importing atuin history, deciding
   whether a tool belongs in koopa, writing a new installer, wiring auto-update
-  for apps with non-version metadata (build IDs, per-platform hashes), or
-  debugging GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths,
-  the dead-host circuit breaker) in version-check or source-download code.
+  for apps with non-version metadata (build IDs, per-platform hashes), debugging
+  GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths, the
+  dead-host circuit breaker) in version-check or source-download code, or
+  reasoning about why an app was (or wasn't) flagged as needing a rebuild —
+  dependency-staleness detection compares installed state, not app.json's target,
+  or debugging a binary-package push/pull issue (why a push must run from the
+  canonical '/opt/koopa' prefix, KOOPA_BUILDER gating, or a tarball uploaded from
+  the wrong prefix that a puller can never extract).
 ---
 
 # koopa App Registry & Command Conventions
@@ -83,6 +88,30 @@ and merges the result into the app.json entry atomically.
 
 This ensures `koopa develop check-app-versions` never writes a stale `build_id`
 when bumping the version.
+
+### Checking Python-version compatibility for a new `python-package` app
+
+Confirming that every *direct* dependency ships a `cp3XX` wheel for the target
+Python version is necessary but not sufficient. A transitive dependency pulled
+in through an extras marker can carry its own `requires-python` exclusion that
+a direct-dependency sweep never sees.
+
+Case in point: adding `tooluniverse` (pinned to `python3.14` at first) passed a
+full check of every direct dependency's PyPI wheel listing, then failed at
+`pip install` with `ResolutionImpossible`. Root cause: `tooluniverse`'s own
+`pyproject.toml` lists `markitdown[all]` as a *base* dependency (not optional),
+and `markitdown[all]==0.1.7` pins `youtube-transcript-api~=1.0.0`, whose 1.0.x
+series sets `requires-python = "<3.14,>=3.8"` — an explicit exclusion, not a
+missing wheel. No newer `markitdown` release loosens that pin. `no_binary` and
+`extra_packages` can't work around a `requires-python` exclusion.
+
+The reliable check is to attempt the actual `pip install` (or `koopa install
+<app>`) rather than inferring compatibility from wheel filenames. When it fails
+with `ResolutionImpossible`, read which package sets the offending
+`requires-python`, then pin the app below that ceiling with the minimal
+necessary version drop — see `apache-airflow`, `azure-cli`, `dbt`,
+`snowflake-cli`, `tabcmd` for the `dependencies: ["python3.13"]` +
+`installer_args.python_version` + `python_version_pin: true` pattern.
 
 ## Version Check Machinery
 
@@ -183,9 +212,139 @@ download raises instead of silently printing "Mirror upload skipped". Use it to
 confirm a `src_url` or mirror-list fix actually resolves before trusting the
 next full `check-app-versions` run.
 
+## Private Staged-Artifact Apps (cellranger, bcl-convert)
+
+Apps gated behind a `private: true` + `installer_artifact` app.json entry (10x
+Genomics tools currently: `cellranger`, `bcl-convert`) require the vendor's
+EULA-gated tarball to be staged in the private artifacts S3 bucket before
+install works — koopa has no rights to redistribute or mirror it automatically.
+
+### Maintainer upgrade path
+
+1. `koopa develop check-app-versions <app>` reports the new upstream version
+   but does **not** bump `app.json`. `update_app_json()` (`version_check.py`)
+   checks `installer_artifact_key()` (`app.py`) against `s3_object_exists()`
+   and holds the pin, printing "artifact not staged" — this gate runs
+   regardless of `--no-update`.
+2. Download the vendor's Linux tarball from the `url` in `app.json` (accepting
+   their terms-of-service page).
+3. Stage it: `koopa develop push-installer <app> <file>` uploads to the S3 key
+   the `installer_artifact` template names (e.g.
+   `installers/cellranger/{version}.tar.xz`).
+4. Re-run `koopa develop check-app-versions --reset-cache <app>` — the artifact
+   is now staged, so the pin bumps.
+5. `koopa install <app>` extracts the tarball and asserts a top-level `bin/`
+   directory before linking (`installers/cellranger.py`,
+   `installers/bcl_convert.py`) — if the vendor changes their archive layout,
+   this raises explicitly instead of leaving a dangling `bin -> libexec/bin`
+   symlink.
+
+Covered by `tests/test_installers.py`: the staged-artifact pin-hold, the
+missing-`installer_artifact`-field case, and the archive-layout assertion.
+
+## Binary Package Cache (push/pull)
+
+Pre-built binary tarballs (a Homebrew-bottle equivalent) let non-builder hosts
+skip compiling from source. Push and pull are two independent code paths in
+`install.py`, gated separately — there is no single shared helper that
+enforces their common invariant for free.
+
+### The `/opt/koopa` absolute-path invariant
+
+A tarball is archived with `tar -Pcz` (absolute paths preserved) and extracted
+with `tar -Pxz`. A tarball built from any prefix other than `/opt/koopa`
+embeds that other prefix's path, so it can never be extracted correctly
+anywhere else — a pull would try to write into `/Users/someone/...` instead of
+`/opt/koopa/...`. `_BINARY_PREFIX = "/opt/koopa"` in `install.py` names this
+invariant once; every site below checks it independently:
+
+| Function | File | Enforcement |
+|---|---|---|
+| `_can_install_binary()` | `install.py` | soft gate, returns `False` off-prefix |
+| `install_app_from_binary_package()` | `install.py` | hard `RuntimeError` at pull time |
+| `_can_push_binary()` | `install.py` | soft gate, returns `False` off-prefix, one-shot `alert_note` |
+| `push_app_build()` | `install.py` | hard `RuntimeError` via `_require_binary_prefix()` |
+| `_handle_push_app_build()` (`koopa develop push-app-build`) | `cli_develop.py` | hard `RuntimeError` via the same `_require_binary_prefix()` |
+
+**Gotcha:** `push_app_build()` and `_handle_push_app_build()` are two
+independent tar-and-upload implementations of "push one app's build." A guard
+added to one does not cover the other — there is no single choke point both
+pass through, so both call `_require_binary_prefix()` explicitly. When adding
+a new push code path, check for this invariant explicitly; don't assume
+`_can_push_binary() is True` means the tarball being built is safe.
+
+### KOOPA_BUILDER gating
+
+`can_build_binary()` = `KOOPA_BUILDER=1`, read via `koopa.aws.dotenv_value()` —
+checks `os.environ` first, then `<koopa-root>/.env`. `_can_push_binary()`
+requires: `can_build_binary()` AND the `/opt/koopa` prefix AND (a configured
+vendor push backend OR (`_has_private_access()` AND the `aws` CLI on PATH)).
+
+Two homes for the flag, two different survival stories against koopa's own
+direnv-revert step (`cli_main._revert_direnv_env`, see
+`koopa.system.revert_direnv_env`):
+
+- Set in a shell profile *before* direnv runs: it lands in direnv's
+  pre-`.envrc` baseline, which gets restored on every
+  `koopa install`/`reinstall`/`update`, not stripped.
+- Set in `<koopa-root>/.env`: koopa's own `.envrc` loads `.env` through
+  direnv's `dotenv_if_exists`, so the flag is absent from the pre-`.envrc`
+  baseline and `revert_direnv_env()` deletes it from `os.environ` on every
+  run. `dotenv_value()`'s `.env` fallback is what makes this home work anyway
+  — without it, `can_build_binary()` reads `os.environ` only and a builder
+  configured this way is silently demoted to a consumer.
+
+Failure shape of the demotion (fixed, but worth recognizing if it recurs from
+a future refactor): the builder attempts a binary pull instead of skipping to
+a source build, gets a 404 (nothing was ever pushed for a builder), and
+`_can_install_binary()`/`_can_push_binary()` end up `True` at once — a
+combination `_can_install_binary()` exists specifically to prevent, since a
+builder is supposed to always build from source and never install a binary
+substitute. That inconsistency, not just the 404, is the tell.
+
+### S3 key layout
+
+`s3://<artifacts-bucket>/binaries/<os_slug>/<arch>/<name>/<version>.tar.gz`,
+or `<version>-r<revision>.tar.gz` when the app.json entry's `revision > 0`
+(`_binary_tarball_basename()`). A `.koopa-binary` marker file inside an
+installed app's prefix means it was pulled as a binary, not built locally —
+`push_missing_app_builds()`'s sweep skips any app carrying that marker.
+
+### Silent-success trap
+
+`push_app_build()` runs `aws s3 cp --only-show-errors` with `capture=True` and
+used to have no success message at all — a push that ran and succeeded
+looked identical to one that silently did nothing, even under `--verbose`.
+Fixed with one `alert_success()` line after the upload. When debugging "it
+looks like nothing happened," confirm whether the operation actually ran
+before assuming it didn't: `--only-show-errors` on any `aws s3` call makes
+success silent by design.
+
+### Auditing a bucket for a wrong-prefix tarball
+
+Stream an object and read its first tar entry without extracting anything to
+disk:
+
+```sh
+aws s3 cp --profile acidgenomics --only-show-errors \
+  "s3://<bucket>/binaries/<os_slug>/<arch>/<name>/<version>.tar.gz" - \
+  | tar -tzf - | head -1
+```
+
+Expect a line starting `/opt/koopa/app/...`. Anything else means the object
+was pushed from a non-canonical prefix and must be deleted — no `/opt/koopa`
+host can ever extract it.
+
 ## Tool-Inclusion Scope
 
-koopa includes AI agentic coding tools from **major vendors only**: Anthropic, Google,
-OpenAI, Microsoft (GitHub), and Amazon. OSS community tools (aider, goose, OpenHands,
-etc.) are out of scope regardless of popularity — the scope is intentionally narrow to
-vendor-backed products.
+koopa includes AI agentic coding **CLI assistants** from **major vendors only**:
+Anthropic, Google, OpenAI, Microsoft (GitHub), and Amazon. OSS community assistants
+(aider, goose, OpenHands, etc.) are out of scope regardless of popularity — the
+scope is intentionally narrow to vendor-backed products.
+
+This limit does not extend to **agent-adjacent tooling** — software that drives
+or reviews the output of the agent CLIs koopa already installs, rather than acting
+as an agent CLI itself. `roborev` (category `AI`, `default: false`) is the first
+example: it runs a git post-commit hook and feeds findings back to whichever agent
+CLI is installed. Vendor is irrelevant for this class of tool; judge each on
+whether it operates on top of the existing agent CLIs, not on who publishes it.

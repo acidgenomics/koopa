@@ -8,6 +8,8 @@ from types import TracebackType
 from typing import TYPE_CHECKING
 from unittest.mock import patch
 
+import pytest
+
 if TYPE_CHECKING:
     import concurrent.futures
     from collections.abc import Callable
@@ -40,6 +42,7 @@ def test_apps_with_missing_runtime_deps_clean(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -62,6 +65,7 @@ def test_apps_with_missing_runtime_deps_missing(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -90,6 +94,7 @@ def test_apps_with_missing_runtime_deps_skips_removed(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -120,6 +125,7 @@ def test_apps_with_missing_runtime_deps_alias_resolved(tmp_path: Path) -> None:
     with (
         patch("koopa.install.import_app_json", return_value=json_data),
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
         patch("koopa.app.installed_apps", return_value=["curl"]),
         patch("koopa.app.os_id", return_value="macos-arm64"),
         patch("koopa.app.import_app_json", return_value=json_data),
@@ -177,17 +183,17 @@ def _make_scheduler_config(
 def _noop_worker(
     config: InstallConfig,
     pid_map: dict[str, int] | None = None,
-) -> tuple[str, str, float, None, None]:
+) -> tuple[str, str, float, None, None, None]:
     """Worker that succeeds immediately."""
-    return config.name, config.version, 0.0, None, None
+    return config.name, config.version, 0.0, None, None, None
 
 
 def _fail_worker(
     config: InstallConfig,
     pid_map: dict[str, int] | None = None,
-) -> tuple[str, str, float, str, None]:
+) -> tuple[str, str, float, str, None, None]:
     """Worker that always returns a structured failure tuple."""
-    return config.name, config.version, 0.0, f"injected failure: {config.name}", None
+    return config.name, config.version, 0.0, f"injected failure: {config.name}", None, None
 
 
 def test_run_install_plan_single_app() -> None:
@@ -200,7 +206,7 @@ def test_run_install_plan_single_app() -> None:
 
     def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         calls.append(config.name)
-        return config.name, config.version, 0.0, None, None
+        return config.name, config.version, 0.0, None, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -227,10 +233,10 @@ def test_run_install_plan_dep_order() -> None:
         if config.name == "dep":
             dispatch_order.append("dep")
             dep_done.set()
-            return config.name, config.version, 0.0, None, None
+            return config.name, config.version, 0.0, None, None, None
         dep_done.wait(timeout=5)
         dispatch_order.append("app")
-        return config.name, config.version, 0.0, None, None
+        return config.name, config.version, 0.0, None, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -266,7 +272,7 @@ def test_run_install_plan_cpu_serialized() -> None:
         time.sleep(0.05)
         with lock:
             concurrent_cpu[0] -= 1
-        return config.name, config.version, 0.05, None, None
+        return config.name, config.version, 0.05, None, None, None
 
     # Both are CPU-bound (gnu-app installer)
     json_data = {"gcc": {"installer": "gnu-app"}, "llvm": {"installer": "gnu-app"}}
@@ -308,7 +314,7 @@ def test_run_install_plan_io_parallel() -> None:
         time.sleep(0.05)
         with lock:
             current[0] -= 1
-        return config.name, config.version, 0.05, None, None
+        return config.name, config.version, 0.05, None, None, None
 
     json_data = {f"app{i}": {} for i in range(4)}
 
@@ -336,8 +342,8 @@ def test_run_install_plan_failure_aborts() -> None:
 
     def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         if config.name == "bad":
-            return config.name, config.version, 0.0, "injected", None
-        return config.name, config.version, 0.0, None, None
+            return config.name, config.version, 0.0, "injected", None, None
+        return config.name, config.version, 0.0, None, None, None
 
     with (
         patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
@@ -376,3 +382,422 @@ def test_check_platform_support_no_note() -> None:
         _check_platform_support("some-app", app_meta)
 
     assert "\n" not in str(exc_info.value)
+
+
+# -- _load_pending_plan resume-validation tests -------------------------------
+
+
+def _write_pending_plan(cache_path: Path, created: str) -> None:
+    import json as json_mod
+
+    cache_path.write_text(
+        json_mod.dumps(
+            {
+                "created": created,
+                "source": "update",
+                "plan": [{"app": "stale-app", "reason": "outdated"}],
+            },
+        ),
+    )
+
+
+def test_load_pending_plan_drops_app_installed_after_cache(tmp_path: Path) -> None:
+    """An app installed (e.g. by hand) after the plan was cached is dropped."""
+    import json as json_mod
+    from datetime import UTC, datetime, timedelta
+
+    from koopa.install import _load_pending_plan
+
+    cache_path = tmp_path / "update-plan.json"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+
+    created = datetime.now(tz=UTC) - timedelta(hours=1)
+    _write_pending_plan(cache_path, created.isoformat())
+
+    info_dir = opt_dir / "stale-app" / ".install"
+    info_dir.mkdir(parents=True)
+    installed_at = datetime.now(tz=UTC) - timedelta(minutes=30)  # after `created`
+    info_dir.joinpath("info.json").write_text(
+        json_mod.dumps({"date": installed_at.strftime("%Y-%m-%d %H:%M:%S")}),
+    )
+
+    with (
+        patch("koopa.install._update_plan_cache_path", return_value=str(cache_path)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+    ):
+        plan = _load_pending_plan(source="update")
+
+    assert plan == []
+
+
+def test_load_pending_plan_keeps_app_installed_before_cache(tmp_path: Path) -> None:
+    """An app whose install predates the cached plan is kept for resume."""
+    import json as json_mod
+    from datetime import UTC, datetime, timedelta
+
+    from koopa.install import _load_pending_plan
+
+    cache_path = tmp_path / "update-plan.json"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+
+    created = datetime.now(tz=UTC) - timedelta(hours=1)
+    _write_pending_plan(cache_path, created.isoformat())
+
+    info_dir = opt_dir / "stale-app" / ".install"
+    info_dir.mkdir(parents=True)
+    installed_at = datetime.now(tz=UTC) - timedelta(hours=2)  # before `created`
+    info_dir.joinpath("info.json").write_text(
+        json_mod.dumps({"date": installed_at.strftime("%Y-%m-%d %H:%M:%S")}),
+    )
+
+    with (
+        patch("koopa.install._update_plan_cache_path", return_value=str(cache_path)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+    ):
+        plan = _load_pending_plan(source="update")
+
+    assert plan == [("stale-app", "outdated")]
+
+
+def test_load_pending_plan_keeps_app_with_no_info_json(tmp_path: Path) -> None:
+    """An app not (yet) installed at all is kept for resume."""
+    from datetime import UTC, datetime, timedelta
+
+    from koopa.install import _load_pending_plan
+
+    cache_path = tmp_path / "update-plan.json"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    # No opt/stale-app directory at all.
+
+    created = datetime.now(tz=UTC) - timedelta(hours=1)
+    _write_pending_plan(cache_path, created.isoformat())
+
+    with (
+        patch("koopa.install._update_plan_cache_path", return_value=str(cache_path)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+    ):
+        plan = _load_pending_plan(source="update")
+
+    assert plan == [("stale-app", "outdated")]
+
+
+# ── push_app_build / push_missing_app_builds ─────────────────────────────────
+
+
+def _link_python_versions(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
+    """Build app/python3.13/{3.13.9,3.13.15} with opt/python3.13 -> 3.13.15.
+
+    3.13.9 sorts *after* 3.13.15 as a string, so a `sorted(listdir)[-1]` version
+    pick lands on the wrong (unlinked) directory.
+    """
+    app_dir = tmp_path / "app"
+    opt_dir = tmp_path / "opt"
+    linked = app_dir / "python3.13" / "3.13.15"
+    older = app_dir / "python3.13" / "3.13.9"
+    linked.mkdir(parents=True)
+    older.mkdir(parents=True)
+    opt_dir.mkdir()
+    (opt_dir / "python3.13").symlink_to(linked)
+    return app_dir, opt_dir, linked, older
+
+
+def test_push_app_build_uses_linked_version_not_string_max(tmp_path: Path) -> None:
+    """push_app_build tars the version linked under opt/, not the string-max sibling."""
+    from koopa.install import push_app_build
+
+    app_dir, opt_dir, linked, older = _link_python_versions(tmp_path)
+    json_data = {"python3.13": {"version": "3.13.15"}}
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
+        patch("koopa.install.app_prefix", return_value=str(app_dir)),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.install.arch2", return_value="arm64"),
+        patch("koopa.install.os_slug", return_value="macos"),
+        patch("koopa.install.import_app_json", return_value=json_data),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-bucket"),
+        patch("koopa.vendor.vendor_config", return_value=None),
+        patch("koopa.install.run") as mock_run,
+    ):
+        push_app_build("python3.13")
+
+    tar_args = mock_run.call_args_list[0].args
+    assert tar_args[-1] == str(linked)
+    assert str(older) not in tar_args
+
+    cp_args = mock_run.call_args_list[1].args
+    assert cp_args[-1].endswith("python3.13/3.13.15.tar.gz")
+
+
+def test_push_app_build_raises_when_not_linked(tmp_path: Path) -> None:
+    """push_app_build refuses to guess a version when opt/<name> isn't linked."""
+    from koopa.install import push_app_build
+
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        pytest.raises(FileNotFoundError),
+    ):
+        push_app_build("python3.13")
+
+
+def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
+    """push_missing_app_builds queries S3 for the linked version, not the string-max sibling."""
+    from koopa.install import push_missing_app_builds
+
+    _app_dir, opt_dir, _linked, _older = _link_python_versions(tmp_path)
+
+    with (
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.install.arch2", return_value="arm64"),
+        patch("koopa.install.os_slug", return_value="macos"),
+        patch("shutil.which", return_value="/usr/bin/aws"),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-bucket"),
+        patch("koopa.aws.s3_object_exists", return_value=True) as mock_exists,
+    ):
+        push_missing_app_builds()
+
+    key = mock_exists.call_args.args[1]
+    assert key.endswith("python3.13/3.13.15-r1.tar.gz")
+    assert "3.13.9" not in key
+
+
+def test_can_push_binary_denies_private_non_builder_hosts() -> None:
+    """Private acidgenomics hosts cannot push unless KOOPA_BUILDER=1."""
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=False),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_push_binary() is False
+
+
+def test_can_push_binary_allows_private_builder_hosts() -> None:
+    """Private acidgenomics builders can push when aws CLI is available."""
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_push_binary() is True
+
+
+def test_can_push_binary_requires_aws_cli_for_private_path() -> None:
+    """Private push path is disabled when aws CLI is unavailable."""
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=False),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", side_effect=FileNotFoundError),
+    ):
+        assert _can_push_binary() is False
+
+
+def test_can_push_binary_denies_non_default_prefix() -> None:
+    """A builder with private access still can't push from a non-'/opt/koopa' prefix.
+
+    Pushed tarballs record absolute paths ('tar -Pcz'), so a tarball built
+    against any other prefix can never be extracted by a puller.
+    """
+    from koopa.install import _can_push_binary
+
+    with (
+        patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.install.koopa_prefix", return_value="/home/u/.local/share/koopa"),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_push_binary() is False
+
+
+def test_can_build_binary_reads_dotenv(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A builder flag set only in '.env' is still recognized.
+
+    Regression test: koopa's own '.envrc' loads '<koopa-root>/.env' through
+    direnv, and 'revert_direnv_env' deletes every variable direnv added, so an
+    environment-only read demoted a '.env'-configured builder to a consumer.
+    """
+    from koopa.install import can_build_binary
+
+    monkeypatch.delenv("KOOPA_BUILDER", raising=False)
+    with patch("koopa.aws._parse_dotenv", return_value={"KOOPA_BUILDER": "1"}):
+        assert can_build_binary() is True
+
+
+def test_can_build_binary_environment_zero_overrides_dotenv(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An explicit 'KOOPA_BUILDER=0' in the environment still wins over '.env'."""
+    from koopa.install import can_build_binary
+
+    monkeypatch.setenv("KOOPA_BUILDER", "0")
+    with patch("koopa.aws._parse_dotenv", return_value={"KOOPA_BUILDER": "1"}):
+        assert can_build_binary() is False
+
+
+def test_builder_never_gets_install_and_push_both_true() -> None:
+    """A '.env'-configured builder can push but never attempts a binary install.
+
+    Regression test for the evaluation-order trap: '_can_install_binary()' used
+    to read 'can_build_binary()' before anything triggered a '.env' re-read, so
+    a builder whose flag lived only in '.env' got 'binary=True' and (correctly)
+    'push=True' at once -- the exact combination '_can_install_binary()' exists
+    to prevent.
+    """
+    from koopa.install import _can_install_binary, _can_push_binary
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/opt/koopa"),
+        patch("koopa.install.can_build_binary", return_value=True),
+        patch("koopa.vendor.vendor_can_pull", return_value=False),
+        patch("koopa.vendor.vendor_can_push", return_value=False),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.build.locate", return_value="/usr/bin/aws"),
+    ):
+        assert _can_install_binary() is False
+        assert _can_push_binary() is True
+
+
+def test_run_python_installer_resolves_via_app_json_installer_key() -> None:
+    """A binary miss for e.g. 'python3.12' falls back through its 'installer' key.
+
+    Regression test for the binary-miss fallback, which used to check only
+    'has_python_installer(config.name, ...)'. 'python3.12' has no direct
+    registry entry, only 'installer: python' in app.json, so the fallback
+    re-raised the original binary-download error instead of building from
+    source.
+    """
+    from koopa.install import InstallConfig, _run_python_installer
+
+    config = InstallConfig(
+        name="python3.12", version="3.12.14", prefix="/opt/koopa/app/python3.12/3.12.14"
+    )
+    calls: list[dict] = []
+
+    def _fake_installer(**kwargs):  # noqa: ANN003, ANN202
+        calls.append(kwargs)
+
+    with (
+        patch(
+            "koopa.installers.has_python_installer",
+            side_effect=lambda name, *_a, **_kw: name == "python",
+        ),
+        patch("koopa.installers.get_python_installer", return_value=_fake_installer),
+        patch("koopa.install._app_json_installer", return_value="python"),
+    ):
+        result = _run_python_installer(config, fallback_note=True)
+
+    assert result is True
+    assert calls == [
+        {
+            "name": "python3.12",
+            "version": "3.12.14",
+            "prefix": "/opt/koopa/app/python3.12/3.12.14",
+            "passthrough_args": [],
+        }
+    ]
+
+
+def test_run_python_installer_returns_false_when_no_installer_exists() -> None:
+    """No installer anywhere resolves to False, not an exception.
+
+    The caller ('install_app') decides how to fail: re-raise the original
+    binary error, or raise 'FileNotFoundError' on the non-binary path.
+    """
+    from koopa.install import InstallConfig, _run_python_installer
+
+    config = InstallConfig(name="totally-unregistered-app")
+
+    with (
+        patch("koopa.installers.has_python_installer", return_value=False),
+        patch("koopa.install._app_json_installer", return_value=""),
+    ):
+        assert _run_python_installer(config) is False
+
+
+def test_push_app_build_rejects_non_default_prefix(tmp_path: Path) -> None:
+    """push_app_build refuses to build a tarball outside '/opt/koopa'."""
+    from koopa.install import push_app_build
+
+    _app_dir, opt_dir, _linked, _older = _link_python_versions(tmp_path)
+
+    with (
+        patch("koopa.install.koopa_prefix", return_value="/home/u/.local/share/koopa"),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        pytest.raises(RuntimeError, match="/opt/koopa"),
+    ):
+        push_app_build("python3.13")
+
+
+def test_link_in_bin_replaces_non_symlink_file(tmp_path: Path) -> None:
+    """A self-updater (e.g. agy) can clobber a koopa-managed link with a real file.
+
+    Regression test: this previously raised 'FileExistsError' from 'os.symlink()'
+    on the next 'koopa update', aborting the whole run.
+    """
+    from koopa.install import link_in_bin
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    source = tmp_path / "app" / "agy"
+    source.parent.mkdir()
+    source.write_text("#!/bin/sh\n")
+    target = bin_dir / "agy"
+    target.write_bytes(b"not a symlink")
+
+    with patch("koopa.install.bin_prefix", return_value=str(bin_dir)):
+        link_in_bin(name="agy", source=str(source))
+
+    assert target.is_symlink()
+    assert Path(target).resolve() == source.resolve()
+
+
+def test_link_in_bin_replaces_broken_symlink(tmp_path: Path) -> None:
+    """A stale symlink to a removed app version is replaced, not left dangling."""
+    from koopa.install import link_in_bin
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    source = tmp_path / "app" / "tool"
+    source.parent.mkdir()
+    source.write_text("#!/bin/sh\n")
+    target = bin_dir / "tool"
+    target.symlink_to(tmp_path / "app" / "gone")
+
+    with patch("koopa.install.bin_prefix", return_value=str(bin_dir)):
+        link_in_bin(name="tool", source=str(source))
+
+    assert target.resolve() == source.resolve()
+
+
+def test_link_in_opt_refuses_to_replace_a_real_directory(tmp_path: Path) -> None:
+    """A real directory at the target is never implicitly removed."""
+    from koopa.install import link_in_opt
+
+    opt_dir = tmp_path / "opt"
+    source = tmp_path / "app" / "curl" / "8.0"
+    source.mkdir(parents=True)
+    target_dir = opt_dir / "curl"
+    target_dir.mkdir(parents=True)
+
+    with (
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        pytest.raises(IsADirectoryError),
+    ):
+        link_in_opt(name="curl", source=str(source))
