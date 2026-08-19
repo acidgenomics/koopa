@@ -12,6 +12,7 @@ from koopa.build import locate
 from koopa.configurers.dotfiles import _chezmoi_managed
 from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import os_appearance_mode
+from koopa.text import plural
 from koopa.tmux import reload_tmux_config, warn_tmux_stale
 
 # Chezmoi source-name prefixes that are stripped to get the target name.
@@ -103,7 +104,8 @@ def _discover_color_mode_targets(
         else:
             dropped.append(target)
     if dropped and warn_on_drop:
-        warn(f"{len(dropped)} color-mode target(s) not managed by the main tree; skipping:")
+        n = len(dropped)
+        warn(f"{n} color-mode {plural(n, 'target')} not managed by the main tree; skipping:")
         for target in sorted(dropped):
             print(f"  {target}", file=sys.stderr)
     return targets
@@ -325,7 +327,8 @@ def main(
         # would be a permanent false alarm on every flip.
         unclaimed = sorted(all_candidates - all_applied)
         if unclaimed:
-            warn(f"{len(unclaimed)} color-mode target(s) not managed by any tree; skipping:")
+            n = len(unclaimed)
+            warn(f"{n} color-mode {plural(n, 'target')} not managed by any tree; skipping:")
             for target in unclaimed:
                 print(f"  {target}", file=sys.stderr)
 

@@ -97,9 +97,11 @@ def _revert_direnv_env(*, verbose: bool = False) -> None:
     reverted = revert_direnv_env()
     if reverted and verbose:
         from koopa.alert import alert_note
+        from koopa.text import plural
 
+        n = len(reverted)
         alert_note(
-            f"Reverted {len(reverted)} direnv-loaded environment variable(s) from '{project_dir}'.",
+            f"Reverted {n} direnv-loaded environment {plural(n, 'variable')} from '{project_dir}'.",
         )
 
 

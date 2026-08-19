@@ -1367,9 +1367,11 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
         return
 
     from koopa.alert import alert, alert_note, alert_success
+    from koopa.text import plural
 
+    n = len(to_move)
     verb = "Would archive" if parsed.dry_run else "Archiving"
-    alert(f"{verb} {len(to_move)} plan file(s).")
+    alert(f"{verb} {n} plan {plural(n, 'file')}.")
 
     dest_counts: dict[str, int] = defaultdict(int)
     for src, dest_dir, dest_name in to_move:
@@ -1380,12 +1382,12 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
 
     for dest_dir, count in sorted(dest_counts.items()):
         rel = os.path.relpath(dest_dir, plans_dir)
-        print(f"  {count:3d} file(s) -> {rel}")
+        print(f"  {count:3d} {plural(count, 'file')} -> {rel}")
 
     if parsed.dry_run:
         alert_note("Dry run -- no files were moved.")
     else:
-        alert_success(f"Archived {len(to_move)} plan file(s).")
+        alert_success(f"Archived {n} plan {plural(n, 'file')}.")
 
 
 def _estimate_claude_tokens(text: str) -> int:

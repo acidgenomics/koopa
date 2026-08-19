@@ -859,6 +859,7 @@ def archive_src(*, invalidate: bool = True) -> None:
         Invalidate CloudFront PACKAGES* caches after archiving.
     """
     from koopa.alert import alert
+    from koopa.text import plural
 
     aws = _aws()
 
@@ -906,9 +907,9 @@ def archive_src(*, invalidate: bool = True) -> None:
             deleted += 1
 
     if archived:
-        alert(f"Archived {archived} superseded source tarball(s).")
+        alert(f"Archived {archived} superseded source {plural(archived, 'tarball')}.")
     if deleted:
-        alert(f"Removed {deleted} superseded binary/binaries.")
+        alert(f"Removed {deleted} superseded {plural(deleted, 'binary', 'binaries')}.")
 
     if archived or deleted:
         alert("Regenerating PACKAGES manifests.")

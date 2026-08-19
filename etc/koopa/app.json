@@ -4562,9 +4562,21 @@
     "version": "8.0.1"
   },
   "jemalloc": {
+    "build_dependencies": [
+      "make",
+      "pkg-config"
+    ],
+    "category": "Library",
     "date": "2026-04-15",
+    "default": false,
     "description": "general-purpose malloc implementation with profiling support",
-    "removed": true
+    "src_url": "https://github.com/jemalloc/jemalloc/releases/download/{version}/jemalloc-{version}.tar.bz2",
+    "type": "library",
+    "url": [
+      "http://jemalloc.net/",
+      "https://github.com/jemalloc/jemalloc/"
+    ],
+    "version": "5.3.1"
   },
   "jfrog-cli": {
     "bin": [
@@ -9549,15 +9561,24 @@
     "category": "Terminal",
     "date": "2026-08-19",
     "default": true,
-    "dependencies": [
-      "libevent",
-      "ncurses",
-      "utf8proc"
-    ],
+    "dependencies": {
+      "macos-arm64": [
+        "jemalloc",
+        "libevent",
+        "ncurses",
+        "utf8proc"
+      ],
+      "noarch": [
+        "libevent",
+        "ncurses",
+        "utf8proc"
+      ]
+    },
     "description": "terminal multiplexer with persistent sessions",
     "man1": [
       "tmux.1"
     ],
+    "revision": 1,
     "src_url": "https://github.com/tmux/tmux/releases/download/{version}/tmux-{version}.tar.gz",
     "type": "build_tool",
     "url": [

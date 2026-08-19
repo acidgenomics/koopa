@@ -129,6 +129,16 @@ def to_string(items: list, *, sep: str = " ") -> str:
     return sep.join(str(x) for x in items)
 
 
+def plural(count: int, singular: str, plural_form: str | None = None) -> str:
+    """Return the correct noun form for a count.
+
+    Appends 's' by default. Pass 'plural_form' for an irregular noun.
+    """
+    if count == 1:
+        return singular
+    return plural_form or f"{singular}s"
+
+
 def autopad_zeros(
     dir_path: str, *, prefix: str = "", dry_run: bool = False
 ) -> list[tuple[str, str]]:

@@ -182,6 +182,7 @@ def prune_stale(*, dryrun: bool = True) -> None:
     from koopa.alert import alert
     from koopa.cli_develop import _list_s3_keys
     from koopa.prefix import koopa_prefix
+    from koopa.text import plural
 
     aws = _aws()
     bucket = _bucket()
@@ -212,9 +213,10 @@ def prune_stale(*, dryrun: bool = True) -> None:
     for key in sorted(stale):
         print(f"  s3://{bucket}/{key}", file=sys.stderr)
 
+    n = len(stale)
     if dryrun:
         alert(
-            f"Dry run: {len(stale)} stale key(s) would be deleted."
+            f"Dry run: {n} stale {plural(n, 'key')} would be deleted."
             " Re-run with --no-dryrun to delete."
         )
         return
@@ -224,4 +226,4 @@ def prune_stale(*, dryrun: bool = True) -> None:
             [aws, "s3", "rm", f"s3://{bucket}/{key}", f"--profile={_PROFILE}"],
             check=True,
         )
-    alert(f"Deleted {len(stale)} stale key(s).")
+    alert(f"Deleted {n} stale {plural(n, 'key')}.")
