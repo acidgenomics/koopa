@@ -1,3 +1,19 @@
+** TODO Breaking change to tmux installer
+    checking TERM... tmux-256color
+      checking platform... darwin
+      configure:
+      configure:       macOS calloc(3) appears not to correctly
+      configure:       zero allocations in some circumstances;
+      configure:       to avoid this, configuring with
+      configure:       --enable-jemalloc is recommended. To build
+      configure:       without anyway, use --disable-jemalloc
+      configure:
+      configure: error: must give --enable-jemalloc or --disable-jemalloc
+      ────────────────────────────────────────
+      Error lines (1):
+      ────────────────────────────────────────
+      configure: error: must give --enable-jemalloc or --disable-jemalloc
+      ────────────────────────────────────────
 ** TODO liblinear check is failing
     Failed (1):
       liblinear: check failed (network timeout)
