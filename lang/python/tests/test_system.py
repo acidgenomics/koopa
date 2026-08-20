@@ -16,6 +16,8 @@ from koopa.system import (
     arch2,
     color_mode,
     cpu_count,
+    in_slurm_allocation,
+    is_slurm_submit_host,
     major_minor_patch_version,
     major_minor_version,
     major_version,
@@ -175,6 +177,60 @@ def test_cpu_count_rejects_malformed_slurm_value(monkeypatch: pytest.MonkeyPatch
     monkeypatch.setenv("SLURM_CPUS_ON_NODE", "2")
     monkeypatch.delenv("KOOPA_CPU_COUNT", raising=False)
     assert cpu_count() == 2
+
+
+def test_is_slurm_submit_host_true_when_sbatch_on_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A host with 'sbatch' on PATH can submit Slurm jobs."""
+    fake_sbatch = tmp_path / "sbatch"
+    fake_sbatch.write_text("#!/bin/sh\n")
+    fake_sbatch.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path))
+    monkeypatch.delenv("SLURM_CONF", raising=False)
+    assert is_slurm_submit_host() is True
+
+
+def test_is_slurm_submit_host_false_with_no_slurm_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A plain workstation with no Slurm tooling is never a submit host.
+
+    'os.path.isfile' is patched so a real '/etc/slurm/slurm.conf' on the
+    machine running this test can never make it flaky.
+    """
+    monkeypatch.setenv("PATH", str(tmp_path))
+    monkeypatch.delenv("SLURM_CONF", raising=False)
+    monkeypatch.setattr(os.path, "isfile", lambda _path: False)
+    assert is_slurm_submit_host() is False
+
+
+def test_in_slurm_allocation_true_for_slurm_job_id(monkeypatch: pytest.MonkeyPatch) -> None:
+    """'SLURM_JOB_ID' set to a positive integer means an allocation is active."""
+    monkeypatch.setenv("SLURM_JOB_ID", "42")
+    monkeypatch.delenv("SLURM_JOBID", raising=False)
+    assert in_slurm_allocation() is True
+
+
+def test_in_slurm_allocation_true_for_legacy_slurm_jobid(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The legacy 'SLURM_JOBID' name is also honored."""
+    monkeypatch.delenv("SLURM_JOB_ID", raising=False)
+    monkeypatch.setenv("SLURM_JOBID", "42")
+    assert in_slurm_allocation() is True
+
+
+def test_in_slurm_allocation_false_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No allocation variable set means no active allocation."""
+    monkeypatch.delenv("SLURM_JOB_ID", raising=False)
+    monkeypatch.delenv("SLURM_JOBID", raising=False)
+    assert in_slurm_allocation() is False
+
+
+def test_in_slurm_allocation_rejects_malformed_value(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A malformed allocation variable must never count as an active allocation."""
+    monkeypatch.setenv("SLURM_JOB_ID", "not-a-number")
+    monkeypatch.delenv("SLURM_JOBID", raising=False)
+    assert in_slurm_allocation() is False
 
 
 def test_safe_build_env_drops_unlisted_project_var(monkeypatch: pytest.MonkeyPatch) -> None:

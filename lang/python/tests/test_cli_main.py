@@ -14,6 +14,7 @@ def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.Monke
     """Default update should not trigger system upgrades."""
     monkeypatch.setattr(cli_main, "_require_supported_platform", lambda: None)
     monkeypatch.setattr(cli_main, "_require_git_managed_install", lambda: None)
+    monkeypatch.setattr(cli_main, "_require_slurm_allocation", lambda: None)
     monkeypatch.setattr(cli_main, "_koopa_prefix", lambda: "/tmp/koopa")
 
     with (
@@ -68,6 +69,54 @@ def test_require_git_managed_install_refuses_packaged_install(
 
     with pytest.raises(SystemExit):
         cli_main._require_git_managed_install()
+
+
+def test_require_slurm_allocation_refuses_bare_login_shell(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A Slurm submit host with no active job allocation is refused."""
+    monkeypatch.delenv("KOOPA_ALLOW_SLURM_SUBMIT_HOST", raising=False)
+    monkeypatch.setattr("koopa.system.is_slurm_submit_host", lambda: True)
+    monkeypatch.setattr("koopa.system.in_slurm_allocation", lambda: False)
+
+    with pytest.raises(SystemExit):
+        cli_main._require_slurm_allocation()
+
+
+def test_require_slurm_allocation_permits_inside_allocation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A shell started via 'salloc'/'srun'/'sbatch' is never blocked."""
+    monkeypatch.delenv("KOOPA_ALLOW_SLURM_SUBMIT_HOST", raising=False)
+    monkeypatch.setattr("koopa.system.is_slurm_submit_host", lambda: True)
+    monkeypatch.setattr("koopa.system.in_slurm_allocation", lambda: True)
+
+    cli_main._require_slurm_allocation()  # must not raise or exit
+
+
+def test_require_slurm_allocation_permits_non_slurm_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A workstation with no Slurm tooling is never blocked."""
+    monkeypatch.delenv("KOOPA_ALLOW_SLURM_SUBMIT_HOST", raising=False)
+    monkeypatch.setattr("koopa.system.is_slurm_submit_host", lambda: False)
+    monkeypatch.setattr("koopa.system.in_slurm_allocation", lambda: False)
+
+    cli_main._require_slurm_allocation()  # must not raise or exit
+
+
+def test_require_slurm_allocation_env_override_short_circuits(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """'KOOPA_ALLOW_SLURM_SUBMIT_HOST=1' bypasses the check without probing Slurm."""
+    monkeypatch.setenv("KOOPA_ALLOW_SLURM_SUBMIT_HOST", "1")
+
+    def _unexpected_call() -> bool:
+        raise AssertionError("is_slurm_submit_host should not be called under the override")
+
+    monkeypatch.setattr("koopa.system.is_slurm_submit_host", _unexpected_call)
+
+    cli_main._require_slurm_allocation()  # must not raise or exit
 
 
 def test_revert_direnv_env_reports_count_when_verbose(

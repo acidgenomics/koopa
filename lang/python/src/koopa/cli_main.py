@@ -79,6 +79,31 @@ def _require_git_managed_install() -> None:
     sys.exit(1)
 
 
+def _require_slurm_allocation() -> None:
+    """Abort if this is a Slurm submit host and no job allocation is active.
+
+    A login/head node also runs the scheduler and is shared by every user of
+    the cluster; building apps there competes with both. Inside 'salloc',
+    'srun --pty', or an 'sbatch' script this is a no-op -- only a bare login
+    shell on a submit host is refused. Set 'KOOPA_ALLOW_SLURM_SUBMIT_HOST=1'
+    to override.
+    """
+    if os.environ.get("KOOPA_ALLOW_SLURM_SUBMIT_HOST") == "1":
+        return
+    from koopa.system import in_slurm_allocation, is_slurm_submit_host
+
+    if in_slurm_allocation() or not is_slurm_submit_host():
+        return
+    print(
+        "Error: refusing to run on a Slurm submit host outside a job allocation.\n"
+        "Request an allocation first, then re-run, for example:\n"
+        "  srun --pty bash\n"
+        "Set KOOPA_ALLOW_SLURM_SUBMIT_HOST=1 to override.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
 def _revert_direnv_env(*, verbose: bool = False) -> None:
     """Undo an active direnv project's '.envrc' mutations to this process's env.
 
@@ -411,6 +436,7 @@ def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
+    _require_slurm_allocation()
     _revert_direnv_env(verbose=args.verbose)
 
     apps, mode = _resolve_apps_and_mode(args)
@@ -474,6 +500,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
+    _require_slurm_allocation()
     _revert_direnv_env(verbose=args.verbose)
     from koopa.app import stale_revdeps
     from koopa.install import (
@@ -721,6 +748,7 @@ def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
     _require_supported_platform()
     _require_git_managed_install()
+    _require_slurm_allocation()
     _revert_direnv_env(verbose=args.verbose)
     from koopa.install import (
         InstallPlanError,
