@@ -1615,6 +1615,25 @@
     ],
     "version": "2.1.235"
   },
+  "claude-replay": {
+    "bin": [
+      "claude-replay"
+    ],
+    "category": "AI",
+    "date": "2026-08-20",
+    "default": false,
+    "dependencies": [
+      "node"
+    ],
+    "description": "convert AI coding agent session transcripts into HTML replays",
+    "installer": "node-package",
+    "type": "cli",
+    "url": [
+      "https://www.npmjs.com/package/claude-replay",
+      "https://github.com/es617/claude-replay/"
+    ],
+    "version": "0.10.0"
+  },
   "cli11": {
     "date": "2026-05-02",
     "description": "command-line argument parser library for C++11",

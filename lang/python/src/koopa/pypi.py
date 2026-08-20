@@ -45,16 +45,19 @@ def _s3_uri() -> str:
 
 
 def _cloudfront_distribution_id() -> str:
-    """Return CloudFront distribution ID from environment, raising if absent."""
+    """Return CloudFront distribution ID from environment, raising if absent.
+
+    Deliberately does NOT fall back to a generic AWS_CLOUDFRONT_DISTRIBUTION_ID
+    -- that fallback silently invalidated the wrong (or no-longer-relevant)
+    distribution on a machine whose .env had a stale generic value but no
+    site-specific one set, leaving python.acidgenomics.com serving a stale
+    cached index with zero error surfaced. Fail loudly instead.
+    """
     from koopa.aws import dotenv_value
 
     dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON")
     if not dist_id:
-        dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID")
-    if not dist_id:
-        msg = (
-            "AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
-        )
+        msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON must be set."
         raise RuntimeError(msg)
     return dist_id
 
