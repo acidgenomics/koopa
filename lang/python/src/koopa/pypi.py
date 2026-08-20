@@ -351,8 +351,60 @@ def reindex(*, invalidate: bool = True) -> None:
     alert(f"Index updated. Packages: {sorted(packages)}")
 
 
+def _tag_and_push_release(pkg_path: Path) -> None:
+    """Create and push a 'v{version}' git tag matching pyproject.toml.
+
+    A published version with no matching git tag is exactly the gap that let
+    acidgenomes 0.2.0 ship to the index with no v0.2.0 tag ever created on
+    GitHub: publish() built and uploaded the release correctly, but nothing
+    tied a durable, citable git ref to it, and nothing said so. Skips (with
+    a note, not an error) when package_dir isn't a git repository at all --
+    not every publishable directory is expected to be one. Otherwise creates
+    the tag if missing and always pushes it (idempotent if already pushed),
+    matching the 'vMAJOR.MINOR.PATCH' bumpver convention used by every sibling
+    package (acidgenomes, cellosaurus, ...).
+    """
+    import tomllib
+
+    from koopa.alert import alert
+    from koopa.git import (
+        git_create_tag,
+        git_push_tag,
+        git_repo_has_unstaged_changes,
+        git_tag_exists,
+        is_git_repo,
+    )
+
+    path = str(pkg_path)
+    if not is_git_repo(path):
+        alert(f"'{pkg_path}' is not a git repository -- skipping release tag.")
+        return
+
+    with open(pkg_path / "pyproject.toml", "rb") as fh:
+        meta = tomllib.load(fh)
+    version = meta.get("project", {}).get("version", "")
+    if not version:
+        msg = f"[project] version not found in '{pkg_path / 'pyproject.toml'}'."
+        raise RuntimeError(msg)
+    tag = f"v{version}"
+
+    if git_repo_has_unstaged_changes(path):
+        alert(f"Warning: '{pkg_path}' has unstaged changes -- tagging HEAD anyway.")
+
+    if not git_tag_exists(tag, path):
+        alert(f"Creating tag '{tag}'.")
+        git_create_tag(tag, tag, path)
+    alert(f"Pushing tag '{tag}'.")
+    git_push_tag(tag, path)
+
+
 def publish(package_dir: str, *, invalidate: bool = True) -> None:
     """Build and publish a Python package to python.acidgenomics.com.
+
+    Also creates and pushes a matching 'v{version}' git tag (see
+    _tag_and_push_release) so every published release has a durable git ref
+    -- a real incident (acidgenomes 0.2.0, 2026-08) shipped to the index
+    with no tag at all until this was added.
 
     Parameters
     ----------
@@ -410,6 +462,7 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     reindex(invalidate=invalidate)
+    _tag_and_push_release(pkg_path)
 
 
 def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
