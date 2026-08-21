@@ -1,5 +1,73 @@
 # Changelog
 
+## koopa 0.27.0 (2026-08-21)
+
+Major changes:
+
+- Added a Claude Code / Copilot CLI plugin under `plugins/koopa/`, shipped via
+  a new `.claude-plugin/marketplace.json`. It ships three skills --
+  `koopa-cli` (command syntax), `koopa-env` (why a tool resolves from koopa
+  vs. Homebrew or the system, and `KOOPA_AUTO_ACTIVATE` for non-interactive
+  sessions), and `koopa-troubleshoot` (`koopa system check`/`info`, install
+  logs) -- and deliberately no commands, agents, or hooks. `koopa develop
+  check-skills` now also scans `plugins/*/skills` by default, and
+  `.gitattributes` gained a note explaining why `plugins/` ships in release
+  tarballs even though `.claude/` does not.
+- `koopa install`, `koopa reinstall`, and `koopa update` now refuse to run on
+  a Slurm submit host outside a job allocation. A login/head node also runs
+  the scheduler and is shared by every cluster user; building apps there
+  competes with both. The new `is_slurm_submit_host()` and
+  `in_slurm_allocation()` checks in `system.py` are a no-op inside `salloc`,
+  `srun --pty`, or an `sbatch` script; only a bare login shell on a submit
+  host is refused. Set `KOOPA_ALLOW_SLURM_SUBMIT_HOST=1` to override.
+- `koopa app python publish` now refuses to overwrite an already-published
+  version's artifact with different content, and always creates and pushes a
+  matching `v{version}` git tag after a successful publish. Both fixes trace
+  to a real incident: acidgenomes 0.2.0 was rebuilt from an unmerged branch
+  and silently overwrote the original 0.2.0 wheel/sdist with different
+  content, with no tag and no CHANGELOG change to mark it. The collision
+  check compares SHA-256 of the local build against the published object and
+  raises unless they match; pass the new `--force` flag for a deliberate,
+  already-decided in-place update.
+- `_cloudfront_distribution_id()` in `pypi.py`, `cran.py`, and `site.py` no
+  longer falls back to a generic `AWS_CLOUDFRONT_DISTRIBUTION_ID` when the
+  site-specific variable (`_PYTHON`, `_R`, `_KOOPA`) is unset. That fallback
+  could silently invalidate the wrong, or no-longer-relevant, distribution on
+  a machine whose `.env` had a stale generic value, leaving the real site
+  serving a stale cached index with no error surfaced. Each site now requires
+  its own variable and fails loudly if it is missing.
+- `tmux` now builds against `jemalloc` on macOS. Upstream's `configure`
+  hard-errors on Darwin unless one of `--enable-jemalloc` or
+  `--disable-jemalloc` is passed, since macOS `calloc(3)` does not always
+  zero memory correctly; koopa now builds with jemalloc there, matching
+  Homebrew. `jemalloc` returns as a real, installable app (it was previously
+  a `removed: true` stub).
+- `koopa check-app-versions`' liblinear check now reads GitHub tags first,
+  falling back to scraping the upstream HTML page only if that fails. The
+  upstream page is not valid UTF-8; `_http_get_text()` gained an `encoding`
+  parameter so the HTML fallback can still decode it as latin-1.
+
+Minor changes:
+
+- Added a `plural()` helper to `text.py` and applied it across `brew.py`,
+  `cli_app.py`, `cli_develop.py`, `cli_main.py`, `configurers/color_mode.py`,
+  `configurers/dotfiles.py`, `cran.py`, `install.py`, `site.py`, and
+  `version_check.py`, replacing informal `(s)` count suffixes with correct
+  singular/plural noun forms.
+- Fixed the plugin marketplace owner URL to point at
+  `https://koopa.acidgenomics.com` instead of the bare marketing site.
+- Added roughly 34 new tests covering the Slurm guard, the CloudFront
+  fallback removal, the publish safety checks, `plural()`, the liblinear tag
+  parser, and the platform-keyed `tmux` dependency on jemalloc.
+- Routine upstream version bumps across 47 apps.
+
+New apps:
+
+- `claude-replay` 0.10.0: converts AI coding agent session transcripts into
+  HTML replays (node-package, non-default).
+- `jemalloc` 5.3.1: general-purpose malloc implementation with profiling
+  support (build_tool dependency for macOS `tmux`, non-default).
+
 ## koopa 0.26.0 (2026-08-16)
 
 Major changes:
