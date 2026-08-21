@@ -136,6 +136,9 @@ file_patterns."pyproject.toml" = [
   'current_version = "{version}"',
   'version = "{pep440_version}"',
 ]
+file_patterns.".claude-plugin/marketplace.json" = [ '"version": "{pep440_version}"' ]
+file_patterns."plugins/koopa/.claude-plugin/plugin.json" = [ '"version": "{pep440_version}"' ]
+file_patterns."plugins/koopa/.github/plugin/plugin.json" = [ '"version": "{pep440_version}"' ]
 
 [tool.numpydoc_validation]
 checks = [

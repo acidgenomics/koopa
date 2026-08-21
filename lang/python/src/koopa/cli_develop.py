@@ -674,6 +674,7 @@ def _handle_check_skills(args: list[str]) -> None:
     ``_skill_frontmatter_errors`` for the exact rules enforced.
     """
     import argparse
+    import glob
 
     from koopa.alert import alert, alert_success
     from koopa.prefix import koopa_prefix
@@ -687,8 +688,9 @@ def _handle_check_skills(args: list[str]) -> None:
         nargs="*",
         metavar="PATH",
         help=(
-            "skill-directory roots to check (default: <prefix>/.claude/skills and "
-            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills)"
+            "skill-directory roots to check (default: <prefix>/.claude/skills, "
+            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills, and any "
+            "<prefix>/plugins/*/skills)"
         ),
     )
     parsed = parser.parse_args(args)
@@ -700,6 +702,7 @@ def _handle_check_skills(args: list[str]) -> None:
         roots = [
             os.path.join(prefix, ".claude", "skills"),
             os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_claude", "skills"),
+            *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
 
     skill_files: list[str] = []

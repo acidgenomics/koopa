@@ -102,6 +102,15 @@ def _parse_package_name(filename: str) -> str | None:
     return None
 
 
+def _sha256_of_file(path: str) -> str:
+    """Return the SHA-256 hex digest of a local file."""
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
     """Download an S3 object and return its SHA-256 hex digest."""
     aws = _aws()
@@ -118,12 +127,49 @@ def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
         capture_output=True,
         check=True,
     )
-    h = hashlib.sha256()
-    with open(local, "rb") as fh:
-        for chunk in iter(lambda: fh.read(65536), b""):
-            h.update(chunk)
+    digest = _sha256_of_file(local)
     os.unlink(local)
-    return h.hexdigest()
+    return digest
+
+
+def _check_no_artifact_collision(dist_files: list[Path], tmp_dir: str) -> None:
+    """Raise if publishing would silently overwrite a differing published artifact.
+
+    A version string that already has a wheel/sdist under packages/ must stay
+    immutable: republishing the same filename with different bytes breaks the
+    published git tag <-> artifact mapping. Real incident: acidgenomes 0.2.0
+    was rebuilt from an unmerged branch and silently overwrote the original
+    0.2.0 wheel/sdist with different content, with no tag or CHANGELOG change
+    to mark it (2026-08). Identical bytes (an idempotent re-publish) are not a
+    collision and are let through.
+
+    Parameters
+    ----------
+    dist_files : list[Path]
+        Local wheel/sdist paths about to be uploaded.
+    tmp_dir : str
+        Scratch directory for downloading existing S3 objects to hash.
+
+    Raises
+    ------
+    RuntimeError
+        If a dist file already exists on the index with different content.
+    """
+    existing = set(_s3_list_packages())
+    for f in dist_files:
+        if f.name not in existing:
+            continue
+        local_sha256 = _sha256_of_file(str(f))
+        remote_sha256 = _sha256_of_s3_file(f"packages/{f.name}", tmp_dir)
+        if local_sha256 != remote_sha256:
+            msg = (
+                f"'{f.name}' is already published with different content "
+                f"(local sha256 {local_sha256[:12]} != published sha256 "
+                f"{remote_sha256[:12]}). Refusing to overwrite an already-published "
+                "version's artifact -- bump the version (e.g. `bumpver update "
+                "--patch`) and publish again."
+            )
+            raise RuntimeError(msg)
 
 
 def _read_wheel_summary(whl_path: str) -> str:
@@ -398,7 +444,7 @@ def _tag_and_push_release(pkg_path: Path) -> None:
     git_push_tag(tag, path)
 
 
-def publish(package_dir: str, *, invalidate: bool = True) -> None:
+def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -> None:
     """Build and publish a Python package to python.acidgenomics.com.
 
     Also creates and pushes a matching 'v{version}' git tag (see
@@ -412,6 +458,13 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
         Path to a Python package source directory (must contain pyproject.toml).
     invalidate
         Whether to invalidate the CloudFront cache after uploading.
+    force
+        Skip the artifact-collision check (see _check_no_artifact_collision)
+        and overwrite an already-published version's artifact even if its
+        content differs. Off by default -- only pass this for a deliberate,
+        already-decided in-place update of a version that's already live
+        (e.g. correcting the same real incident this check exists to catch).
+        Every other case should bump the version instead.
     """
     from koopa.alert import alert
 
@@ -441,6 +494,12 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
         if not dist_files:
             msg = "uv build produced no output files."
             raise RuntimeError(msg)
+
+        if force:
+            alert("--force: skipping the artifact-collision check.")
+        else:
+            alert("Checking for artifact collisions.")
+            _check_no_artifact_collision(dist_files, tmp_dir)
 
         for f in dist_files:
             dest = f"{_s3_uri()}/packages/{f.name}"

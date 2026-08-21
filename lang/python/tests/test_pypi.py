@@ -5,7 +5,12 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from koopa.pypi import _cloudfront_distribution_id, _tag_and_push_release
+from koopa.pypi import (
+    _check_no_artifact_collision,
+    _cloudfront_distribution_id,
+    _sha256_of_file,
+    _tag_and_push_release,
+)
 
 _GIT_ENV = ["-c", "user.name=Test", "-c", "user.email=test@example.com"]
 
@@ -133,3 +138,41 @@ def test_tag_and_push_release_raises_when_version_missing(tmp_path: Path) -> Non
     (pkg / "pyproject.toml").write_text('[project]\nname = "pkg"\n')
     with pytest.raises(RuntimeError, match="version not found"):
         _tag_and_push_release(pkg)
+
+
+def test_check_no_artifact_collision_allows_a_new_file(tmp_path: Path) -> None:
+    """Test a filename not yet on the index is not a collision."""
+    dist = tmp_path / "pkg-1.2.3-py3-none-any.whl"
+    dist.write_bytes(b"wheel contents")
+    with patch("koopa.pypi._s3_list_packages", return_value=[]):
+        _check_no_artifact_collision([dist], str(tmp_path))  # must not raise
+
+
+def test_check_no_artifact_collision_allows_identical_content(tmp_path: Path) -> None:
+    """Test re-publishing byte-identical content is not a collision."""
+    dist = tmp_path / "pkg-1.2.3-py3-none-any.whl"
+    dist.write_bytes(b"wheel contents")
+    same_sha256 = _sha256_of_file(str(dist))
+    with (
+        patch("koopa.pypi._s3_list_packages", return_value=[dist.name]),
+        patch("koopa.pypi._sha256_of_s3_file", return_value=same_sha256),
+    ):
+        _check_no_artifact_collision([dist], str(tmp_path))  # must not raise
+
+
+def test_check_no_artifact_collision_raises_on_differing_content(tmp_path: Path) -> None:
+    """Test it refuses to silently overwrite a published file with different bytes.
+
+    Regression test: acidgenomes 0.2.0 was rebuilt from an unmerged branch and
+    published() silently overwrote the original 0.2.0 wheel/sdist on S3 with
+    different content -- same version, same filename, no error, no new tag,
+    no CHANGELOG entry to mark the change (2026-08).
+    """
+    dist = tmp_path / "pkg-1.2.3-py3-none-any.whl"
+    dist.write_bytes(b"new wheel contents")
+    with (
+        patch("koopa.pypi._s3_list_packages", return_value=[dist.name]),
+        patch("koopa.pypi._sha256_of_s3_file", return_value="0" * 64),
+        pytest.raises(RuntimeError, match="already published with different content"),
+    ):
+        _check_no_artifact_collision([dist], str(tmp_path))

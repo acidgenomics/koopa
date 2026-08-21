@@ -359,12 +359,23 @@ def _handle_docker_run(args: list[str]) -> None:
 
 
 def _handle_python_publish(args: list[str]) -> None:
-    if not args:
-        print("Usage: koopa app python publish <package-dir>", file=sys.stderr)
-        sys.exit(1)
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app python publish")
+    parser.add_argument("package_dir", help="Path to a Python package source directory.")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "Overwrite an already-published version's artifact even if its content "
+            "differs. Only for a deliberate, already-decided in-place update -- "
+            "every other case should bump the version instead."
+        ),
+    )
+    parsed = parser.parse_args(args)
     from koopa.pypi import publish
 
-    publish(args[0])
+    publish(parsed.package_dir, force=parsed.force)
 
 
 def _handle_python_publish_docs(args: list[str]) -> None:

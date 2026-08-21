@@ -1,0 +1,15 @@
+{
+  "name": "koopa",
+  "displayName": "koopa",
+  "version": "0.26.0",
+  "description": "Use koopa to install apps, manage shell activation, and troubleshoot the koopa environment in any project.",
+  "author": {
+    "name": "Acid Genomics",
+    "url": "https://acidgenomics.com"
+  },
+  "homepage": "https://koopa.acidgenomics.com",
+  "repository": "https://github.com/acidgenomics/koopa",
+  "license": "Apache-2.0",
+  "keywords": ["koopa", "shell", "bootloader", "package-manager"],
+  "skills": "./skills/"
+}
