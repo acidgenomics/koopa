@@ -51,16 +51,17 @@ def _s3_uri() -> str:
 
 
 def _cloudfront_distribution_id() -> str:
-    """Return CloudFront distribution ID from environment, raising if absent."""
+    """Return CloudFront distribution ID from environment, raising if absent.
+
+    Deliberately does NOT fall back to a generic AWS_CLOUDFRONT_DISTRIBUTION_ID
+    -- see the identical fix in koopa.pypi._cloudfront_distribution_id for why
+    that fallback is unsafe (silently invalidates the wrong distribution).
+    """
     from koopa.aws import dotenv_value
 
     dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA")
     if not dist_id:
-        dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID")
-    if not dist_id:
-        msg = (
-            "AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
-        )
+        msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA must be set."
         raise RuntimeError(msg)
     return dist_id
 
@@ -182,6 +183,7 @@ def prune_stale(*, dryrun: bool = True) -> None:
     from koopa.alert import alert
     from koopa.cli_develop import _list_s3_keys
     from koopa.prefix import koopa_prefix
+    from koopa.text import plural
 
     aws = _aws()
     bucket = _bucket()
@@ -212,9 +214,10 @@ def prune_stale(*, dryrun: bool = True) -> None:
     for key in sorted(stale):
         print(f"  s3://{bucket}/{key}", file=sys.stderr)
 
+    n = len(stale)
     if dryrun:
         alert(
-            f"Dry run: {len(stale)} stale key(s) would be deleted."
+            f"Dry run: {n} stale {plural(n, 'key')} would be deleted."
             " Re-run with --no-dryrun to delete."
         )
         return
@@ -224,4 +227,4 @@ def prune_stale(*, dryrun: bool = True) -> None:
             [aws, "s3", "rm", f"s3://{bucket}/{key}", f"--profile={_PROFILE}"],
             check=True,
         )
-    alert(f"Deleted {len(stale)} stale key(s).")
+    alert(f"Deleted {n} stale {plural(n, 'key')}.")

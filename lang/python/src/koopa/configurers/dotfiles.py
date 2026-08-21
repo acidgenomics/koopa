@@ -9,6 +9,7 @@ from koopa.build import locate
 from koopa.git import git_pull_safe
 from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import os_appearance_mode
+from koopa.text import plural
 
 
 def _chezmoi_managed(
@@ -82,9 +83,10 @@ def _warn_cross_tree_overlap(
     overlap = sorted(main_targets & tree_targets)
     if not overlap:
         return
+    n = len(overlap)
     warn(
         f"{tree_label} tree overrides the main tree for "
-        f"{len(overlap)} target(s); the {tree_label} version wins:"
+        f"{n} {plural(n, 'target')}; the {tree_label} version wins:"
     )
     for target in overlap:
         print(f"  {target}", file=sys.stderr)
@@ -144,8 +146,9 @@ def _warn_remove_manage_conflict(
                 conflicts.append((removed, managed))
     if not conflicts:
         return
+    n = len(conflicts)
     warn(
-        f"{tree_label} tree's .chezmoiremove deletes {len(conflicts)} target(s) "
+        f"{tree_label} tree's .chezmoiremove deletes {n} {plural(n, 'target')} "
         f"the main tree manages; this can never converge:"
     )
     for removed, managed in conflicts:

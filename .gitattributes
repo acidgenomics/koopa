@@ -2,6 +2,14 @@
 # tarballs). These are developer/contributor tooling, not part of the shell
 # bootloader koopa ships to end users. Does not affect 'git clone' -- contributors
 # still get the full tree.
+#
+# The koopa Claude Code / Copilot CLI plugin lives entirely under plugins/koopa/,
+# a path never touched by any rule below, so it always ships regardless of these
+# ignores. (An earlier draft needed .claude/skills/ and .github/plugin/ to ship
+# too, for a since-cut "koopa-dev" plugin -- if that idea returns, note that
+# 'export-ignore' on a directory blocks git from ever descending into it, so a
+# later '-export-ignore' override on a subpath is not honored; each exception
+# has to be listed individually instead of via a parent-directory pattern.)
 .claude/             export-ignore
 .agents/             export-ignore
 .idea/               export-ignore

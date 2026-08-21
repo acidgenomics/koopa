@@ -23,7 +23,9 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
 ## Release checklist
 
 1. **Version bump** — already done by `bumpver` (the `Bump version to vX.Y.Z.`
-   commit). Confirm `pyproject.toml:3` reads the new version.
+   commit). Confirm `pyproject.toml:3` reads the new version, and confirm the
+   3 plugin manifest versions moved too (`.claude-plugin/marketplace.json` and
+   the two under `plugins/koopa/`) — all wired via `[tool.bumpver] file_patterns`.
 2. **Write CHANGELOG.md** — prepend a new section directly above the previous
    `## koopa X.Y.Z (...)` heading. See format below.
 3. **Pre-release gate** — all must pass:

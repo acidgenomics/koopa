@@ -19,6 +19,7 @@ from koopa.version_check import (
     _friendly_network_error,
     _is_prerelease,
     _is_retryable_network_error,
+    _liblinear_tag_to_version,
     _NetworkUnavailableError,
     classify_app,
     update_app_json,
@@ -380,3 +381,21 @@ def test_classify_app_no_unsupported_apps_in_registry() -> None:
         if classify_app(name, entry) is None:
             unsupported.append(name)
     assert unsupported == []
+
+
+# ── _liblinear_tag_to_version ─────────────────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    ("tag", "expected"),
+    [
+        ("v250", "2.50"),
+        ("v134", "1.34"),
+        ("v2.51", "2.51"),
+        ("vX", None),
+        ("v1000", None),
+    ],
+)
+def test_liblinear_tag_to_version(tag: str, expected: str | None) -> None:
+    """Test translation of a liblinear git tag to a version string."""
+    assert _liblinear_tag_to_version(tag) == expected

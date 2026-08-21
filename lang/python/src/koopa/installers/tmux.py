@@ -2,6 +2,7 @@
 
 from koopa.build import make_build
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
+from koopa.system import is_macos
 
 
 def main(
@@ -14,11 +15,14 @@ def main(
     """Install tmux."""
     env = activate_app_deps()
     download_extract_cd()
-    make_build(
-        conf_args=[
-            "--enable-sixel",
-            "--enable-utf8proc",
-            f"--prefix={prefix}",
-        ],
-        env=env,
-    )
+    conf_args = [
+        "--enable-sixel",
+        "--enable-utf8proc",
+        f"--prefix={prefix}",
+    ]
+    if is_macos():
+        # macOS calloc(3) does not always zero memory correctly. Upstream's
+        # configure hard-errors on darwin unless one of --enable-jemalloc or
+        # --disable-jemalloc is given; build against jemalloc as Homebrew does.
+        conf_args.append("--enable-jemalloc")
+    make_build(conf_args=conf_args, env=env)

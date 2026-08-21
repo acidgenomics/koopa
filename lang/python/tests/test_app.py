@@ -44,6 +44,20 @@ def test_app_deps_libarchive_includes_cmake() -> None:
     assert "cmake" in deps
 
 
+def test_app_deps_tmux_includes_jemalloc_on_macos() -> None:
+    """Test that jemalloc is a dependency of tmux on macOS."""
+    with patch("koopa.app.os_id", return_value="macos-arm64"):
+        deps = app_deps("tmux")
+    assert "jemalloc" in deps
+
+
+def test_app_deps_tmux_excludes_jemalloc_on_linux() -> None:
+    """Test that jemalloc is not a dependency of tmux on Linux."""
+    with patch("koopa.app.os_id", return_value="linux-amd64"):
+        deps = app_deps("tmux")
+    assert "jemalloc" not in deps
+
+
 # -- installer_artifact_key tests ---------------------------------------------
 
 

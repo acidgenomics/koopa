@@ -443,6 +443,7 @@ def _handle_scrub_install_info(args: list[str]) -> None:
 
     from koopa.alert import alert, alert_success
     from koopa.install_info import scrub_install_info
+    from koopa.text import plural
 
     parser = argparse.ArgumentParser(
         prog="koopa develop scrub-install-info",
@@ -466,7 +467,8 @@ def _handle_scrub_install_info(args: list[str]) -> None:
     for info_file, removed_keys in scrubbed:
         alert(f"{verb} '{info_file}': removed {', '.join(removed_keys)}")
     if not parsed.dry_run:
-        alert_success(f"Scrubbed {len(scrubbed)} info.json file(s).")
+        n = len(scrubbed)
+        alert_success(f"Scrubbed {n} {plural(n, 'info.json file')}.")
 
 
 def _collect_shell_files() -> dict[str, list[str]]:
@@ -672,6 +674,7 @@ def _handle_check_skills(args: list[str]) -> None:
     ``_skill_frontmatter_errors`` for the exact rules enforced.
     """
     import argparse
+    import glob
 
     from koopa.alert import alert, alert_success
     from koopa.prefix import koopa_prefix
@@ -685,8 +688,9 @@ def _handle_check_skills(args: list[str]) -> None:
         nargs="*",
         metavar="PATH",
         help=(
-            "skill-directory roots to check (default: <prefix>/.claude/skills and "
-            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills)"
+            "skill-directory roots to check (default: <prefix>/.claude/skills, "
+            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills, and any "
+            "<prefix>/plugins/*/skills)"
         ),
     )
     parsed = parser.parse_args(args)
@@ -698,6 +702,7 @@ def _handle_check_skills(args: list[str]) -> None:
         roots = [
             os.path.join(prefix, ".claude", "skills"),
             os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_claude", "skills"),
+            *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
 
     skill_files: list[str] = []
@@ -930,6 +935,7 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
 
     from koopa.download import _derive_filename
     from koopa.io import import_app_json
+    from koopa.text import plural
     from koopa.vendor import vendor_can_push
     from koopa.vendor import vendor_config as _vendor_config
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws, _mirror_src_to_s3
@@ -1040,8 +1046,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
 
     if not prune:
         if failures:
+            n = len(failures)
             print(
-                f"\n{len(failures)} app(s) failed to mirror:",
+                f"\n{n} {plural(n, 'app')} failed to mirror:",
                 file=sys.stderr,
             )
             for fname, reason in sorted(failures.items()):
@@ -1077,7 +1084,8 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     if stale_keys:
         from koopa.aws import _aws
 
-        print(f"Pruning {len(stale_keys)} stale file(s)...", file=sys.stderr)
+        n = len(stale_keys)
+        print(f"Pruning {n} stale {plural(n, 'file')}...", file=sys.stderr)
         for key in stale_keys:
             print(f"  s3://{bucket}/{key}", file=sys.stderr)
         for key in stale_keys:
@@ -1099,8 +1107,9 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
                     print(f"  TIMEOUT: {key}", file=sys.stderr)
 
     if failures:
+        n = len(failures)
         print(
-            f"\n{len(failures)} app(s) failed to mirror:",
+            f"\n{n} {plural(n, 'app')} failed to mirror:",
             file=sys.stderr,
         )
         for fname, reason in sorted(failures.items()):
@@ -1119,6 +1128,7 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
 
     from koopa.download import _derive_filename
     from koopa.io import import_app_json
+    from koopa.text import plural
     from koopa.version_check import _expand_src_url, _has_acidgenomics_aws
 
     if not _has_acidgenomics_aws():
@@ -1203,13 +1213,15 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
                 if name not in missing:
                     missing.append(name)
     if missing:
+        n = len(missing)
         print(
-            f"\n{len(missing)} app(s) missing from mirror: {', '.join(missing)}",
+            f"\n{n} {plural(n, 'app')} missing from mirror: {', '.join(missing)}",
             file=sys.stderr,
         )
         sys.exit(1)
     else:
-        print(f"\nAll {len(targets)} app(s) present in mirror.")
+        n = len(targets)
+        print(f"\nAll {n} {plural(n, 'app')} present in mirror.")
 
 
 def _handle_remove_app(args: list[str]) -> None:
@@ -1431,12 +1443,14 @@ def _handle_app_revdeps(args: list[str]) -> None:
 def _handle_circular_dependencies() -> None:
     """Handle ``koopa develop circular-dependencies``."""
     from koopa.check import check_circular_deps
+    from koopa.text import plural
 
     cycles = check_circular_deps()
     if not cycles:
         print("No circular dependencies detected.")
         return
-    print(f"Found {len(cycles)} circular dependency chain(s):")
+    n = len(cycles)
+    print(f"Found {n} {plural(n, 'circular dependency chain')}:")
     for cycle in cycles:
         print(f"  {' -> '.join(cycle)}")
     sys.exit(1)
@@ -1498,6 +1512,7 @@ def _handle_orphan_apps(args: list[str]) -> None:
     Use --all to show all orphans including leaf user tools.
     """
     from koopa.io import import_app_json
+    from koopa.text import plural
 
     show_all = "--all" in args
     data = import_app_json()
@@ -1529,7 +1544,8 @@ def _handle_orphan_apps(args: list[str]) -> None:
     if not orphans:
         print("No orphan apps detected.")
         return
-    print(f"Found {len(orphans)} orphan app(s):")
+    n = len(orphans)
+    print(f"Found {n} orphan {plural(n, 'app')}:")
     for name in orphans:
         app_type = data[name].get("type", "unknown")
         print(f"  {name} ({app_type})")
@@ -1545,6 +1561,7 @@ def _handle_conda_candidates(args: list[str]) -> None:
     import urllib.request
 
     from koopa.io import import_app_json
+    from koopa.text import plural
 
     verify = "--verify" in args
     data = import_app_json()
@@ -1586,7 +1603,8 @@ def _handle_conda_candidates(args: list[str]) -> None:
     if not found:
         print("No conda candidates found.")
         return
-    print(f"Found {len(found)} source-built app(s) available on conda:")
+    n = len(found)
+    print(f"Found {n} source-built {plural(n, 'app')} available on conda:")
     for name, channel, current, conda in found:
         print(f"  {name}: {current} -> {conda} ({channel})")
 

@@ -263,9 +263,10 @@ def brew_upgrade_casks() -> None:
         )
         raise PermissionError(msg)
     from koopa.progress import note, set_status
+    from koopa.text import plural
 
-    note(f"{len(casks)} outdated cask(s): {', '.join(casks)}")
     n = len(casks)
+    note(f"{n} outdated {plural(n, 'cask')}: {', '.join(casks)}")
     _sudo_authenticate()
     keepalive = _sudo_keepalive_start()
     try:
@@ -277,7 +278,7 @@ def brew_upgrade_casks() -> None:
         # in failure isolation -- if anything the old per-cask loop was worse,
         # since check=True aborted the whole remaining list on the first
         # failure instead of continuing to the rest.
-        set_status(f"reinstalling {n} cask(s)")
+        set_status(f"reinstalling {n} {plural(n, 'cask')}")
         _brew("reinstall", "--cask", "--force", *casks, capture=False)
     finally:
         # Run cask-specific post-hooks regardless of the batch's overall exit
@@ -319,9 +320,10 @@ def brew_upgrade_brews() -> None:
     if not brews:
         return
     from koopa.progress import note, set_status
+    from koopa.text import plural
 
-    note(f"{len(brews)} outdated brew(s): {', '.join(brews)}")
     n = len(brews)
+    note(f"{n} outdated {plural(n, 'brew')}: {', '.join(brews)}")
     for i, brew_name in enumerate(brews, start=1):
         set_status(f"upgrading brews [{i}/{n}] {brew_name}")
         _brew("reinstall", "--force", brew_name, capture=False)

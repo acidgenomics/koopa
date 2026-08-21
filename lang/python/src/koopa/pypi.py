@@ -45,16 +45,19 @@ def _s3_uri() -> str:
 
 
 def _cloudfront_distribution_id() -> str:
-    """Return CloudFront distribution ID from environment, raising if absent."""
+    """Return CloudFront distribution ID from environment, raising if absent.
+
+    Deliberately does NOT fall back to a generic AWS_CLOUDFRONT_DISTRIBUTION_ID
+    -- that fallback silently invalidated the wrong (or no-longer-relevant)
+    distribution on a machine whose .env had a stale generic value but no
+    site-specific one set, leaving python.acidgenomics.com serving a stale
+    cached index with zero error surfaced. Fail loudly instead.
+    """
     from koopa.aws import dotenv_value
 
     dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON")
     if not dist_id:
-        dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID")
-    if not dist_id:
-        msg = (
-            "AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
-        )
+        msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON must be set."
         raise RuntimeError(msg)
     return dist_id
 
@@ -99,6 +102,15 @@ def _parse_package_name(filename: str) -> str | None:
     return None
 
 
+def _sha256_of_file(path: str) -> str:
+    """Return the SHA-256 hex digest of a local file."""
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
     """Download an S3 object and return its SHA-256 hex digest."""
     aws = _aws()
@@ -115,12 +127,49 @@ def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
         capture_output=True,
         check=True,
     )
-    h = hashlib.sha256()
-    with open(local, "rb") as fh:
-        for chunk in iter(lambda: fh.read(65536), b""):
-            h.update(chunk)
+    digest = _sha256_of_file(local)
     os.unlink(local)
-    return h.hexdigest()
+    return digest
+
+
+def _check_no_artifact_collision(dist_files: list[Path], tmp_dir: str) -> None:
+    """Raise if publishing would silently overwrite a differing published artifact.
+
+    A version string that already has a wheel/sdist under packages/ must stay
+    immutable: republishing the same filename with different bytes breaks the
+    published git tag <-> artifact mapping. Real incident: acidgenomes 0.2.0
+    was rebuilt from an unmerged branch and silently overwrote the original
+    0.2.0 wheel/sdist with different content, with no tag or CHANGELOG change
+    to mark it (2026-08). Identical bytes (an idempotent re-publish) are not a
+    collision and are let through.
+
+    Parameters
+    ----------
+    dist_files : list[Path]
+        Local wheel/sdist paths about to be uploaded.
+    tmp_dir : str
+        Scratch directory for downloading existing S3 objects to hash.
+
+    Raises
+    ------
+    RuntimeError
+        If a dist file already exists on the index with different content.
+    """
+    existing = set(_s3_list_packages())
+    for f in dist_files:
+        if f.name not in existing:
+            continue
+        local_sha256 = _sha256_of_file(str(f))
+        remote_sha256 = _sha256_of_s3_file(f"packages/{f.name}", tmp_dir)
+        if local_sha256 != remote_sha256:
+            msg = (
+                f"'{f.name}' is already published with different content "
+                f"(local sha256 {local_sha256[:12]} != published sha256 "
+                f"{remote_sha256[:12]}). Refusing to overwrite an already-published "
+                "version's artifact -- bump the version (e.g. `bumpver update "
+                "--patch`) and publish again."
+            )
+            raise RuntimeError(msg)
 
 
 def _read_wheel_summary(whl_path: str) -> str:
@@ -348,8 +397,60 @@ def reindex(*, invalidate: bool = True) -> None:
     alert(f"Index updated. Packages: {sorted(packages)}")
 
 
-def publish(package_dir: str, *, invalidate: bool = True) -> None:
+def _tag_and_push_release(pkg_path: Path) -> None:
+    """Create and push a 'v{version}' git tag matching pyproject.toml.
+
+    A published version with no matching git tag is exactly the gap that let
+    acidgenomes 0.2.0 ship to the index with no v0.2.0 tag ever created on
+    GitHub: publish() built and uploaded the release correctly, but nothing
+    tied a durable, citable git ref to it, and nothing said so. Skips (with
+    a note, not an error) when package_dir isn't a git repository at all --
+    not every publishable directory is expected to be one. Otherwise creates
+    the tag if missing and always pushes it (idempotent if already pushed),
+    matching the 'vMAJOR.MINOR.PATCH' bumpver convention used by every sibling
+    package (acidgenomes, cellosaurus, ...).
+    """
+    import tomllib
+
+    from koopa.alert import alert
+    from koopa.git import (
+        git_create_tag,
+        git_push_tag,
+        git_repo_has_unstaged_changes,
+        git_tag_exists,
+        is_git_repo,
+    )
+
+    path = str(pkg_path)
+    if not is_git_repo(path):
+        alert(f"'{pkg_path}' is not a git repository -- skipping release tag.")
+        return
+
+    with open(pkg_path / "pyproject.toml", "rb") as fh:
+        meta = tomllib.load(fh)
+    version = meta.get("project", {}).get("version", "")
+    if not version:
+        msg = f"[project] version not found in '{pkg_path / 'pyproject.toml'}'."
+        raise RuntimeError(msg)
+    tag = f"v{version}"
+
+    if git_repo_has_unstaged_changes(path):
+        alert(f"Warning: '{pkg_path}' has unstaged changes -- tagging HEAD anyway.")
+
+    if not git_tag_exists(tag, path):
+        alert(f"Creating tag '{tag}'.")
+        git_create_tag(tag, tag, path)
+    alert(f"Pushing tag '{tag}'.")
+    git_push_tag(tag, path)
+
+
+def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -> None:
     """Build and publish a Python package to python.acidgenomics.com.
+
+    Also creates and pushes a matching 'v{version}' git tag (see
+    _tag_and_push_release) so every published release has a durable git ref
+    -- a real incident (acidgenomes 0.2.0, 2026-08) shipped to the index
+    with no tag at all until this was added.
 
     Parameters
     ----------
@@ -357,6 +458,13 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
         Path to a Python package source directory (must contain pyproject.toml).
     invalidate
         Whether to invalidate the CloudFront cache after uploading.
+    force
+        Skip the artifact-collision check (see _check_no_artifact_collision)
+        and overwrite an already-published version's artifact even if its
+        content differs. Off by default -- only pass this for a deliberate,
+        already-decided in-place update of a version that's already live
+        (e.g. correcting the same real incident this check exists to catch).
+        Every other case should bump the version instead.
     """
     from koopa.alert import alert
 
@@ -387,6 +495,12 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
             msg = "uv build produced no output files."
             raise RuntimeError(msg)
 
+        if force:
+            alert("--force: skipping the artifact-collision check.")
+        else:
+            alert("Checking for artifact collisions.")
+            _check_no_artifact_collision(dist_files, tmp_dir)
+
         for f in dist_files:
             dest = f"{_s3_uri()}/packages/{f.name}"
             alert(f"Uploading '{f.name}' to '{dest}'.")
@@ -407,6 +521,7 @@ def publish(package_dir: str, *, invalidate: bool = True) -> None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     reindex(invalidate=invalidate)
+    _tag_and_push_release(pkg_path)
 
 
 def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:

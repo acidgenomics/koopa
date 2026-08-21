@@ -174,14 +174,17 @@ def _s3_uri() -> str:
 
 
 def _cloudfront_distribution_id() -> str:
-    """Return CloudFront distribution ID from environment, raising if absent."""
+    """Return CloudFront distribution ID from environment, raising if absent.
+
+    Deliberately does NOT fall back to a generic AWS_CLOUDFRONT_DISTRIBUTION_ID
+    -- see the identical fix in koopa.pypi._cloudfront_distribution_id for why
+    that fallback is unsafe (silently invalidates the wrong distribution).
+    """
     from koopa.aws import dotenv_value
 
     dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID_R")
     if not dist_id:
-        dist_id = dotenv_value("AWS_CLOUDFRONT_DISTRIBUTION_ID")
-    if not dist_id:
-        msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_R (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must be set."
+        msg = "AWS_CLOUDFRONT_DISTRIBUTION_ID_R must be set."
         raise RuntimeError(msg)
     return dist_id
 
@@ -859,6 +862,7 @@ def archive_src(*, invalidate: bool = True) -> None:
         Invalidate CloudFront PACKAGES* caches after archiving.
     """
     from koopa.alert import alert
+    from koopa.text import plural
 
     aws = _aws()
 
@@ -906,9 +910,9 @@ def archive_src(*, invalidate: bool = True) -> None:
             deleted += 1
 
     if archived:
-        alert(f"Archived {archived} superseded source tarball(s).")
+        alert(f"Archived {archived} superseded source {plural(archived, 'tarball')}.")
     if deleted:
-        alert(f"Removed {deleted} superseded binary/binaries.")
+        alert(f"Removed {deleted} superseded {plural(deleted, 'binary', 'binaries')}.")
 
     if archived or deleted:
         alert("Regenerating PACKAGES manifests.")

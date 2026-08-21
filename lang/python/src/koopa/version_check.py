@@ -249,7 +249,9 @@ def _http_get_json(
     raise last_exc
 
 
-def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
+def _http_get_text(
+    url: str, *, timeout: int = 15, encoding: str = "utf-8", _retries: int = 2
+) -> str:
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
@@ -257,7 +259,7 @@ def _http_get_text(url: str, *, timeout: int = 15, _retries: int = 2) -> str:
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
-                return resp.read().decode()
+                return resp.read().decode(encoding)
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
             if not _is_retryable_network_error(exc):
                 raise
@@ -1291,12 +1293,33 @@ def _check_temurin() -> str:
     return m.group(1)
 
 
+def _liblinear_tag_to_version(tag: str) -> str | None:
+    """Translate a liblinear git tag (e.g. 'v250') to a version (e.g. '2.50')."""
+    digits = tag.lstrip("vV")
+    if "." in digits:
+        return digits
+    if digits.isdigit() and len(digits) == 3:
+        return f"{digits[0]}.{digits[1:]}"
+    return None
+
+
 def _check_liblinear() -> str:
-    _rate_default.wait()
-    req = urllib.request.Request("https://www.csie.ntu.edu.tw/~cjlin/liblinear/")
-    req.add_header("User-Agent", "koopa-version-checker")
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        html = resp.read().decode("latin-1")
+    """Check liblinear version from GitHub tags, falling back to upstream HTML."""
+    try:
+        tags = _http_get_json(
+            "https://api.github.com/repos/cjlin1/liblinear/tags?per_page=100",
+            github=True,
+        )
+        versions = [v for v in (_liblinear_tag_to_version(t["name"]) for t in tags) if v]
+        if versions:
+            return max(versions, key=_version_key)
+    except (urllib.error.URLError, OSError, TimeoutError):
+        pass
+    # Upstream page is not valid UTF-8, so decode as latin-1.
+    html = _http_get_text(
+        "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
+        encoding="latin-1",
+    )
     m = re.search(r"Version\s+(\d+\.\d+)", html)
     if not m:
         msg = "No liblinear version found"
@@ -2105,6 +2128,8 @@ def check_app_versions(  # noqa: C901, PLR0915
     reset_cache: bool = False,
 ) -> list[VersionCheckResult]:
     """Check upstream versions for all apps in app.json."""
+    from koopa.text import plural
+
     if _github_token is None:
         msg = (
             "GitHub token is not available."
@@ -2169,13 +2194,15 @@ def check_app_versions(  # noqa: C901, PLR0915
     try:
         from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
-        desc = f"Checking {len(uncached_names)} app(s)"
+        n_uncached = len(uncached_names)
+        desc = f"Checking {n_uncached} {plural(n_uncached, 'app')}"
         if cached_count:
             desc += f" ({cached_count} cached)"
         pbar = tqdm(total=total, desc="Checking", unit="app", dynamic_ncols=True)
     except ModuleNotFoundError:
         pbar = None
-        msg = f"Checking {len(uncached_names)} app(s)..."
+        n_uncached = len(uncached_names)
+        msg = f"Checking {n_uncached} {plural(n_uncached, 'app')}..."
         if cached_count:
             msg += f" ({cached_count} cached)"
         print(msg, file=sys.stderr)

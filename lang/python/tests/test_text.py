@@ -16,6 +16,7 @@ from koopa.text import (
     nchar,
     nlines,
     pascal_case,
+    plural,
     snake_case,
     sort_lines,
     tail,
@@ -128,6 +129,27 @@ def test_to_string_custom_sep() -> None:
 def test_to_string_integers() -> None:
     """Test to_string with integer items."""
     assert to_string([1, 2, 3]) == "1 2 3"
+
+
+def test_plural_singular() -> None:
+    """Test plural with a count of one."""
+    assert plural(1, "cask") == "cask"
+
+
+def test_plural_zero() -> None:
+    """Test plural with a count of zero."""
+    assert plural(0, "cask") == "casks"
+
+
+def test_plural_many() -> None:
+    """Test plural with a count greater than one."""
+    assert plural(2, "cask") == "casks"
+
+
+def test_plural_irregular_form() -> None:
+    """Test plural with an explicit irregular plural_form."""
+    assert plural(2, "binary", "binaries") == "binaries"
+    assert plural(1, "binary", "binaries") == "binary"
 
 
 def test_find_and_replace_in_file_fixed(tmp_path: Path) -> None:

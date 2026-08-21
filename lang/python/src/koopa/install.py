@@ -655,6 +655,7 @@ def push_missing_app_builds() -> None:
     """
     from koopa.alert import alert, alert_note, alert_success
     from koopa.aws import koopa_s3_bucket, s3_object_exists
+    from koopa.text import plural
 
     arch = arch2()
     os_str = os_slug()
@@ -706,8 +707,9 @@ def push_missing_app_builds() -> None:
     if failed:
         import sys as _sys
 
+        n_failed = len(failed)
         print(
-            f"Warning: {len(failed)} app(s) failed to push: {', '.join(failed)}",
+            f"Warning: {n_failed} {plural(n_failed, 'app')} failed to push: {', '.join(failed)}",
             file=_sys.stderr,
         )
     else:
@@ -3014,6 +3016,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         build_log_path,
         format_completion_line,
     )
+    from koopa.text import plural
 
     json_data = import_app_json()
     cap = _io_cap()
@@ -3266,7 +3269,11 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     if failed:
         root_failures = sorted(fail_msgs)
         skipped = sorted(failed - set(root_failures))
-        parts = [f"{len(root_failures)} app(s) failed: {', '.join(root_failures)}."]
+        n_root_failures = len(root_failures)
+        parts = [
+            f"{n_root_failures} {plural(n_root_failures, 'app')} failed: "
+            f"{', '.join(root_failures)}."
+        ]
         if skipped:
             parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
         raise InstallPlanError(" ".join(parts), root_failures)

@@ -547,6 +547,35 @@ def has_sudo() -> bool:
     return b"password is required" in result.stderr
 
 
+# The three job-submission commands. Their presence is the exact definition of
+# a submit host, which is what 'is_slurm_submit_host()' is about -- a broader
+# probe on 'sinfo'/'scontrol'/'sacct' would also match a client-tools-only host
+# that cannot actually submit work.
+_SLURM_SUBMIT_COMMANDS = ("sbatch", "salloc", "srun")
+
+# 'slurm-llnl' is the legacy Debian/Ubuntu package path.
+_SLURM_CONF_PATHS = ("/etc/slurm/slurm.conf", "/etc/slurm-llnl/slurm.conf")
+
+
+def is_slurm_submit_host() -> bool:
+    """Check whether this host can submit Slurm jobs."""
+    if any(shutil.which(cmd) for cmd in _SLURM_SUBMIT_COMMANDS):
+        return True
+    slurm_conf = os.environ.get("SLURM_CONF", "")
+    if slurm_conf and os.path.isfile(slurm_conf):
+        return True
+    return any(os.path.isfile(path) for path in _SLURM_CONF_PATHS)
+
+
+def in_slurm_allocation() -> bool:
+    """Check whether this process runs inside a Slurm job allocation."""
+    for name in ("SLURM_JOB_ID", "SLURM_JOBID"):
+        value = os.environ.get(name, "")
+        if value.isdigit() and int(value) > 0:
+            return True
+    return False
+
+
 def is_installed(name: str) -> bool:
     """Check if a program is installed."""
     return shutil.which(name) is not None
