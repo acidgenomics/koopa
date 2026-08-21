@@ -2,7 +2,7 @@
   "name": "koopa",
   "owner": {
     "name": "Acid Genomics",
-    "url": "https://acidgenomics.com"
+    "url": "https://koopa.acidgenomics.com"
   },
   "metadata": {
     "description": "Agent skills for koopa: a shell bootloader for data science.",
