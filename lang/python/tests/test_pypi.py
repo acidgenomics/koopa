@@ -8,8 +8,10 @@ import pytest
 from koopa.pypi import (
     _check_no_artifact_collision,
     _cloudfront_distribution_id,
+    _parse_package_version,
     _sha256_of_file,
     _tag_and_push_release,
+    _version_sort_key,
 )
 
 _GIT_ENV = ["-c", "user.name=Test", "-c", "user.email=test@example.com"]
@@ -176,3 +178,37 @@ def test_check_no_artifact_collision_raises_on_differing_content(tmp_path: Path)
         pytest.raises(RuntimeError, match="already published with different content"),
     ):
         _check_no_artifact_collision([dist], str(tmp_path))
+
+
+def test_parse_package_version_from_wheel() -> None:
+    """Test version extraction from a wheel filename."""
+    assert _parse_package_version("pipette-0.2.0-py3-none-any.whl") == "0.2.0"
+
+
+def test_parse_package_version_from_sdist() -> None:
+    """Test version extraction from an sdist filename."""
+    assert _parse_package_version("pipette-0.2.0.tar.gz") == "0.2.0"
+
+
+def test_parse_package_version_returns_none_for_unrecognized_file() -> None:
+    """Test a non-package file yields no version."""
+    assert _parse_package_version("README.md") is None
+
+
+def test_version_sort_key_orders_numerically_not_lexicographically() -> None:
+    """Test 0.10.0 sorts after 0.9.0 despite '1' < '9' as characters."""
+    assert _version_sort_key("0.9.0") < _version_sort_key("0.10.0")
+
+
+def test_reindex_landing_summary_picks_highest_version_wheel() -> None:
+    """Test the landing page reads the Summary from the newest wheel, not the first.
+
+    Regression test: reindex() picked the first ``.whl`` filename per package
+    from a plain lexicographically sorted S3 listing, which is the *oldest*
+    version, not the latest. After a package's second release, the landing
+    page permanently showed the previous version's description -- reproduced
+    live for pipette and goalie (2026-08).
+    """
+    whls = ["pipette-0.1.0-py3-none-any.whl", "pipette-0.2.0-py3-none-any.whl"]
+    picked = max(whls, key=lambda f: _version_sort_key(_parse_package_version(f) or ""))
+    assert picked == "pipette-0.2.0-py3-none-any.whl"
