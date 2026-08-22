@@ -31,6 +31,10 @@ fn activate-koopa {
         '/usr/local/sbin' ^
         '/usr/local/bin' ^
         (xdg-config-home)'/koopa/scripts-private/bin' ^
+        (xdg-config-home)'/koopa/dotfiles/bin' ^
+        (xdg-config-home)'/koopa/dotfiles-work/bin' ^
+        (xdg-config-home)'/koopa/dotfiles-personal/bin' ^
+        (xdg-config-home)'/koopa/dotfiles-private/bin' ^
         $E:HOME'/.local/bin' ^
         $E:HOME'/.bin' ^
         $E:HOME'/bin'
