@@ -1,0 +1,19 @@
+* Bioconda
+** TODO Update 11 Acid Genomics R package recipes
+   r-eggnog 0.3.2, r-wormbase 0.5.1, r-basejump 0.18.2,
+   r-acidexperiment 0.5.6, r-chromium 0.3.1, r-acidsinglecell 0.4.5,
+   r-acidgsea 0.9.2, r-panther 0.5.2, r-acidplots 0.7.5,
+   r-acidgenomes 0.8.1, and r-deseqanalysis 0.7.3.
+** TODO Merge the r-pointillism Bioconda recipe
+   https://github.com/bioconda/bioconda-recipes/pull/66529
+** TODO Merge the r-acidtest Bioconda recipe
+   https://github.com/bioconda/bioconda-recipes/pull/66520
+** TODO Add r-aciddevtools to Bioconda
+   Useful for community development.
+   https://github.com/acidgenomics/r-aciddevtools
+** TODO Add r-acidroxygen to Bioconda
+   Useful for R package development.
+   https://github.com/bioconda/bioconda-recipes/pull/66516
+** TODO Track the gatk4 Bioconda recipe
+   Required for the koopa gatk4 installer.
+   https://github.com/bioconda/bioconda-recipes/pull/68419
