@@ -6,6 +6,7 @@ Converted from Bash functions in ``lang/bash/functions/r/``.
 import os
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 from . import prefix as pfx
@@ -168,12 +169,30 @@ def configure_r_java() -> None:
     subprocess.run(["R", "CMD", "javareconf"], check=True)
 
 
-def r_check(path: str) -> None:
-    """Run R CMD check on a package."""
+def _r_build_source(path: str, build_dir: Path) -> Path:
+    """Build a source tarball for R CMD check."""
     subprocess.run(
-        ["R", "CMD", "check", "--as-cran", "--no-manual", path],
+        ["R", "CMD", "build", path],
+        cwd=build_dir,
         check=True,
     )
+    tarballs = list(build_dir.glob("*.tar.gz"))
+    if len(tarballs) != 1:
+        msg = f"Expected one source tarball in '{build_dir}', found {len(tarballs)}."
+        raise RuntimeError(msg)
+    return tarballs[0]
+
+
+def r_check(path: str) -> None:
+    """Build an R package source tarball and run R CMD check on it."""
+    package_dir = Path(path).expanduser().resolve()
+    with tempfile.TemporaryDirectory(prefix="koopa-r-check-") as tmp_dir:
+        tarball = _r_build_source(str(package_dir), Path(tmp_dir))
+        subprocess.run(
+            ["R", "CMD", "check", "--as-cran", "--no-manual", str(tarball)],
+            cwd=tmp_dir,
+            check=True,
+        )
 
 
 def r_script(script: str) -> None:

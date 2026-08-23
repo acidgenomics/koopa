@@ -694,7 +694,8 @@ def publish(
     package_dir
         Path to an R package source directory (must contain DESCRIPTION).
     check
-        Run R CMD check --as-cran --no-manual before building.
+        Build a source tarball and run R CMD check --as-cran --no-manual
+        before publishing.
     deploy
         Upload to S3 and regenerate PACKAGES manifests after building.
     invalidate
