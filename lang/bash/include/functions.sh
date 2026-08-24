@@ -928,38 +928,41 @@ _koopa_activate_today_bucket() {
     _koopa_is_interactive || return 0
     local bucket_dir
     bucket_dir="${KOOPA_BUCKET:-}"
-    local today_link
     if [[ -n "$bucket_dir" ]]
     then
         [[ -d "$KOOPA_BUCKET" ]] || return 0
-        today_link="${HOME:?}/today"
     elif [[ -d "${HOME:?}/bucket" ]]
     then
         bucket_dir="${HOME:?}/bucket"
-        today_link="${HOME:?}/today"
     elif [[ -d "${HOME:?}/Documents/bucket" ]]
     then
         bucket_dir="${HOME:?}/Documents/bucket"
-        today_link="${HOME:?}/Documents/today"
     else
         return 0
     fi
+    bucket_dir="$(_koopa_realpath "$bucket_dir")"
     local today_subdirs
     today_subdirs="$(date '+%Y/%m/%d')"
-    if [[ -d "$today_link" ]] && \
-        _koopa_str_detect_posix \
-            "$(_koopa_realpath "$today_link")" \
-            "$today_subdirs"
-    then
-        return 0
-    fi
     mkdir -p \
         "${bucket_dir}/${today_subdirs}" \
         >/dev/null
-    ln -fns \
-        "${bucket_dir}/${today_subdirs}" \
-        "$today_link" \
-        >/dev/null
+    local today_link
+    for today_link in \
+        "${HOME:?}/today" \
+        "${HOME:?}/Documents/today"
+    do
+        if [[ -d "$today_link" ]] && \
+            _koopa_str_detect_posix \
+                "$(_koopa_realpath "$today_link")" \
+                "$today_subdirs"
+        then
+            continue
+        fi
+        ln -fns \
+            "${bucket_dir}/${today_subdirs}" \
+            "$today_link" \
+            >/dev/null
+    done
     return 0
 }
 
