@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5084709148033024",
+    "build_id": "4894004681244672",
     "category": "AI",
-    "date": "2026-08-21",
+    "date": "2026-08-23",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "eda17e9f3649df12bcd614e226983922cd5e4c22a9153e9f9a5ecc5557addcda0f03147db8a2c6c19daeb8e1dc8062a9a1bcf86284315c2b1aae73f2d8236b1e",
-      "darwin_amd64": "38c23febf677c93ba62cccc979ceee0348e733e2d1d827c9d0751422e5d4462b5df1030ff97f07d78a30194cc1386a6b428ba3f85141a65f572e804a9978bda5",
-      "linux_amd64": "5c6047a19e80025ea7cecc8152fb263a7f14e80591ee75bdf1ca10191cc0cd1639b5b5ebdce4d1c9d43b14bd2446f038a457821694579f4392b6ca9736512936",
-      "linux_arm64": "ad871538fc8bbd0cf96e11b85e388dadde5cd02164c2921cf7cd30646e343c90a63ef5224f6420612ad6f91fe06f260e332e307968082f3a1f54e53933be847f"
+      "darwin_arm64": "54b6b0e2e2fed5d5e270c6353f8097bd2a0e966f07946ded8065a6293b79ec7be5993f5d3de5c12d0683b33822a5cb887795094ffa2c6f77bb7183816c92ae96",
+      "darwin_amd64": "e6f9e0c3e0d32509937cb6aa5f6e00096aed2a78ab3e21ffdcf05ddbbf0e2b4772388196d9dbbc356400b16adc3ba6d2ecb8d8fdafa9489604ed3b3bbd775f95",
+      "linux_amd64": "7c3b310c80685adcba714994207eb870fb4817403975da46555b7d9fade446487da3d8f897aa220dfbc30f602ab461a0147a6f7b3c8228fdebd35951e3f250fd",
+      "linux_arm64": "488c3dac1c7ca866a9da990f9a88648bfb7176992a0a2d27605e3bc10143e5b17af552ed99f0bf4250e2d69fed6d0d5f50684c729bf03f269f2b52b44503558d"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.1.17"
+    "version": "1.1.19"
   },
   "apache-airflow": {
     "bin": [
@@ -556,7 +556,7 @@
       "autoflake"
     ],
     "category": "Python",
-    "date": "2026-02-22",
+    "date": "2026-08-23",
     "default": false,
     "dependencies": [
       "python"
@@ -568,7 +568,7 @@
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.3.3"
+    "version": "2.4.0"
   },
   "automake": {
     "bin": [
@@ -627,7 +627,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-21",
+    "date": "2026-08-23",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -639,7 +639,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.27"
+    "version": "2.36.29"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1135,7 +1135,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-05-08",
+    "date": "2026-08-23",
     "default": false,
     "description": "NCBI sequence similarity search tool",
     "installer": "conda-package",
@@ -1149,7 +1149,7 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.16.0"
+    "version": "2.17.0"
   },
   "boost": {
     "category": "Library",
@@ -1230,7 +1230,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-07-14",
+    "date": "2026-08-23",
     "default": false,
     "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
@@ -1239,7 +1239,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.58.0"
+    "version": "1.59.0"
   },
   "brotli": {
     "bin": [
@@ -1599,7 +1599,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-08-21",
+    "date": "2026-08-23",
     "default": true,
     "dependencies": [
       "node"
@@ -1613,7 +1613,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.238"
+    "version": "2.1.241"
   },
   "claude-replay": {
     "bin": [
@@ -2487,7 +2487,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-21",
+    "date": "2026-08-23",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2497,7 +2497,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "87b8afe6e2ff0a5debbad96534ea131277a4df64"
+    "version": "81dce4c6c2bb1d81098d48e54348a0916e8f1092"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -5074,7 +5074,7 @@
       "cmake"
     ],
     "category": "Library",
-    "date": "2025-11-03",
+    "date": "2026-08-23",
     "default": false,
     "description": "fast DEFLATE, zlib, and gzip compression library",
     "src_url": "https://github.com/ebiggers/libdeflate/archive/v{version}.tar.gz",
@@ -5082,7 +5082,7 @@
     "url": [
       "https://github.com/ebiggers/libdeflate/"
     ],
-    "version": "1.25"
+    "version": "1.26"
   },
   "libedit": {
     "build_dependencies": [
@@ -5656,7 +5656,7 @@
       "pkg-config"
     ],
     "category": "Dotfile",
-    "date": "2026-07-30",
+    "date": "2026-08-23",
     "default": false,
     "dependencies": [
       "lua",
@@ -5677,7 +5677,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.3"
+    "version": "9.3.1"
   },
   "lsd": {
     "bin": [
@@ -6596,7 +6596,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-08-16",
+    "date": "2026-08-23",
     "default": false,
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
@@ -6604,7 +6604,7 @@
     "url": [
       "https://github.com/nushell/nushell/"
     ],
-    "version": "0.115.0"
+    "version": "0.115.1"
   },
   "onefetch": {
     "bin": [
@@ -9023,7 +9023,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-19",
+    "date": "2026-08-23",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9033,7 +9033,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "795df149bc06ef98ff315b0d9bc7d1cd7170111b"
+    "version": "7f7b56d3ea737ca633ff780113fda48a8cdcd94c"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9767,7 +9767,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-08-19",
+    "date": "2026-08-23",
     "default": true,
     "dependencies": [
       "python"
@@ -9779,7 +9779,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.73"
+    "version": "0.0.74"
   },
   "udunits": {
     "date": "2022-08-30",
