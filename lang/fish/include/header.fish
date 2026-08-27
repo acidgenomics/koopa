@@ -88,16 +88,7 @@ function __koopa_activate_koopa
     _koopa_activate_rbenv
     _koopa_activate_direnv
     if not _koopa_is_subshell
-        # Create today bucket symlink.
-        set -l today_dir "$HOME/today"
-        if not test -e "$today_dir"
-            set -l date_str (date '+%Y/%m/%d')
-            set -l bucket_dir "$HOME/$date_str"
-            if not test -d "$bucket_dir"
-                mkdir -p "$bucket_dir"
-            end
-            ln -fns "$bucket_dir" "$today_dir"
-        end
+        _koopa_activate_today_bucket
     end
     _koopa_activate_aliases
 end

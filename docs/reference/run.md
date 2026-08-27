@@ -262,5 +262,5 @@ Create tar archives for multiple directories.
 (koopa-run-update-today-bucket)=
 ## `run update-today-bucket`
 
-Repoint the dated 'today bucket' symlink at today's directory.
+Repoint the dated 'today bucket' symlinks at today's directory.
 

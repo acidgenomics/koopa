@@ -790,38 +790,37 @@ _koopa_activate_today_bucket() {
     if [ -n "$__kvar_bucket_dir" ]
     then
         [ -d "$KOOPA_BUCKET" ] || return 0
-        __kvar_today_link="${HOME:?}/today"
     elif [ -d "${HOME:?}/bucket" ]
     then
         __kvar_bucket_dir="${HOME:?}/bucket"
-        __kvar_today_link="${HOME:?}/today"
     elif [ -d "${HOME:?}/Documents/bucket" ]
     then
         __kvar_bucket_dir="${HOME:?}/Documents/bucket"
-        __kvar_today_link="${HOME:?}/Documents/today"
     else
         unset -v __kvar_bucket_dir
         return 0
     fi
+    __kvar_bucket_dir="$(_koopa_realpath "$__kvar_bucket_dir")"
     __kvar_today_subdirs="$(date '+%Y/%m/%d')"
-    if [ -d "$__kvar_today_link" ] && \
-        _koopa_str_detect_posix \
-            "$(_koopa_realpath "$__kvar_today_link")" \
-            "$__kvar_today_subdirs"
-    then
-        unset -v \
-            __kvar_bucket_dir \
-            __kvar_today_link \
-            __kvar_today_subdirs
-        return 0
-    fi
     mkdir -p \
         "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \
         >/dev/null
-    ln -fns \
-        "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \
-        "$__kvar_today_link" \
-        >/dev/null
+    for __kvar_today_link in \
+        "${HOME:?}/today" \
+        "${HOME:?}/Documents/today"
+    do
+        if [ -d "$__kvar_today_link" ] && \
+            _koopa_str_detect_posix \
+                "$(_koopa_realpath "$__kvar_today_link")" \
+                "$__kvar_today_subdirs"
+        then
+            continue
+        fi
+        ln -fns \
+            "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \
+            "$__kvar_today_link" \
+            >/dev/null
+    done
     unset -v \
         __kvar_bucket_dir \
         __kvar_today_link \

@@ -1845,10 +1845,20 @@ def _handle_aws_ec2_stop(args: list[str]) -> None:
     parser.add_argument("instance_ids", nargs="*", help="EC2 instance IDs")
     parser.add_argument("--profile", default=None)
     parsed = parser.parse_args(args)
-    from koopa.aws import aws_ec2_instance_id, aws_ec2_stop
+    from koopa.aws import aws_ec2_instance_id, aws_ec2_region, aws_ec2_stop
 
-    instance_ids = parsed.instance_ids or [aws_ec2_instance_id()]
-    aws_ec2_stop(instance_ids, profile=parsed.profile)
+    if parsed.instance_ids or parsed.profile:
+        instance_ids = parsed.instance_ids or [aws_ec2_instance_id()]
+        aws_ec2_stop(instance_ids, profile=parsed.profile)
+        return
+    # No IDs and no profile means "stop the host I am on". Use that host's
+    # own IMDS identity, not the ambient credential chain, which can point at
+    # a different AWS account entirely.
+    aws_ec2_stop(
+        [aws_ec2_instance_id()],
+        region=aws_ec2_region(),
+        instance_identity=True,
+    )
 
 
 def _handle_aws_ecr_login_private(args: list[str]) -> None:

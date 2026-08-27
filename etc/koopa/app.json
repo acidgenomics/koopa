@@ -2505,7 +2505,7 @@
     ],
     "category": "Dotfile",
     "date": "2026-08-16",
-    "default": true,
+    "default": false,
     "dependencies": [
       "chezmoi"
     ],
