@@ -881,7 +881,7 @@ def prune_broken_symlinks() -> None:
 
 def _print_update_plan() -> None:
     """Print the full list of apps that 'koopa update' will install."""
-    from koopa.app import stale_revdeps
+    from koopa.app import stale_revdeps_with_triggers
 
     outdated = outdated_apps_with_reasons()
     broken = broken_app_installs()
@@ -898,9 +898,10 @@ def _print_update_plan() -> None:
     changed = True
     while changed:
         changed = False
-        for rd in stale_revdeps(list(seen)):
+        for rd, triggers in stale_revdeps_with_triggers(list(seen)).items():
             if rd not in seen:
-                seen[rd] = "dependency rebuilt"
+                label = "dependency" if len(triggers) == 1 else "dependencies"
+                seen[rd] = f"{label} {', '.join(triggers)} rebuilt"
                 changed = True
     revdeps = sorted(set(seen) - direct)
     apps = sorted(seen)

@@ -13,6 +13,7 @@ from koopa.app import (
     prune_apps,
     recorded_app_deps,
     stale_revdeps,
+    stale_revdeps_with_triggers,
 )
 
 
@@ -353,3 +354,23 @@ def test_stale_revdeps_excludes_app_recorded_with_no_such_dep(tmp_path: Path) ->
         result = stale_revdeps(["libffi"])
     assert "python3.13" not in result
     assert "ruby" in result
+
+
+def test_stale_revdeps_with_triggers_reports_rebuilt_dependencies(tmp_path: Path) -> None:
+    """Reverse dependency rebuilds identify all direct triggering dependencies."""
+    app_dir = tmp_path / "app"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    _link_app_with_recorded_deps(app_dir, opt_dir, "dependent", ["first", "second"])
+    json_data = {
+        "dependent": {"version": "current", "dependencies": ["first", "second"]},
+        "first": {"version": "current"},
+        "second": {"version": "current"},
+    }
+    with (
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.app.installed_apps", return_value=["dependent"]),
+    ):
+        result = stale_revdeps_with_triggers(["first", "second"])
+    assert result == {"dependent": ["first", "second"]}
