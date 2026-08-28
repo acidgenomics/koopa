@@ -1,5 +1,35 @@
 # Changelog
 
+## koopa 0.28.0 (2026-08-28)
+Major changes:
+
+- `koopa app aws ec2 stop` with no instance IDs or profile now stops the EC2
+  instance it runs on using that instance's IMDS identity and region, rather
+  than an ambient local AWS profile that could target a different account.
+  Explicit instance IDs and `--profile` retain their existing behavior.
+- `koopa app r check` now builds a package source tarball before running
+  `R CMD check --as-cran`, matching the CRAN check workflow and avoiding
+  checks directly against an unbuilt source tree.
+- Cell Ranger installation now recognizes the upstream archive layout that
+  contains one nested `.tar` file, extracting it before checking for `bin/`.
+- Shell activation now prepends the path of a dotfiles repository to `PATH`
+  across bash, zsh, sh, fish, elvish, nushell, and PowerShell.
+- `koopa run update-today-bucket` now maintains independent `~/today` and
+  `~/Documents/today` dated symlinks, resolving their bucket target to its
+  real path so they never point through one another.
+- Python package-index reindexing now selects each package's newest wheel for
+  the generated landing-page summary rather than the first (and possibly
+  oldest) wheel returned by object storage.
+
+Minor changes:
+
+- Reverse-dependency rebuild messages now identify the exact dependency or
+  dependencies that made each installed app stale.
+- Added test coverage for the EC2 instance-identity path, reverse-dependency
+  triggers, Cell Ranger's nested archive layout, R package checks, and
+  latest-wheel summary selection.
+- Routine upstream version bumps across 55 apps.
+
 ## koopa 0.27.0 (2026-08-21)
 
 Major changes:
