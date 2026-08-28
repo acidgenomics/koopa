@@ -1515,14 +1515,13 @@
       "cellranger"
     ],
     "category": "Bioinformatics",
-    "date": "2025-12-11",
+    "date": "2026-08-28",
     "default": false,
     "description": "10x Genomics single-cell RNA-seq pipeline",
     "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
     "installer_artifact": "installers/cellranger/{version}.tar.xz",
     "installer_platform": "linux",
     "private": true,
-    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1532,7 +1531,7 @@
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
-    "version": "10.0.0"
+    "version": "10.1.0"
   },
   "cereal": {
     "date": "",

@@ -119,3 +119,29 @@ def test_cellranger_raises_when_archive_lacks_top_level_bin(tmp_path: Path) -> N
         pytest.raises(RuntimeError, match="top-level 'bin/'"),
     ):
         cellranger.main(name="cellranger", version="10.0.0", prefix=prefix)
+
+
+def test_cellranger_extracts_nested_vendor_tar(tmp_path: Path) -> None:
+    """Test that Cell Ranger unpacks the nested tar in the vendor wrapper archive."""
+    prefix = str(tmp_path / "cellranger" / "10.0.0")
+
+    def mock_extract(path: str, output_dir: str) -> None:
+        if path == "10.0.0.tar.xz":
+            (Path(output_dir) / "cellranger-10.0.0.tar").touch()
+        else:
+            (Path(output_dir) / "bin").mkdir()
+
+    with (
+        patch(
+            "koopa.app.installer_artifact_key",
+            return_value="installers/cellranger/10.0.0.tar.xz",
+        ),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-000000000000-us-east-1-an"),
+        patch("koopa.aws.s3_object_exists", return_value=True),
+        patch("koopa.installers.cellranger.subprocess.run"),
+        patch("koopa.installers.cellranger.extract", side_effect=mock_extract) as extract_mock,
+    ):
+        cellranger.main(name="cellranger", version="10.0.0", prefix=prefix)
+
+    assert extract_mock.call_count == 2
+    assert (Path(prefix) / "bin").is_symlink()
