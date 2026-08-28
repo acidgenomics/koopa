@@ -3357,16 +3357,17 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     # Iteratively expand reverse dependencies: if openssl3 is being rebuilt,
     # python3.14 (which links against it) also needs rebuilding, etc.
     if apps_with_reasons:
-        from koopa.app import stale_revdeps
+        from koopa.app import stale_revdeps_with_triggers
 
         seen_names = {a for a, _ in apps_with_reasons}
         changed = True
         while changed:
             changed = False
-            revdeps = stale_revdeps([a for a, _ in apps_with_reasons])
-            for rd in revdeps:
+            revdeps = stale_revdeps_with_triggers([a for a, _ in apps_with_reasons])
+            for rd, triggers in revdeps.items():
                 if rd not in seen_names and _is_supported_app(rd):
-                    apps_with_reasons.append((rd, "dependency rebuilt"))
+                    label = "dependency" if len(triggers) == 1 else "dependencies"
+                    apps_with_reasons.append((rd, f"{label} {', '.join(triggers)} rebuilt"))
                     seen_names.add(rd)
                     changed = True
     else:

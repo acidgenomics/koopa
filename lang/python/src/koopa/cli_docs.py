@@ -258,7 +258,7 @@ RUN_DESCRIPTIONS: dict[str, str] = {
     "sort-lines": "Sort lines in files.",
     "spotlight": "Search using macOS Spotlight (mdfind).",
     "tar-multiple-dirs": "Create tar archives for multiple directories.",
-    "update-today-bucket": "Repoint the dated 'today bucket' symlink at today's directory.",
+    "update-today-bucket": "Repoint the dated 'today bucket' symlinks at today's directory.",
 }
 
 RUN_SYNOPSIS: dict[str, str] = {

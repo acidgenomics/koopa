@@ -49,7 +49,16 @@ def main(
     libexec = os.path.join(prefix, "libexec")
     init_dir(libexec)
     extract(local_file, libexec)
-    if not os.path.isdir(os.path.join(libexec, "bin")):
+    bin_dir = os.path.join(libexec, "bin")
+    if not os.path.isdir(bin_dir):
+        nested_archives = [
+            os.path.join(libexec, entry)
+            for entry in os.listdir(libexec)
+            if entry.lower().endswith(".tar") and os.path.isfile(os.path.join(libexec, entry))
+        ]
+        if len(nested_archives) == 1:
+            extract(nested_archives[0], libexec)
+    if not os.path.isdir(bin_dir):
         msg = (
             f"'{name}' {version} archive layout has no top-level 'bin/' directory"
             f" after extraction (expected at '{libexec}/bin').\n"

@@ -67,6 +67,10 @@ function __koopa_activate_koopa {
         '/usr/local/sbin',
         '/usr/local/bin',
         (Join-Path (_koopa_xdg_config_home) 'koopa/scripts-private/bin'),
+        (Join-Path (_koopa_xdg_config_home) 'koopa/dotfiles/bin'),
+        (Join-Path (_koopa_xdg_config_home) 'koopa/dotfiles-work/bin'),
+        (Join-Path (_koopa_xdg_config_home) 'koopa/dotfiles-personal/bin'),
+        (Join-Path (_koopa_xdg_config_home) 'koopa/dotfiles-private/bin'),
         (Join-Path $HOME '.local/bin'),
         (Join-Path $HOME '.bin'),
         (Join-Path $HOME 'bin')

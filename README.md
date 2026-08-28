@@ -5,6 +5,15 @@
 
 Shell bootloader for data science.
 
+## Installation
+
+```sh
+sh -c "$(curl -LSs https://koopa.acidgenomics.com/install)"
+```
+
+Refer to the [koopa website](https://koopa.acidgenomics.com/) for full
+installation and usage details.
+
 ## Requirements
 
 - Linux (x86_64 or arm64) or macOS (Apple Silicon / arm64 only).
@@ -23,15 +32,6 @@ Shell bootloader for data science.
   automatically when necessary.
 - Core utilities: `curl`, `git`, `grep`, `mkdir`, `mktemp`, `rm`, `sed`, `tar`.
 
-## Installation
-
-```sh
-sh -c "$(curl -LSs https://koopa.acidgenomics.com/install)"
-```
-
-Refer to the [koopa website](https://koopa.acidgenomics.com/) for full
-installation and usage details.
-
 ## License
 
-Apache-2.0 — Copyright 2016 Acid Genomics LLC — see [LICENSE](LICENSE).
+[Apache-2.0 license](LICENSE). Copyright 2016 Acid Genomics LLC.

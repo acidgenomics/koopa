@@ -89,14 +89,51 @@ class _AwsError(subprocess.CalledProcessError):
         return base
 
 
-def _aws(*args: str, capture: bool = True, timeout: int = 300) -> subprocess.CompletedProcess:
-    """Run an AWS CLI command."""
+# Force the AWS CLI to ignore every ambient credential source and fall
+# through to the EC2 instance profile (IMDS). A '[default]' block in
+# '~/.aws/credentials', or an exported 'AWS_PROFILE', otherwise outranks
+# IMDS. On a host whose own AWS account has no named profile at all, that
+# makes a self-directed 'stop-instances' fail with
+# 'InvalidInstanceID.NotFound' rather than a permission error.
+#
+# 'AWS_PROFILE' must be dropped even though credentials are not injected
+# here: botocore removes its env credential provider entirely when a profile
+# is set explicitly, and a named profile cannot resolve once the config file
+# is '/dev/null'.
+_INSTANCE_IDENTITY_ENV: dict[str, str | None] = {
+    "AWS_CONFIG_FILE": os.devnull,
+    "AWS_SHARED_CREDENTIALS_FILE": os.devnull,
+    "AWS_PROFILE": None,
+    "AWS_DEFAULT_PROFILE": None,
+    "AWS_ACCESS_KEY_ID": None,
+    "AWS_SECRET_ACCESS_KEY": None,
+    "AWS_SESSION_TOKEN": None,
+    "AWS_EC2_METADATA_DISABLED": None,
+}
+
+
+def _aws(
+    *args: str,
+    capture: bool = True,
+    timeout: int = 300,
+    env: dict[str, str | None] | None = None,
+) -> subprocess.CompletedProcess:
+    """Run an AWS CLI command.
+
+    *env* overrides the inherited environment. A value of 'None' removes
+    that variable instead of setting it.
+    """
     cmd = ["aws", *args]
-    env = os.environ.copy()
-    env["AWS_PAGER"] = ""
+    run_env = os.environ.copy()
+    run_env["AWS_PAGER"] = ""
+    for key, value in (env or {}).items():
+        if value is None:
+            run_env.pop(key, None)
+        else:
+            run_env[key] = value
     try:
         return subprocess.run(
-            cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=env
+            cmd, capture_output=capture, text=True, check=True, timeout=timeout, env=run_env
         )
     except subprocess.CalledProcessError as exc:
         raise _AwsError(exc.returncode, exc.cmd, exc.output, exc.stderr) from exc
@@ -388,35 +425,58 @@ def aws_ec2_map_instance_ids_to_names(
     return json.loads(result.stdout)
 
 
-def aws_ec2_instance_id() -> str:
-    """Get the current EC2 instance ID via instance metadata."""
+_IMDS_BASE = "http://169.254.169.254/latest"
+
+
+def _imds_get(path: str, *, timeout: int = 2) -> str:
+    """Fetch *path* from the EC2 instance metadata service, using IMDSv2."""
     import urllib.request
 
     token_req = urllib.request.Request(
-        "http://169.254.169.254/latest/api/token",
+        f"{_IMDS_BASE}/api/token",
         method="PUT",
         headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"},
     )
-    with urllib.request.urlopen(token_req, timeout=2) as resp:
+    with urllib.request.urlopen(token_req, timeout=timeout) as resp:
         token = resp.read().decode()
-    id_req = urllib.request.Request(
-        "http://169.254.169.254/latest/meta-data/instance-id",
+    req = urllib.request.Request(
+        f"{_IMDS_BASE}/{path.lstrip('/')}",
         headers={"X-aws-ec2-metadata-token": token},
     )
-    with urllib.request.urlopen(id_req, timeout=2) as resp:
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.read().decode().strip()
+
+
+def aws_ec2_instance_id() -> str:
+    """Get the current EC2 instance ID via instance metadata."""
+    return _imds_get("meta-data/instance-id")
+
+
+def aws_ec2_region() -> str:
+    """Get the current EC2 instance's region via instance metadata."""
+    return _imds_get("meta-data/placement/region")
 
 
 def aws_ec2_stop(
     instance_ids: list[str],
     *,
     profile: str | None = None,
+    region: str | None = None,
+    instance_identity: bool = False,
 ) -> None:
-    """Stop EC2 instances."""
+    """Stop EC2 instances.
+
+    Set *instance_identity* to stop the host this call runs on. The AWS CLI
+    then ignores every ambient credential source and uses the instance
+    profile from IMDS. Pass *region* with it, because neutralizing the config
+    file also drops that file's 'region' setting.
+    """
     args = ["ec2", "stop-instances", "--instance-ids", *instance_ids]
+    if region:
+        args.extend(["--region", region])
     if profile:
         args.extend(["--profile", profile])
-    _aws(*args)
+    _aws(*args, env=_INSTANCE_IDENTITY_ENV if instance_identity else None)
     print(f"Stopping: {', '.join(instance_ids)}")
 
 

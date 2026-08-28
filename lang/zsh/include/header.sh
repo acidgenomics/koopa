@@ -108,6 +108,10 @@ __koopa_activate_koopa() {
         '/usr/local/sbin' \
         '/usr/local/bin' \
         "${XDG_CONFIG_HOME:?}/koopa/scripts-private/bin" \
+        "${XDG_CONFIG_HOME:?}/koopa/dotfiles/bin" \
+        "${XDG_CONFIG_HOME:?}/koopa/dotfiles-work/bin" \
+        "${XDG_CONFIG_HOME:?}/koopa/dotfiles-personal/bin" \
+        "${XDG_CONFIG_HOME:?}/koopa/dotfiles-private/bin" \
         "${HOME:?}/.local/bin" \
         "${HOME:?}/.bin" \
         "${HOME:?}/bin" \

@@ -370,23 +370,24 @@ def recorded_app_deps(name: str) -> list | None:
     return deps
 
 
-def stale_revdeps(names: list) -> list:
-    """Get installed apps whose runtime dependencies are being reinstalled.
+def stale_revdeps_with_triggers(names: list[str]) -> dict[str, list[str]]:
+    """Get installed reverse dependencies and the apps that trigger each rebuild.
 
     Given a list of app names being installed, returns any currently installed
-    apps that have one or more of those names as a runtime dependency. Only
-    considers 'dependencies', not 'build_dependencies'. Prefers each candidate's
-    recorded install-time dep list (see `recorded_app_deps`) over app.json's
-    current dict, falling back only when nothing was recorded.
+    apps that have one or more of those names as a runtime dependency, mapped
+    to the triggering dependency names. Only considers 'dependencies', not
+    'build_dependencies'. Prefers each candidate's recorded install-time dep
+    list (see `recorded_app_deps`) over app.json's current dict, falling back
+    only when nothing was recorded.
     """
     json_data = import_app_json()
     keys = list(json_data.keys())
     targets = set(names)
     if not targets:
-        return []
+        return {}
     installed = set(installed_apps())
     sys_dict = {"os_id": os_id()}
-    lst = []
+    revdeps: dict[str, list[str]] = {}
     for key in keys:
         if key not in installed:
             continue
@@ -399,17 +400,24 @@ def stale_revdeps(names: list) -> list:
                 deps = json_data[key]["dependencies"]
                 if isinstance(deps, dict):
                     deps = _resolve_dep_dict(deps, sys_dict)
-        triggering = set()
+        triggering: list[str] = []
         for d in deps:
             resolved_d = d
             d_entry = json_data.get(d, {})
             if isinstance(d_entry, dict) and d_entry.get("alias_of"):
                 resolved_d = d_entry["alias_of"]
             if d in targets or resolved_d in targets:
-                triggering.add(d)
+                trigger = resolved_d if resolved_d in targets else d
+                if trigger not in triggering:
+                    triggering.append(trigger)
         if triggering:
-            lst.append(key)
-    return lst
+            revdeps[key] = triggering
+    return revdeps
+
+
+def stale_revdeps(names: list[str]) -> list[str]:
+    """Get installed apps whose runtime dependencies are being reinstalled."""
+    return list(stale_revdeps_with_triggers(names))
 
 
 def installed_apps() -> list:

@@ -102,6 +102,26 @@ def _parse_package_name(filename: str) -> str | None:
     return None
 
 
+def _parse_package_version(filename: str) -> str | None:
+    """Extract the version string from a wheel or sdist filename."""
+    stem = filename
+    for suffix in (".tar.gz", ".whl"):
+        if stem.endswith(suffix):
+            stem = stem[: -len(suffix)]
+            break
+    else:
+        return None
+    _, _, rest = stem.partition("-")
+    if not rest:
+        return None
+    return rest.split("-", 1)[0]
+
+
+def _version_sort_key(version: str) -> tuple[int, ...]:
+    """Parse a dotted version string into a comparable int tuple."""
+    return tuple(int(p) for p in version.split(".") if p.isdigit())
+
+
 def _sha256_of_file(path: str) -> str:
     """Return the SHA-256 hex digest of a local file."""
     h = hashlib.sha256()
@@ -363,7 +383,10 @@ def reindex(*, invalidate: bool = True) -> None:
         aws = _aws()
         summaries: dict[str, str] = {}
         for name in sorted(packages):
-            whl = next((f for f, _ in packages[name] if f.endswith(".whl")), None)
+            whls = [f for f, _ in packages[name] if f.endswith(".whl")]
+            whl = max(
+                whls, key=lambda f: _version_sort_key(_parse_package_version(f) or ""), default=None
+            )
             if whl is None:
                 summaries[name] = ""
                 continue
