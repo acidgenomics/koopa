@@ -638,6 +638,8 @@ python.acidgenomics.com package index and docs publishing.
 
 Build and publish a Python package to python.acidgenomics.com.
 
+- `--force`
+
 (koopa-app-python-publish-docs)=
 ### `app python publish-docs`
 
