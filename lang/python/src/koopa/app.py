@@ -384,7 +384,7 @@ def stale_revdeps_with_triggers(names: list[str]) -> dict[str, list[str]]:
     keys = list(json_data.keys())
     targets = set(names)
     if not targets:
-        return []
+        return {}
     installed = set(installed_apps())
     sys_dict = {"os_id": os_id()}
     revdeps: dict[str, list[str]] = {}

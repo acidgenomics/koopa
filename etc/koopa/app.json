@@ -627,7 +627,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -639,7 +639,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.32"
+    "version": "2.36.33"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1515,14 +1515,13 @@
       "cellranger"
     ],
     "category": "Bioinformatics",
-    "date": "2025-12-11",
+    "date": "2026-08-28",
     "default": false,
     "description": "10x Genomics single-cell RNA-seq pipeline",
     "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
     "installer_artifact": "installers/cellranger/{version}.tar.xz",
     "installer_platform": "linux",
     "private": true,
-    "revision": 1,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1532,7 +1531,7 @@
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
-    "version": "10.0.0"
+    "version": "10.1.0"
   },
   "cereal": {
     "date": "",
@@ -1599,7 +1598,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": true,
     "dependencies": [
       "node"
@@ -1613,7 +1612,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.247"
+    "version": "2.1.250"
   },
   "claude-replay": {
     "bin": [
@@ -1663,7 +1662,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-21",
+    "date": "2026-08-28",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1672,7 +1671,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.25.3"
+    "version": "2.25.4"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -1802,7 +1801,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-08-14",
+    "date": "2026-08-28",
     "default": true,
     "dependencies": [
       "node"
@@ -1816,7 +1815,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.80"
+    "version": "1.0.81"
   },
   "coreutils": {
     "bin": [
@@ -2234,14 +2233,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.14.0"
+    "version": "1.14.1"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2487,7 +2486,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2497,7 +2496,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "1404f1bac5a2ae8602b4d861f7805e194c05d28c"
+    "version": "c187cdcb56b91e4bc561d1b31e76d8beb2ad3302"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -3614,16 +3613,15 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-08-28",
     "default": true,
     "description": "Git extension for versioning large files",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://git-lfs.github.com/"
     ],
-    "version": "3.7.1"
+    "version": "3.8.0"
   },
   "gitui": {
     "bin": [
@@ -4527,7 +4525,7 @@
       "ipython"
     ],
     "category": "Python",
-    "date": "2026-08-03",
+    "date": "2026-08-28",
     "default": true,
     "dependencies": [
       "python"
@@ -4539,7 +4537,7 @@
       "https://ipython.org/",
       "https://pypi.org/project/ipython/"
     ],
-    "version": "9.16.1"
+    "version": "9.17.0"
   },
   "isl": {
     "build_dependencies": [
@@ -4566,7 +4564,7 @@
       "isort"
     ],
     "category": "Python",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": false,
     "dependencies": [
       "python"
@@ -4578,7 +4576,7 @@
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
     ],
-    "version": "9.0.0"
+    "version": "9.0.1"
   },
   "jemalloc": {
     "build_dependencies": [
@@ -5656,7 +5654,7 @@
       "pkg-config"
     ],
     "category": "Dotfile",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": false,
     "dependencies": [
       "lua",
@@ -5677,7 +5675,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.3.2"
+    "version": "9.3.3"
   },
   "lsd": {
     "bin": [
@@ -7148,7 +7146,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": false,
     "description": "cross-platform, multi-language package management tool",
     "installer": "conda-package",
@@ -7157,7 +7155,7 @@
       "https://pixi.sh/",
       "https://github.com/prefix-dev/pixi/"
     ],
-    "version": "0.77.1"
+    "version": "0.78.0"
   },
   "pixman": {
     "build_dependencies": [
@@ -8555,7 +8553,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-08-21",
+    "date": "2026-08-28",
     "default": true,
     "dependencies": [
       "python"
@@ -8566,7 +8564,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.16.4"
+    "version": "0.16.5"
   },
   "ruff-lsp": {
     "bin": [
@@ -9909,14 +9907,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-08-27",
+    "date": "2026-08-28",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.12.6"
+    "version": "0.12.7"
   },
   "valkey": {
     "bin": [
@@ -10763,7 +10761,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-08-21",
+    "date": "2026-08-28",
     "default": false,
     "description": "terminal workspace with layouts and plugins",
     "installer": "conda-package",
@@ -10771,7 +10769,7 @@
     "url": [
       "https://github.com/zellij-org/zellij/"
     ],
-    "version": "0.45.0"
+    "version": "0.45.1"
   },
   "zenith": {
     "date": "2026-06-02",
