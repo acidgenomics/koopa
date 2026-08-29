@@ -254,6 +254,65 @@ def test_update_homebrew_all_brew_calls_noninteractive() -> None:
 
 
 # ---------------------------------------------------------------------------
+# _ensure_completion_dirs / brew_fix_completion_dirs: the cask-sandbox
+# parent-directory bug (Homebrew 6.0.20's sandboxed cask artifact steps
+# allow writes to a completion directory, but not to its not-yet-created
+# parent, so `share/pwsh/completions` never gets created on a fresh install)
+# ---------------------------------------------------------------------------
+
+
+def test_ensure_completion_dirs_creates_all_four(tmp_path: Path) -> None:
+    """_ensure_completion_dirs must create every completion dir under the prefix."""
+    from koopa.brew import _COMPLETION_DIRS, _ensure_completion_dirs
+
+    with patch("koopa.brew.brew_prefix", return_value=str(tmp_path)):
+        _ensure_completion_dirs()
+
+    for parts in _COMPLETION_DIRS:
+        assert (tmp_path / Path(*parts)).is_dir()
+
+
+def test_ensure_completion_dirs_is_idempotent(tmp_path: Path) -> None:
+    """A second call on the same prefix must not raise."""
+    from koopa.brew import _ensure_completion_dirs
+
+    with patch("koopa.brew.brew_prefix", return_value=str(tmp_path)):
+        _ensure_completion_dirs()
+        _ensure_completion_dirs()  # must not raise
+
+
+def test_ensure_completion_dirs_skips_one_bad_dir_without_raising(tmp_path: Path) -> None:
+    """A directory koopa cannot create must not stop the others from being created.
+
+    Simulated here by leaving a plain file where a completion directory
+    belongs -- os.makedirs raises FileExistsError (an OSError subclass) for
+    that one entry, which _ensure_completion_dirs must swallow and continue.
+    """
+    from koopa.brew import _ensure_completion_dirs
+
+    blocked = tmp_path / "share" / "pwsh"
+    blocked.mkdir(parents=True)
+    (blocked / "completions").write_text("not a directory\n")
+
+    with patch("koopa.brew.brew_prefix", return_value=str(tmp_path)):
+        _ensure_completion_dirs()  # must not raise despite the blocked entry
+
+    assert (tmp_path / "etc" / "bash_completion.d").is_dir()
+    assert (tmp_path / "share" / "zsh" / "site-functions").is_dir()
+    assert (tmp_path / "share" / "fish" / "vendor_completions.d").is_dir()
+
+
+def test_brew_fix_completion_dirs_delegates_to_ensure(tmp_path: Path) -> None:
+    """The public entry point must do exactly what _ensure_completion_dirs does."""
+    from koopa.brew import brew_fix_completion_dirs
+
+    with patch("koopa.brew.brew_prefix", return_value=str(tmp_path)):
+        brew_fix_completion_dirs()
+
+    assert (tmp_path / "share" / "pwsh" / "completions").is_dir()
+
+
+# ---------------------------------------------------------------------------
 # brew_upgrade_casks: the most likely hang point (pkg casks shell out to sudo)
 # ---------------------------------------------------------------------------
 
@@ -275,6 +334,7 @@ def test_brew_upgrade_casks_reinstall_is_noninteractive() -> None:
     with (
         patch("koopa.brew.subprocess.run", side_effect=_side_effect) as mock_run,
         patch("koopa.system.has_sudo", return_value=True),
+        patch("koopa.brew._ensure_completion_dirs"),
     ):
         from koopa.brew import brew_upgrade_casks
 
@@ -288,6 +348,42 @@ def test_brew_upgrade_casks_reinstall_is_noninteractive() -> None:
         kwargs = c.kwargs
         assert kwargs.get("stdin") is subprocess.DEVNULL
         assert kwargs.get("env", {}).get("NONINTERACTIVE") == "1"
+
+
+def test_brew_upgrade_casks_ensures_completion_dirs_before_reinstall() -> None:
+    """_ensure_completion_dirs must run before the first cask reinstall.
+
+    Order matters: the directories must exist before Homebrew's own sandboxed
+    cask install step tries to write a completion file into them.
+    """
+    calls: list[str] = []
+
+    def _side_effect(cmd: list[str], **_kwargs: object) -> MagicMock:
+        if "reinstall" in cmd and "--cask" in cmd:
+            calls.append("reinstall")
+        result = MagicMock()
+        if "outdated" in cmd and "--cask" in cmd:
+            result.stdout = "firefox (128.0 < 129.0)\n"
+        else:
+            result.stdout = ""
+        result.stderr = ""
+        result.returncode = 0
+        return result
+
+    with (
+        patch("koopa.brew.subprocess.run", side_effect=_side_effect),
+        patch("koopa.system.has_sudo", return_value=True),
+        patch(
+            "koopa.brew._ensure_completion_dirs",
+            side_effect=lambda: calls.append("ensure_completion_dirs"),
+        ) as mock_ensure,
+    ):
+        from koopa.brew import brew_upgrade_casks
+
+        brew_upgrade_casks()
+
+    mock_ensure.assert_called_once()
+    assert calls[0] == "ensure_completion_dirs", "Expected the dirs to be created before reinstall"
 
 
 def test_brew_upgrade_casks_skips_versionless_casks_with_same_version() -> None:
@@ -310,6 +406,7 @@ def test_brew_upgrade_casks_skips_versionless_casks_with_same_version() -> None:
     with (
         patch("koopa.brew.subprocess.run", side_effect=_side_effect) as mock_run,
         patch("koopa.system.has_sudo", return_value=True),
+        patch("koopa.brew._ensure_completion_dirs"),
     ):
         from koopa.brew import brew_upgrade_casks
 
@@ -372,6 +469,7 @@ def test_brew_upgrade_casks_authenticates_before_reinstalling() -> None:
     with (
         patch("koopa.brew.subprocess.run", side_effect=_side_effect),
         patch("koopa.system.has_sudo", return_value=True),
+        patch("koopa.brew._ensure_completion_dirs"),
         patch("koopa.brew._sudo_authenticate") as mock_auth,
         patch("koopa.brew._sudo_keepalive_start", return_value="handle") as mock_start,
         patch("koopa.brew._sudo_keepalive_stop") as mock_stop,
@@ -403,6 +501,7 @@ def test_brew_upgrade_casks_stops_keepalive_even_if_reinstall_fails() -> None:
     with (
         patch("koopa.brew.subprocess.run", side_effect=_side_effect),
         patch("koopa.system.has_sudo", return_value=True),
+        patch("koopa.brew._ensure_completion_dirs"),
         patch("koopa.brew._sudo_authenticate"),
         patch("koopa.brew._sudo_keepalive_start", return_value="handle") as mock_start,
         patch("koopa.brew._sudo_keepalive_stop") as mock_stop,

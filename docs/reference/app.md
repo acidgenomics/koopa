@@ -195,6 +195,11 @@ Run 'brew cleanup'.
 
 Dump the current Homebrew Bundle to a Brewfile.
 
+(koopa-app-brew-fix-completion-dirs)=
+### `app brew fix-completion-dirs`
+
+Create shell completion dirs a cask sandbox can't create itself.
+
 (koopa-app-brew-install-bundle)=
 ### `app brew install-bundle`
 

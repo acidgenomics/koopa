@@ -91,6 +91,86 @@ KOOPA_COLOR_MODE=dark chezmoi diff  --source="${HOME}/.local/share/koopa/opt/dot
 KOOPA_COLOR_MODE=dark chezmoi apply --source="${HOME}/.local/share/koopa/opt/dotfiles/chezmoi" ~/.curlrc
 ```
 
+## A cask install can silently drop its pwsh completion file
+
+Homebrew 6.0.20 added a `sandbox-exec` profile around cask artifact steps
+(commit `f8fcbd88e037`, "Sandbox structured cask operations"). A cask with a
+`generate_completions_from_executable` stanza (e.g. `zed`) can then fail one
+shell's completion with no install failure, just a caught warning:
+
+```
+==> Linking Binary 'cli' to '/opt/homebrew/bin/zed'
+Warning: An exception occurred within a child process:
+  RuntimeError: Failed to generate pwsh completions from /opt/homebrew/bin/zed: Operation not permitted @ dir_s_mkdir - /opt/homebrew/share/pwsh
+```
+
+This is **not** a permissions or MDM/proxy restriction — the user owns
+`/opt/homebrew/share` and can `mkdir` there by hand. The denial comes from
+Homebrew's own sandbox profile. Evidence chain:
+
+1. `Library/Homebrew/cask/artifact/generated_completion.rb`'s `install_phase`
+   allows writes to each completion directory itself:
+   `sandbox.allow_write_path(directory)` for every distinct
+   `output_path.dirname` across the requested shells.
+2. `allow_write_path` emits `(allow file-write* (subpath <dir>))`
+   (`Library/Homebrew/sandbox.rb`). This covers the directory and its
+   contents, not an as-yet-nonexistent parent.
+3. The sandboxed child then does `output_path.dirname.mkpath`
+   (`Library/Homebrew/cask_artifact.rb`) — creating the directory, not just
+   writing inside an existing one.
+4. When that directory has never been created before, `mkpath` must first
+   create its parent. The profile's `(deny file-write*)` default rejects
+   that `mkdir`. Seatbelt returns `EPERM`; Ruby reports it as
+   `dir_s_mkdir`.
+5. bash, zsh, and fish never hit this: their target directories
+   (`etc/bash_completion.d`, `share/zsh/site-functions`,
+   `share/fish/vendor_completions.d`) already exist on a standard Homebrew
+   install. `share/pwsh/completions` is the one directory nothing else ever
+   creates first.
+
+Target directories, from `Library/Homebrew/cask/config.rb` and
+`generated_completion.rb`:
+
+| Shell | Directory under the Homebrew prefix |
+|---|---|
+| bash | `etc/bash_completion.d` |
+| zsh | `share/zsh/site-functions` |
+| fish | `share/fish/vendor_completions.d` |
+| pwsh | `share/pwsh/completions` |
+
+Homebrew's own installed-keg manifest (`Library/Homebrew/keg.rb`) already
+lists `share/pwsh` and `share/pwsh/completions` among the directories every
+keg link expects to exist — pre-creating them restores an invariant
+Homebrew assumes, it is not a workaround for a permissions problem that
+doesn't exist.
+
+No upstream Homebrew/brew issue or PR exists for this as of 2026-08-29 (`gh
+search issues`/`gh search prs` against `Homebrew/brew` returned nothing).
+
+### The fix: `koopa.brew`
+
+`_ensure_completion_dirs()` in `lang/python/src/koopa/brew.py` creates all
+four directories with `os.makedirs(path, exist_ok=True)`, swallowing
+`OSError` per directory so one bad entry never aborts the caller. It runs as
+the first statement of `brew_upgrade_casks()`, so both `koopa app brew
+upgrade` and the `koopa update` sweep (`installers/homebrew.py`'s
+`_update_homebrew()`, which calls `brew_upgrade_casks()` on macOS) create
+the directories before the first cask reinstall.
+
+`brew_fix_completion_dirs()` is the public wrapper, reachable as `koopa app
+brew fix-completion-dirs` — the escape hatch for repairing a machine that
+already hit the warning, without waiting for a full `koopa update`.
+
+Test pattern: patch `koopa.brew.brew_prefix` to a `tmp_path`, never a real
+prefix — `_ensure_completion_dirs` does real `os.makedirs` calls, and every
+existing `brew_upgrade_casks()` test needed `patch("koopa.brew
+._ensure_completion_dirs")` added once this call was wired in, or it would
+have either written into the developer's real `/opt/homebrew` (tests that
+patch `brew_prefix` to a real path) or created stray relative directories in
+the test runner's cwd (tests that don't patch `brew_prefix` at all, so
+`brew_prefix()`'s mocked `subprocess.run` returns an empty string and
+`os.path.join("", ...)` yields a relative path).
+
 ## Sudo keep-alive for multi-cask upgrades
 
 A separate but related problem: Homebrew shells out to `sudo` separately for

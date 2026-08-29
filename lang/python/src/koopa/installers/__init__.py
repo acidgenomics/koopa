@@ -37,6 +37,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "parallel": f"{_M}._conda",
     "pigz": f"{_M}._conda",
     "pkgconf": f"{_M}._conda",
+    "poppler": f"{_M}._conda",
     "postgresql": f"{_M}._conda",
     "rsync": f"{_M}.rsync",
     "screen": f"{_M}.screen",

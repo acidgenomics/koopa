@@ -7258,6 +7258,36 @@
     ],
     "version": "2.4.1"
   },
+  "poppler": {
+    "bin": [
+      "pdfdetach",
+      "pdffonts",
+      "pdfimages",
+      "pdfinfo",
+      "pdfseparate",
+      "pdfsig",
+      "pdftocairo",
+      "pdftohtml",
+      "pdftoppm",
+      "pdftops",
+      "pdftotext",
+      "pdfunite"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Documentation",
+    "conda_channel": "conda-forge",
+    "default": false,
+    "description": "PDF rendering library and command-line utilities",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://poppler.freedesktop.org/",
+      "https://gitlab.freedesktop.org/poppler/poppler"
+    ],
+    "version": "26.07.0"
+  },
   "postgresql": {
     "bin": [
       "pg_ctl",

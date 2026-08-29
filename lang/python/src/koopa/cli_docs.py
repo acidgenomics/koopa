@@ -393,6 +393,7 @@ APP_DESCRIPTIONS: dict[str, str] = {
     # brew
     "brew-cleanup": "Run 'brew cleanup'.",
     "brew-dump-brewfile": "Dump the current Homebrew Bundle to a Brewfile.",
+    "brew-fix-completion-dirs": "Create shell completion dirs a cask sandbox can't create itself.",
     "brew-install-bundle": "Install packages from a Brewfile via 'brew bundle'.",
     "brew-outdated": "List outdated Homebrew packages.",
     "brew-reset-core-repo": "Reset the homebrew/core git repo to match its remote.",
