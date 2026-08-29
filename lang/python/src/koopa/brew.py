@@ -3,7 +3,7 @@
 Converted from Bash functions: brew-prefix, brew-version, brew-doctor,
 brew-outdated, brew-upgrade-brews, brew-dump-brewfile, brew-reset-core-repo,
 brew-reset-permissions, brew-uninstall-all-brews, brew-install-brewfile,
-brew-list-formulae, brew-list-casks, brew-info, etc.
+brew-list-formulae, brew-list-casks, brew-info, brew-fix-completion-dirs, etc.
 """
 
 import os
@@ -16,6 +16,16 @@ from koopa.system import safe_build_env
 from koopa.xdg import xdg_config_home
 
 _SUDO_KEEPALIVE_INTERVAL_SECONDS = 50
+
+# Shell completion directories a cask's `generate_completions_from_executable`
+# stanza can write to, relative to the Homebrew prefix. See
+# ``_ensure_completion_dirs`` for why these must exist before a cask install.
+_COMPLETION_DIRS = (
+    ("etc", "bash_completion.d"),
+    ("share", "zsh", "site-functions"),
+    ("share", "fish", "vendor_completions.d"),
+    ("share", "pwsh", "completions"),
+)
 
 
 def _user_curlrc_path() -> str | None:
@@ -203,8 +213,55 @@ def brew_upgrade() -> None:
     _brew("cleanup", capture=False)
 
 
+def _ensure_completion_dirs() -> None:
+    """Pre-create the shell completion directories Homebrew's cask sandbox needs.
+
+    Homebrew 6.0.20 sandboxed cask artifact steps with ``sandbox-exec``
+    (macOS). The ``generate_completions_from_executable`` stanza's
+    ``install_phase`` allows writes to each completion directory itself
+    (``sandbox.allow_write_path(directory)``, a ``subpath`` rule), but the
+    write that actually happens is ``output_path.dirname.mkpath`` -- creating
+    the directory, not just writing inside an existing one. When a completion
+    directory has never been created before (``share/pwsh/completions`` is
+    the common case; nothing else on a fresh Homebrew install writes there),
+    the sandbox denies the parent-directory ``mkdir`` with ``EPERM``, and the
+    cask install degrades to a caught warning:
+    ``Operation not permitted @ dir_s_mkdir - <prefix>/share/pwsh``. No
+    completion file is ever written for that shell.
+
+    Creating these directories ahead of time is not a workaround for a
+    Homebrew bug so much as restoring an invariant Homebrew's own installed
+    manifest already assumes -- ``Library/Homebrew/keg.rb`` lists
+    ``share/pwsh`` and ``share/pwsh/completions`` among the directories every
+    keg link expects to exist. bash, zsh, and fish never hit this because
+    their target directories already exist on a standard Homebrew install.
+
+    Never raises: a directory koopa cannot create (permissions, a stale file
+    where a directory belongs) must not abort a cask upgrade over a
+    completions nicety.
+    """
+    prefix = brew_prefix()
+    for parts in _COMPLETION_DIRS:
+        path = os.path.join(prefix, *parts)
+        try:
+            os.makedirs(path, exist_ok=True)
+        except OSError:
+            continue
+
+
+def brew_fix_completion_dirs() -> None:
+    """Create the shell completion directories a cask install may need.
+
+    Public entry point for ``_ensure_completion_dirs``, reachable via
+    ``koopa app brew fix-completion-dirs`` for repairing a machine
+    immediately, without waiting for the next ``koopa update``.
+    """
+    _ensure_completion_dirs()
+
+
 def brew_upgrade_casks() -> None:
     """Upgrade outdated casks detected via --greedy on macOS."""
+    _ensure_completion_dirs()
     result = subprocess.run(
         ["brew", "outdated", "--cask", "--greedy"],
         capture_output=True,

@@ -47,6 +47,7 @@ _APP_TREE: dict[str, Any] = {
     "brew": {
         "cleanup": "brew-cleanup",
         "dump-brewfile": "brew-dump-brewfile",
+        "fix-completion-dirs": "brew-fix-completion-dirs",
         "install-bundle": "brew-install-bundle",
         "outdated": "brew-outdated",
         "reset-core-repo": "brew-reset-core-repo",
@@ -1257,6 +1258,12 @@ def _handle_brew_dump_brewfile(args: list[str]) -> None:
 
     path = args[0] if args else "Brewfile"
     brew_dump_brewfile(path)
+
+
+def _handle_brew_fix_completion_dirs(args: list[str]) -> None:
+    from koopa.brew import brew_fix_completion_dirs
+
+    brew_fix_completion_dirs()
 
 
 def _handle_brew_install_bundle(args: list[str]) -> None:
@@ -2598,6 +2605,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     # brew
     "brew-cleanup": _handle_brew_cleanup,
     "brew-dump-brewfile": _handle_brew_dump_brewfile,
+    "brew-fix-completion-dirs": _handle_brew_fix_completion_dirs,
     "brew-install-bundle": _handle_brew_install_bundle,
     "brew-outdated": _handle_brew_outdated,
     "brew-reset-core-repo": _handle_brew_reset_core_repo,

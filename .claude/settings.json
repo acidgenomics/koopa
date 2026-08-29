@@ -1,7 +1,20 @@
 {
   "permissions": {
     "allow": [
-      "Bash(*)",
+      "Bash(chezmoi diff:*)",
+      "Bash(chezmoi managed:*)",
+      "Bash(chezmoi status:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(koopa develop:*)",
+      "Bash(koopa list:*)",
+      "Bash(koopa system info:*)",
+      "Bash(pyright:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff check:*)",
+      "Bash(ruff format:*)",
+      "Bash(uv pip compile:*)",
       "Edit(**)",
       "Edit(//**/*lessons.md)",
       "Grep",
