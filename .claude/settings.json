@@ -10,6 +10,7 @@
       "Bash(koopa develop:*)",
       "Bash(koopa list:*)",
       "Bash(koopa system info:*)",
+      "Bash(mktemp -d)",
       "Bash(pyright:*)",
       "Bash(pytest:*)",
       "Bash(ruff check:*)",
@@ -25,9 +26,10 @@
       "mcp__ide__*",
       "mcp__mcp-atlassian__*",
       "mcp__read-website-fast__*",
-      "mcp__tooluniverse__*"
+      "mcp__tooluniverse__*",
+      "Bash(gh pr *)",
+      "Bash(gh run *)"
     ],
-    "defaultMode": "plan",
     "deny": [
       "Bash(git add*)",
       "Bash(git commit*)",
@@ -42,6 +44,7 @@
       "Edit(.env*)",
       "Read(**/.env*)",
       "Read(.env*)"
-    ]
+    ],
+    "defaultMode": "plan"
   }
 }

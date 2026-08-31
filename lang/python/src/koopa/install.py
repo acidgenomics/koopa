@@ -1843,6 +1843,7 @@ def _link_conda_binaries(
     man1_src_dir = os.path.join(libexec, "share", "man", "man1")
     man1_dst_dir = os.path.join(prefix, "share", "man", "man1")
     os.makedirs(bin_dir, exist_ok=True)
+    broken: dict[str, list[str]] = {}
     for bin_name in bin_names:
         src = os.path.join(libexec_bin, bin_name)
         if not os.path.isfile(src):
@@ -1859,6 +1860,59 @@ def _link_conda_binaries(
             if os.path.islink(man1_dst):
                 os.unlink(man1_dst)
             os.symlink(man1_src, man1_dst)
+        missing = _missing_shared_libs(src)
+        if missing:
+            broken[bin_name] = missing
+    if broken:
+        details = "; ".join(f"{k}: {', '.join(v)}" for k, v in broken.items())
+        msg = (
+            f"Conda package '{name}' installed binaries with unresolved shared "
+            f"library dependencies ({details}). The installed package was "
+            "likely linked against a different soname than the one the conda "
+            "solver resolved. Check for a newer build of the missing "
+            "library's package, or pin it to the version the binary expects."
+        )
+        raise RuntimeError(msg)
+
+
+def _is_elf(path: str) -> bool:
+    """Return True when the file at path starts with the ELF magic bytes."""
+    with open(path, "rb") as fh:
+        return fh.read(4) == b"\x7fELF"
+
+
+def _parse_ldd_missing(output: str) -> list[str]:
+    """Parse ldd output and return the sorted, de-duplicated missing libraries."""
+    missing = set()
+    for line in output.splitlines():
+        if "not found" not in line:
+            continue
+        missing.add(line.split("=>")[0].strip())
+    return sorted(missing)
+
+
+def _missing_shared_libs(binary: str) -> list[str]:
+    """Return shared libraries that ldd cannot resolve for an ELF binary.
+
+    Linux-only: otool -L on macOS does not report a missing library the way
+    ldd does, so this is a no-op there. ldd exits 0 for a valid ELF file even
+    when a dependency is missing, so check=True is safe once _is_elf() has
+    filtered out scripts (a non-ELF file makes ldd exit non-zero).
+    """
+    if not is_linux():
+        return []
+    if shutil.which("ldd") is None:
+        return []
+    if not _is_elf(binary):
+        return []
+    result = subprocess.run(
+        ["ldd", binary],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    return _parse_ldd_missing(result.stdout)
 
 
 # -- Haskell package installer ------------------------------------------------

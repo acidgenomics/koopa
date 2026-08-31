@@ -801,3 +801,91 @@ def test_link_in_opt_refuses_to_replace_a_real_directory(tmp_path: Path) -> None
         pytest.raises(IsADirectoryError),
     ):
         link_in_opt(name="curl", source=str(source))
+
+
+def test_parse_ldd_missing_reports_broken_soname() -> None:
+    """A 'not found' line yields the library name before the '=>'."""
+    from koopa.install import _parse_ldd_missing
+
+    output = (
+        "\tlibluv.so.1 => /opt/koopa/app/neovim/0.12.5/libexec/lib/libluv.so.1\n"
+        "\tlibunibilium.so.. => not found\n"
+        "\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6\n"
+    )
+
+    assert _parse_ldd_missing(output) == ["libunibilium.so.."]
+
+
+def test_parse_ldd_missing_clean_output() -> None:
+    """No 'not found' lines yields an empty list."""
+    from koopa.install import _parse_ldd_missing
+
+    output = "\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6\n"
+
+    assert _parse_ldd_missing(output) == []
+
+
+def test_parse_ldd_missing_non_dynamic_executable() -> None:
+    """Ldd's 'not a dynamic executable' message is not mistaken for a miss."""
+    from koopa.install import _parse_ldd_missing
+
+    assert _parse_ldd_missing("\tnot a dynamic executable\n") == []
+
+
+def test_is_elf_true_for_elf_magic(tmp_path: Path) -> None:
+    """A file starting with the ELF magic bytes is detected as ELF."""
+    from koopa.install import _is_elf
+
+    binary = tmp_path / "nvim"
+    binary.write_bytes(b"\x7fELF" + b"\x00" * 12)
+
+    assert _is_elf(str(binary)) is True
+
+
+def test_is_elf_false_for_script(tmp_path: Path) -> None:
+    """A shebang script is not mistaken for an ELF binary."""
+    from koopa.install import _is_elf
+
+    script = tmp_path / "age-keygen"
+    script.write_text("#!/bin/sh\necho hi\n")
+
+    assert _is_elf(str(script)) is False
+
+
+def test_missing_shared_libs_noop_on_macos(tmp_path: Path) -> None:
+    """The check is Linux-only; otool does not report missing libs like ldd."""
+    from koopa.install import _missing_shared_libs
+
+    binary = tmp_path / "nvim"
+    binary.write_bytes(b"\x7fELF" + b"\x00" * 12)
+
+    with patch("koopa.install.is_linux", return_value=False):
+        assert _missing_shared_libs(str(binary)) == []
+
+
+def test_link_conda_binaries_raises_on_broken_linkage(tmp_path: Path) -> None:
+    """A binary with an unresolved shared library fails the install loudly."""
+    from koopa.install import _link_conda_binaries
+
+    prefix = tmp_path / "app" / "neovim" / "0.12.5"
+    libexec = prefix / "libexec"
+    libexec_bin = libexec / "bin"
+    libexec_bin.mkdir(parents=True)
+    (libexec_bin / "nvim").write_bytes(b"\x7fELF" + b"\x00" * 12)
+    conda_meta = libexec / "conda-meta"
+    conda_meta.mkdir()
+    (conda_meta / "nvim-0.12.5-h5d254f0_0.json").write_text('{"files": ["bin/nvim"]}')
+
+    with (
+        patch(
+            "koopa.install._missing_shared_libs",
+            return_value=["libunibilium.so.."],
+        ),
+        pytest.raises(RuntimeError, match=r"libunibilium\.so\.\."),
+    ):
+        _link_conda_binaries(
+            name="nvim",
+            version="0.12.5",
+            prefix=str(prefix),
+            libexec=str(libexec),
+        )
