@@ -93,7 +93,7 @@ always miss at template render time.
 Instead, detect the **source** that triggers generation (e.g. the upstream `.tmTheme`
 file itself) rather than the generated artifact.
 
-**Concrete case: colorblind-safe git/VS Code diff colors (2026-08).** Three new
+**Concrete case: git/VS Code diff colors (2026-08).** Three new
 templates (`delta/theme.gitconfig.tmpl`, `git/config.tmpl`,
 `dracula-pro-diff-colors.tmpl`) each added a `{{ if stat $fragment }}` check
 for a Python-generated color file. The generator was placed in
@@ -283,7 +283,7 @@ The same trap applies to a raw `{{ include $path }}` (a dynamic file path, not
 a named `.chezmoitemplates` partial) when the included file already ends in
 its own trailing newline and the surrounding template also supplies one —
 `dot_config/git/config.tmpl` and `dot_config/delta/theme.gitconfig.tmpl` both
-had this exact shape (a `stat`-gated colorblind-diff-color fragment spliced
+had this exact shape (a `stat`-gated diff-color fragment spliced
 into a literal/generated `if`/`else`), producing a doubled blank line in one
 case and a trailing blank line at EOF in the other. `include`'s return value
 is a runtime string, invisible to source-level `{{-`/`-}}` trimming, so the
