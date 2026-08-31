@@ -1753,11 +1753,17 @@ def install_conda_package(
     version: str = "",
     prefix: str = "",
     yaml_file: str = "",
+    post_extract_fn: Callable[[str], None] | None = None,
 ) -> None:
     """Install a conda environment as an application.
 
     Creates a conda env in ``<prefix>/libexec`` and links binaries into
     ``<prefix>/bin``. Uses a single channel resolved from conda config.
+
+    ``post_extract_fn``, when given, runs with the ``libexec`` path after the
+    conda env is created and before binaries are linked. It exists for a
+    per-app installer (e.g. ``installers/neovim.py``) to patch a known-broken
+    package build; the shared conda-package path does not use it.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1808,6 +1814,8 @@ def install_conda_package(
         raise RuntimeError(msg) from None
     finally:
         shutil.rmtree(tmp_pkg_cache, ignore_errors=True)
+    if post_extract_fn is not None:
+        post_extract_fn(libexec)
     _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
 
 

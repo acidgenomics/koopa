@@ -109,7 +109,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "minimap2": f"{_M}._conda",
     "mise": f"{_M}._conda",
     "ncbi-sra-tools": f"{_M}._conda",
-    "neovim": f"{_M}._conda",
+    "neovim": f"{_M}.neovim",
     "nextflow": f"{_M}._conda",
     "node": f"{_M}._conda",
     "nushell": f"{_M}._conda",

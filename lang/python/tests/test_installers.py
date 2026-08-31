@@ -1,12 +1,13 @@
 """Installer registry unit tests."""
 
+import os
 from pathlib import Path
 from types import ModuleType
 from unittest.mock import patch
 
 import pytest
 from koopa.install import _app_json_installer
-from koopa.installers import bcl_convert, cellranger, has_python_installer
+from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim
 from koopa.io import import_app_json
 
 _BANNED_CPU_COUNT_PATTERNS = (
@@ -145,3 +146,62 @@ def test_cellranger_extracts_nested_vendor_tar(tmp_path: Path) -> None:
 
     assert extract_mock.call_count == 2
     assert (Path(prefix) / "bin").is_symlink()
+
+
+def test_fix_unibilium_soname_creates_symlink(tmp_path: Path) -> None:
+    """The malformed soname is symlinked to the real, correctly-built library."""
+    lib_dir = tmp_path / "libexec" / "lib"
+    lib_dir.mkdir(parents=True)
+    (lib_dir / "libunibilium.so.4.0.2").touch()
+    (lib_dir / "libunibilium.so.4").symlink_to("libunibilium.so.4.0.2")
+
+    neovim._fix_unibilium_soname(str(tmp_path / "libexec"))
+
+    broken = lib_dir / "libunibilium.so.."
+    assert broken.is_symlink()
+    assert os.readlink(broken) == "libunibilium.so.4.0.2"
+
+
+def test_fix_unibilium_soname_is_idempotent(tmp_path: Path) -> None:
+    """A second run does not touch an already-repaired lib dir."""
+    lib_dir = tmp_path / "libexec" / "lib"
+    lib_dir.mkdir(parents=True)
+    (lib_dir / "libunibilium.so.4.0.2").touch()
+    broken = lib_dir / "libunibilium.so.."
+    broken.symlink_to("some-other-target")
+
+    neovim._fix_unibilium_soname(str(tmp_path / "libexec"))
+
+    assert os.readlink(broken) == "some-other-target"
+
+
+def test_fix_unibilium_soname_noop_when_library_absent(tmp_path: Path) -> None:
+    """No unibilium library present means nothing to link against; skip silently."""
+    lib_dir = tmp_path / "libexec" / "lib"
+    lib_dir.mkdir(parents=True)
+
+    neovim._fix_unibilium_soname(str(tmp_path / "libexec"))
+
+    assert not (lib_dir / "libunibilium.so..").exists()
+
+
+def test_neovim_main_applies_fix_on_linux() -> None:
+    """main() wires the unibilium hotfix into install_conda_package on Linux."""
+    with (
+        patch("koopa.installers.neovim.is_linux", return_value=True),
+        patch("koopa.installers.neovim.install_conda_package") as install_mock,
+    ):
+        neovim.main(name="neovim", version="0.12.5", prefix="/opt/koopa/app/neovim/0.12.5")
+
+    assert install_mock.call_args.kwargs["post_extract_fn"] is neovim._fix_unibilium_soname
+
+
+def test_neovim_main_skips_fix_off_linux() -> None:
+    """main() does not install the hotfix on a platform ldd can't help with."""
+    with (
+        patch("koopa.installers.neovim.is_linux", return_value=False),
+        patch("koopa.installers.neovim.install_conda_package") as install_mock,
+    ):
+        neovim.main(name="neovim", version="0.12.5", prefix="/opt/koopa/app/neovim/0.12.5")
+
+    assert install_mock.call_args.kwargs["post_extract_fn"] is None
