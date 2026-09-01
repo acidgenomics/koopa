@@ -1801,7 +1801,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-08-28",
+    "date": "2026-09-01",
     "default": true,
     "dependencies": [
       "node"
@@ -1815,7 +1815,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.81"
+    "version": "1.0.82"
   },
   "coreutils": {
     "bin": [
