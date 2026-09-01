@@ -57,7 +57,7 @@ Two constraints on that path, both verified live:
 ```python
 env.setdefault("HOMEBREW_CURLRC", _user_curlrc_path() or _brew_curlrc_fallback())
 ```
-- `_user_curlrc_path()` mirrors curl's own lookup order: `$CURL_HOME/.curlrc`,
+- `_user_curlrc_path()` mirrors curl's own lookup order: `${CURL_HOME}/.curlrc`,
   then `<xdg_config_home>/curlrc`, then `~/.curlrc`. Returns the first path
   that exists.
 - `_brew_curlrc_fallback()` writes a minimal koopa-generated

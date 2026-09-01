@@ -45,7 +45,7 @@ the handler function body (not constructed dynamically).
 
 ## Bash lazy-load mechanism
 
-Activation sets `BASH_COMPLETION_USER_DIR=$KOOPA_PREFIX/share/bash-completion`
+Activation sets `BASH_COMPLETION_USER_DIR=${KOOPA_PREFIX}/share/bash-completion`
 (in `lang/bash/functions/activate/activate-bash-completion.sh`).
 
 The bash-completion v2 framework (`opt/bash-completion/`) lazy-loads the `koopa`
@@ -66,7 +66,7 @@ koopa's versioned framework always wins over any system-installed v2.
 `_koopa_activate_zsh_compinit` (`lang/zsh/functions/activate/activate-zsh-compinit.sh`):
 - Dump path: `${ZDOTDIR:-$HOME}/.zcompdump` → typically `~/.config/zsh/.zcompdump`
 - Fast path (`compinit -C`) only fires when dump is < 24 h old AND no file in
-  `$KOOPA_PREFIX/share/zsh/site-functions` is newer than the dump.
+  `${KOOPA_PREFIX}/share/zsh/site-functions` is newer than the dump.
 - After `koopa develop generate-completion`, the `_koopa` mtime changes, so the
   next new shell forces a full `compinit` rebuild automatically.
 

@@ -373,10 +373,15 @@ def _handle_python_publish(args: list[str]) -> None:
             "every other case should bump the version instead."
         ),
     )
+    parser.add_argument(
+        "--no-pypi",
+        action="store_true",
+        help="Skip the public PyPI upload; publish to python.acidgenomics.com only.",
+    )
     parsed = parser.parse_args(args)
     from koopa.pypi import publish
 
-    publish(parsed.package_dir, force=parsed.force)
+    publish(parsed.package_dir, force=parsed.force, pypi=not parsed.no_pypi)
 
 
 def _handle_python_publish_docs(args: list[str]) -> None:

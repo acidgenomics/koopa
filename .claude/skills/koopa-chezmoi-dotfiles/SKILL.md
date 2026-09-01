@@ -313,9 +313,9 @@ the last committed state rather than an uncommitted edit still on disk, get it
 from a throwaway worktree instead of trusting memory of what HEAD looked like:
 ```sh
 tmp="$(mktemp -d)"
-git worktree add --detach "$tmp/head" HEAD
-chezmoi execute-template --source="$tmp/head/chezmoi" --file "$tmp/head/chezmoi/<target>.tmpl" > before.json
-git worktree remove "$tmp/head"
+git worktree add --detach "${tmp}/head" HEAD
+chezmoi execute-template --source="${tmp}/head/chezmoi" --file "${tmp}/head/chezmoi/<target>.tmpl" > before.json
+git worktree remove "${tmp}/head"
 ```
 Pair this with a duplicate-key guard, since `json.load`/`JSON.parse` silently
 keep only the last occurrence of a repeated key — a real collision (see "Two

@@ -71,7 +71,7 @@ does:
 
 ```sh
 env -i HOME="$scratch" KOOPA_FORCE=1 sh -c \
-  '. "$scratch/koopa/activate.sh"; echo "$KOOPA_PREFIX"'
+  '. "${scratch}/koopa/activate.sh"; echo "$KOOPA_PREFIX"'
 ```
 
 Without `KOOPA_FORCE=1` this silently no-ops (exit 0, empty output) — a false

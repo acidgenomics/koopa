@@ -87,9 +87,23 @@ def _s3_list_packages() -> list[str]:
     return [k.removeprefix("packages/") for k in keys if k != "packages/"]
 
 
+_DIST_PREFIX = "acidgenomics-"
+
+
 def _normalize_name(name: str) -> str:
     """PEP 503 normalized package name."""
     return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def _docs_slug(name: str) -> str:
+    """Return the short docs slug for a distribution name.
+
+    Every package's PyPI distribution name carries the 'acidgenomics-' prefix
+    (e.g. 'acidgenomics-syntactic'), but docs and the landing page keep using
+    the short, pre-existing slug ('syntactic') so published doc URLs and
+    Bioconda 'about.home' fields stay valid across the rename.
+    """
+    return _normalize_name(name).removeprefix(_DIST_PREFIX)
 
 
 def _parse_package_name(filename: str) -> str | None:
@@ -264,10 +278,28 @@ def _generate_landing(
     footer with the license. css/front.css and images/logo.svg are uploaded
     separately (not part of the generated tree); see the module docstring for
     the S3 layout.
+
+    packages_summaries is keyed by distribution name, so a package that
+    shipped under both a bare name and the 'acidgenomics-' prefix (e.g.
+    'syntactic' and 'acidgenomics-syntactic') arrives as two separate keys.
+    Both collapse onto one docs slug (see _docs_slug) before rendering, so the
+    page shows one entry per package; the prefixed name's summary always wins
+    on a collision, since that is the current release.
     """
     from koopa.landing import render_landing
 
-    remaining = dict(packages_summaries)
+    by_slug: dict[str, str] = {}
+    prefixed_slugs: set[str] = set()
+    for name, summary in packages_summaries.items():
+        slug = _docs_slug(name)
+        is_prefixed = name.startswith(_DIST_PREFIX)
+        if slug in prefixed_slugs and not is_prefixed:
+            continue
+        by_slug[slug] = summary
+        if is_prefixed:
+            prefixed_slugs.add(slug)
+
+    remaining = by_slug
     sections: list[tuple[str, list[tuple[str, str, str]]]] = []
     for heading, names in _LANDING_CATEGORIES:
         entries = [(name, f"{name}/", remaining.pop(name)) for name in names if name in remaining]
@@ -467,13 +499,57 @@ def _tag_and_push_release(pkg_path: Path) -> None:
     git_push_tag(tag, path)
 
 
-def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -> None:
-    """Build and publish a Python package to python.acidgenomics.com.
+def _publish_to_pypi(dist_files: list[Path]) -> None:
+    """Upload built dist files to public PyPI via 'uv publish'.
+
+    Reads the token from UV_PUBLISH_TOKEN (environment, else
+    <koopa-root>/.env via dotenv_value) and passes it through the subprocess
+    environment only, never argv -- a token on argv is visible to any other
+    process via `ps`. A brand-new project name needs an account-scoped
+    token for its first upload; a project-scoped token can't create the
+    project it's scoped to.
+    """
+    from koopa.aws import dotenv_value
+
+    token = dotenv_value("UV_PUBLISH_TOKEN")
+    if not token:
+        msg = "UV_PUBLISH_TOKEN must be set (in environment or <koopa-root>/.env)."
+        raise RuntimeError(msg)
+
+    uv = _uv()
+    env = os.environ.copy()
+    env["UV_PUBLISH_TOKEN"] = token
+    subprocess.run(
+        [
+            uv,
+            "publish",
+            "--check-url",
+            "https://pypi.org/simple/",
+            *[str(f) for f in dist_files],
+        ],
+        env=env,
+        check=True,
+    )
+
+
+def publish(
+    package_dir: str,
+    *,
+    invalidate: bool = True,
+    force: bool = False,
+    pypi: bool = True,
+) -> None:
+    """Build and publish a Python package to PyPI and python.acidgenomics.com.
 
     Also creates and pushes a matching 'v{version}' git tag (see
     _tag_and_push_release) so every published release has a durable git ref
     -- a real incident (acidgenomes 0.2.0, 2026-08) shipped to the index
     with no tag at all until this was added.
+
+    The single build in dist_dir feeds both indexes, so the bytes shipped to
+    PyPI and to S3 are identical. PyPI is uploaded last, after the S3 upload
+    and reindex: a PyPI release is permanent even after deletion, while an S3
+    object can still be corrected, so the reversible step runs first.
 
     Parameters
     ----------
@@ -488,6 +564,9 @@ def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -
         already-decided in-place update of a version that's already live
         (e.g. correcting the same real incident this check exists to catch).
         Every other case should bump the version instead.
+    pypi
+        Whether to also upload the same dist files to public PyPI. On by
+        default; pass False for a private-index-only publish.
     """
     from koopa.alert import alert
 
@@ -540,6 +619,10 @@ def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -
                 ],
                 check=True,
             )
+
+        if pypi:
+            alert("Publishing to PyPI.")
+            _publish_to_pypi(dist_files)
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
@@ -550,10 +633,14 @@ def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -
 def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     """Build and publish a package's Sphinx docs to python.acidgenomics.com.
 
-    The rendered site is synced to s3://<python-bucket>/<name>/ where <name>
-    is the PEP 503-normalised project name read from pyproject.toml. Docs are
-    served at https://python.acidgenomics.com/<name>/ on the same domain and
-    bucket as the package index. The index at /simple/ is not touched.
+    The rendered site is synced to s3://<python-bucket>/<slug>/ where <slug>
+    is the docs slug (see _docs_slug) derived from the PEP 503-normalised
+    project name read from pyproject.toml. A distribution named
+    'acidgenomics-syntactic' still publishes docs to /syntactic/, not
+    /acidgenomics-syntactic/ -- the prefix is a PyPI naming concern only.
+    Docs are served at https://python.acidgenomics.com/<slug>/ on the same
+    domain and bucket as the package index. The index at /simple/ is not
+    touched.
 
     Parameters
     ----------
@@ -584,8 +671,9 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
         msg = f"[project] name not found in '{pyproject}'."
         raise RuntimeError(msg)
     name = _normalize_name(raw_name)
-    if name in {"simple", "packages"}:
-        msg = f"Package name '{name}' collides with a reserved path on python.acidgenomics.com."
+    slug = _docs_slug(raw_name)
+    if slug in {"simple", "packages"}:
+        msg = f"Docs slug '{slug}' collides with a reserved path on python.acidgenomics.com."
         raise ValueError(msg)
 
     uv = _uv()
@@ -613,7 +701,7 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
             check=True,
         )
 
-        dest = f"{_s3_uri()}/{name}/"
+        dest = f"{_s3_uri()}/{slug}/"
         alert(f"Syncing docs to '{dest}'.")
         aws_s3_sync(out_dir + "/", dest, delete=True, profile=_PROFILE)
 
@@ -623,7 +711,7 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
-    alert(f"Docs published: https://python.acidgenomics.com/{name}/")
+    alert(f"Docs published: https://python.acidgenomics.com/{slug}/")
 
 
 def sync_docs_theme(package_dirs: list[str], *, check: bool = False) -> bool:

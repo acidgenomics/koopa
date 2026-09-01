@@ -74,8 +74,9 @@ To bump manually:
 1. Fetch all four platform manifests:
    ```sh
    base="https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
-   for p in darwin_arm64 darwin_amd64 linux_amd64 linux_arm64; do
-     echo "=== $p ===" && curl -fsSL "$base/$p.json"
+   for p in darwin_arm64 darwin_amd64 linux_amd64 linux_arm64
+   do
+     echo "=== $p ===" && curl -fsSL "${base}/${p}.json"
    done
    ```
 2. Update `"version"`, `"date"`, `"build_id"`, and all four `"sha512"` values in

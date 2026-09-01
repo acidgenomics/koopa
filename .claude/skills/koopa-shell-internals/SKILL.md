@@ -235,7 +235,7 @@ Use a koopa-only binary like `bat` instead, and always start from `env -i`. Defa
 is off, so these should print nothing:
 
 ```sh
-env -i HOME="$HOME" TERM=dumb PATH=/usr/bin:/bin bash -c '. "$HOME/.profile"; command -v bat'
+env -i HOME="$HOME" TERM=dumb PATH=/usr/bin:/bin bash -c '. "${HOME}/.profile"; command -v bat'
 env -i HOME="$HOME" TERM=dumb PATH=/usr/bin:/bin zsh -c 'command -v bat'
 env -i HOME="$HOME" SSH_CLIENT="1.2.3.4 1 2" TERM=dumb PATH=/usr/bin:/bin bash -c 'command -v bat'
 ```
@@ -247,7 +247,7 @@ a cwd with a **blocked** `.envrc`, not just a clean one — that's the case the
 ```sh
 D="$(mktemp -d)"; cd "$D"; echo 'export FOO=bar' > .envrc   # deliberately not allowed
 env -i HOME="$HOME" TERM=dumb KOOPA_AUTO_ACTIVATE=1 PATH=/usr/bin:/bin \
-    bash -c '. "$HOME/.profile"; command -v bat' >o 2>e
+    bash -c '. "${HOME}/.profile"; command -v bat' >o 2>e
 wc -c <o; wc -c <e   # bat found; stderr will be non-zero — expected with direnv on this path
 ```
 

@@ -26,7 +26,11 @@
       "mcp__ide__*",
       "mcp__mcp-atlassian__*",
       "mcp__read-website-fast__*",
-      "mcp__tooluniverse__*"
+      "mcp__tooluniverse__*",
+      "Edit(/.claude/skills/koopa-python-release/**)",
+      "Edit(/.claude/skills/koopa-chezmoi-dotfiles/**)",
+      "Edit(/.claude/skills/koopa-r-release/**)",
+      "Edit(/.claude/skills/koopa-shell-internals/**)"
     ],
     "deny": [
       "Bash(git add*)",
