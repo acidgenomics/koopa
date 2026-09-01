@@ -7,6 +7,7 @@ import http.client
 import json
 import ssl
 import urllib.error
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,6 +15,7 @@ import pytest
 from koopa.version import sanitize_version
 from koopa.version_check import (
     VersionCheckResult,
+    _check_pypi,
     _dead_hosts,
     _fetch_first_reachable,
     _friendly_network_error,
@@ -182,6 +184,55 @@ def test_is_retryable_connection_reset() -> None:
 def test_is_retryable_value_error() -> None:
     """A non-network exception is not retryable."""
     assert _is_retryable_network_error(ValueError()) is False
+
+
+# ── _check_pypi (P14D dependency cooldown) ───────────────────────────────────
+
+
+def _pypi_file(days_old: int, *, yanked: bool = False) -> dict:
+    uploaded = datetime.now(UTC) - timedelta(days=days_old)
+    return {"upload_time_iso_8601": uploaded.isoformat(), "yanked": yanked}
+
+
+def test_check_pypi_skips_release_inside_cooldown(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A release younger than 14 days is skipped in favor of the next-newest one."""
+    data = {
+        "info": {"version": "2.0.0"},
+        "releases": {
+            "1.0.0": [_pypi_file(days_old=30)],
+            "2.0.0": [_pypi_file(days_old=1)],
+        },
+    }
+    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
+    assert _check_pypi("example") == "1.0.0"
+
+
+def test_check_pypi_falls_back_when_all_releases_inside_cooldown(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """If every release is inside the cooldown, the newest one is still returned."""
+    data = {
+        "info": {"version": "2.0.0"},
+        "releases": {
+            "1.0.0": [_pypi_file(days_old=2)],
+            "2.0.0": [_pypi_file(days_old=1)],
+        },
+    }
+    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
+    assert _check_pypi("example") == "2.0.0"
+
+
+def test_check_pypi_ignores_yanked_files(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A release whose only file is yanked is excluded from eligibility."""
+    data = {
+        "info": {"version": "2.0.0"},
+        "releases": {
+            "1.0.0": [_pypi_file(days_old=30, yanked=True)],
+            "2.0.0": [_pypi_file(days_old=1)],
+        },
+    }
+    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
+    assert _check_pypi("example") == "2.0.0"
 
 
 # ── _fetch_first_reachable (dead-host circuit breaker) ──────────────────────

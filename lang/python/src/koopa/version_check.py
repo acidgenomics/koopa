@@ -15,6 +15,7 @@ import urllib.request
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -323,8 +324,26 @@ def _check_github(owner: str, repo: str) -> str:
     return _sanitize_github_tag(tag, repo)
 
 
+# Matches the P14D dependency cooldown used elsewhere (pip's uploaded-prior-to,
+# uv's exclude-newer): a release must be at least this many days old to pin.
+_PYPI_COOLDOWN_DAYS = 14
+
+
 def _check_pypi(package: str) -> str:
+    """Return the newest PyPI release at least `_PYPI_COOLDOWN_DAYS` days old."""
     data = _http_get_json(f"https://pypi.org/pypi/{package}/json")
+    cutoff = time.time() - _PYPI_COOLDOWN_DAYS * 86400
+    eligible: list[str] = []
+    for version, files in data.get("releases", {}).items():
+        upload_times = [
+            datetime.fromisoformat(f["upload_time_iso_8601"]).timestamp()
+            for f in files
+            if f.get("upload_time_iso_8601") and not f.get("yanked", False)
+        ]
+        if upload_times and min(upload_times) <= cutoff:
+            eligible.append(version)
+    if eligible:
+        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
     return data["info"]["version"]
 
 
