@@ -1312,6 +1312,14 @@ def install_python_package(
     os.makedirs(bin_dir, exist_ok=True)
     # Create venv.
     subprocess.run([python, "-m", "venv", libexec], check=True)
+    # koopa always installs an exact, already-vetted pin here (never a
+    # floating resolve), so a user-configured dependency cooldown
+    # (global.uploaded-prior-to in ~/.config/pip/pip.conf) adds no safety
+    # value and only breaks installs of recently released app.json pins.
+    # A site-level pip.conf (sys.prefix/pip.conf) outranks the user config
+    # and, set to an empty value, un-sets the key for this venv only.
+    with open(os.path.join(libexec, "pip.conf"), "w") as f:
+        f.write("[global]\nuploaded-prior-to =\n")
     venv_pip = os.path.join(libexec, "bin", "pip")
     pip_args = [venv_pip, "install", "--no-cache-dir"]
     if no_binary:
@@ -2607,6 +2615,13 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
+            # Overrides any user-configured dependency cooldown
+            # (exclude-newer in ~/.config/uv/uv.toml). This installs the
+            # extras pinned in koopa's own pyproject.toml, not a floating
+            # resolve, so the cooldown adds no safety value here and would
+            # only break installs of a recently released extra.
+            "--exclude-newer",
+            "false",
             # uv bundles its own TLS cert store rather than consulting the OS
             # one. On networks where the OS store trusts a cert uv's bundled
             # store doesn't (observed against python.acidgenomics.com), uv
