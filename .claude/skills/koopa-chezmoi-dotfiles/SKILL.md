@@ -53,6 +53,34 @@ chezmoi-managed, always re-check with the explicit `--source` flag — an
 empty or negative result from any bare chezmoi command is not trustworthy
 evidence.
 
+## A Missing `--config` Path Creates a Stray State Database
+
+chezmoi puts its persistent-state database next to the config file it reads.
+Give it a `--config` path that does not exist, and chezmoi does not error. It
+creates a new, mostly empty database beside that path instead.
+
+**The main tree has no `chezmoi.toml`.** Never pass `--config` for it. Only the
+work and private trees have one, and koopa's own code gates the flag on
+`os.path.isfile()` (`configurers/dotfiles.py`, `configurers/color_mode.py`) so
+neither call site ever misfires on the main tree.
+
+Concrete case: a hand-run command copied the work-tree recipe shape,
+
+```sh
+chezmoi --config=./chezmoi.toml --source=./chezmoi apply
+```
+
+into `opt/dotfiles` (the main tree), where `./chezmoi.toml` does not exist.
+chezmoi created `chezmoistate.boltdb` in the repo root: a 128 KB binary blob
+holding one stray `entryState` record. The next `git add ./` staged it into
+the public `acidgenomics/dotfiles` repo. The real state database always lives
+at `~/.config/chezmoi/chezmoistate.boltdb`.
+
+`opt/dotfiles/.gitignore` now ignores `chezmoistate*.boltdb`, so a repeat stays
+untracked. But the file still should never be created there: check
+`os.path.isfile(config)` (or the shell equivalent) before adding a `--config`
+flag to any main-tree command.
+
 ## Always Edit the Source First
 
 Home-directory dotfiles are managed by chezmoi. The deployed copies under `~/` will
