@@ -769,6 +769,12 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     if not (pkg_path / "docs" / "conf.py").is_file():
         msg = f"No docs/conf.py found in '{pkg_path}'."
         raise FileNotFoundError(msg)
+    if not sync_docs_theme([str(pkg_path)], check=True):
+        msg = (
+            f"Vendored Sphinx theme in '{pkg_path}' differs from koopa's tracked "
+            "source. Run `koopa app python sync-docs-theme` first."
+        )
+        raise RuntimeError(msg)
 
     with open(pyproject, "rb") as fh:
         meta = tomllib.load(fh)

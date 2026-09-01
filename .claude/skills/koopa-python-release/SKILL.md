@@ -584,12 +584,21 @@ carry over `pydata`'s own `html_theme_options` keys (`github_url`, `logo`,
 `publish-docs`. Also drop `pydata-sphinx-theme` from
 `optional-dependencies.docs` in `pyproject.toml`.
 
-Re-run `sync-docs-theme` after editing the tracked theme files in koopa;
-`publish-docs` builds whatever is already vendored in the package repo, it
-does not re-sync. A `.gitignore` negation for the theme's `layout.html` is
-required in each package repo — the global `~/.config/git/ignore` has a
-blanket `*.html` rule, so `!docs/_themes/**/*.html` (alongside the existing
-`!docs/` negation) is needed or the file silently won't track.
+Re-run `sync-docs-theme` after editing the tracked theme files in koopa.
+`publish-docs` (both `pypi.publish_docs()` and koopa's own `site.publish_docs()`)
+refuses to build against a drifted vendored copy: it calls `sync_docs_theme([pkg],
+check=True)` before running `sphinx-build` and raises `RuntimeError` if the
+package's `docs/_themes/acidgenomics/` differs from koopa's tracked source. This
+guard exists because a stale vendored theme was silently published for months
+across three packages (`acidplyr`, `cellosaurus`, `syntactic`) after the shared
+theme's header was reworked — nothing detected it until a live-site audit
+compared `acidgenomics.css`'s querystring hash across every package. Run
+`koopa app python sync-docs-theme <package-dir>` to fix a raised drift error.
+
+A `.gitignore` negation for the theme's `layout.html` is required in each
+package repo — the global `~/.config/git/ignore` has a blanket `*.html` rule,
+so `!docs/_themes/**/*.html` (alongside the existing `!docs/` negation) is
+needed or the file silently won't track.
 
 ### Footer copyright/license clause
 

@@ -146,8 +146,15 @@ def publish_docs(*, invalidate: bool = True, dryrun: bool = False) -> None:
     from koopa.alert import alert
     from koopa.aws import aws_s3_sync
     from koopa.prefix import koopa_prefix
+    from koopa.pypi import sync_docs_theme
 
     koopa_root = koopa_prefix()
+    if not sync_docs_theme([koopa_root], check=True):
+        msg = (
+            f"Vendored Sphinx theme in '{koopa_root}' differs from koopa's tracked "
+            "source. Run `koopa app python sync-docs-theme` first."
+        )
+        raise RuntimeError(msg)
     tmp_dir = tempfile.mkdtemp()
     try:
         out_dir = os.path.join(tmp_dir, "html")
