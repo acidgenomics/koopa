@@ -55,7 +55,10 @@ package's old bare-name index entry and new prefixed entry onto one slug,
 preferring the prefixed name's summary.
 
 - Publish tooling: `koopa app python publish <package-dir>` (add `--no-pypi`
-  to skip the PyPI upload and publish to the private index only)
+  to skip the PyPI upload and publish to the private index only; add
+  `--pypi-only` to upload an already-published version's artifacts to PyPI
+  only, skipping build/S3/reindex/tag -- the resume path when the S3 half
+  succeeded but the PyPI upload then failed, e.g. on a rate limit)
 - Docs tooling: `koopa app python publish-docs <package-dir>`
 - Reindex tooling: `koopa app python reindex`
 - Implementation: `lang/python/src/koopa/pypi.py`
@@ -229,9 +232,23 @@ even after deletion, while an S3 object can still be corrected, so the
 reversible step goes first. Pass `--no-pypi` to stop after the private index
 and skip PyPI.
 
+If the run fails partway, after the S3 upload but before or during the PyPI
+upload (e.g. a PyPI rate limit), re-running plain `publish` rebuilds from
+source and `_check_no_artifact_collision` refuses if the rebuilt bytes differ
+even slightly from what is already published. Pass `--pypi-only` instead: it
+downloads the exact wheel and sdist already on the private index for the
+version in `pyproject.toml` and uploads only those to PyPI, skipping build,
+S3, reindex, and tagging. Raises if no matching wheel and sdist are already
+published (nothing to resume; run plain `publish`). Mutually exclusive with
+`--no-pypi`; combining with `--force` is a parser error since no collision
+check runs in this mode.
+
 Requires: AWS profile `acidgenomics` configured; `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON`
-set (or `AWS_CLOUDFRONT_DISTRIBUTION_ID` as fallback) and `UV_PUBLISH_TOKEN`
-set — both loaded from `<koopa-root>/.env` if not already in the environment.
+set, and `UV_PUBLISH_TOKEN` set — both loaded from `<koopa-root>/.env` if not
+already in the environment. `AWS_CLOUDFRONT_DISTRIBUTION_ID` (the generic,
+non-python-specific var) is not accepted as a fallback: `_cloudfront_distribution_id()`
+raises `RuntimeError` if the specific var is unset, even when the generic one
+is set, to avoid silently invalidating the wrong CloudFront distribution.
 
 ### User-owned (git)
 

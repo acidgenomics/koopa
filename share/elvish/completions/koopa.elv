@@ -97,7 +97,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
         } elif (eq $path 'app/miso/index') {
             put --gff-file --help --output-dir
         } elif (eq $path 'app/python/publish') {
-            put --force --help --no-pypi
+            put --force --help --no-pypi --pypi-only
         } elif (eq $path 'app/python/sync-docs-theme') {
             put --check --help
         } elif (eq $path 'app/r/archive') {

@@ -373,12 +373,32 @@ def _handle_python_publish(args: list[str]) -> None:
             "every other case should bump the version instead."
         ),
     )
-    parser.add_argument(
+    pypi_group = parser.add_mutually_exclusive_group()
+    pypi_group.add_argument(
         "--no-pypi",
         action="store_true",
         help="Skip the public PyPI upload; publish to python.acidgenomics.com only.",
     )
+    pypi_group.add_argument(
+        "--pypi-only",
+        action="store_true",
+        help=(
+            "Upload an already-published version's artifacts to public PyPI only. "
+            "Recovery path for a publish run whose S3 upload succeeded but whose "
+            "PyPI upload failed (e.g. a rate limit). Skips build, S3, reindex, and "
+            "tagging."
+        ),
+    )
     parsed = parser.parse_args(args)
+    if parsed.pypi_only and parsed.force:
+        parser.error("--pypi-only skips the collision check; --force has no effect with it.")
+
+    if parsed.pypi_only:
+        from koopa.pypi import publish_pypi_only
+
+        publish_pypi_only(parsed.package_dir)
+        return
+
     from koopa.pypi import publish
 
     publish(parsed.package_dir, force=parsed.force, pypi=not parsed.no_pypi)

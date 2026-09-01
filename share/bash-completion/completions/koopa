@@ -49,7 +49,7 @@ _koopa_complete() {
         ['app/koopa/prune-stale-docs']='--help --no-dryrun'
         ['app/koopa/publish-docs']='--help --no-invalidate --dryrun'
         ['app/miso/index']='--help --gff-file --output-dir'
-        ['app/python/publish']='--help --force --no-pypi'
+        ['app/python/publish']='--help --force --no-pypi --pypi-only'
         ['app/python/sync-docs-theme']='--help --check'
         ['app/r/archive']='--help --no-invalidate'
         ['app/r/clean-orphan-binaries']='--help --no-invalidate'

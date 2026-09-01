@@ -641,9 +641,11 @@ python.acidgenomics.com package index and docs publishing.
 (koopa-app-python-publish)=
 ### `app python publish`
 
-Build and publish a Python package to python.acidgenomics.com.
+Build and publish a Python package to PyPI and python.acidgenomics.com.
 
 - `--force`
+- `--no-pypi`
+- `--pypi-only`
 
 (koopa-app-python-publish-docs)=
 ### `app python publish-docs`

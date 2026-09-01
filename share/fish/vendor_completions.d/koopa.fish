@@ -2095,6 +2095,7 @@ complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from python and __fish_seen_subcommand_from publish' -l force
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from python and __fish_seen_subcommand_from publish' -l help
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from python and __fish_seen_subcommand_from publish' -l no-pypi
+complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from python and __fish_seen_subcommand_from publish' -l pypi-only
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from python and __fish_seen_subcommand_from sync-docs-theme' -l check
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from python and __fish_seen_subcommand_from sync-docs-theme' -l help
 complete -c koopa -n '__fish_seen_subcommand_from app and __fish_seen_subcommand_from r and __fish_seen_subcommand_from archive' -l help

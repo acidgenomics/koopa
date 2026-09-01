@@ -9,9 +9,11 @@ from koopa.pypi import (
     _check_no_artifact_collision,
     _cloudfront_distribution_id,
     _parse_package_version,
+    _select_published_artifacts,
     _sha256_of_file,
     _tag_and_push_release,
     _version_sort_key,
+    publish_pypi_only,
 )
 
 _GIT_ENV = ["-c", "user.name=Test", "-c", "user.email=test@example.com"]
@@ -198,6 +200,58 @@ def test_parse_package_version_returns_none_for_unrecognized_file() -> None:
 def test_version_sort_key_orders_numerically_not_lexicographically() -> None:
     """Test 0.10.0 sorts after 0.9.0 despite '1' < '9' as characters."""
     assert _version_sort_key("0.9.0") < _version_sort_key("0.10.0")
+
+
+def test_select_published_artifacts_matches_wheel_and_sdist() -> None:
+    """Test it returns only the wheel and sdist for the exact name and version.
+
+    Covers the underscore filename form ('acidgenomics_acidplyr-...') against
+    the hyphenated distribution name ('acidgenomics-acidplyr'), and confirms
+    other packages and other versions of the same package are excluded.
+    """
+    filenames = [
+        "acidgenomics_acidplyr-0.1.1-py3-none-any.whl",
+        "acidgenomics_acidplyr-0.1.1.tar.gz",
+        "acidplyr-0.1.0-py3-none-any.whl",
+        "acidgenomics_goalie-0.2.1.tar.gz",
+    ]
+    assert _select_published_artifacts(filenames, "acidgenomics-acidplyr", "0.1.1") == [
+        "acidgenomics_acidplyr-0.1.1-py3-none-any.whl",
+        "acidgenomics_acidplyr-0.1.1.tar.gz",
+    ]
+
+
+def test_select_published_artifacts_returns_empty_when_no_match() -> None:
+    """Test no match returns an empty list, not a raise."""
+    filenames = ["acidgenomics_acidplyr-0.1.0-py3-none-any.whl"]
+    assert _select_published_artifacts(filenames, "acidgenomics-acidplyr", "0.1.1") == []
+
+
+def test_publish_pypi_only_raises_when_no_published_artifact(tmp_path: Path) -> None:
+    """Test it refuses to run when the S3 half never published this version.
+
+    A missing artifact means there is nothing to resume -- publish() (without
+    --pypi-only) is the correct command instead.
+    """
+    pkg = tmp_path / "pkg"
+    pkg.mkdir()
+    (pkg / "pyproject.toml").write_text(
+        '[project]\nname = "acidgenomics-acidplyr"\nversion = "0.1.1"\n'
+    )
+    with (
+        patch("koopa.pypi._s3_list_packages", return_value=[]),
+        pytest.raises(RuntimeError, match="No published wheel and sdist found"),
+    ):
+        publish_pypi_only(str(pkg))
+
+
+def test_publish_pypi_only_raises_when_version_missing(tmp_path: Path) -> None:
+    """Test a pyproject.toml with no [project] version raises loudly."""
+    pkg = tmp_path / "pkg"
+    pkg.mkdir()
+    (pkg / "pyproject.toml").write_text('[project]\nname = "acidgenomics-acidplyr"\n')
+    with pytest.raises(RuntimeError, match="name/version not found"):
+        publish_pypi_only(str(pkg))
 
 
 def test_reindex_landing_summary_picks_highest_version_wheel() -> None:

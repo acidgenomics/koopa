@@ -136,6 +136,32 @@ def _version_sort_key(version: str) -> tuple[int, ...]:
     return tuple(int(p) for p in version.split(".") if p.isdigit())
 
 
+def _select_published_artifacts(filenames: list[str], dist_name: str, version: str) -> list[str]:
+    """Return the wheel and sdist filenames for one already-published version.
+
+    Parameters
+    ----------
+    filenames : list[str]
+        Package filenames as listed under the S3 packages/ prefix (e.g. from
+        _s3_list_packages).
+    dist_name : str
+        PyPI distribution name (e.g. 'acidgenomics-acidplyr').
+    version : str
+        Exact version to match (e.g. '0.1.1').
+
+    Returns
+    -------
+    list[str]
+        Matching filenames, sorted.
+    """
+    normalized = _normalize_name(dist_name)
+    return sorted(
+        f
+        for f in filenames
+        if _parse_package_name(f) == normalized and _parse_package_version(f) == version
+    )
+
+
 def _sha256_of_file(path: str) -> str:
     """Return the SHA-256 hex digest of a local file."""
     h = hashlib.sha256()
@@ -628,6 +654,86 @@ def publish(
 
     reindex(invalidate=invalidate)
     _tag_and_push_release(pkg_path)
+
+
+def publish_pypi_only(package_dir: str) -> None:
+    """Upload an already-published version's artifacts to public PyPI.
+
+    Recovery path for a publish() run whose S3 upload succeeded but whose
+    PyPI upload failed partway through (e.g. a PyPI rate limit). Downloads
+    the exact wheel and sdist already on the private index and uploads those
+    same bytes to PyPI, so both indexes and the git tag keep pointing at one
+    artifact. Never builds, never writes to S3, never reindexes, never tags.
+
+    Parameters
+    ----------
+    package_dir : str
+        Path to a Python package source directory (must contain
+        pyproject.toml).
+
+    Raises
+    ------
+    FileNotFoundError
+        If package_dir has no pyproject.toml.
+    RuntimeError
+        If pyproject.toml has no [project] name/version, or if no matching
+        wheel and sdist are already published on the private index.
+    """
+    import tomllib
+
+    from koopa.alert import alert
+
+    pkg_path = Path(package_dir).resolve()
+    pyproject = pkg_path / "pyproject.toml"
+    if not pyproject.is_file():
+        msg = f"No pyproject.toml found in '{pkg_path}'."
+        raise FileNotFoundError(msg)
+
+    with open(pyproject, "rb") as fh:
+        meta = tomllib.load(fh)
+    project = meta.get("project", {})
+    name = project.get("name", "")
+    version = project.get("version", "")
+    if not name or not version:
+        msg = f"[project] name/version not found in '{pyproject}'."
+        raise RuntimeError(msg)
+
+    alert(f"Looking up published artifacts for '{name}' {version}.")
+    matches = _select_published_artifacts(_s3_list_packages(), name, version)
+    has_whl = any(f.endswith(".whl") for f in matches)
+    has_sdist = any(f.endswith(".tar.gz") for f in matches)
+    if not (has_whl and has_sdist):
+        msg = (
+            f"No published wheel and sdist found for '{name}' {version} on "
+            "the private index. Run 'publish' (without --pypi-only) instead."
+        )
+        raise RuntimeError(msg)
+
+    aws = _aws()
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        dist_files = []
+        for filename in matches:
+            local = os.path.join(tmp_dir, filename)
+            alert(f"Downloading '{filename}' from the private index.")
+            subprocess.run(
+                [
+                    aws,
+                    "s3",
+                    f"--profile={_PROFILE}",
+                    "cp",
+                    f"{_s3_uri()}/packages/{filename}",
+                    local,
+                ],
+                capture_output=True,
+                check=True,
+            )
+            dist_files.append(Path(local))
+
+        alert("Publishing to PyPI.")
+        _publish_to_pypi(dist_files)
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:

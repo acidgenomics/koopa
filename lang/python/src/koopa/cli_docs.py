@@ -461,7 +461,7 @@ APP_DESCRIPTIONS: dict[str, str] = {
     # photos
     "photos-rename-with-exiftool": "Rename photos and videos by capture date using exiftool.",
     # python
-    "python-publish": "Build and publish a Python package to python.acidgenomics.com.",
+    "python-publish": "Build and publish a Python package to PyPI and python.acidgenomics.com.",
     "python-publish-docs": "Build and publish a package's Sphinx docs to python.acidgenomics.com.",
     "python-reindex": "Regenerate the PEP 503 index and landing page for python.acidgenomics.com.",
     "python-sync-docs-theme": "Sync koopa's shared Sphinx theme into one or more doc trees.",
