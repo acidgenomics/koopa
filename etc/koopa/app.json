@@ -2480,7 +2480,8 @@
   },
   "doom-emacs": {
     "bin": [
-      "doom"
+      "doom",
+      "doom-emacs"
     ],
     "build_dependencies": [
       "emacs",
@@ -2493,6 +2494,7 @@
       "emacs"
     ],
     "description": "opinionated Emacs configuration framework",
+    "revision": 2,
     "type": "cli",
     "url": [
       "https://github.com/doomemacs/doomemacs/"
