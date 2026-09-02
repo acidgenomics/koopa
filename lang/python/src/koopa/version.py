@@ -14,7 +14,7 @@ from koopa.prefix import koopa_prefix
 PRERELEASE_MARKERS = "alpha|beta|preview|pre|rc|dev|snapshot|nightly|canary"
 
 _SANITIZE_VERSION_RE = re.compile(
-    rf"(\d+(?:\.\d+)*(?:[._-]?(?:{PRERELEASE_MARKERS})[0-9.]*|[a-zA-Z])?)",
+    rf"^v?(\d+(?:\.\d+)*(?:[._-]?(?:{PRERELEASE_MARKERS}|[ab])[0-9.]*)?(?:[a-zA-Z])?)",
     re.IGNORECASE,
 )
 

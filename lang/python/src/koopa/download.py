@@ -118,6 +118,12 @@ _GNU_MIRROR_BASES = (
     "https://mirror.csclub.uwaterloo.ca/gnu/",
 )
 
+_GNUPG_HOSTS = ("ftp.gnupg.org", "gnupg.org", "www.gnupg.org")
+_GNUPG_MIRROR_BASES = (
+    "https://www.gnupg.org/ftp/gcrypt/",
+    "https://gnupg.org/ftp/gcrypt/",
+)
+
 _NONGNU_HOSTS = ("download.savannah.nongnu.org", "mirror.csclub.uwaterloo.ca")
 _NONGNU_MIRROR_BASES = (
     "https://mirror.csclub.uwaterloo.ca/nongnu/",
@@ -149,6 +155,21 @@ def _gnu_mirrors(primary_url: str) -> list[str]:
     if rel is None:
         return []
     return [f"{base}{rel}" for base in _GNU_MIRROR_BASES]
+
+
+def _gnupg_mirrors(primary_url: str) -> list[str]:
+    """Return alternative GnuPG download host URLs."""
+    parsed = urlparse(primary_url)
+    hostname = parsed.hostname or ""
+    if hostname not in _GNUPG_HOSTS:
+        return []
+    path = parsed.path.lstrip("/")
+    prefixes = ("ftp/gcrypt/", "gcrypt/")
+    prefix = next((x for x in prefixes if path.startswith(x)), None)
+    if prefix is None:
+        return []
+    rel = path[len(prefix) :]
+    return [f"{base}{rel}" for base in _GNUPG_MIRROR_BASES]
 
 
 def _savannah_relative_path(primary_url: str) -> str | None:
@@ -220,7 +241,12 @@ def download_with_mirror(
     vendor_url = vendor_download_src(name, filename)
     vendor_only = vendor_config() is not None and vendor_pull_priority() == "vendor_only"
 
-    public = [primary_url, *_gnu_mirrors(primary_url), *_savannah_mirrors(primary_url)]
+    public = [
+        primary_url,
+        *_gnu_mirrors(primary_url),
+        *_gnupg_mirrors(primary_url),
+        *_savannah_mirrors(primary_url),
+    ]
     public.extend(extra_urls or [])
     if not skip_koopa_mirror:
         public.append(koopa_mirror)

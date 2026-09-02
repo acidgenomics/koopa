@@ -157,10 +157,10 @@ del _ca_bundle
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 _VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
-_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+_SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _PRERELEASE_RE = re.compile(
-    rf"(?<![a-zA-Z])(?:{PRERELEASE_MARKERS})(?![a-zA-Z])",
-    re.IGNORECASE,
+    rf"(?: (?<![a-zA-Z])(?:{PRERELEASE_MARKERS})(?![a-zA-Z]) | (?<=\d)(?:[ab])(?=\d)(?![a-zA-Z]) )",
+    re.IGNORECASE | re.VERBOSE,
 )
 
 
@@ -168,11 +168,13 @@ def _version_key(version: str) -> tuple[int, ...]:
     """Parse version string into a comparable int tuple, handling trailing letters."""
     nums = []
     for part in re.split(r"[.\-]", version):
-        m = re.match(r"(\d+)([a-zA-Z]?)", part)
+        m = re.match(r"(\d+)([a-zA-Z]?)(\d*)", part)
         if m:
             nums.append(int(m.group(1)))
             if m.group(2):
                 nums.append(ord(m.group(2).lower()))
+            if m.group(3):
+                nums.append(int(m.group(3)))
     return tuple(nums)
 
 
@@ -194,6 +196,9 @@ def _is_prerelease(version: str) -> bool:
     bool
         True if the version looks like a pre-release.
     """
+    version = version.strip()
+    if _SHA_RE.fullmatch(version):
+        return False
     return bool(_PRERELEASE_RE.search(version))
 
 
@@ -217,7 +222,7 @@ def _is_retryable_network_error(exc: BaseException) -> bool:
         return exc.code >= 500 or exc.code in (403, 429)
     if isinstance(exc, urllib.error.URLError):
         return isinstance(exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError))
-    return isinstance(exc, (ssl.SSLError, ConnectionResetError))
+    return isinstance(exc, (ssl.SSLError, ConnectionResetError, TimeoutError))
 
 
 def _http_get_json(
@@ -235,12 +240,14 @@ def _http_get_json(
         req.add_header("Accept", "application/vnd.github+json")
         if _github_token:
             req.add_header("Authorization", f"Bearer {_github_token}")
-    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | None = None
+    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | TimeoutError | None = (
+        None
+    )
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return json.loads(resp.read().decode())
-        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
+        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError) as exc:
             if not _is_retryable_network_error(exc):
                 raise
             last_exc = exc
@@ -256,12 +263,14 @@ def _http_get_text(
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | None = None
+    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | TimeoutError | None = (
+        None
+    )
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return resp.read().decode(encoding)
-        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
+        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError) as exc:
             if not _is_retryable_network_error(exc):
                 raise
             last_exc = exc
@@ -329,18 +338,35 @@ def _check_github(owner: str, repo: str) -> str:
 _PYPI_COOLDOWN_DAYS = 14
 
 
-def _check_pypi(package: str) -> str:
-    """Return the newest PyPI release at least `_PYPI_COOLDOWN_DAYS` days old."""
+def _check_pypi(package: str, current: str = "") -> str:
+    """Return the newest stable PyPI release at least `_PYPI_COOLDOWN_DAYS` days old.
+
+    A pre-release (alpha, beta, rc, dev, ...) is never eligible, so it can
+    never win `max()` over an older stable release. Without this, a package
+    with a recent alpha/beta/rc upload would report that pre-release as the
+    latest version forever, even after the pin has already drifted onto a
+    pre-release itself.
+
+    The currently pinned *stable* version is always treated as eligible,
+    regardless of its age. Cooldown only gates a *new* recommendation; it
+    must never make an already-adopted, genuinely-latest pin look "pinned
+    too high" just because it's recent.
+    """
     data = _http_get_json(f"https://pypi.org/pypi/{package}/json")
+    current_san = sanitize_version(current) if current else ""
     cutoff = time.time() - _PYPI_COOLDOWN_DAYS * 86400
     eligible: list[str] = []
     for version, files in data.get("releases", {}).items():
+        if _is_prerelease(version):
+            continue
         upload_times = [
             datetime.fromisoformat(f["upload_time_iso_8601"]).timestamp()
             for f in files
             if f.get("upload_time_iso_8601") and not f.get("yanked", False)
         ]
-        if upload_times and min(upload_times) <= cutoff:
+        is_old_enough = bool(upload_times) and min(upload_times) <= cutoff
+        is_current = bool(current_san) and sanitize_version(version) == current_san
+        if is_old_enough or is_current:
             eligible.append(version)
     if eligible:
         return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
@@ -601,8 +627,18 @@ def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) 
 
 
 def _check_npm(package: str) -> str:
-    data = _http_get_json(f"https://registry.npmjs.org/{package}/latest")
-    return data["version"]
+    """Return the newest npm version that is not marked deprecated.
+
+    No age-based cooldown here: koopa's npm apps are single-vendor CLIs
+    (Anthropic, OpenAI, Google, GitHub) tracked at the latest release. The
+    deprecated-version skip is pure hygiene, not a delay.
+    """
+    data = _http_get_json(f"https://registry.npmjs.org/{package}")
+    versions = data.get("versions", {})
+    eligible = [v for v, info in versions.items() if not info.get("deprecated")]
+    if eligible:
+        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
+    return data["dist-tags"]["latest"]
 
 
 def _check_crates(crate: str) -> str:
@@ -610,9 +646,37 @@ def _check_crates(crate: str) -> str:
     return data["crate"]["max_stable_version"]
 
 
-def _check_rubygems(gem: str) -> str:
-    data = _http_get_json(f"https://rubygems.org/api/v1/gems/{gem}.json")
-    return data["version"]
+_RUBYGEMS_COOLDOWN_DAYS = 14
+
+
+def _check_rubygems(gem: str, current: str = "") -> str:
+    """Return the newest RubyGems release at least `_RUBYGEMS_COOLDOWN_DAYS` days old.
+
+    The currently pinned version is always treated as eligible, regardless of
+    its age. Cooldown only gates a *new* recommendation; it must never make an
+    already-adopted, genuinely-latest pin look "pinned too high" just because
+    it's recent.
+    """
+    data = _http_get_json(f"https://rubygems.org/api/v1/versions/{gem}.json")
+    current_san = sanitize_version(current) if current else ""
+    cutoff = time.time() - _RUBYGEMS_COOLDOWN_DAYS * 86400
+    eligible: list[str] = []
+    all_versions: list[str] = []
+    for release in data:
+        number = release.get("number")
+        if not number:
+            continue
+        all_versions.append(number)
+        created_at = release.get("created_at")
+        is_old_enough = bool(
+            created_at and datetime.fromisoformat(created_at).timestamp() <= cutoff
+        )
+        is_current = bool(current_san) and sanitize_version(number) == current_san
+        if is_old_enough or is_current:
+            eligible.append(number)
+    if eligible:
+        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
+    return max(all_versions, key=lambda v: _version_key(sanitize_version(v)))
 
 
 def _check_metacpan(distribution: str) -> str:
@@ -826,6 +890,7 @@ def _extract_github_repo_from_urls(urls: list[str]) -> str | None:
 _GENERIC_INSTALLER_MAP: dict[str, str] = {
     "._conda": "conda",
     "._python_pkg": "pypi",
+    "._python_plugin": "pypi",
     "._gnu": "gnu",
     "._node_pkg": "npm",
     "._rust_pkg": "crates",
@@ -844,8 +909,31 @@ class _AppCheckSpec:
     extra_fields_fn: Callable[[], dict[str, Any]] | None = None
 
 
-def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
-    """Classify an app into a version-check strategy."""
+def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
+    """Classify an app into a version-check strategy.
+
+    Wraps `_classify_app_uncooled` so a "pypi" spec's check_fn always sees the
+    app's currently pinned version, regardless of which branch produced the
+    spec (a hardcoded `_SPECIAL_CASES` entry or a dynamically classified one).
+    Without this, `_check_pypi`'s cooldown can misreport an already-adopted,
+    genuinely-latest pin as "pinned too high" just because it's recent (the
+    same bug fixed for `_check_rubygems`, e.g. bashcov 4.0.0).
+    """
+    spec = _classify_app_uncooled(name, info)
+    if spec is not None and spec.source == "pypi":
+        current = info.get("version", "")
+        return _AppCheckSpec(
+            "pypi",
+            lambda fn=spec.check_fn, a=spec.args, c=current: fn(*a, current=c),
+            (),
+            batch_size=spec.batch_size,
+            extra_fields_fn=spec.extra_fields_fn,
+        )
+    return spec
+
+
+def _classify_app_uncooled(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
+    """Classify an app into a version-check strategy, before the pypi cooldown wrap."""
     module_path = PYTHON_INSTALLERS.get(name, "")
     args = info.get("installer_args", {})
     urls = info.get("url", [])
@@ -2032,8 +2120,6 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("datafusion", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
-    "dbt-bigquery": _AppCheckSpec("pypi", _check_pypi, ("dbt-bigquery",)),
-    "dbt-snowflake": _AppCheckSpec("pypi", _check_pypi, ("dbt-snowflake",)),
     "zsh": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing("https://www.zsh.org/pub/", "zsh"),
@@ -2077,7 +2163,12 @@ def _classify_generic(  # noqa: PLR0911
     if source == "crates":
         return _AppCheckSpec("crates", _check_crates, (name,))
     if source == "rubygems":
-        return _AppCheckSpec("rubygems", _check_rubygems, (name,))
+        current = info.get("version", "")
+        return _AppCheckSpec(
+            "rubygems",
+            lambda g=name, c=current: _check_rubygems(g, current=c),
+            (),
+        )
     if source == "metacpan":
         cpan_path = _get_str(args, "cpan_path")
         if cpan_path:
