@@ -20,5 +20,6 @@
 /libexec/
 /opt/
 /output/
+/reports/
 /share/
 __pycache__/
