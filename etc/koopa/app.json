@@ -6550,7 +6550,7 @@
     ],
     "category": "Language",
     "conda_channel": "conda-forge",
-    "date": "2026-09-02",
+    "date": "2026-08-05",
     "default": false,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
@@ -6563,13 +6563,18 @@
       "npx.1"
     ],
     "notes": [
-      "Tracking the LTS release series."
+      "Tracking the LTS release series.",
+      "Held below 26.8.0: that upstream release stamps its own build as",
+      "'v26.8.0-alpha.0.0.0' (see node_version.h), which fails npm's engine",
+      "check on every invocation. Bump past this only once conda-forge ships",
+      "26.8.1 or later."
     ],
+    "revision": 1,
     "type": "build_tool",
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.8.0"
+    "version": "26.6.0"
   },
   "npth": {
     "build_dependencies": [
@@ -7628,6 +7633,7 @@
     ],
     "description": "static type checker for Python by Microsoft",
     "installer": "python-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/pyright/",

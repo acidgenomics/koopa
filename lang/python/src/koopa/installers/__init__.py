@@ -202,7 +202,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "pylint": f"{_M}._python_pkg",
     "pyrefly": f"{_M}._python_pkg",
     "pyproject-fmt": f"{_M}._python_pkg",
-    "pyright": f"{_M}._python_pkg",
+    "pyright": f"{_M}.pyright",
     "pytaglib": f"{_M}._python_pkg",
     "pytest": f"{_M}._python_pkg",
     "ruff": f"{_M}._python_pkg",
