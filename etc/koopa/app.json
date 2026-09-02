@@ -2677,7 +2677,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-05-11",
+    "date": "2026-09-02",
     "default": true,
     "description": "extensible, customizable GNU text editor",
     "installer": "conda-package",
@@ -2690,7 +2690,7 @@
     "url": [
       "https://www.gnu.org/software/emacs/"
     ],
-    "version": "29.4"
+    "version": "31.1"
   },
   "emacs-prelude": {
     "bin": [
