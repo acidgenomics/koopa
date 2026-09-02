@@ -16,11 +16,12 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from koopa.installers import PYTHON_INSTALLERS
+from koopa.installers import PIP_VERSIONED_INSTALLERS, PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
 from koopa.prefix import koopa_prefix
 from koopa.version import PRERELEASE_MARKERS, sanitize_version
@@ -2687,6 +2688,56 @@ def _mirror_src_to_s3(
                 print(f"  {msg}", file=sys.stderr)
 
 
+@lru_cache(maxsize=1)
+def _pip_index_url() -> str | None:
+    """Return the configured pip index URL, or None if it is unset or is PyPI itself.
+
+    Checks ``PIP_INDEX_URL`` first, then falls back to ``pip config get
+    global.index-url``. Returns None for a bare PyPI/PythonHosted index so the
+    ``_index_has_version`` gate in ``update_app_json`` becomes a no-op for a
+    contributor or CI job that installs straight from public PyPI.
+    """
+    url = os.environ.get("PIP_INDEX_URL")
+    if not url:
+        try:
+            result = subprocess.run(
+                ["pip", "config", "get", "global.index-url"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+        except (subprocess.CalledProcessError, OSError):
+            return None
+        url = result.stdout.strip()
+    if not url:
+        return None
+    host = urlparse(url).hostname or ""
+    if host in ("pypi.org", "files.pythonhosted.org"):
+        return None
+    return url
+
+
+def _index_has_version(index_url: str, package: str, version: str) -> bool:
+    """Return whether *version* of *package* is present on a PEP 503 index.
+
+    Fails open (returns True) on any network or HTTP error, since a hold
+    caused by the index blinking is worse than the stale-pin bug this gate
+    fixes.
+    """
+    normalized = re.sub(r"[-_.]+", "-", package).lower()
+    url = f"{index_url.rstrip('/')}/{normalized}/"
+    try:
+        body = _http_get_text(url)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+        print(f"Warning: could not query pip index for {package!r}: {exc}", file=sys.stderr)
+        return True
+    escaped = re.escape(version)
+    pattern = re.compile(
+        rf"{re.escape(normalized)}[-_]{escaped}(?:[-_.]|\.tar|\.whl|\.zip)", re.IGNORECASE
+    )
+    return bool(pattern.search(body))
+
+
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes."""
     outdated = [r for r in results if r.is_outdated]
@@ -2739,6 +2790,24 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
                 file=sys.stderr,
             )
             continue
+        # Gate on the resolved installer module, not `r.source` -- an app can
+        # install via pip (koopa.installers.pyright, .playwright, ...) while
+        # still classifying as a "github" version-check source, because its
+        # url list also has a github.com entry that wins classify_app's
+        # priority order. The module is the actual install-time truth.
+        if PYTHON_INSTALLERS.get(r.name, "") in PIP_VERSIONED_INSTALLERS:
+            index_url = _pip_index_url()
+            if index_url is not None:
+                pkg = _resolve_pypi_name(
+                    r.name, data[r.name].get("installer_args", {}), data[r.name].get("url", [])
+                )
+                if not _index_has_version(index_url, pkg, r.latest_version):
+                    print(
+                        f"{r.name}: {r.latest_version} available upstream; not on the "
+                        f"configured pip index, pin held at {r.current_version}",
+                        file=sys.stderr,
+                    )
+                    continue
         artifact_key = installer_artifact_key(r.name, r.latest_version)
         if artifact_key is not None:
             staged = False

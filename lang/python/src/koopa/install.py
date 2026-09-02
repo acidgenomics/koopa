@@ -3053,12 +3053,39 @@ class InstallPlanError(RuntimeError):
     Carries the specific app names that failed at the plan's root (excluding
     apps skipped only because a dependency failed), so a caller can retry
     exactly those apps instead of re-deriving the failure set by parsing the
-    formatted message text.
+    formatted message text. ``non_retryable`` is the subset of those apps
+    whose failure log matches a pattern that cannot succeed on a second
+    attempt (e.g. a missing distribution on the configured pip index), so a
+    caller can skip retrying them instead of reprinting the same failure.
     """
 
-    def __init__(self, message: str, failed_apps: list[str]) -> None:
+    def __init__(
+        self, message: str, failed_apps: list[str], non_retryable: list[str] | None = None
+    ) -> None:
         super().__init__(message)
         self.failed_apps = failed_apps
+        self.non_retryable = non_retryable or []
+
+
+# A build log matching one of these patterns cannot succeed on a second,
+# identical attempt: the requested version simply is not present on the
+# index/registry that was queried, so retrying only reprints the same failure.
+_NON_RETRYABLE_LOG_PATTERNS = (
+    "no matching distribution found",
+    "could not find a version that satisfies",
+)
+
+
+def _is_retryable_failure(message: str, tail: str) -> bool:
+    """Return whether a failed app's build output looks worth retrying.
+
+    Classifies from the log tail, not the raised exception message alone --
+    for a ``pip install`` failure, the exception message is only ``"Command
+    '[...]' returned non-zero exit status 1."`` and never holds the actual
+    ``pip`` error text.
+    """
+    combined = f"{message}\n{tail}".lower()
+    return not any(pattern in combined for pattern in _NON_RETRYABLE_LOG_PATTERNS)
 
 
 def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
@@ -3134,6 +3161,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     done: set[str] = set()
     failed: set[str] = set()
     fail_msgs: dict[str, str] = {}
+    fail_tails: dict[str, str] = {}
 
     cpu_busy = False
     io_running = 0
@@ -3320,6 +3348,8 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                         _clear()
                     failed.add(app)
                     fail_msgs[app] = _error
+                    if _tail:
+                        fail_tails[app] = _tail
                     alert(f"Failed to install {app}: {_error}")
                     if _tail:
                         sys.stderr.write(_tail)
@@ -3347,13 +3377,18 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         root_failures = sorted(fail_msgs)
         skipped = sorted(failed - set(root_failures))
         n_root_failures = len(root_failures)
+        non_retryable = [
+            name
+            for name in root_failures
+            if not _is_retryable_failure(fail_msgs[name], fail_tails.get(name, ""))
+        ]
         parts = [
             f"{n_root_failures} {plural(n_root_failures, 'app')} failed: "
             f"{', '.join(root_failures)}."
         ]
         if skipped:
             parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
-        raise InstallPlanError(" ".join(parts), root_failures)
+        raise InstallPlanError(" ".join(parts), root_failures, non_retryable)
     _save_pending_plan([], source=source)
 
 

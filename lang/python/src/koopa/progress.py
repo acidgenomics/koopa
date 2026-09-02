@@ -19,6 +19,7 @@ _last_push_message: str | None = None
 
 _SPINNER_FRAMES = ("|", "/", "-", "\\")
 _LOG_TAIL_LINES = 100
+_LOG_LINE_MAX_CHARS = 500
 
 _ANSI_RE = re.compile(r"\033\[[0-9;]*[A-Za-z]")
 
@@ -26,6 +27,46 @@ _ANSI_RE = re.compile(r"\033\[[0-9;]*[A-Za-z]")
 def _visible_len(s: str) -> int:
     """Return the printable length of *s*, ignoring ANSI escapes and carriage returns."""
     return len(_ANSI_RE.sub("", s).replace("\r", ""))
+
+
+def _cap_line_width(line: str, width: int) -> str:
+    """Truncate *line* to *width* printable columns, marking a cut with an ellipsis.
+
+    A ``pip`` "from versions:" error line can run to thousands of characters
+    on one line; printing it in full makes the surrounding failure unreadable.
+    """
+    stripped = line.rstrip("\n")
+    truncated = BuildProgress._truncate_to_width(stripped, width)
+    if _visible_len(truncated) < _visible_len(stripped):
+        truncated += "…"
+    return truncated + "\n" if line.endswith("\n") else truncated
+
+
+def _format_log_tail_text(lines: list[str]) -> str:
+    """Return error lines and the last N lines of a build log as a string.
+
+    Error lines already covered by the printed tail are not repeated in a
+    second block below it.
+    """
+    if not lines:
+        return "  Build failed.\n"
+    sep = "─" * 40
+    error_lines = [line for line in lines if "error" in line.lower()]
+    tail = lines[-_LOG_TAIL_LINES:]
+    parts = [f"  Build failed.\n  Last {_LOG_TAIL_LINES} lines:\n  {sep}\n"]
+    for line in tail:
+        capped = _cap_line_width(line, _LOG_LINE_MAX_CHARS)
+        parts.append(f"  {capped}" if capped.endswith("\n") else f"  {capped}\n")
+    parts.append(f"  {sep}\n")
+    uncovered_error_lines = [line for line in error_lines if line not in tail]
+    if uncovered_error_lines:
+        parts.append(f"  Error lines ({len(uncovered_error_lines)}):\n")
+        parts.append(f"  {sep}\n")
+        for line in uncovered_error_lines:
+            capped = _cap_line_width(line, _LOG_LINE_MAX_CHARS)
+            parts.append(f"  {capped}" if capped.endswith("\n") else f"  {capped}\n")
+        parts.append(f"  {sep}\n")
+    return "".join(parts)
 
 
 def _terminal_width(tty: int) -> int | None:
@@ -492,22 +533,7 @@ class BuildProgress:
                 lines = f.readlines()
         except OSError:
             return "  Build failed.\n"
-        if not lines:
-            return "  Build failed.\n"
-        sep = "─" * 40
-        error_lines = [line for line in lines if "error" in line.lower()]
-        tail = lines[-_LOG_TAIL_LINES:]
-        parts = [f"  Build failed.\n  Last {_LOG_TAIL_LINES} lines:\n  {sep}\n"]
-        for line in tail:
-            parts.append(f"  {line}" if line.endswith("\n") else f"  {line}\n")
-        parts.append(f"  {sep}\n")
-        if error_lines:
-            parts.append(f"  Error lines ({len(error_lines)}):\n")
-            parts.append(f"  {sep}\n")
-            for line in error_lines:
-                parts.append(f"  {line}" if line.endswith("\n") else f"  {line}\n")
-            parts.append(f"  {sep}\n")
-        return "".join(parts)
+        return _format_log_tail_text(lines)
 
     def _dump_log_tail(self, tty: int) -> None:
         """Print error lines and the last N lines of the build log to the tty."""

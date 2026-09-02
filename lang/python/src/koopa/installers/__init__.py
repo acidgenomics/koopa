@@ -537,6 +537,24 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "homebrew": f"{_M}.homebrew",
 }
 
+# Installer modules that install an exact pip version pin -- either via the
+# shared install_python_package() helper (koopa.install), or their own direct
+# `pip install <name>==<version>` (_python_plugin). A pin resolved for one of
+# these apps must exist on whatever pip index is configured on the machine
+# that writes app.json, so koopa.version_check.update_app_json gates pin
+# writes for these modules. Keep in sync with:
+#   grep -rl 'install_python_package(\|pip_name}==' koopa/installers/*.py
+PIP_VERSIONED_INSTALLERS: frozenset[str] = frozenset(
+    {
+        f"{_M}._python_pkg",
+        f"{_M}._python_plugin",
+        f"{_M}.gseapy",
+        f"{_M}.ont_bonito",
+        f"{_M}.playwright",
+        f"{_M}.pyright",
+    }
+)
+
 PYTHON_PLATFORM_INSTALLERS: dict[tuple[str, str, str], str] = {
     ("python", "macos", "system"): f"{_M}.python_macos",
     ("r", "debian", "system"): f"{_M}.r_debian",

@@ -889,3 +889,54 @@ def test_link_conda_binaries_raises_on_broken_linkage(tmp_path: Path) -> None:
             prefix=str(prefix),
             libexec=str(libexec),
         )
+
+
+# ── non-retryable failure classification ────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    ("tail", "expected"),
+    [
+        ("ERROR: No matching distribution found for pyright==1.1.412\n", False),
+        (
+            "ERROR: Could not find a version that satisfies the requirement foo==2.0\n",
+            False,
+        ),
+        ("HTTPError: 404 Client Error: Not Found for url: https://example.test\n", True),
+        ("", True),
+    ],
+)
+def test_is_retryable_failure_classifies_pip_index_misses(tail: str, expected: bool) -> None:
+    """A missing-distribution log is non-retryable; a plain 404 is left retryable."""
+    from koopa.install import _is_retryable_failure
+
+    message = "Command '[...]' returned non-zero exit status 1."
+    assert _is_retryable_failure(message, tail) is expected
+
+
+def test_run_install_plan_marks_non_retryable_failure() -> None:
+    """A pip-index-miss failure is reported in InstallPlanError.non_retryable."""
+    from koopa.install import InstallPlanError, _run_install_plan
+
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
+        return (
+            config.name,
+            config.version,
+            0.0,
+            "Command '[...]' returned non-zero exit status 1.",
+            "ERROR: No matching distribution found for pyright==1.1.412\n",
+            None,
+        )
+
+    with (
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("koopa.install._install_app_worker", _worker),
+        patch("koopa.io.import_app_json", return_value={"pyright": {}}),
+        patch("koopa.install._remove_from_pending_plan"),
+        patch("koopa.install._save_pending_plan"),
+        pytest.raises(InstallPlanError) as exc_info,
+    ):
+        _run_install_plan([("pyright", "")], {}, make_config=_make_scheduler_config)
+
+    assert exc_info.value.failed_apps == ["pyright"]
+    assert exc_info.value.non_retryable == ["pyright"]
