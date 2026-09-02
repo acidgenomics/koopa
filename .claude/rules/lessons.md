@@ -17,7 +17,14 @@
 - **Never run `find /` or any filesystem-root search.** Scope every `find`/search
   to a known root: the repo, `~/git`, an app prefix, or a specific cache dir (e.g.
   `~/.cache/uv/...`). A root-wide search is slow, noisy, and reaches unrelated
-  trees the task never asked about.
+  trees the task never asked about. The same risk hides inside a plain `rg` call
+  here: `~/.config/ripgrep/config` set `--no-ignore`, which disables `.gitignore`
+  (and any repo-local `.rgignore`, which the same flag also disables) for every
+  invocation. A bare `rg --files` at the koopa repo root walked 700,000 files
+  (the `app/` install prefix included) instead of the 1,226 `.gitignore` allows,
+  and a content search over that many files can hang. Fixed at the source in
+  `dot_config/ripgrep/config.tmpl` (`-u`/`-uu`/`-uuu` is the per-command opt-in
+  now); on a host still running the old config, add `--ignore-vcs` as a stopgap.
 - **Vendor-mirror docs and examples stay product-neutral.** Never name a
   specific artifact manager in `docs/`, `etc/koopa/vendor.json.example`, tests,
   or code comments. The backend identifier is `http` for exactly this reason.
