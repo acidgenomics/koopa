@@ -39,6 +39,17 @@
   produced no `bin/python3`, and fell through to the much slower source
   build. Fix: add `! -name '.*'` to the `find`.
 
+- **A `notes` entry in app.json is prose only; `version_check.py` never reads
+  it, so it does not stop `check-app-versions` from re-bumping the version it
+  describes.** This bit `node`: a `notes` entry said "held below 26.8.0" and
+  the next unguarded run re-bumped it anyway. Use `version_exclude`,
+  `version_granularity`, or `version_match` instead — see
+  `.claude/rules/app-json.md` and the `koopa-app-registry` skill. The same
+  gap exists for `python_version_pin`: it is a human-readable marker paired
+  with `dependencies: ["python3.13"]`, but no code in `src/koopa` reads it —
+  confirmed by grep. It documents a pin that `dependencies` alone already
+  enforces; it enforces nothing on its own.
+
 ## Skills (load body on invocation)
 
 | Skill | Covers |

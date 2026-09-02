@@ -2504,7 +2504,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-08-29",
+    "date": "2026-09-02",
     "default": false,
     "dependencies": [
       "chezmoi"
@@ -2514,7 +2514,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "22da9540bcf7eb0c779e5d0bd9b9d2df9cc0b66d"
+    "version": "116e15364c177065f549d78ffb56e57b69725f42"
   },
   "du-dust": {
     "bin": [
@@ -2690,8 +2690,7 @@
     "url": [
       "https://www.gnu.org/software/emacs/"
     ],
-    "version": "29.4",
-    "version_pin": true
+    "version": "29.4"
   },
   "emacs-prelude": {
     "bin": [
@@ -4392,7 +4391,8 @@
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
     ],
-    "version": "0.165.0"
+    "version": "0.165.0",
+    "version_granularity": "minor"
   },
   "hurl": {
     "bin": [
@@ -6092,7 +6092,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.9.0"
+    "version": "2026.9.1"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6414,6 +6414,9 @@
     ],
     "description": "low-level cryptographic library",
     "installer": "gnu-app",
+    "notes": [
+      "Held back for gnutls compatibility."
+    ],
     "src_url": "https://mirrors.kernel.org/gnu/nettle/nettle-{version}.tar.gz",
     "type": "library",
     "url": [
@@ -6563,7 +6566,6 @@
       "npx.1"
     ],
     "notes": [
-      "Tracking the LTS release series.",
       "Held below 26.8.0: that upstream release stamps its own build as",
       "'v26.8.0-alpha.0.0.0' (see node_version.h), which fails npm's engine",
       "check on every invocation. Bump past this only once conda-forge ships",
@@ -6574,7 +6576,10 @@
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.6.0"
+    "version": "26.6.0",
+    "version_exclude": [
+      "26.8.0"
+    ]
   },
   "npth": {
     "build_dependencies": [
@@ -7626,20 +7631,19 @@
       "pyright-python-langserver"
     ],
     "category": "Python",
-    "date": "2026-06-28",
+    "date": "2026-09-02",
     "default": true,
     "dependencies": [
       "python"
     ],
     "description": "static type checker for Python by Microsoft",
     "installer": "python-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.411"
+    "version": "1.1.412"
   },
   "pytaglib": {
     "bin": [
@@ -10477,7 +10481,8 @@
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/proto/xcbproto/-/tags"
     ],
-    "version": "1.17.0"
+    "version": "1.17.0",
+    "version_match": "xorg-libxcb"
   },
   "xorg-xorgproto": {
     "build_dependencies": [

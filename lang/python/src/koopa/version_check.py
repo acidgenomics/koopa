@@ -178,6 +178,78 @@ def _version_key(version: str) -> tuple[int, ...]:
     return tuple(nums)
 
 
+def _is_excluded(version: str, excluded: tuple[str, ...]) -> bool:
+    """Return whether a version is on an app's ``version_exclude`` list."""
+    if version in excluded:
+        return True
+    san = sanitize_version(version)
+    return any(san == sanitize_version(x) for x in excluded)
+
+
+def _audit_version_excludes(json_data: dict[str, Any]) -> tuple[list[str], list[str]]:
+    """Audit each app's ``version_exclude`` list against its current pin.
+
+    Returns ``(contradictions, stale_holds)``. A contradiction is a pin that is
+    itself excluded. A stale hold is an exclusion list entirely below the
+    current pin, meaning the hold no longer does anything and can be removed.
+    """
+    contradictions: list[str] = []
+    stale_holds: list[str] = []
+    for app_name, info in sorted(json_data.items()):
+        if info.get("alias_of") or info.get("removed", False):
+            continue
+        excluded = tuple(info.get("version_exclude", ()))
+        version = info.get("version", "")
+        if not (excluded and version):
+            continue
+        if _is_excluded(version, excluded):
+            contradictions.append(f"{app_name}: current pin {version} is itself excluded")
+            continue
+        try:
+            cur_key = _version_key(sanitize_version(version))
+            if all(_version_key(sanitize_version(x)) < cur_key for x in excluded):
+                stale_holds.append(
+                    f"{app_name}: version_exclude {list(excluded)} is below the "
+                    f"current pin {version}; safe to remove"
+                )
+        except (ValueError, AttributeError):
+            pass
+    return contradictions, stale_holds
+
+
+def _print_version_exclude_audit(contradictions: list[str], stale_holds: list[str]) -> None:
+    """Print version_exclude health findings from _audit_version_excludes."""
+    for msg in contradictions:
+        print(f"Warning: {msg}", file=sys.stderr)
+    if stale_holds:
+        print(f"Stale holds ({len(stale_holds)}):", file=sys.stderr)
+        for msg in stale_holds:
+            print(f"  {msg}", file=sys.stderr)
+
+
+def _held_message(
+    app_name: str,
+    current: str,
+    latest: str,
+    excluded: tuple[str, ...],
+    gran: str | None,
+) -> str | None:
+    """Return a hold message if ``latest`` should not be written, else None."""
+    if _is_excluded(latest, excluded):
+        return f"{app_name}: {latest} available upstream; excluded, pin held at {current}"
+    if gran == "minor" and not (_SHA_RE.match(latest) or _SHA_RE.match(current)):
+        try:
+            latest_key = _version_key(sanitize_version(latest))[:2]
+            current_key = _version_key(sanitize_version(current))[:2]
+        except (ValueError, AttributeError):
+            return None
+        if latest_key == current_key:
+            return (
+                f"{app_name}: {latest} available upstream; not a minor bump, pin held at {current}"
+            )
+    return None
+
+
 def _is_prerelease(version: str) -> bool:
     """Return whether a version string denotes a pre-release.
 
@@ -2249,11 +2321,17 @@ def check_app_versions(  # noqa: C901, PLR0915
         )
         raise RuntimeError(msg)
     json_data = import_app_json()
+    # Report every version_exclude hold's health up front, regardless of name_filter,
+    # so a dead or contradictory hold surfaces on every run, not just when the held
+    # app itself is in scope.
+    _print_version_exclude_audit(*_audit_version_excludes(json_data))
     cache = _VersionCache()
     if reset_cache:
         cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
+    holds: dict[str, tuple[str, ...]] = {}
+    granularity: dict[str, str | None] = {}
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
             continue
@@ -2273,6 +2351,8 @@ def check_app_versions(  # noqa: C901, PLR0915
             continue
         if source_filter and spec.source != source_filter:
             continue
+        holds[app_name] = tuple(info.get("version_exclude", ()))
+        granularity[app_name] = info.get("version_granularity")
         specs.append((app_name, version, spec))
     results: list[VersionCheckResult] = list(unsupported)
     if not specs:
@@ -2282,6 +2362,15 @@ def check_app_versions(  # noqa: C901, PLR0915
         if cache is not None:
             cached = cache.get(app_name)
             if cached is not None and not (_is_prerelease(cached) and not _is_prerelease(version)):
+                if _is_excluded(cached, holds.get(app_name, ())):
+                    print(
+                        f"{app_name}: {cached} available upstream; excluded, pin held at {version}",
+                        file=sys.stderr,
+                    )
+                    results.append(
+                        VersionCheckResult(app_name, version, version, spec.source, None)
+                    )
+                    continue
                 if _SHA_RE.match(cached):
                     results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
                     continue
@@ -2335,10 +2424,18 @@ def check_app_versions(  # noqa: C901, PLR0915
             # cache it, and report no update so is_outdated stays False.
             if _is_prerelease(latest) and not _is_prerelease(current):
                 return VersionCheckResult(app_name, current, current, spec.source, None), None
-            if cache is not None:
-                cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
             latest_san = sanitize_version(latest)
+            # Only a genuine change is eligible for a hold: current_san == latest_san
+            # already means nothing would be written, so there is nothing to hold.
+            if current_san != latest_san:
+                held = _held_message(
+                    app_name, current, latest, holds.get(app_name, ()), granularity.get(app_name)
+                )
+                if held is not None:
+                    return VersionCheckResult(app_name, current, current, spec.source, None), held
+            if cache is not None:
+                cache.put(app_name, latest, spec.source)
             if current_san == latest_san:
                 msg = None
             elif _SHA_RE.match(current) or _SHA_RE.match(latest):
@@ -2602,31 +2699,68 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     data = json.loads(json_path.read_text())
     today = time.strftime("%Y-%m-%d")
+
+    # version_match: apps that must move in lockstep with another app (e.g. an
+    # xorg proto package that must match its library's version). Bump the whole
+    # group only when every member agrees on the same target version.
+    outdated_by_name = {r.name: r for r in outdated}
+    lockstep_groups: dict[str, set[str]] = {}
+    for name, info in data.items():
+        leader = info.get("version_match")
+        if leader:
+            lockstep_groups.setdefault(leader, {leader}).add(name)
+    held_by_match: set[str] = set()
+    for members in lockstep_groups.values():
+        targets = {
+            outdated_by_name[m].latest_version
+            if m in outdated_by_name
+            else data.get(m, {}).get("version", "")
+            for m in members
+        }
+        if len(targets) > 1:
+            print(
+                f"version_match group ({', '.join(sorted(members))}) disagrees "
+                "on the latest version; pins held",
+                file=sys.stderr,
+            )
+            held_by_match |= members
+
     count = 0
     for r in outdated:
-        if r.name in data and r.latest_version:
-            artifact_key = installer_artifact_key(r.name, r.latest_version)
-            if artifact_key is not None:
-                staged = False
-                if _has_private_access():
-                    from koopa.aws import koopa_s3_bucket, s3_object_exists
+        if r.name not in data or not r.latest_version:
+            continue
+        if r.name in held_by_match:
+            continue
+        excluded = tuple(data[r.name].get("version_exclude", []))
+        if _is_excluded(r.latest_version, excluded):
+            print(
+                f"{r.name}: {r.latest_version} available upstream; excluded, "
+                f"pin held at {r.current_version}",
+                file=sys.stderr,
+            )
+            continue
+        artifact_key = installer_artifact_key(r.name, r.latest_version)
+        if artifact_key is not None:
+            staged = False
+            if _has_private_access():
+                from koopa.aws import koopa_s3_bucket, s3_object_exists
 
-                    staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
-                if not staged:
-                    print(
-                        f"{r.name}: {r.latest_version} available upstream; "
-                        f"artifact not staged, pin held at {r.current_version}",
-                        file=sys.stderr,
-                    )
-                    continue
-            data[r.name]["version"] = r.latest_version
-            data[r.name]["date"] = today
-            data[r.name].pop("revision", None)
-            spec = _SPECIAL_CASES.get(r.name)
-            if spec is not None and spec.extra_fields_fn is not None:
-                extra = spec.extra_fields_fn()
-                data[r.name].update(extra)
-            count += 1
+                staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
+            if not staged:
+                print(
+                    f"{r.name}: {r.latest_version} available upstream; "
+                    f"artifact not staged, pin held at {r.current_version}",
+                    file=sys.stderr,
+                )
+                continue
+        data[r.name]["version"] = r.latest_version
+        data[r.name]["date"] = today
+        data[r.name].pop("revision", None)
+        spec = _SPECIAL_CASES.get(r.name)
+        if spec is not None and spec.extra_fields_fn is not None:
+            extra = spec.extra_fields_fn()
+            data[r.name].update(extra)
+        count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
     bootstrap_count = update_bootstrap(data)

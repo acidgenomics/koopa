@@ -15,12 +15,14 @@ import pytest
 from koopa.version import sanitize_version
 from koopa.version_check import (
     VersionCheckResult,
+    _audit_version_excludes,
     _check_npm,
     _check_pypi,
     _check_rubygems,
     _dead_hosts,
     _fetch_first_reachable,
     _friendly_network_error,
+    _held_message,
     _is_prerelease,
     _is_retryable_network_error,
     _liblinear_tag_to_version,
@@ -551,6 +553,162 @@ def test_update_app_json_bumps_when_artifact_staged(tmp_path: Path) -> None:
     written = mock_export.call_args[0][0]
     assert written["cellranger"]["version"] == "10.0.0"
     assert count == 1
+
+
+# ── version_exclude / version_granularity holds (_held_message) ─────────────
+
+
+def test_held_message_holds_an_excluded_version() -> None:
+    """A latest version on the exclusion list is held, not written."""
+    msg = _held_message("node", "26.6.0", "26.8.0", ("26.8.0",), None)
+    assert msg is not None
+    assert "excluded" in msg
+    assert "26.6.0" in msg
+
+
+def test_held_message_allows_a_non_excluded_version() -> None:
+    """A latest version not on the exclusion list bumps normally."""
+    msg = _held_message("node", "26.6.0", "26.9.0", ("26.8.0",), None)
+    assert msg is None
+
+
+def test_held_message_minor_granularity_holds_a_patch_bump() -> None:
+    """A patch-only bump is held when version_granularity is 'minor'."""
+    msg = _held_message("hugo", "0.165.0", "0.165.1", (), "minor")
+    assert msg is not None
+    assert "not a minor" in msg
+
+
+def test_held_message_minor_granularity_allows_a_minor_bump() -> None:
+    """A minor bump is written when version_granularity is 'minor'."""
+    msg = _held_message("hugo", "0.165.0", "0.166.0", (), "minor")
+    assert msg is None
+
+
+# ── version_exclude audit (_audit_version_excludes) ──────────────────────────
+
+
+def test_audit_version_excludes_flags_a_stale_hold() -> None:
+    """An exclusion list entirely below the current pin is reported as stale."""
+    json_data = {"node": {"version": "26.9.0", "version_exclude": ["26.8.0"]}}
+    contradictions, stale_holds = _audit_version_excludes(json_data)
+    assert contradictions == []
+    assert len(stale_holds) == 1
+    assert "node" in stale_holds[0]
+
+
+def test_audit_version_excludes_flags_a_contradiction() -> None:
+    """A pin that is itself excluded is reported as a contradiction."""
+    json_data = {"node": {"version": "26.8.0", "version_exclude": ["26.8.0"]}}
+    contradictions, stale_holds = _audit_version_excludes(json_data)
+    assert stale_holds == []
+    assert len(contradictions) == 1
+    assert "node" in contradictions[0]
+
+
+def test_audit_version_excludes_is_silent_for_an_active_hold() -> None:
+    """A hold that is neither stale nor contradictory raises nothing."""
+    json_data = {"node": {"version": "26.6.0", "version_exclude": ["26.8.0"]}}
+    contradictions, stale_holds = _audit_version_excludes(json_data)
+    assert contradictions == []
+    assert stale_holds == []
+
+
+# ── update_app_json: version_exclude / version_match write-time gates ───────
+
+
+def test_update_app_json_holds_pin_when_version_excluded(tmp_path: Path) -> None:
+    """An excluded latest version is held at write time, even if it reaches here."""
+    json_data = {
+        "node": {"version": "26.6.0", "version_exclude": ["26.8.0"], "url": ["https://x"]},
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("node", "26.6.0", "26.8.0", "conda", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["node"]["version"] == "26.6.0"
+    assert count == 0
+
+
+def test_update_app_json_bumps_when_version_not_excluded(tmp_path: Path) -> None:
+    """A latest version off the exclusion list bumps normally, proving the hold self-heals."""
+    json_data = {
+        "node": {"version": "26.6.0", "version_exclude": ["26.8.0"], "url": ["https://x"]},
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("node", "26.6.0", "26.9.0", "conda", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["node"]["version"] == "26.9.0"
+    assert count == 1
+
+
+def test_update_app_json_holds_a_version_match_group_on_disagreement(tmp_path: Path) -> None:
+    """A version_match group is held whole when its members disagree on the latest version."""
+    json_data = {
+        "xorg-libxcb": {"version": "1.17.0", "url": ["https://x"]},
+        "xorg-xcb-proto": {
+            "version": "1.17.0",
+            "version_match": "xorg-libxcb",
+            "url": ["https://x"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [
+        VersionCheckResult("xorg-libxcb", "1.17.0", "1.18.0", "dirlist", None),
+        VersionCheckResult("xorg-xcb-proto", "1.17.0", "1.17.1", "dirlist", None),
+    ]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["xorg-libxcb"]["version"] == "1.17.0"
+    assert written["xorg-xcb-proto"]["version"] == "1.17.0"
+    assert count == 0
+
+
+def test_update_app_json_bumps_a_version_match_group_on_agreement(tmp_path: Path) -> None:
+    """A version_match group bumps together when its members agree on the latest version."""
+    json_data = {
+        "xorg-libxcb": {"version": "1.17.0", "url": ["https://x"]},
+        "xorg-xcb-proto": {
+            "version": "1.17.0",
+            "version_match": "xorg-libxcb",
+            "url": ["https://x"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [
+        VersionCheckResult("xorg-libxcb", "1.17.0", "1.18.0", "dirlist", None),
+        VersionCheckResult("xorg-xcb-proto", "1.17.0", "1.18.0", "dirlist", None),
+    ]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["xorg-libxcb"]["version"] == "1.18.0"
+    assert written["xorg-xcb-proto"]["version"] == "1.18.0"
+    assert count == 2
 
 
 # ── classify_app ─────────────────────────────────────────────────────────────

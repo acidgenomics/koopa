@@ -146,6 +146,30 @@ koopa develop check-app-versions --no-update boost git
 koopa develop check-app-versions --reset-cache --no-update boost
 ```
 
+### Holding a version back permanently (`version_exclude`, `version_granularity`, `version_match`, `version_pin`)
+
+A hold written only as prose in an entry's `notes` array is not enforced —
+`version_check.py` never reads `notes`. The next `check-app-versions` run
+silently re-bumps the version, undoing the hold. This is exactly what
+happened to `node`: a `notes` entry said "held below 26.8.0" (that
+conda-forge release stamps its own build as `v26.8.0-alpha.0.0.0`, which
+fails npm's engine check), but nothing enforced it, so the next run re-bumped
+to 26.8.0 anyway. Use one of these fields instead, checked in
+`check_app_versions()` / `update_app_json()`:
+
+| Field | Shape | Effect |
+|---|---|---|
+| `version_exclude` | array of version strings | Never write these exact versions. Self-heals: once upstream ships a version not on the list, the pin bumps normally with no further edit. |
+| `version_granularity` | `"minor"` | Accept a bump only when the major or minor component changes; hold a patch-only bump. |
+| `version_match` | another app's name | Bump only when this app and the named app agree on the same latest version; hold both otherwise (e.g. `xorg-xcb-proto` must match `xorg-libxcb`). |
+| `version_pin` | `true` | Drop the app from checking entirely (`emacs`, `nettle`). Use only when the app should never be checked again — most holds should use `version_exclude`, so the app keeps getting checked and the hold expires on its own. |
+
+`check-app-versions` audits every `version_exclude` list up front, regardless
+of which apps are in scope for that run, and reports two failure shapes so a
+dead hold doesn't linger unnoticed: a **stale hold** (every excluded version
+is already below the current pin, so it does nothing) and a **contradiction**
+(the current pin is itself on its own exclusion list).
+
 ### Recovery when a bad version is written to app.json
 
 If `check-app-versions` runs without `--no-update` before a fix is in place (or a
@@ -154,8 +178,13 @@ pre-release guard fires only after the fact), the bad version lands in `app.json
 (an app pinned to a pre-release can still receive pre-release updates). Fix:
 
 1. Edit `app.json` directly — revert `version` and `date` to the last known-good values.
-2. Run `koopa develop format-app-json` to normalize.
-3. Re-run `check-app-versions --reset-cache --no-update <app>` to confirm.
+2. Add `version_exclude` naming the bad version, so the fix survives the next
+   `check-app-versions` run. Editing `version`/`date` alone reverts the symptom but
+   not the cause — the next run just re-bumps it, since nothing recorded the version
+   as bad.
+3. Run `koopa develop format-app-json` to normalize.
+4. Re-run `check-app-versions --reset-cache --no-update <app>` to confirm the version
+   is now reported as held, not outdated.
 
 ### Pre-release suppression
 
