@@ -81,3 +81,13 @@ if the tag hasn't been created yet for the previous release).
 `pyproject.toml:3` — `version = "X.Y.Z"`. Read at runtime by
 `koopa_version()` in `lang/python/src/koopa/version.py`. No other file
 hardcodes the koopa version.
+
+## GitHub releases
+
+When publishing a GitHub release for a koopa tag, set its name to the bare tag
+exactly (for example, `v0.29.0`), not a product-prefixed name such as
+`koopa v0.29.0`.
+
+Koopa keeps only the newest GitHub release. After publishing `vNEXT`, delete
+the prior GitHub release with `gh release delete vPREV --yes`; do not delete
+the prior `vPREV` Git tag.
