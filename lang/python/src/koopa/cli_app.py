@@ -47,6 +47,7 @@ _APP_TREE: dict[str, Any] = {
     "brew": {
         "cleanup": "brew-cleanup",
         "dump-brewfile": "brew-dump-brewfile",
+        "fix-completion-dirs": "brew-fix-completion-dirs",
         "install-bundle": "brew-install-bundle",
         "outdated": "brew-outdated",
         "reset-core-repo": "brew-reset-core-repo",
@@ -372,10 +373,35 @@ def _handle_python_publish(args: list[str]) -> None:
             "every other case should bump the version instead."
         ),
     )
+    pypi_group = parser.add_mutually_exclusive_group()
+    pypi_group.add_argument(
+        "--no-pypi",
+        action="store_true",
+        help="Skip the public PyPI upload; publish to python.acidgenomics.com only.",
+    )
+    pypi_group.add_argument(
+        "--pypi-only",
+        action="store_true",
+        help=(
+            "Upload an already-published version's artifacts to public PyPI only. "
+            "Recovery path for a publish run whose S3 upload succeeded but whose "
+            "PyPI upload failed (e.g. a rate limit). Skips build, S3, reindex, and "
+            "tagging."
+        ),
+    )
     parsed = parser.parse_args(args)
+    if parsed.pypi_only and parsed.force:
+        parser.error("--pypi-only skips the collision check; --force has no effect with it.")
+
+    if parsed.pypi_only:
+        from koopa.pypi import publish_pypi_only
+
+        publish_pypi_only(parsed.package_dir)
+        return
+
     from koopa.pypi import publish
 
-    publish(parsed.package_dir, force=parsed.force)
+    publish(parsed.package_dir, force=parsed.force, pypi=not parsed.no_pypi)
 
 
 def _handle_python_publish_docs(args: list[str]) -> None:
@@ -1257,6 +1283,12 @@ def _handle_brew_dump_brewfile(args: list[str]) -> None:
 
     path = args[0] if args else "Brewfile"
     brew_dump_brewfile(path)
+
+
+def _handle_brew_fix_completion_dirs(args: list[str]) -> None:
+    from koopa.brew import brew_fix_completion_dirs
+
+    brew_fix_completion_dirs()
 
 
 def _handle_brew_install_bundle(args: list[str]) -> None:
@@ -2598,6 +2630,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     # brew
     "brew-cleanup": _handle_brew_cleanup,
     "brew-dump-brewfile": _handle_brew_dump_brewfile,
+    "brew-fix-completion-dirs": _handle_brew_fix_completion_dirs,
     "brew-install-bundle": _handle_brew_install_bundle,
     "brew-outdated": _handle_brew_outdated,
     "brew-reset-core-repo": _handle_brew_reset_core_repo,

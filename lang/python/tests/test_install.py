@@ -801,3 +801,142 @@ def test_link_in_opt_refuses_to_replace_a_real_directory(tmp_path: Path) -> None
         pytest.raises(IsADirectoryError),
     ):
         link_in_opt(name="curl", source=str(source))
+
+
+def test_parse_ldd_missing_reports_broken_soname() -> None:
+    """A 'not found' line yields the library name before the '=>'."""
+    from koopa.install import _parse_ldd_missing
+
+    output = (
+        "\tlibluv.so.1 => /opt/koopa/app/neovim/0.12.5/libexec/lib/libluv.so.1\n"
+        "\tlibunibilium.so.. => not found\n"
+        "\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6\n"
+    )
+
+    assert _parse_ldd_missing(output) == ["libunibilium.so.."]
+
+
+def test_parse_ldd_missing_clean_output() -> None:
+    """No 'not found' lines yields an empty list."""
+    from koopa.install import _parse_ldd_missing
+
+    output = "\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6\n"
+
+    assert _parse_ldd_missing(output) == []
+
+
+def test_parse_ldd_missing_non_dynamic_executable() -> None:
+    """Ldd's 'not a dynamic executable' message is not mistaken for a miss."""
+    from koopa.install import _parse_ldd_missing
+
+    assert _parse_ldd_missing("\tnot a dynamic executable\n") == []
+
+
+def test_is_elf_true_for_elf_magic(tmp_path: Path) -> None:
+    """A file starting with the ELF magic bytes is detected as ELF."""
+    from koopa.install import _is_elf
+
+    binary = tmp_path / "nvim"
+    binary.write_bytes(b"\x7fELF" + b"\x00" * 12)
+
+    assert _is_elf(str(binary)) is True
+
+
+def test_is_elf_false_for_script(tmp_path: Path) -> None:
+    """A shebang script is not mistaken for an ELF binary."""
+    from koopa.install import _is_elf
+
+    script = tmp_path / "age-keygen"
+    script.write_text("#!/bin/sh\necho hi\n")
+
+    assert _is_elf(str(script)) is False
+
+
+def test_missing_shared_libs_noop_on_macos(tmp_path: Path) -> None:
+    """The check is Linux-only; otool does not report missing libs like ldd."""
+    from koopa.install import _missing_shared_libs
+
+    binary = tmp_path / "nvim"
+    binary.write_bytes(b"\x7fELF" + b"\x00" * 12)
+
+    with patch("koopa.install.is_linux", return_value=False):
+        assert _missing_shared_libs(str(binary)) == []
+
+
+def test_link_conda_binaries_raises_on_broken_linkage(tmp_path: Path) -> None:
+    """A binary with an unresolved shared library fails the install loudly."""
+    from koopa.install import _link_conda_binaries
+
+    prefix = tmp_path / "app" / "neovim" / "0.12.5"
+    libexec = prefix / "libexec"
+    libexec_bin = libexec / "bin"
+    libexec_bin.mkdir(parents=True)
+    (libexec_bin / "nvim").write_bytes(b"\x7fELF" + b"\x00" * 12)
+    conda_meta = libexec / "conda-meta"
+    conda_meta.mkdir()
+    (conda_meta / "nvim-0.12.5-h5d254f0_0.json").write_text('{"files": ["bin/nvim"]}')
+
+    with (
+        patch(
+            "koopa.install._missing_shared_libs",
+            return_value=["libunibilium.so.."],
+        ),
+        pytest.raises(RuntimeError, match=r"libunibilium\.so\.\."),
+    ):
+        _link_conda_binaries(
+            name="nvim",
+            version="0.12.5",
+            prefix=str(prefix),
+            libexec=str(libexec),
+        )
+
+
+# ── non-retryable failure classification ────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    ("tail", "expected"),
+    [
+        ("ERROR: No matching distribution found for pyright==1.1.412\n", False),
+        (
+            "ERROR: Could not find a version that satisfies the requirement foo==2.0\n",
+            False,
+        ),
+        ("HTTPError: 404 Client Error: Not Found for url: https://example.test\n", True),
+        ("", True),
+    ],
+)
+def test_is_retryable_failure_classifies_pip_index_misses(tail: str, expected: bool) -> None:
+    """A missing-distribution log is non-retryable; a plain 404 is left retryable."""
+    from koopa.install import _is_retryable_failure
+
+    message = "Command '[...]' returned non-zero exit status 1."
+    assert _is_retryable_failure(message, tail) is expected
+
+
+def test_run_install_plan_marks_non_retryable_failure() -> None:
+    """A pip-index-miss failure is reported in InstallPlanError.non_retryable."""
+    from koopa.install import InstallPlanError, _run_install_plan
+
+    def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
+        return (
+            config.name,
+            config.version,
+            0.0,
+            "Command '[...]' returned non-zero exit status 1.",
+            "ERROR: No matching distribution found for pyright==1.1.412\n",
+            None,
+        )
+
+    with (
+        patch("concurrent.futures.ProcessPoolExecutor", _FakePoolExecutor),
+        patch("koopa.install._install_app_worker", _worker),
+        patch("koopa.io.import_app_json", return_value={"pyright": {}}),
+        patch("koopa.install._remove_from_pending_plan"),
+        patch("koopa.install._save_pending_plan"),
+        pytest.raises(InstallPlanError) as exc_info,
+    ):
+        _run_install_plan([("pyright", "")], {}, make_config=_make_scheduler_config)
+
+    assert exc_info.value.failed_apps == ["pyright"]
+    assert exc_info.value.non_retryable == ["pyright"]

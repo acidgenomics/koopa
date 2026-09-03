@@ -37,6 +37,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "parallel": f"{_M}._conda",
     "pigz": f"{_M}._conda",
     "pkgconf": f"{_M}._conda",
+    "poppler": f"{_M}._conda",
     "postgresql": f"{_M}._conda",
     "rsync": f"{_M}.rsync",
     "screen": f"{_M}.screen",
@@ -108,7 +109,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "minimap2": f"{_M}._conda",
     "mise": f"{_M}._conda",
     "ncbi-sra-tools": f"{_M}._conda",
-    "neovim": f"{_M}._conda",
+    "neovim": f"{_M}.neovim",
     "nextflow": f"{_M}._conda",
     "node": f"{_M}._conda",
     "nushell": f"{_M}._conda",
@@ -201,7 +202,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "pylint": f"{_M}._python_pkg",
     "pyrefly": f"{_M}._python_pkg",
     "pyproject-fmt": f"{_M}._python_pkg",
-    "pyright": f"{_M}._python_pkg",
+    "pyright": f"{_M}.pyright",
     "pytaglib": f"{_M}._python_pkg",
     "pytest": f"{_M}._python_pkg",
     "ruff": f"{_M}._python_pkg",
@@ -535,6 +536,24 @@ PYTHON_INSTALLERS: dict[str, str] = {
     # -- system-mode installers -------------------------------------------------
     "homebrew": f"{_M}.homebrew",
 }
+
+# Installer modules that install an exact pip version pin -- either via the
+# shared install_python_package() helper (koopa.install), or their own direct
+# `pip install <name>==<version>` (_python_plugin). A pin resolved for one of
+# these apps must exist on whatever pip index is configured on the machine
+# that writes app.json, so koopa.version_check.update_app_json gates pin
+# writes for these modules. Keep in sync with:
+#   grep -rl 'install_python_package(\|pip_name}==' koopa/installers/*.py
+PIP_VERSIONED_INSTALLERS: frozenset[str] = frozenset(
+    {
+        f"{_M}._python_pkg",
+        f"{_M}._python_plugin",
+        f"{_M}.gseapy",
+        f"{_M}.ont_bonito",
+        f"{_M}.playwright",
+        f"{_M}.pyright",
+    }
+)
 
 PYTHON_PLATFORM_INSTALLERS: dict[tuple[str, str, str], str] = {
     ("python", "macos", "system"): f"{_M}.python_macos",

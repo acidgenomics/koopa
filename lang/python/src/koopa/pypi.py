@@ -87,9 +87,23 @@ def _s3_list_packages() -> list[str]:
     return [k.removeprefix("packages/") for k in keys if k != "packages/"]
 
 
+_DIST_PREFIX = "acidgenomics-"
+
+
 def _normalize_name(name: str) -> str:
     """PEP 503 normalized package name."""
     return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def _docs_slug(name: str) -> str:
+    """Return the short docs slug for a distribution name.
+
+    Every package's PyPI distribution name carries the 'acidgenomics-' prefix
+    (e.g. 'acidgenomics-syntactic'), but docs and the landing page keep using
+    the short, pre-existing slug ('syntactic') so published doc URLs and
+    Bioconda 'about.home' fields stay valid across the rename.
+    """
+    return _normalize_name(name).removeprefix(_DIST_PREFIX)
 
 
 def _parse_package_name(filename: str) -> str | None:
@@ -120,6 +134,32 @@ def _parse_package_version(filename: str) -> str | None:
 def _version_sort_key(version: str) -> tuple[int, ...]:
     """Parse a dotted version string into a comparable int tuple."""
     return tuple(int(p) for p in version.split(".") if p.isdigit())
+
+
+def _select_published_artifacts(filenames: list[str], dist_name: str, version: str) -> list[str]:
+    """Return the wheel and sdist filenames for one already-published version.
+
+    Parameters
+    ----------
+    filenames : list[str]
+        Package filenames as listed under the S3 packages/ prefix (e.g. from
+        _s3_list_packages).
+    dist_name : str
+        PyPI distribution name (e.g. 'acidgenomics-acidplyr').
+    version : str
+        Exact version to match (e.g. '0.1.1').
+
+    Returns
+    -------
+    list[str]
+        Matching filenames, sorted.
+    """
+    normalized = _normalize_name(dist_name)
+    return sorted(
+        f
+        for f in filenames
+        if _parse_package_name(f) == normalized and _parse_package_version(f) == version
+    )
 
 
 def _sha256_of_file(path: str) -> str:
@@ -264,10 +304,28 @@ def _generate_landing(
     footer with the license. css/front.css and images/logo.svg are uploaded
     separately (not part of the generated tree); see the module docstring for
     the S3 layout.
+
+    packages_summaries is keyed by distribution name, so a package that
+    shipped under both a bare name and the 'acidgenomics-' prefix (e.g.
+    'syntactic' and 'acidgenomics-syntactic') arrives as two separate keys.
+    Both collapse onto one docs slug (see _docs_slug) before rendering, so the
+    page shows one entry per package; the prefixed name's summary always wins
+    on a collision, since that is the current release.
     """
     from koopa.landing import render_landing
 
-    remaining = dict(packages_summaries)
+    by_slug: dict[str, str] = {}
+    prefixed_slugs: set[str] = set()
+    for name, summary in packages_summaries.items():
+        slug = _docs_slug(name)
+        is_prefixed = name.startswith(_DIST_PREFIX)
+        if slug in prefixed_slugs and not is_prefixed:
+            continue
+        by_slug[slug] = summary
+        if is_prefixed:
+            prefixed_slugs.add(slug)
+
+    remaining = by_slug
     sections: list[tuple[str, list[tuple[str, str, str]]]] = []
     for heading, names in _LANDING_CATEGORIES:
         entries = [(name, f"{name}/", remaining.pop(name)) for name in names if name in remaining]
@@ -467,13 +525,57 @@ def _tag_and_push_release(pkg_path: Path) -> None:
     git_push_tag(tag, path)
 
 
-def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -> None:
-    """Build and publish a Python package to python.acidgenomics.com.
+def _publish_to_pypi(dist_files: list[Path]) -> None:
+    """Upload built dist files to public PyPI via 'uv publish'.
+
+    Reads the token from UV_PUBLISH_TOKEN (environment, else
+    <koopa-root>/.env via dotenv_value) and passes it through the subprocess
+    environment only, never argv -- a token on argv is visible to any other
+    process via `ps`. A brand-new project name needs an account-scoped
+    token for its first upload; a project-scoped token can't create the
+    project it's scoped to.
+    """
+    from koopa.aws import dotenv_value
+
+    token = dotenv_value("UV_PUBLISH_TOKEN")
+    if not token:
+        msg = "UV_PUBLISH_TOKEN must be set (in environment or <koopa-root>/.env)."
+        raise RuntimeError(msg)
+
+    uv = _uv()
+    env = os.environ.copy()
+    env["UV_PUBLISH_TOKEN"] = token
+    subprocess.run(
+        [
+            uv,
+            "publish",
+            "--check-url",
+            "https://pypi.org/simple/",
+            *[str(f) for f in dist_files],
+        ],
+        env=env,
+        check=True,
+    )
+
+
+def publish(
+    package_dir: str,
+    *,
+    invalidate: bool = True,
+    force: bool = False,
+    pypi: bool = True,
+) -> None:
+    """Build and publish a Python package to PyPI and python.acidgenomics.com.
 
     Also creates and pushes a matching 'v{version}' git tag (see
     _tag_and_push_release) so every published release has a durable git ref
     -- a real incident (acidgenomes 0.2.0, 2026-08) shipped to the index
     with no tag at all until this was added.
+
+    The single build in dist_dir feeds both indexes, so the bytes shipped to
+    PyPI and to S3 are identical. PyPI is uploaded last, after the S3 upload
+    and reindex: a PyPI release is permanent even after deletion, while an S3
+    object can still be corrected, so the reversible step runs first.
 
     Parameters
     ----------
@@ -488,6 +590,9 @@ def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -
         already-decided in-place update of a version that's already live
         (e.g. correcting the same real incident this check exists to catch).
         Every other case should bump the version instead.
+    pypi
+        Whether to also upload the same dist files to public PyPI. On by
+        default; pass False for a private-index-only publish.
     """
     from koopa.alert import alert
 
@@ -540,6 +645,10 @@ def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -
                 ],
                 check=True,
             )
+
+        if pypi:
+            alert("Publishing to PyPI.")
+            _publish_to_pypi(dist_files)
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
@@ -547,13 +656,97 @@ def publish(package_dir: str, *, invalidate: bool = True, force: bool = False) -
     _tag_and_push_release(pkg_path)
 
 
+def publish_pypi_only(package_dir: str) -> None:
+    """Upload an already-published version's artifacts to public PyPI.
+
+    Recovery path for a publish() run whose S3 upload succeeded but whose
+    PyPI upload failed partway through (e.g. a PyPI rate limit). Downloads
+    the exact wheel and sdist already on the private index and uploads those
+    same bytes to PyPI, so both indexes and the git tag keep pointing at one
+    artifact. Never builds, never writes to S3, never reindexes, never tags.
+
+    Parameters
+    ----------
+    package_dir : str
+        Path to a Python package source directory (must contain
+        pyproject.toml).
+
+    Raises
+    ------
+    FileNotFoundError
+        If package_dir has no pyproject.toml.
+    RuntimeError
+        If pyproject.toml has no [project] name/version, or if no matching
+        wheel and sdist are already published on the private index.
+    """
+    import tomllib
+
+    from koopa.alert import alert
+
+    pkg_path = Path(package_dir).resolve()
+    pyproject = pkg_path / "pyproject.toml"
+    if not pyproject.is_file():
+        msg = f"No pyproject.toml found in '{pkg_path}'."
+        raise FileNotFoundError(msg)
+
+    with open(pyproject, "rb") as fh:
+        meta = tomllib.load(fh)
+    project = meta.get("project", {})
+    name = project.get("name", "")
+    version = project.get("version", "")
+    if not name or not version:
+        msg = f"[project] name/version not found in '{pyproject}'."
+        raise RuntimeError(msg)
+
+    alert(f"Looking up published artifacts for '{name}' {version}.")
+    matches = _select_published_artifacts(_s3_list_packages(), name, version)
+    has_whl = any(f.endswith(".whl") for f in matches)
+    has_sdist = any(f.endswith(".tar.gz") for f in matches)
+    if not (has_whl and has_sdist):
+        msg = (
+            f"No published wheel and sdist found for '{name}' {version} on "
+            "the private index. Run 'publish' (without --pypi-only) instead."
+        )
+        raise RuntimeError(msg)
+
+    aws = _aws()
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        dist_files = []
+        for filename in matches:
+            local = os.path.join(tmp_dir, filename)
+            alert(f"Downloading '{filename}' from the private index.")
+            subprocess.run(
+                [
+                    aws,
+                    "s3",
+                    f"--profile={_PROFILE}",
+                    "cp",
+                    f"{_s3_uri()}/packages/{filename}",
+                    local,
+                ],
+                capture_output=True,
+                check=True,
+            )
+            dist_files.append(Path(local))
+
+        alert("Publishing to PyPI.")
+        _publish_to_pypi(dist_files)
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
 def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     """Build and publish a package's Sphinx docs to python.acidgenomics.com.
 
-    The rendered site is synced to s3://<python-bucket>/<name>/ where <name>
-    is the PEP 503-normalised project name read from pyproject.toml. Docs are
-    served at https://python.acidgenomics.com/<name>/ on the same domain and
-    bucket as the package index. The index at /simple/ is not touched.
+    The rendered site is synced to s3://<python-bucket>/<slug>/ where <slug>
+    is the docs slug (see _docs_slug) derived from the PEP 503-normalised
+    project name read from pyproject.toml. A distribution named
+    'acidgenomics-syntactic' still publishes docs to /syntactic/, not
+    /acidgenomics-syntactic/ -- the prefix is a PyPI naming concern only.
+    Docs are served at https://python.acidgenomics.com/<slug>/ on the same
+    domain and bucket as the package index. The index at /simple/ is not
+    touched.
 
     Parameters
     ----------
@@ -576,6 +769,12 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     if not (pkg_path / "docs" / "conf.py").is_file():
         msg = f"No docs/conf.py found in '{pkg_path}'."
         raise FileNotFoundError(msg)
+    if not sync_docs_theme([str(pkg_path)], check=True):
+        msg = (
+            f"Vendored Sphinx theme in '{pkg_path}' differs from koopa's tracked "
+            "source. Run `koopa app python sync-docs-theme` first."
+        )
+        raise RuntimeError(msg)
 
     with open(pyproject, "rb") as fh:
         meta = tomllib.load(fh)
@@ -584,8 +783,9 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
         msg = f"[project] name not found in '{pyproject}'."
         raise RuntimeError(msg)
     name = _normalize_name(raw_name)
-    if name in {"simple", "packages"}:
-        msg = f"Package name '{name}' collides with a reserved path on python.acidgenomics.com."
+    slug = _docs_slug(raw_name)
+    if slug in {"simple", "packages"}:
+        msg = f"Docs slug '{slug}' collides with a reserved path on python.acidgenomics.com."
         raise ValueError(msg)
 
     uv = _uv()
@@ -613,7 +813,7 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
             check=True,
         )
 
-        dest = f"{_s3_uri()}/{name}/"
+        dest = f"{_s3_uri()}/{slug}/"
         alert(f"Syncing docs to '{dest}'.")
         aws_s3_sync(out_dir + "/", dest, delete=True, profile=_PROFILE)
 
@@ -623,7 +823,7 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
-    alert(f"Docs published: https://python.acidgenomics.com/{name}/")
+    alert(f"Docs published: https://python.acidgenomics.com/{slug}/")
 
 
 def sync_docs_theme(package_dirs: list[str], *, check: bool = False) -> bool:

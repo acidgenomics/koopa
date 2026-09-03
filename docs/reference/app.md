@@ -195,6 +195,11 @@ Run 'brew cleanup'.
 
 Dump the current Homebrew Bundle to a Brewfile.
 
+(koopa-app-brew-fix-completion-dirs)=
+### `app brew fix-completion-dirs`
+
+Create shell completion dirs a cask sandbox can't create itself.
+
 (koopa-app-brew-install-bundle)=
 ### `app brew install-bundle`
 
@@ -636,9 +641,11 @@ python.acidgenomics.com package index and docs publishing.
 (koopa-app-python-publish)=
 ### `app python publish`
 
-Build and publish a Python package to python.acidgenomics.com.
+Build and publish a Python package to PyPI and python.acidgenomics.com.
 
 - `--force`
+- `--no-pypi`
+- `--pypi-only`
 
 (koopa-app-python-publish-docs)=
 ### `app python publish-docs`

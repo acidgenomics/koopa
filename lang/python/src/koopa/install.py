@@ -1312,6 +1312,14 @@ def install_python_package(
     os.makedirs(bin_dir, exist_ok=True)
     # Create venv.
     subprocess.run([python, "-m", "venv", libexec], check=True)
+    # koopa always installs an exact, already-vetted pin here (never a
+    # floating resolve), so a user-configured dependency cooldown
+    # (global.uploaded-prior-to in ~/.config/pip/pip.conf) adds no safety
+    # value and only breaks installs of recently released app.json pins.
+    # A site-level pip.conf (sys.prefix/pip.conf) outranks the user config
+    # and, set to an empty value, un-sets the key for this venv only.
+    with open(os.path.join(libexec, "pip.conf"), "w") as f:
+        f.write("[global]\nuploaded-prior-to =\n")
     venv_pip = os.path.join(libexec, "bin", "pip")
     pip_args = [venv_pip, "install", "--no-cache-dir"]
     if no_binary:
@@ -1753,11 +1761,17 @@ def install_conda_package(
     version: str = "",
     prefix: str = "",
     yaml_file: str = "",
+    post_extract_fn: Callable[[str], None] | None = None,
 ) -> None:
     """Install a conda environment as an application.
 
     Creates a conda env in ``<prefix>/libexec`` and links binaries into
     ``<prefix>/bin``. Uses a single channel resolved from conda config.
+
+    ``post_extract_fn``, when given, runs with the ``libexec`` path after the
+    conda env is created and before binaries are linked. It exists for a
+    per-app installer (e.g. ``installers/neovim.py``) to patch a known-broken
+    package build; the shared conda-package path does not use it.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1808,6 +1822,8 @@ def install_conda_package(
         raise RuntimeError(msg) from None
     finally:
         shutil.rmtree(tmp_pkg_cache, ignore_errors=True)
+    if post_extract_fn is not None:
+        post_extract_fn(libexec)
     _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
 
 
@@ -1843,6 +1859,7 @@ def _link_conda_binaries(
     man1_src_dir = os.path.join(libexec, "share", "man", "man1")
     man1_dst_dir = os.path.join(prefix, "share", "man", "man1")
     os.makedirs(bin_dir, exist_ok=True)
+    broken: dict[str, list[str]] = {}
     for bin_name in bin_names:
         src = os.path.join(libexec_bin, bin_name)
         if not os.path.isfile(src):
@@ -1859,6 +1876,59 @@ def _link_conda_binaries(
             if os.path.islink(man1_dst):
                 os.unlink(man1_dst)
             os.symlink(man1_src, man1_dst)
+        missing = _missing_shared_libs(src)
+        if missing:
+            broken[bin_name] = missing
+    if broken:
+        details = "; ".join(f"{k}: {', '.join(v)}" for k, v in broken.items())
+        msg = (
+            f"Conda package '{name}' installed binaries with unresolved shared "
+            f"library dependencies ({details}). The installed package was "
+            "likely linked against a different soname than the one the conda "
+            "solver resolved. Check for a newer build of the missing "
+            "library's package, or pin it to the version the binary expects."
+        )
+        raise RuntimeError(msg)
+
+
+def _is_elf(path: str) -> bool:
+    """Return True when the file at path starts with the ELF magic bytes."""
+    with open(path, "rb") as fh:
+        return fh.read(4) == b"\x7fELF"
+
+
+def _parse_ldd_missing(output: str) -> list[str]:
+    """Parse ldd output and return the sorted, de-duplicated missing libraries."""
+    missing = set()
+    for line in output.splitlines():
+        if "not found" not in line:
+            continue
+        missing.add(line.split("=>")[0].strip())
+    return sorted(missing)
+
+
+def _missing_shared_libs(binary: str) -> list[str]:
+    """Return shared libraries that ldd cannot resolve for an ELF binary.
+
+    Linux-only: otool -L on macOS does not report a missing library the way
+    ldd does, so this is a no-op there. ldd exits 0 for a valid ELF file even
+    when a dependency is missing, so check=True is safe once _is_elf() has
+    filtered out scripts (a non-ELF file makes ldd exit non-zero).
+    """
+    if not is_linux():
+        return []
+    if shutil.which("ldd") is None:
+        return []
+    if not _is_elf(binary):
+        return []
+    result = subprocess.run(
+        ["ldd", binary],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    return _parse_ldd_missing(result.stdout)
 
 
 # -- Haskell package installer ------------------------------------------------
@@ -2545,6 +2615,13 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
+            # Overrides any user-configured dependency cooldown
+            # (exclude-newer in ~/.config/uv/uv.toml). This installs the
+            # extras pinned in koopa's own pyproject.toml, not a floating
+            # resolve, so the cooldown adds no safety value here and would
+            # only break installs of a recently released extra.
+            "--exclude-newer",
+            "false",
             # uv bundles its own TLS cert store rather than consulting the OS
             # one. On networks where the OS store trusts a cert uv's bundled
             # store doesn't (observed against python.acidgenomics.com), uv
@@ -2976,12 +3053,39 @@ class InstallPlanError(RuntimeError):
     Carries the specific app names that failed at the plan's root (excluding
     apps skipped only because a dependency failed), so a caller can retry
     exactly those apps instead of re-deriving the failure set by parsing the
-    formatted message text.
+    formatted message text. ``non_retryable`` is the subset of those apps
+    whose failure log matches a pattern that cannot succeed on a second
+    attempt (e.g. a missing distribution on the configured pip index), so a
+    caller can skip retrying them instead of reprinting the same failure.
     """
 
-    def __init__(self, message: str, failed_apps: list[str]) -> None:
+    def __init__(
+        self, message: str, failed_apps: list[str], non_retryable: list[str] | None = None
+    ) -> None:
         super().__init__(message)
         self.failed_apps = failed_apps
+        self.non_retryable = non_retryable or []
+
+
+# A build log matching one of these patterns cannot succeed on a second,
+# identical attempt: the requested version simply is not present on the
+# index/registry that was queried, so retrying only reprints the same failure.
+_NON_RETRYABLE_LOG_PATTERNS = (
+    "no matching distribution found",
+    "could not find a version that satisfies",
+)
+
+
+def _is_retryable_failure(message: str, tail: str) -> bool:
+    """Return whether a failed app's build output looks worth retrying.
+
+    Classifies from the log tail, not the raised exception message alone --
+    for a ``pip install`` failure, the exception message is only ``"Command
+    '[...]' returned non-zero exit status 1."`` and never holds the actual
+    ``pip`` error text.
+    """
+    combined = f"{message}\n{tail}".lower()
+    return not any(pattern in combined for pattern in _NON_RETRYABLE_LOG_PATTERNS)
 
 
 def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
@@ -3057,6 +3161,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     done: set[str] = set()
     failed: set[str] = set()
     fail_msgs: dict[str, str] = {}
+    fail_tails: dict[str, str] = {}
 
     cpu_busy = False
     io_running = 0
@@ -3243,6 +3348,8 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                         _clear()
                     failed.add(app)
                     fail_msgs[app] = _error
+                    if _tail:
+                        fail_tails[app] = _tail
                     alert(f"Failed to install {app}: {_error}")
                     if _tail:
                         sys.stderr.write(_tail)
@@ -3270,13 +3377,18 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         root_failures = sorted(fail_msgs)
         skipped = sorted(failed - set(root_failures))
         n_root_failures = len(root_failures)
+        non_retryable = [
+            name
+            for name in root_failures
+            if not _is_retryable_failure(fail_msgs[name], fail_tails.get(name, ""))
+        ]
         parts = [
             f"{n_root_failures} {plural(n_root_failures, 'app')} failed: "
             f"{', '.join(root_failures)}."
         ]
         if skipped:
             parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
-        raise InstallPlanError(" ".join(parts), root_failures)
+        raise InstallPlanError(" ".join(parts), root_failures, non_retryable)
     _save_pending_plan([], source=source)
 
 

@@ -1,7 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Bash(*)",
+      "Bash(chezmoi diff:*)",
+      "Bash(chezmoi managed:*)",
+      "Bash(chezmoi status:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(koopa develop:*)",
+      "Bash(koopa list:*)",
+      "Bash(koopa system info:*)",
+      "Bash(mktemp -d)",
+      "Bash(pyright:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff check:*)",
+      "Bash(ruff format:*)",
+      "Bash(uv pip compile:*)",
       "Edit(**)",
       "Edit(//**/*lessons.md)",
       "Grep",
@@ -12,9 +26,12 @@
       "mcp__ide__*",
       "mcp__mcp-atlassian__*",
       "mcp__read-website-fast__*",
-      "mcp__tooluniverse__*"
+      "mcp__tooluniverse__*",
+      "Edit(/.claude/skills/koopa-python-release/**)",
+      "Edit(/.claude/skills/koopa-chezmoi-dotfiles/**)",
+      "Edit(/.claude/skills/koopa-r-release/**)",
+      "Edit(/.claude/skills/koopa-shell-internals/**)"
     ],
-    "defaultMode": "plan",
     "deny": [
       "Bash(git add*)",
       "Bash(git commit*)",
@@ -29,6 +46,7 @@
       "Edit(.env*)",
       "Read(**/.env*)",
       "Read(.env*)"
-    ]
+    ],
+    "defaultMode": "plan"
   }
 }

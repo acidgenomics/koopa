@@ -6,7 +6,7 @@ _koopa_activate_zsh_completion() {
     # @note Updated 2026-05-03.
     #
     # Native compdef completions (_koopa, _chezmoi, _gh, etc.) are in
-    # $KOOPA_PREFIX/share/zsh/site-functions/ which is on $fpath and picked
+    # ${KOOPA_PREFIX}/share/zsh/site-functions/ which is on $fpath and picked
     # up automatically when compinit runs.
     #
     # Two apps ship non-compdef sourceable scripts that must be sourced

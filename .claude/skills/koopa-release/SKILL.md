@@ -50,7 +50,7 @@ File: `CHANGELOG.md` at the repo root.
 Section heading: `## koopa X.Y.Z (YYYY-MM-DD)`
 - Bare version — no `v` prefix.
 - ISO date in parentheses — use the date of the version-bump commit.
-- No blank line between `## heading` and the first subsection heading.
+- Insert a blank line between `## heading` and the first subsection heading.
 
 Subsections (in order, omit if empty):
 - `Major changes:` — substantive user-facing changes, ~4-6 bullets.

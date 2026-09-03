@@ -1,12 +1,15 @@
 """Installer registry unit tests."""
 
+import os
+import subprocess
 from pathlib import Path
 from types import ModuleType
 from unittest.mock import patch
 
 import pytest
 from koopa.install import _app_json_installer
-from koopa.installers import bcl_convert, cellranger, has_python_installer
+from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim
+from koopa.installers import pyright as pyright_installer
 from koopa.io import import_app_json
 
 _BANNED_CPU_COUNT_PATTERNS = (
@@ -145,3 +148,118 @@ def test_cellranger_extracts_nested_vendor_tar(tmp_path: Path) -> None:
 
     assert extract_mock.call_count == 2
     assert (Path(prefix) / "bin").is_symlink()
+
+
+def test_fix_unibilium_soname_creates_symlink(tmp_path: Path) -> None:
+    """The malformed soname is symlinked to the real, correctly-built library."""
+    lib_dir = tmp_path / "libexec" / "lib"
+    lib_dir.mkdir(parents=True)
+    (lib_dir / "libunibilium.so.4.0.2").touch()
+    (lib_dir / "libunibilium.so.4").symlink_to("libunibilium.so.4.0.2")
+
+    neovim._fix_unibilium_soname(str(tmp_path / "libexec"))
+
+    broken = lib_dir / "libunibilium.so.."
+    assert broken.is_symlink()
+    assert os.readlink(broken) == "libunibilium.so.4.0.2"
+
+
+def test_fix_unibilium_soname_is_idempotent(tmp_path: Path) -> None:
+    """A second run does not touch an already-repaired lib dir."""
+    lib_dir = tmp_path / "libexec" / "lib"
+    lib_dir.mkdir(parents=True)
+    (lib_dir / "libunibilium.so.4.0.2").touch()
+    broken = lib_dir / "libunibilium.so.."
+    broken.symlink_to("some-other-target")
+
+    neovim._fix_unibilium_soname(str(tmp_path / "libexec"))
+
+    assert os.readlink(broken) == "some-other-target"
+
+
+def test_fix_unibilium_soname_noop_when_library_absent(tmp_path: Path) -> None:
+    """No unibilium library present means nothing to link against; skip silently."""
+    lib_dir = tmp_path / "libexec" / "lib"
+    lib_dir.mkdir(parents=True)
+
+    neovim._fix_unibilium_soname(str(tmp_path / "libexec"))
+
+    assert not (lib_dir / "libunibilium.so..").exists()
+
+
+def test_neovim_main_applies_fix_on_linux() -> None:
+    """main() wires the unibilium hotfix into install_conda_package on Linux."""
+    with (
+        patch("koopa.installers.neovim.is_linux", return_value=True),
+        patch("koopa.installers.neovim.install_conda_package") as install_mock,
+    ):
+        neovim.main(name="neovim", version="0.12.5", prefix="/opt/koopa/app/neovim/0.12.5")
+
+    assert install_mock.call_args.kwargs["post_extract_fn"] is neovim._fix_unibilium_soname
+
+
+def test_neovim_main_skips_fix_off_linux() -> None:
+    """main() does not install the hotfix on a platform ldd can't help with."""
+    with (
+        patch("koopa.installers.neovim.is_linux", return_value=False),
+        patch("koopa.installers.neovim.install_conda_package") as install_mock,
+    ):
+        neovim.main(name="neovim", version="0.12.5", prefix="/opt/koopa/app/neovim/0.12.5")
+
+    assert install_mock.call_args.kwargs["post_extract_fn"] is None
+
+
+# -- pyright: post-install npm-engine smoke test ------------------------------
+
+
+def test_pyright_main_installs_then_verifies() -> None:
+    """main() runs the pip install before the 'pyright --version' smoke test."""
+    with (
+        patch("koopa.installers.pyright.install_python_package") as install_mock,
+        patch("koopa.installers.pyright._verify") as verify_mock,
+    ):
+        pyright_installer.main(
+            name="pyright", version="1.1.411", prefix="/opt/koopa/app/pyright/1.1.411"
+        )
+
+    install_mock.assert_called_once()
+    verify_mock.assert_called_once_with("/opt/koopa/app/pyright/1.1.411")
+
+
+def test_pyright_verify_raises_when_npm_engine_is_broken() -> None:
+    """A broken npm/Node engine (this repo's actual failure) fails the install.
+
+    Reproduces the 2026-09-02 incident: a corrupted Node build made npm warn
+    about an unsupported engine, and pyright-python mis-parsed that warning's
+    own version number as the latest pyright release, then failed to install
+    it. '_verify' must surface that npm output instead of installing silently.
+    """
+    broken = subprocess.CompletedProcess(
+        args=["pyright", "--version"],
+        returncode=1,
+        stdout="",
+        stderr=(
+            "npm warn cli npm v11.19.0 does not support Node.js v26.8.0-alpha.0.0.0\n"
+            "npm error code ETARGET\n"
+            "npm error notarget No matching version found for pyright@11.19.0.\n"
+        ),
+    )
+    with (
+        patch("koopa.installers.pyright.subprocess.run", return_value=broken) as run_mock,
+        pytest.raises(RuntimeError, match="ETARGET"),
+    ):
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411")
+
+    assert run_mock.call_args.kwargs["env"]["PYRIGHT_PYTHON_FORCE_VERSION"] == "latest"
+
+
+def test_pyright_verify_passes_when_version_prints() -> None:
+    """A working engine reports 'pyright <version>' and '_verify' is silent."""
+    ok = subprocess.CompletedProcess(
+        args=["pyright", "--version"],
+        returncode=0,
+        stdout="pyright 1.1.413\n",
+        stderr="",
+    )
+    with patch("koopa.installers.pyright.subprocess.run", return_value=ok):
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411")

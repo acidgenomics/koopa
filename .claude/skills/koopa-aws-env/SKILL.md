@@ -51,6 +51,11 @@ AWS_CLOUDFRONT_DISTRIBUTION_ID=<id>            # generic fallback (optional)
 # Builder designation (optional — see koopa-app-registry's "KOOPA_BUILDER
 # gating" section for what this flag controls)
 KOOPA_BUILDER=1
+
+# Public PyPI upload token, read by pypi.py's publish() via dotenv_value().
+# Needs an account-scoped token for a brand-new project's first upload; a
+# project-scoped token can't create the project it's scoped to.
+UV_PUBLISH_TOKEN=<token>
 ```
 
 `KOOPA_BUILDER` is not an AWS identifier, but `.env` is a valid home for it

@@ -1,10 +1,13 @@
 ---
 name: koopa-python-release
 description: >-
-  Acid Genomics Python package release — python.acidgenomics.com PEP 503
-  S3+CloudFront index at /simple/, same-domain docs at /<name>/, categorized
-  landing page at /, koopa app python publish/publish-docs/sync-docs-theme/
-  reindex, quality gate (ruff/pyright/ty/pytest/numpydoc lint), pytest
+  Acid Genomics Python package release, published to three targets: public
+  PyPI (as acidgenomics-<name>, import name unchanged), the private
+  python.acidgenomics.com PEP 503 S3+CloudFront index at /simple/ with
+  same-domain docs at the short /<slug>/ path and a categorized landing page
+  at /, and Bioconda under the bare recipe name. koopa app python
+  publish/publish-docs/sync-docs-theme/reindex, UV_PUBLISH_TOKEN in .env,
+  quality gate (ruff/pyright/ty/pytest/numpydoc lint), pytest
   --doctest-modules wiring, pkgdown-shaped docs/ structure (index.md +
   reference/index.rst + changelog.md), CHANGELOG format, smoke test, uv run
   venv-shebang gotcha, Sphinx docs-build RST/numpydoc pitfalls, shared
@@ -16,41 +19,69 @@ description: >-
 
 ## Hosting
 
-Python packages are hosted at **python.acidgenomics.com** — a private PEP 503
-"simple" index backed by S3 (bucket `python-<account-id>-us-east-1-an` via
-`koopa_s3_bucket("python")` in `aws.py`) and served via CloudFront. Packages
-are NOT published to public pypi.org.
+Every package publishes to three targets, in this order inside `publish()`:
 
-All Python materials (packages, docs, landing page) live on the same domain
-and bucket. Layout:
+1. **Public PyPI** (`pypi.org`) — the primary target for consumers. The
+   distribution name always carries the `acidgenomics-` prefix (e.g.
+   `acidgenomics-syntactic`), since several bare names (`syntactic`, `goalie`,
+   `pipette`) already belong to unrelated projects on PyPI. The import name
+   never changes: `import syntactic` still works. `_DIST_PREFIX` in `pypi.py`
+   holds the literal prefix.
+2. **python.acidgenomics.com** — a private PEP 503 "simple" index backed by
+   S3 (bucket `python-<account-id>-us-east-1-an` via `koopa_s3_bucket("python")`
+   in `aws.py`) and served via CloudFront. Kept alongside PyPI, not replaced
+   by it — internal tooling and docs still point here.
+3. **Bioconda** — under the pre-existing bare recipe name (`syntactic`), not
+   the PyPI-prefixed name. See the "Bioconda" section below.
+
+All python.acidgenomics.com materials (packages, docs, landing page) live on
+the same domain and bucket. Layout:
 
 | URL | S3 key | Produced by |
 |---|---|---|
 | `python.acidgenomics.com/` | `index.html` | `reindex` (generated landing page) |
 | `.../simple/` | `simple/index.html` | `reindex` (PEP 503 root) |
-| `.../simple/<name>/` | `simple/<name>/index.html` | `reindex` (per-package) |
+| `.../simple/<dist-name>/` | `simple/<dist-name>/index.html` | `reindex` (per-package) |
 | `.../packages/<file>` | `packages/<file>` | `publish` |
-| `.../<name>/` | `<name>/index.html` | `publish-docs` (Sphinx) |
+| `.../<slug>/` | `<slug>/index.html` | `publish-docs` (Sphinx) |
 
-- Publish tooling: `koopa app python publish <package-dir>`
+The index (`/simple/<dist-name>/`) is keyed by the full PyPI distribution
+name, but docs and the landing page use the short **docs slug** — the
+distribution name with `acidgenomics-` stripped (`_docs_slug()` in
+`pypi.py`) — so `acidgenomics-syntactic` still serves docs at `/syntactic/`,
+not `/acidgenomics-syntactic/`. This keeps existing doc URLs and Bioconda
+`about.home` fields valid across the rename. The landing page collapses a
+package's old bare-name index entry and new prefixed entry onto one slug,
+preferring the prefixed name's summary.
+
+- Publish tooling: `koopa app python publish <package-dir>` (add `--no-pypi`
+  to skip the PyPI upload and publish to the private index only; add
+  `--pypi-only` to upload an already-published version's artifacts to PyPI
+  only, skipping build/S3/reindex/tag -- the resume path when the S3 half
+  succeeded but the PyPI upload then failed, e.g. on a rate limit)
 - Docs tooling: `koopa app python publish-docs <package-dir>`
 - Reindex tooling: `koopa app python reindex`
 - Implementation: `lang/python/src/koopa/pypi.py`
+
+Publishing to PyPI needs `UV_PUBLISH_TOKEN` in `<koopa-root>/.env` (see
+`koopa-aws-env`). A brand-new project name needs an account-scoped token for
+its first upload; a project-scoped token can't create the project it's
+scoped to.
 
 ## Consumer install
 
 ```sh
 # one-off
-uv pip install --index-url 'https://python.acidgenomics.com/simple/' syntactic
+uv pip install acidgenomics-syntactic
 
 # project pyproject.toml
-[[tool.uv.index]]
-name = "acidgenomics"
-url = "https://python.acidgenomics.com/simple/"
-
-[tool.uv]
-sources.syntactic = { index = "acidgenomics" }
+[project]
+dependencies = ["acidgenomics-syntactic"]
 ```
+
+No custom index configuration is needed — the package is on public PyPI.
+The private python.acidgenomics.com index and Bioconda remain available as
+secondary install paths (see the package's own README for both).
 
 ## Release checklist (e.g. `py-syntactic`)
 
@@ -192,14 +223,32 @@ extra optional-dependency groups need those included too, e.g.
 koopa app python publish ~/git/personal/py-syntactic
 ```
 
-This runs `uv build`, uploads wheel + sdist to S3, regenerates the PEP 503
-index HTML under `simple/` (scoped `--delete` cannot touch `packages/` or
-per-package docs), re-generates the landing page at `/`, and invalidates
-CloudFront `/*`.
+This runs `uv build` once, then uploads the same wheel + sdist to S3,
+regenerates the PEP 503 index HTML under `simple/` (scoped `--delete` cannot
+touch `packages/` or per-package docs), re-generates the landing page at `/`,
+invalidates CloudFront `/*`, and finally uploads the same files to public
+PyPI via `uv publish`. PyPI runs last on purpose: a PyPI release is permanent
+even after deletion, while an S3 object can still be corrected, so the
+reversible step goes first. Pass `--no-pypi` to stop after the private index
+and skip PyPI.
+
+If the run fails partway, after the S3 upload but before or during the PyPI
+upload (e.g. a PyPI rate limit), re-running plain `publish` rebuilds from
+source and `_check_no_artifact_collision` refuses if the rebuilt bytes differ
+even slightly from what is already published. Pass `--pypi-only` instead: it
+downloads the exact wheel and sdist already on the private index for the
+version in `pyproject.toml` and uploads only those to PyPI, skipping build,
+S3, reindex, and tagging. Raises if no matching wheel and sdist are already
+published (nothing to resume; run plain `publish`). Mutually exclusive with
+`--no-pypi`; combining with `--force` is a parser error since no collision
+check runs in this mode.
 
 Requires: AWS profile `acidgenomics` configured; `AWS_CLOUDFRONT_DISTRIBUTION_ID_PYTHON`
-set (or `AWS_CLOUDFRONT_DISTRIBUTION_ID` as fallback) — loaded from
-`<koopa-root>/.env` if not already in the environment.
+set, and `UV_PUBLISH_TOKEN` set — both loaded from `<koopa-root>/.env` if not
+already in the environment. `AWS_CLOUDFRONT_DISTRIBUTION_ID` (the generic,
+non-python-specific var) is not accepted as a fallback: `_cloudfront_distribution_id()`
+raises `RuntimeError` if the specific var is unset, even when the generic one
+is set, to avoid silently invalidating the wrong CloudFront distribution.
 
 ### User-owned (git)
 
@@ -213,14 +262,12 @@ Merging `develop`→`main` via PR before tagging is the standard flow.
 
 ### Verification
 
-After publish, confirm the package is installable:
+After publish, confirm the package is installable from PyPI:
 ```sh
 tmp=$(mktemp -d)
-uv venv --quiet "$tmp/venv"
-uv pip install --python "$tmp/venv/bin/python" \
-    --index-url 'https://python.acidgenomics.com/simple/' \
-    syntactic
-"$tmp/venv/bin/python" -c "import syntactic; print(syntactic.__all__)"
+uv venv --quiet "${tmp}/venv"
+uv pip install --python "${tmp}/venv/bin/python" acidgenomics-syntactic
+"${tmp}/venv/bin/python" -c "import syntactic; print(syntactic.__all__)"
 rm -rf "$tmp"
 ```
 
@@ -231,8 +278,9 @@ artifact are correct without installing anything, and surface the real
 install command for the user to run:
 
 ```sh
-curl -sI 'https://python.acidgenomics.com/simple/syntactic/'   # 200
-curl -sI 'https://python.acidgenomics.com/packages/syntactic-<ver>-py3-none-any.whl'
+curl -sI 'https://pypi.org/pypi/acidgenomics-syntactic/json'   # 200
+curl -sI 'https://python.acidgenomics.com/simple/acidgenomics-syntactic/'   # 200
+curl -sI 'https://python.acidgenomics.com/packages/acidgenomics_syntactic-<ver>-py3-none-any.whl'
 ```
 
 ## pypi.py index layout
@@ -334,27 +382,34 @@ stub file not found`. Reference only one of the two names in
 Check every package's `__all__` for other lowercased duplicates before
 assuming this doesn't apply.
 
-**Install guide must match the README, not `pip install <name>`.** Sphinx
-doc scaffolds (and stale hand-written ones) commonly default to
+**Install guide must match the README, not a bare `pip install <name>`.**
+Sphinx doc scaffolds (and stale hand-written ones) commonly default to
 `pip install <name>` in the Installation section. That's wrong here — the
-package doesn't exist on public PyPI, only on the private index — so it
-sends readers straight into a `pip` failure or, worse, a same-named
-malicious package on PyPI. Always match the README's install block exactly:
+distribution name carries the `acidgenomics-` prefix, so the bare import
+name isn't installable, and a bare-name `pip install` may resolve to an
+unrelated (or malicious) same-named package on PyPI. Always match the
+README's install block exactly:
 
 > ## Installation
 >
-> This package is hosted at [python.acidgenomics.com](https://python.acidgenomics.com/).
+> This is a [Python](https://www.python.org/) package hosted on
+> [PyPI](https://pypi.org/project/acidgenomics-<name>/) as
+> `acidgenomics-<name>`. The import name is unchanged: `<name>`.
 > We recommend using [uv](https://docs.astral.sh/uv/) to install.
 >
 > ```sh
-> uv pip install \
->     --index-url 'https://python.acidgenomics.com/simple/' \
->     <name>
+> uv add acidgenomics-<name>
+> ```
+>
+> Or with [pip](https://pip.pypa.io/):
+>
+> ```sh
+> pip install acidgenomics-<name>
 > ```
 
-Check `README.md` and `docs/index.md` together whenever the index URL
-changes — they drift independently and neither build/test/lint gate catches
-a wrong-but-valid install snippet.
+Check `README.md` and `docs/index.md` together whenever the install
+instructions change — they drift independently and neither build/test/lint
+gate catches a wrong-but-valid install snippet.
 
 ## Docs-build gotchas (`sphinx-build -W`)
 
@@ -529,12 +584,21 @@ carry over `pydata`'s own `html_theme_options` keys (`github_url`, `logo`,
 `publish-docs`. Also drop `pydata-sphinx-theme` from
 `optional-dependencies.docs` in `pyproject.toml`.
 
-Re-run `sync-docs-theme` after editing the tracked theme files in koopa;
-`publish-docs` builds whatever is already vendored in the package repo, it
-does not re-sync. A `.gitignore` negation for the theme's `layout.html` is
-required in each package repo — the global `~/.config/git/ignore` has a
-blanket `*.html` rule, so `!docs/_themes/**/*.html` (alongside the existing
-`!docs/` negation) is needed or the file silently won't track.
+Re-run `sync-docs-theme` after editing the tracked theme files in koopa.
+`publish-docs` (both `pypi.publish_docs()` and koopa's own `site.publish_docs()`)
+refuses to build against a drifted vendored copy: it calls `sync_docs_theme([pkg],
+check=True)` before running `sphinx-build` and raises `RuntimeError` if the
+package's `docs/_themes/acidgenomics/` differs from koopa's tracked source. This
+guard exists because a stale vendored theme was silently published for months
+across three packages (`acidplyr`, `cellosaurus`, `syntactic`) after the shared
+theme's header was reworked — nothing detected it until a live-site audit
+compared `acidgenomics.css`'s querystring hash across every package. Run
+`koopa app python sync-docs-theme <package-dir>` to fix a raised drift error.
+
+A `.gitignore` negation for the theme's `layout.html` is required in each
+package repo — the global `~/.config/git/ignore` has a blanket `*.html` rule,
+so `!docs/_themes/**/*.html` (alongside the existing `!docs/` negation) is
+needed or the file silently won't track.
 
 ### Footer copyright/license clause
 
@@ -669,6 +733,31 @@ Keep-a-Changelog style, version at top. Example heading:
 
 Sections: `### Features`, `### Bug Fixes`, `### Changes`, `### Tests`.
 Omit empty sections.
+
+## Bioconda
+
+Every package also ships a Bioconda recipe under its **bare** name
+(`recipes/syntactic`, not `recipes/acidgenomics-syntactic`) — the recipe
+predates the PyPI rename and is already published on the channel; renaming
+it would ship a second, orphaned package rather than update the first.
+`conda install syntactic` keeps working unchanged.
+
+Only the recipe's `source` block moves, from the GitHub release tarball to
+the PyPI sdist, once that version is live on PyPI:
+
+```yaml
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/acidgenomics-{{ name }}/acidgenomics_{{ name }}-{{ version }}.tar.gz"
+  sha256: "<sdist sha256>"
+```
+
+The sdist filename uses underscores (`acidgenomics_syntactic-...`), matching
+PEP 503 wheel/sdist normalization, not the hyphenated distribution name. This
+also lets Bioconda's autobump bot track PyPI releases instead of GitHub tags.
+`package.name`, `about.home` (still the short docs slug), `run_exports`, and
+`test.imports` are untouched by the rename — see the `bioconda` skill for the
+GitHub Contents API PR workflow (never `git push`; the upstream clone is
+about 700 MB and checked out sparse).
 
 ## R analog
 

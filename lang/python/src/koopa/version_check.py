@@ -15,11 +15,13 @@ import urllib.request
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
+from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from koopa.installers import PYTHON_INSTALLERS
+from koopa.installers import PIP_VERSIONED_INSTALLERS, PYTHON_INSTALLERS
 from koopa.io import export_app_json, import_app_json
 from koopa.prefix import koopa_prefix
 from koopa.version import PRERELEASE_MARKERS, sanitize_version
@@ -156,10 +158,10 @@ del _ca_bundle
 _INSTALLER_MODULE_RE = re.compile(r"koopa\.installers\.(_\w+)")
 _GITHUB_REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git|/|\"|\"|'|$)")
 _VERSION_RE = re.compile(r"^\d[\d.\-+a-zA-Z]*$")
-_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+_SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 _PRERELEASE_RE = re.compile(
-    rf"(?<![a-zA-Z])(?:{PRERELEASE_MARKERS})(?![a-zA-Z])",
-    re.IGNORECASE,
+    rf"(?: (?<![a-zA-Z])(?:{PRERELEASE_MARKERS})(?![a-zA-Z]) | (?<=\d)(?:[ab])(?=\d)(?![a-zA-Z]) )",
+    re.IGNORECASE | re.VERBOSE,
 )
 
 
@@ -167,12 +169,88 @@ def _version_key(version: str) -> tuple[int, ...]:
     """Parse version string into a comparable int tuple, handling trailing letters."""
     nums = []
     for part in re.split(r"[.\-]", version):
-        m = re.match(r"(\d+)([a-zA-Z]?)", part)
+        m = re.match(r"(\d+)([a-zA-Z]?)(\d*)", part)
         if m:
             nums.append(int(m.group(1)))
             if m.group(2):
                 nums.append(ord(m.group(2).lower()))
+            if m.group(3):
+                nums.append(int(m.group(3)))
     return tuple(nums)
+
+
+def _is_excluded(version: str, excluded: tuple[str, ...]) -> bool:
+    """Return whether a version is on an app's ``version_exclude`` list."""
+    if version in excluded:
+        return True
+    san = sanitize_version(version)
+    return any(san == sanitize_version(x) for x in excluded)
+
+
+def _audit_version_excludes(json_data: dict[str, Any]) -> tuple[list[str], list[str]]:
+    """Audit each app's ``version_exclude`` list against its current pin.
+
+    Returns ``(contradictions, stale_holds)``. A contradiction is a pin that is
+    itself excluded. A stale hold is an exclusion list entirely below the
+    current pin, meaning the hold no longer does anything and can be removed.
+    Holds with unorderable version strings are excluded from the stale-hold
+    audit because their relative order cannot be determined safely.
+    """
+    contradictions: list[str] = []
+    stale_holds: list[str] = []
+    for app_name, info in sorted(json_data.items()):
+        if info.get("alias_of") or info.get("removed", False):
+            continue
+        excluded = tuple(info.get("version_exclude", ()))
+        version = info.get("version", "")
+        if not (excluded and version):
+            continue
+        if _is_excluded(version, excluded):
+            contradictions.append(f"{app_name}: current pin {version} is itself excluded")
+            continue
+        try:
+            cur_key = _version_key(sanitize_version(version))
+            if all(_version_key(sanitize_version(x)) < cur_key for x in excluded):
+                stale_holds.append(
+                    f"{app_name}: version_exclude {list(excluded)} is below the "
+                    f"current pin {version}; safe to remove"
+                )
+        except (ValueError, AttributeError):
+            continue
+    return contradictions, stale_holds
+
+
+def _print_version_exclude_audit(contradictions: list[str], stale_holds: list[str]) -> None:
+    """Print version_exclude health findings from _audit_version_excludes."""
+    for msg in contradictions:
+        print(f"Warning: {msg}", file=sys.stderr)
+    if stale_holds:
+        print(f"Stale holds ({len(stale_holds)}):", file=sys.stderr)
+        for msg in stale_holds:
+            print(f"  {msg}", file=sys.stderr)
+
+
+def _held_message(
+    app_name: str,
+    current: str,
+    latest: str,
+    excluded: tuple[str, ...],
+    gran: str | None,
+) -> str | None:
+    """Return a hold message if ``latest`` should not be written, else None."""
+    if _is_excluded(latest, excluded):
+        return f"{app_name}: {latest} available upstream; excluded, pin held at {current}"
+    if gran == "minor" and not (_SHA_RE.match(latest) or _SHA_RE.match(current)):
+        try:
+            latest_key = _version_key(sanitize_version(latest))[:2]
+            current_key = _version_key(sanitize_version(current))[:2]
+        except (ValueError, AttributeError):
+            return None
+        if latest_key == current_key:
+            return (
+                f"{app_name}: {latest} available upstream; not a minor bump, pin held at {current}"
+            )
+    return None
 
 
 def _is_prerelease(version: str) -> bool:
@@ -193,6 +271,9 @@ def _is_prerelease(version: str) -> bool:
     bool
         True if the version looks like a pre-release.
     """
+    version = version.strip()
+    if _SHA_RE.fullmatch(version):
+        return False
     return bool(_PRERELEASE_RE.search(version))
 
 
@@ -216,7 +297,7 @@ def _is_retryable_network_error(exc: BaseException) -> bool:
         return exc.code >= 500 or exc.code in (403, 429)
     if isinstance(exc, urllib.error.URLError):
         return isinstance(exc.reason, (ssl.SSLError, ConnectionResetError, TimeoutError))
-    return isinstance(exc, (ssl.SSLError, ConnectionResetError))
+    return isinstance(exc, (ssl.SSLError, ConnectionResetError, TimeoutError))
 
 
 def _http_get_json(
@@ -234,12 +315,14 @@ def _http_get_json(
         req.add_header("Accept", "application/vnd.github+json")
         if _github_token:
             req.add_header("Authorization", f"Bearer {_github_token}")
-    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | None = None
+    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | TimeoutError | None = (
+        None
+    )
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return json.loads(resp.read().decode())
-        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
+        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError) as exc:
             if not _is_retryable_network_error(exc):
                 raise
             last_exc = exc
@@ -255,12 +338,14 @@ def _http_get_text(
     _rate_default.wait()
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | None = None
+    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | TimeoutError | None = (
+        None
+    )
     for attempt in range(_retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return resp.read().decode(encoding)
-        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError) as exc:
+        except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError) as exc:
             if not _is_retryable_network_error(exc):
                 raise
             last_exc = exc
@@ -323,8 +408,43 @@ def _check_github(owner: str, repo: str) -> str:
     return _sanitize_github_tag(tag, repo)
 
 
-def _check_pypi(package: str) -> str:
+# Matches the P14D dependency cooldown used elsewhere (pip's uploaded-prior-to,
+# uv's exclude-newer): a release must be at least this many days old to pin.
+_PYPI_COOLDOWN_DAYS = 14
+
+
+def _check_pypi(package: str, current: str = "") -> str:
+    """Return the newest stable PyPI release at least `_PYPI_COOLDOWN_DAYS` days old.
+
+    A pre-release (alpha, beta, rc, dev, ...) is never eligible, so it can
+    never win `max()` over an older stable release. Without this, a package
+    with a recent alpha/beta/rc upload would report that pre-release as the
+    latest version forever, even after the pin has already drifted onto a
+    pre-release itself.
+
+    The currently pinned *stable* version is always treated as eligible,
+    regardless of its age. Cooldown only gates a *new* recommendation; it
+    must never make an already-adopted, genuinely-latest pin look "pinned
+    too high" just because it's recent.
+    """
     data = _http_get_json(f"https://pypi.org/pypi/{package}/json")
+    current_san = sanitize_version(current) if current else ""
+    cutoff = time.time() - _PYPI_COOLDOWN_DAYS * 86400
+    eligible: list[str] = []
+    for version, files in data.get("releases", {}).items():
+        if _is_prerelease(version):
+            continue
+        upload_times = [
+            datetime.fromisoformat(f["upload_time_iso_8601"]).timestamp()
+            for f in files
+            if f.get("upload_time_iso_8601") and not f.get("yanked", False)
+        ]
+        is_old_enough = bool(upload_times) and min(upload_times) <= cutoff
+        is_current = bool(current_san) and sanitize_version(version) == current_san
+        if is_old_enough or is_current:
+            eligible.append(version)
+    if eligible:
+        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
     return data["info"]["version"]
 
 
@@ -582,8 +702,18 @@ def _check_gnu(package: str, *, parent: str = "", non_gnu_mirror: bool = False) 
 
 
 def _check_npm(package: str) -> str:
-    data = _http_get_json(f"https://registry.npmjs.org/{package}/latest")
-    return data["version"]
+    """Return the newest npm version that is not marked deprecated.
+
+    No age-based cooldown here: koopa's npm apps are single-vendor CLIs
+    (Anthropic, OpenAI, Google, GitHub) tracked at the latest release. The
+    deprecated-version skip is pure hygiene, not a delay.
+    """
+    data = _http_get_json(f"https://registry.npmjs.org/{package}")
+    versions = data.get("versions", {})
+    eligible = [v for v, info in versions.items() if not info.get("deprecated")]
+    if eligible:
+        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
+    return data["dist-tags"]["latest"]
 
 
 def _check_crates(crate: str) -> str:
@@ -591,9 +721,37 @@ def _check_crates(crate: str) -> str:
     return data["crate"]["max_stable_version"]
 
 
-def _check_rubygems(gem: str) -> str:
-    data = _http_get_json(f"https://rubygems.org/api/v1/gems/{gem}.json")
-    return data["version"]
+_RUBYGEMS_COOLDOWN_DAYS = 14
+
+
+def _check_rubygems(gem: str, current: str = "") -> str:
+    """Return the newest RubyGems release at least `_RUBYGEMS_COOLDOWN_DAYS` days old.
+
+    The currently pinned version is always treated as eligible, regardless of
+    its age. Cooldown only gates a *new* recommendation; it must never make an
+    already-adopted, genuinely-latest pin look "pinned too high" just because
+    it's recent.
+    """
+    data = _http_get_json(f"https://rubygems.org/api/v1/versions/{gem}.json")
+    current_san = sanitize_version(current) if current else ""
+    cutoff = time.time() - _RUBYGEMS_COOLDOWN_DAYS * 86400
+    eligible: list[str] = []
+    all_versions: list[str] = []
+    for release in data:
+        number = release.get("number")
+        if not number:
+            continue
+        all_versions.append(number)
+        created_at = release.get("created_at")
+        is_old_enough = bool(
+            created_at and datetime.fromisoformat(created_at).timestamp() <= cutoff
+        )
+        is_current = bool(current_san) and sanitize_version(number) == current_san
+        if is_old_enough or is_current:
+            eligible.append(number)
+    if eligible:
+        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
+    return max(all_versions, key=lambda v: _version_key(sanitize_version(v)))
 
 
 def _check_metacpan(distribution: str) -> str:
@@ -807,6 +965,7 @@ def _extract_github_repo_from_urls(urls: list[str]) -> str | None:
 _GENERIC_INSTALLER_MAP: dict[str, str] = {
     "._conda": "conda",
     "._python_pkg": "pypi",
+    "._python_plugin": "pypi",
     "._gnu": "gnu",
     "._node_pkg": "npm",
     "._rust_pkg": "crates",
@@ -825,8 +984,31 @@ class _AppCheckSpec:
     extra_fields_fn: Callable[[], dict[str, Any]] | None = None
 
 
-def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
-    """Classify an app into a version-check strategy."""
+def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
+    """Classify an app into a version-check strategy.
+
+    Wraps `_classify_app_uncooled` so a "pypi" spec's check_fn always sees the
+    app's currently pinned version, regardless of which branch produced the
+    spec (a hardcoded `_SPECIAL_CASES` entry or a dynamically classified one).
+    Without this, `_check_pypi`'s cooldown can misreport an already-adopted,
+    genuinely-latest pin as "pinned too high" just because it's recent (the
+    same bug fixed for `_check_rubygems`, e.g. bashcov 4.0.0).
+    """
+    spec = _classify_app_uncooled(name, info)
+    if spec is not None and spec.source == "pypi":
+        current = info.get("version", "")
+        return _AppCheckSpec(
+            "pypi",
+            lambda fn=spec.check_fn, a=spec.args, c=current: fn(*a, current=c),
+            (),
+            batch_size=spec.batch_size,
+            extra_fields_fn=spec.extra_fields_fn,
+        )
+    return spec
+
+
+def _classify_app_uncooled(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
+    """Classify an app into a version-check strategy, before the pypi cooldown wrap."""
     module_path = PYTHON_INSTALLERS.get(name, "")
     args = info.get("installer_args", {})
     urls = info.get("url", [])
@@ -2013,8 +2195,6 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("datafusion", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
-    "dbt-bigquery": _AppCheckSpec("pypi", _check_pypi, ("dbt-bigquery",)),
-    "dbt-snowflake": _AppCheckSpec("pypi", _check_pypi, ("dbt-snowflake",)),
     "zsh": _AppCheckSpec(
         "dirlist",
         lambda: _check_directory_listing("https://www.zsh.org/pub/", "zsh"),
@@ -2058,7 +2238,12 @@ def _classify_generic(  # noqa: PLR0911
     if source == "crates":
         return _AppCheckSpec("crates", _check_crates, (name,))
     if source == "rubygems":
-        return _AppCheckSpec("rubygems", _check_rubygems, (name,))
+        current = info.get("version", "")
+        return _AppCheckSpec(
+            "rubygems",
+            lambda g=name, c=current: _check_rubygems(g, current=c),
+            (),
+        )
     if source == "metacpan":
         cpan_path = _get_str(args, "cpan_path")
         if cpan_path:
@@ -2139,11 +2324,17 @@ def check_app_versions(  # noqa: C901, PLR0915
         )
         raise RuntimeError(msg)
     json_data = import_app_json()
+    # Report every version_exclude hold's health up front, regardless of name_filter,
+    # so a dead or contradictory hold surfaces on every run, not just when the held
+    # app itself is in scope.
+    _print_version_exclude_audit(*_audit_version_excludes(json_data))
     cache = _VersionCache()
     if reset_cache:
         cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
+    holds: dict[str, tuple[str, ...]] = {}
+    granularity: dict[str, str | None] = {}
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
             continue
@@ -2163,6 +2354,8 @@ def check_app_versions(  # noqa: C901, PLR0915
             continue
         if source_filter and spec.source != source_filter:
             continue
+        holds[app_name] = tuple(info.get("version_exclude", ()))
+        granularity[app_name] = info.get("version_granularity")
         specs.append((app_name, version, spec))
     results: list[VersionCheckResult] = list(unsupported)
     if not specs:
@@ -2172,6 +2365,15 @@ def check_app_versions(  # noqa: C901, PLR0915
         if cache is not None:
             cached = cache.get(app_name)
             if cached is not None and not (_is_prerelease(cached) and not _is_prerelease(version)):
+                if _is_excluded(cached, holds.get(app_name, ())):
+                    print(
+                        f"{app_name}: {cached} available upstream; excluded, pin held at {version}",
+                        file=sys.stderr,
+                    )
+                    results.append(
+                        VersionCheckResult(app_name, version, version, spec.source, None)
+                    )
+                    continue
                 if _SHA_RE.match(cached):
                     results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
                     continue
@@ -2225,10 +2427,18 @@ def check_app_versions(  # noqa: C901, PLR0915
             # cache it, and report no update so is_outdated stays False.
             if _is_prerelease(latest) and not _is_prerelease(current):
                 return VersionCheckResult(app_name, current, current, spec.source, None), None
-            if cache is not None:
-                cache.put(app_name, latest, spec.source)
             current_san = sanitize_version(current)
             latest_san = sanitize_version(latest)
+            # Only a genuine change is eligible for a hold: current_san == latest_san
+            # already means nothing would be written, so there is nothing to hold.
+            if current_san != latest_san:
+                held = _held_message(
+                    app_name, current, latest, holds.get(app_name, ()), granularity.get(app_name)
+                )
+                if held is not None:
+                    return VersionCheckResult(app_name, current, current, spec.source, None), held
+            if cache is not None:
+                cache.put(app_name, latest, spec.source)
             if current_san == latest_san:
                 msg = None
             elif _SHA_RE.match(current) or _SHA_RE.match(latest):
@@ -2480,6 +2690,56 @@ def _mirror_src_to_s3(
                 print(f"  {msg}", file=sys.stderr)
 
 
+@lru_cache(maxsize=1)
+def _pip_index_url() -> str | None:
+    """Return the configured pip index URL, or None if it is unset or is PyPI itself.
+
+    Checks ``PIP_INDEX_URL`` first, then falls back to ``pip config get
+    global.index-url``. Returns None for a bare PyPI/PythonHosted index so the
+    ``_index_has_version`` gate in ``update_app_json`` becomes a no-op for a
+    contributor or CI job that installs straight from public PyPI.
+    """
+    url = os.environ.get("PIP_INDEX_URL")
+    if not url:
+        try:
+            result = subprocess.run(
+                ["pip", "config", "get", "global.index-url"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+        except (subprocess.CalledProcessError, OSError):
+            return None
+        url = result.stdout.strip()
+    if not url:
+        return None
+    host = urlparse(url).hostname or ""
+    if host in ("pypi.org", "files.pythonhosted.org"):
+        return None
+    return url
+
+
+def _index_has_version(index_url: str, package: str, version: str) -> bool:
+    """Return whether *version* of *package* is present on a PEP 503 index.
+
+    Fails open (returns True) on any network or HTTP error, since a hold
+    caused by the index blinking is worse than the stale-pin bug this gate
+    fixes.
+    """
+    normalized = re.sub(r"[-_.]+", "-", package).lower()
+    url = f"{index_url.rstrip('/')}/{normalized}/"
+    try:
+        body = _http_get_text(url)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+        print(f"Warning: could not query pip index for {package!r}: {exc}", file=sys.stderr)
+        return True
+    escaped = re.escape(version)
+    pattern = re.compile(
+        rf"{re.escape(normalized)}[-_]{escaped}(?:[-_.]|\.tar|\.whl|\.zip)", re.IGNORECASE
+    )
+    return bool(pattern.search(body))
+
+
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes."""
     outdated = [r for r in results if r.is_outdated]
@@ -2492,31 +2752,86 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     data = json.loads(json_path.read_text())
     today = time.strftime("%Y-%m-%d")
+
+    # version_match: apps that must move in lockstep with another app (e.g. an
+    # xorg proto package that must match its library's version). Bump the whole
+    # group only when every member agrees on the same target version.
+    outdated_by_name = {r.name: r for r in outdated}
+    lockstep_groups: dict[str, set[str]] = {}
+    for name, info in data.items():
+        leader = info.get("version_match")
+        if leader:
+            lockstep_groups.setdefault(leader, {leader}).add(name)
+    held_by_match: set[str] = set()
+    for members in lockstep_groups.values():
+        targets = {
+            outdated_by_name[m].latest_version
+            if m in outdated_by_name
+            else data.get(m, {}).get("version", "")
+            for m in members
+        }
+        if len(targets) > 1:
+            print(
+                f"version_match group ({', '.join(sorted(members))}) disagrees "
+                "on the latest version; pins held",
+                file=sys.stderr,
+            )
+            held_by_match |= members
+
     count = 0
     for r in outdated:
-        if r.name in data and r.latest_version:
-            artifact_key = installer_artifact_key(r.name, r.latest_version)
-            if artifact_key is not None:
-                staged = False
-                if _has_private_access():
-                    from koopa.aws import koopa_s3_bucket, s3_object_exists
-
-                    staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
-                if not staged:
+        if r.name not in data or not r.latest_version:
+            continue
+        if r.name in held_by_match:
+            continue
+        excluded = tuple(data[r.name].get("version_exclude", []))
+        if _is_excluded(r.latest_version, excluded):
+            print(
+                f"{r.name}: {r.latest_version} available upstream; excluded, "
+                f"pin held at {r.current_version}",
+                file=sys.stderr,
+            )
+            continue
+        # Gate on the resolved installer module, not `r.source` -- an app can
+        # install via pip (koopa.installers.pyright, .playwright, ...) while
+        # still classifying as a "github" version-check source, because its
+        # url list also has a github.com entry that wins classify_app's
+        # priority order. The module is the actual install-time truth.
+        if PYTHON_INSTALLERS.get(r.name, "") in PIP_VERSIONED_INSTALLERS:
+            index_url = _pip_index_url()
+            if index_url is not None:
+                pkg = _resolve_pypi_name(
+                    r.name, data[r.name].get("installer_args", {}), data[r.name].get("url", [])
+                )
+                if not _index_has_version(index_url, pkg, r.latest_version):
                     print(
-                        f"{r.name}: {r.latest_version} available upstream; "
-                        f"artifact not staged, pin held at {r.current_version}",
+                        f"{r.name}: {r.latest_version} available upstream; not on the "
+                        f"configured pip index, pin held at {r.current_version}",
                         file=sys.stderr,
                     )
                     continue
-            data[r.name]["version"] = r.latest_version
-            data[r.name]["date"] = today
-            data[r.name].pop("revision", None)
-            spec = _SPECIAL_CASES.get(r.name)
-            if spec is not None and spec.extra_fields_fn is not None:
-                extra = spec.extra_fields_fn()
-                data[r.name].update(extra)
-            count += 1
+        artifact_key = installer_artifact_key(r.name, r.latest_version)
+        if artifact_key is not None:
+            staged = False
+            if _has_private_access():
+                from koopa.aws import koopa_s3_bucket, s3_object_exists
+
+                staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
+            if not staged:
+                print(
+                    f"{r.name}: {r.latest_version} available upstream; "
+                    f"artifact not staged, pin held at {r.current_version}",
+                    file=sys.stderr,
+                )
+                continue
+        data[r.name]["version"] = r.latest_version
+        data[r.name]["date"] = today
+        data[r.name].pop("revision", None)
+        spec = _SPECIAL_CASES.get(r.name)
+        if spec is not None and spec.extra_fields_fn is not None:
+            extra = spec.extra_fields_fn()
+            data[r.name].update(extra)
+        count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
     bootstrap_count = update_bootstrap(data)

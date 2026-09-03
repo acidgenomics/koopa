@@ -7,7 +7,7 @@ _koopa_activate_bash_completion() {
     #
     # Sets BASH_COMPLETION_USER_DIR so bash-completion v2 lazy-loads all
     # koopa-managed app completions from the central directory
-    # ($KOOPA_PREFIX/share/bash-completion) on first TAB press per command.
+    # (${KOOPA_PREFIX}/share/bash-completion) on first TAB press per command.
     # App completion files are symlinked there at install time.
     # """
     local koopa_prefix

@@ -392,15 +392,17 @@ aws --profile acidgenomics s3 ls \
   | sed -E 's/_[0-9].*\.tar\.gz$//' \
   | awk '{print "r-" tolower($0)}' \
   | sort -u \
-  | while IFS= read -r repo; do
+  | while IFS= read -r repo
+    do
       target=~/git/personal/"$repo"
-      if [ -d "$target/.git" ]; then
+      if [ -d "${target}/.git" ]
+      then
         git -C "$target" fetch --quiet origin develop
         git -C "$target" checkout --quiet develop
         git -C "$target" pull --quiet --ff-only origin develop
       else
         git clone --quiet -b develop \
-          "https://github.com/acidgenomics/$repo.git" "$target"
+          "https://github.com/acidgenomics/${repo}.git" "$target"
       fi
     done
 ```

@@ -8,6 +8,7 @@ from koopa.download import (
     _derive_filename,
     _download_curl,
     _gnu_mirrors,
+    _gnupg_mirrors,
     _is_sourceforge_url,
     _savannah_mirrors,
     download,
@@ -443,6 +444,27 @@ def test_gnu_mirrors_excludes_blocked_and_broken_hosts() -> None:
 def test_gnu_mirrors_ignores_non_gnu_url() -> None:
     """A non-GNU primary URL yields no GNU mirror candidates."""
     assert _gnu_mirrors("https://example.com/pkg-1.0.tar.gz") == []
+
+
+def test_gnupg_mirrors_switches_between_official_hosts() -> None:
+    """GnuPG downloads can retry through the alternate official HTTPS hostname."""
+    mirrors = _gnupg_mirrors("https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.22.tar.bz2")
+    assert mirrors == [
+        "https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.22.tar.bz2",
+        "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.22.tar.bz2",
+    ]
+
+
+def test_gnupg_mirrors_normalizes_ftp_host_path() -> None:
+    """ftp.gnupg.org uses /gcrypt/ rather than the web hosts' /ftp/gcrypt/."""
+    mirrors = _gnupg_mirrors("https://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.5.22.tar.bz2")
+    assert mirrors[0] == "https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.22.tar.bz2"
+
+
+def test_gnupg_mirrors_ignores_non_gcrypt_url() -> None:
+    """A non-GnuPG or non-gcrypt URL yields no GnuPG mirror candidates."""
+    assert _gnupg_mirrors("https://example.com/gnupg-2.5.22.tar.bz2") == []
+    assert _gnupg_mirrors("https://gnupg.org/download/gnupg-2.5.22.tar.bz2") == []
 
 
 def test_savannah_mirrors_strips_releases_prefix() -> None:

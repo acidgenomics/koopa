@@ -3,8 +3,42 @@
 import os
 import subprocess
 
-from koopa.alert import alert_info
+from koopa.alert import alert_info, warn
 from koopa.prefix import koopa_prefix, opt_prefix
+from koopa.xdg import xdg_config_home, xdg_data_home
+
+_EARLY_INIT_MARKER = "Managed by koopa"
+
+_EARLY_INIT_TEMPLATE = """\
+;; -*- mode: emacs-lisp; lexical-binding: t; no-byte-compile: t -*-
+;; Managed by koopa: koopa configure user doom-emacs
+;; Bootstrap Doom Emacs from koopa's install prefix, keeping package state
+;; outside it so a version bump does not destroy it.
+(setenv "EMACSDIR" "{emacsdir}")
+(setenv "DOOMLOCALDIR" "{doomlocaldir}")
+(setq early-init-file (expand-file-name "early-init.el" "{emacsdir}"))
+(load early-init-file nil t 'nosuffix)
+"""
+
+
+def _write_early_init_shim(*, emacsdir: str, doomlocaldir: str) -> None:
+    """Write the bootstrap shim so plain 'emacs' loads Doom.
+
+    Skips the write if a non-koopa early-init.el already exists, so a
+    hand-written file is never clobbered.
+    """
+    emacs_dir = os.path.join(xdg_config_home(), "emacs")
+    path = os.path.join(emacs_dir, "early-init.el")
+    if os.path.isfile(path):
+        with open(path) as f:
+            existing = f.read()
+        if _EARLY_INIT_MARKER not in existing:
+            warn(f"Skipping unmanaged early-init.el: {path}")
+            return
+    os.makedirs(emacs_dir, exist_ok=True)
+    content = _EARLY_INIT_TEMPLATE.format(emacsdir=emacsdir, doomlocaldir=doomlocaldir)
+    with open(path, "w") as f:
+        f.write(content)
 
 
 def main(
@@ -38,6 +72,8 @@ def main(
     env["PATH"] = koopa_bin + os.pathsep + env.get("PATH", "")
     env["EMACSDIR"] = libexec
     env["DOOMDIR"] = doom_dir
+    doom_local_dir = os.path.join(xdg_data_home(), "doom")
+    env["DOOMLOCALDIR"] = doom_local_dir
     already_configured = os.path.isfile(os.path.join(doom_dir, "init.el"))
     if already_configured:
         alert_info("Running 'doom sync'.")
@@ -50,3 +86,4 @@ def main(
             check=True,
             env=env,
         )
+    _write_early_init_shim(emacsdir=libexec, doomlocaldir=doom_local_dir)

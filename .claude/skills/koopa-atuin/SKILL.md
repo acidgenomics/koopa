@@ -18,7 +18,7 @@ koopa uses **bash-preexec** as the backend via a dedicated
 `_koopa_activate_bash_preexec()` function:
 
 ```
-$KOOPA_PREFIX/opt/bash-preexec/share/bash-preexec/bash-preexec.sh
+${KOOPA_PREFIX}/opt/bash-preexec/share/bash-preexec/bash-preexec.sh
 ```
 
 **Activation ordering is load-bearing.** bash-preexec must be sourced *before* starship.
@@ -78,8 +78,8 @@ zsh uses `add-zsh-hook preexec/precmd` (native). Fish uses `--on-event fish_pree
 
 The atuin init output is cached at:
 ```
-$XDG_CACHE_HOME/koopa/shell-init/atuin-{bash,zsh}.sh
-$XDG_CACHE_HOME/koopa/shell-init/atuin-fish.fish
+${XDG_CACHE_HOME}/koopa/shell-init/atuin-{bash,zsh}.sh
+${XDG_CACHE_HOME}/koopa/shell-init/atuin-fish.fish
 ```
 
 Cache is invalidated when the atuin binary is newer than the cache file.
