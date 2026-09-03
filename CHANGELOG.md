@@ -1,5 +1,42 @@
 # Changelog
 
+## koopa 0.29.0 (2026-09-02)
+
+Major changes:
+
+- `koopa app python publish` now publishes to both public PyPI and
+  python.acidgenomics.com. New `--no-pypi` and `--pypi-only` modes support
+  private-only publishing and recovery from a failed public upload without
+  rebuilding or replacing the private artifacts.
+- Version checking now ignores unreleased, deprecated, and very recent package
+  releases; supports durable excluded versions, minor-only holds, and lockstep
+  version matching; and audits invalid or stale holds before updating
+  `app.json`. It also checks PyPI/RubyGems release age and can use a configured
+  private package index to avoid pins that are unavailable to an installation.
+- `koopa update` distinguishes permanent installation failures from transient
+  ones, reports failures that cannot succeed on retry, and retries only
+  recoverable root-app failures after the update plan completes.
+- Added Linux fixes for conda-installed Neovim and a Doom Emacs early-init
+  shim that redirects configuration and local state to koopa's XDG paths.
+- Homebrew upgrades now create the user completion directories that sandboxed
+  casks cannot create themselves; `koopa app brew fix-completion-dirs` exposes
+  that repair independently.
+- GnuPG source downloads now use mirrored download locations, improving
+  installation reliability when the upstream host is unavailable.
+
+Minor changes:
+
+- Added a dedicated Pyright installer which verifies the installed CLI, and
+  added a per-environment `pip.conf` when installing Python packages.
+- Corrected the completion activation documentation and ignore generated
+  `reports/` output.
+- Routine upstream version bumps across the app registry.
+
+New apps:
+
+- `poppler` 26.07.0: PDF rendering library and command-line utilities
+  (conda-package, non-default).
+
 ## koopa 0.28.0 (2026-08-28)
 Major changes:
 

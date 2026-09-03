@@ -42,7 +42,7 @@ def _init_repo_with_remote(tmp_path: Path, version: str = "1.2.3") -> Path:
 
 def _remote_tags(bare: Path) -> list[str]:
     result = subprocess.run(
-        ["git", "-C", str(bare), "tag", "-l"],
+        ["git", f"--git-dir={bare}", "tag", "-l"],
         capture_output=True,
         text=True,
         check=True,
