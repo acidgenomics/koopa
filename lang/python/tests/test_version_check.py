@@ -676,7 +676,6 @@ def test_pip_versioned_installers_registry_matches_source() -> None:
     exactly the bug that let `pyright` slip past `r.source == "pypi"` gating.
     """
     import koopa.installers as installers_pkg
-    from koopa.installers import PIP_VERSIONED_INSTALLERS
 
     installers_dir = Path(installers_pkg.__file__).parent
     found = {
@@ -685,7 +684,7 @@ def test_pip_versioned_installers_registry_matches_source() -> None:
         if path.stem != "__init__"
         and ("install_python_package(" in path.read_text() or "pip_name}==" in path.read_text())
     }
-    assert found == set(PIP_VERSIONED_INSTALLERS)
+    assert found == set(installers_pkg.PIP_VERSIONED_INSTALLERS)
 
 
 def test_index_has_version_fails_open_on_network_error() -> None:

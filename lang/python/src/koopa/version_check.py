@@ -193,6 +193,8 @@ def _audit_version_excludes(json_data: dict[str, Any]) -> tuple[list[str], list[
     Returns ``(contradictions, stale_holds)``. A contradiction is a pin that is
     itself excluded. A stale hold is an exclusion list entirely below the
     current pin, meaning the hold no longer does anything and can be removed.
+    Holds with unorderable version strings are excluded from the stale-hold
+    audit because their relative order cannot be determined safely.
     """
     contradictions: list[str] = []
     stale_holds: list[str] = []
@@ -214,7 +216,7 @@ def _audit_version_excludes(json_data: dict[str, Any]) -> tuple[list[str], list[
                     f"current pin {version}; safe to remove"
                 )
         except (ValueError, AttributeError):
-            pass
+            continue
     return contradictions, stale_holds
 
 
