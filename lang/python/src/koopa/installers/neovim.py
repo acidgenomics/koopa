@@ -56,6 +56,7 @@ def main(
         prefix=prefix,
         yaml_file=get_str(kwargs, "yaml_file"),
         post_extract_fn=_fix_unibilium_soname if is_linux() else None,
+        app_name=name,
     )
 
 

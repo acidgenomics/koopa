@@ -33,6 +33,7 @@ def main(
         name=get_str(kwargs, "name", name),
         version=version,
         prefix=prefix,
+        app_name=name,
     )
     _setup_completions(prefix)
 

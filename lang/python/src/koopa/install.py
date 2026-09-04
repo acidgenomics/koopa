@@ -2186,6 +2186,7 @@ def install_conda_package(
     prefix: str = "",
     yaml_file: str = "",
     post_extract_fn: Callable[[str], None] | None = None,
+    app_name: str = "",
 ) -> None:
     """Install a conda environment as an application.
 
@@ -2210,6 +2211,10 @@ def install_conda_package(
     post_extract_fn : Callable[[str], None] | None, optional
         Callback invoked with the ``libexec`` path after environment creation
         and before binaries are linked.
+    app_name : str, optional
+        koopa app name to look up in app.json, when it differs from the
+        conda package name given as ``name`` (e.g. an ``installer_args``
+        name remap). Defaults to ``name``.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -2262,7 +2267,9 @@ def install_conda_package(
         shutil.rmtree(tmp_pkg_cache, ignore_errors=True)
     if post_extract_fn is not None:
         post_extract_fn(libexec)
-    _link_conda_binaries(name=name, version=version, prefix=prefix, libexec=libexec)
+    _link_conda_binaries(
+        name=name, version=version, prefix=prefix, libexec=libexec, app_name=app_name
+    )
 
 
 def _link_conda_binaries(
@@ -2271,8 +2278,17 @@ def _link_conda_binaries(
     version: str,
     prefix: str,
     libexec: str,
+    app_name: str = "",
 ) -> None:
     """Link binaries from conda env into prefix/bin using conda metadata.
+
+    The ``ldd`` linkage check below only runs against binaries app.json
+    declares under ``bin`` for this app. A conda package can ship an
+    auxiliary binary in its own ``bin/`` (e.g. emacs's Linux build bundles a
+    ``libgccjit`` compiler driver for native compilation) that koopa never
+    links into ``<prefix>/bin`` and that may legitimately resolve its shared
+    libraries only via its own RUNPATH. Checking it anyway would fail the
+    whole install over a binary koopa never exposes.
 
     Parameters
     ----------
@@ -2284,9 +2300,13 @@ def _link_conda_binaries(
         Installation prefix directory.
     libexec : str
         Path to the conda environment directory holding the installed package.
+    app_name : str, optional
+        koopa app name to look up in app.json, when it differs from the
+        conda package name given as ``name``. Defaults to ``name``.
     """
     import glob as glob_mod
 
+    from koopa.app import app_json_bin
     from koopa.io import extract_conda_bin_names
 
     conda_meta = os.path.join(libexec, "conda-meta")
@@ -2304,6 +2324,8 @@ def _link_conda_binaries(
     if not bin_names:
         msg = f"No binaries found in conda metadata: {json_file}"
         raise RuntimeError(msg)
+    declared = app_json_bin(app_name or name)
+    checked = set(declared) if declared else set(bin_names)
     libexec_bin = os.path.join(libexec, "bin")
     bin_dir = os.path.join(prefix, "bin")
     man1_src_dir = os.path.join(libexec, "share", "man", "man1")
@@ -2326,6 +2348,8 @@ def _link_conda_binaries(
             if os.path.islink(man1_dst):
                 os.unlink(man1_dst)
             os.symlink(man1_src, man1_dst)
+        if bin_name not in checked:
+            continue
         missing = _missing_shared_libs(src)
         if missing:
             broken[bin_name] = missing

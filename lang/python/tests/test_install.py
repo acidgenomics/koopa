@@ -891,6 +891,91 @@ def test_link_conda_binaries_raises_on_broken_linkage(tmp_path: Path) -> None:
         )
 
 
+def test_link_conda_binaries_ignores_undeclared_bin(tmp_path: Path) -> None:
+    """A broken binary app.json does not declare under 'bin' does not fail the install.
+
+    Regression test: emacs's Linux conda package bundles a libgccjit
+    compiler driver in its own bin/ for native compilation. koopa never
+    links that driver into <prefix>/bin (app.json's 'bin' list for emacs is
+    only emacs/emacsclient/etags), and the driver resolves its shared
+    libraries via its own RUNPATH rather than the env's top-level lib/.
+    """
+    from koopa.install import _link_conda_binaries
+
+    prefix = tmp_path / "app" / "emacs" / "31.1"
+    libexec = prefix / "libexec"
+    libexec_bin = libexec / "bin"
+    libexec_bin.mkdir(parents=True)
+    (libexec_bin / "emacs").write_bytes(b"\x7fELF" + b"\x00" * 12)
+    (libexec_bin / "x86_64-conda-linux-gnu-gcc-15.3.0").write_bytes(b"\x7fELF" + b"\x00" * 12)
+    conda_meta = libexec / "conda-meta"
+    conda_meta.mkdir()
+    (conda_meta / "emacs-31.1-h2ad1345_0.json").write_text(
+        '{"files": ["bin/emacs", "bin/x86_64-conda-linux-gnu-gcc-15.3.0"]}'
+    )
+
+    def _fake_missing(binary: str) -> list[str]:
+        if binary.endswith("x86_64-conda-linux-gnu-gcc-15.3.0"):
+            return ["libiconv.so.2"]
+        return []
+
+    with (
+        patch("koopa.install._missing_shared_libs", side_effect=_fake_missing),
+        patch(
+            "koopa.app.import_app_json",
+            return_value={"emacs": {"bin": ["emacs", "emacsclient", "etags"]}},
+        ),
+    ):
+        _link_conda_binaries(
+            name="emacs",
+            version="31.1",
+            prefix=str(prefix),
+            libexec=str(libexec),
+            app_name="emacs",
+        )
+
+    assert (prefix / "bin" / "emacs").is_symlink()
+    assert (prefix / "bin" / "x86_64-conda-linux-gnu-gcc-15.3.0").is_symlink()
+
+
+def test_link_conda_binaries_raises_on_declared_bin_broken(tmp_path: Path) -> None:
+    """A broken binary app.json does declare under 'bin' still fails the install."""
+    from koopa.install import _link_conda_binaries
+
+    prefix = tmp_path / "app" / "emacs" / "31.1"
+    libexec = prefix / "libexec"
+    libexec_bin = libexec / "bin"
+    libexec_bin.mkdir(parents=True)
+    (libexec_bin / "emacs").write_bytes(b"\x7fELF" + b"\x00" * 12)
+    (libexec_bin / "x86_64-conda-linux-gnu-gcc-15.3.0").write_bytes(b"\x7fELF" + b"\x00" * 12)
+    conda_meta = libexec / "conda-meta"
+    conda_meta.mkdir()
+    (conda_meta / "emacs-31.1-h2ad1345_0.json").write_text(
+        '{"files": ["bin/emacs", "bin/x86_64-conda-linux-gnu-gcc-15.3.0"]}'
+    )
+
+    def _fake_missing(binary: str) -> list[str]:
+        if binary.endswith("/emacs"):
+            return ["libgtk-3.so.0"]
+        return []
+
+    with (
+        patch("koopa.install._missing_shared_libs", side_effect=_fake_missing),
+        patch(
+            "koopa.app.import_app_json",
+            return_value={"emacs": {"bin": ["emacs", "emacsclient", "etags"]}},
+        ),
+        pytest.raises(RuntimeError, match=r"libgtk-3\.so\.0"),
+    ):
+        _link_conda_binaries(
+            name="emacs",
+            version="31.1",
+            prefix=str(prefix),
+            libexec=str(libexec),
+            app_name="emacs",
+        )
+
+
 # ── non-retryable failure classification ────────────────────────────────────
 
 

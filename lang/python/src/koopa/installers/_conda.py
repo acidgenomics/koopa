@@ -31,4 +31,5 @@ def main(
         version=version,
         prefix=prefix,
         yaml_file=get_str(kwargs, "yaml_file"),
+        app_name=name,
     )

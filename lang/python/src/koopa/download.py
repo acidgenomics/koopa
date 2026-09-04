@@ -24,8 +24,12 @@ _USER_AGENT = (
 )
 
 
-def _is_sourceforge_url(url: str) -> bool:
-    """Return whether a URL points at sourceforge.net or a subdomain.
+def _blocks_spoofed_user_agent(url: str) -> bool:
+    """Return whether a URL's host rejects our desktop-browser UA string.
+
+    SourceForge's Cloudflare front 403s it on the files/.../download
+    redirect hop, and www.freedesktop.org's Anubis bot check 418s it on
+    the release path; curl's own default UA is accepted by both.
 
     Parameters
     ----------
@@ -35,10 +39,14 @@ def _is_sourceforge_url(url: str) -> bool:
     Returns
     -------
     bool
-        True if the URL's host is sourceforge.net or a subdomain of it.
+        True if the URL's host is known to block the spoofed UA string.
     """
     host = urlparse(url).hostname or ""
-    return host == "sourceforge.net" or host.endswith(".sourceforge.net")
+    return (
+        host == "sourceforge.net"
+        or host.endswith(".sourceforge.net")
+        or host == "www.freedesktop.org"
+    )
 
 
 # Extensions that archive.is_valid_archive() can actually recognize by magic
@@ -565,9 +573,7 @@ def _download_curl(
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and os.path.isfile(ca_bundle):
         curl_args.extend(["--cacert", ca_bundle])
-    # SourceForge's Cloudflare front 403s this desktop-browser UA string on the
-    # files/.../download redirect hop; curl's own default UA is accepted.
-    if not _is_sourceforge_url(url):
+    if not _blocks_spoofed_user_agent(url):
         curl_args.extend(["--user-agent", _USER_AGENT])
     if os.environ.get("http_proxy") or os.environ.get("https_proxy"):
         curl_args.append("--insecure")
@@ -596,8 +602,7 @@ def _download_urllib(url: str, output: str) -> None:
         Destination file path.
     """
     req = urllib.request.Request(url)
-    # See _download_curl: SourceForge 403s this UA string.
-    if not _is_sourceforge_url(url):
+    if not _blocks_spoofed_user_agent(url):
         req.add_header("User-Agent", _USER_AGENT)
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and not os.path.isfile(ca_bundle):
