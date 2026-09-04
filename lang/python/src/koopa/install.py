@@ -2212,8 +2212,8 @@ def install_conda_package(
         Callback invoked with the ``libexec`` path after environment creation
         and before binaries are linked.
     app_name : str, optional
-        koopa app name to look up in app.json, when it differs from the
-        conda package name given as ``name`` (e.g. an ``installer_args``
+        Name of the koopa app to look up in app.json, when it differs from
+        the conda package name given as ``name`` (e.g. an ``installer_args``
         name remap). Defaults to ``name``.
     """
     if not name:
@@ -2301,8 +2301,8 @@ def _link_conda_binaries(
     libexec : str
         Path to the conda environment directory holding the installed package.
     app_name : str, optional
-        koopa app name to look up in app.json, when it differs from the
-        conda package name given as ``name``. Defaults to ``name``.
+        Name of the koopa app to look up in app.json, when it differs from
+        the conda package name given as ``name``. Defaults to ``name``.
     """
     import glob as glob_mod
 

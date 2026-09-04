@@ -58,6 +58,11 @@ Bump the Python venv version.
 
 Regenerate the cached Bash function library.
 
+(koopa-develop-check)=
+## `develop check`
+
+Run the full Python quality gate: ruff, pyright, ty, numpydoc, pytest.
+
 (koopa-develop-check-app-versions)=
 ## `develop check-app-versions`
 
@@ -211,6 +216,11 @@ Rewrite .install/info.json environ blocks down to the allowlist.
 ## `develop shellcheck`
 
 Run shellcheck on all shell scripts.
+
+(koopa-develop-ty)=
+## `develop ty`
+
+Run the ty type checker on the Python source tree.
 
 (koopa-develop-update-docs)=
 ## `develop update-docs`

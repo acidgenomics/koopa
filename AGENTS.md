@@ -5,6 +5,16 @@ administration, bioinformatics, and development environment management.
 
 ## Build, Test, and Lint
 
+### Full Gate
+
+```sh
+koopa develop check
+```
+
+Runs every check below in one command: `ruff check`, `ruff format --check`,
+`pyright`, `ty check`, `numpydoc`, then `pytest`. All phases run even after one
+fails, so a single invocation reports every problem.
+
 ### Running Tests
 
 ```sh
@@ -15,14 +25,26 @@ pytest lang/python/tests/
 
 ```sh
 ruff check lang/python/src/
-ruff format lang/python/src/
+ruff format --check lang/python/src/
 ```
+
+Use `ruff format` (no `--check`) only to apply fixes, not to verify the gate.
 
 ### Type Checking
 
 ```sh
 pyright lang/python/src/
+ty check lang/python/src/koopa
 ```
+
+### Docstring Validation
+
+```sh
+numpydoc lint $(find lang/python/src/koopa -name '*.py')
+```
+
+NumPy-style docstrings; see `[tool.numpydoc_validation]` in `pyproject.toml`
+for the enabled checks.
 
 ## Architecture
 

@@ -6602,6 +6602,7 @@
     ],
     "category": "Python",
     "date": "2026-09-04",
+    "default": true,
     "dependencies": [
       "python"
     ],
@@ -9111,6 +9112,7 @@
     ],
     "category": "Documentation",
     "date": "2026-01-02",
+    "default": true,
     "dependencies": [
       "python"
     ],

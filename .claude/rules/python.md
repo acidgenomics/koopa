@@ -62,8 +62,8 @@ This caught two instances (`cli_main.py`, `installers/_build_helper.py`) that
 
 ## Dev tools
 
-Tools like `ruff`, `ty`, `pyright`, `pytest` are standalone koopa apps installed
-to PATH — NOT dependencies in `.venv` or `[project.optional-dependencies]`.
+Tools like `ruff`, `ty`, `pyright`, `pytest`, `numpydoc` are standalone koopa apps
+installed to PATH — NOT dependencies in `.venv` or `[project.optional-dependencies]`.
 Never suggest adding them via `uv pip install` into the venv.
 
 ## XDG base directories

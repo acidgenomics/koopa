@@ -270,6 +270,9 @@ Bump the Python venv version.
 \fBdevelop cache\-functions\fR
 Regenerate the cached Bash function library.
 .TP
+\fBdevelop check\fR
+Run the full Python quality gate: ruff, pyright, ty, numpydoc, pytest.
+.TP
 \fBdevelop check\-app\-versions\fR
 Check upstream versions for all apps in app.json.
 .TP
@@ -347,6 +350,9 @@ Rewrite .install/info.json environ blocks down to the allowlist.
 .TP
 \fBdevelop shellcheck\fR
 Run shellcheck on all shell scripts.
+.TP
+\fBdevelop ty\fR
+Run the ty type checker on the Python source tree.
 .TP
 \fBdevelop update\-docs\fR
 Update generated documentation files.

@@ -28,12 +28,18 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    the two under `plugins/koopa/`) — all wired via `[tool.bumpver] file_patterns`.
 2. **Write CHANGELOG.md** — prepend a new section directly above the previous
    `## koopa X.Y.Z (...)` heading. See format below.
-3. **Pre-release gate** — all must pass:
+3. **Pre-release gate** — all must pass. Run the whole gate in one command:
    ```sh
-   pytest lang/python/tests/
+   koopa develop check
+   ```
+   or the individual checks it wraps:
+   ```sh
    ruff check lang/python/src/
    ruff format --check lang/python/src/
    pyright lang/python/src/
+   ty check lang/python/src/koopa
+   numpydoc lint $(find lang/python/src/koopa -name '*.py')
+   pytest lang/python/tests/
    ```
 4. **User-owned** — tag, push, and merge:
    ```sh

@@ -653,6 +653,7 @@ _koopa_develop_cmds() {
         'bump-revision'
         'bump-venv-version'
         'cache-functions'
+        'check'
         'check-app-versions'
         'check-skills'
         'circular-dependencies'
@@ -679,6 +680,7 @@ _koopa_develop_cmds() {
         'reset-revisions'
         'scrub-install-info'
         'shellcheck'
+        'ty'
         'update-docs'
     )
     _describe -t commands 'develop command' cmds

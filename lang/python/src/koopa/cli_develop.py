@@ -931,13 +931,18 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json(results, s3_upload=parsed.s3_upload)
 
 
-def _handle_pytest(args: list[str]) -> None:
-    """Handle ``koopa develop pytest``.
+def _run_pytest(args: list[str]) -> int:
+    """Run ``pytest`` over the koopa test suite.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``pytest`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``pytest``.
     """
     from koopa.prefix import python_prefix
 
@@ -951,7 +956,41 @@ def _handle_pytest(args: list[str]) -> None:
     env = os.environ.copy()
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = f"{src_dir}:{existing}" if existing else src_dir
-    sys.exit(subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode)
+    return subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode
+
+
+def _handle_pytest(args: list[str]) -> None:
+    """Handle ``koopa develop pytest``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pytest`` invocation.
+    """
+    sys.exit(_run_pytest(args))
+
+
+def _run_pyright(args: list[str]) -> int:
+    """Run ``pyright`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyright`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``pyright``.
+    """
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    pyright_cmd = shutil.which("pyright")
+    if pyright_cmd is None:
+        msg = "pyright is not installed."
+        raise RuntimeError(msg)
+    return subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode
 
 
 def _handle_pyright(args: list[str]) -> None:
@@ -962,23 +1001,62 @@ def _handle_pyright(args: list[str]) -> None:
     args : list[str]
         Extra arguments passed through to the ``pyright`` invocation.
     """
-    from koopa.prefix import python_prefix
+    sys.exit(_run_pyright(args))
+
+
+def _run_ty(args: list[str]) -> int:
+    """Run ``ty check`` over the koopa source tree.
+
+    Passes ``--project`` explicitly, since ``ty`` resolves ``pyproject.toml``
+    from the project directory rather than from the target path -- unlike
+    ``ruff`` and ``numpydoc``, which both walk up from the target path itself.
+    Without it, ``[tool.ty]`` (its ``extra-paths`` in particular) is silently
+    ignored when the caller's working directory is outside the koopa checkout.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ty check`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``ty check``.
+    """
+    from koopa.prefix import koopa_prefix, python_prefix
 
     src_dir = os.path.join(python_prefix(), "src", "koopa")
-    pyright_cmd = shutil.which("pyright")
-    if pyright_cmd is None:
-        msg = "pyright is not installed."
+    ty_cmd = shutil.which("ty")
+    if ty_cmd is None:
+        msg = "ty is not installed."
         raise RuntimeError(msg)
-    sys.exit(subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode)
+    cmd = [ty_cmd, "check", "--project", koopa_prefix(), src_dir, *args]
+    return subprocess.run(cmd, check=False).returncode
 
 
-def _handle_numpydoc(args: list[str]) -> None:
-    """Handle ``koopa develop numpydoc``.
+def _handle_ty(args: list[str]) -> None:
+    """Handle ``koopa develop ty``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ty check`` invocation.
+    """
+    sys.exit(_run_ty(args))
+
+
+def _run_numpydoc(args: list[str]) -> int:
+    """Run ``numpydoc lint`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``numpydoc lint`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``numpydoc lint``.
     """
     from pathlib import Path
 
@@ -990,7 +1068,111 @@ def _handle_numpydoc(args: list[str]) -> None:
         msg = "numpydoc is not installed."
         raise RuntimeError(msg)
     files = sorted(str(p) for p in Path(src_dir).rglob("*.py"))
-    sys.exit(subprocess.run([numpydoc_cmd, "lint", *files, *args], check=False).returncode)
+    return subprocess.run([numpydoc_cmd, "lint", *files, *args], check=False).returncode
+
+
+def _handle_numpydoc(args: list[str]) -> None:
+    """Handle ``koopa develop numpydoc``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``numpydoc lint`` invocation.
+    """
+    sys.exit(_run_numpydoc(args))
+
+
+def _run_ruff_check(args: list[str]) -> int:
+    """Run ``ruff check`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ruff check`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``ruff check``.
+    """
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    ruff_cmd = shutil.which("ruff")
+    if ruff_cmd is None:
+        msg = "ruff is not installed."
+        raise RuntimeError(msg)
+    return subprocess.run([ruff_cmd, "check", src_dir, *args], check=False).returncode
+
+
+def _run_ruff_format_check(args: list[str]) -> int:
+    """Run ``ruff format --check`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ruff format --check``
+        invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``ruff format --check``.
+    """
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    ruff_cmd = shutil.which("ruff")
+    if ruff_cmd is None:
+        msg = "ruff is not installed."
+        raise RuntimeError(msg)
+    cmd = [ruff_cmd, "format", "--check", src_dir, *args]
+    return subprocess.run(cmd, check=False).returncode
+
+
+def _handle_check(args: list[str]) -> None:
+    """Handle ``koopa develop check``.
+
+    Runs the full Python quality gate as one command: ``ruff check``,
+    ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
+    ``pytest``. Every phase runs even after an earlier one fails, so a single
+    invocation surfaces every problem instead of stopping at the first.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. Rejected if non-empty, since
+        an argument cannot be routed unambiguously across six tools.
+    """
+    from koopa.alert import alert, alert_success, warn
+
+    if args:
+        msg = (
+            "'koopa develop check' takes no arguments. Run the individual "
+            "subcommands instead: ruff-check, ruff-format-check, pyright, "
+            "ty, numpydoc, pytest."
+        )
+        raise RuntimeError(msg)
+    phases: list[tuple[str, Callable[[list[str]], int]]] = [
+        ("ruff check", _run_ruff_check),
+        ("ruff format", _run_ruff_format_check),
+        ("pyright", _run_pyright),
+        ("ty check", _run_ty),
+        ("numpydoc", _run_numpydoc),
+        ("pytest", _run_pytest),
+    ]
+    failed: list[str] = []
+    for label, runner in phases:
+        alert(f"Running {label}.")
+        if runner([]) == 0:
+            alert_success(f"{label} passed.")
+        else:
+            warn(f"{label} failed.")
+            failed.append(label)
+    if failed:
+        msg = f"{len(failed)} of {len(phases)} checks failed: {', '.join(failed)}."
+        raise RuntimeError(msg)
+    alert_success("All checks passed.")
 
 
 def _handle_generate_completion() -> None:
@@ -2289,9 +2471,11 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "generate-completion": lambda _: _handle_generate_completion(),
     "generate-man": _handle_generate_man,
     "generate-docs": _handle_generate_docs,
+    "check": _handle_check,
     "numpydoc": _handle_numpydoc,
     "pytest": _handle_pytest,
     "pyright": _handle_pyright,
+    "ty": _handle_ty,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),

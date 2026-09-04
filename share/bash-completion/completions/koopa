@@ -164,6 +164,7 @@ _koopa_complete() {
                         'bump-revision'
                         'bump-venv-version'
                         'cache-functions'
+                        'check'
                         'check-app-versions'
                         'check-skills'
                         'circular-dependencies'
@@ -190,6 +191,7 @@ _koopa_complete() {
                         'reset-revisions'
                         'scrub-install-info'
                         'shellcheck'
+                        'ty'
                         'update-docs'
                     )
                     ;;
