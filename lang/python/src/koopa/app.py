@@ -92,6 +92,18 @@ def is_cpu_bound_app(name: str, json_data: dict) -> bool:
     CPU-bound apps compile from source (make -j, cargo, cmake --parallel,
     go build, etc.) and must not run concurrently with other CPU-bound builds.
     IO-bound apps only download and extract pre-built artifacts.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    json_data : dict
+        Parsed app.json registry mapping app names to entries.
+
+    Returns
+    -------
+    bool
+        True if installing this app will saturate CPU cores.
     """
     entry = json_data.get(name)
     if not isinstance(entry, dict):
@@ -109,7 +121,18 @@ def is_cpu_bound_app(name: str, json_data: dict) -> bool:
 
 
 def resolve_alias(name: str) -> str:
-    """Resolve app alias to its target name (e.g. 'python' -> 'python3.14')."""
+    """Resolve app alias to its target name (e.g. 'python' -> 'python3.14').
+
+    Parameters
+    ----------
+    name : str
+        Application name, possibly an alias.
+
+    Returns
+    -------
+    str
+        The target app name if name is an alias, otherwise name unchanged.
+    """
     data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
@@ -120,7 +143,18 @@ def resolve_alias(name: str) -> str:
 
 
 def app_json_bin(name: str) -> list[str]:
-    """Get bin names for an app from app.json."""
+    """Get bin names for an app from app.json.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list[str]
+        Binary names registered for the app, or an empty list if none.
+    """
     data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
@@ -133,7 +167,18 @@ def app_json_bin(name: str) -> list[str]:
 
 
 def app_json_man1(name: str) -> list[str]:
-    """Get man1 page names for an app from app.json."""
+    """Get man1 page names for an app from app.json.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list[str]
+        Man1 page names registered for the app, or an empty list if none.
+    """
     data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
@@ -152,6 +197,19 @@ def installer_artifact_key(name: str, version: str) -> str | None:
     ``{version}`` placeholder) from app.json and expands it. Returns ``None``
     when the app has no such field, which is the case for every app that isn't
     gated on a manually-staged vendor tarball (e.g. cellranger, bcl-convert).
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version to substitute into the S3 key template.
+
+    Returns
+    -------
+    str | None
+        Expanded S3 key for the staged installer artifact, or None if the
+        app has no ``installer_artifact`` field.
     """
     data = import_app_json()
     entry = data.get(name, {})
@@ -164,7 +222,18 @@ def installer_artifact_key(name: str, version: str) -> str | None:
 
 
 def app_deps(name: str) -> list:
-    """Get application dependencies in topological order (deepest first)."""
+    """Get application dependencies in topological order (deepest first).
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list
+        Dependency names in topological order, deepest dependency first.
+    """
     json_data = import_app_json()
     if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
@@ -187,7 +256,23 @@ def app_deps(name: str) -> list:
 
 
 def app_revdeps(name: str, mode: str, include_build_deps: bool = True) -> list:
-    """Get reverse application dependencies."""
+    """Get reverse application dependencies.
+
+    Parameters
+    ----------
+    name : str
+        Application name to find reverse dependencies for.
+    mode : str
+        Filter mode, either ``"all"`` or ``"default"``.
+    include_build_deps : bool, optional
+        Whether to include build-only dependencies when resolving each
+        candidate's dependency set.
+
+    Returns
+    -------
+    list
+        Names of apps that depend on name, filtered per mode.
+    """
     json_data = import_app_json()
     if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
@@ -220,6 +305,20 @@ def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
        ``"noarch"`` fallback (existing behaviour).
     3. Plain list (not a dict) - returned as-is by the caller before this
        function is reached.
+
+    Parameters
+    ----------
+    dep_dict : dict
+        Dependency dictionary keyed by dispatch strategy (firewall or
+        os_id) to resolve.
+    sys_dict : dict
+        System context dict containing at least the ``"os_id"`` key.
+
+    Returns
+    -------
+    list
+        Dependency names resolved for the current platform and firewall
+        state.
     """
     from koopa.install import can_build_binary
     from koopa.system import has_firewall, is_macos
@@ -252,6 +351,23 @@ def extract_app_deps(
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
+
+    Parameters
+    ----------
+    name : str
+        Application name to extract dependencies for.
+    json_data : dict
+        Parsed app.json registry mapping app names to entries.
+    include_build_deps : bool, optional
+        Whether to include the app's ``build_dependencies`` entries.
+    include_soft_deps : bool, optional
+        Whether to include the app's ``soft_dependencies`` entries.
+
+    Returns
+    -------
+    list
+        Unique dependency names in build, then runtime, then
+        soft-dependency order.
     """
     if name not in json_data:
         raise NameError(f"Unsupported app: {name!r}.")
@@ -277,7 +393,21 @@ def extract_app_deps(
 
 
 def filter_app_deps(names: list, json_data: dict) -> list:
-    """Filter supported app dependencies."""
+    """Filter supported app dependencies.
+
+    Parameters
+    ----------
+    names : list
+        Candidate dependency names to filter.
+    json_data : dict
+        Parsed app.json registry mapping app names to entries.
+
+    Returns
+    -------
+    list
+        Names from names that are supported on the current platform and
+        are not private, system, or user apps.
+    """
     sys_dict = {"os_id": os_id()}
     lst = []
     for val in names:
@@ -296,7 +426,23 @@ def filter_app_deps(names: list, json_data: dict) -> list:
 
 
 def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
-    """Filter supported app reverse dependencies."""
+    """Filter supported app reverse dependencies.
+
+    Parameters
+    ----------
+    names : list
+        Candidate reverse dependency names to filter.
+    json_data : dict
+        Parsed app.json registry mapping app names to entries.
+    mode : str
+        Filter mode, either ``"all"`` or ``"default"``.
+
+    Returns
+    -------
+    list
+        Names from names that are installed, or that pass the supported,
+        default, and visibility checks.
+    """
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {
@@ -351,6 +497,18 @@ def recorded_app_deps(name: str) -> list | None:
     from before this field was recorded -- so callers know to fall back to
     live re-resolution. A recorded empty list is authoritative and returned
     as-is.
+
+    Parameters
+    ----------
+    name : str
+        Application name whose recorded install-time dependency list to
+        read.
+
+    Returns
+    -------
+    list | None
+        The recorded runtime dependency list, or None if nothing was
+        recorded.
     """
     opt_link = join(koopa_opt_prefix(), name)
     if not islink(opt_link):
@@ -379,6 +537,17 @@ def stale_revdeps_with_triggers(names: list[str]) -> dict[str, list[str]]:
     'build_dependencies'. Prefers each candidate's recorded install-time dep
     list (see `recorded_app_deps`) over app.json's current dict, falling back
     only when nothing was recorded.
+
+    Parameters
+    ----------
+    names : list[str]
+        Application names being installed or reinstalled.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Mapping of each installed app whose recorded dependencies include
+        one of names to the list of triggering names.
     """
     json_data = import_app_json()
     keys = list(json_data.keys())
@@ -416,12 +585,30 @@ def stale_revdeps_with_triggers(names: list[str]) -> dict[str, list[str]]:
 
 
 def stale_revdeps(names: list[str]) -> list[str]:
-    """Get installed apps whose runtime dependencies are being reinstalled."""
+    """Get installed apps whose runtime dependencies are being reinstalled.
+
+    Parameters
+    ----------
+    names : list[str]
+        Application names being installed or reinstalled.
+
+    Returns
+    -------
+    list[str]
+        Names of installed apps whose recorded runtime dependencies
+        include one of names.
+    """
     return list(stale_revdeps_with_triggers(names))
 
 
 def installed_apps() -> list:
-    """List installed apps."""
+    """List installed apps.
+
+    Returns
+    -------
+    list
+        Names of apps currently installed under the koopa app prefix.
+    """
     app_prefix = koopa_app_prefix()
     names = list_subdirs(path=app_prefix, recursive=False, sort=True, basename_only=True)
     return names
@@ -446,7 +633,18 @@ def _prune_rmtree_onexc(
     path: str,
     excinfo: BaseException,
 ) -> None:
-    """Retry rmtree callbacks after fixing restrictive permissions."""
+    """Retry rmtree callbacks after fixing restrictive permissions.
+
+    Parameters
+    ----------
+    func : Callable[..., None]
+        Function that raised during rmtree's traversal. Unused, but kept
+        to match shutil's onexc callback signature.
+    path : str
+        Path that failed to be removed.
+    excinfo : BaseException
+        Exception raised by the failed operation.
+    """
     del func  # not reliably callable for all shutil internals (e.g. os.open).
     if isinstance(excinfo, PermissionError):
         chmod(path, 0o700)
@@ -456,7 +654,15 @@ def _prune_rmtree_onexc(
 
 
 def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
-    """Prune apps."""
+    """Prune apps.
+
+    Parameters
+    ----------
+    dry_run : bool, optional
+        Print what would be pruned without deleting anything.
+    verbose : bool, optional
+        Print each subdirectory as it's pruned.
+    """
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
     supported_names = json_data.keys()
@@ -531,9 +737,15 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
 def prune_app_binaries(dry_run: bool = False) -> None:
     """Prune app binaries.
 
-    See Also
-    --------
-    - https://stackoverflow.com/questions/27274996/
+    Parameters
+    ----------
+    dry_run : bool, optional
+        Print the binary keys that would be pruned without deleting
+        anything.
+
+    Notes
+    -----
+    https://stackoverflow.com/questions/27274996/
     """
     from koopa.aws import koopa_s3_bucket
 
@@ -602,7 +814,18 @@ def prune_app_binaries(dry_run: bool = False) -> None:
 
 
 def shared_apps(mode: str) -> list:
-    """Return names of shared apps."""
+    """Return names of shared apps.
+
+    Parameters
+    ----------
+    mode : str
+        Filter mode, either ``"all"`` or ``"default"``.
+
+    Returns
+    -------
+    list
+        Names of shared apps, filtered per mode.
+    """
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}

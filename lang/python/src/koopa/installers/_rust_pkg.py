@@ -11,7 +11,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install a Rust package."""
+    """Install a Rust package.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     install_rust_package(
         name=get_str(kwargs, "name", name),

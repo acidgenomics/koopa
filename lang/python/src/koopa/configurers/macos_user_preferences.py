@@ -17,12 +17,23 @@ def main(
     Data-driven approach: all `defaults write` calls are stored as tuples
     and iterated over for clean, maintainable code.
 
-    See Also
-    --------
-    - https://github.com/nix-darwin/nix-darwin
-    - https://github.com/kevinSuttle/macOS-Defaults
-    - https://macos-defaults.com/
-    - https://github.com/brokosz/macos-defaults
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Print verbose output.
+
+    Notes
+    -----
+    https://github.com/nix-darwin/nix-darwin
+    https://github.com/kevinSuttle/macOS-Defaults
+    https://macos-defaults.com/
+    https://github.com/brokosz/macos-defaults
     """
     if sys.platform != "darwin":
         msg = "macOS only."

@@ -15,7 +15,21 @@ def main(
     prefix: str = "",
     verbose: bool = False,
 ) -> None:
-    """Uninstall Homebrew."""
+    """Uninstall Homebrew.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+    prefix : str, optional
+        Installation prefix directory.
+    verbose : bool, optional
+        Print verbose output.
+    """
     url = "https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh"
     fd, tmp = tempfile.mkstemp(suffix=".sh", prefix="koopa-homebrew-uninstall-")
     os.close(fd)

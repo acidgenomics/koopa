@@ -13,7 +13,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install glibc."""
+    """Install glibc.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     gh_url = f"https://github.com/sgerrand/alpine-pkg-glibc/releases/download/{version}"
     key_url = "https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub"
     key_file = download(key_url)

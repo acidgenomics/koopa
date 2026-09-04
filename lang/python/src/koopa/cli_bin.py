@@ -20,7 +20,18 @@ from pathlib import Path
 
 
 def _which(name: str) -> str:
-    """Locate a command."""
+    """Locate a command.
+
+    Parameters
+    ----------
+    name : str
+        Command name to locate on ``PATH``.
+
+    Returns
+    -------
+    str
+        Absolute path to the command.
+    """
     path = shutil.which(name)
     if path is None:
         msg = f"Command not found: {name}"
@@ -933,7 +944,14 @@ def _handle_find_and_move_in_sequence(args: list[str]) -> None:
 
 
 def _handle_create_dmg(args: list[str]) -> None:
-    """Create a DMG disk image from a source folder."""
+    """Create a DMG disk image from a source folder.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. Must contain exactly one
+        element: the path to the source folder.
+    """
     if len(args) != 1:
         print("Error: exactly one argument (source folder) is required.", file=sys.stderr)
         sys.exit(1)
@@ -954,7 +972,14 @@ def _handle_create_dmg(args: list[str]) -> None:
 
 
 def _handle_ifactive(args: list[str]) -> None:
-    """Show active network interfaces (macOS only)."""
+    """Show active network interfaces (macOS only).
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. Unused; this subcommand
+        takes no arguments.
+    """
     if sys.platform != "darwin":
         print("Error: 'ifactive' is only supported on macOS.", file=sys.stderr)
         sys.exit(1)
@@ -987,7 +1012,15 @@ def _handle_ifactive(args: list[str]) -> None:
 
 
 def _handle_spotlight(args: list[str]) -> None:
-    """Search using macOS Spotlight (mdfind)."""
+    """Search using macOS Spotlight (mdfind).
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. First element is the
+        search pattern; optional second element is the directory to
+        search in (defaults to the current directory).
+    """
     if sys.platform != "darwin":
         print("Error: 'spotlight' is only supported on macOS.", file=sys.stderr)
         sys.exit(1)
@@ -1023,6 +1056,12 @@ def _handle_reset_terminal(args: list[str]) -> None:
 
     Recovery for: ``^[[<0;56;29M`` (SGR mouse reports) and ``^[[?997;2n``
     (mode-2031 light-mode reports) leaking as literal keystrokes.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. This subcommand takes no
+        arguments; any value here causes argparse to exit with an error.
     """
     import argparse
 
@@ -1074,6 +1113,12 @@ def _handle_update_today_bucket(args: list[str]) -> None:
     ``_koopa_activate_today_bucket`` so the links stay current even when no
     new interactive shell is launched (e.g. working all day in GUI apps).
     Idempotent; no-ops when no bucket dir exists.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. This subcommand takes no
+        arguments; any value here causes argparse to exit with an error.
     """
     import argparse
 

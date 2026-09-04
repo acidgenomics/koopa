@@ -35,7 +35,18 @@ from koopa.cli_docs import (
 
 
 def _anchor(name: str) -> str:
-    """Return a slug id usable as an explicit MyST/Sphinx anchor target."""
+    """Return a slug id usable as an explicit MyST/Sphinx anchor target.
+
+    Parameters
+    ----------
+    name : str
+        Command name, possibly containing spaces.
+
+    Returns
+    -------
+    str
+        Slug id with spaces replaced by hyphens.
+    """
     return f"koopa-{name.replace(' ', '-')}"
 
 
@@ -45,6 +56,22 @@ def _entry(name: str, synopsis: str, description: str, *, level: int = 2) -> lis
     ``level`` picks the heading depth (2 for a flat page, 3 when nested
     under a namespace H2, as on the app reference page) -- Sphinx's
     ``myst.header`` check requires consecutive levels with no skips.
+
+    Parameters
+    ----------
+    name : str
+        Command name, used to build the heading and anchor.
+    synopsis : str
+        Argument synopsis appended after the command name.
+    description : str
+        Prose description rendered below the heading.
+    level : int, optional
+        Markdown heading depth.
+
+    Returns
+    -------
+    list[str]
+        Markdown lines rendering the command entry.
     """
     term = f"`{name}"
     if synopsis:
@@ -214,7 +241,21 @@ def _render_app() -> str:
 
 
 def _flatten_app_namespace(node: str | dict, prefix: str = "") -> list[tuple[str, str]]:
-    """Flatten one _APP_TREE namespace subtree into (subpath, handler_key) pairs."""
+    """Flatten one _APP_TREE namespace subtree into (subpath, handler_key) pairs.
+
+    Parameters
+    ----------
+    node : str | dict
+        Subtree to flatten: a handler key string at a leaf, or a nested
+        dict of further subpaths.
+    prefix : str, optional
+        Subpath accumulated from parent keys, joined with spaces.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        (subpath, handler_key) pairs for every leaf under `node`.
+    """
     if isinstance(node, str):
         return [(prefix, node)]
     result: list[tuple[str, str]] = []

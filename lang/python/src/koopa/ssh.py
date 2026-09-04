@@ -13,7 +13,17 @@ def ssh_generate_key(
     *key_names: str,
     prefix: str = "",
 ) -> None:
-    """Generate SSH keys."""
+    """Generate SSH keys.
+
+    Parameters
+    ----------
+    *key_names : str
+        Key filenames to generate (e.g. ``"id_ed25519"``); defaults to
+        ``"id_rsa"`` when none are given. The suffix determines the key
+        type: ``ed25519`` or ``rsa``.
+    prefix : str, optional
+        Directory to write the keys into; defaults to ``~/.ssh``.
+    """
     ssh_keygen = shutil.which("ssh-keygen")
     if ssh_keygen is None:
         msg = "ssh-keygen is not installed."

@@ -10,7 +10,14 @@ from koopa.xdg import xdg_config_home
 
 
 def _bundled_tmux() -> str | None:
-    """Return the path to the koopa-bundled tmux binary, or None if absent."""
+    """Return the path to the koopa-bundled tmux binary, or None if absent.
+
+    Returns
+    -------
+    str | None
+        Absolute path to the bundled tmux binary, or None if it is not
+        present.
+    """
     path = os.path.join(bin_prefix(), "tmux")
     return path if os.path.isfile(path) else None
 
@@ -23,6 +30,12 @@ def tmux_server_is_stale() -> bool:
     binary version (``tmux -V``).  Returns False when no server is running or
     when the bundled tmux binary is absent — nothing to warn about in either
     case.
+
+    Returns
+    -------
+    bool
+        True if the running tmux server's version differs from the on-disk
+        bundled binary version.
     """
     tmux = _bundled_tmux()
     if tmux is None:
@@ -67,6 +80,12 @@ def reload_tmux_config(color_mode: str | None = None) -> None:
     running.  A CalledProcessError (e.g. protocol mismatch between a very
     stale server and a newer binary) is caught and emitted as a warning so it
     never aborts the caller.
+
+    Parameters
+    ----------
+    color_mode : str | None, optional
+        Color mode to push into the server's global environment as
+        ``KOOPA_COLOR_MODE`` before sourcing the config.
     """
     tmux = _bundled_tmux()
     if tmux is None:
@@ -99,6 +118,11 @@ def warn_tmux_stale() -> bool:
     Returns True when the server is current (or absent), False when stale.
     Emits a ``warn()`` message with the exact kill-server remedy so the user
     knows what to do.  Never auto-kills sessions.
+
+    Returns
+    -------
+    bool
+        True if the server is current or absent, False if it is stale.
     """
     tmux = _bundled_tmux()
     if tmux is None:

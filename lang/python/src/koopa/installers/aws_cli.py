@@ -13,7 +13,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install aws-cli."""
+    """Install aws-cli.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     install_conda_package(
         name=get_str(kwargs, "name", name),
@@ -30,6 +43,11 @@ def _setup_completions(prefix: str) -> None:
     aws_completer aws``) and ``bin/aws_zsh_completer.sh`` (a sourceable zsh
     script).  Neither lives in a standard completion directory, so we create
     symlinks that the generic scanner and zsh activation can find.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
     """
     prefix = os.path.abspath(prefix)
     # Bash: symlink into share/bash-completion/completions/ so the generic

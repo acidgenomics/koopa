@@ -151,7 +151,13 @@ pkgdown::build_site(pkg = PKG_DIR, preview = FALSE)
 
 
 def _aws() -> str:
-    """Return path to aws CLI, raising if absent."""
+    """Return path to aws CLI, raising if absent.
+
+    Returns
+    -------
+    str
+        Absolute path to the ``aws`` executable.
+    """
     import shutil
 
     path = shutil.which("aws")
@@ -162,14 +168,26 @@ def _aws() -> str:
 
 
 def _bucket() -> str:
-    """Return the R package S3 bucket name (loaded from environment)."""
+    """Return the R package S3 bucket name (loaded from environment).
+
+    Returns
+    -------
+    str
+        Name of the S3 bucket that hosts the R package repository.
+    """
     from koopa.aws import koopa_s3_bucket
 
     return koopa_s3_bucket("r")
 
 
 def _s3_uri() -> str:
-    """Return the S3 URI prefix for the R package bucket."""
+    """Return the S3 URI prefix for the R package bucket.
+
+    Returns
+    -------
+    str
+        ``s3://`` URI for the R package bucket, with no trailing slash.
+    """
     return f"s3://{_bucket()}"
 
 
@@ -179,6 +197,11 @@ def _cloudfront_distribution_id() -> str:
     Deliberately does NOT fall back to a generic AWS_CLOUDFRONT_DISTRIBUTION_ID
     -- see the identical fix in koopa.pypi._cloudfront_distribution_id for why
     that fallback is unsafe (silently invalidates the wrong distribution).
+
+    Returns
+    -------
+    str
+        CloudFront distribution ID for the R package repository.
     """
     from koopa.aws import dotenv_value
 
@@ -190,13 +213,37 @@ def _cloudfront_distribution_id() -> str:
 
 
 def _r_quoted(value: str) -> str:
-    """Wrap a value in an R double-quoted string literal."""
+    """Wrap a value in an R double-quoted string literal.
+
+    Parameters
+    ----------
+    value : str
+        Text to quote for interpolation into an R script.
+
+    Returns
+    -------
+    str
+        ``value`` escaped and wrapped in double quotes, safe to interpolate
+        into R source code.
+    """
     escaped = value.replace("\\", "\\\\").replace('"', '\\"')
     return f'"{escaped}"'
 
 
 def _parse_dcf(text: str) -> dict[str, str]:
-    """Parse a single DCF (Debian Control File) record into a dict."""
+    """Parse a single DCF (Debian Control File) record into a dict.
+
+    Parameters
+    ----------
+    text : str
+        Raw DCF text containing a single record.
+
+    Returns
+    -------
+    dict[str, str]
+        Mapping of field name to value, with continuation lines joined onto
+        the field they belong to.
+    """
     record: dict[str, str] = {}
     current_key = ""
     for line in text.splitlines():
@@ -213,7 +260,19 @@ def _parse_dcf(text: str) -> dict[str, str]:
 
 
 def _extract_description_from_tarball(tarball_bytes: bytes) -> dict[str, str]:
-    """Extract and parse DESCRIPTION from an in-memory tarball."""
+    """Extract and parse DESCRIPTION from an in-memory tarball.
+
+    Parameters
+    ----------
+    tarball_bytes : bytes
+        Raw contents of a ``.tar.gz`` package tarball.
+
+    Returns
+    -------
+    dict[str, str]
+        Parsed DESCRIPTION fields, or an empty dict if no DESCRIPTION file
+        is found at the expected top-level path.
+    """
     with tarfile.open(fileobj=io.BytesIO(tarball_bytes), mode="r:gz") as tf:
         for member in tf.getmembers():
             parts = member.name.split("/")
@@ -225,7 +284,19 @@ def _extract_description_from_tarball(tarball_bytes: bytes) -> dict[str, str]:
 
 
 def _stream_description_from_s3(key: str) -> dict[str, str]:
-    """Stream a tarball from S3 and extract only its DESCRIPTION file."""
+    """Stream a tarball from S3 and extract only its DESCRIPTION file.
+
+    Parameters
+    ----------
+    key : str
+        S3 object key of the package tarball, relative to the bucket root.
+
+    Returns
+    -------
+    dict[str, str]
+        Parsed DESCRIPTION fields, or an empty dict if no DESCRIPTION file
+        is found in the tarball.
+    """
     aws = _aws()
     result = subprocess.run(
         [aws, "s3", f"--profile={_PROFILE}", "cp", f"{_s3_uri()}/{key}", "-"],
@@ -238,8 +309,18 @@ def _stream_description_from_s3(key: str) -> dict[str, str]:
 def _s3_list_packages(prefix: str) -> list[dict[str, str]]:
     """List package tarballs under a given S3 prefix.
 
-    Returns a list of dicts with 'Key' and 'ETag' (MD5 hex, no quotes).
     Only includes .tar.gz and .tgz files; skips Archive/ subdirs.
+
+    Parameters
+    ----------
+    prefix : str
+        S3 key prefix to list, relative to the bucket root.
+
+    Returns
+    -------
+    list[dict[str, str]]
+        One dict per tarball, with ``Key`` (full S3 key), ``ETag`` (MD5 hex,
+        no quotes), and ``Filename`` (basename within ``prefix``).
     """
     aws = _aws()
     result = subprocess.run(
@@ -275,7 +356,14 @@ def _s3_list_packages(prefix: str) -> list[dict[str, str]]:
 
 
 def _s3_list_binary_prefixes() -> list[str]:
-    """Discover all bin/macosx/<platform>/contrib/<Rver>/ prefixes in S3."""
+    """Discover all bin/macosx/<platform>/contrib/<Rver>/ prefixes in S3.
+
+    Returns
+    -------
+    list[str]
+        Sorted, trailing-slash-terminated binary contrib prefixes found in
+        the bucket.
+    """
     aws = _aws()
     result = subprocess.run(
         [
@@ -307,7 +395,21 @@ def _s3_list_binary_prefixes() -> list[str]:
 
 
 def _build_packages_text(entries: list[dict[str, str]], *, binary: bool = False) -> str:
-    """Build the PACKAGES DCF text from a list of entry dicts."""
+    """Build the PACKAGES DCF text from a list of entry dicts.
+
+    Parameters
+    ----------
+    entries : list[dict[str, str]]
+        Parsed DESCRIPTION-derived records, one per package.
+    binary : bool, optional
+        Whether to include the binary-only ``Built`` and ``File`` fields.
+
+    Returns
+    -------
+    str
+        DCF-formatted PACKAGES text, with one blank-line-separated block per
+        entry.
+    """
     fields = _SOURCE_FIELDS + (_BINARY_EXTRA_FIELDS if binary else [])
     blocks = []
     for entry in sorted(entries, key=lambda e: (e.get("Package", ""), e.get("Version", ""))):
@@ -322,7 +424,18 @@ def _build_packages_text(entries: list[dict[str, str]], *, binary: bool = False)
 
 
 def _upload_manifest(packages_text: str, s3_prefix: str, tmp_dir: str) -> None:
-    """Write PACKAGES, PACKAGES.gz, PACKAGES.rds and upload all three to S3."""
+    """Write PACKAGES, PACKAGES.gz, PACKAGES.rds and upload all three to S3.
+
+    Parameters
+    ----------
+    packages_text : str
+        DCF-formatted PACKAGES text to write and upload.
+    s3_prefix : str
+        S3 key prefix to upload the manifests under, relative to the bucket
+        root.
+    tmp_dir : str
+        Local directory to write the manifest files into before upload.
+    """
     from koopa.r import _r_eval
 
     aws = _aws()
@@ -361,10 +474,23 @@ def _upload_manifest(packages_text: str, s3_prefix: str, tmp_dir: str) -> None:
 def _reindex_prefix(s3_prefix: str, *, binary: bool = False) -> list[dict[str, str]]:
     """Regenerate and upload PACKAGES manifests for one S3 prefix.
 
-    Streams only the DESCRIPTION file from each tarball — no full downloads.
-    Uses S3 ETag as MD5sum (valid for single-part uploads). Returns the parsed
-    entries (full DESCRIPTION fields, including Description) so callers such
-    as the landing page generator can reuse them without re-streaming.
+    Streams only the DESCRIPTION file from each tarball, with no full
+    downloads. Uses S3 ETag as MD5sum (valid for single-part uploads).
+
+    Parameters
+    ----------
+    s3_prefix : str
+        S3 key prefix to reindex, relative to the bucket root.
+    binary : bool, optional
+        Whether this prefix holds binary tarballs (adds the ``Built`` and
+        ``File`` fields and reads ``Filename`` into ``File``).
+
+    Returns
+    -------
+    list[dict[str, str]]
+        Parsed entries (full DESCRIPTION fields, including Description) so
+        callers such as the landing page generator can reuse them without
+        re-streaming.
     """
     from koopa.alert import alert
 
@@ -400,6 +526,19 @@ def _superseded_filenames(filenames: list[str], suffix: str) -> list[str]:
     Filenames are expected in "<Pkg>_<X.Y.Z><suffix>" form. Entries whose
     version does not parse as a dotted integer tuple are skipped (never
     reported as superseded).
+
+    Parameters
+    ----------
+    filenames : list[str]
+        Tarball basenames to group by package name and compare by version.
+    suffix : str
+        Filename suffix to strip before splitting off the version (e.g.
+        ``".tar.gz"`` or ``".tgz"``).
+
+    Returns
+    -------
+    list[str]
+        Filenames that are not the highest version for their package.
     """
     from collections import defaultdict
 
@@ -431,6 +570,13 @@ def _archive_old_source(pkg_name: str, new_filename: str) -> None:
 
     Called before uploading a new version so the old one is preserved, mirroring
     drat's latestOnly=TRUE + archivePackages behaviour.
+
+    Parameters
+    ----------
+    pkg_name : str
+        Package name whose superseded source tarballs should be archived.
+    new_filename : str
+        Basename of the tarball just uploaded; excluded from archiving.
     """
     from koopa.alert import alert
 
@@ -484,6 +630,16 @@ def _delete_superseded_binaries(pkg_name: str, bin_prefix: str, new_filename: st
     old binary in place. Unlike _archive_old_source(), this deletes rather than
     moves to Archive/: binary contrib dirs mirror CRAN convention and hold only
     the current version; nothing consumes an archived binary.
+
+    Parameters
+    ----------
+    pkg_name : str
+        Package name whose superseded binary tarballs should be deleted.
+    bin_prefix : str
+        S3 key prefix holding the binary tarballs, relative to the bucket
+        root.
+    new_filename : str
+        Basename of the binary tarball just uploaded; excluded from deletion.
     """
     from koopa.alert import alert
 
@@ -529,7 +685,15 @@ def _delete_superseded_binaries(pkg_name: str, bin_prefix: str, new_filename: st
 
 
 def _upload_package(local_path: str, s3_key: str) -> None:
-    """Upload a package tarball to S3."""
+    """Upload a package tarball to S3.
+
+    Parameters
+    ----------
+    local_path : str
+        Path to the local tarball file to upload.
+    s3_key : str
+        Destination S3 key, relative to the bucket root.
+    """
     aws = _aws()
     subprocess.run(
         [
@@ -549,13 +713,24 @@ def _upload_package(local_path: str, s3_key: str) -> None:
 def _r_build(package_dir: str, build_dir: str) -> tuple[str, str, str]:
     """Build source + macOS binary tarballs via R CMD build / R CMD INSTALL --build.
 
-    build_dir must be a Python-managed directory that outlives the R session.
-    Returns (src_path, bin_path, bin_subpath). The bin_subpath is determined by
-    contrib.url(..., type='binary') from the running R, so it's always correct
-    for the current platform (e.g. sonoma-arm64/contrib/4.6).
-
     Stderr is passed through to the terminal so build/install errors are visible.
     Only stdout (the final 3 lines of paths) is captured.
+
+    Parameters
+    ----------
+    package_dir : str
+        Path to the R package source directory to build.
+    build_dir : str
+        Python-managed directory that outlives the R session; the built
+        tarballs are written here.
+
+    Returns
+    -------
+    tuple[str, str, str]
+        ``(src_path, bin_path, bin_subpath)``. ``bin_subpath`` is determined
+        by ``contrib.url(..., type='binary')`` from the running R, so it's
+        always correct for the current platform (e.g.
+        ``sonoma-arm64/contrib/4.6``).
     """
     import shutil
 
@@ -588,10 +763,21 @@ def _generate_landing(entries: list[dict[str, str]]) -> str:
     """Render the root landing page HTML from src/contrib DESCRIPTION entries.
 
     Reuses the Package/Description fields already parsed by _reindex_prefix()
-    for src/contrib — no extra S3 calls or tarball streams. Packages are
+    for src/contrib, with no extra S3 calls or tarball streams. Packages are
     grouped by _CATEGORIES; any package present in S3 but absent from every
     category warns to stderr and is appended to "Infrastructure" so it is
     never silently dropped from the page.
+
+    Parameters
+    ----------
+    entries : list[dict[str, str]]
+        Parsed DESCRIPTION records for the src/contrib packages, as returned
+        by ``_reindex_prefix()``.
+
+    Returns
+    -------
+    str
+        Rendered landing page HTML.
     """
     by_lower = {entry["Package"].lower(): entry for entry in entries if entry.get("Package")}
     categorized = {name for _, names in _CATEGORIES for name in names}
@@ -630,7 +816,15 @@ def _generate_landing(entries: list[dict[str, str]]) -> str:
 
 
 def _upload_landing(html_content: str, tmp_dir: str) -> None:
-    """Write the landing page to a temp file and upload it to s3://bucket/index.html."""
+    """Write the landing page to a temp file and upload it to s3://bucket/index.html.
+
+    Parameters
+    ----------
+    html_content : str
+        Rendered landing page HTML to write and upload.
+    tmp_dir : str
+        Local directory to write the ``index.html`` file into before upload.
+    """
     local = os.path.join(tmp_dir, "index.html")
     with open(local, "w") as fh:
         fh.write(html_content)
@@ -650,7 +844,14 @@ def _upload_landing(html_content: str, tmp_dir: str) -> None:
 
 
 def _invalidate_cloudfront(paths: list[str] | None = None) -> None:
-    """Invalidate the given CloudFront paths (defaults to PACKAGES* manifests)."""
+    """Invalidate the given CloudFront paths (defaults to PACKAGES* manifests).
+
+    Parameters
+    ----------
+    paths : list[str] | None, optional
+        CloudFront paths to invalidate. Defaults to ``_CLOUDFRONT_PATHS``
+        when not given.
+    """
     aws = _aws()
     dist_id = _cloudfront_distribution_id()
     subprocess.run(
@@ -691,16 +892,16 @@ def publish(
 
     Parameters
     ----------
-    package_dir
+    package_dir : str
         Path to an R package source directory (must contain DESCRIPTION).
-    check
+    check : bool, optional
         Build a source tarball and run R CMD check --as-cran --no-manual
         before publishing.
-    deploy
+    deploy : bool, optional
         Upload to S3 and regenerate PACKAGES manifests after building.
-    invalidate
+    invalidate : bool, optional
         Invalidate CloudFront PACKAGES* caches (only when deploy=True).
-    tag
+    tag : bool, optional
         Create an annotated git tag vX.Y.Z and push it to origin after a
         successful deploy. Only runs when the package dir is a git repo.
         Tag message: "<Package> v<Version> (<Date>)".
@@ -789,10 +990,10 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
 
     Parameters
     ----------
-    package_dir
+    package_dir : str
         Path to an R package source directory (must contain DESCRIPTION and
         a ``_pkgdown.yml`` config).
-    invalidate
+    invalidate : bool, optional
         Whether to invalidate the CloudFront cache after uploading.
     """
     import shutil
@@ -859,7 +1060,7 @@ def archive_src(*, invalidate: bool = True) -> None:
 
     Parameters
     ----------
-    invalidate
+    invalidate : bool, optional
         Invalidate CloudFront PACKAGES* caches after archiving.
     """
     from koopa.alert import alert
@@ -940,7 +1141,7 @@ def clean_orphan_binaries(*, invalidate: bool = True) -> None:
 
     Parameters
     ----------
-    invalidate
+    invalidate : bool, optional
         Invalidate CloudFront PACKAGES* caches if any orphans are deleted.
     """
     from koopa.alert import alert
@@ -1010,13 +1211,13 @@ def publish_from_github(
 
     Parameters
     ----------
-    pkg_name
+    pkg_name : str
         GitHub repository name (e.g. "r-goalie").
-    org
+    org : str, optional
         GitHub organisation. Defaults to "acidgenomics".
-    check
+    check : bool, optional
         Run R CMD check before building. Off by default for batch builds.
-    invalidate
+    invalidate : bool, optional
         Invalidate CloudFront PACKAGES* caches after publishing.
     """
     import shutil
@@ -1048,7 +1249,7 @@ def reindex(*, invalidate: bool = True) -> None:
 
     Parameters
     ----------
-    invalidate
+    invalidate : bool, optional
         Invalidate CloudFront PACKAGES* caches after reindexing.
     """
     from koopa.alert import alert
@@ -1083,11 +1284,11 @@ def reindex(*, invalidate: bool = True) -> None:
 
 
 def deploy(*, invalidate: bool = True) -> None:
-    """Alias for reindex() — kept for CLI symmetry and AcidDevTools compatibility.
+    """Run reindex() as an alias, kept for CLI symmetry and AcidDevTools compatibility.
 
     Parameters
     ----------
-    invalidate
+    invalidate : bool, optional
         Invalidate CloudFront PACKAGES* caches after reindexing.
     """
     reindex(invalidate=invalidate)

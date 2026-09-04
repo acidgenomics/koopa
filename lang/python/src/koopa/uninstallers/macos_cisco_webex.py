@@ -14,7 +14,21 @@ def main(
     prefix: str = "",
     verbose: bool = False,
 ) -> None:
-    """Uninstall Cisco WebEx on macOS."""
+    """Uninstall Cisco WebEx on macOS.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+    prefix : str, optional
+        Installation prefix directory.
+    verbose : bool, optional
+        Print verbose output.
+    """
     home = os.path.expanduser("~")
     # System path (requires sudo).
     app = "/Applications/Cisco Webex Meetings.app"

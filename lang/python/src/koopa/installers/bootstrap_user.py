@@ -13,6 +13,19 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install koopa bootstrap."""
+    """Install koopa bootstrap.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     script = os.path.join(koopa_prefix(), "bootstrap.sh")
     subprocess.run([script], check=True)

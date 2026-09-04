@@ -17,12 +17,25 @@ if TYPE_CHECKING:
 
 
 def _koopa_prefix() -> str:
-    """Return koopa installation prefix."""
+    """Return koopa installation prefix.
+
+    Returns
+    -------
+    str
+        Absolute path to the koopa installation prefix, or an empty
+        string if ``KOOPA_PREFIX`` is not set.
+    """
     return os.environ.get("KOOPA_PREFIX", "")
 
 
 def _import_app_json() -> dict[str, Any]:
-    """Import app.json data."""
+    """Import app.json data.
+
+    Returns
+    -------
+    dict[str, Any]
+        Parsed app.json contents, keyed by application name.
+    """
     json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
     with open(json_path) as f:
         return json.load(f)
@@ -33,6 +46,12 @@ def _os_id() -> str:
 
     Mirrors koopa.system.arch2() mapping but avoids importing koopa.*
     at module level since cli_main.py must work before the venv is ready.
+
+    Returns
+    -------
+    str
+        Platform-architecture identifier, such as ``"macos-arm64"`` or
+        ``"linux-amd64"``.
     """
     machine = platform.machine()
     arch_map = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
@@ -112,6 +131,11 @@ def _revert_direnv_env(*, verbose: bool = False) -> None:
     'koopa.system.safe_build_env' -- most of them. Reverting in-process (see
     'koopa.system.revert_direnv_env') removes the exposure outright instead of
     warning about it. Silent by default; reports a count under '--verbose'.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        Print a note reporting how many environment variables were reverted.
     """
     from koopa.system import revert_direnv_env
 
@@ -175,7 +199,15 @@ def _exec_restart_after_pull() -> None:
 
 
 def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
-    """Abort if the app is not supported on the current platform."""
+    """Abort if the app is not supported on the current platform.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    app_meta : dict[str, Any]
+        The app's metadata entry from app.json.
+    """
     supported = app_meta.get("supported", {})
     os_key = _os_id()
     if os_key in supported and not supported[os_key]:
@@ -187,7 +219,19 @@ def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
 
 
 def _build_passthrough_args(app_meta: dict[str, Any]) -> list[str]:
-    """Build passthrough -D args from app.json installer_args."""
+    """Build passthrough -D args from app.json installer_args.
+
+    Parameters
+    ----------
+    app_meta : dict[str, Any]
+        The app's metadata entry from app.json.
+
+    Returns
+    -------
+    list[str]
+        ``--flag=value`` strings derived from the app's ``installer_args``
+        mapping, suitable for passing through to the installer.
+    """
     import json as json_mod
 
     installer_args = app_meta.get("installer_args", {})
@@ -215,7 +259,29 @@ def _build_install_config(
     deps: bool = True,
     extra_passthrough: list[str] | None = None,
 ) -> "InstallConfig":
-    """Build an InstallConfig from app.json metadata."""
+    """Build an InstallConfig from app.json metadata.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    mode : str, optional
+        Installation mode (e.g. ``"shared"`` or ``"system"``).
+    reinstall : bool, optional
+        True if this is a reinstall of an already-installed app.
+    verbose : bool, optional
+        Enable verbose installer output.
+    deps : bool, optional
+        True to also install the app's dependencies.
+    extra_passthrough : list[str] | None, optional
+        Extra ``--flag=value`` arguments to append to those derived from
+        app.json's ``installer_args``.
+
+    Returns
+    -------
+    InstallConfig
+        Configuration object ready to pass to ``koopa.install.install_app``.
+    """
     from koopa.install import InstallConfig, _can_install_binary, _can_push_binary
 
     app_data = _import_app_json()
@@ -256,12 +322,24 @@ def _build_install_config(
 
 
 def _add_common_flags(parser: argparse.ArgumentParser) -> None:
-    """Add flags shared across subcommands."""
+    """Add flags shared across subcommands.
+
+    Parameters
+    ----------
+    parser : argparse.ArgumentParser
+        Subcommand parser to add the shared flags to.
+    """
     parser.add_argument("--verbose", action="store_true", default=False)
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    """Build the argument parser for koopa CLI."""
+    """Build the argument parser for koopa CLI.
+
+    Returns
+    -------
+    argparse.ArgumentParser
+        Parser configured with all koopa subcommands and their flags.
+    """
     parser = argparse.ArgumentParser(
         prog="koopa",
         description="Shell bootloader for data science.",
@@ -420,7 +498,20 @@ def _build_parser() -> argparse.ArgumentParser:
 def _resolve_apps_and_mode(
     args: argparse.Namespace,
 ) -> tuple[list[str], str]:
-    """Resolve apps and mode from positional args."""
+    """Resolve apps and mode from positional args.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments containing an ``apps`` list.
+
+    Returns
+    -------
+    tuple[list[str], str]
+        Remaining app names and the install mode (``"shared"`` or
+        ``"system"``), with a leading ``"system"`` token stripped from
+        ``apps`` if present.
+    """
     apps = list(args.apps) if args.apps else []
     mode = "shared"
     if apps and apps[0] in ("system",):
@@ -433,7 +524,13 @@ def _resolve_apps_and_mode(
 
 
 def _handle_install(args: argparse.Namespace) -> None:
-    """Handle ``koopa install`` subcommand."""
+    """Handle ``koopa install`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``install`` subcommand.
+    """
     _require_supported_platform()
     _require_git_managed_install()
     _require_slurm_allocation()
@@ -497,7 +594,13 @@ def _handle_install(args: argparse.Namespace) -> None:
 
 
 def _handle_reinstall(args: argparse.Namespace) -> None:
-    """Handle ``koopa reinstall`` subcommand."""
+    """Handle ``koopa reinstall`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``reinstall`` subcommand.
+    """
     _require_supported_platform()
     _require_git_managed_install()
     _require_slurm_allocation()
@@ -555,7 +658,13 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
 
 
 def _reinstall_all(*, verbose: bool = False) -> None:
-    """Reinstall all installed apps and install any missing defaults."""
+    """Reinstall all installed apps and install any missing defaults.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        Enable verbose installer output.
+    """
     from koopa.alert import alert, alert_success
     from koopa.app import installed_apps
     from koopa.install import (
@@ -638,7 +747,19 @@ def _reinstall_with_revdeps(
     mode: str,
     verbose: bool = False,
 ) -> None:
-    """Reinstall apps with reverse dependency handling."""
+    """Reinstall apps with reverse dependency handling.
+
+    Parameters
+    ----------
+    apps : list[str]
+        Application names to reinstall.
+    mode : str
+        Reverse dependency scope: ``"all"`` reinstalls the given apps plus
+        their reverse dependencies, ``"only"`` reinstalls only the reverse
+        dependencies.
+    verbose : bool, optional
+        Enable verbose installer output.
+    """
     from koopa.app import app_revdeps
     from koopa.install import _remove_from_pending_plan, install_app
 
@@ -664,11 +785,22 @@ def _reinstall_with_revdeps(
 def _confirm_destructive(prompt: str, yes: bool) -> bool:
     """Prompt the user to confirm a destructive action.
 
-    Returns True if the action should proceed, False if aborted.
     When ``yes`` is True or stdin is not a TTY the prompt is skipped and
     the function returns True unconditionally (scripted / CI use).
     The default answer is **no** — the user must type ``y`` or ``yes``
     explicitly to continue.
+
+    Parameters
+    ----------
+    prompt : str
+        Question to display to the user before the ``[y/N]`` suffix.
+    yes : bool
+        True to skip the prompt and confirm automatically.
+
+    Returns
+    -------
+    bool
+        True if the action should proceed, False if aborted.
     """
     if yes or not sys.stdin.isatty():
         return True
@@ -677,7 +809,13 @@ def _confirm_destructive(prompt: str, yes: bool) -> bool:
 
 
 def _handle_uninstall(args: argparse.Namespace) -> None:
-    """Handle ``koopa uninstall`` subcommand."""
+    """Handle ``koopa uninstall`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``uninstall`` subcommand.
+    """
     _require_git_managed_install()
     from koopa.app import app_revdeps, installed_apps
     from koopa.install import _acquire_install_lock, _release_install_lock
@@ -751,9 +889,23 @@ def _retry_recoverable_failures(
 
     A failure whose log matches a known non-retryable pattern (e.g. a missing
     distribution on the configured pip index) cannot succeed on a second,
-    identical attempt, so it is excluded from the retry. Returns an error
-    message if a non-retryable failure remains unresolved or the retry itself
-    fails, else None.
+    identical attempt, so it is excluded from the retry.
+
+    Parameters
+    ----------
+    root_failures : list[str]
+        Names of root apps that failed during the initial install attempt.
+    non_retryable : list[str]
+        Subset of ``root_failures`` whose failure matches a known
+        non-retryable pattern, and which is excluded from the retry.
+    verbose : bool
+        Enable verbose installer output.
+
+    Returns
+    -------
+    str | None
+        Error message if a non-retryable failure remains unresolved or the
+        retry itself fails, else None.
     """
     from koopa.alert import alert
     from koopa.install import InstallPlanError, retry_failed_apps
@@ -784,7 +936,13 @@ def _retry_recoverable_failures(
 
 
 def _handle_update(args: argparse.Namespace) -> None:
-    """Handle ``koopa update`` subcommand."""
+    """Handle ``koopa update`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``update`` subcommand.
+    """
     _require_supported_platform()
     _require_git_managed_install()
     _require_slurm_allocation()
@@ -904,7 +1062,13 @@ def _handle_update(args: argparse.Namespace) -> None:
 
 
 def _handle_configure(args: argparse.Namespace) -> None:
-    """Handle ``koopa configure`` subcommand."""
+    """Handle ``koopa configure`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``configure`` subcommand.
+    """
     _require_supported_platform()
     from koopa.configure import ConfigureConfig, configure_app
 
@@ -927,14 +1091,26 @@ def _handle_configure(args: argparse.Namespace) -> None:
 
 
 def _handle_app(args: argparse.Namespace) -> None:
-    """Handle ``koopa app`` subcommand."""
+    """Handle ``koopa app`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``app`` subcommand.
+    """
     from koopa.cli_app import handle_app
 
     handle_app(args.remainder)
 
 
 def _handle_list(args: argparse.Namespace) -> None:
-    """Handle ``koopa list`` subcommand."""
+    """Handle ``koopa list`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``list`` subcommand.
+    """
     from koopa.cli import print_shared_apps
 
     if args.all:
@@ -944,28 +1120,52 @@ def _handle_list(args: argparse.Namespace) -> None:
 
 
 def _handle_system(args: argparse.Namespace) -> None:
-    """Handle ``koopa system`` subcommand."""
+    """Handle ``koopa system`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``system`` subcommand.
+    """
     from koopa.cli_system import handle_system
 
     handle_system(args.remainder)
 
 
 def _handle_admin(args: argparse.Namespace) -> None:
-    """Handle ``koopa admin`` subcommand."""
+    """Handle ``koopa admin`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``admin`` subcommand.
+    """
     from koopa.cli_system import handle_admin
 
     handle_admin(args.remainder)
 
 
 def _handle_develop(args: argparse.Namespace) -> None:
-    """Handle ``koopa develop`` subcommand."""
+    """Handle ``koopa develop`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``develop`` subcommand.
+    """
     from koopa.cli_develop import handle_develop
 
     handle_develop(args.remainder)
 
 
 def _handle_run(args: argparse.Namespace) -> None:
-    """Handle ``koopa run`` subcommand."""
+    """Handle ``koopa run`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``run`` subcommand.
+    """
     from koopa.cli_bin import _HANDLERS
 
     remainder = args.remainder
@@ -983,7 +1183,13 @@ def _handle_run(args: argparse.Namespace) -> None:
 
 
 def _handle_header(_args: argparse.Namespace) -> None:
-    """Handle ``koopa header`` subcommand."""
+    """Handle ``koopa header`` subcommand.
+
+    Parameters
+    ----------
+    _args : argparse.Namespace
+        Parsed CLI arguments for the ``header`` subcommand (unused).
+    """
     from koopa.prefix import bash_prefix
 
     print(os.path.join(bash_prefix(), "include", "deprecated-header.sh"))

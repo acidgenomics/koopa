@@ -13,7 +13,21 @@ from functools import lru_cache
 
 
 def _fetch(url: str, *, list_only: bool = False) -> str:
-    """Fetch URL content as text, mirroring ``_koopa_parse_url``."""
+    """Fetch URL content as text, mirroring ``_koopa_parse_url``.
+
+    Parameters
+    ----------
+    url : str
+        URL to fetch. FTP URLs use curl when `list_only` is True.
+    list_only : bool, optional
+        Use curl's ``--list-only`` flag to fetch an FTP directory listing
+        instead of the URL contents.
+
+    Returns
+    -------
+    str
+        Decoded response body text.
+    """
     if list_only and url.startswith("ftp://"):
         curl = shutil.which("curl")
         if curl is None:
@@ -44,7 +58,19 @@ def _fetch(url: str, *, list_only: bool = False) -> str:
 
 
 def _version_sort_key(version: str) -> tuple[int, ...]:
-    """Generate a sort key for version strings."""
+    """Generate a sort key for version strings.
+
+    Parameters
+    ----------
+    version : str
+        Version string, with components separated by periods, hyphens,
+        or underscores.
+
+    Returns
+    -------
+    tuple[int, ...]
+        Leading integer of each version component, for use as a sort key.
+    """
     parts = re.split(r"[.\-_]", version)
     result: list[int] = []
     for part in parts:
@@ -54,12 +80,24 @@ def _version_sort_key(version: str) -> tuple[int, ...]:
 
 
 def current_aws_cli_version() -> str:
-    """Get the current AWS CLI version."""
+    """Get the current AWS CLI version.
+
+    Returns
+    -------
+    str
+        Current AWS CLI version string.
+    """
     return current_github_tag_version("aws/aws-cli")
 
 
 def current_bioconductor_version() -> str:
-    """Current Bioconductor version."""
+    """Current Bioconductor version.
+
+    Returns
+    -------
+    str
+        Current Bioconductor version string.
+    """
     text = _fetch("https://bioconductor.org/bioc-version")
     version = text.strip()
     if not version:
@@ -69,7 +107,18 @@ def current_bioconductor_version() -> str:
 
 
 def current_conda_package_version(name: str) -> str:
-    """Get the current version of a conda package."""
+    """Get the current version of a conda package.
+
+    Parameters
+    ----------
+    name : str
+        Conda package name.
+
+    Returns
+    -------
+    str
+        Latest version string reported by ``conda search``.
+    """
     conda = shutil.which("conda")
     if conda is None:
         msg = "conda is not installed."
@@ -93,7 +142,13 @@ def current_conda_package_version(name: str) -> str:
 
 
 def current_ensembl_version() -> str:
-    """Current Ensembl version."""
+    """Current Ensembl version.
+
+    Returns
+    -------
+    str
+        Current Ensembl release version string.
+    """
     text = _fetch("ftp://ftp.ensembl.org/pub/README")
     lines = text.splitlines()
     if len(lines) < 3:
@@ -107,7 +162,13 @@ def current_ensembl_version() -> str:
 
 
 def current_flybase_version() -> str:
-    """Current FlyBase version."""
+    """Current FlyBase version.
+
+    Returns
+    -------
+    str
+        Current FlyBase release identifier (e.g. ``FB2024_01``).
+    """
     text = _fetch("ftp://ftp.flybase.net/releases/", list_only=True)
     pattern = re.compile(r"^(FB\d{4}_\d{2})$")
     matches = [m.group(1) for line in text.splitlines() if (m := pattern.match(line.strip()))]
@@ -118,7 +179,19 @@ def current_flybase_version() -> str:
 
 
 def current_gencode_version(organism: str = "Homo sapiens") -> str:
-    """Current GENCODE version."""
+    """Current GENCODE version.
+
+    Parameters
+    ----------
+    organism : str, optional
+        Organism name, e.g. ``"Homo sapiens"``/``"human"`` or
+        ``"Mus musculus"``/``"mouse"``.
+
+    Returns
+    -------
+    str
+        Current GENCODE release number for the organism.
+    """
     if organism in ("Homo sapiens", "human"):
         short_name = "human"
         pattern = re.compile(r"Release (\d+)")
@@ -138,7 +211,13 @@ def current_gencode_version(organism: str = "Homo sapiens") -> str:
 
 
 def current_git_version() -> str:
-    """Get current Git version from kernel.org."""
+    """Get current Git version from kernel.org.
+
+    Returns
+    -------
+    str
+        Latest Git release version string.
+    """
     url = "https://mirrors.edge.kernel.org/pub/software/scm/git/"
     text = _fetch(url)
     pattern = re.compile(r"git-([\d.]+)\.tar\.xz")
@@ -150,7 +229,18 @@ def current_git_version() -> str:
 
 
 def current_github_release_version(repo: str) -> str:
-    """Get the current release version from GitHub."""
+    """Get the current release version from GitHub.
+
+    Parameters
+    ----------
+    repo : str
+        GitHub repository in ``"owner/name"`` format.
+
+    Returns
+    -------
+    str
+        Latest release tag name, with a leading ``v`` stripped.
+    """
     url = f"https://api.github.com/repos/{repo}/releases/latest"
     text = _fetch(url)
     data = json.loads(text)
@@ -162,7 +252,18 @@ def current_github_release_version(repo: str) -> str:
 
 
 def current_github_tag_version(repo: str) -> str:
-    """Get the current tag version from GitHub."""
+    """Get the current tag version from GitHub.
+
+    Parameters
+    ----------
+    repo : str
+        GitHub repository in ``"owner/name"`` format.
+
+    Returns
+    -------
+    str
+        Highest tag name by version sort, with a leading ``v`` stripped.
+    """
     url = f"https://api.github.com/repos/{repo}/tags"
     text = _fetch(url)
     data = json.loads(text)
@@ -175,7 +276,18 @@ def current_github_tag_version(repo: str) -> str:
 
 
 def current_gnu_ftp_version(name: str) -> str:
-    """Get current version from GNU FTP server."""
+    """Get current version from GNU FTP server.
+
+    Parameters
+    ----------
+    name : str
+        GNU package name.
+
+    Returns
+    -------
+    str
+        Current version string parsed from the package's tarball listing.
+    """
     url = f"https://mirrors.kernel.org/gnu/{name}/?C=M;O=D"
     text = _fetch(url)
     pattern = re.compile(rf"{re.escape(name)}-([\d.a-z]+)\.tar")
@@ -188,7 +300,13 @@ def current_gnu_ftp_version(name: str) -> str:
 
 @lru_cache(maxsize=1)
 def current_google_cloud_sdk_version() -> str:
-    """Get the current Google Cloud SDK version."""
+    """Get the current Google Cloud SDK version.
+
+    Returns
+    -------
+    str
+        Current Google Cloud SDK version string.
+    """
     url = "https://cloud.google.com/sdk/docs/release-notes"
     text = _fetch(url)
     pattern = re.compile(r"<h2[^>]*>\s*([\d.]+)")
@@ -200,12 +318,29 @@ def current_google_cloud_sdk_version() -> str:
 
 
 def current_latch_version() -> str:
-    """Current latch package version at PyPI."""
+    """Current latch package version at PyPI.
+
+    Returns
+    -------
+    str
+        Current latch package version string.
+    """
     return current_pypi_package_version("latch")
 
 
 def current_pypi_package_version(name: str) -> str:
-    """Current Python package version at PyPI."""
+    """Current Python package version at PyPI.
+
+    Parameters
+    ----------
+    name : str
+        PyPI package name.
+
+    Returns
+    -------
+    str
+        Current version string reported by the PyPI JSON API.
+    """
     url = f"https://pypi.org/pypi/{name}/json"
     text = _fetch(url)
     data = json.loads(text)
@@ -217,7 +352,13 @@ def current_pypi_package_version(name: str) -> str:
 
 
 def current_python_version() -> str:
-    """Get current Python version from python.org."""
+    """Get current Python version from python.org.
+
+    Returns
+    -------
+    str
+        Current stable Python 3 version string.
+    """
     url = "https://www.python.org/ftp/python/"
     text = _fetch(url)
     pattern = re.compile(r"(3\.\d+\.\d+)/")
@@ -232,7 +373,13 @@ def current_python_version() -> str:
 
 
 def current_refseq_version() -> str:
-    """Current RefSeq version."""
+    """Current RefSeq version.
+
+    Returns
+    -------
+    str
+        Current RefSeq release number.
+    """
     url = "ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
     text = _fetch(url)
     version = text.strip()
@@ -243,7 +390,13 @@ def current_refseq_version() -> str:
 
 
 def current_wormbase_version() -> str:
-    """Current WormBase version."""
+    """Current WormBase version.
+
+    Returns
+    -------
+    str
+        Current WormBase release identifier (e.g. ``WS290``).
+    """
     url = "ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
     text = _fetch(url, list_only=True)
     pattern = re.compile(r"(WS\d+)")

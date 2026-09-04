@@ -21,7 +21,13 @@ _RESERVED_PREFIXES: tuple[str, ...] = ("install", "src/")
 
 
 def _aws() -> str:
-    """Return path to aws CLI, raising if absent."""
+    """Return path to aws CLI, raising if absent.
+
+    Returns
+    -------
+    str
+        Absolute path to the ``aws`` executable.
+    """
     path = shutil.which("aws")
     if path is None:
         msg = "aws CLI is not installed."
@@ -30,7 +36,13 @@ def _aws() -> str:
 
 
 def _uv() -> str:
-    """Return path to uv, raising if absent."""
+    """Return path to uv, raising if absent.
+
+    Returns
+    -------
+    str
+        Absolute path to the ``uv`` executable.
+    """
     path = shutil.which("uv")
     if path is None:
         msg = "uv is not installed."
@@ -39,14 +51,26 @@ def _uv() -> str:
 
 
 def _bucket() -> str:
-    """Return the koopa website S3 bucket name (loaded from environment)."""
+    """Return the koopa website S3 bucket name (loaded from environment).
+
+    Returns
+    -------
+    str
+        Name of the S3 bucket backing the koopa website.
+    """
     from koopa.aws import koopa_s3_bucket
 
     return koopa_s3_bucket("koopa")
 
 
 def _s3_uri() -> str:
-    """Return the S3 URI prefix for the koopa website bucket."""
+    """Return the S3 URI prefix for the koopa website bucket.
+
+    Returns
+    -------
+    str
+        ``s3://`` URI for the koopa website bucket.
+    """
     return f"s3://{_bucket()}"
 
 
@@ -56,6 +80,11 @@ def _cloudfront_distribution_id() -> str:
     Deliberately does NOT fall back to a generic AWS_CLOUDFRONT_DISTRIBUTION_ID
     -- see the identical fix in koopa.pypi._cloudfront_distribution_id for why
     that fallback is unsafe (silently invalidates the wrong distribution).
+
+    Returns
+    -------
+    str
+        CloudFront distribution ID for the koopa website.
     """
     from koopa.aws import dotenv_value
 
@@ -89,7 +118,18 @@ def _invalidate_cloudfront() -> None:
 
 
 def _build_site(koopa_root: str, out_dir: str, doctree_dir: str) -> None:
-    """Regenerate docs sources and run sphinx-build against them."""
+    """Regenerate docs sources and run sphinx-build against them.
+
+    Parameters
+    ----------
+    koopa_root : str
+        Path to the koopa repository root, used as the sphinx-build
+        working directory.
+    out_dir : str
+        Directory the built HTML site is written to.
+    doctree_dir : str
+        Directory sphinx-build stores its doctree cache in.
+    """
     from koopa.alert import alert
     from koopa.generate_docs import generate_docs
     from koopa.update_docs import update_docs
@@ -121,7 +161,18 @@ def _build_site(koopa_root: str, out_dir: str, doctree_dir: str) -> None:
 
 
 def _relative_keys(root: str) -> set[str]:
-    """Return the set of S3-style relative keys for every file under root."""
+    """Return the set of S3-style relative keys for every file under root.
+
+    Parameters
+    ----------
+    root : str
+        Directory to walk for files.
+
+    Returns
+    -------
+    set[str]
+        Paths of every file under root, relative to root.
+    """
     keys: set[str] = set()
     for path in Path(root).rglob("*"):
         if path.is_file():
@@ -138,9 +189,9 @@ def publish_docs(*, invalidate: bool = True, dryrun: bool = False) -> None:
 
     Parameters
     ----------
-    invalidate
+    invalidate : bool, optional
         Whether to invalidate the CloudFront cache after uploading.
-    dryrun
+    dryrun : bool, optional
         Print the aws s3 sync plan without uploading anything.
     """
     from koopa.alert import alert
@@ -183,7 +234,7 @@ def prune_stale(*, dryrun: bool = True) -> None:
 
     Parameters
     ----------
-    dryrun
+    dryrun : bool, optional
         Print what would be deleted without deleting. Defaults to True --
         callers must opt in to an actual deletion.
     """

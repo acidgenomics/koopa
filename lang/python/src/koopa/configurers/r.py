@@ -16,7 +16,18 @@ from koopa.r import (
 
 
 def _find_r_cmd(mode: str) -> str:
-    """Locate R binary for the given mode."""
+    """Locate R binary for the given mode.
+
+    Parameters
+    ----------
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+
+    Returns
+    -------
+    str
+        Path to the R binary.
+    """
     if mode == "system":
         if sys.platform == "darwin":
             framework = "/Library/Frameworks/R.framework/Resources/bin/R"
@@ -47,7 +58,19 @@ def main(
     mode: str,
     verbose: bool = False,
 ) -> None:
-    """Configure R."""
+    """Configure R.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+    verbose : bool, optional
+        Print verbose output.
+    """
     r_cmd = _find_r_cmd(mode)
     r_home = r_prefix(r_cmd)
     is_system = mode == "system"

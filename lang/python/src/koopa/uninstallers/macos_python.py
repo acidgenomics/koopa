@@ -14,7 +14,21 @@ def main(
     prefix: str = "",
     verbose: bool = False,
 ) -> None:
-    """Uninstall Python framework on macOS."""
+    """Uninstall Python framework on macOS.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+    prefix : str, optional
+        Installation prefix directory.
+    verbose : bool, optional
+        Print verbose output.
+    """
     framework = "/Library/Frameworks/Python.framework"
     if not os.path.exists(framework):
         return

@@ -17,7 +17,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install haskell-ghcup."""
+    """Install haskell-ghcup.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     env = activate_app_deps()
     build_prefix = os.path.join(os.getcwd(), "ghcup-build")
     os.makedirs(build_prefix, exist_ok=True)

@@ -6599,6 +6599,24 @@
     ],
     "version": "1.8"
   },
+  "numpydoc": {
+    "bin": [
+      "numpydoc"
+    ],
+    "category": "Python",
+    "date": "2026-09-04",
+    "dependencies": [
+      "python"
+    ],
+    "description": "numpy docstring validator and Sphinx extension",
+    "installer": "python-package",
+    "type": "cli",
+    "url": [
+      "https://pypi.org/project/numpydoc/",
+      "https://github.com/numpy/numpydoc/"
+    ],
+    "version": "1.10.0"
+  },
   "nushell": {
     "bin": [
       "nu"

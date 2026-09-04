@@ -90,7 +90,18 @@ def _is_lmod_active() -> bool:
 
 
 def _app_json_version(key: str) -> str:
-    """Get application version from app.json."""
+    """Get application version from app.json.
+
+    Parameters
+    ----------
+    key : str
+        App.json key to look up (usually the app name or version key).
+
+    Returns
+    -------
+    str
+        Version string, or an empty string if the key or version is absent.
+    """
     data = import_app_json()
     entry = data.get(key, {})
     if isinstance(entry, dict):
@@ -99,7 +110,18 @@ def _app_json_version(key: str) -> str:
 
 
 def _app_json_installer(name: str) -> str:
-    """Get installer name from app.json, if different from app name."""
+    """Get installer name from app.json, if different from app name.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    str
+        Installer key, or an empty string if not set.
+    """
     data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
@@ -108,7 +130,18 @@ def _app_json_installer(name: str) -> str:
 
 
 def _app_dependencies(name: str) -> list[str]:
-    """Get application dependencies from app.json."""
+    """Get application dependencies from app.json.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list[str]
+        Runtime dependency names.
+    """
     from koopa.app import _resolve_dep_dict
     from koopa.system import os_id
 
@@ -126,7 +159,18 @@ def _app_dependencies(name: str) -> list[str]:
 
 
 def _app_build_dependencies(name: str) -> list[str]:
-    """Get application build dependencies from app.json."""
+    """Get application build dependencies from app.json.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list[str]
+        Build-only dependency names.
+    """
     from koopa.app import _resolve_dep_dict
     from koopa.system import os_id
 
@@ -144,7 +188,18 @@ def _app_build_dependencies(name: str) -> list[str]:
 
 
 def _app_soft_dependencies(name: str) -> list[str]:
-    """Get application soft dependencies from app.json."""
+    """Get application soft dependencies from app.json.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list[str]
+        Soft (optional) dependency names.
+    """
     from koopa.app import _resolve_dep_dict
     from koopa.system import os_id
 
@@ -162,7 +217,18 @@ def _app_soft_dependencies(name: str) -> list[str]:
 
 
 def _app_json_revision(name: str) -> int:
-    """Get recipe revision from app.json (default 0)."""
+    """Get recipe revision from app.json (default 0).
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    int
+        Recipe revision number, or 0 if not set.
+    """
     data = import_app_json()
     entry = data.get(name, {})
     if isinstance(entry, dict):
@@ -171,7 +237,20 @@ def _app_json_revision(name: str) -> int:
 
 
 def _binary_tarball_basename(name: str, version: str) -> str:
-    """Construct S3 tarball filename, including revision suffix when > 0."""
+    """Construct S3 tarball filename, including revision suffix when > 0.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+
+    Returns
+    -------
+    str
+        Tarball filename, e.g. ``"1.2.3.tar.gz"`` or ``"1.2.3-r2.tar.gz"``.
+    """
     revision = _app_json_revision(name)
     if revision > 0:
         return f"{version}-r{revision}.tar.gz"
@@ -185,6 +264,11 @@ def can_build_binary() -> bool:
     loads '.env' through direnv, and 'revert_direnv_env' deletes every variable
     direnv added, so an environment-only read made a builder look like a
     consumer inside every koopa process.
+
+    Returns
+    -------
+    bool
+        True if this machine is a designated binary builder.
     """
     from koopa.aws import dotenv_value
 
@@ -228,6 +312,11 @@ def _has_private_access() -> bool:
     ``AWS_ACCOUNT_ID``) has been lost or never provisioned. Requiring both avoids
     treating that machine as having private access, which previously caused
     binary installs to be attempted and abort with "AWS_ACCOUNT_ID must be set".
+
+    Returns
+    -------
+    bool
+        True if both the AWS credentials profile and account ID are usable.
     """
     credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
     if not os.path.isfile(credentials):
@@ -264,6 +353,11 @@ def _can_install_binary() -> bool:
     - KOOPA_BUILDER=1 -> deny (builders always build from source)
     - koopa prefix must be /opt/koopa (binaries are built against this path)
     - otherwise: allow if vendor backend can pull, or acidgenomics AWS profile present
+
+    Returns
+    -------
+    bool
+        True if a binary package install is available.
     """
     from koopa.vendor import vendor_can_pull
 
@@ -293,6 +387,11 @@ def _can_push_binary() -> bool:
     Note: aws-cli cannot push its own binary during its own post-install
     (aws not yet in PATH at that point). Use 'koopa develop push-app-build
     aws-cli' after installation completes.
+
+    Returns
+    -------
+    bool
+        True if pushing a binary package is available.
     """
     from koopa.vendor import vendor_can_push
 
@@ -335,6 +434,13 @@ def _replace_with_symlink(*, source: str, target: str) -> None:
     Any non-symlink file or broken symlink is unlinked and replaced; a real
     directory is never removed, since that would require an implicit
     'rmtree' the caller never asked for.
+
+    Parameters
+    ----------
+    source : str
+        Path the new symlink should point to.
+    target : str
+        Path where the symlink is created or replaced.
     """
     if os.path.lexists(target):
         if os.path.isdir(target) and not os.path.islink(target):
@@ -349,7 +455,15 @@ def _replace_with_symlink(*, source: str, target: str) -> None:
 
 
 def link_in_opt(*, name: str, source: str) -> None:
-    """Create symlink in koopa opt/ directory."""
+    """Create symlink in koopa opt/ directory.
+
+    Parameters
+    ----------
+    name : str
+        Name of the symlink to create under opt/.
+    source : str
+        Path the symlink should point to.
+    """
     if not os.path.exists(source):
         msg = f"Link source does not exist: {source!r}"
         raise FileNotFoundError(msg)
@@ -360,7 +474,15 @@ def link_in_opt(*, name: str, source: str) -> None:
 
 
 def link_in_bin(*, name: str, source: str) -> None:
-    """Create symlink in koopa bin/ directory."""
+    """Create symlink in koopa bin/ directory.
+
+    Parameters
+    ----------
+    name : str
+        Name of the symlink to create under bin/.
+    source : str
+        Path to the binary the symlink should point to.
+    """
     if not os.path.isfile(source):
         msg = f"Binary does not exist: {source!r}"
         raise FileNotFoundError(msg)
@@ -371,7 +493,15 @@ def link_in_bin(*, name: str, source: str) -> None:
 
 
 def link_in_man1(*, name: str, source: str) -> None:
-    """Create symlink in koopa man1/ directory."""
+    """Create symlink in koopa man1/ directory.
+
+    Parameters
+    ----------
+    name : str
+        Name of the symlink to create under man1/.
+    source : str
+        Path to the man page the symlink should point to.
+    """
     if not os.path.isfile(source):
         msg = f"Man page does not exist: {source!r}"
         raise FileNotFoundError(msg)
@@ -388,6 +518,16 @@ def _find_bash_completion_files(prefix: str) -> list[tuple[str, str]]:
       - share/bash-completion/completions/   (standard)
       - share/bash-completions/completions/  (aws-cli non-standard spelling)
       - etc/bash_completion.d/
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        Pairs of source file path and completion filename.
     """
     results: list[tuple[str, str]] = []
     for root in (prefix, os.path.join(prefix, "libexec")):
@@ -409,6 +549,16 @@ def _find_fish_completion_files(prefix: str) -> list[tuple[str, str]]:
 
     Scans both the prefix root and prefix/libexec for:
       - share/fish/vendor_completions.d/
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        Pairs of source file path and completion filename.
     """
     results: list[tuple[str, str]] = []
     for root in (prefix, os.path.join(prefix, "libexec")):
@@ -426,6 +576,16 @@ def _find_zsh_completion_files(prefix: str) -> list[tuple[str, str]]:
 
     Scans both the prefix root and prefix/libexec for:
       - share/zsh/site-functions/
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        Pairs of source file path and completion filename.
     """
     results: list[tuple[str, str]] = []
     for root in (prefix, os.path.join(prefix, "libexec")):
@@ -439,7 +599,15 @@ def _find_zsh_completion_files(prefix: str) -> list[tuple[str, str]]:
 
 
 def _link_completions(central_dir: str, files: list[tuple[str, str]]) -> None:
-    """Symlink a list of completion files into a central directory."""
+    """Symlink a list of completion files into a central directory.
+
+    Parameters
+    ----------
+    central_dir : str
+        Central completions directory to link into.
+    files : list[tuple[str, str]]
+        Pairs of source file path and completion filename.
+    """
     for source, name in files:
         os.makedirs(central_dir, exist_ok=True)
         target = os.path.join(central_dir, name)
@@ -447,7 +615,13 @@ def _link_completions(central_dir: str, files: list[tuple[str, str]]) -> None:
 
 
 def link_in_bash_completions(prefix: str) -> None:
-    """Symlink bash completion files from an app prefix into the central dir."""
+    """Symlink bash completion files from an app prefix into the central dir.
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+    """
     _link_completions(
         bash_completions_prefix(),
         _find_bash_completion_files(prefix),
@@ -455,7 +629,13 @@ def link_in_bash_completions(prefix: str) -> None:
 
 
 def link_in_fish_completions(prefix: str) -> None:
-    """Symlink fish completion files from an app prefix into the central dir."""
+    """Symlink fish completion files from an app prefix into the central dir.
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+    """
     _link_completions(
         fish_completions_prefix(),
         _find_fish_completion_files(prefix),
@@ -463,7 +643,13 @@ def link_in_fish_completions(prefix: str) -> None:
 
 
 def link_in_zsh_completions(prefix: str) -> None:
-    """Symlink zsh completion files from an app prefix into the central dir."""
+    """Symlink zsh completion files from an app prefix into the central dir.
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+    """
     _link_completions(
         zsh_completions_prefix(),
         _find_zsh_completion_files(prefix),
@@ -475,6 +661,16 @@ def _find_powershell_completion_files(prefix: str) -> list[tuple[str, str]]:
 
     Scans both the prefix root and prefix/libexec for:
       - share/powershell/completions/
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        Pairs of source file path and completion filename.
     """
     results: list[tuple[str, str]] = []
     for root in (prefix, os.path.join(prefix, "libexec")):
@@ -488,7 +684,13 @@ def _find_powershell_completion_files(prefix: str) -> list[tuple[str, str]]:
 
 
 def link_in_powershell_completions(prefix: str) -> None:
-    """Symlink PowerShell completion files from an app prefix into the central dir."""
+    """Symlink PowerShell completion files from an app prefix into the central dir.
+
+    Parameters
+    ----------
+    prefix : str
+        Application installation prefix directory.
+    """
     _link_completions(
         powershell_completions_prefix(),
         _find_powershell_completion_files(prefix),
@@ -504,6 +706,11 @@ def install_app_from_binary_package(*prefixes: str) -> None:
     Downloads a pre-built tarball from the vendor backend (if configured) or
     the private acidgenomics S3 bucket, and extracts it into the target prefix.
     Inspired by Homebrew bottles.
+
+    Parameters
+    ----------
+    *prefixes : str
+        One or more target installation prefix directories.
     """
     from koopa.vendor import vendor_config, vendor_pull_binary, vendor_pull_priority
 
@@ -578,6 +785,16 @@ def _active_app_version(name: str) -> str | None:
     e.g. "3.13.9" sorts after "3.13.15" and would silently be picked as the
     version to push once a single-digit patch release exists alongside a
     two-digit one.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    str | None
+        Currently linked version, or None if not linked.
     """
     link = os.path.join(opt_prefix(), name)
     if not os.path.islink(link):
@@ -598,6 +815,18 @@ def push_app_build(name: str, *, quiet: bool = False) -> str:
     returned message to ``koopa.progress.set_last_push_message`` instead,
     since the worker does not own the terminal and printing directly would
     race with the parent's live spinner.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    quiet : bool, optional
+        If True, suppress the immediate success print.
+
+    Returns
+    -------
+    str
+        Push confirmation message.
     """
     from koopa.alert import alert_success
     from koopa.aws import koopa_s3_bucket
@@ -724,6 +953,19 @@ def _run_python_installer(config: InstallConfig, *, fallback_note: bool = False)
     the app name, so a missing tarball for any app with an 'installer' key --
     python3.10 through python3.14, openssl3, openssl4 -- raised the raw AWS 404
     instead of building from source.
+
+    Parameters
+    ----------
+    config : InstallConfig
+        Installation configuration.
+    fallback_note : bool, optional
+        If True, print a note that the install is falling back from a failed
+        binary package to a source build.
+
+    Returns
+    -------
+    bool
+        True if a Python installer was found and run.
     """
     from koopa.installers import get_python_installer, has_python_installer
 
@@ -767,8 +1009,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     manages prefix creation, delegates to the binary or subshell installer,
     and performs post-install linking.
 
-    Args:
-        config: An ``InstallConfig`` dataclass with installation parameters.
+    Parameters
+    ----------
+    config : InstallConfig
+        Installation configuration.
     """
     if not config.name:
         msg = "--name is required."
@@ -1088,6 +1332,31 @@ def install_gnu_app(
 
     Positional arguments are passed to configure script.
     Converted from install-gnu-app.sh.
+
+    Parameters
+    ----------
+    name : str, optional
+        Application name. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Application version. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    compress_ext : str, optional
+        Tarball compression extension (e.g. ``"gz"`` or ``"xz"``).
+    mirror : str, optional
+        Base GNU mirror URL to download the tarball from.
+    package_name : str, optional
+        Tarball package name, if different from *name*.
+    parent_name : str, optional
+        GNU project directory name, if different from *name*.
+    non_gnu_mirror : bool, optional
+        If True, download from the Savannah non-GNU mirror instead.
+    extra_urls : list[str] | None, optional
+        Additional fallback URLs to try if the mirror download fails.
+    conf_args : list[str] | None, optional
+        Extra arguments passed to the ``configure`` script.
+    jobs : int | None, optional
+        Number of parallel make jobs. Defaults to the CPU count.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1136,7 +1405,29 @@ def build_go_package(
     mod: str = "",
     tags: str = "",
 ) -> None:
-    """Build a Go package from source using ``go build``."""
+    """Build a Go package from source using ``go build``.
+
+    Parameters
+    ----------
+    url : str
+        Source tarball URL to download and build.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    name : str, optional
+        Application name. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Application version. Not read directly by this function.
+    bin_name : str, optional
+        Output binary name, if different from *name*.
+    build_cmd : str, optional
+        Package or command path to build (passed to ``go build``).
+    ldflags : str, optional
+        Linker flags passed via ``go build -ldflags``.
+    mod : str, optional
+        Module mode passed via ``go build -mod``.
+    tags : str, optional
+        Build tags passed via ``go build -tags``.
+    """
     from koopa.build import activate_app, locate
 
     env = activate_app("go", build_only=True)
@@ -1184,6 +1475,13 @@ def install_go_package(
     """Install a Go package using ``go install``.
 
     Converted from install-go-package.sh.
+
+    Parameters
+    ----------
+    url : str
+        Go module path or URL to install (passed to ``go install``).
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
     """
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
@@ -1220,6 +1518,19 @@ def install_node_package(
     """Install a Node.js package using npm.
 
     Converted from install-node-package.sh.
+
+    Parameters
+    ----------
+    name : str, optional
+        Package name. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Package version. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    extra_packages : list[str] | None, optional
+        Additional npm package specs to install alongside *name*.
+    build_env : dict[str, str] | None, optional
+        Extra environment variables merged into the build environment.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1275,6 +1586,27 @@ def install_python_package(
 
     Creates a venv in ``<prefix>/libexec`` and symlinks binaries into
     ``<prefix>/bin``. Converted from install-python-package.sh.
+
+    Parameters
+    ----------
+    name : str, optional
+        Application name. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Package version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    pip_name : str, optional
+        PyPI distribution name, if different from *egg_name*.
+    egg_name : str, optional
+        Installed package (egg/dist-info) name, if different from *name*.
+    python_version : str, optional
+        Python minor version (e.g. ``"3.12"``) to build the venv with.
+    extra_packages : list[str] | None, optional
+        Additional pip package specs to install alongside *pip_name*.
+    no_binary : bool, optional
+        If True, force pip to build from source (``--no-binary :all:``).
+    build_env : dict[str, str] | None, optional
+        Extra environment variables merged into the pip build environment.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1348,7 +1680,19 @@ def _link_pip_binaries(
     prefix: str,
     libexec: str,
 ) -> None:
-    """Link binaries from pip venv into prefix/bin using RECORD metadata."""
+    """Link binaries from pip venv into prefix/bin using RECORD metadata.
+
+    Parameters
+    ----------
+    egg_name : str
+        Installed package (egg/dist-info) name.
+    version : str
+        Package version.
+    prefix : str
+        Installation prefix directory.
+    libexec : str
+        Path to the venv directory holding the installed package.
+    """
     import glob as glob_mod
     import re
 
@@ -1443,6 +1787,27 @@ def install_rust_package(
     """Install a Rust package using ``cargo install``.
 
     Converted from install-rust-package.sh.
+
+    Parameters
+    ----------
+    name : str, optional
+        Crate name to install. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Crate version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    features : str, optional
+        Comma-separated cargo features to enable.
+    git_url : str, optional
+        Git repository URL to install from, instead of crates.io.
+    tag : str, optional
+        Git tag to check out when installing from *git_url*.
+    with_openssl : bool, optional
+        If True, point ``OPENSSL_DIR`` at koopa's own openssl build.
+    rustflags : str, optional
+        Extra flags passed via the ``RUSTFLAGS`` environment variable.
+    jobs : int | None, optional
+        Number of parallel build jobs. Defaults to the CPU count.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1508,6 +1873,17 @@ def install_ruby_package(
 
     Creates a Gemfile in ``<prefix>/libexec`` and runs ``bundle install``
     + ``bundle binstubs``. Converted from install-ruby-package.sh.
+
+    Parameters
+    ----------
+    name : str, optional
+        Gem name to install. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Gem version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    jobs : int | None, optional
+        Number of parallel bundler jobs. Defaults to the CPU count.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1589,6 +1965,21 @@ def install_perl_package(
     """Install a Perl package using CPAN.
 
     Converted from install-perl-package.sh.
+
+    Parameters
+    ----------
+    cpan_path : str
+        CPAN distribution path (author/module), without the version suffix.
+    version : str, optional
+        Package version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    version_prefix : str, optional
+        Prefix inserted before *version* in the tarball filename (e.g. ``"v"``).
+    dependencies : list[str] | None, optional
+        Additional CPAN distributions to install before *cpan_path*.
+    jobs : int | None, optional
+        Number of parallel make jobs. Defaults to the CPU count.
     """
     if not version:
         version = os.environ.get("KOOPA_INSTALL_VERSION", "")
@@ -1663,13 +2054,25 @@ def _install_lock_path() -> str:
 
 
 def _completions_lock_path() -> str:
-    """Lock file to serialise completion-dir symlink operations across processes."""
+    """Lock file to serialise completion-dir symlink operations across processes.
+
+    Returns
+    -------
+    str
+        Path to the completions lock file.
+    """
     cache_dir = os.path.join(xdg_cache_home(), "koopa")
     return os.path.join(cache_dir, "completions.lock")
 
 
 def _acquire_install_lock() -> bool:
-    """Acquire the install lock. Returns True if newly acquired, False if already held."""
+    """Acquire the install lock. Returns True if newly acquired, False if already held.
+
+    Returns
+    -------
+    bool
+        True if newly acquired, False if already held by this process.
+    """
     path = _install_lock_path()
     if os.path.isfile(path):
         try:
@@ -1735,6 +2138,16 @@ def _resolve_conda_channel_url(channel_name: str) -> str:
     Queries configured channels and matches against the channel name
     (e.g., 'bioconda' or 'conda-forge'). Returns the full URL if a
     custom mirror is configured, otherwise returns the bare channel name.
+
+    Parameters
+    ----------
+    channel_name : str
+        Conda channel name to resolve (e.g. ``"bioconda"``).
+
+    Returns
+    -------
+    str
+        Configured channel URL, or the bare channel name if unconfigured.
     """
     channels = _get_conda_channels()
     for ch in channels:
@@ -1744,7 +2157,18 @@ def _resolve_conda_channel_url(channel_name: str) -> str:
 
 
 def _app_json_conda_channel(name: str) -> str:
-    """Get conda channel for app from app.json (default 'conda-forge')."""
+    """Get conda channel for app from app.json (default 'conda-forge').
+
+    Parameters
+    ----------
+    name : str
+        Application name, used as a fallback when no app name is currently set.
+
+    Returns
+    -------
+    str
+        Conda channel name.
+    """
     from koopa.installers._context import get_app_name
 
     app_name = get_app_name() or name
@@ -1772,6 +2196,20 @@ def install_conda_package(
     conda env is created and before binaries are linked. It exists for a
     per-app installer (e.g. ``installers/neovim.py``) to patch a known-broken
     package build; the shared conda-package path does not use it.
+
+    Parameters
+    ----------
+    name : str, optional
+        Application name. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Package version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    yaml_file : str, optional
+        Path to a conda environment YAML file, instead of a name/version spec.
+    post_extract_fn : Callable[[str], None] | None, optional
+        Callback invoked with the ``libexec`` path after environment creation
+        and before binaries are linked.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -1834,7 +2272,19 @@ def _link_conda_binaries(
     prefix: str,
     libexec: str,
 ) -> None:
-    """Link binaries from conda env into prefix/bin using conda metadata."""
+    """Link binaries from conda env into prefix/bin using conda metadata.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Package version.
+    prefix : str
+        Installation prefix directory.
+    libexec : str
+        Path to the conda environment directory holding the installed package.
+    """
     import glob as glob_mod
 
     from koopa.io import extract_conda_bin_names
@@ -1892,13 +2342,35 @@ def _link_conda_binaries(
 
 
 def _is_elf(path: str) -> bool:
-    """Return True when the file at path starts with the ELF magic bytes."""
+    """Return True when the file at path starts with the ELF magic bytes.
+
+    Parameters
+    ----------
+    path : str
+        Path to the file to check.
+
+    Returns
+    -------
+    bool
+        True when the file starts with the ELF magic bytes.
+    """
     with open(path, "rb") as fh:
         return fh.read(4) == b"\x7fELF"
 
 
 def _parse_ldd_missing(output: str) -> list[str]:
-    """Parse ldd output and return the sorted, de-duplicated missing libraries."""
+    """Parse ldd output and return the sorted, de-duplicated missing libraries.
+
+    Parameters
+    ----------
+    output : str
+        Captured stdout from an ``ldd`` invocation.
+
+    Returns
+    -------
+    list[str]
+        Sorted, de-duplicated names of libraries ``ldd`` could not resolve.
+    """
     missing = set()
     for line in output.splitlines():
         if "not found" not in line:
@@ -1914,6 +2386,16 @@ def _missing_shared_libs(binary: str) -> list[str]:
     ldd does, so this is a no-op there. ldd exits 0 for a valid ELF file even
     when a dependency is missing, so check=True is safe once _is_elf() has
     filtered out scripts (a non-ELF file makes ldd exit non-zero).
+
+    Parameters
+    ----------
+    binary : str
+        Path to the binary to check.
+
+    Returns
+    -------
+    list[str]
+        Names of shared libraries ``ldd`` could not resolve.
     """
     if not is_linux():
         return []
@@ -1947,6 +2429,24 @@ def install_haskell_package(
     """Install a Haskell package using Cabal and GHCup.
 
     Converted from install-haskell-package.sh.
+
+    Parameters
+    ----------
+    name : str, optional
+        Package name to install. Defaults to ``KOOPA_INSTALL_NAME``.
+    version : str, optional
+        Package version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+    prefix : str, optional
+        Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    ghc_version : str, optional
+        GHC compiler version to install via GHCup.
+    dependencies : list[str] | None, optional
+        Other koopa app names whose include/lib dirs are added to the cabal
+        config.
+    extra_packages : list[str] | None, optional
+        Additional cabal package specs to install alongside *name*.
+    jobs : int | None, optional
+        Number of parallel build jobs. Defaults to the CPU count.
     """
     if not name:
         name = os.environ.get("KOOPA_INSTALL_NAME", "")
@@ -2031,7 +2531,13 @@ def install_default_apps() -> None:
 
 
 def install_missing_default_apps(*, verbose: bool = False) -> None:
-    """Install any default apps that are not yet present."""
+    """Install any default apps that are not yet present.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run installs with verbose build output.
+    """
     from koopa.alert import alert, alert_success
     from koopa.app import shared_apps
 
@@ -2081,6 +2587,13 @@ def retry_failed_apps(names: list[str], *, verbose: bool = False) -> None:
     regardless of whether the app's ``opt/`` symlink still exists from its
     prior (older) install -- an existence check would silently exclude an
     already-installed app that merely failed to update.
+
+    Parameters
+    ----------
+    names : list[str]
+        App names to retry.
+    verbose : bool, optional
+        If True, run installs with verbose build output.
     """
     from koopa.alert import alert, alert_success
 
@@ -2120,6 +2633,11 @@ def install_shared_apps(mode: str = "default") -> None:
 
     Skips apps that are already fully installed (have an install log).
     Use ``koopa update`` to update outdated apps.
+
+    Parameters
+    ----------
+    mode : str, optional
+        Which app set to install: ``"default"`` or ``"all"``.
     """
     if mode not in ("all", "default"):
         msg = f"Invalid mode: {mode!r}."
@@ -2199,6 +2717,19 @@ def _make_app_installer(
 
     Most install-*.sh files are simple wrappers around ``koopa_install_app``.
     This function provides the same pattern in Python.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    installer : str, optional
+        Installer key, if different from *app_name*.
+    mode : str, optional
+        Installation mode (e.g. ``"shared"``, ``"system"``, or ``"user"``).
+    platform : str, optional
+        Operating system platform slug.
+    prefix : str, optional
+        Installation prefix directory.
     """
     config = InstallConfig(name=app_name, mode=mode, platform=platform)
     if installer:
@@ -2214,6 +2745,13 @@ def install_system_app(name: str, **kwargs: str) -> None:
     """Install a system-level application.
 
     Equivalent to ``koopa_install_app --name=<name> --system``.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    **kwargs : str
+        Extra keyword arguments forwarded to ``_make_app_installer``.
     """
     _make_app_installer(name, mode="system", **kwargs)
 
@@ -2231,6 +2769,15 @@ def install_koopa(
 
     Copies the source tree to the target prefix, optionally as a shared
     (system-wide) install. Converted from install-koopa.sh.
+
+    Parameters
+    ----------
+    prefix : str, optional
+        Installation prefix directory. Defaults to the system or user prefix.
+    shared : bool, optional
+        If True, install as a shared, system-wide installation.
+    verbose : bool, optional
+        If True, enable verbose build output.
     """
     from koopa.system import check_platform
 
@@ -2372,8 +2919,17 @@ def _cleanup_legacy_config() -> None:
 def update_koopa(*, verbose: bool = False) -> bool:
     """Update koopa installation via git pull.
 
-    Returns True if Python source files under lang/python/src/ changed,
-    indicating the caller should restart the process for fresh module state.
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, print the git pull output.
+
+    Returns
+    -------
+    bool
+        True if Python source files under lang/python/src/ changed,
+        indicating the caller should restart the process for fresh module
+        state.
     """
     from koopa.alert import (
         alert,
@@ -2486,7 +3042,13 @@ def update_koopa(*, verbose: bool = False) -> bool:
 
 
 def _update_venv(prefix: str) -> None:  # noqa: PLR0911
-    """Create or update the Python virtual environment with extras."""
+    """Create or update the Python virtual environment with extras.
+
+    Parameters
+    ----------
+    prefix : str
+        Koopa installation prefix directory.
+    """
     from koopa.alert import alert, warn
 
     python_version_file = os.path.join(prefix, ".python-version")
@@ -2646,7 +3208,15 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
 def update_bootstrap(*, verbose: bool = False) -> bool:
     """Update bootstrap if out of date.
 
-    Returns True if bootstrap was rebuilt, False if already current.
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run the bootstrap reinstall with verbose output.
+
+    Returns
+    -------
+    bool
+        True if bootstrap was rebuilt, False if already current.
     """
     from koopa.alert import alert, styled_name, styled_prefix
     from koopa.check import check_bootstrap_version
@@ -2710,7 +3280,18 @@ def update_bootstrap(*, verbose: bool = False) -> bool:
 
 
 def _is_supported_app(name: str) -> bool:
-    """Check if an app is supported on the current platform."""
+    """Check if an app is supported on the current platform.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    bool
+        True if the app is supported on the current platform.
+    """
     from koopa.system import os_id
 
     json_data = import_app_json()
@@ -2727,10 +3308,17 @@ def _compute_install_plan(  # noqa: C901
 ) -> tuple[list[tuple[str, str]], dict[str, set[str]]]:
     """Compute ordered install plan with full transitive dep expansion.
 
+    Parameters
+    ----------
+    apps_with_reasons : list[tuple[str, str]]
+        Root apps to install, as (app name, reason) pairs.
+
     Returns
     -------
-        plan: ordered (app, reason) tuples in install order (deps first)
-        dep_map: for each app in plan, its transitive deps also in the plan
+    plan : list[tuple[str, str]]
+        Ordered (app, reason) tuples in install order (deps first).
+    dep_map : dict[str, set[str]]
+        For each app in *plan*, its transitive deps also in *plan*.
     """
     from koopa.app import extract_app_deps
     from koopa.system import os_id
@@ -2792,7 +3380,20 @@ def _compute_install_plan(  # noqa: C901
     transitive_deps_in_plan: dict[str, set[str]] = {a: set() for a in full_set}
 
     def _find_plan_deps(name: str, seen: set[str]) -> set[str]:
-        """DFS to find all transitive deps of name that are in full_set."""
+        """DFS to find all transitive deps of name that are in full_set.
+
+        Parameters
+        ----------
+        name : str
+            Application name to search dependencies from.
+        seen : set[str]
+            Names already visited in the current traversal, mutated in place.
+
+        Returns
+        -------
+        set[str]
+            Transitive dependency names that are also in ``full_set``.
+        """
         result_deps: set[str] = set()
         try:
             deps = extract_app_deps(name, json_data)
@@ -2862,6 +3463,18 @@ def _installed_after(app: str, cutoff_ts: float) -> bool:
     that were already installed (e.g. by hand, via ``koopa reinstall``) after
     the plan was cached, so a resumed ``koopa update`` doesn't redo work that
     already happened out of band.
+
+    Parameters
+    ----------
+    app : str
+        Application name.
+    cutoff_ts : float
+        UTC Unix timestamp to compare the recorded install date against.
+
+    Returns
+    -------
+    bool
+        True if *app*'s recorded install date is newer than *cutoff_ts*.
     """
     from datetime import UTC, datetime
 
@@ -2963,6 +3576,23 @@ def _install_app_worker(
 
     When *pid_map* is provided (a Manager dict), the worker registers its PID so
     the parent scheduler can target the process tree for a hard-abort kill.
+
+    Parameters
+    ----------
+    config : InstallConfig
+        Installation configuration for the app to install.
+    pid_map : dict[str, int] | None, optional
+        Manager-backed dict the worker registers its PID into, keyed by app
+        name, so the parent scheduler can target the process tree for a
+        hard-abort kill.
+
+    Returns
+    -------
+    tuple[str, str, float, str | None, str | None, str | None]
+        ``(name, version, elapsed, error, tail, push_msg)``: app name,
+        version, elapsed seconds, error message (or None on success), log
+        tail on failure (or None), and S3 push confirmation message (or
+        None).
     """
     import contextlib
     import time
@@ -3012,7 +3642,13 @@ def _install_app_worker(
 
 
 def _io_cap() -> int:
-    """Return the max number of concurrent IO-bound installs (KOOPA_INSTALL_JOBS)."""
+    """Return the max number of concurrent IO-bound installs (KOOPA_INSTALL_JOBS).
+
+    Returns
+    -------
+    int
+        Maximum number of concurrent IO-bound installs.
+    """
     try:
         val = int(os.environ.get("KOOPA_INSTALL_JOBS", "4"))
         return max(1, val)
@@ -3024,6 +3660,11 @@ def _warn_threshold() -> int | None:
     """Return KOOPA_INSTALL_APP_WARN seconds, default 1800 (30 min).
 
     Set to 0 to disable the slow-app warning entirely.
+
+    Returns
+    -------
+    int | None
+        Slow-app warning threshold in seconds, or None if disabled.
     """
     try:
         val = int(os.environ.get("KOOPA_INSTALL_APP_WARN", "1800"))
@@ -3039,6 +3680,11 @@ def _timeout_threshold() -> int | None:
     aborted.  This is a hard abort: the entire pool is shut down, not just
     the one app, because ProcessPoolExecutor workers cannot be killed in
     isolation without poisoning the pool.  Set to 0 to disable entirely.
+
+    Returns
+    -------
+    int | None
+        Hard-abort timeout threshold in seconds, or None if disabled.
     """
     try:
         val = int(os.environ.get("KOOPA_INSTALL_APP_TIMEOUT", "3600"))
@@ -3057,6 +3703,15 @@ class InstallPlanError(RuntimeError):
     whose failure log matches a pattern that cannot succeed on a second
     attempt (e.g. a missing distribution on the configured pip index), so a
     caller can skip retrying them instead of reprinting the same failure.
+
+    Parameters
+    ----------
+    message : str
+        Human-readable error message.
+    failed_apps : list[str]
+        Names of root apps that failed.
+    non_retryable : list[str] | None, optional
+        Subset of *failed_apps* whose failure cannot succeed on retry.
     """
 
     def __init__(
@@ -3083,6 +3738,18 @@ def _is_retryable_failure(message: str, tail: str) -> bool:
     for a ``pip install`` failure, the exception message is only ``"Command
     '[...]' returned non-zero exit status 1."`` and never holds the actual
     ``pip`` error text.
+
+    Parameters
+    ----------
+    message : str
+        Exception message raised by the failed install.
+    tail : str
+        Tail of the captured build log for the failed install.
+
+    Returns
+    -------
+    bool
+        True if the failure looks worth retrying.
     """
     combined = f"{message}\n{tail}".lower()
     return not any(pattern in combined for pattern in _NON_RETRYABLE_LOG_PATTERNS)
@@ -3103,6 +3770,18 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
 
     On the first failure, no new installs are dispatched; in-flight installs
     drain before the error is raised (matches serial break-on-first-failure).
+
+    Parameters
+    ----------
+    plan : list[tuple[str, str]]
+        Ordered (app, reason) tuples in install order, as returned by
+        ``_compute_install_plan``.
+    dep_map : dict[str, set[str]]
+        For each app in *plan*, its transitive deps also in *plan*.
+    make_config : Callable[[str, str], InstallConfig]
+        Factory building an ``InstallConfig`` from an (app, reason) pair.
+    source : str, optional
+        Label identifying the caller, used for the pending-plan cache.
     """
     import concurrent.futures
     import multiprocessing
@@ -3191,6 +3870,11 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         time so a stuck app is immediately identifiable::
 
             | installing 2 apps: python3.12 [12m03s], sqlite [45s]
+
+        Parameters
+        ----------
+        items : list[tuple[str, float]]
+            ``(app_name, dispatch_t0)`` pairs for currently running futures.
         """
         nonlocal spin_idx
         now = time.monotonic()
@@ -3399,6 +4083,11 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
     be scheduled for rebuild during update.  This is a runtime fallback for
     cases where ``koopa develop remove-app`` was not used and no revision bump
     was recorded on the dependent.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        (app, reason) pairs for apps needing a dependency-triggered rebuild.
     """
     from koopa.app import _resolve_dep_dict, installed_apps, recorded_app_deps
     from koopa.system import os_id
@@ -3433,7 +4122,20 @@ def _apps_with_missing_runtime_deps() -> list[tuple[str, str]]:
 
 
 def _dep_has_broken_rpath(name: str, opt_link: str) -> bool:
-    """Return True if an installed dep has broken RPATH entries."""
+    """Return True if an installed dep has broken RPATH entries.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    opt_link : str
+        Path to the app's symlink under opt/.
+
+    Returns
+    -------
+    bool
+        True if the installed dep has broken RPATH entries.
+    """
     from koopa.build import _extract_rpath
 
     json_data = import_app_json()
@@ -3451,7 +4153,13 @@ def _dep_has_broken_rpath(name: str, opt_link: str) -> bool:
 
 
 def update_stale_apps(*, verbose: bool = False) -> None:
-    """Find and reinstall all outdated or broken shared apps."""
+    """Find and reinstall all outdated or broken shared apps.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run installs with verbose build output.
+    """
     from koopa.alert import alert, alert_success
     from koopa.check import broken_app_installs, outdated_apps_with_reasons
 
@@ -3597,7 +4305,13 @@ def repair_app_symlinks() -> None:
 
 
 def remove_unsupported_apps(*, verbose: bool = False) -> None:
-    """Remove installed apps that are no longer in app.json or marked removed."""
+    """Remove installed apps that are no longer in app.json or marked removed.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run uninstalls with verbose output.
+    """
     from koopa.alert import alert
     from koopa.check import unsupported_apps
     from koopa.uninstall import UninstallConfig, uninstall_app
@@ -3659,6 +4373,16 @@ def resolve_system_update_entries(names: list[str] | None) -> list[tuple[str, st
     unsupported entry there is silently skipped rather than an error).
     With explicit ``names``, raises ``ValueError`` for an unknown app or one
     unsupported on this platform -- an explicit request must not fail silent.
+
+    Parameters
+    ----------
+    names : list[str] | None
+        System app names to resolve, or None to return every registry entry.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        (name, platform) pairs for the resolved system-update entries.
     """
     from koopa.installers import PYTHON_INSTALLER_MODES
 
@@ -3687,7 +4411,16 @@ def resolve_system_update_entries(names: list[str] | None) -> list[tuple[str, st
 
 
 def update_system_apps(*, names: list[str] | None = None, verbose: bool = False) -> None:
-    """Update system-level apps from the update-system registry."""
+    """Update system-level apps from the update-system registry.
+
+    Parameters
+    ----------
+    names : list[str] | None, optional
+        System app names to update, or None to update every entry that
+        matches the current platform.
+    verbose : bool, optional
+        If True, run installs with verbose build output.
+    """
     from koopa.alert import alert_note
 
     if not is_admin():
@@ -3703,7 +4436,18 @@ def update_system_apps(*, names: list[str] | None = None, verbose: bool = False)
 
 
 def _platform_matches(plat: str) -> bool:
-    """Check if a platform string from PYTHON_INSTALLER_MODES applies here."""
+    """Check if a platform string from PYTHON_INSTALLER_MODES applies here.
+
+    Parameters
+    ----------
+    plat : str
+        Platform slug (e.g. ``"macos"``, ``"linux"``, ``"debian"``).
+
+    Returns
+    -------
+    bool
+        True if *plat* applies to the current platform.
+    """
     from koopa.system import is_debian_like, is_fedora_like
 
     checks: dict[str, Callable[[], bool]] = {
@@ -3719,7 +4463,20 @@ def _platform_matches(plat: str) -> bool:
 
 
 def _run_system_update(name: str, *, verbose: bool) -> str | None:
-    """Dispatch a single system update by name."""
+    """Dispatch a single system update by name.
+
+    Parameters
+    ----------
+    name : str
+        System updater name, keyed into ``_SYSTEM_UPDATERS``.
+    verbose : bool
+        If True, run the update with verbose build output.
+
+    Returns
+    -------
+    str | None
+        A note to display if the update was skipped, otherwise None.
+    """
     updater = _SYSTEM_UPDATERS.get(name)
     if updater is None:
         from koopa.alert import warn
@@ -3730,7 +4487,18 @@ def _run_system_update(name: str, *, verbose: bool) -> str | None:
 
 
 def _update_system_tex_packages(*, verbose: bool = False) -> str | None:
-    """Update TeX packages if tlmgr is installed."""
+    """Update TeX packages if tlmgr is installed.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run the reinstall with verbose build output.
+
+    Returns
+    -------
+    str | None
+        A note if tlmgr is not installed, otherwise None.
+    """
     from koopa.alert import alert, warn
 
     if shutil.which("tlmgr") is None:
@@ -3750,7 +4518,18 @@ def _update_system_tex_packages(*, verbose: bool = False) -> str | None:
 
 
 def _update_system_homebrew(*, verbose: bool = False) -> str | None:
-    """Update Homebrew if installed."""
+    """Update Homebrew if installed.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run the reinstall with verbose build output.
+
+    Returns
+    -------
+    str | None
+        A note if Homebrew is not installed, otherwise None.
+    """
     from koopa.alert import alert, warn
 
     if shutil.which("brew") is None:
@@ -3770,7 +4549,18 @@ def _update_system_homebrew(*, verbose: bool = False) -> str | None:
 
 
 def _update_system_r(*, verbose: bool = False) -> str | None:
-    """Update system R if installed and outdated."""
+    """Update system R if installed and outdated.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run the reinstall with verbose build output.
+
+    Returns
+    -------
+    str | None
+        A note if system R is already up to date, otherwise None.
+    """
     from koopa.alert import alert, warn
     from koopa.check import check_system_r
     from koopa.system import is_macos
@@ -3794,7 +4584,18 @@ def _update_system_r(*, verbose: bool = False) -> str | None:
 
 
 def _update_system_python(*, verbose: bool = False) -> str | None:
-    """Update macOS system Python if installed and outdated."""
+    """Update macOS system Python if installed and outdated.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        If True, run the reinstall with verbose build output.
+
+    Returns
+    -------
+    str | None
+        A note if macOS system Python is already up to date, otherwise None.
+    """
     from koopa.alert import alert, warn
     from koopa.check import check_macos_system_python
 
@@ -3835,7 +4636,19 @@ _SYSTEM_UPDATERS: dict[str, Callable[..., str | None]] = {
 
 
 def _build_passthrough_args(name: str) -> list[str]:
-    """Build passthrough args from app.json installer_args."""
+    """Build passthrough args from app.json installer_args.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    list[str]
+        ``--flag=value`` arguments derived from the app's ``installer_args``
+        entry in app.json.
+    """
     data = import_app_json()
     entry = data.get(name, {})
     installer_args = entry.get("installer_args", {}) if isinstance(entry, dict) else {}
@@ -3866,6 +4679,17 @@ def cli_install(
     """High-level CLI entry point for installing an app by name.
 
     This is the Python equivalent of ``koopa install <name>``.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    reinstall : bool, optional
+        If True, force a reinstall even if already installed.
+    reinstall_reason : str, optional
+        Human-readable reason for the reinstall, shown in progress output.
+    verbose : bool, optional
+        If True, run the install with verbose build output.
     """
     acquired = _acquire_install_lock()
     try:

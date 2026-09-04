@@ -44,7 +44,14 @@ def _load_category_order() -> list[str]:
 
 
 def default_app_names() -> list[str]:
-    """Return sorted list of default app names from app.json."""
+    """Return sorted list of default app names from app.json.
+
+    Returns
+    -------
+    list[str]
+        Sorted names of apps flagged ``default`` in app.json, excluding
+        aliases and removed apps.
+    """
     from koopa.io import import_app_json
 
     json_data = import_app_json()
@@ -60,7 +67,22 @@ def default_app_names() -> list[str]:
 
 
 def _wrap_bullet(category: str, names: list[str], width: int = 72) -> str:
-    """Format a category bullet with inline app refs, wrapped at width."""
+    """Format a category bullet with inline app refs, wrapped at width.
+
+    Parameters
+    ----------
+    category : str
+        Category heading rendered in bold at the start of the bullet.
+    names : list[str]
+        App names to render as inline markdown reference links.
+    width : int, optional
+        Maximum line length before wrapping to a new indented line.
+
+    Returns
+    -------
+    str
+        The formatted, word-wrapped markdown bullet.
+    """
     prefix = f"- **{category}:** "
     indent = "  "
     refs = [f"[{n}][]" for n in names]
@@ -87,6 +109,16 @@ def _render_default_apps_section(apps: list[str]) -> str:
     No heading -- this is included into ``docs/applications.md`` under an
     existing '## Default application stack' heading via a MyST
     ``{include}`` directive, so a duplicate heading here would double up.
+
+    Parameters
+    ----------
+    apps : list[str]
+        App names to bucket by category and render.
+
+    Returns
+    -------
+    str
+        The rendered markdown bulleted list, one bullet per category.
     """
     from koopa.io import import_app_json
 
@@ -121,7 +153,19 @@ def _render_default_apps_section(apps: list[str]) -> str:
 
 
 def _render_refs(apps: list[str]) -> str:
-    """Render markdown reference-style link definitions from app.json URLs."""
+    """Render markdown reference-style link definitions from app.json URLs.
+
+    Parameters
+    ----------
+    apps : list[str]
+        App names to look up URLs for in app.json.
+
+    Returns
+    -------
+    str
+        Markdown reference-style link definitions, one per line, sorted
+        case-insensitively by name.
+    """
     from koopa.io import import_app_json
 
     json_data = import_app_json()
@@ -143,7 +187,13 @@ def _render_refs(apps: list[str]) -> str:
 
 
 def write_app_stack_include(apps: list[str]) -> None:
-    """Write the generated app-stack include consumed by docs/applications.md."""
+    """Write the generated app-stack include consumed by docs/applications.md.
+
+    Parameters
+    ----------
+    apps : list[str]
+        App names to render into the default application stack section.
+    """
     from koopa.prefix import koopa_prefix
 
     out_dir = join(koopa_prefix(), "docs", "_generated")

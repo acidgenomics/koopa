@@ -92,7 +92,13 @@ _SYSTEM_LIST: list[tuple[str, str | None]] = [
 
 
 def _get_main_command_flags() -> dict[str, list[str]]:
-    """Derive flags for top-level subcommands from argparse parser."""
+    """Derive flags for top-level subcommands from argparse parser.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Mapping of top-level subcommand name to its sorted ``--flag`` strings.
+    """
     import argparse
 
     from koopa.cli_main import _build_parser
@@ -117,7 +123,15 @@ def _get_main_command_flags() -> dict[str, list[str]]:
 
 
 def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
-    """Derive install/update subcommands from installer modes registry."""
+    """Derive install/update subcommands from installer modes registry.
+
+    Returns
+    -------
+    dict[str, list[tuple[str, str | None]]]
+        Mapping of installer mode (``"system-install"``, ``"system"``,
+        ``"user"``, or ``"update-system"``) to a list of ``(name, platform)``
+        app entries.
+    """
     from koopa.installers import PYTHON_INSTALLER_MODES, PYTHON_PLATFORM_INSTALLERS
 
     result: dict[str, list[tuple[str, str | None]]] = {
@@ -144,7 +158,14 @@ def _get_installer_mode_apps() -> dict[str, list[tuple[str, str | None]]]:
 
 
 def _get_private_apps() -> list[tuple[str, str | None]]:
-    """Derive private app list from app.json."""
+    """Derive private app list from app.json.
+
+    Returns
+    -------
+    list[tuple[str, str | None]]
+        Sorted ``(name, platform)`` entries for apps marked ``private`` in
+        app.json.
+    """
     from koopa.io import import_app_json
 
     data = import_app_json()
@@ -157,7 +178,14 @@ def _get_private_apps() -> list[tuple[str, str | None]]:
 
 
 def _get_configure_apps() -> tuple[list[tuple[str, str | None]], list[tuple[str, str | None]]]:
-    """Derive configure subcommands from PYTHON_CONFIGURERS registry."""
+    """Derive configure subcommands from PYTHON_CONFIGURERS registry.
+
+    Returns
+    -------
+    tuple[list[tuple[str, str | None]], list[tuple[str, str | None]]]
+        The ``(system_apps, user_apps)`` lists of ``(name, platform)``
+        entries.
+    """
     from koopa.configurers import PYTHON_CONFIGURERS
 
     system_apps: list[tuple[str, str | None]] = []
@@ -200,7 +228,13 @@ def _load_run_commands() -> list[str]:
 
 
 def _load_app_names() -> tuple[list[str], list[str], list[str]]:
-    """Return (common, linux_only, macos_only) app name lists."""
+    """Return (common, linux_only, macos_only) app name lists.
+
+    Returns
+    -------
+    tuple[list[str], list[str], list[str]]
+        The ``(common, linux_only, macos_only)`` app name lists.
+    """
     from koopa.io import import_app_json
 
     data = import_app_json()
@@ -226,8 +260,16 @@ def _load_app_names() -> tuple[list[str], list[str], list[str]]:
 def _extract_handler_flags(filepath: str) -> dict[str, list[str]]:
     """AST-parse a Python file and extract ``--flags`` from handlers.
 
-    Returns a dict mapping function names (e.g. ``_handle_aws_s3_sync``)
-    to their list of ``--flag`` strings.
+    Parameters
+    ----------
+    filepath : str
+        Path to the Python source file to parse.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Mapping of function names (e.g. ``_handle_aws_s3_sync``) to their
+        list of ``--flag`` strings.
     """
     with open(filepath) as f:
         tree = ast.parse(f.read())
@@ -278,6 +320,16 @@ def _extract_handler_key_to_func(filepath: str) -> dict[str, str]:
 
     Handles direct references, lambdas wrapping calls, and call expressions
     (factory functions).
+
+    Parameters
+    ----------
+    filepath : str
+        Path to the Python source file to parse.
+
+    Returns
+    -------
+    dict[str, str]
+        Mapping of handler dict key to the resolved function name.
     """
     with open(filepath) as f:
         tree = ast.parse(f.read())
@@ -323,7 +375,25 @@ def _build_flag_map(
     *,
     prefix: tuple[str, ...] = (),
 ) -> dict[str, list[str]]:
-    """Walk ``_APP_TREE`` and build a ``path -> flags`` mapping."""
+    """Walk ``_APP_TREE`` and build a ``path -> flags`` mapping.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE`` or a subtree of it).
+    key_to_func : dict[str, str]
+        Mapping of handler dict key to the resolved function name.
+    handler_flags : dict[str, list[str]]
+        Mapping of function name to its list of ``--flag`` strings.
+    prefix : tuple[str, ...], optional
+        Path segments accumulated from the recursive walk so far.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Mapping of ``"app/..."`` path string to its ``--help``-prefixed
+        flags.
+    """
     result: dict[str, list[str]] = {}
     for key, value in sorted(app_tree.items()):
         path = (*prefix, key)
@@ -349,7 +419,23 @@ def _emit_platform_block(
     entries: list[tuple[str, str | None]],
     indent: str,
 ) -> list[str]:
-    """Emit args+= lines with platform conditionals."""
+    """Emit args+= lines with platform conditionals.
+
+    Parameters
+    ----------
+    entries : list[tuple[str, str | None]]
+        ``(name, platform)`` pairs, where platform is ``None`` (all
+        platforms), ``"linux"``, ``"macos"``, ``"debian"``, ``"fedora"``,
+        or ``"debian_or_fedora"``.
+    indent : str
+        Leading whitespace to prepend to each emitted line.
+
+    Returns
+    -------
+    list[str]
+        Bash lines that append the entries to the ``args`` array, guarded
+        by platform conditionals where needed.
+    """
     lines: list[str] = []
     common = sorted(e[0] for e in entries if e[1] is None)
     linux = sorted(e[0] for e in entries if e[1] == "linux")
@@ -389,7 +475,21 @@ def _emit_platform_block(
 
 
 def _emit_args_array(names: list[str], indent: str) -> list[str]:
-    """Emit a shell ``args+=( ... )`` block."""
+    """Emit a shell ``args+=( ... )`` block.
+
+    Parameters
+    ----------
+    names : list[str]
+        Values to add to the ``args`` array.
+    indent : str
+        Leading whitespace to prepend to each emitted line.
+
+    Returns
+    -------
+    list[str]
+        Bash lines forming the ``args+=(...)`` block, or an empty list if
+        ``names`` is empty.
+    """
     if not names:
         return []
     if len(names) == 1:
@@ -406,7 +506,22 @@ def _emit_case_entry(
     body_lines: list[str],
     indent: str,
 ) -> list[str]:
-    """Emit a single case pattern with body."""
+    """Emit a single case pattern with body.
+
+    Parameters
+    ----------
+    pattern : str
+        The ``case`` pattern text (e.g. ``"'app')"``).
+    body_lines : list[str]
+        Lines to place inside the case entry's body.
+    indent : str
+        Leading whitespace to prepend to the pattern line.
+
+    Returns
+    -------
+    list[str]
+        The pattern line, the body lines, and a closing ``;;`` line.
+    """
     lines = [f"{indent}{pattern}"]
     lines.extend(body_lines)
     lines.append(f"{indent}{_I};;")
@@ -419,7 +534,18 @@ def _emit_case_entry(
 
 
 def _collect_app_depth_2(tree: dict[str, Any]) -> list[str]:
-    """Return sorted top-level keys of ``_APP_TREE`` (COMP_CWORD=3)."""
+    """Return sorted top-level keys of ``_APP_TREE`` (COMP_CWORD=3).
+
+    Parameters
+    ----------
+    tree : dict[str, Any]
+        The app command tree (``_APP_TREE`` or a subtree of it).
+
+    Returns
+    -------
+    list[str]
+        Sorted top-level namespace names.
+    """
     return sorted(tree.keys())
 
 
@@ -429,6 +555,16 @@ def _collect_app_depth_3(
     """Return mapping of parent -> sorted children at depth 3 (COMP_CWORD=4).
 
     Only includes parents whose value is a dict (branch nodes).
+
+    Parameters
+    ----------
+    tree : dict[str, Any]
+        The app command tree (``_APP_TREE`` or a subtree of it).
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Mapping of parent namespace name to its sorted child names.
     """
     result: dict[str, list[str]] = {}
     for key, value in sorted(tree.items()):
@@ -443,6 +579,17 @@ def _collect_app_depth_4(
     """Return mapping of (grandparent, parent) -> sorted children at depth 4.
 
     Only for nodes three levels deep (COMP_CWORD=5).
+
+    Parameters
+    ----------
+    tree : dict[str, Any]
+        The app command tree (``_APP_TREE`` or a subtree of it).
+
+    Returns
+    -------
+    dict[tuple[str, str], list[str]]
+        Mapping of ``(grandparent, parent)`` namespace names to their sorted
+        child names.
     """
     result: dict[tuple[str, str], list[str]] = {}
     for gp_key, gp_val in sorted(tree.items()):
@@ -497,7 +644,32 @@ def _generate_fish_completion(
     today: str,
     update_system_apps: list[tuple[str, str | None]],
 ) -> str:
-    """Generate fish shell completion for koopa."""
+    """Generate fish shell completion for koopa.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE``).
+    develop_cmds : list[str]
+        Sorted ``koopa develop`` subcommand names.
+    common_apps : list[str]
+        App names installable on every platform.
+    linux_apps : list[str]
+        App names installable only on Linux.
+    macos_apps : list[str]
+        App names installable only on macOS.
+    flag_map : dict[str, list[str]]
+        Mapping of ``"app/..."`` or top-level command path to its flags.
+    today : str
+        Current date string used in the generated file's header comment.
+    update_system_apps : list[tuple[str, str | None]]
+        ``(name, platform)`` entries eligible for ``koopa update system``.
+
+    Returns
+    -------
+    str
+        The complete fish completion script.
+    """
     lines: list[str] = []
     top_seen = " ".join(_TOP_CMDS)
     app_ns = sorted(app_tree.keys())
@@ -648,7 +820,16 @@ def _zsh_app_namespace_completions(
     app_tree: dict[str, Any],
     lines: list[str],
 ) -> None:
-    """Generate per-namespace sub-dispatchers for zsh completion."""
+    """Generate per-namespace sub-dispatchers for zsh completion.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE``).
+    lines : list[str]
+        Output line buffer; appended to in place with generated zsh
+        function definitions.
+    """
     for ns, val in sorted(app_tree.items()):
         if not isinstance(val, dict):
             continue
@@ -726,7 +907,20 @@ def _zsh_subcmd_completion(
     flag_map: dict[str, list[str]],
     lines: list[str],
 ) -> None:
-    """Generate zsh completion for a subcommand group (develop/run)."""
+    """Generate zsh completion for a subcommand group (develop/run).
+
+    Parameters
+    ----------
+    subcmd : str
+        Subcommand group name (e.g. ``"develop"`` or ``"run"``).
+    cmds : list[str]
+        Command names belonging to the subcommand group.
+    flag_map : dict[str, list[str]]
+        Mapping of ``"<subcmd>/<cmd>"`` path to its flags.
+    lines : list[str]
+        Output line buffer; appended to in place with generated zsh
+        function definitions.
+    """
     flags = {k.split("/", 1)[1]: v for k, v in flag_map.items() if k.startswith(f"{subcmd}/")}
     if flags:
         lines += [
@@ -769,7 +963,32 @@ def _generate_zsh_completion(
     today: str,
     update_system_apps: list[tuple[str, str | None]],
 ) -> str:
-    """Generate native zsh completion for koopa using _arguments/_describe."""
+    """Generate native zsh completion for koopa using _arguments/_describe.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE``).
+    develop_cmds : list[str]
+        Sorted ``koopa develop`` subcommand names.
+    common_apps : list[str]
+        App names installable on every platform.
+    linux_apps : list[str]
+        App names installable only on Linux.
+    macos_apps : list[str]
+        App names installable only on macOS.
+    flag_map : dict[str, list[str]]
+        Mapping of ``"app/..."`` or top-level command path to its flags.
+    today : str
+        Current date string used in the generated file's header comment.
+    update_system_apps : list[tuple[str, str | None]]
+        ``(name, platform)`` entries eligible for ``koopa update system``.
+
+    Returns
+    -------
+    str
+        The complete zsh completion script.
+    """
     lines: list[str] = []
     app_ns = sorted(app_tree.keys())
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
@@ -903,7 +1122,19 @@ def _generate_zsh_completion(
 
 
 def _ps_array(items: list[str]) -> str:
-    """Format a list as a PowerShell array of single-quoted strings."""
+    """Format a list as a PowerShell array of single-quoted strings.
+
+    Parameters
+    ----------
+    items : list[str]
+        Values to format.
+
+    Returns
+    -------
+    str
+        Comma-separated, single-quoted values suitable for a PowerShell
+        ``@(...)`` array literal.
+    """
     return ", ".join(f"'{item}'" for item in items)
 
 
@@ -917,7 +1148,32 @@ def _generate_powershell_completion(
     today: str,
     update_system_apps: list[tuple[str, str | None]],
 ) -> str:
-    """Generate PowerShell tab completion for koopa via Register-ArgumentCompleter."""
+    """Generate PowerShell tab completion for koopa via Register-ArgumentCompleter.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE``).
+    develop_cmds : list[str]
+        Sorted ``koopa develop`` subcommand names.
+    common_apps : list[str]
+        App names installable on every platform.
+    linux_apps : list[str]
+        App names installable only on Linux.
+    macos_apps : list[str]
+        App names installable only on macOS.
+    flag_map : dict[str, list[str]]
+        Mapping of ``"app/..."`` or top-level command path to its flags.
+    today : str
+        Current date string used in the generated file's header comment.
+    update_system_apps : list[tuple[str, str | None]]
+        ``(name, platform)`` entries eligible for ``koopa update system``.
+
+    Returns
+    -------
+    str
+        The complete PowerShell completion script.
+    """
     lines: list[str] = []
     app_ns = sorted(app_tree.keys())
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
@@ -1050,7 +1306,32 @@ def _generate_elvish_completion(
     today: str,
     update_system_apps: list[tuple[str, str | None]],
 ) -> str:
-    """Generate elvish shell completion for koopa."""
+    """Generate elvish shell completion for koopa.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE``).
+    develop_cmds : list[str]
+        Sorted ``koopa develop`` subcommand names.
+    common_apps : list[str]
+        App names installable on every platform.
+    linux_apps : list[str]
+        App names installable only on Linux.
+    macos_apps : list[str]
+        App names installable only on macOS.
+    flag_map : dict[str, list[str]]
+        Mapping of ``"app/..."`` or top-level command path to its flags.
+    today : str
+        Current date string used in the generated file's header comment.
+    update_system_apps : list[tuple[str, str | None]]
+        ``(name, platform)`` entries eligible for ``koopa update system``.
+
+    Returns
+    -------
+    str
+        The complete elvish completion script.
+    """
     lines: list[str] = []
     app_ns = sorted(app_tree.keys())
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
@@ -1190,7 +1471,32 @@ def _generate_nushell_completion(
     today: str,
     update_system_apps: list[tuple[str, str | None]],
 ) -> str:
-    """Generate nushell completion for koopa."""
+    """Generate nushell completion for koopa.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree (``_APP_TREE``).
+    develop_cmds : list[str]
+        Sorted ``koopa develop`` subcommand names.
+    common_apps : list[str]
+        App names installable on every platform.
+    linux_apps : list[str]
+        App names installable only on Linux.
+    macos_apps : list[str]
+        App names installable only on macOS.
+    flag_map : dict[str, list[str]]
+        Mapping of ``"app/..."`` or top-level command path to its flags.
+    today : str
+        Current date string used in the generated file's header comment.
+    update_system_apps : list[tuple[str, str | None]]
+        ``(name, platform)`` entries eligible for ``koopa update system``.
+
+    Returns
+    -------
+    str
+        The complete nushell completion script.
+    """
     lines: list[str] = []
     app_ns = sorted(app_tree.keys())
     all_apps = sorted(set(common_apps + linux_apps + macos_apps))
@@ -1344,7 +1650,18 @@ def _generate_nushell_completion(
 
 
 def _nu_completer(lines: list[str], name: str, items: list[str]) -> None:
-    """Emit a nushell completer function."""
+    """Emit a nushell completer function.
+
+    Parameters
+    ----------
+    lines : list[str]
+        Output line buffer; appended to in place with the generated
+        ``def <name> [] { [...] }`` completer function.
+    name : str
+        Name of the nushell completer function to define.
+    items : list[str]
+        Values the completer function returns as candidates.
+    """
     items_str = ", ".join(f'"{item}"' for item in items)
     lines.append(f"def {name} [] {{ [{items_str}] }}")
     lines.append("")

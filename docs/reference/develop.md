@@ -138,6 +138,11 @@ Mirror source tarballs to S3.
 - `--prune`
 - `--help`
 
+(koopa-develop-numpydoc)=
+## `develop numpydoc`
+
+Run the numpydoc docstring validator on the Python source tree.
+
 (koopa-develop-orphan-apps)=
 ## `develop orphan-apps`
 

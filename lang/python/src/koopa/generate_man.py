@@ -45,7 +45,18 @@ from koopa.cli_docs import (
 
 
 def _roff_name(text: str) -> str:
-    """Escape hyphens for roff .TP term lines."""
+    """Escape hyphens for roff .TP term lines.
+
+    Parameters
+    ----------
+    text : str
+        Command or flag name to escape.
+
+    Returns
+    -------
+    str
+        Text with hyphens escaped for roff.
+    """
     return text.replace("-", r"\-")
 
 
@@ -75,7 +86,13 @@ def _tp(term: str, desc: str) -> list[str]:
 
 
 def generate_man() -> str:
-    """Generate the ``koopa.1`` man page in roff format."""
+    """Generate the ``koopa.1`` man page in roff format.
+
+    Returns
+    -------
+    str
+        The full ``koopa.1`` man page content in roff format.
+    """
     from koopa.generate_completion import (
         _ADMIN_COMMANDS,
         _SYSTEM_COMMANDS,
@@ -199,7 +216,14 @@ def generate_man() -> str:
 
 
 def write_man(*, path: str = "") -> None:
-    """Write ``koopa.1`` to disk."""
+    """Write ``koopa.1`` to disk.
+
+    Parameters
+    ----------
+    path : str, optional
+        Output file path. Defaults to ``share/man/man1/koopa.1`` under the
+        koopa prefix.
+    """
     from koopa.prefix import koopa_prefix
 
     if not path:

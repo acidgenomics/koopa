@@ -23,7 +23,14 @@ class ConfigureConfig:
 
 
 def configure_app(config: ConfigureConfig) -> None:
-    """Configure an application in an isolated subshell."""
+    """Configure an application in an isolated subshell.
+
+    Parameters
+    ----------
+    config : ConfigureConfig
+        Configuration specifying the application name, mode, platform, and
+        verbosity to configure with.
+    """
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
     if config.mode == "shared":

@@ -27,6 +27,12 @@ def vendor_config() -> dict[str, Any] | None:
     pinned-release re-extract or 'git clean', since it lives outside the koopa
     tree entirely; the 'etc/koopa/' location is kept for continuity with
     existing setups and the shipped '.example' file.
+
+    Returns
+    -------
+    dict[str, Any] | None
+        Parsed vendor config if a valid, enabled config file exists,
+        otherwise None.
     """
     from koopa.prefix import koopa_prefix
     from koopa.xdg import xdg_config_home
@@ -55,7 +61,18 @@ def vendor_config() -> dict[str, Any] | None:
 
 
 def _http_token(cfg: dict[str, Any]) -> str | None:
-    """Resolve the HTTP Bearer token from the configured env var."""
+    """Resolve the HTTP Bearer token from the configured env var.
+
+    Parameters
+    ----------
+    cfg : dict[str, Any]
+        Parsed vendor config.
+
+    Returns
+    -------
+    str | None
+        Token value from the configured environment variable, or None if unset.
+    """
     hc = cfg.get("http", {})
     env_var = hc.get("token_env_var", "HTTP_ACCESS_TOKEN")
     return os.environ.get(env_var) or None
@@ -76,7 +93,20 @@ def _http_binary_url(cfg: dict[str, Any], os_str: str, arch: str, name: str, tar
 
 
 def _remote_repo_for_host(cfg: dict[str, Any], host: str) -> str | None:
-    """Return the remote-proxy repo name for a host, or None if unmapped."""
+    """Return the remote-proxy repo name for a host, or None if unmapped.
+
+    Parameters
+    ----------
+    cfg : dict[str, Any]
+        Parsed vendor config.
+    host : str
+        Hostname to look up in the 'http.remotes' map.
+
+    Returns
+    -------
+    str | None
+        Matching remote-proxy repo name, or None if the host has no mapping.
+    """
     remotes = cfg.get("http", {}).get("remotes") or {}
     if host in remotes:
         return remotes[host]
@@ -101,7 +131,21 @@ def _s3_binary_uri(cfg: dict[str, Any], os_str: str, arch: str, name: str, tarba
 
 
 def vendor_download_src(name: str, filename: str) -> str | None:
-    """Return HTTPS URL for source tarball from vendor backend, or None."""
+    """Return HTTPS URL for source tarball from vendor backend, or None.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    filename : str
+        Source tarball filename.
+
+    Returns
+    -------
+    str | None
+        HTTPS URL for the source tarball, or None if no HTTP vendor backend
+        is configured.
+    """
     cfg = vendor_config()
     if cfg is None:
         return None
@@ -116,6 +160,23 @@ def vendor_download_binary(os_str: str, arch: str, name: str, tarball: str) -> s
     """Return HTTPS URL for binary tarball from vendor HTTP backend, or None.
 
     For S3 backend returns None (callers use vendor_pull_binary instead).
+
+    Parameters
+    ----------
+    os_str : str
+        Operating system platform slug.
+    arch : str
+        CPU architecture slug.
+    name : str
+        Application name.
+    tarball : str
+        Binary tarball filename.
+
+    Returns
+    -------
+    str | None
+        HTTPS URL for the binary tarball, or None if no HTTP vendor backend
+        is configured.
     """
     cfg = vendor_config()
     if cfg is None:
@@ -134,6 +195,17 @@ def vendor_rewrite_url(url: str) -> str | None:
     suffix match (e.g. '.gnu.org' matches 'ftpmirror.gnu.org'). A remote
     repo's root mirrors the proxied host's root, so the rewritten URL keeps
     the original path and query string.
+
+    Parameters
+    ----------
+    url : str
+        Upstream URL to rewrite.
+
+    Returns
+    -------
+    str | None
+        Rewritten URL through the matching remote-proxy repo, or None if no
+        HTTP vendor backend is configured or the host has no remote mapping.
     """
     cfg = vendor_config()
     if cfg is None or cfg.get("backend") != "http":
@@ -150,7 +222,20 @@ def vendor_rewrite_url(url: str) -> str | None:
 
 
 def vendor_has_src(name: str, filename: str) -> bool:
-    """Return True if the source tarball exists in the vendor backend."""
+    """Return True if the source tarball exists in the vendor backend.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    filename : str
+        Source tarball filename.
+
+    Returns
+    -------
+    bool
+        True if the source tarball exists in the configured vendor backend.
+    """
     cfg = vendor_config()
     if cfg is None:
         return False
@@ -165,7 +250,24 @@ def vendor_has_src(name: str, filename: str) -> bool:
 
 
 def vendor_has_binary(os_str: str, arch: str, name: str, tarball: str) -> bool:
-    """Return True if the binary tarball exists in the vendor backend."""
+    """Return True if the binary tarball exists in the vendor backend.
+
+    Parameters
+    ----------
+    os_str : str
+        Operating system platform slug.
+    arch : str
+        CPU architecture slug.
+    name : str
+        Application name.
+    tarball : str
+        Binary tarball filename.
+
+    Returns
+    -------
+    bool
+        True if the binary tarball exists in the configured vendor backend.
+    """
     cfg = vendor_config()
     if cfg is None:
         return False
@@ -179,7 +281,21 @@ def vendor_has_binary(os_str: str, arch: str, name: str, tarball: str) -> bool:
 
 
 def vendor_pull_binary(os_str: str, arch: str, name: str, tarball: str, dest: str) -> None:
-    """Download binary tarball from vendor backend to dest path."""
+    """Download binary tarball from vendor backend to dest path.
+
+    Parameters
+    ----------
+    os_str : str
+        Operating system platform slug.
+    arch : str
+        CPU architecture slug.
+    name : str
+        Application name.
+    tarball : str
+        Binary tarball filename.
+    dest : str
+        Local file path to download the tarball to.
+    """
     cfg = vendor_config()
     if cfg is None:
         msg = "No vendor config."
@@ -196,7 +312,17 @@ def vendor_pull_binary(os_str: str, arch: str, name: str, tarball: str, dest: st
 
 
 def vendor_push_src(local_path: str, name: str, filename: str) -> None:
-    """Upload source tarball to vendor backend."""
+    """Upload source tarball to vendor backend.
+
+    Parameters
+    ----------
+    local_path : str
+        Local file path of the source tarball to upload.
+    name : str
+        Application name.
+    filename : str
+        Source tarball filename to upload to.
+    """
     cfg = vendor_config()
     if cfg is None:
         return
@@ -212,7 +338,21 @@ def vendor_push_src(local_path: str, name: str, filename: str) -> None:
 
 
 def vendor_push_binary(local_path: str, os_str: str, arch: str, name: str, tarball: str) -> None:
-    """Upload binary tarball to vendor backend."""
+    """Upload binary tarball to vendor backend.
+
+    Parameters
+    ----------
+    local_path : str
+        Local file path of the binary tarball to upload.
+    os_str : str
+        Operating system platform slug.
+    arch : str
+        CPU architecture slug.
+    name : str
+        Application name.
+    tarball : str
+        Binary tarball filename to upload to.
+    """
     cfg = vendor_config()
     if cfg is None:
         return
@@ -228,7 +368,13 @@ def vendor_push_binary(local_path: str, os_str: str, arch: str, name: str, tarba
 
 
 def vendor_can_pull() -> bool:
-    """Return True if the vendor backend is configured and pull credentials are available."""
+    """Return True if the vendor backend is configured and pull credentials are available.
+
+    Returns
+    -------
+    bool
+        True if a vendor backend is configured and can be read from.
+    """
     cfg = vendor_config()
     if cfg is None:
         return False
@@ -240,7 +386,13 @@ def vendor_can_pull() -> bool:
 
 
 def vendor_can_push() -> bool:
-    """Return True if the vendor backend is configured and push credentials are available."""
+    """Return True if the vendor backend is configured and push credentials are available.
+
+    Returns
+    -------
+    bool
+        True if a vendor backend is configured and push credentials are available.
+    """
     cfg = vendor_config()
     if cfg is None:
         return False
@@ -261,7 +413,13 @@ def vendor_can_push() -> bool:
 
 
 def vendor_pull_priority() -> str:
-    """Return 'vendor_first' or 'vendor_only'. Defaults to 'vendor_first'."""
+    """Return 'vendor_first' or 'vendor_only'. Defaults to 'vendor_first'.
+
+    Returns
+    -------
+    str
+        Pull priority mode: 'vendor_first' or 'vendor_only'.
+    """
     cfg = vendor_config()
     if cfg is None:
         return "vendor_first"

@@ -14,7 +14,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install diff-so-fancy."""
+    """Install diff-so-fancy.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     download_extract_cd()
     bin_dir = os.path.join(prefix, "bin")
     libexec_dir = os.path.join(prefix, "libexec")

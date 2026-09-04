@@ -15,7 +15,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install Python framework on macOS."""
+    """Install Python framework on macOS.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     framework_prefix = "/Library/Frameworks/Python.framework"
     print(f"Target: {framework_prefix}", file=sys.stderr)
     maj_ver = version.split(".", maxsplit=1)[0]

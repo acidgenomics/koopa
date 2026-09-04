@@ -13,7 +13,19 @@ def main(
     mode: str,
     verbose: bool = False,
 ) -> None:
-    """Configure Spacemacs for the current user."""
+    """Configure Spacemacs for the current user.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Print verbose output.
+    """
     if os.geteuid() == 0:
         msg = "Must not be run as root."
         raise RuntimeError(msg)

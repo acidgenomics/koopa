@@ -14,7 +14,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install google-cloud-sdk."""
+    """Install google-cloud-sdk.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     install_conda_package(
         name=get_str(kwargs, "name", name),
@@ -36,6 +49,11 @@ def _setup_completions(prefix: str) -> None:
     2. Symlink ``completion.bash.inc`` into
        ``share/bash-completion/completions/gcloud`` so bash-completion v2
        lazy-loads it on first TAB after ``gcloud``.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
     """
     prefix = os.path.abspath(prefix)
     matches = sorted(glob.glob(os.path.join(prefix, "libexec", "share", "google-cloud-sdk-*")))

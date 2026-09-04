@@ -13,7 +13,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install gum."""
+    """Install gum.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     url = f"https://github.com/charmbracelet/gum/archive/v{version}.tar.gz"
     ldflags = f"-s -w -X main.Version={version}"
     build_go_package(

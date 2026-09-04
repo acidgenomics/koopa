@@ -33,6 +33,11 @@ def _user_curlrc_path() -> str | None:
 
     Mirrors curl's own lookup order: ``$CURL_HOME/.curlrc``, then
     ``<xdg_config_home>/curlrc``, then ``~/.curlrc``.
+
+    Returns
+    -------
+    str | None
+        Absolute path to the first curl config found, or None if none exists.
     """
     candidates = []
     curl_home = os.environ.get("CURL_HOME")
@@ -108,7 +113,20 @@ def _brew_env() -> dict[str, str]:
 
 
 def _brew(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
-    """Run a brew command non-interactively with no tty stdin."""
+    """Run a brew command non-interactively with no tty stdin.
+
+    Parameters
+    ----------
+    *args : str
+        Positional arguments to pass to the ``brew`` command.
+    capture : bool, optional
+        If True, capture stdout and stderr instead of streaming them.
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        The completed brew subprocess.
+    """
     cmd = ["brew", *args]
     return subprocess.run(
         cmd,
@@ -167,26 +185,50 @@ def _sudo_keepalive_start() -> tuple[threading.Event, threading.Thread]:
 
 
 def _sudo_keepalive_stop(handle: tuple[threading.Event, threading.Thread]) -> None:
-    """Stop a background refresher started by ``_sudo_keepalive_start``."""
+    """Stop a background refresher started by ``_sudo_keepalive_start``.
+
+    Parameters
+    ----------
+    handle : tuple[threading.Event, threading.Thread]
+        The event and thread pair returned by ``_sudo_keepalive_start``.
+    """
     stop_event, thread = handle
     stop_event.set()
     thread.join(timeout=2)
 
 
 def brew_prefix() -> str:
-    """Get Homebrew prefix."""
+    """Get Homebrew prefix.
+
+    Returns
+    -------
+    str
+        Homebrew's installation prefix directory.
+    """
     result = _brew("--prefix")
     return result.stdout.strip()
 
 
 def brew_version() -> str:
-    """Get Homebrew version."""
+    """Get Homebrew version.
+
+    Returns
+    -------
+    str
+        Homebrew's version string.
+    """
     result = _brew("--version")
     return result.stdout.strip().splitlines()[0]
 
 
 def brew_doctor() -> str:
-    """Run brew doctor."""
+    """Run brew doctor.
+
+    Returns
+    -------
+    str
+        Output of ``brew doctor``.
+    """
     result = subprocess.run(
         ["brew", "doctor"],
         capture_output=True,
@@ -197,7 +239,13 @@ def brew_doctor() -> str:
 
 
 def brew_outdated() -> list[str]:
-    """List outdated formulae."""
+    """List outdated formulae.
+
+    Returns
+    -------
+    list[str]
+        Names of formulae with an available upgrade.
+    """
     result = _brew("outdated")
     return [x for x in result.stdout.strip().splitlines() if x]
 
@@ -449,7 +497,13 @@ def brew_doctor_filtered() -> None:
 
 
 def brew_dump_brewfile(path: str = "Brewfile") -> None:
-    """Dump installed formulae to a Brewfile."""
+    """Dump installed formulae to a Brewfile.
+
+    Parameters
+    ----------
+    path : str, optional
+        Destination path for the generated Brewfile.
+    """
     _brew("bundle", "dump", "--file", path, "--force", capture=False)
 
 
@@ -499,23 +553,52 @@ def brew_uninstall_all_brews() -> None:
 
 
 def brew_install_brewfile(path: str = "Brewfile") -> None:
-    """Install from a Brewfile."""
+    """Install from a Brewfile.
+
+    Parameters
+    ----------
+    path : str, optional
+        Path to the Brewfile to install from.
+    """
     _brew("bundle", "install", "--file", path, capture=False)
 
 
 def brew_list_formulae() -> list[str]:
-    """List installed formulae."""
+    """List installed formulae.
+
+    Returns
+    -------
+    list[str]
+        Names of installed formulae.
+    """
     result = _brew("list", "--formula", "-1")
     return [x for x in result.stdout.strip().splitlines() if x]
 
 
 def brew_list_casks() -> list[str]:
-    """List installed casks."""
+    """List installed casks.
+
+    Returns
+    -------
+    list[str]
+        Names of installed casks.
+    """
     result = _brew("list", "--cask", "-1")
     return [x for x in result.stdout.strip().splitlines() if x]
 
 
 def brew_info(formula: str) -> str:
-    """Get info about a formula."""
+    """Get info about a formula.
+
+    Parameters
+    ----------
+    formula : str
+        Name of the formula to look up.
+
+    Returns
+    -------
+    str
+        Output of ``brew info`` for the formula.
+    """
     result = _brew("info", formula)
     return result.stdout.strip()

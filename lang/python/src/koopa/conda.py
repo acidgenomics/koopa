@@ -8,7 +8,20 @@ import subprocess
 
 
 def _conda(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
-    """Run a conda command."""
+    """Run a conda command.
+
+    Parameters
+    ----------
+    *args : str
+        Arguments to pass to the conda executable.
+    capture : bool, optional
+        Capture stdout and stderr instead of streaming to the console.
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        Completed process result from running the conda command.
+    """
     from koopa.build import locate
 
     conda = locate("conda")
@@ -27,7 +40,22 @@ def conda_create_env(
     force: bool = False,
     latest: bool = False,
 ) -> None:
-    """Create a conda environment."""
+    """Create a conda environment.
+
+    Parameters
+    ----------
+    *packages : str
+        Package specifications to install into the new environment.
+    prefix : str, optional
+        Directory prefix to create the environment in, instead of a named
+        environment.
+    yaml_file : str, optional
+        Path to a conda environment YAML file to create the environment from.
+    force : bool, optional
+        Force creation, overwriting an existing environment or prefix.
+    latest : bool, optional
+        Use the latest available package versions instead of pinned ones.
+    """
     from koopa.build import locate
 
     conda = locate("conda")
@@ -59,7 +87,13 @@ def conda_create_env(
 
 
 def conda_remove_env(*names: str) -> None:
-    """Remove conda environments."""
+    """Remove conda environments.
+
+    Parameters
+    ----------
+    *names : str
+        Names of the conda environments to remove.
+    """
     from koopa.build import locate
 
     conda = locate("conda")

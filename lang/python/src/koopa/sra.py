@@ -16,7 +16,17 @@ def sra_prefetch(
     *,
     jobs: int = 4,
 ) -> None:
-    """Prefetch files from SRA."""
+    """Prefetch files from SRA.
+
+    Parameters
+    ----------
+    accession_file : str
+        Path to a text file listing SRA accessions, one per line.
+    output_dir : str
+        Directory to write the prefetched SRA files to.
+    jobs : int, optional
+        Number of parallel prefetch jobs to run.
+    """
     prefetch = shutil.which("prefetch")
     if prefetch is None:
         msg = "prefetch is not installed."
@@ -60,7 +70,20 @@ def sra_fastq_dump(
     compress: bool = True,
     threads: int | None = None,
 ) -> None:
-    """Dump FASTQ files from SRA prefetch directory."""
+    """Dump FASTQ files from SRA prefetch directory.
+
+    Parameters
+    ----------
+    prefetch_dir : str
+        Directory containing prefetched ``.sra`` files.
+    fastq_dir : str
+        Directory to write the dumped FASTQ files to.
+    compress : bool, optional
+        Gzip-compress the dumped FASTQ files.
+    threads : int | None, optional
+        Number of threads to use for the dump. Defaults to the number of
+        available CPUs.
+    """
     fasterq_dump = shutil.which("fasterq-dump")
     if fasterq_dump is None:
         msg = "fasterq-dump is not installed."
@@ -114,7 +137,16 @@ def sra_fastq_dump(
 
 
 def sra_download_accession_list(srp_id: str, output_file: str = "") -> None:
-    """Download SRA accession list."""
+    """Download SRA accession list.
+
+    Parameters
+    ----------
+    srp_id : str
+        SRA study accession (for example, an SRP identifier).
+    output_file : str, optional
+        Path to write the accession list to. Defaults to
+        ``<srp_id>-accession-list.txt`` in the current directory.
+    """
     esearch = shutil.which("esearch")
     efetch = shutil.which("efetch")
     if esearch is None or efetch is None:
@@ -149,7 +181,16 @@ def sra_download_accession_list(srp_id: str, output_file: str = "") -> None:
 
 
 def sra_download_run_info_table(srp_id: str, output_file: str = "") -> None:
-    """Download SRA run info table."""
+    """Download SRA run info table.
+
+    Parameters
+    ----------
+    srp_id : str
+        SRA study accession (for example, an SRP identifier).
+    output_file : str, optional
+        Path to write the run info CSV table to. Defaults to
+        ``<srp_id>-run-info-table.csv`` in the current directory.
+    """
     esearch = shutil.which("esearch")
     efetch = shutil.which("efetch")
     if esearch is None or efetch is None:

@@ -34,7 +34,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install pyright, then smoke-test the npm-backed engine."""
+    """Install pyright, then smoke-test the npm-backed engine.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     extra = get_list(kwargs, "extra_packages")
     build_env = get_dict(kwargs, "build_env")
@@ -58,6 +71,11 @@ def _verify(prefix: str) -> None:
     Raises with npm's own captured output on failure, since a bare
     ``CalledProcessError`` would hide the actual root cause (an npm warning
     or a version-not-found error) from the install failure message.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
     """
     binary = os.path.join(prefix, "bin", "pyright")
     env = {**os.environ, "PYRIGHT_PYTHON_FORCE_VERSION": "latest"}

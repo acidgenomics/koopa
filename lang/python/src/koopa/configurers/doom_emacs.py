@@ -26,6 +26,14 @@ def _write_early_init_shim(*, emacsdir: str, doomlocaldir: str) -> None:
 
     Skips the write if a non-koopa early-init.el already exists, so a
     hand-written file is never clobbered.
+
+    Parameters
+    ----------
+    emacsdir : str
+        Doom Emacs ``EMACSDIR`` path, the shared install's libexec directory.
+    doomlocaldir : str
+        Doom Emacs ``DOOMLOCALDIR`` path, where package state is stored
+        outside the shared install prefix.
     """
     emacs_dir = os.path.join(xdg_config_home(), "emacs")
     path = os.path.join(emacs_dir, "early-init.el")
@@ -52,6 +60,17 @@ def main(
 
     Runs 'doom install' (or 'doom sync' if already configured) using the shared
     install. DOOMDIR defaults to ~/.config/doom for the user's private config.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Print verbose output.
     """
     if os.geteuid() == 0:
         msg = "Must not be run as root."

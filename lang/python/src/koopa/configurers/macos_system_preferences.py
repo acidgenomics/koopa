@@ -15,6 +15,17 @@ def main(
 
     Configures startup, locale, power management, Finder, Spotlight, and
     Time Machine settings using system-level commands with sudo.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"``).
+    verbose : bool, optional
+        Print verbose output.
     """
     if sys.platform != "darwin":
         msg = "macOS only."

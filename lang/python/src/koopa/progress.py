@@ -25,7 +25,19 @@ _ANSI_RE = re.compile(r"\033\[[0-9;]*[A-Za-z]")
 
 
 def _visible_len(s: str) -> int:
-    """Return the printable length of *s*, ignoring ANSI escapes and carriage returns."""
+    """Return the printable length of *s*, ignoring ANSI escapes and carriage returns.
+
+    Parameters
+    ----------
+    s : str
+        String to measure, possibly containing ANSI escape codes.
+
+    Returns
+    -------
+    int
+        Number of printable columns *s* occupies once ANSI escapes and
+        carriage returns are stripped.
+    """
     return len(_ANSI_RE.sub("", s).replace("\r", ""))
 
 
@@ -34,6 +46,20 @@ def _cap_line_width(line: str, width: int) -> str:
 
     A ``pip`` "from versions:" error line can run to thousands of characters
     on one line; printing it in full makes the surrounding failure unreadable.
+
+    Parameters
+    ----------
+    line : str
+        Log line to truncate, possibly ending in a newline.
+    width : int
+        Maximum number of printable columns to keep.
+
+    Returns
+    -------
+    str
+        *line* truncated to *width* printable columns, with an ellipsis
+        appended if any characters were cut, preserving a trailing newline
+        if *line* had one.
     """
     stripped = line.rstrip("\n")
     truncated = BuildProgress._truncate_to_width(stripped, width)
@@ -47,6 +73,18 @@ def _format_log_tail_text(lines: list[str]) -> str:
 
     Error lines already covered by the printed tail are not repeated in a
     second block below it.
+
+    Parameters
+    ----------
+    lines : list[str]
+        Full contents of a build log file, one entry per line.
+
+    Returns
+    -------
+    str
+        Formatted failure report containing the last ``_LOG_TAIL_LINES``
+        lines of the log, followed by any error lines not already covered
+        by that tail.
     """
     if not lines:
         return "  Build failed.\n"
@@ -70,7 +108,18 @@ def _format_log_tail_text(lines: list[str]) -> str:
 
 
 def _terminal_width(tty: int) -> int | None:
-    """Return the terminal column width for *tty*, or None if undeterminable."""
+    """Return the terminal column width for *tty*, or None if undeterminable.
+
+    Parameters
+    ----------
+    tty : int
+        File descriptor of the terminal to query.
+
+    Returns
+    -------
+    int | None
+        Terminal width in columns, or None if it could not be determined.
+    """
     try:
         return os.get_terminal_size(tty).columns
     except OSError:
@@ -98,7 +147,14 @@ def _styled_time(elapsed: str, *, seconds: float | None = None) -> str:
 
 
 def get_active_progress() -> "BuildProgress | None":
-    """Return the currently active build progress context, if any."""
+    """Return the currently active build progress context, if any.
+
+    Returns
+    -------
+    BuildProgress | None
+        The currently active build progress context, or None if no build is
+        in progress.
+    """
     return _active_progress
 
 
@@ -107,6 +163,11 @@ def set_status(text: str) -> None:
 
     No-ops when no ``BuildProgress`` context is active, so callers need no
     conditional boilerplate.
+
+    Parameters
+    ----------
+    text : str
+        Status suffix to display after the spinner's elapsed time.
     """
     progress = get_active_progress()
     if progress is not None:
@@ -117,6 +178,11 @@ def note(text: str) -> None:
     """Print a persistent line above the active build spinner.
 
     Falls back to stderr when no build progress context is active.
+
+    Parameters
+    ----------
+    text : str
+        Line of text to print.
     """
     progress = get_active_progress()
     if progress is not None:
@@ -126,12 +192,26 @@ def note(text: str) -> None:
 
 
 def get_last_failure_tail() -> str | None:
-    """Return the failure log tail stashed by the most recent noninteractive build, if any."""
+    """Return the failure log tail stashed by the most recent noninteractive build, if any.
+
+    Returns
+    -------
+    str | None
+        Formatted failure log tail, or None if no noninteractive build has
+        failed.
+    """
     return _last_failure_tail
 
 
 def get_last_push_message() -> str | None:
-    """Return the S3 push confirmation stashed by the most recent noninteractive install, if any."""
+    """Return the S3 push confirmation stashed by the most recent noninteractive install, if any.
+
+    Returns
+    -------
+    str | None
+        The stashed S3 push confirmation message, or None if none is
+        stashed.
+    """
     return _last_push_message
 
 
@@ -143,6 +223,11 @@ def set_last_push_message(message: str | None) -> None:
     direct write from the worker races with it, corrupting the display. The
     worker calls this instead, then returns the message so the parent can
     print it after redrawing.
+
+    Parameters
+    ----------
+    message : str | None
+        S3 push confirmation text to stash, or None to clear it.
     """
     global _last_push_message  # noqa: PLW0603
     _last_push_message = message
@@ -154,6 +239,24 @@ def format_completion_line(name: str, version: str, *, failed: bool, elapsed_sec
     Mirrors the line BuildProgress._stop_capture writes on the tty, so both
     single-app interactive builds and the parallel-scheduler parent produce
     identical output.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version. A 40-character hex string is shown truncated
+        to 7 characters.
+    failed : bool
+        True if the build failed, shown as an ``x`` marker instead of ``OK``.
+    elapsed_secs : float
+        Build duration in seconds.
+
+    Returns
+    -------
+    str
+        Formatted completion line, including a leading carriage return and
+        line-clear escape and a trailing newline.
     """
     version_display = version
     if len(version_display) == 40 and all(c in "0123456789abcdef" for c in version_display):
@@ -173,7 +276,13 @@ def format_completion_line(name: str, version: str, *, failed: bool, elapsed_sec
 
 
 def _history_path() -> str:
-    """Return path to the build-times JSON file under user cache."""
+    """Return path to the build-times JSON file under user cache.
+
+    Returns
+    -------
+    str
+        Absolute path to the build-times history JSON file.
+    """
     from koopa.xdg import xdg_cache_home
 
     return os.path.join(xdg_cache_home(), "koopa", _HISTORY_FILENAME)
@@ -187,6 +296,16 @@ def build_log_path(name: str) -> str:
       ``${XDG_CACHE_HOME}/koopa/logs/<name>.log``
     The file is overwritten on each install run and is kept even on failure so
     a failed or hung build's output is inspectable afterward.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+
+    Returns
+    -------
+    str
+        Absolute path to the build log file for *name*.
     """
     from koopa.xdg import xdg_cache_home
 
@@ -194,7 +313,14 @@ def build_log_path(name: str) -> str:
 
 
 def _load_history() -> dict[str, float]:
-    """Load build timing history from disk."""
+    """Load build timing history from disk.
+
+    Returns
+    -------
+    dict[str, float]
+        Mapping of application name to the last recorded build duration in
+        seconds. Empty if no history file exists or it cannot be read.
+    """
     path = _history_path()
     if not os.path.isfile(path):
         return {}
@@ -206,7 +332,13 @@ def _load_history() -> dict[str, float]:
 
 
 def _save_history(history: dict[str, float]) -> None:
-    """Save build timing history to disk."""
+    """Save build timing history to disk.
+
+    Parameters
+    ----------
+    history : dict[str, float]
+        Mapping of application name to build duration in seconds.
+    """
     path = _history_path()
     os.makedirs(os.path.dirname(path), exist_ok=True)
     try:
@@ -217,7 +349,19 @@ def _save_history(history: dict[str, float]) -> None:
 
 
 def _fmt_duration(seconds: float) -> str:
-    """Format seconds as a human-readable duration string."""
+    """Format seconds as a human-readable duration string.
+
+    Parameters
+    ----------
+    seconds : float
+        Duration in seconds.
+
+    Returns
+    -------
+    str
+        Duration formatted as seconds, minutes and seconds, or hours and
+        minutes, depending on magnitude.
+    """
     seconds = int(seconds)
     if seconds < 60:
         return f"{seconds}s"
@@ -236,6 +380,21 @@ class BuildProgress:
     any lines containing "error" (case-insensitive) are surfaced first, followed
     by the last 100 lines of the log.  When ``verbose`` is True, output streams
     through to the terminal as before.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str, optional
+        Application version.
+    noninteractive : bool, optional
+        True to suppress the spinner and tty output, capturing to the log
+        file only.
+    quiet : bool, optional
+        True to skip output capture and the spinner entirely.
+    verbose : bool, optional
+        True to stream output straight through to the terminal instead of
+        capturing it to a log file.
     """
 
     def __init__(
@@ -269,23 +428,49 @@ class BuildProgress:
 
     @property
     def saved_log_path(self) -> str | None:
-        """Path to the preserved build log after a successful build."""
+        """Path to the preserved build log after a successful build.
+
+        Returns
+        -------
+        str | None
+            Absolute path to the preserved log file, or None if no build has
+            completed yet.
+        """
         return self._saved_log_path
 
     @property
     def capturing(self) -> bool:
-        """True when output is being captured to a log file."""
+        """True when output is being captured to a log file.
+
+        Returns
+        -------
+        bool
+            True if output is currently being captured to a log file.
+        """
         return self._log_file is not None
 
     @property
     def log_path(self) -> str | None:
-        """Return path to the build log file, if capturing."""
+        """Return path to the build log file, if capturing.
+
+        Returns
+        -------
+        str | None
+            Absolute path to the active build log file, or None if output is
+            not being captured.
+        """
         if self._log_file is not None:
             return self._log_file.name
         return None
 
     def __enter__(self) -> Self:
-        """Enter the build progress context."""
+        """Enter the build progress context.
+
+        Returns
+        -------
+        Self
+            This build progress instance.
+        """
         global _active_progress  # noqa: PLW0603
         _active_progress = self
         self._start = time.monotonic()
@@ -294,7 +479,17 @@ class BuildProgress:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
-        """Exit the build progress context."""
+        """Exit the build progress context.
+
+        Parameters
+        ----------
+        exc_type : type[BaseException] | None
+            Exception class raised in the context, if any.
+        exc_val : BaseException | None
+            Exception instance raised in the context, if any.
+        exc_tb : TracebackType | None
+            Traceback of the exception raised in the context, if any.
+        """
         global _active_progress  # noqa: PLW0603
         _active_progress = None
         self._elapsed = time.monotonic() - self._start
@@ -305,14 +500,28 @@ class BuildProgress:
 
     @property
     def elapsed(self) -> float:
-        """Return elapsed seconds since the build started."""
+        """Return elapsed seconds since the build started.
+
+        Returns
+        -------
+        float
+            Elapsed seconds since the build started, or 0.0 if it has not
+            started yet.
+        """
         if self._start == 0.0:
             return 0.0
         return time.monotonic() - self._start
 
     @property
     def elapsed_formatted(self) -> str:
-        """Return elapsed time as a human-readable string."""
+        """Return elapsed time as a human-readable string.
+
+        Returns
+        -------
+        str
+            Elapsed build time formatted as a human-readable duration
+            string.
+        """
         return _fmt_duration(self._elapsed if self._elapsed else self.elapsed)
 
     def _styled_label(self) -> str:
@@ -334,6 +543,17 @@ class BuildProgress:
 
         When capturing, this pauses the spinner so update_steps can
         take over the tty line.
+
+        Parameters
+        ----------
+        total : int
+            Total number of steps expected.
+
+        Returns
+        -------
+        bool
+            True if step mode was activated, False if *total* was not
+            positive.
         """
         if total <= 0:
             return False
@@ -348,6 +568,13 @@ class BuildProgress:
 
         In verbose mode writes to stderr. In capture mode writes to the
         saved tty fd so the progress line replaces the spinner.
+
+        Parameters
+        ----------
+        current : int
+            Number of steps completed so far.
+        total : int
+            Total number of steps expected.
         """
         self._current_step = current
         self._total_steps = total
@@ -386,6 +613,11 @@ class BuildProgress:
         Picked up by the spinner thread on its next 0.2s tick; this method
         performs no write of its own, so callers cannot race ahead of the
         spinner.
+
+        Parameters
+        ----------
+        text : str
+            Status suffix to display after the spinner's elapsed time.
         """
         self._status = text
 
@@ -397,6 +629,11 @@ class BuildProgress:
         not capturing (verbose/quiet) or noninteractive, falls through to
         stderr, which already targets the right destination (the terminal or
         the redirected log file).
+
+        Parameters
+        ----------
+        text : str
+            Line of text to print.
         """
         if self.capturing and self._tty_fd >= 0:
             line = f"\r\033[K   {text}\n"
@@ -436,7 +673,14 @@ class BuildProgress:
         self._spinner_thread.start()
 
     def _stop_capture(self, *, failed: bool) -> None:
-        """Restore fds, stop spinner, optionally dump log tail."""
+        """Restore fds, stop spinner, optionally dump log tail.
+
+        Parameters
+        ----------
+        failed : bool
+            True if the build failed, controlling whether a completion line
+            and log tail are written.
+        """
         global _last_failure_tail  # noqa: PLW0603
         self._spinner_stop.set()
         if self._spinner_thread is not None:
@@ -505,6 +749,19 @@ class BuildProgress:
 
         Walks the string, copying escape sequences through untouched while
         counting only printable characters against *width*.
+
+        Parameters
+        ----------
+        line : str
+            Line to truncate, possibly containing ANSI escape sequences.
+        width : int
+            Maximum number of printable columns to keep.
+
+        Returns
+        -------
+        str
+            *line* truncated to *width* printable columns, with ANSI escape
+            sequences preserved in full.
         """
         out: list[str] = []
         visible = 0
@@ -525,7 +782,14 @@ class BuildProgress:
         return "".join(out)
 
     def _format_log_tail(self) -> str:
-        """Return error lines and the last N lines of the build log as a string."""
+        """Return error lines and the last N lines of the build log as a string.
+
+        Returns
+        -------
+        str
+            Formatted failure report, or a generic failure message if the
+            log file is unavailable or unreadable.
+        """
         if self._log_file is None:
             return "  Build failed.\n"
         try:
@@ -536,7 +800,13 @@ class BuildProgress:
         return _format_log_tail_text(lines)
 
     def _dump_log_tail(self, tty: int) -> None:
-        """Print error lines and the last N lines of the build log to the tty."""
+        """Print error lines and the last N lines of the build log to the tty.
+
+        Parameters
+        ----------
+        tty : int
+            File descriptor of the terminal to write to.
+        """
         os.write(tty, self._format_log_tail().encode())
 
     def _record_duration(self) -> None:

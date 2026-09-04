@@ -130,6 +130,11 @@ def safe_build_env() -> dict[str, str]:
     build tool's cache/home directory (e.g. ``CARGO_HOME``, ``GOPATH``)
     should set that key on the returned dict afterward, same as they
     previously did on a raw ``os.environ.copy()``.
+
+    Returns
+    -------
+    dict[str, str]
+        Environment variables safe to pass to build subprocesses.
     """
     return {
         k: v
@@ -145,6 +150,17 @@ def _decode_direnv_diff(diff: str) -> tuple[dict[str, Any], dict[str, Any]] | No
     JSON '{"p": <values before the .envrc ran>, "n": <values after>}'. Returns
     None on any malformed input -- this decodes data from an external process,
     not koopa's own state, so a parse failure must never raise.
+
+    Parameters
+    ----------
+    diff : str
+        Raw 'DIRENV_DIFF' environment variable value.
+
+    Returns
+    -------
+    tuple[dict[str, Any], dict[str, Any]] | None
+        Tuple of (values before the '.envrc' ran, values after), or None if
+        'diff' could not be decoded.
     """
     try:
         raw = base64.urlsafe_b64decode(diff + "=" * (-len(diff) % 4))
@@ -179,6 +195,11 @@ def revert_direnv_env() -> list[str]:
     never lists itself there), but after the first call every diffed key
     already matches its pre-'.envrc' value, so a second call (e.g. after this
     process re-execs itself) finds nothing left to change and returns [].
+
+    Returns
+    -------
+    list[str]
+        Names of environment variables changed (restored or removed).
     """
     diff = os.environ.get("DIRENV_DIFF")
     if not diff:
@@ -278,32 +299,68 @@ def cpu_count() -> int:
 
 
 def group_id() -> int:
-    """Return effective group ID."""
+    """Return effective group ID.
+
+    Returns
+    -------
+    int
+        Effective group ID.
+    """
     return os.getegid()
 
 
 def group_name() -> str:
-    """Return effective group name."""
+    """Return effective group name.
+
+    Returns
+    -------
+    str
+        Effective group name.
+    """
     return grp.getgrgid(os.getegid()).gr_name
 
 
 def user_id() -> int:
-    """Return effective user ID."""
+    """Return effective user ID.
+
+    Returns
+    -------
+    int
+        Effective user ID.
+    """
     return os.geteuid()
 
 
 def user_name() -> str:
-    """Return effective user name."""
+    """Return effective user name.
+
+    Returns
+    -------
+    str
+        Effective user name.
+    """
     return pwd.getpwuid(os.geteuid()).pw_name
 
 
 def is_linux() -> bool:
-    """Check if running on Linux."""
+    """Check if running on Linux.
+
+    Returns
+    -------
+    bool
+        True if running on Linux.
+    """
     return platform.system() == "Linux"
 
 
 def is_macos() -> bool:
-    """Check if running on macOS."""
+    """Check if running on macOS.
+
+    Returns
+    -------
+    bool
+        True if running on macOS.
+    """
     return platform.system() == "Darwin"
 
 
@@ -314,7 +371,13 @@ _PORTAL_COLOR_SCHEME_RE = re.compile(r"uint32\s+(\d+)")
 
 
 def is_windows() -> bool:
-    """Check if running on Windows."""
+    """Check if running on Windows.
+
+    Returns
+    -------
+    bool
+        True if running on Windows.
+    """
     return platform.system() == "Windows"
 
 
@@ -323,6 +386,11 @@ def os_appearance_mode() -> str:
 
     Distinct from ``color_mode()`` which returns terminal color depth.
     Reads directly from the OS at call time — never trusts inherited env.
+
+    Returns
+    -------
+    str
+        'dark' or 'light'.
     """
     if platform.system() == "Darwin":
         # `defaults read` exits non-zero when the key is absent (light mode).
@@ -364,6 +432,11 @@ def _linux_has_graphical_session() -> bool:
     makes that cost avoidable; probing D-Bus availability is not sufficient,
     since the bus being reachable says nothing about whether a portal will
     ever answer.
+
+    Returns
+    -------
+    bool
+        True when a graphical desktop session appears to be present.
     """
     if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
         return True
@@ -373,7 +446,13 @@ def _linux_has_graphical_session() -> bool:
 
 
 def _os_appearance_mode_linux() -> str:
-    """Return 'dark' or 'light' on Linux via XDG portal or gsettings fallback."""
+    """Return 'dark' or 'light' on Linux via XDG portal or gsettings fallback.
+
+    Returns
+    -------
+    str
+        'dark' or 'light'.
+    """
     if _linux_has_graphical_session():
         # Primary: XDG desktop portal (freedesktop standard; works on GNOME
         # and KDE). color-scheme: 0 = no-preference, 1 = prefer-dark,
@@ -488,12 +567,24 @@ def check_platform() -> None:
 
 
 def is_root() -> bool:
-    """Check if effective user is root."""
+    """Check if effective user is root.
+
+    Returns
+    -------
+    bool
+        True if the effective user ID is 0 (root).
+    """
     return os.geteuid() == 0
 
 
 def is_owner() -> bool:
-    """Check if current user is the koopa installation owner."""
+    """Check if current user is the koopa installation owner.
+
+    Returns
+    -------
+    bool
+        True if the current user owns the koopa installation prefix.
+    """
     from koopa.prefix import koopa_prefix
 
     try:
@@ -509,6 +600,11 @@ def is_admin() -> bool:
     On Linux, checks if the user can run sudo (membership in 'sudo' or
     'wheel' groups, which is the standard convention on Debian/Ubuntu and
     Fedora/RHEL respectively).
+
+    Returns
+    -------
+    bool
+        True if the user has admin privileges.
     """
     if is_root():
         return True
@@ -529,7 +625,14 @@ def is_admin() -> bool:
 
 
 def has_sudo() -> bool:
-    """Check whether the current user has sudo access."""
+    """Check whether the current user has sudo access.
+
+    Returns
+    -------
+    bool
+        True if the current user has passwordless or authenticated sudo
+        access.
+    """
     if is_root():
         return True
     if shutil.which("sudo") is None:
@@ -558,7 +661,13 @@ _SLURM_CONF_PATHS = ("/etc/slurm/slurm.conf", "/etc/slurm-llnl/slurm.conf")
 
 
 def is_slurm_submit_host() -> bool:
-    """Check whether this host can submit Slurm jobs."""
+    """Check whether this host can submit Slurm jobs.
+
+    Returns
+    -------
+    bool
+        True if this host can submit Slurm jobs.
+    """
     if any(shutil.which(cmd) for cmd in _SLURM_SUBMIT_COMMANDS):
         return True
     slurm_conf = os.environ.get("SLURM_CONF", "")
@@ -568,7 +677,13 @@ def is_slurm_submit_host() -> bool:
 
 
 def in_slurm_allocation() -> bool:
-    """Check whether this process runs inside a Slurm job allocation."""
+    """Check whether this process runs inside a Slurm job allocation.
+
+    Returns
+    -------
+    bool
+        True if this process runs inside a Slurm job allocation.
+    """
     for name in ("SLURM_JOB_ID", "SLURM_JOBID"):
         value = os.environ.get(name, "")
         if value.isdigit() and int(value) > 0:
@@ -577,7 +692,18 @@ def in_slurm_allocation() -> bool:
 
 
 def is_installed(name: str) -> bool:
-    """Check if a program is installed."""
+    """Check if a program is installed.
+
+    Parameters
+    ----------
+    name : str
+        Program name to look up on PATH.
+
+    Returns
+    -------
+    bool
+        True if the program is installed and resolvable on PATH.
+    """
     return shutil.which(name) is not None
 
 
@@ -622,90 +748,206 @@ def find_system_python(version: str) -> str | None:
 
 
 def is_interactive() -> bool:
-    """Check if running in an interactive session."""
+    """Check if running in an interactive session.
+
+    Returns
+    -------
+    bool
+        True if running in an interactive session.
+    """
     return bool(hasattr(sys, "ps1") or sys.flags.interactive)
 
 
 def is_alpine() -> bool:
-    """Check if running on Alpine Linux."""
+    """Check if running on Alpine Linux.
+
+    Returns
+    -------
+    bool
+        True if running on Alpine Linux.
+    """
     return _os_id() == "alpine"
 
 
 def is_amzn() -> bool:
-    """Check if running on Amazon Linux."""
+    """Check if running on Amazon Linux.
+
+    Returns
+    -------
+    bool
+        True if running on Amazon Linux.
+    """
     return _os_id() == "amzn"
 
 
 def is_arch() -> bool:
-    """Check if running on Arch Linux."""
+    """Check if running on Arch Linux.
+
+    Returns
+    -------
+    bool
+        True if running on Arch Linux.
+    """
     return _os_id() == "arch"
 
 
 def is_centos() -> bool:
-    """Check if running on CentOS."""
+    """Check if running on CentOS.
+
+    Returns
+    -------
+    bool
+        True if running on CentOS.
+    """
     return _os_id() == "centos"
 
 
 def is_debian() -> bool:
-    """Check if running on Debian."""
+    """Check if running on Debian.
+
+    Returns
+    -------
+    bool
+        True if running on Debian.
+    """
     return _os_id() == "debian"
 
 
 def is_fedora() -> bool:
-    """Check if running on Fedora."""
+    """Check if running on Fedora.
+
+    Returns
+    -------
+    bool
+        True if running on Fedora.
+    """
     return _os_id() == "fedora"
 
 
 def is_opensuse() -> bool:
-    """Check if running on openSUSE."""
+    """Check if running on openSUSE.
+
+    Returns
+    -------
+    bool
+        True if running on openSUSE.
+    """
     return _os_id() in ("opensuse-leap", "opensuse-tumbleweed", "opensuse")
 
 
 def is_rhel() -> bool:
-    """Check if running on RHEL."""
+    """Check if running on RHEL.
+
+    Returns
+    -------
+    bool
+        True if running on RHEL.
+    """
     return _os_id() == "rhel"
 
 
 def is_ubuntu() -> bool:
-    """Check if running on Ubuntu."""
+    """Check if running on Ubuntu.
+
+    Returns
+    -------
+    bool
+        True if running on Ubuntu.
+    """
     return _os_id() == "ubuntu"
 
 
 def is_debian_like() -> bool:
-    """Check if running on a Debian-like distro."""
+    """Check if running on a Debian-like distro.
+
+    Returns
+    -------
+    bool
+        True if running on Debian or a distro whose ID_LIKE includes
+        'debian'.
+    """
     like = _os_id_like()
     return "debian" in like or is_debian()
 
 
 def is_fedora_like() -> bool:
-    """Check if running on a Fedora-like distro."""
+    """Check if running on a Fedora-like distro.
+
+    Returns
+    -------
+    bool
+        True if running on Fedora, RHEL, or a distro whose ID_LIKE includes
+        'fedora' or 'rhel'.
+    """
     like = _os_id_like()
     return "fedora" in like or "rhel" in like or is_fedora() or is_rhel()
 
 
 def is_os(os_id: str) -> bool:
-    """Check if running on a specific OS."""
+    """Check if running on a specific OS.
+
+    Parameters
+    ----------
+    os_id : str
+        OS identifier to compare against (e.g. 'ubuntu', 'macos').
+
+    Returns
+    -------
+    bool
+        True if the current OS ID matches 'os_id'.
+    """
     return _os_id() == os_id
 
 
 def is_os_like(os_id: str) -> bool:
-    """Check if running on a specific OS family."""
+    """Check if running on a specific OS family.
+
+    Parameters
+    ----------
+    os_id : str
+        OS family identifier to look for in the current OS's ID_LIKE
+        string (e.g. 'debian', 'rhel').
+
+    Returns
+    -------
+    bool
+        True if 'os_id' appears in the current OS's ID_LIKE string.
+    """
     return os_id in _os_id_like()
 
 
 def get_os_id() -> str:
-    """Get the OS identifier string."""
+    """Get the OS identifier string.
+
+    Returns
+    -------
+    str
+        OS identifier (e.g. 'ubuntu', 'macos').
+    """
     return _os_id()
 
 
 def get_os_id_like() -> str:
-    """Get the OS ID_LIKE string (e.g. 'debian' for Ubuntu)."""
+    """Get the OS ID_LIKE string (e.g. 'debian' for Ubuntu).
+
+    Returns
+    -------
+    str
+        OS ID_LIKE string, or an empty string if not applicable.
+    """
     return _os_id_like()
 
 
 @lru_cache(maxsize=1)
 def _os_id() -> str:
-    """Get OS ID from /etc/os-release."""
+    """Get OS ID from /etc/os-release.
+
+    Returns
+    -------
+    str
+        OS identifier (e.g. 'ubuntu', 'macos'), or 'unknown' if
+        undetectable.
+    """
     if is_macos():
         return "macos"
     release = _read_os_release()
@@ -714,7 +956,13 @@ def _os_id() -> str:
 
 @lru_cache(maxsize=1)
 def _os_id_like() -> str:
-    """Get OS ID_LIKE from /etc/os-release."""
+    """Get OS ID_LIKE from /etc/os-release.
+
+    Returns
+    -------
+    str
+        OS ID_LIKE string, or an empty string if not present.
+    """
     if is_macos():
         return "macos"
     release = _read_os_release()
@@ -723,7 +971,14 @@ def _os_id_like() -> str:
 
 @lru_cache(maxsize=1)
 def _read_os_release() -> dict[str, str]:
-    """Parse /etc/os-release."""
+    """Parse /etc/os-release.
+
+    Returns
+    -------
+    dict[str, str]
+        Key-value pairs parsed from '/etc/os-release' or
+        '/usr/lib/os-release', or an empty dict if neither file exists.
+    """
     result: dict[str, str] = {}
     for path in ("/etc/os-release", "/usr/lib/os-release"):
         if os.path.isfile(path):
@@ -741,7 +996,8 @@ def os_slug() -> str:
     Returns
     -------
     str
-        e.g. 'macos-15', 'ubuntu-24', 'fedora-40'.
+        Machine-readable OS version slug, e.g. 'macos-15', 'ubuntu-24',
+        'fedora-40'.
     """
     if is_macos():
         ver = platform.mac_ver()[0]
@@ -755,13 +1011,25 @@ def os_slug() -> str:
 
 
 def os_id() -> str:
-    """Platform and architecture-specific identifier (e.g. 'macos-arm64')."""
+    """Platform and architecture-specific identifier (e.g. 'macos-arm64').
+
+    Returns
+    -------
+    str
+        Platform and architecture-specific identifier.
+    """
     _platform = "macos" if is_macos() else "linux"
     return f"{_platform}-{arch2()}"
 
 
 def logged_in_users() -> list[str]:
-    """Get list of logged-in users."""
+    """Get list of logged-in users.
+
+    Returns
+    -------
+    list[str]
+        Sorted, deduplicated usernames of logged-in users.
+    """
     try:
         result = subprocess.run(
             ["who"],
@@ -780,37 +1048,89 @@ def logged_in_users() -> list[str]:
 
 
 def check_multiple_users() -> bool:
-    """Check if multiple users are logged in."""
+    """Check if multiple users are logged in.
+
+    Returns
+    -------
+    bool
+        True if more than one user is logged in.
+    """
     return len(logged_in_users()) > 1
 
 
 def macos_os_version() -> str:
-    """Get macOS version string."""
+    """Get macOS version string.
+
+    Returns
+    -------
+    str
+        MacOS version string, or an empty string when not running on
+        macOS.
+    """
     if not is_macos():
         return ""
     return platform.mac_ver()[0]
 
 
 def major_version(version: str) -> str:
-    """Extract major version."""
+    """Extract major version.
+
+    Parameters
+    ----------
+    version : str
+        Version string, e.g. '1.2.3'.
+
+    Returns
+    -------
+    str
+        Major version component, e.g. '1'.
+    """
     parts = version.split(".")
     return parts[0] if parts else version
 
 
 def major_minor_version(version: str) -> str:
-    """Extract major.minor version."""
+    """Extract major.minor version.
+
+    Parameters
+    ----------
+    version : str
+        Version string, e.g. '1.2.3'.
+
+    Returns
+    -------
+    str
+        Major.minor version component, e.g. '1.2'.
+    """
     parts = version.split(".")
     return ".".join(parts[:2]) if len(parts) >= 2 else version
 
 
 def major_minor_patch_version(version: str) -> str:
-    """Extract major.minor.patch version."""
+    """Extract major.minor.patch version.
+
+    Parameters
+    ----------
+    version : str
+        Version string, e.g. '1.2.3.4'.
+
+    Returns
+    -------
+    str
+        Major.minor.patch version component, e.g. '1.2.3'.
+    """
     parts = version.split(".")
     return ".".join(parts[:3]) if len(parts) >= 3 else version
 
 
 def mem_gb() -> float:
-    """Get total memory in GB."""
+    """Get total memory in GB.
+
+    Returns
+    -------
+    float
+        Total system memory in gigabytes, or 0.0 if undetectable.
+    """
     if is_macos():
         try:
             result = subprocess.run(
@@ -834,7 +1154,13 @@ def mem_gb() -> float:
 
 
 def color_mode() -> str:
-    """Detect terminal color mode."""
+    """Detect terminal color mode.
+
+    Returns
+    -------
+    str
+        'truecolor', '256', '8', or 'none'.
+    """
     colorterm = os.environ.get("COLORTERM", "").lower()
     if colorterm in ("truecolor", "24bit"):
         return "truecolor"
@@ -847,7 +1173,13 @@ def color_mode() -> str:
 
 
 def today() -> str:
-    """Get today's date in ISO format."""
+    """Get today's date in ISO format.
+
+    Returns
+    -------
+    str
+        Today's date as 'YYYY-MM-DD' in UTC.
+    """
     return datetime.now(tz=UTC).strftime("%Y-%m-%d")
 
 

@@ -28,7 +28,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install zsh."""
+    """Install zsh.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     env = activate_app_deps()
     download_extract_cd()
     if version < "5.9.1":
@@ -102,7 +115,15 @@ def main(
 
 
 def _set_mdd_load(mdd_path: str, value: str) -> None:
-    """Set the load= field in a zsh .mdd module definition file."""
+    """Set the load= field in a zsh .mdd module definition file.
+
+    Parameters
+    ----------
+    mdd_path : str
+        Path to the ``.mdd`` module definition file.
+    value : str
+        New value for the ``load=`` field, e.g. ``"yes"`` or ``"no"``.
+    """
     if not os.path.isfile(mdd_path):
         msg = f"Module definition file not found: '{mdd_path}'"
         raise RuntimeError(msg)
@@ -114,7 +135,13 @@ def _set_mdd_load(mdd_path: str, value: str) -> None:
 
 
 def _verify_mathfunc_installed(prefix: str) -> None:
-    """Abort if the mathfunc module was not installed."""
+    """Abort if the mathfunc module was not installed.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
+    """
     pattern = os.path.join(prefix, "lib", "zsh", "**", "mathfunc*")
     matches = glob.glob(pattern, recursive=True)
     if not matches:

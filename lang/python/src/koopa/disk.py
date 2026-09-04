@@ -11,37 +11,104 @@ import shutil
 
 
 def disk_gb_free(path: str = "/") -> float:
-    """Get free disk space in GB."""
+    """Get free disk space in GB.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check.
+
+    Returns
+    -------
+    float
+        Free disk space in gigabytes.
+    """
     usage = shutil.disk_usage(path)
     return usage.free / (1024**3)
 
 
 def disk_gb_total(path: str = "/") -> float:
-    """Get total disk space in GB."""
+    """Get total disk space in GB.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check.
+
+    Returns
+    -------
+    float
+        Total disk space in gigabytes.
+    """
     usage = shutil.disk_usage(path)
     return usage.total / (1024**3)
 
 
 def disk_gb_used(path: str = "/") -> float:
-    """Get used disk space in GB."""
+    """Get used disk space in GB.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check.
+
+    Returns
+    -------
+    float
+        Used disk space in gigabytes.
+    """
     usage = shutil.disk_usage(path)
     return usage.used / (1024**3)
 
 
 def disk_pct_free(path: str = "/") -> float:
-    """Get free disk space as a percentage."""
+    """Get free disk space as a percentage.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check.
+
+    Returns
+    -------
+    float
+        Free disk space as a percentage of total capacity.
+    """
     usage = shutil.disk_usage(path)
     return (usage.free / usage.total) * 100
 
 
 def disk_pct_used(path: str = "/") -> float:
-    """Get used disk space as a percentage."""
+    """Get used disk space as a percentage.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check.
+
+    Returns
+    -------
+    float
+        Used disk space as a percentage of total capacity.
+    """
     usage = shutil.disk_usage(path)
     return (usage.used / usage.total) * 100
 
 
 def df2(path: str = "/") -> dict[str, str]:
-    """Get disk usage summary as a dictionary."""
+    """Get disk usage summary as a dictionary.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check.
+
+    Returns
+    -------
+    dict[str, str]
+        Summary with keys ``path``, ``total_gb``, ``used_gb``, ``free_gb``,
+        and ``pct_used``.
+    """
     usage = shutil.disk_usage(path)
     return {
         "path": path,
@@ -58,7 +125,22 @@ def find_large_files(
     min_size_mb: float = 100,
     max_results: int = 50,
 ) -> list[tuple[str, float]]:
-    """Find files larger than a threshold (in MB)."""
+    """Find files larger than a threshold (in MB).
+
+    Parameters
+    ----------
+    dir_path : str
+        Directory to search recursively.
+    min_size_mb : float, optional
+        Minimum file size in megabytes to include in the results.
+    max_results : int, optional
+        Maximum number of files to return.
+
+    Returns
+    -------
+    list[tuple[str, float]]
+        Pairs of file path and size in megabytes, sorted largest first.
+    """
     large: list[tuple[str, float]] = []
     min_bytes = min_size_mb * 1024 * 1024
     for root, _dirs, files in os.walk(dir_path):
@@ -78,7 +160,22 @@ def find_large_dirs(
     min_size_mb: float = 100,
     max_depth: int | None = None,
 ) -> list[tuple[str, float]]:
-    """Find directories larger than a threshold (in MB)."""
+    """Find directories larger than a threshold (in MB).
+
+    Parameters
+    ----------
+    dir_path : str
+        Directory to search recursively.
+    min_size_mb : float, optional
+        Minimum directory size in megabytes to include in the results.
+    max_depth : int | None, optional
+        Maximum depth below `dir_path` to descend into. Unlimited if None.
+
+    Returns
+    -------
+    list[tuple[str, float]]
+        Pairs of directory path and size in megabytes, sorted largest first.
+    """
     dir_sizes: dict[str, float] = {}
     for root, _dirs, files in os.walk(dir_path):
         if max_depth is not None:

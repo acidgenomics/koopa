@@ -40,7 +40,13 @@ _ENVIRON_ALLOWLIST = (
 
 
 def _capture_build_environ() -> dict[str, str]:
-    """Capture a fixed allowlist of build-diagnostic variables for info.json."""
+    """Capture a fixed allowlist of build-diagnostic variables for info.json.
+
+    Returns
+    -------
+    dict[str, str]
+        Allowlisted environment variable names mapped to their current values.
+    """
     return {k: os.environ[k] for k in _ENVIRON_ALLOWLIST if k in os.environ}
 
 
@@ -49,6 +55,19 @@ def _installed_dep_state(dep: str, fallback_entry: dict) -> tuple[str, int]:
 
     Falls back to *fallback_entry* (the app.json entry) when the dep isn't
     linked in opt/ yet, so recording never fails outright.
+
+    Parameters
+    ----------
+    dep : str
+        Dependency application name.
+    fallback_entry : dict
+        The dependency's app.json entry, used when the dependency isn't
+        linked under opt/ yet.
+
+    Returns
+    -------
+    tuple[str, int]
+        The dependency's installed version and revision number.
     """
     opt_link = os.path.join(opt_prefix(), dep)
     if os.path.islink(opt_link):
@@ -68,7 +87,17 @@ def _installed_dep_state(dep: str, fallback_entry: dict) -> tuple[str, int]:
 
 
 def write_install_info(output_file: str, name: str, version: str) -> None:
-    """Write install metadata JSON file."""
+    """Write install metadata JSON file.
+
+    Parameters
+    ----------
+    output_file : str
+        Path to write the info.json file to.
+    name : str
+        Application name.
+    version : str
+        Application version.
+    """
     json_data = import_app_json()
     sys_dict = {"os_id": os_id()}
     build_deps = []
@@ -143,16 +172,17 @@ def scrub_install_info(
 
     Parameters
     ----------
-    names
+    names : list[str] | None, optional
         App names to scrub. ``None`` scans every app under `app_prefix()`.
-    dry_run
+    dry_run : bool, optional
         Report what would change without writing anything.
 
     Returns
     -------
-        (info.json path, removed key names) for every file that has (or, under
-        `dry_run`, would have) non-allowlisted keys removed. Key *names* only --
-        never values.
+    list[tuple[str, list[str]]]
+        A (info.json path, removed key names) pair for every file that has,
+        or under `dry_run` would have, non-allowlisted keys removed. Only key
+        names are recorded, never values.
     """
     from koopa.prefix import app_prefix
 

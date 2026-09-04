@@ -21,7 +21,27 @@ def _docker(
     capture_output: bool = False,
     text: bool = False,
 ) -> subprocess.CompletedProcess:
-    """Run a docker command."""
+    """Run a docker command.
+
+    Parameters
+    ----------
+    *args : str
+        Arguments to pass to the ``docker`` command.
+    check : bool, optional
+        Raise ``CalledProcessError`` if the command exits with a non-zero
+        status.
+    capture_output : bool, optional
+        Capture stdout and stderr instead of inheriting the parent process
+        streams.
+    text : bool, optional
+        Decode stdout and stderr as text instead of bytes.
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        The completed docker process, including its return code and any
+        captured output.
+    """
     import shutil
 
     docker = shutil.which("docker")
@@ -49,7 +69,20 @@ def build(
     memory: str = "",
     no_push: bool = False,
 ) -> None:
-    """Build and push a multi-architecture Docker image using buildx."""
+    """Build and push a multi-architecture Docker image using buildx.
+
+    Parameters
+    ----------
+    local : str
+        Path to the local directory containing the Dockerfile to build.
+    remote : str
+        Remote image URL to tag and push the build to.
+    memory : str, optional
+        Memory limit to pass to buildx (e.g. ``"4g"``); applied to both
+        ``--memory`` and ``--memory-swap``.
+    no_push : bool, optional
+        Build the image without pushing it to the remote registry.
+    """
     local = abspath(expanduser(local))
     if not isdir(local):
         msg = f"Local directory does not exist: '{local}'."
@@ -134,7 +167,13 @@ def build(
 
 
 def _authenticate(server: str) -> None:
-    """Authenticate with a Docker registry."""
+    """Authenticate with a Docker registry.
+
+    Parameters
+    ----------
+    server : str
+        Registry hostname to authenticate against.
+    """
     if _ECR_PRIVATE_RE.match(server):
         from koopa.aws import aws_ecr_login_private
 
@@ -149,7 +188,17 @@ def _authenticate(server: str) -> None:
 
 
 def build_all_tags(local: str, remote: str) -> None:
-    """Build all Docker tags from subdirectories."""
+    """Build all Docker tags from subdirectories.
+
+    Parameters
+    ----------
+    local : str
+        Path to the local directory whose subdirectories each represent a
+        tag to build.
+    remote : str
+        Remote image URL (without tag) to build and push each subdirectory
+        tag to.
+    """
     local = abspath(expanduser(local))
     if not isdir(local):
         msg = f"Directory does not exist: '{local}'."
@@ -184,14 +233,37 @@ def ghcr_login() -> None:
 
 
 def ghcr_push(owner: str, image_name: str, version: str) -> None:
-    """Push an image to GitHub Container Registry."""
+    """Push an image to GitHub Container Registry.
+
+    Parameters
+    ----------
+    owner : str
+        GitHub Container Registry owner (user or organization).
+    image_name : str
+        Name of the image to push.
+    version : str
+        Tag to push the image as.
+    """
     url = f"ghcr.io/{owner}/{image_name}:{version}"
     ghcr_login()
     _docker("push", url)
 
 
 def is_build_recent(*images: str, days: int = 7) -> bool:
-    """Check if Docker images were built within N days."""
+    """Check if Docker images were built within N days.
+
+    Parameters
+    ----------
+    *images : str
+        Image references to check; each is pulled and inspected.
+    days : int, optional
+        Maximum age in days for a build to be considered recent.
+
+    Returns
+    -------
+    bool
+        True if every image was built within the given number of days.
+    """
     seconds = days * 86400
     now = datetime.now(tz=UTC)
     for image in images:
@@ -245,7 +317,14 @@ def prune_old_images() -> None:
 
 
 def remove(*patterns: str) -> None:
-    """Remove Docker images by pattern matching."""
+    """Remove Docker images by pattern matching.
+
+    Parameters
+    ----------
+    *patterns : str
+        Regular expression patterns matched against ``docker images``
+        output lines; matching images are removed.
+    """
     for pattern in patterns:
         result = _docker(
             "images",
@@ -271,7 +350,22 @@ def run(
     bash: bool = False,
     bind: bool = False,
 ) -> None:
-    """Run a Docker image interactively."""
+    """Run a Docker image interactively.
+
+    Parameters
+    ----------
+    image : str
+        Image reference to pull and run.
+    arm : bool, optional
+        Run the image under the ``linux/arm64`` platform.
+    x86 : bool, optional
+        Run the image under the ``linux/amd64`` platform.
+    bash : bool, optional
+        Launch an interactive login bash shell inside the container.
+    bind : bool, optional
+        Bind-mount the current working directory into the container at
+        ``/mnt/work`` and use it as the working directory.
+    """
     if _ECR_PRIVATE_RE.match(image):
         from koopa.aws import aws_ecr_login_private
 

@@ -188,6 +188,7 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "color-mode-audit": "Detect dark/light color-mode thrash in the sync log.",
     "conda-candidates": "Find source-built apps that are available on conda-forge or bioconda.",
     "find-ignored-bin-files": "Find files in bin/ that are ignored by git.",
+    "numpydoc": "Run the numpydoc docstring validator on the Python source tree.",
     "orphan-apps": "Find apps in app.json that no other app depends on.",
     "pyright": "Run the pyright type checker on the Python source tree.",
     "reset-revisions": "Remove the revision key from all apps in app.json.",
