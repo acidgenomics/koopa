@@ -1,23 +1,26 @@
-"""Install pyright, then verify the npm-backed engine actually starts.
+"""Install pyright, then verify the bundled engine actually starts.
 
-pyright ships on PyPI as a thin shim (the ``pyright-python`` package) that
-downloads the real type-checking engine from npm on first run. koopa's shell
-activation forces ``PYRIGHT_PYTHON_FORCE_VERSION=latest`` (see
-``lang/*/functions/activate/activate-pyright.sh``), so that npm resolve runs
-against whatever Node/npm koopa currently has on ``PATH``, on every fresh
-cache -- not just once at pin time.
+pyright ships on PyPI as a thin shim (the ``pyright-python`` package) around
+a real type-checking engine written in Node. The wheel bundles that engine at
+``pyright/dist``, and pyright-python uses the bundled copy whenever no
+version override is in effect and the resolved version equals the wheel's
+own pin -- which is always true here, since koopa never sets
+``PYRIGHT_PYTHON_FORCE_VERSION``. koopa's shell activation instead sets
+``PYRIGHT_PYTHON_IGNORE_WARNINGS=1`` (see
+``lang/*/functions/activate/activate-pyright.sh``), purely to silence a
+"new version available" nag -- it has no effect on which engine runs.
 
-A broken Node build corrupts that resolve silently. For example,
-conda-forge's ``node`` 26.8.0 packaged an upstream Node.js build that
-misreports its own version as an alpha pre-release; npm's engine check then
-prints a warning whose own version number gets mis-parsed by pyright-python
-as "the latest pyright version", and the follow-up ``npm install`` fails on
-a version that does not exist. The pip install itself still succeeds, so
-this class of breakage previously surfaced only the first time a user ran
-``pyright``, not at install time.
+Relying on the bundled engine means no npm resolve and no network call ever
+happen at pyright's own first run. Forcing a version defeats the bundle and
+makes pyright-python shell out to ``npm install`` instead. That path is
+fragile: on 2026-09-02, a corrupted Node build made npm print an engine
+warning whose own version number pyright-python mis-parsed as "the latest
+pyright version", and the follow-up ``npm install`` then failed on a version
+that does not exist.
 
-Run ``pyright --version`` once after install, with the same env force koopa's
-shell activation applies, so a broken engine fails the install instead.
+Run ``pyright --version`` once after install to catch two things: Node
+cannot run the bundled engine, or the wheel's bundled version has drifted
+from the ``app.json`` pin.
 """
 
 import os
@@ -34,7 +37,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install pyright, then smoke-test the npm-backed engine.
+    """Install pyright, then verify the reported version matches the pin.
 
     Parameters
     ----------
@@ -62,23 +65,53 @@ def main(
         no_binary=get_str(kwargs, "no_binary") == "true",
         build_env=build_env or None,
     )
-    _verify(prefix)
+    _verify(prefix, version)
 
 
-def _verify(prefix: str) -> None:
-    """Run ``pyright --version``, forcing the 'latest' npm engine resolve.
+def _parse_version(stdout: str) -> str | None:
+    """Extract the version token from ``pyright --version`` output.
 
-    Raises with npm's own captured output on failure, since a bare
-    ``CalledProcessError`` would hide the actual root cause (an npm warning
-    or a version-not-found error) from the install failure message.
+    Scans line by line rather than testing a prefix on the whole of
+    ``stdout``, so a preamble line (for example from an unexpected npm
+    resolve) before the version line does not cause a false failure.
+
+    Parameters
+    ----------
+    stdout : str
+        Captured standard output from ``pyright --version``.
+
+    Returns
+    -------
+    str | None
+        The reported version, or ``None`` if no ``"pyright "`` line is found.
+    """
+    for raw_line in stdout.splitlines():
+        line = raw_line.strip()
+        if line.startswith("pyright "):
+            return line.removeprefix("pyright ").strip()
+    return None
+
+
+def _verify(prefix: str, version: str) -> None:
+    """Run ``pyright --version`` and confirm it matches the pinned version.
+
+    Strips any ``PYRIGHT_PYTHON_*`` variable from the child env first, so a
+    stray ``PYRIGHT_PYTHON_FORCE_VERSION`` exported by the calling shell
+    cannot mask a real engine problem. Raises with the captured output on
+    failure, since a bare ``CalledProcessError`` would hide the actual root
+    cause (a broken Node build or a version mismatch) from the install
+    failure message.
 
     Parameters
     ----------
     prefix : str
         Installation prefix directory.
+    version : str
+        Expected (pinned) pyright version.
     """
     binary = os.path.join(prefix, "bin", "pyright")
-    env = {**os.environ, "PYRIGHT_PYTHON_FORCE_VERSION": "latest"}
+    env = {k: v for k, v in os.environ.items() if not k.startswith("PYRIGHT_PYTHON_")}
+    env["PYRIGHT_PYTHON_IGNORE_WARNINGS"] = "1"
     result = subprocess.run(
         [binary, "--version"],
         capture_output=True,
@@ -86,6 +119,10 @@ def _verify(prefix: str) -> None:
         env=env,
         check=False,
     )
-    if result.returncode != 0 or not result.stdout.strip().startswith("pyright "):
-        msg = f"'pyright --version' failed after install:\n{result.stdout}{result.stderr}"
+    reported = _parse_version(result.stdout) if result.returncode == 0 else None
+    if reported != version:
+        msg = (
+            f"'pyright --version' reported {reported!r}, expected {version!r}:"
+            f"\n{result.stdout}{result.stderr}"
+        )
         raise RuntimeError(msg)
