@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "6130423206641664",
+    "build_id": "5550154686791680",
     "category": "AI",
-    "date": "2026-09-02",
+    "date": "2026-09-04",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "7d62ce18983438433b12e514e2ecd23f03dff937cdb73c8e53b718afdf1cad18f0a2eaceddefab0682ad049b1f355d70da605ef4d35cca9ec7979ecdc8656f9a",
-      "darwin_amd64": "f88ba5b3065bd3e47c59a631b20cd6228f55860f06171337db13f10db2fde325bdf22c8da94e9b675f50c5a6065dfe6ab4644b63b4d558be7e6dd5c983cf6cd5",
-      "linux_amd64": "ed4df91ea7ced986aa14507a0ab8225d92985190f7d551010eba0c46c569587e602cb36af81c9cde7af0d6b380e8dd3a82131361806cd96012d44a3e47fb369a",
-      "linux_arm64": "316ca00d50389a08b162c66066b4e2db201e4ffb85acea05029e3c4532c69d5b8f7c741cf027325889f898ea8f747af8cd15c802e15fcf5d73b7137b6e2420a1"
+      "darwin_arm64": "89027c600c700fba831baf43843626b49e7a16afd5e7ffb682441b1bf2894fe21e6b2314e601501e569554e94190976fa984a5f68271ab04e2ee7074f9b6f599",
+      "darwin_amd64": "d4b80f4c05eef14cd660f5a29a4a700e2d97b02af1ccddba2450136d9d4712606b09254610fecd6761178998cac1e9d3559b26fe0cfb335f44b0efb8c099fda7",
+      "linux_amd64": "80f2e7bf1fe0833487975b320b07176b82dd2cc2043b8acb4201b37b86d604af50718400b58af0f41adc68b389640f6ff95362da87a9ef1682b34258e83110b2",
+      "linux_arm64": "332dddb06ab4d901a44cfd4b9b358848230e64a64515a8e79b03822348adac9ce92d54cb4fc5119ef075edfba922820c926dfddf82d3a49f4ecdb6e6704dfc75"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.1.24"
+    "version": "1.1.26"
   },
   "apache-airflow": {
     "bin": [
@@ -627,7 +627,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-09-02",
+    "date": "2026-09-04",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -639,7 +639,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.36.34"
+    "version": "2.36.38"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1598,7 +1598,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-09-02",
+    "date": "2026-09-04",
     "default": true,
     "dependencies": [
       "node"
@@ -1612,7 +1612,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.258"
+    "version": "2.1.260"
   },
   "claude-replay": {
     "bin": [
@@ -2233,14 +2233,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-08-28",
+    "date": "2026-09-04",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.14.1"
+    "version": "1.15.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2488,18 +2488,17 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-09-02",
+    "date": "2026-09-04",
     "default": false,
     "dependencies": [
       "emacs"
     ],
     "description": "opinionated Emacs configuration framework",
-    "revision": 2,
     "type": "cli",
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "e545441ca954a0c43118f98c050ae77dd8d4818e"
+    "version": "2e0dbaddd71600392498428c4b0e827c72a81e0e"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -2516,7 +2515,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "a10b9cd85522c23c8702b0ad061b75a927beb62e"
+    "version": "8019e98641662d96c0fc79021e3daecd2fd822a4"
   },
   "du-dust": {
     "bin": [
@@ -2991,7 +2990,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-07-14",
+    "date": "2026-09-04",
     "default": false,
     "description": "friendly interactive shell",
     "installer": "conda-package",
@@ -3003,7 +3002,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.8.1"
+    "version": "4.9.0"
   },
   "flac": {
     "bin": [
@@ -4495,7 +4494,7 @@
       "icav2"
     ],
     "category": "Cloud",
-    "date": "2026-07-25",
+    "date": "2026-09-04",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
     "installer_platform": "linux",
@@ -4504,7 +4503,6 @@
       "The darwin-amd64 build runs under Rosetta 2, but Rosetta is deliberately not supported.",
       "Only the Linux amd64 archive is used; see _check_illumina_ica_cli in version_check.py."
     ],
-    "revision": 2,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4516,7 +4514,7 @@
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
-    "version": "2.47.0"
+    "version": "2.48.0"
   },
   "imagemagick": {
     "date": "2026-05-02",
@@ -4603,7 +4601,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-08-27",
+    "date": "2026-09-04",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4611,7 +4609,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.122.0"
+    "version": "2.123.0"
   },
   "jj": {
     "bin": [
@@ -4622,7 +4620,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-08-08",
+    "date": "2026-09-04",
     "default": false,
     "description": "Git-compatible version control system with conflict resolution",
     "installer": "conda-package",
@@ -4631,7 +4629,7 @@
       "https://jj-vcs.github.io/jj/",
       "https://github.com/jj-vcs/jj/"
     ],
-    "version": "0.44.0"
+    "version": "0.45.1"
   },
   "jless": {
     "date": "2026-06-02",
@@ -5549,7 +5547,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-05-02",
+    "date": "2026-09-04",
     "default": false,
     "dependencies": [
       "icu4c",
@@ -5559,13 +5557,12 @@
       "zlib"
     ],
     "description": "XML parsing library",
-    "revision": 2,
     "src_url": "https://download.gnome.org/sources/libxml2/{major_minor}/libxml2-{version}.tar.xz",
     "type": "library",
     "url": [
       "https://gitlab.gnome.org/GNOME/libxml2/-/releases"
     ],
-    "version": "2.15.3"
+    "version": "2.15.4"
   },
   "libxslt": {
     "build_dependencies": [
@@ -5734,7 +5731,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-08-19",
+    "date": "2026-09-04",
     "default": false,
     "description": "just-in-time compiler for Lua",
     "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
@@ -5743,7 +5740,7 @@
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
     ],
-    "version": "71797fa75ffa1ddbd9b41bbd55d6c2d4236164b0"
+    "version": "3000f7cdb1123f2a4d8b690d4292c541359c670c"
   },
   "luarocks": {
     "bin": [
@@ -7177,7 +7174,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-08-28",
+    "date": "2026-09-04",
     "default": false,
     "description": "cross-platform, multi-language package management tool",
     "installer": "conda-package",
@@ -7186,7 +7183,7 @@
       "https://pixi.sh/",
       "https://github.com/prefix-dev/pixi/"
     ],
-    "version": "0.78.0"
+    "version": "0.79.0"
   },
   "pixman": {
     "build_dependencies": [
@@ -8629,14 +8626,14 @@
       "rustfmt"
     ],
     "category": "Language",
-    "date": "2026-08-21",
+    "date": "2026-09-04",
     "default": false,
     "description": "systems programming language focused on safety and speed",
     "type": "cli",
     "url": [
       "https://www.rust-lang.org/"
     ],
-    "version": "1.98.0"
+    "version": "1.98.1"
   },
   "rustqc": {
     "bin": [
@@ -9083,7 +9080,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-09-02",
+    "date": "2026-09-04",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9093,7 +9090,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "0aa03ab66381b7e8b7a3543105961b6c11e85210"
+    "version": "bb9691a38f3331772409461e2a7b53507ba924b5"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9357,7 +9354,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2026-08-08",
+    "date": "2026-09-04",
     "default": false,
     "dependencies": [
       "pcre2"
@@ -9368,7 +9365,7 @@
     "url": [
       "http://www.swig.org/"
     ],
-    "version": "4.5.0"
+    "version": "4.5.1"
   },
   "synapseclient": {
     "bin": [
@@ -10097,7 +10094,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-06-02",
+    "date": "2026-09-04",
     "default": false,
     "description": "execute commands when watched files change",
     "installer": "conda-package",
@@ -10106,7 +10103,7 @@
       "https://watchexec.github.io/",
       "https://github.com/watchexec/watchexec/"
     ],
-    "version": "2.5.1"
+    "version": "2.7.1"
   },
   "wget": {
     "bin": [
@@ -10774,7 +10771,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-08-27",
+    "date": "2026-09-04",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10783,7 +10780,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.17.2"
+    "version": "1.18.0"
   },
   "zellij": {
     "bin": [

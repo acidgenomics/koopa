@@ -15,7 +15,9 @@ import pytest
 from koopa.version import sanitize_version
 from koopa.version_check import (
     VersionCheckResult,
+    _AppCheckSpec,
     _audit_version_excludes,
+    _cache_hit_result,
     _check_npm,
     _check_pypi,
     _check_rubygems,
@@ -28,6 +30,7 @@ from koopa.version_check import (
     _is_retryable_network_error,
     _liblinear_tag_to_version,
     _NetworkUnavailableError,
+    _pip_index_hold_message,
     classify_app,
     update_app_json,
 )
@@ -556,115 +559,117 @@ def test_update_app_json_bumps_when_artifact_staged(tmp_path: Path) -> None:
     assert count == 1
 
 
-# ── update_app_json pip-index gate (pip-versioned installer modules) ────────
+# ── _pip_index_hold_message (pip-index gate, checked before is_outdated) ────
+#
+# This gate runs inside check_app_versions's _run_check, before a
+# VersionCheckResult is built, so a held app's `latest_version` never
+# diverges from `current_version` and `is_outdated` is False. Holding it
+# here -- instead of in update_app_json, after the "Outdated" report has
+# already printed -- is what stops a permanently-held pip-installed app
+# (e.g. dbt, pyright) from being re-reported as newly outdated on every run.
 
 
-def test_update_app_json_holds_pin_when_index_lacks_version(tmp_path: Path) -> None:
-    """A pin is held when the configured pip index doesn't have the latest version.
+def test_pip_index_hold_message_holds_pin_when_index_lacks_version() -> None:
+    """A hold message is returned when the configured pip index lacks the latest version.
 
     ``pyright`` resolves to ``koopa.installers.pyright`` in the real
     ``PYTHON_INSTALLERS`` registry, which is in ``PIP_VERSIONED_INSTALLERS`` --
-    gating must key off that module, not ``r.source`` (see the next test).
+    gating must key off that module, not a check's source label (see the next
+    test).
     """
-    json_data = {
-        "pyright": {"version": "1.1.411", "url": ["https://pypi.org/project/pyright/"]},
-    }
-    _write_app_json(tmp_path, json_data)
-    results = [VersionCheckResult("pyright", "1.1.411", "1.1.412", "github", None)]
+    info = {"url": ["https://pypi.org/project/pyright/"]}
     with (
-        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
-        patch("koopa.version_check.export_app_json") as mock_export,
-        patch("koopa.version_check.update_venv_version"),
-        patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.version_check._pip_index_url", return_value="https://example.test/simple"),
         patch("koopa.version_check._index_has_version", return_value=False),
     ):
-        count = update_app_json(results)
-    written = mock_export.call_args[0][0]
-    assert written["pyright"]["version"] == "1.1.411"
-    assert count == 0
+        held = _pip_index_hold_message("pyright", "1.1.411", "1.1.412", info)
+    assert held == (
+        "pyright: 1.1.412 available upstream; not on the configured pip index, pin held at 1.1.411"
+    )
 
 
-def test_update_app_json_pip_index_gate_ignores_a_non_pip_source_label(tmp_path: Path) -> None:
-    """A `pypi`-labelled source alone must never trigger the gate.
+def test_pip_index_hold_message_ignores_non_pip_installed_app() -> None:
+    """The pip-index gate never applies to an app with no pip-versioned installer module.
 
     Regression test: pyright's real classify_app() source is "github" (its
     url list has a github.com entry that wins classify_app's priority order
     over its pypi.org entry), yet it is still a pip install and must be
-    gated. The inverse bug -- gating on `r.source == "pypi"` -- let a fake
-    app claiming that label through the gate for an app that PYTHON_INSTALLERS
-    has no pip-versioned module for, and missed pyright entirely.
+    gated. Keying the gate off `PYTHON_INSTALLERS`/`PIP_VERSIONED_INSTALLERS`
+    instead of a source label is what makes that possible; this app has no
+    entry in either registry, so the gate must skip it without ever
+    consulting the index.
     """
-    json_data = {
-        "not-actually-pip-installed": {"version": "1.0.0", "url": ["https://example.test"]},
-    }
-    _write_app_json(tmp_path, json_data)
-    results = [
-        VersionCheckResult("not-actually-pip-installed", "1.0.0", "2.0.0", "pypi", None),
-    ]
+    info = {"url": ["https://github.com/BurntSushi/ripgrep"]}
     with (
-        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
-        patch("koopa.version_check.export_app_json") as mock_export,
-        patch("koopa.version_check.update_venv_version"),
-        patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.version_check._pip_index_url", return_value="https://example.test/simple"),
         patch(
             "koopa.version_check._index_has_version",
             side_effect=AssertionError("must not be called for a non-pip-installed app"),
         ),
     ):
-        count = update_app_json(results)
-    written = mock_export.call_args[0][0]
-    assert written["not-actually-pip-installed"]["version"] == "2.0.0"
-    assert count == 1
+        held = _pip_index_hold_message("ripgrep", "14.0.0", "14.1.0", info)
+    assert held is None
 
 
-def test_update_app_json_bumps_pin_when_no_index_configured(tmp_path: Path) -> None:
+def test_pip_index_hold_message_is_a_noop_when_no_index_configured() -> None:
     """The pip-index gate is a no-op when no non-PyPI index is configured."""
-    json_data = {
-        "pyright": {"version": "1.1.411", "url": ["https://pypi.org/project/pyright/"]},
-    }
-    _write_app_json(tmp_path, json_data)
-    results = [VersionCheckResult("pyright", "1.1.411", "1.1.412", "github", None)]
+    info = {"url": ["https://pypi.org/project/pyright/"]}
     with (
-        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
-        patch("koopa.version_check.export_app_json") as mock_export,
-        patch("koopa.version_check.update_venv_version"),
-        patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.version_check._pip_index_url", return_value=None),
         patch(
             "koopa.version_check._index_has_version",
             side_effect=AssertionError("must not be called when no index is configured"),
         ),
     ):
-        count = update_app_json(results)
-    written = mock_export.call_args[0][0]
-    assert written["pyright"]["version"] == "1.1.412"
-    assert count == 1
+        held = _pip_index_hold_message("pyright", "1.1.411", "1.1.412", info)
+    assert held is None
 
 
-def test_update_app_json_pip_index_gate_ignores_non_pip_installed_app(tmp_path: Path) -> None:
-    """The pip-index gate never applies to an app with no pip-versioned installer module."""
-    json_data = {
-        "ripgrep": {"version": "14.0.0", "url": ["https://github.com/BurntSushi/ripgrep"]},
-    }
-    _write_app_json(tmp_path, json_data)
-    results = [VersionCheckResult("ripgrep", "14.0.0", "14.1.0", "github", None)]
+def test_pip_index_hold_message_allows_bump_when_index_has_version() -> None:
+    """No hold is returned once the configured pip index carries the latest version."""
+    info = {"url": ["https://pypi.org/project/pyright/"]}
     with (
-        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
-        patch("koopa.version_check.export_app_json") as mock_export,
-        patch("koopa.version_check.update_venv_version"),
-        patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.version_check._pip_index_url", return_value="https://example.test/simple"),
-        patch(
-            "koopa.version_check._index_has_version",
-            side_effect=AssertionError("must not be called for a non-pip-installed app"),
-        ),
+        patch("koopa.version_check._index_has_version", return_value=True),
     ):
-        count = update_app_json(results)
-    written = mock_export.call_args[0][0]
-    assert written["ripgrep"]["version"] == "14.1.0"
-    assert count == 1
+        held = _pip_index_hold_message("pyright", "1.1.411", "1.1.412", info)
+    assert held is None
+
+
+# ── _cache_hit_result (cache-hit path must apply the same holds as fresh) ───
+
+
+def test_cache_hit_result_holds_pin_when_index_lacks_version() -> None:
+    """A cached latest version is held the same way a fresh check would be.
+
+    Regression test for the recurring dbt/pyright report: the cache-hit path
+    in `check_app_versions` used to apply only the `version_exclude` hold,
+    never the pip-index hold, so a value the previous run had already cached
+    (and already held out of app.json) came back as newly "outdated" on
+    every subsequent run within the cache's 24-hour TTL.
+    """
+    info = {"url": ["https://pypi.org/project/pyright/"]}
+    spec = _AppCheckSpec("github", lambda: "", ())
+    with (
+        patch("koopa.version_check._pip_index_url", return_value="https://example.test/simple"),
+        patch("koopa.version_check._index_has_version", return_value=False),
+    ):
+        hit = _cache_hit_result("pyright", "1.1.411", "1.1.412", spec, (), None, info)
+    assert hit is not None
+    result, held = hit
+    assert result.current_version == "1.1.411"
+    assert result.latest_version == "1.1.411"
+    assert result.is_outdated is False
+    assert held == (
+        "pyright: 1.1.412 available upstream; not on the configured pip index, pin held at 1.1.411"
+    )
+
+
+def test_cache_hit_result_returns_none_on_a_cache_miss() -> None:
+    """A cached value that is neither a SHA nor a semver falls through to a fresh check."""
+    spec = _AppCheckSpec("github", lambda: "", ())
+    hit = _cache_hit_result("widget", "1.0.0", "not-a-version", spec, (), None, {})
+    assert hit is None
 
 
 def test_pip_versioned_installers_registry_matches_source() -> None:
