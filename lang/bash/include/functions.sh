@@ -618,6 +618,10 @@ _koopa_activate_direnv() {
         trap - SIGINT
         return "$previous_exit_status"
     }
+    if [[ ";${precmd_functions[*]:-};" != *';_direnv_hook;'* ]]
+    then
+        precmd_functions+=(_direnv_hook)
+    fi
     local timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
     local gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
     if [[ "$timeout" -gt 0 ]] && [[ -x "$gtimeout" ]]
