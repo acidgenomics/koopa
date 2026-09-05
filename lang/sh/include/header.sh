@@ -47,8 +47,9 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa.
-    # @note Updated 2025-04-24.
+    # @note Updated 2026-09-05.
     # """
+    _koopa_deactivate_inherited_direnv || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         _koopa_activate_path_helper || return 1

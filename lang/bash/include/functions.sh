@@ -1004,6 +1004,15 @@ _koopa_activate_zoxide() {
     return 0
 }
 
+_koopa_deactivate_inherited_direnv() {
+    local direnv
+    [[ -n "${DIRENV_DIFF:-}" ]] || return 0
+    direnv="${KOOPA_PREFIX:?}/bin/direnv"
+    [[ -x "$direnv" ]] || return 0
+    eval "$(cd / && "$direnv" export bash 2>/dev/null)"
+    return 0
+}
+
 _koopa_alias_colorls() {
     local color_flag
     case "$(_koopa_color_mode)" in

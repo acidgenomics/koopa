@@ -1057,6 +1057,22 @@ _koopa_activate_zsh_reverse_search() {
     _koopa_activate_atuin
 }
 
+_koopa_deactivate_inherited_direnv() {
+    local direnv
+    [[ -n "${DIRENV_DIFF:-}" ]] || return 0
+    direnv="${KOOPA_PREFIX:?}/bin/direnv"
+    [[ -x "$direnv" ]] || return 0
+    local shell
+    shell="${KOOPA_SHELL##*/}"
+    case "$shell" in
+        'bash' | \
+        'zsh')
+            eval "$(cd / && "$direnv" export "$shell" 2>/dev/null)"
+            ;;
+    esac
+    return 0
+}
+
 _koopa_alias_colorls() {
     local color_flag
     case "$(_koopa_color_mode)" in

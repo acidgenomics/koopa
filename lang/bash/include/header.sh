@@ -160,6 +160,7 @@ __koopa_warn() {
 }
 
 __koopa_activate_koopa() {
+    _koopa_deactivate_inherited_direnv || return 1
     if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
     then
         _koopa_activate_path_helper || return 1
@@ -387,6 +388,12 @@ __koopa_bash_header() {
         dict['header_path']="${BASH_SOURCE[0]}"
         if [[ -L "${dict['header_path']}" ]]
         then
+            # shellcheck disable=SC2218
+            # False positive: '__koopa_realpath' is defined above, at the top
+            # of this file. Confirmed by bisection that ShellCheck only
+            # raises this once the later, unresolvable call to the
+            # externally-sourced '_koopa_activate_bash_extras' is also
+            # present in this function; removing either call clears it.
             dict['header_path']="$(__koopa_realpath "${dict['header_path']}")"
         fi
         KOOPA_PREFIX="$( \

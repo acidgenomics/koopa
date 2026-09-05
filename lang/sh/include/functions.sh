@@ -873,6 +873,27 @@ _koopa_activate_zoxide() {
     return 0
 }
 
+_koopa_deactivate_inherited_direnv() {
+    if [ -z "${DIRENV_DIFF:-}" ]
+    then
+        return 0
+    fi
+    __kvar_direnv="${KOOPA_PREFIX:?}/bin/direnv"
+    if [ ! -x "$__kvar_direnv" ]
+    then
+        unset -v __kvar_direnv
+        return 0
+    fi
+    __kvar_shell="${KOOPA_SHELL##*/}"
+    case "$__kvar_shell" in
+        'bash' | 'zsh')
+            eval "$(cd / && "$__kvar_direnv" export "$__kvar_shell" 2>/dev/null)"
+            ;;
+    esac
+    unset -v __kvar_direnv __kvar_shell
+    return 0
+}
+
 _koopa_alias_colorls() {
     case "$(_koopa_color_mode)" in
         'dark')
