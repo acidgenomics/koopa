@@ -1,7 +1,7 @@
 {
   "name": "koopa",
   "displayName": "koopa",
-  "version": "0.29.0",
+  "version": "0.30.0",
   "description": "Use koopa to install apps, manage shell activation, and troubleshoot the koopa environment in any project.",
   "author": {
     "name": "Acid Genomics",
