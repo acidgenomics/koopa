@@ -20,7 +20,13 @@ from koopa.system import cpu_count, is_macos, safe_build_env
 
 
 def _shared_ext() -> str:
-    """Return shared library extension for current platform."""
+    """Return shared library extension for current platform.
+
+    Returns
+    -------
+    str
+        ``"dylib"`` on macOS, ``"so"`` otherwise.
+    """
     return "dylib" if is_macos() else "so"
 
 
@@ -55,6 +61,11 @@ class BuildEnv:
         The base environment itself is filtered to a build-safe allowlist
         (see ``koopa.system.safe_build_env``), so e.g. a direnv-loaded
         project credential never reaches the build subprocess.
+
+        Returns
+        -------
+        dict[str, str]
+            Environment mapping with accumulated build variables merged in.
         """
         env = safe_build_env()
         if env.get("LOADEDMODULES"):
@@ -137,7 +148,15 @@ def _is_package_installer(app_name: str) -> bool:
 
 
 def _check_rpath(prefix: str, app_name: str) -> None:
-    """Verify RPATH targets exist for the app's primary binary."""
+    """Verify RPATH targets exist for the app's primary binary.
+
+    Parameters
+    ----------
+    prefix : str
+        Installed prefix directory containing the app's ``bin/`` directory.
+    app_name : str
+        Resolved app name, used to locate ``<prefix>/bin/<app_name>``.
+    """
     bin_path = os.path.join(prefix, "bin", app_name)
     if not os.path.isfile(bin_path):
         return
@@ -153,14 +172,37 @@ def _check_rpath(prefix: str, app_name: str) -> None:
 
 
 def _extract_rpath(binary: str) -> list[str]:
-    """Extract RPATH/RUNPATH directories from a binary."""
+    """Extract RPATH/RUNPATH directories from a binary.
+
+    Parameters
+    ----------
+    binary : str
+        Path to the binary to inspect.
+
+    Returns
+    -------
+    list[str]
+        RPATH/RUNPATH directory entries found in the binary.
+    """
     if is_macos():
         return _extract_rpath_macos(binary)
     return _extract_rpath_linux(binary)
 
 
 def _extract_rpath_macos(binary: str) -> list[str]:
-    """Extract LC_RPATH entries via otool."""
+    """Extract LC_RPATH entries via otool.
+
+    Parameters
+    ----------
+    binary : str
+        Path to the binary to inspect.
+
+    Returns
+    -------
+    list[str]
+        LC_RPATH directory entries found in the binary, excluding
+        ``@``-relative entries.
+    """
     try:
         result = subprocess.run(
             ["otool", "-l", binary],
@@ -185,7 +227,19 @@ def _extract_rpath_macos(binary: str) -> list[str]:
 
 
 def _extract_rpath_linux(binary: str) -> list[str]:
-    """Extract RPATH/RUNPATH entries via readelf."""
+    """Extract RPATH/RUNPATH entries via readelf.
+
+    Parameters
+    ----------
+    binary : str
+        Path to the binary to inspect.
+
+    Returns
+    -------
+    list[str]
+        RPATH/RUNPATH directory entries found in the binary, excluding
+        ``$``-relative entries.
+    """
     try:
         result = subprocess.run(
             ["readelf", "-d", binary],
@@ -227,12 +281,12 @@ def activate_app(
 
     Parameters
     ----------
-    names
+    *names : str
         App names to activate (e.g. ``"zlib"``, ``"openssl"``).
-    build_only
+    build_only : bool, optional
         If ``True``, only modify PATH and PKG_CONFIG_PATH — skip
         CPPFLAGS, LDFLAGS, LDLIBS, LIBRARY_PATH, and CMAKE_PREFIX_PATH.
-    env
+    env : BuildEnv | None, optional
         Existing ``BuildEnv`` to accumulate into. A new one is created
         if not provided.
 
@@ -290,7 +344,15 @@ def activate_app(
 
 
 def _add_pkg_config_paths(prefix: str, env: BuildEnv) -> None:
-    """Add pkgconfig directories to PKG_CONFIG_PATH."""
+    """Add pkgconfig directories to PKG_CONFIG_PATH.
+
+    Parameters
+    ----------
+    prefix : str
+        Installed prefix directory to search for pkgconfig directories.
+    env : BuildEnv
+        Build environment to append discovered pkgconfig paths to.
+    """
     candidates = [
         os.path.join(prefix, "lib", "pkgconfig"),
         os.path.join(prefix, "lib64", "pkgconfig"),
@@ -308,6 +370,14 @@ def _add_transitive_rpath_links(names: tuple[str, ...], env: BuildEnv) -> None:
     This adds -rpath-link for every lib dir in the full transitive runtime
     dependency closure so the linker can find them without baking those paths
     into the output binary's RPATH.
+
+    Parameters
+    ----------
+    names : tuple[str, ...]
+        App names whose declared dependencies are walked transitively.
+    env : BuildEnv
+        Build environment to append discovered rpath-link flags and
+        pkgconfig paths to.
     """
     app_json_path = os.path.join(koopa_prefix(), "etc", "koopa", "app.json")
     with open(app_json_path) as f:
@@ -349,7 +419,18 @@ def _add_transitive_rpath_links(names: tuple[str, ...], env: BuildEnv) -> None:
 
 
 def _find_pc_files(prefix: str) -> list[str]:
-    """Find all .pc files under a prefix."""
+    """Find all .pc files under a prefix.
+
+    Parameters
+    ----------
+    prefix : str
+        Directory tree to search recursively.
+
+    Returns
+    -------
+    list[str]
+        Paths to all ``.pc`` files found under `prefix`.
+    """
     result: list[str] = []
     for root, _dirs, files in os.walk(prefix):
         for f in files:
@@ -359,7 +440,16 @@ def _find_pc_files(prefix: str) -> list[str]:
 
 
 def _add_flags_from_pkgconfig(pc_files: list[str], env: BuildEnv) -> None:
-    """Extract compiler/linker flags from .pc files via pkg-config."""
+    """Extract compiler/linker flags from .pc files via pkg-config.
+
+    Parameters
+    ----------
+    pc_files : list[str]
+        Paths to ``.pc`` files to query, one per package.
+    env : BuildEnv
+        Build environment to append discovered CPPFLAGS, LDFLAGS, and
+        LDLIBS to.
+    """
     try:
         pkg_config = locate("pkg-config")
     except FileNotFoundError:
@@ -435,20 +525,20 @@ def cmake_build(
 
     Parameters
     ----------
-    prefix
+    prefix : str
         Installation prefix (``CMAKE_INSTALL_PREFIX``).
-    source_dir
+    source_dir : str, optional
         Path to CMakeLists.txt directory.
-    build_dir
+    build_dir : str | None, optional
         Build directory. Auto-generated if not specified.
-    args
+    args : list[str] | None, optional
         Additional CMake cache variables (e.g. ``["-DFOO=ON"]``).
-    generator
+    generator : str, optional
         CMake generator name (default ``"Unix Makefiles"``).  Automatically
         switched to ``"Ninja"`` when ``ninja`` is on PATH.
-    jobs
+    jobs : int | None, optional
         Parallel build jobs (defaults to CPU count).
-    env
+    env : BuildEnv | None, optional
         Build environment from ``activate_app``.
     """
     if jobs is None:
@@ -516,7 +606,15 @@ def _run_ninja_with_progress(
     *,
     env: dict[str, str],
 ) -> None:
-    """Run a command that produces ninja ``[current/total]`` progress output."""
+    """Run a command that produces ninja ``[current/total]`` progress output.
+
+    Parameters
+    ----------
+    cmd : list[str]
+        Command and arguments to run.
+    env : dict[str, str]
+        Environment mapping passed to the subprocess.
+    """
     from koopa.progress import get_active_progress
 
     progress = get_active_progress()
@@ -557,7 +655,22 @@ def _cmake_build_step(
     subprocess_env: dict[str, str],
     use_ninja: bool,
 ) -> None:
-    """Run the ``cmake --build`` step, optionally parsing Ninja progress."""
+    """Run the ``cmake --build`` step, optionally parsing Ninja progress.
+
+    Parameters
+    ----------
+    cmake : str
+        Path to the cmake executable.
+    build_dir : str
+        Build directory to build in.
+    jobs : int
+        Parallel build jobs.
+    subprocess_env : dict[str, str]
+        Environment mapping passed to the subprocess.
+    use_ninja : bool
+        If ``True``, run through `_run_ninja_with_progress` to parse Ninja
+        progress output; otherwise run ``cmake --build`` directly.
+    """
     cmd = [cmake, "--build", build_dir, "--parallel", str(jobs)]
     if not use_ninja:
         subprocess.run(cmd, env=subprocess_env, check=True)
@@ -571,7 +684,23 @@ def _cmake_std_args(
     generator: str,
     subprocess_env: dict[str, str],
 ) -> list[str]:
-    """Return standard CMake arguments."""
+    """Return standard CMake arguments.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix (``CMAKE_INSTALL_PREFIX``).
+    generator : str
+        CMake generator name.
+    subprocess_env : dict[str, str]
+        Environment mapping to read CPPFLAGS, LDFLAGS, and
+        CMAKE_PREFIX_PATH from.
+
+    Returns
+    -------
+    list[str]
+        CMake ``-D`` cache-variable arguments.
+    """
     args = [
         "-DCMAKE_BUILD_TYPE=Release",
         f"-DCMAKE_INSTALL_PREFIX={prefix}",
@@ -602,7 +731,14 @@ def _cmake_std_args(
 
 
 def _macos_sdk_prefix() -> str:
-    """Return macOS SDK path."""
+    """Return macOS SDK path.
+
+    Returns
+    -------
+    str
+        Path to the macOS SDK, or an empty string if it could not be
+        determined.
+    """
     try:
         result = subprocess.run(
             ["xcrun", "--sdk", "macosx", "--show-sdk-path"],
@@ -630,14 +766,17 @@ def make_build(
 
     Parameters
     ----------
-    conf_args
+    conf_args : list[str] | None, optional
         Arguments passed to ``./configure``.
-    jobs
+    jobs : int | None, optional
         Parallel make jobs (defaults to CPU count).
-    targets
+    targets : list[str] | None, optional
         Make targets to run after build (defaults to ``["install"]``).
-    env
+    env : BuildEnv | None, optional
         Build environment from ``activate_app``.
+    extra_env : dict[str, str] | None, optional
+        Extra environment variables merged into the subprocess environment,
+        overriding any values from `env`.
     """
     if jobs is None:
         jobs = cpu_count()
@@ -682,13 +821,13 @@ def meson_build(
 
     Parameters
     ----------
-    prefix
+    prefix : str
         Installation prefix.
-    args
+    args : list[str] | None, optional
         Additional meson setup arguments.
-    jobs
+    jobs : int | None, optional
         Parallel build jobs (defaults to CPU count).
-    env
+    env : BuildEnv | None, optional
         Build environment from ``activate_app``.
     """
     if jobs is None:
@@ -725,18 +864,46 @@ def meson_build(
 
 
 def app_prefix(name: str) -> str:
-    """Return the resolved prefix for an installed app."""
+    """Return the resolved prefix for an installed app.
+
+    Parameters
+    ----------
+    name : str
+        App name, as it appears under the ``opt/`` symlink.
+
+    Returns
+    -------
+    str
+        Resolved installation prefix directory for the app.
+    """
     link = os.path.join(opt_prefix(), name)
     return os.path.realpath(link)
 
 
 def shared_ext() -> str:
-    """Return shared library extension for current platform."""
+    """Return shared library extension for current platform.
+
+    Returns
+    -------
+    str
+        ``"dylib"`` on macOS, ``"so"`` otherwise.
+    """
     return _shared_ext()
 
 
 def locate(name: str) -> str:
-    """Locate an executable, preferring koopa bin/."""
+    """Locate an executable, preferring koopa bin/.
+
+    Parameters
+    ----------
+    name : str
+        Executable name to locate.
+
+    Returns
+    -------
+    str
+        Absolute path to the executable.
+    """
     koopa_bin = os.path.join(koopa_prefix(), "bin")
     candidate = os.path.join(koopa_bin, name)
     if os.path.isfile(candidate) and os.access(candidate, os.X_OK):

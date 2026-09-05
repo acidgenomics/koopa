@@ -11,6 +11,19 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install bash-completion."""
+    """Install bash-completion.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     download_extract_cd()
     make_build(conf_args=[f"--prefix={prefix}"])

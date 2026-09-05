@@ -14,7 +14,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install bash-preexec."""
+    """Install bash-preexec.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     url = _resolve_src_url(name, version)
     script = download(url, "bash-preexec.sh")
     share_dir = os.path.join(prefix, "share", "bash-preexec")

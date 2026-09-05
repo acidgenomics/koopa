@@ -14,7 +14,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install apache-spark."""
+    """Install apache-spark.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     url = f"https://archive.apache.org/dist/spark/spark-{version}/spark-{version}-bin-hadoop3.tgz"
     tarball = download(url)
     libexec = os.path.join(prefix, "libexec")

@@ -11,7 +11,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install pinentry."""
+    """Install pinentry.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     env = activate_app_deps()
     lgpe_prefix = app_prefix("libgpg-error")
     libassuan_prefix = app_prefix("libassuan")

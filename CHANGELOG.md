@@ -1,5 +1,33 @@
 # Changelog
 
+## koopa 0.30.0 (2026-09-05)
+
+Major changes:
+
+- On shared Linux and HPC hosts where a user's login shell cannot be changed,
+  koopa now hands interactive POSIX shell sessions to Bash when it is
+  available. POSIX activation also locates a user installation in
+  `$XDG_DATA_HOME/koopa`; set `KOOPA_NO_SHELL_UPGRADE=1` to opt out.
+- Conda app installation now checks shared-library linkage only for binaries
+  declared in the app registry, avoiding failures from auxiliary bundled
+  binaries that koopa never exposes (such as Emacs's `libgccjit` driver).
+- Downloads from freedesktop.org now use curl's default user agent, avoiding
+  its Anubis bot check and allowing Emacs and fontconfig installations to
+  complete.
+- Pyright now always uses and verifies its bundled, pinned engine rather than
+  triggering a fragile npm download on its first run.
+
+Minor changes:
+
+- Added `numpydoc` and made the existing `spacevim` documentation tool
+  default-installed.
+- Routine upstream version bumps across the app registry.
+
+New apps:
+
+- `numpydoc` 1.10.0: validates NumPy-style Python docstrings
+  (CLI, default).
+
 ## koopa 0.29.0 (2026-09-02)
 
 Major changes:

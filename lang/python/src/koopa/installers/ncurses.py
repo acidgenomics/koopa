@@ -18,7 +18,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install ncurses."""
+    """Install ncurses.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     os.environ.pop("DYLD_FALLBACK_LIBRARY_PATH", None)
     os.environ.pop("DYLD_LIBRARY_PATH", None)
     os.environ.pop("LD_LIBRARY_PATH", None)

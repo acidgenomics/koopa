@@ -7,6 +7,16 @@ def parse_passthrough(
     """Parse ``--key=value`` passthrough args into a dict.
 
     Handles repeated keys by collecting values into a list.
+
+    Parameters
+    ----------
+    args : list[str] | None
+        Passthrough arguments, e.g. ``["--extra-packages=foo"]``.
+
+    Returns
+    -------
+    dict[str, str | list[str]]
+        Parsed keys mapped to their string or list value.
     """
     if not args:
         return {}
@@ -28,7 +38,22 @@ def parse_passthrough(
 
 
 def get_str(kwargs: dict[str, str | list[str]], key: str, default: str = "") -> str:
-    """Get a string value from parsed passthrough args."""
+    """Get a string value from parsed passthrough args.
+
+    Parameters
+    ----------
+    kwargs : dict[str, str | list[str]]
+        Parsed passthrough args from :func:`parse_passthrough`.
+    key : str
+        Key to look up.
+    default : str, optional
+        Value to return if ``key`` is absent.
+
+    Returns
+    -------
+    str
+        The value for ``key``, or ``default`` if absent.
+    """
     value = kwargs.get(key, default)
     if isinstance(value, list):
         return value[0]
@@ -36,7 +61,20 @@ def get_str(kwargs: dict[str, str | list[str]], key: str, default: str = "") -> 
 
 
 def get_list(kwargs: dict[str, str | list[str]], key: str) -> list[str]:
-    """Get a list value from parsed passthrough args."""
+    """Get a list value from parsed passthrough args.
+
+    Parameters
+    ----------
+    kwargs : dict[str, str | list[str]]
+        Parsed passthrough args from :func:`parse_passthrough`.
+    key : str
+        Key to look up.
+
+    Returns
+    -------
+    list[str]
+        The value for ``key``, or an empty list if absent.
+    """
     value = kwargs.get(key, [])
     if isinstance(value, str):
         return [value]
@@ -44,7 +82,20 @@ def get_list(kwargs: dict[str, str | list[str]], key: str) -> list[str]:
 
 
 def get_dict(kwargs: dict[str, str | list[str]], key: str) -> dict[str, str]:
-    """Get a dict value from parsed passthrough args (JSON-encoded)."""
+    """Get a dict value from parsed passthrough args (JSON-encoded).
+
+    Parameters
+    ----------
+    kwargs : dict[str, str | list[str]]
+        Parsed passthrough args from :func:`parse_passthrough`.
+    key : str
+        Key to look up.
+
+    Returns
+    -------
+    dict[str, str]
+        The decoded value for ``key``, or an empty dict if absent.
+    """
     import json
 
     value = kwargs.get(key, "")

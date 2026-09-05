@@ -48,6 +48,11 @@ def uninstall_app(config: UninstallConfig) -> None:
 
     Removes the app's prefix directory and symlinks from bin/, opt/, and
     man1/. Optionally runs a custom uninstaller script if one exists.
+
+    Parameters
+    ----------
+    config : UninstallConfig
+        Uninstallation settings, including the app name, mode, and prefix.
     """
     if config.verbose:
         os.environ["KOOPA_VERBOSE"] = "1"
@@ -130,21 +135,39 @@ def uninstall_app(config: UninstallConfig) -> None:
 
 
 def _unlink_in_opt(name: str) -> None:
-    """Remove symlink from koopa opt/ directory."""
+    """Remove symlink from koopa opt/ directory.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    """
     target = os.path.join(opt_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
 
 
 def _unlink_in_bin(name: str) -> None:
-    """Remove symlink from koopa bin/ directory."""
+    """Remove symlink from koopa bin/ directory.
+
+    Parameters
+    ----------
+    name : str
+        Symlink name.
+    """
     target = os.path.join(bin_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
 
 
 def _unlink_in_man1(name: str) -> None:
-    """Remove symlink from koopa man1/ directory."""
+    """Remove symlink from koopa man1/ directory.
+
+    Parameters
+    ----------
+    name : str
+        Symlink name.
+    """
     target = os.path.join(man1_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
@@ -166,7 +189,13 @@ def _unlink_broken_completions() -> None:
 
 
 def _is_shared_install() -> bool:
-    """Check if koopa is a shared (non-user-home) install."""
+    """Check if koopa is a shared (non-user-home) install.
+
+    Returns
+    -------
+    bool
+        True if the koopa prefix is not under the user's home directory.
+    """
     home = os.path.expanduser("~")
     return not koopa_prefix().startswith(home)
 
@@ -202,7 +231,15 @@ def uninstall_koopa() -> None:
 
 
 def uninstall_non_default_apps(yes: bool = False, verbose: bool = False) -> None:
-    """Uninstall installed apps that are not default and not dependencies of defaults."""
+    """Uninstall installed apps that are not default and not dependencies of defaults.
+
+    Parameters
+    ----------
+    yes : bool, optional
+        Skip the interactive confirmation prompt.
+    verbose : bool, optional
+        Enable verbose uninstaller output.
+    """
     from koopa.app import app_deps, import_app_json, installed_apps, shared_apps
     from koopa.install import _acquire_install_lock, _release_install_lock
 

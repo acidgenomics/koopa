@@ -26,7 +26,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install aws-azure-login, then pre-seed puppeteer's bundled Chromium."""
+    """Install aws-azure-login, then pre-seed puppeteer's bundled Chromium.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     if not is_macos():
         msg = "aws-azure-login: only macOS is currently supported by this installer."
         raise RuntimeError(msg)
@@ -43,7 +56,13 @@ def main(
 
 
 def _install_chromium(prefix: str) -> None:
-    """Download and extract puppeteer's pinned Chromium build."""
+    """Download and extract puppeteer's pinned Chromium build.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
+    """
     puppeteer_dir = os.path.join(
         prefix, "lib", "node_modules", "aws-azure-login", "node_modules", "puppeteer"
     )

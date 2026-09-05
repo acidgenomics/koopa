@@ -16,7 +16,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install Homebrew Bundle."""
+    """Install Homebrew Bundle.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     if is_macos():
         clt_dir = "/Library/Developer/CommandLineTools"
         if not os.path.isdir(clt_dir):

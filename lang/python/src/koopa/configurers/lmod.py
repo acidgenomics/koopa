@@ -21,6 +21,17 @@ def main(
       {prefix}/apps/lmod/lmod/init/profile.fish -> /etc/fish/conf.d/z00_lmod.fish
 
     Uses sudo for /etc/ paths. Creates dirs if missing.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"``).
+    verbose : bool, optional
+        Print verbose output.
     """
     prefix = app_prefix("lmod")
     if not os.path.isdir(prefix):

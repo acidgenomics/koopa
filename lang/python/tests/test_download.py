@@ -5,11 +5,11 @@ from pathlib import Path
 
 import pytest
 from koopa.download import (
+    _blocks_spoofed_user_agent,
     _derive_filename,
     _download_curl,
     _gnu_mirrors,
     _gnupg_mirrors,
-    _is_sourceforge_url,
     _savannah_mirrors,
     download,
     download_with_mirror,
@@ -267,11 +267,12 @@ def test_download_with_mirror_vendor_first_includes_remote_rewrite(
     [
         "https://sourceforge.net/projects/libpng/files/libpng16/1.6.58/libpng-1.6.58.tar.xz/download",
         "https://downloads.sourceforge.net/project/libpng/libpng-1.6.58.tar.xz",
+        "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.16.0.tar.xz",
     ],
 )
-def test_is_sourceforge_url_matches(url: str) -> None:
-    """SourceForge's apex domain and subdomains are detected."""
-    assert _is_sourceforge_url(url) is True
+def test_blocks_spoofed_user_agent_matches(url: str) -> None:
+    """SourceForge's apex domain, subdomains, and www.freedesktop.org are detected."""
+    assert _blocks_spoofed_user_agent(url) is True
 
 
 @pytest.mark.parametrize(
@@ -279,11 +280,12 @@ def test_is_sourceforge_url_matches(url: str) -> None:
     [
         "https://github.com/libgeos/geos/archive/3.14.1.tar.gz",
         "https://notsourceforge.net/files/foo.tar.gz",
+        "https://xorg.freedesktop.org/archive/individual/lib/libX11-1.8.tar.xz",
     ],
 )
-def test_is_sourceforge_url_rejects(url: str) -> None:
-    """Non-SourceForge hosts, including near-miss domains, are not matched."""
-    assert _is_sourceforge_url(url) is False
+def test_blocks_spoofed_user_agent_rejects(url: str) -> None:
+    """Non-matching hosts, including near-miss domains, are not matched."""
+    assert _blocks_spoofed_user_agent(url) is False
 
 
 def test_download_curl_omits_spoofed_user_agent_for_sourceforge(

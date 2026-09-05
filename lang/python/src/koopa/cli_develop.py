@@ -13,7 +13,22 @@ from typing import IO, Any, Self, cast
 
 
 class _TqdmFallback:
-    """Minimal progress-bar shim when tqdm is not installed."""
+    """Minimal progress-bar shim when tqdm is not installed.
+
+    Parameters
+    ----------
+    iterable : Iterable[Any] | None, optional
+        Items to iterate over.
+    desc : str, optional
+        Description printed once to stderr when iteration starts.
+    unit : str, optional
+        Unit label, accepted for tqdm API compatibility and unused.
+    total : int | None, optional
+        Total item count, accepted for tqdm API compatibility and unused.
+    dynamic_ncols : bool, optional
+        Whether to resize dynamically, accepted for tqdm API compatibility
+        and unused.
+    """
 
     def __init__(
         self,
@@ -50,7 +65,13 @@ def _handle_prune_app_binaries() -> None:
 
 
 def _handle_format_app_json(args: list[str]) -> None:
-    """Handle ``koopa develop format-app-json``."""
+    """Handle ``koopa develop format-app-json``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand, unused.
+    """
     from koopa.io import export_app_json, import_app_json
 
     data = import_app_json()
@@ -165,7 +186,13 @@ def _handle_edit_app_json() -> None:
 
 
 def _handle_push_app_build(args: list[str]) -> None:
-    """Handle ``koopa develop push-app-build <name>...``."""
+    """Handle ``koopa develop push-app-build <name>...``.
+
+    Parameters
+    ----------
+    args : list[str]
+        App names to push binary builds for.
+    """
     if not args:
         print(
             "Usage: koopa develop push-app-build <name>...",
@@ -296,7 +323,18 @@ _TAR_SUFFIX_METHOD: dict[str, str] = {
 
 
 def _tar_suffix(name: str) -> str | None:
-    """Return the known tar compression suffix at the end of *name*, if any."""
+    """Return the known tar compression suffix at the end of *name*, if any.
+
+    Parameters
+    ----------
+    name : str
+        Filename to check for a known tar compression suffix.
+
+    Returns
+    -------
+    str | None
+        The matching suffix (e.g. ``".tar.gz"``), or None if none matched.
+    """
     lname = name.lower()
     for suffix in sorted(_TAR_SUFFIX_METHOD, key=len, reverse=True):
         if lname.endswith(suffix):
@@ -305,7 +343,20 @@ def _tar_suffix(name: str) -> str | None:
 
 
 def _version_from_filename(app: str, path: str) -> str | None:
-    """Best-effort extraction of a version string from a vendor tarball filename."""
+    """Best-effort extraction of a version string from a vendor tarball filename.
+
+    Parameters
+    ----------
+    app : str
+        App name, stripped as a prefix from the filename before matching.
+    path : str
+        Path to the vendor tarball whose filename is inspected.
+
+    Returns
+    -------
+    str | None
+        The extracted version string, or None if none was found.
+    """
     import re
 
     base = os.path.basename(path)
@@ -326,6 +377,13 @@ def _handle_push_installer(args: list[str]) -> None:
     to the format that template requires when the input archive differs, without
     otherwise altering the tar member layout the installer expects after
     ``koopa.archive.extract()``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: the app name, the path to the
+        downloaded installer tarball, and optional ``--version``/``--force``
+        flags.
     """
     import argparse
 
@@ -438,7 +496,14 @@ def _handle_push_installer(args: list[str]) -> None:
 
 
 def _handle_scrub_install_info(args: list[str]) -> None:
-    """Handle ``koopa develop scrub-install-info [--dry-run] [<name>...]``."""
+    """Handle ``koopa develop scrub-install-info [--dry-run] [<name>...]``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: app name(s) to scrub, and an
+        optional ``--dry-run`` flag.
+    """
     import argparse
 
     from koopa.alert import alert, alert_success
@@ -476,6 +541,12 @@ def _collect_shell_files() -> dict[str, list[str]]:
 
     Searches functions/ subdirectories and include/ files across all lang/
     shell prefixes. Shell type is determined by shebang line.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Mapping of shell type (``"posix"``, ``"bash"``, ``"zsh"``) to the
+        sorted list of shell file paths for that type.
     """
     from koopa.prefix import bash_prefix, sh_prefix, zsh_prefix
 
@@ -548,7 +619,21 @@ _ILLEGAL_ZSH = [
 
 
 def _check_illegal_strings(files: list[str], extra_patterns: list[tuple[str, str]]) -> list[str]:
-    """Check files for illegal string patterns. Returns list of error messages."""
+    """Check files for illegal string patterns. Returns list of error messages.
+
+    Parameters
+    ----------
+    files : list[str]
+        Paths of shell files to check.
+    extra_patterns : list[tuple[str, str]]
+        Additional (regex, message) pairs to check, on top of the patterns
+        in ``_ILLEGAL_ALL``.
+
+    Returns
+    -------
+    list[str]
+        Error messages for each illegal pattern match found.
+    """
     import re
 
     patterns = [(re.compile(p), msg) for p, msg in _ILLEGAL_ALL + extra_patterns]
@@ -626,6 +711,16 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
     Codex CLI hardcodes the same ``MAX_DESCRIPTION_LEN=1024``. Plain ``>`` folds in a
     trailing newline (parsed = raw + 1), silently spending 1 char of that budget for
     nothing; an over-cap skill gets dropped by whichever CLI reads it.
+
+    Parameters
+    ----------
+    path : str
+        Path to the ``SKILL.md`` file to validate.
+
+    Returns
+    -------
+    list[str]
+        Error messages describing any frontmatter violations found.
     """
     with open(path, errors="replace") as fh:
         lines = fh.read().split("\n")
@@ -672,6 +767,12 @@ def _handle_check_skills(args: list[str]) -> None:
 
     Validates every ``SKILL.md``'s frontmatter for cross-CLI compatibility. See
     ``_skill_frontmatter_errors`` for the exact rules enforced.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: optional skill-directory
+        root paths to check.
     """
     import argparse
     import glob
@@ -731,7 +832,15 @@ def _handle_check_skills(args: list[str]) -> None:
 
 
 def _handle_check_app_versions(args: list[str]) -> None:
-    """Handle ``koopa develop check-app-versions``."""
+    """Handle ``koopa develop check-app-versions``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: optional app names to check,
+        and flags such as ``--json``, ``--source``, ``--no-update``,
+        ``--s3-upload``, and ``--reset-cache``.
+    """
     import argparse
 
     from koopa.version_check import (
@@ -822,8 +931,19 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json(results, s3_upload=parsed.s3_upload)
 
 
-def _handle_pytest(args: list[str]) -> None:
-    """Handle ``koopa develop pytest``."""
+def _run_pytest(args: list[str]) -> int:
+    """Run ``pytest`` over the koopa test suite.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pytest`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``pytest``.
+    """
     from koopa.prefix import python_prefix
 
     py_prefix = python_prefix()
@@ -836,11 +956,33 @@ def _handle_pytest(args: list[str]) -> None:
     env = os.environ.copy()
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = f"{src_dir}:{existing}" if existing else src_dir
-    sys.exit(subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode)
+    return subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode
 
 
-def _handle_pyright(args: list[str]) -> None:
-    """Handle ``koopa develop pyright``."""
+def _handle_pytest(args: list[str]) -> None:
+    """Handle ``koopa develop pytest``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pytest`` invocation.
+    """
+    sys.exit(_run_pytest(args))
+
+
+def _run_pyright(args: list[str]) -> int:
+    """Run ``pyright`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyright`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``pyright``.
+    """
     from koopa.prefix import python_prefix
 
     src_dir = os.path.join(python_prefix(), "src", "koopa")
@@ -848,7 +990,189 @@ def _handle_pyright(args: list[str]) -> None:
     if pyright_cmd is None:
         msg = "pyright is not installed."
         raise RuntimeError(msg)
-    sys.exit(subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode)
+    return subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode
+
+
+def _handle_pyright(args: list[str]) -> None:
+    """Handle ``koopa develop pyright``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyright`` invocation.
+    """
+    sys.exit(_run_pyright(args))
+
+
+def _run_ty(args: list[str]) -> int:
+    """Run ``ty check`` over the koopa source tree.
+
+    Passes ``--project`` explicitly, since ``ty`` resolves ``pyproject.toml``
+    from the project directory rather than from the target path -- unlike
+    ``ruff`` and ``numpydoc``, which both walk up from the target path itself.
+    Without it, ``[tool.ty]`` (its ``extra-paths`` in particular) is silently
+    ignored when the caller's working directory is outside the koopa checkout.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ty check`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``ty check``.
+    """
+    from koopa.prefix import koopa_prefix, python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    ty_cmd = shutil.which("ty")
+    if ty_cmd is None:
+        msg = "ty is not installed."
+        raise RuntimeError(msg)
+    cmd = [ty_cmd, "check", "--project", koopa_prefix(), src_dir, *args]
+    return subprocess.run(cmd, check=False).returncode
+
+
+def _handle_ty(args: list[str]) -> None:
+    """Handle ``koopa develop ty``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ty check`` invocation.
+    """
+    sys.exit(_run_ty(args))
+
+
+def _run_numpydoc(args: list[str]) -> int:
+    """Run ``numpydoc lint`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``numpydoc lint`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``numpydoc lint``.
+    """
+    from pathlib import Path
+
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    numpydoc_cmd = shutil.which("numpydoc")
+    if numpydoc_cmd is None:
+        msg = "numpydoc is not installed."
+        raise RuntimeError(msg)
+    files = sorted(str(p) for p in Path(src_dir).rglob("*.py"))
+    return subprocess.run([numpydoc_cmd, "lint", *files, *args], check=False).returncode
+
+
+def _handle_numpydoc(args: list[str]) -> None:
+    """Handle ``koopa develop numpydoc``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``numpydoc lint`` invocation.
+    """
+    sys.exit(_run_numpydoc(args))
+
+
+def _run_ruff_check(args: list[str]) -> int:
+    """Run ``ruff check`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ruff check`` invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``ruff check``.
+    """
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    ruff_cmd = shutil.which("ruff")
+    if ruff_cmd is None:
+        msg = "ruff is not installed."
+        raise RuntimeError(msg)
+    return subprocess.run([ruff_cmd, "check", src_dir, *args], check=False).returncode
+
+
+def _run_ruff_format_check(args: list[str]) -> int:
+    """Run ``ruff format --check`` over the koopa source tree.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``ruff format --check``
+        invocation.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``ruff format --check``.
+    """
+    from koopa.prefix import python_prefix
+
+    src_dir = os.path.join(python_prefix(), "src", "koopa")
+    ruff_cmd = shutil.which("ruff")
+    if ruff_cmd is None:
+        msg = "ruff is not installed."
+        raise RuntimeError(msg)
+    cmd = [ruff_cmd, "format", "--check", src_dir, *args]
+    return subprocess.run(cmd, check=False).returncode
+
+
+def _handle_check(args: list[str]) -> None:
+    """Handle ``koopa develop check``.
+
+    Runs the full Python quality gate as one command: ``ruff check``,
+    ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
+    ``pytest``. Every phase runs even after an earlier one fails, so a single
+    invocation surfaces every problem instead of stopping at the first.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. Rejected if non-empty, since
+        an argument cannot be routed unambiguously across six tools.
+    """
+    from koopa.alert import alert, alert_success, warn
+
+    if args:
+        msg = (
+            "'koopa develop check' takes no arguments. Run the individual "
+            "subcommands instead: ruff-check, ruff-format-check, pyright, "
+            "ty, numpydoc, pytest."
+        )
+        raise RuntimeError(msg)
+    phases: list[tuple[str, Callable[[list[str]], int]]] = [
+        ("ruff check", _run_ruff_check),
+        ("ruff format", _run_ruff_format_check),
+        ("pyright", _run_pyright),
+        ("ty check", _run_ty),
+        ("numpydoc", _run_numpydoc),
+        ("pytest", _run_pytest),
+    ]
+    failed: list[str] = []
+    for label, runner in phases:
+        alert(f"Running {label}.")
+        if runner([]) == 0:
+            alert_success(f"{label} passed.")
+        else:
+            warn(f"{label} failed.")
+            failed.append(label)
+    if failed:
+        msg = f"{len(failed)} of {len(phases)} checks failed: {', '.join(failed)}."
+        raise RuntimeError(msg)
+    alert_success("All checks passed.")
 
 
 def _handle_generate_completion() -> None:
@@ -862,7 +1186,24 @@ def _handle_generate_completion() -> None:
 
 
 def _list_s3_keys(aws: str, bucket: str, prefix: str, profile: str) -> set[str]:
-    """List all object keys in bucket under prefix via paginated list-objects-v2."""
+    """List all object keys in bucket under prefix via paginated list-objects-v2.
+
+    Parameters
+    ----------
+    aws : str
+        Path to the ``aws`` CLI executable.
+    bucket : str
+        S3 bucket name to list.
+    prefix : str
+        Key prefix to filter listed objects by.
+    profile : str
+        AWS CLI profile name to use.
+
+    Returns
+    -------
+    set[str]
+        All object keys found under the given prefix.
+    """
     import json as _json
 
     keys: set[str] = set()
@@ -930,6 +1271,12 @@ def _handle_mirror_src(args: list[str]) -> None:  # noqa: C901, PLR0912, PLR0915
     Downloads source tarballs from upstream and uploads to the
     private koopa S3 src/ mirror. With no args, mirrors all
     apps with a ``"src_url"`` defined in app.json.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: optional app names to
+        mirror, and an optional ``--prune`` flag.
     """
     import time
 
@@ -1123,6 +1470,12 @@ def _handle_audit_src_mirror(args: list[str]) -> None:
     Checks which mirror apps have their current source tarball present in
     the private koopa S3 src/ mirror using a lightweight head-object call.
     Exits 1 if any are missing.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: optional app names to audit
+        (default: every app with a ``"src_url"`` in app.json).
     """
     import shutil as _shutil
 
@@ -1234,6 +1587,12 @@ def _handle_remove_app(args: list[str]) -> None:
     Run this command BEFORE editing installer files or removing the dep from
     app.json dependency lists so that auto-detection of reverse dependencies
     still works.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: the app name to remove, and
+        an optional ``--revdeps <app>...`` override list.
     """
     import os
     from datetime import date
@@ -1314,6 +1673,11 @@ def _handle_bump_revision(args: list[str]) -> None:
 
     Increments the ``revision`` field by 1 for each named app in app.json.
     This marks the app as stale so ``koopa update`` will rebuild it.
+
+    Parameters
+    ----------
+    args : list[str]
+        App names to bump the revision counter for.
     """
     from koopa.io import export_app_json, import_app_json
 
@@ -1360,6 +1724,11 @@ def _handle_bump_venv_version(_: list[str]) -> None:
 
     Stamps a new venv version in etc/koopa/venv-version.txt.
     This marks the .venv as stale so ``koopa update`` will reinstall it.
+
+    Parameters
+    ----------
+    _ : list[str]
+        Raw CLI arguments for this subcommand, unused.
     """
     import time
 
@@ -1381,6 +1750,11 @@ def _handle_bump_bootstrap(_: list[str]) -> None:
 
     Stamps a new bootstrap version in etc/koopa/bootstrap-version.txt.
     This marks existing bootstraps as stale so ``koopa update`` will rebuild.
+
+    Parameters
+    ----------
+    _ : list[str]
+        Raw CLI arguments for this subcommand, unused.
     """
     import time
 
@@ -1398,7 +1772,14 @@ def _handle_bump_bootstrap(_: list[str]) -> None:
 
 
 def _handle_app_deps(args: list[str]) -> None:
-    """Handle ``koopa develop app-deps <name>``."""
+    """Handle ``koopa develop app-deps <name>``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: the app name to list
+        dependencies for.
+    """
     from koopa.app import app_deps
 
     if not args:
@@ -1419,7 +1800,14 @@ def _handle_app_deps(args: list[str]) -> None:
 
 
 def _handle_app_revdeps(args: list[str]) -> None:
-    """Handle ``koopa develop app-revdeps <name>``."""
+    """Handle ``koopa develop app-revdeps <name>``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: the app name to list reverse
+        dependencies for, and an optional ``--all`` flag.
+    """
     from koopa.app import app_revdeps
 
     if not args:
@@ -1457,21 +1845,39 @@ def _handle_circular_dependencies() -> None:
 
 
 def _handle_generate_man(args: list[str]) -> None:
-    """Handle ``koopa develop generate-man``."""
+    """Handle ``koopa develop generate-man``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand, unused.
+    """
     from koopa.generate_man import write_man
 
     write_man()
 
 
 def _handle_generate_docs(_: list[str]) -> None:
-    """Handle ``koopa develop generate-docs``."""
+    """Handle ``koopa develop generate-docs``.
+
+    Parameters
+    ----------
+    _ : list[str]
+        Raw CLI arguments for this subcommand, unused.
+    """
     from koopa.generate_docs import generate_docs
 
     generate_docs()
 
 
 def _handle_update_docs(_: list[str]) -> None:
-    """Handle ``koopa develop update-docs``."""
+    """Handle ``koopa develop update-docs``.
+
+    Parameters
+    ----------
+    _ : list[str]
+        Raw CLI arguments for this subcommand, unused.
+    """
     from koopa.alert import alert_success
     from koopa.update_docs import update_docs
 
@@ -1480,7 +1886,13 @@ def _handle_update_docs(_: list[str]) -> None:
 
 
 def _handle_find_ignored_bin_files(_: list[str]) -> None:
-    """Handle ``koopa develop find-ignored-bin-files``."""
+    """Handle ``koopa develop find-ignored-bin-files``.
+
+    Parameters
+    ----------
+    _ : list[str]
+        Raw CLI arguments for this subcommand, unused.
+    """
     from koopa.prefix import koopa_prefix
 
     prefix = koopa_prefix()
@@ -1510,6 +1922,11 @@ def _handle_orphan_apps(args: list[str]) -> None:
     Finds apps in app.json that no other app depends on.
     By default only shows non-default library/build-tool orphans.
     Use --all to show all orphans including leaf user tools.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: an optional ``--all`` flag.
     """
     from koopa.io import import_app_json
     from koopa.text import plural
@@ -1556,6 +1973,11 @@ def _handle_conda_candidates(args: list[str]) -> None:
 
     Finds apps that build from source but are available on conda-forge or bioconda.
     Use --verify to query conda channels and show available versions.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: an optional ``--verify`` flag.
     """
     import json as json_mod
     import urllib.request
@@ -1615,6 +2037,13 @@ def _handle_activation_speed_test(args: list[str]) -> None:
     Measures shell activation time for all supported shells and reports
     whether each shell meets its threshold. Exits non-zero if any shell
     exceeds its threshold.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: ``--runs``, ``--shells``,
+        ``--threshold-bash``, ``--threshold-fish``, ``--threshold-zsh``,
+        and ``--verbose``.
     """
     import argparse
     import statistics
@@ -1741,6 +2170,12 @@ def _handle_activation_fork_audit(args: list[str]) -> None:
     Counts subprocess forks (``$(...)``) in the shell activation path and
     compares against thresholds. Exits non-zero if any threshold is exceeded.
     This is a static analysis check — no shell is spawned.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: ``--threshold-bash``,
+        ``--threshold-zsh``, and ``--verbose``.
     """
     import argparse
     import re
@@ -1873,6 +2308,17 @@ def _detect_color_mode_thrash(
     - Any other line is ignored.
 
     Returns ``(longest_run_length, mode_timestamp_pairs_for_that_run)``.
+
+    Parameters
+    ----------
+    lines : list[str]
+        Lines of the color-mode sync log to scan.
+
+    Returns
+    -------
+    tuple[int, list[tuple[str, str | None]]]
+        The length of the longest alternating apply-run, and the
+        (mode, timestamp) pairs making up that run.
     """
     import re
 
@@ -1911,6 +2357,12 @@ def _handle_color_mode_audit(args: list[str]) -> None:
     ``Color mode already applied:`` line between them.  Threshold default of 4
     means light→dark→light→dark, which is unambiguously machine thrash — a
     human cannot toggle that fast.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: ``--threshold``, ``--log``,
+        and ``--verbose``.
     """
     import argparse
     import platform
@@ -2019,8 +2471,11 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "generate-completion": lambda _: _handle_generate_completion(),
     "generate-man": _handle_generate_man,
     "generate-docs": _handle_generate_docs,
+    "check": _handle_check,
+    "numpydoc": _handle_numpydoc,
     "pytest": _handle_pytest,
     "pyright": _handle_pyright,
+    "ty": _handle_ty,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),
@@ -2050,7 +2505,14 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
 
 
 def handle_develop(remainder: list[str]) -> None:
-    """Dispatch ``koopa develop ...`` commands."""
+    """Dispatch ``koopa develop ...`` commands.
+
+    Parameters
+    ----------
+    remainder : list[str]
+        Raw CLI arguments after ``koopa develop``: the subcommand name
+        followed by its own arguments.
+    """
     if not remainder:
         print("Error: no develop command specified.", file=sys.stderr)
         sys.exit(1)

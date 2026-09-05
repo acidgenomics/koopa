@@ -8,7 +8,13 @@ from koopa.installers._build_helper import activate_app_deps, download_extract_c
 
 
 def _readline_prefix() -> str:
-    """Resolve the installed readline prefix."""
+    """Resolve the installed readline prefix.
+
+    Returns
+    -------
+    str
+        Real path to the installed readline app prefix.
+    """
     from koopa.prefix import opt_prefix
 
     return os.path.realpath(os.path.join(opt_prefix(), "readline"))
@@ -21,7 +27,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install sqlite."""
+    """Install sqlite.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     env = activate_app_deps()
     download_extract_cd()
     # SQLite >= 3.53 uses autosetup with proj.tcl which requires Tcl 8.6

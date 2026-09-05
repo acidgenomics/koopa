@@ -22,6 +22,17 @@ def main(
     ones, update, and refresh the lockfile). lazy.nvim auto-installs missing
     plugins at startup but never cleans, so this is the only thing that
     removes an orphaned plugin left behind by a removed spec.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Print verbose output.
     """
     if os.geteuid() == 0:
         msg = "Must not be run as root."

@@ -4,13 +4,25 @@
 def argsort(object: list, reverse: bool = False) -> list[int]:
     """Return the indices that would sort an array.
 
-    See Also
-    --------
-    - https://stackoverflow.com/questions/3071415/
-    - https://stackoverflow.com/questions/6422700/
-    - https://stackoverflow.com/questions/6632188/
-    - https://numpy.org/doc/stable/reference/generated/numpy.argsort.html
-    - https://docs.python.org/3/howto/sorting.html
+    Parameters
+    ----------
+    object : list
+        Array-like values to sort.
+    reverse : bool, optional
+        Sort in descending order instead of ascending.
+
+    Returns
+    -------
+    list[int]
+        Indices into ``object`` that would sort it.
+
+    Notes
+    -----
+    https://stackoverflow.com/questions/3071415/
+    https://stackoverflow.com/questions/6422700/
+    https://stackoverflow.com/questions/6632188/
+    https://numpy.org/doc/stable/reference/generated/numpy.argsort.html
+    https://docs.python.org/3/howto/sorting.html
 
     Examples
     --------
@@ -32,9 +44,19 @@ def argsort(object: list, reverse: bool = False) -> list[int]:
 def unique_pos(object: list) -> list:
     """Return the position index of unique values.
 
-    See Also
-    --------
-    - https://stackoverflow.com/questions/56830995/
+    Parameters
+    ----------
+    object : list
+        Values to search for the first occurrence of each unique value.
+
+    Returns
+    -------
+    list
+        Index of the first occurrence of each unique value, sorted by value.
+
+    Notes
+    -----
+    https://stackoverflow.com/questions/56830995/
 
     Examples
     --------

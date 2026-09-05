@@ -17,12 +17,23 @@ def main(
     Data-driven approach: all `defaults write` calls are stored as tuples
     and iterated over for clean, maintainable code.
 
-    See Also
-    --------
-    - https://github.com/nix-darwin/nix-darwin
-    - https://github.com/kevinSuttle/macOS-Defaults
-    - https://macos-defaults.com/
-    - https://github.com/brokosz/macos-defaults
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Print verbose output.
+
+    Notes
+    -----
+    https://github.com/nix-darwin/nix-darwin
+    https://github.com/kevinSuttle/macOS-Defaults
+    https://macos-defaults.com/
+    https://github.com/brokosz/macos-defaults
     """
     if sys.platform != "darwin":
         msg = "macOS only."
@@ -619,6 +630,8 @@ def main(
         ("com.apple.TextEdit", "RichText", "-int", "0"),
         ("com.apple.TextEdit", "PlainTextEncoding", "-int", "4"),
         ("com.apple.TextEdit", "PlainTextEncodingForWrite", "-int", "4"),
+        # BBEdit.
+        ("com.barebones.bbedit", "DefaultLanguageNameForNewDocuments", "-string", "Markdown"),
         # Google Chrome.
         (
             "com.google.Chrome",
@@ -693,11 +706,15 @@ def main(
             [defaults, "write", "-globalDomain", key, type_flag, value],
             check=True,
         )
-    # Delete keys where "automatic"/"multicolor" is represented by absence.
+    # Delete keys where "multicolor" is represented by absence.
     # Check for the key first to avoid `defaults` printing "Domain not found"
     # when the key is absent.
+    # NOTE: AppleInterfaceStyle is NOT included here. Unlike the accent/highlight/
+    # icon-tint colors below, its absence is not "automatic" — it is the live
+    # current appearance (absent = light, "Dark" = dark), which macOS itself
+    # keeps in sync with AppleInterfaceStyleSwitchesAutomatically. Deleting it
+    # force-switches the system to light mode until the next real sunset/sunrise.
     for domain, key in [
-        ("-globalDomain", "AppleInterfaceStyle"),
         ("NSGlobalDomain", "AppleAccentColor"),
         ("NSGlobalDomain", "AppleHighlightColor"),
         ("NSGlobalDomain", "AppleIconAppearanceTintColor"),

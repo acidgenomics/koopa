@@ -21,6 +21,16 @@ def _parse_dotenv(env_path: Path | None = None) -> dict[str, str]:
     """Parse '<koopa-root>/.env' into a dict, without touching 'os.environ'.
 
     *env_path* is exposed for tests; production callers always use the default.
+
+    Parameters
+    ----------
+    env_path : Path | None, optional
+        Path to the '.env' file to parse. Defaults to '<koopa-root>/.env'.
+
+    Returns
+    -------
+    dict[str, str]
+        Mapping of key to value for each entry parsed from the file.
     """
     if env_path is None:
         env_path = Path(__file__).parents[4] / ".env"
@@ -46,6 +56,16 @@ def dotenv_value(key: str) -> str:
     'koopa.system.revert_direnv_env' is that a project-scoped credential must
     not reach koopa's subprocesses; a helper that loaded the entire file to
     answer one lookup put every '.env' secret straight back.
+
+    Parameters
+    ----------
+    key : str
+        Environment variable name to look up.
+
+    Returns
+    -------
+    str
+        The resolved value, or an empty string if the key is not set.
     """
     value = os.environ.get(key, "")
     if value:
@@ -54,7 +74,13 @@ def dotenv_value(key: str) -> str:
 
 
 def aws_account_id() -> str:
-    """Return the AWS account ID from AWS_ACCOUNT_ID env var, raising if absent."""
+    """Return the AWS account ID from AWS_ACCOUNT_ID env var, raising if absent.
+
+    Returns
+    -------
+    str
+        The AWS account ID.
+    """
     account_id = dotenv_value("AWS_ACCOUNT_ID")
     if not account_id:
         msg = "AWS_ACCOUNT_ID must be set (in environment or <koopa-root>/.env)."
@@ -67,6 +93,16 @@ def koopa_s3_bucket(role: str) -> str:
 
     Bucket naming convention: <role>-<account-id>-us-east-1-an.
     Examples: koopa_s3_bucket('r'), koopa_s3_bucket('artifacts').
+
+    Parameters
+    ----------
+    role : str
+        Bucket role slug (e.g. 'r' or 'artifacts').
+
+    Returns
+    -------
+    str
+        The full S3 bucket name for the given role.
     """
     return f"{role}-{aws_account_id()}-us-east-1-an"
 
@@ -122,6 +158,24 @@ def _aws(
 
     *env* overrides the inherited environment. A value of 'None' removes
     that variable instead of setting it.
+
+    Parameters
+    ----------
+    *args : str
+        Positional arguments passed to the 'aws' CLI, after the program name.
+    capture : bool, optional
+        Capture stdout and stderr as text instead of streaming to the console.
+    timeout : int, optional
+        Maximum number of seconds to wait for the command to complete.
+    env : dict[str, str | None] | None, optional
+        Environment variable overrides to apply on top of the inherited
+        environment. A value of 'None' removes that variable instead of
+        setting it.
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        The completed AWS CLI process.
     """
     cmd = ["aws", *args]
     run_env = os.environ.copy()
@@ -151,7 +205,29 @@ def aws_s3_sync(
     size_only: bool = False,
     profile: str | None = None,
 ) -> None:
-    """Sync files between local and S3 or between S3 buckets."""
+    """Sync files between local and S3 or between S3 buckets.
+
+    Parameters
+    ----------
+    source : str
+        Source path or S3 URI to sync from.
+    target : str
+        Destination path or S3 URI to sync to.
+    delete : bool, optional
+        Delete files in the target that are not present in the source.
+    exclude : list[str] | None, optional
+        Glob patterns of files to exclude from the sync.
+    include : list[str] | None, optional
+        Glob patterns of files to re-include after an exclude pattern.
+    dryrun : bool, optional
+        Show what would be synced without transferring any files.
+    follow_symlinks : bool, optional
+        Follow symbolic links when syncing local files.
+    size_only : bool, optional
+        Compare files by size only, skipping the last-modified timestamp check.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+    """
     args = ["s3", "sync", source, target]
     if delete:
         args.append("--delete")
@@ -178,7 +254,22 @@ def aws_s3_ls(
     recursive: bool = False,
     profile: str | None = None,
 ) -> str:
-    """List S3 objects."""
+    """List S3 objects.
+
+    Parameters
+    ----------
+    path : str
+        S3 URI to list.
+    recursive : bool, optional
+        List objects recursively under the given path.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    str
+        The raw stdout output of the 'aws s3 ls' command.
+    """
     args = ["s3", "ls", path]
     if recursive:
         args.append("--recursive")
@@ -194,7 +285,22 @@ def s3_object_exists(
     *,
     profile: str = "acidgenomics",
 ) -> bool:
-    """Check whether an object exists in an S3 bucket via head-object."""
+    """Check whether an object exists in an S3 bucket via head-object.
+
+    Parameters
+    ----------
+    bucket : str
+        Name of the S3 bucket.
+    key : str
+        Object key to check for.
+    profile : str, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    bool
+        True if the object exists in the bucket.
+    """
     result = subprocess.run(
         [
             "aws",
@@ -220,7 +326,19 @@ def aws_s3_cp(
     recursive: bool = False,
     profile: str | None = None,
 ) -> None:
-    """Copy files to/from S3."""
+    """Copy files to/from S3.
+
+    Parameters
+    ----------
+    source : str
+        Source path or S3 URI to copy from.
+    target : str
+        Destination path or S3 URI to copy to.
+    recursive : bool, optional
+        Copy a directory or prefix recursively.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+    """
     args = ["s3", "cp", source, target]
     if recursive:
         args.append("--recursive")
@@ -236,7 +354,19 @@ def aws_s3_cp_regex(
     *,
     profile: str | None = None,
 ) -> None:
-    """Copy S3 files matching a regex pattern."""
+    """Copy S3 files matching a regex pattern.
+
+    Parameters
+    ----------
+    source_dir : str
+        Source directory or S3 URI to copy from.
+    target_dir : str
+        Destination directory or S3 URI to copy to.
+    pattern : str
+        Glob pattern passed to the AWS CLI '--include' filter.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+    """
     args = [
         "s3",
         "cp",
@@ -260,7 +390,24 @@ def aws_s3_find(
     pattern: str = "",
     profile: str | None = None,
 ) -> list[str]:
-    """Find files in S3 matching a pattern."""
+    """Find files in S3 matching a pattern.
+
+    Parameters
+    ----------
+    bucket : str
+        Name of the S3 bucket to search.
+    prefix : str, optional
+        Key prefix to restrict the listing to.
+    pattern : str, optional
+        Regular expression used to filter the returned keys.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    list[str]
+        Object keys matching the prefix and pattern.
+    """
     args = ["s3api", "list-objects-v2", "--bucket", bucket]
     if prefix:
         args.extend(["--prefix", prefix])
@@ -282,7 +429,24 @@ def aws_s3_list_large_files(
     prefix: str = "",
     profile: str | None = None,
 ) -> list[tuple[str, float]]:
-    """List large files in an S3 bucket."""
+    """List large files in an S3 bucket.
+
+    Parameters
+    ----------
+    bucket : str
+        Name of the S3 bucket to search.
+    min_size_mb : float, optional
+        Minimum object size, in megabytes, to include in the results.
+    prefix : str, optional
+        Key prefix to restrict the listing to.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    list[tuple[str, float]]
+        Pairs of object key and size in megabytes, sorted largest first.
+    """
     args = ["s3api", "list-objects-v2", "--bucket", bucket]
     if prefix:
         args.extend(["--prefix", prefix])
@@ -307,7 +471,24 @@ def aws_s3_delete_versioned_objects(
     glacier: bool = False,
     profile: str | None = None,
 ) -> int:
-    """Delete versioned objects (optionally only Glacier storage class)."""
+    """Delete versioned objects (optionally only Glacier storage class).
+
+    Parameters
+    ----------
+    bucket : str
+        Name of the S3 bucket to delete versions from.
+    prefix : str, optional
+        Key prefix to restrict the deletion to.
+    glacier : bool, optional
+        Delete only versions whose storage class is Glacier.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    int
+        Number of object versions and delete markers removed.
+    """
     args = ["s3api", "list-object-versions", "--bucket", bucket]
     if prefix:
         args.extend(["--prefix", prefix])
@@ -357,7 +538,22 @@ def aws_s3_dot_clean(
     dryrun: bool = False,
     profile: str | None = None,
 ) -> list[str]:
-    """Remove dot files (macOS cruft) from an S3 path."""
+    """Remove dot files (macOS cruft) from an S3 path.
+
+    Parameters
+    ----------
+    path : str
+        S3 URI to clean.
+    dryrun : bool, optional
+        Report matching keys without deleting them.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    list[str]
+        Keys of the dot files that were removed (or would be, under dryrun).
+    """
     ls_args = ["s3", "ls", path, "--recursive"]
     if profile:
         ls_args.extend(["--profile", profile])
@@ -386,7 +582,17 @@ def aws_s3_mv_to_parent(
     dryrun: bool = False,
     profile: str | None = None,
 ) -> None:
-    """Move all objects in an S3 subdirectory up to the parent."""
+    """Move all objects in an S3 subdirectory up to the parent.
+
+    Parameters
+    ----------
+    path : str
+        S3 URI of the subdirectory to move up.
+    dryrun : bool, optional
+        Show what would be moved without transferring any objects.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+    """
     args = ["s3", "mv", path, path.rsplit("/", maxsplit=2)[0] + "/", "--recursive"]
     if dryrun:
         args.append("--dryrun")
@@ -396,7 +602,20 @@ def aws_s3_mv_to_parent(
 
 
 def aws_s3_bucket(name: str | None = None) -> str:
-    """Get S3 bucket URI."""
+    """Get S3 bucket URI.
+
+    Parameters
+    ----------
+    name : str | None, optional
+        Bucket name to build a URI for. If 'None', return the URI of the
+        first bucket listed by 'aws s3 ls'.
+
+    Returns
+    -------
+    str
+        The 's3://' URI for the resolved bucket, or an empty string if
+        *name* is 'None' and no buckets are listed.
+    """
     if name is None:
         result = _aws("s3", "ls")
         lines = result.stdout.strip().splitlines()
@@ -410,7 +629,18 @@ def aws_ec2_map_instance_ids_to_names(
     *,
     profile: str | None = None,
 ) -> list[dict]:
-    """Map EC2 instance IDs to their Name tags."""
+    """Map EC2 instance IDs to their Name tags.
+
+    Parameters
+    ----------
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    list[dict]
+        One dict per instance, with 'Id' and 'Name' keys.
+    """
     args = [
         "ec2",
         "describe-instances",
@@ -429,7 +659,21 @@ _IMDS_BASE = "http://169.254.169.254/latest"
 
 
 def _imds_get(path: str, *, timeout: int = 2) -> str:
-    """Fetch *path* from the EC2 instance metadata service, using IMDSv2."""
+    """Fetch *path* from the EC2 instance metadata service, using IMDSv2.
+
+    Parameters
+    ----------
+    path : str
+        Metadata path to fetch, relative to the IMDS base URL.
+    timeout : int, optional
+        Maximum number of seconds to wait for each IMDS request.
+
+    Returns
+    -------
+    str
+        The metadata value returned by IMDS, with surrounding whitespace
+        stripped.
+    """
     import urllib.request
 
     token_req = urllib.request.Request(
@@ -448,12 +692,24 @@ def _imds_get(path: str, *, timeout: int = 2) -> str:
 
 
 def aws_ec2_instance_id() -> str:
-    """Get the current EC2 instance ID via instance metadata."""
+    """Get the current EC2 instance ID via instance metadata.
+
+    Returns
+    -------
+    str
+        The current instance's ID.
+    """
     return _imds_get("meta-data/instance-id")
 
 
 def aws_ec2_region() -> str:
-    """Get the current EC2 instance's region via instance metadata."""
+    """Get the current EC2 instance's region via instance metadata.
+
+    Returns
+    -------
+    str
+        The current instance's region (e.g. 'us-east-1').
+    """
     return _imds_get("meta-data/placement/region")
 
 
@@ -470,6 +726,18 @@ def aws_ec2_stop(
     then ignores every ambient credential source and uses the instance
     profile from IMDS. Pass *region* with it, because neutralizing the config
     file also drops that file's 'region' setting.
+
+    Parameters
+    ----------
+    instance_ids : list[str]
+        IDs of the EC2 instances to stop.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+    region : str | None, optional
+        AWS region to target. Required when *instance_identity* is set.
+    instance_identity : bool, optional
+        Ignore ambient credentials and use the EC2 instance profile from
+        IMDS, to stop the host this call runs on.
     """
     args = ["ec2", "stop-instances", "--instance-ids", *instance_ids]
     if region:
@@ -486,7 +754,18 @@ def aws_ecr_login_private(
     account_id: str | None = None,
     profile: str | None = None,
 ) -> None:
-    """Login to private AWS ECR."""
+    """Login to private AWS ECR.
+
+    Parameters
+    ----------
+    region : str, optional
+        AWS region hosting the private ECR registry.
+    account_id : str | None, optional
+        AWS account ID that owns the registry. If 'None', it is resolved via
+        'aws sts get-caller-identity'.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+    """
     args = ["ecr", "get-login-password", "--region", region]
     if profile:
         args.extend(["--profile", profile])
@@ -506,7 +785,13 @@ def aws_ecr_login_private(
 
 
 def aws_ecr_login_public(region: str = "us-east-1") -> None:
-    """Login to public AWS ECR."""
+    """Login to public AWS ECR.
+
+    Parameters
+    ----------
+    region : str, optional
+        AWS region used to request the public ECR login password.
+    """
     result = _aws("ecr-public", "get-login-password", "--region", region)
     password = result.stdout.strip()
     subprocess.run(
@@ -521,7 +806,19 @@ def aws_ec2_list_running_instances(
     *,
     profile: str | None = None,
 ) -> list[dict]:
-    """List running EC2 instances."""
+    """List running EC2 instances.
+
+    Parameters
+    ----------
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    list[dict]
+        One dict per running instance, with 'id', 'type', 'state', 'name',
+        'ip', and 'private_ip' keys.
+    """
     args = [
         "ec2",
         "describe-instances",
@@ -562,7 +859,30 @@ def aws_batch_fetch_and_run(
     memory: int = 2048,
     profile: str | None = None,
 ) -> dict:
-    """Submit an AWS Batch fetch-and-run job."""
+    """Submit an AWS Batch fetch-and-run job.
+
+    Parameters
+    ----------
+    queue : str
+        Name or ARN of the AWS Batch job queue to submit to.
+    job_definition : str
+        Name or ARN of the AWS Batch job definition to run.
+    job_name : str, optional
+        Name to assign to the submitted job.
+    command : list[str] | None, optional
+        Command override passed to the job's container.
+    vcpus : int, optional
+        Number of vCPUs to allocate to the job container.
+    memory : int, optional
+        Amount of memory, in megabytes, to allocate to the job container.
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    dict
+        The parsed 'aws batch submit-job' response.
+    """
     args = [
         "batch",
         "submit-job",
@@ -592,7 +912,22 @@ def aws_batch_list_jobs(
     status: str = "RUNNING",
     profile: str | None = None,
 ) -> list[dict]:
-    """List AWS Batch jobs."""
+    """List AWS Batch jobs.
+
+    Parameters
+    ----------
+    queue : str
+        Name or ARN of the AWS Batch job queue to list jobs from.
+    status : str, optional
+        Job status to filter by (e.g. 'RUNNING' or 'SUCCEEDED').
+    profile : str | None, optional
+        Named AWS CLI profile to use for the command.
+
+    Returns
+    -------
+    list[dict]
+        Job summaries matching the given status.
+    """
     args = [
         "batch",
         "list-jobs",

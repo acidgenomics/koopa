@@ -15,7 +15,15 @@ from pathlib import Path
 
 
 def _handle_prefix(args: list[str]) -> None:
-    """Handle ``koopa system prefix [name]``."""
+    """Handle ``koopa system prefix [name]``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the prefix name (an app
+        name, or ``"koopa"`` for the koopa root prefix); any remaining
+        elements are passed through to the resolved prefix function.
+    """
     import koopa.prefix as pfx
 
     if not args or args[0] == "koopa":
@@ -36,6 +44,11 @@ def _handle_version(args: list[str]) -> None:
 
     Resolves the version of programs by various methods:
     1. Run the command with a version argument and extract version.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command names to resolve the installed version for.
     """
     if not args:
         print("Usage: koopa system version <cmd>...", file=sys.stderr)
@@ -95,6 +108,11 @@ def _handle_which(args: list[str]) -> None:
     """Handle ``koopa system which [name]...``.
 
     Resolves command to full real path.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command names to resolve to a real, executable file path.
     """
     if not args:
         print("Usage: koopa system which <cmd>...", file=sys.stderr)
@@ -118,7 +136,16 @@ def _handle_which(args: list[str]) -> None:
 
 
 def _handle_list(args: list[str]) -> None:
-    """Handle ``koopa system list`` subcommands."""
+    """Handle ``koopa system list`` subcommands.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the list subcommand name
+        (``"app-versions"``, ``"launch-agents"``, or ``"path-priority"``);
+        any remaining elements are passed through to that subcommand's
+        handler.
+    """
     if not args:
         print("Error: no list subcommand specified.", file=sys.stderr)
         sys.exit(1)
@@ -142,6 +169,12 @@ def _handle_list_app_versions(_args: list[str]) -> None:
     """Handle ``koopa system list app-versions``.
 
     Lists installed app versions from app prefix directories.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        list subcommand handlers.
     """
     from koopa.prefix import app_prefix
 
@@ -178,6 +211,12 @@ def _handle_list_launch_agents(_args: list[str]) -> None:
     """Handle ``koopa system list launch-agents``.
 
     Lists files in LaunchAgents/LaunchDaemons directories (macOS).
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        list subcommand handlers.
     """
     from koopa.system import is_macos
 
@@ -208,6 +247,13 @@ def _handle_list_path_priority(args: list[str]) -> None:
     """Handle ``koopa system list path-priority``.
 
     Splits $PATH, deduplicates, and reports duplicates.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element, if present, overrides the
+        colon-separated PATH string to analyze; otherwise the process's
+        ``PATH`` environment variable is used.
     """
     path_str = args[0] if args else os.environ.get("PATH", "")
     all_dirs = path_str.split(":")
@@ -233,7 +279,14 @@ def _handle_list_path_priority(args: list[str]) -> None:
 
 
 def _handle_prune_apps(args: list[str] | None = None) -> None:
-    """Handle ``koopa system prune-apps``."""
+    """Handle ``koopa system prune-apps``.
+
+    Parameters
+    ----------
+    args : list[str] | None, optional
+        Command arguments. Pruning runs verbosely if ``"--verbose"`` is
+        present.
+    """
     from koopa.app import prune_apps
 
     verbose = args is not None and "--verbose" in args
@@ -255,7 +308,14 @@ def _handle_update_tex_packages() -> None:
 
 
 def _handle_check(_args: list[str]) -> None:
-    """Handle ``koopa system check``."""
+    """Handle ``koopa system check``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        system subcommand handlers.
+    """
     from koopa.check import check_system
     from koopa.install import _install_lock_path
 
@@ -324,7 +384,14 @@ def _get_glibc_version() -> str:
 
 
 def _handle_system_info(_args: list[str]) -> None:
-    """Handle ``koopa system info``."""
+    """Handle ``koopa system info``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        system subcommand handlers.
+    """
     import platform
 
     from koopa.git import (
@@ -428,7 +495,14 @@ def _handle_system_info(_args: list[str]) -> None:
 
 
 def _handle_switch_to_develop(_args: list[str]) -> None:
-    """Handle ``koopa system switch-to-develop``."""
+    """Handle ``koopa system switch-to-develop``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        system subcommand handlers.
+    """
     from koopa.alert import alert, alert_note
     from koopa.git import git_branch
     from koopa.prefix import koopa_prefix
@@ -764,7 +838,14 @@ def _handle_macos_flush_dns() -> None:
 
 
 def _handle_macos_force_eject(args: list[str]) -> None:
-    """Handle ``koopa system force-eject <volume-name>``."""
+    """Handle ``koopa system force-eject <volume-name>``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. Must contain exactly one element: the name of
+        the volume under ``/Volumes`` to force-unmount.
+    """
     from koopa.system import is_admin
 
     if not is_admin():
@@ -854,7 +935,15 @@ _MACOS_ADMIN_COMMANDS: set[str] = {
 
 
 def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
-    """Dispatch ``koopa system ...`` commands."""
+    """Dispatch ``koopa system ...`` commands.
+
+    Parameters
+    ----------
+    remainder : list[str]
+        Command-line arguments following ``koopa system``. The first
+        element is the subcommand name; any remaining elements are passed
+        through to that subcommand's handler.
+    """
     if not remainder:
         print("Error: no system command specified.", file=sys.stderr)
         sys.exit(1)
@@ -899,7 +988,15 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
 
 
 def _handle_add_user(args: list[str]) -> None:
-    """Handle ``koopa admin add-user``."""
+    """Handle ``koopa admin add-user``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the user name; remaining
+        elements are ``--home``, ``--shell``, ``--system``, and ``--sudo``
+        options.
+    """
     from koopa.os_linux import add_user
 
     if not args:
@@ -934,7 +1031,15 @@ def _handle_add_user(args: list[str]) -> None:
 
 
 def _handle_delete_user(args: list[str]) -> None:
-    """Handle ``koopa admin delete-user``."""
+    """Handle ``koopa admin delete-user``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the user name to delete;
+        an optional ``--remove-home`` flag also removes the home
+        directory.
+    """
     from koopa.os_linux import delete_user
 
     if not args:
@@ -946,7 +1051,14 @@ def _handle_delete_user(args: list[str]) -> None:
 
 
 def _handle_add_group(args: list[str]) -> None:
-    """Handle ``koopa admin add-group``."""
+    """Handle ``koopa admin add-group``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the group name; an
+        optional ``--system`` flag creates a system group.
+    """
     from koopa.os_linux import add_group
 
     if not args:
@@ -958,7 +1070,14 @@ def _handle_add_group(args: list[str]) -> None:
 
 
 def _handle_systemctl_stop(args: list[str]) -> None:
-    """Handle ``koopa admin systemctl-stop``."""
+    """Handle ``koopa admin systemctl-stop``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the name of the systemd
+        service to stop.
+    """
     from koopa.os_linux import systemctl_stop
 
     if not args:
@@ -968,7 +1087,14 @@ def _handle_systemctl_stop(args: list[str]) -> None:
 
 
 def _handle_systemctl_restart(args: list[str]) -> None:
-    """Handle ``koopa admin systemctl-restart``."""
+    """Handle ``koopa admin systemctl-restart``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the name of the systemd
+        service to restart.
+    """
     from koopa.os_linux import systemctl_restart
 
     if not args:
@@ -978,7 +1104,14 @@ def _handle_systemctl_restart(args: list[str]) -> None:
 
 
 def _handle_systemctl_disable(args: list[str]) -> None:
-    """Handle ``koopa admin systemctl-disable``."""
+    """Handle ``koopa admin systemctl-disable``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the name of the systemd
+        service to disable.
+    """
     from koopa.os_linux import systemctl_disable
 
     if not args:
@@ -988,7 +1121,14 @@ def _handle_systemctl_disable(args: list[str]) -> None:
 
 
 def _handle_systemctl_status(args: list[str]) -> None:
-    """Handle ``koopa admin systemctl-status``."""
+    """Handle ``koopa admin systemctl-status``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the name of the systemd
+        service to query the status of.
+    """
     from koopa.os_linux import systemctl_status
 
     if not args:
@@ -998,7 +1138,14 @@ def _handle_systemctl_status(args: list[str]) -> None:
 
 
 def _handle_configure_sshd(args: list[str]) -> None:
-    """Handle ``koopa admin configure-sshd``."""
+    """Handle ``koopa admin configure-sshd``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. Optional ``--port``, ``--permit-root-login``,
+        and ``--password-auth`` options configure the sshd daemon.
+    """
     from koopa.os_linux import configure_system_sshd
 
     port = 22
@@ -1026,7 +1173,14 @@ def _handle_configure_sshd(args: list[str]) -> None:
 
 
 def _handle_configure_lmod(args: list[str]) -> None:
-    """Handle ``koopa admin configure-lmod``."""
+    """Handle ``koopa admin configure-lmod``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the installation prefix
+        directory to configure Lmod for.
+    """
     from koopa.os_linux import configure_lmod
 
     if not args:
@@ -1036,7 +1190,15 @@ def _handle_configure_lmod(args: list[str]) -> None:
 
 
 def _handle_install_app(args: list[str]) -> None:
-    """Handle ``koopa admin install-app``."""
+    """Handle ``koopa admin install-app``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the app name to install;
+        an optional ``--manager`` option selects the Linux package
+        manager (``apt``, ``dnf``, ``apk``, ``pacman``, or ``zypper``).
+    """
     from koopa.os_linux import install_linux_app
 
     if not args:
@@ -1055,7 +1217,16 @@ def _handle_install_app(args: list[str]) -> None:
 
 
 def _handle_uninstall_app(args: list[str]) -> None:
-    """Handle ``koopa admin uninstall-app``."""
+    """Handle ``koopa admin uninstall-app``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command arguments. The first element is the app name to
+        uninstall; an optional ``--manager`` option selects the Linux
+        package manager (``apt``, ``dnf``, ``apk``, ``pacman``, or
+        ``zypper``).
+    """
     from koopa.os_linux import uninstall_linux_app
 
     if not args:
@@ -1074,21 +1245,41 @@ def _handle_uninstall_app(args: list[str]) -> None:
 
 
 def _handle_os_version(_args: list[str]) -> None:
-    """Handle ``koopa admin os-version``."""
+    """Handle ``koopa admin os-version``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import os_version
 
     print(os_version())
 
 
 def _handle_proc_cmdline(_args: list[str]) -> None:
-    """Handle ``koopa admin proc-cmdline``."""
+    """Handle ``koopa admin proc-cmdline``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import proc_cmdline
 
     print(proc_cmdline())
 
 
 def _handle_apt_install(args: list[str]) -> None:
-    """Handle ``koopa admin apt-install``."""
+    """Handle ``koopa admin apt-install``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the apt packages to install.
+    """
     from koopa.os_linux import apt_install
 
     if not args:
@@ -1098,7 +1289,13 @@ def _handle_apt_install(args: list[str]) -> None:
 
 
 def _handle_apt_remove(args: list[str]) -> None:
-    """Handle ``koopa admin apt-remove``."""
+    """Handle ``koopa admin apt-remove``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the apt packages to remove.
+    """
     from koopa.os_linux import apt_remove
 
     if not args:
@@ -1108,21 +1305,42 @@ def _handle_apt_remove(args: list[str]) -> None:
 
 
 def _handle_apt_update(_args: list[str]) -> None:
-    """Handle ``koopa admin apt-update``."""
+    """Handle ``koopa admin apt-update``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import apt_update
 
     apt_update()
 
 
 def _handle_apt_upgrade(_args: list[str]) -> None:
-    """Handle ``koopa admin apt-upgrade``."""
+    """Handle ``koopa admin apt-upgrade``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import apt_upgrade
 
     apt_upgrade()
 
 
 def _handle_apt_list_installed(_args: list[str]) -> None:
-    """Handle ``koopa admin apt-list-installed``."""
+    """Handle ``koopa admin apt-list-installed``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import apt_list_installed
 
     for pkg in apt_list_installed():
@@ -1130,7 +1348,13 @@ def _handle_apt_list_installed(_args: list[str]) -> None:
 
 
 def _handle_dnf_install(args: list[str]) -> None:
-    """Handle ``koopa admin dnf-install``."""
+    """Handle ``koopa admin dnf-install``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the dnf packages to install.
+    """
     from koopa.os_linux import dnf_install
 
     if not args:
@@ -1140,7 +1364,13 @@ def _handle_dnf_install(args: list[str]) -> None:
 
 
 def _handle_dnf_remove(args: list[str]) -> None:
-    """Handle ``koopa admin dnf-remove``."""
+    """Handle ``koopa admin dnf-remove``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the dnf packages to remove.
+    """
     from koopa.os_linux import dnf_remove
 
     if not args:
@@ -1150,14 +1380,27 @@ def _handle_dnf_remove(args: list[str]) -> None:
 
 
 def _handle_dnf_update(_args: list[str]) -> None:
-    """Handle ``koopa admin dnf-update``."""
+    """Handle ``koopa admin dnf-update``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import dnf_update
 
     dnf_update()
 
 
 def _handle_apk_install(args: list[str]) -> None:
-    """Handle ``koopa admin apk-install``."""
+    """Handle ``koopa admin apk-install``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the apk packages to install.
+    """
     from koopa.os_linux import apk_install
 
     if not args:
@@ -1167,7 +1410,13 @@ def _handle_apk_install(args: list[str]) -> None:
 
 
 def _handle_apk_remove(args: list[str]) -> None:
-    """Handle ``koopa admin apk-remove``."""
+    """Handle ``koopa admin apk-remove``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the apk packages to remove.
+    """
     from koopa.os_linux import apk_remove
 
     if not args:
@@ -1177,14 +1426,27 @@ def _handle_apk_remove(args: list[str]) -> None:
 
 
 def _handle_apk_update(_args: list[str]) -> None:
-    """Handle ``koopa admin apk-update``."""
+    """Handle ``koopa admin apk-update``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import apk_update
 
     apk_update()
 
 
 def _handle_pacman_install(args: list[str]) -> None:
-    """Handle ``koopa admin pacman-install``."""
+    """Handle ``koopa admin pacman-install``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the pacman packages to install.
+    """
     from koopa.os_linux import pacman_install
 
     if not args:
@@ -1194,7 +1456,13 @@ def _handle_pacman_install(args: list[str]) -> None:
 
 
 def _handle_pacman_remove(args: list[str]) -> None:
-    """Handle ``koopa admin pacman-remove``."""
+    """Handle ``koopa admin pacman-remove``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the pacman packages to remove.
+    """
     from koopa.os_linux import pacman_remove
 
     if not args:
@@ -1204,14 +1472,27 @@ def _handle_pacman_remove(args: list[str]) -> None:
 
 
 def _handle_pacman_update(_args: list[str]) -> None:
-    """Handle ``koopa admin pacman-update``."""
+    """Handle ``koopa admin pacman-update``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import pacman_update
 
     pacman_update()
 
 
 def _handle_zypper_install(args: list[str]) -> None:
-    """Handle ``koopa admin zypper-install``."""
+    """Handle ``koopa admin zypper-install``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the zypper packages to install.
+    """
     from koopa.os_linux import zypper_install
 
     if not args:
@@ -1221,7 +1502,13 @@ def _handle_zypper_install(args: list[str]) -> None:
 
 
 def _handle_zypper_remove(args: list[str]) -> None:
-    """Handle ``koopa admin zypper-remove``."""
+    """Handle ``koopa admin zypper-remove``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Names of the zypper packages to remove.
+    """
     from koopa.os_linux import zypper_remove
 
     if not args:
@@ -1231,7 +1518,14 @@ def _handle_zypper_remove(args: list[str]) -> None:
 
 
 def _handle_zypper_update(_args: list[str]) -> None:
-    """Handle ``koopa admin zypper-update``."""
+    """Handle ``koopa admin zypper-update``.
+
+    Parameters
+    ----------
+    _args : list[str]
+        Unused. Accepted for dispatch signature consistency with other
+        admin subcommand handlers.
+    """
     from koopa.os_linux import zypper_update
 
     zypper_update()
@@ -1283,7 +1577,15 @@ _ADMIN_HANDLERS: dict[str, Callable[[list[str]], None]] = {
 
 
 def handle_admin(remainder: list[str]) -> None:
-    """Dispatch ``koopa admin ...`` commands (require sudo/admin)."""
+    """Dispatch ``koopa admin ...`` commands (require sudo/admin).
+
+    Parameters
+    ----------
+    remainder : list[str]
+        Command-line arguments following ``koopa admin``. The first
+        element is the subcommand name; any remaining elements are passed
+        through to that subcommand's handler.
+    """
     from koopa.system import is_linux, is_macos
 
     if not remainder:

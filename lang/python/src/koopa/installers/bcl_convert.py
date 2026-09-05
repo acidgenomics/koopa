@@ -14,7 +14,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install BCL Convert."""
+    """Install BCL Convert.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     from koopa.app import installer_artifact_key
     from koopa.aws import koopa_s3_bucket, s3_object_exists
     from koopa.io import import_app_json

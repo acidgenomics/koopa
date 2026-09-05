@@ -49,9 +49,14 @@ ruff format lang/python/src/
 # Type checking with pyright
 pyright lang/python/src/
 
-# Check docstrings (interrogate)
-interrogate -v lang/python/src/
+# Type checking with ty
+ty check lang/python/src/koopa
+
+# Check docstrings (numpydoc)
+numpydoc lint $(find lang/python/src/koopa -name '*.py')
 ```
+
+Run the whole gate in one command with `koopa develop check`.
 
 ### Development Install
 

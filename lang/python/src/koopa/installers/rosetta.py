@@ -4,7 +4,15 @@ import subprocess
 
 
 def main(*, name: str, **kwargs: object) -> None:
-    """Install Rosetta 2 via softwareupdate."""
+    """Install Rosetta 2 via softwareupdate.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    **kwargs : object
+        Unused; accepted so the standard installer call signature works.
+    """
     subprocess.run(
         ["softwareupdate", "--install-rosetta", "--agree-to-license"],
         check=True,

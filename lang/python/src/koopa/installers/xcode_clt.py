@@ -12,7 +12,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install xcode-clt."""
+    """Install xcode-clt.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     clt_dir = "/Library/Developer/CommandLineTools"
     if os.path.isdir(clt_dir):
         print("Removing old Xcode CLT installation.", file=sys.stderr)

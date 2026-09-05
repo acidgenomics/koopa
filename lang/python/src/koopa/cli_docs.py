@@ -160,6 +160,7 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "bump-revision": "Bump the revision of one or more apps in app.json.",
     "bump-venv-version": "Bump the Python venv version.",
     "cache-functions": "Regenerate the cached Bash function library.",
+    "check": "Run the full Python quality gate: ruff, pyright, ty, numpydoc, pytest.",
     "check-app-versions": "Check upstream versions for all apps in app.json.",
     "check-skills": "Validate SKILL.md frontmatter for cross-CLI compatibility.",
     "circular-dependencies": "Detect circular dependency chains in app.json.",
@@ -188,9 +189,11 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "color-mode-audit": "Detect dark/light color-mode thrash in the sync log.",
     "conda-candidates": "Find source-built apps that are available on conda-forge or bioconda.",
     "find-ignored-bin-files": "Find files in bin/ that are ignored by git.",
+    "numpydoc": "Run the numpydoc docstring validator on the Python source tree.",
     "orphan-apps": "Find apps in app.json that no other app depends on.",
     "pyright": "Run the pyright type checker on the Python source tree.",
     "reset-revisions": "Remove the revision key from all apps in app.json.",
+    "ty": "Run the ty type checker on the Python source tree.",
 }
 
 DEVELOP_SYNOPSIS: dict[str, str] = {

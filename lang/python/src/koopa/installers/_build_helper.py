@@ -14,7 +14,20 @@ if TYPE_CHECKING:
 
 
 def _resolve_src_url(name: str, version: str) -> str:
-    """Look up and expand src_url from app.json for the given app."""
+    """Look up and expand src_url from app.json for the given app.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+
+    Returns
+    -------
+    str
+        The expanded ``src_url`` download URL.
+    """
     from koopa.version_check import _expand_src_url
 
     koopa_prefix = str(Path(__file__).resolve().parents[5])
@@ -29,7 +42,20 @@ def _resolve_src_url(name: str, version: str) -> str:
 
 
 def _resolve_extra_src_urls(name: str, version: str) -> list[str]:
-    """Look up and expand extra_src_urls from app.json for the given app."""
+    """Look up and expand extra_src_urls from app.json for the given app.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+
+    Returns
+    -------
+    list[str]
+        The expanded ``extra_src_urls`` download URLs.
+    """
     from koopa.version_check import _expand_src_url
 
     koopa_prefix = str(Path(__file__).resolve().parents[5])
@@ -41,7 +67,14 @@ def _resolve_extra_src_urls(name: str, version: str) -> list[str]:
 
 
 def download_extract_cd(url: str | None = None) -> None:
-    """Download a tarball, extract into ``src/``, and chdir into it."""
+    """Download a tarball, extract into ``src/``, and chdir into it.
+
+    Parameters
+    ----------
+    url : str | None, optional
+        Tarball URL. Resolved from app.json's ``src_url`` for the current
+        app (see :func:`koopa.installers._context.get_app_name`) when omitted.
+    """
     from koopa.installers._context import get_app_name, get_app_version
 
     name = get_app_name()
@@ -60,13 +93,25 @@ def download_extract_cd(url: str | None = None) -> None:
 
 
 def extract_cd(tarball: str) -> None:
-    """Extract a tarball into ``src/`` and chdir into it."""
+    """Extract a tarball into ``src/`` and chdir into it.
+
+    Parameters
+    ----------
+    tarball : str
+        Path to the downloaded tarball.
+    """
     extract(tarball, "src")
     os.chdir("src")
 
 
 def activate_app_deps() -> "BuildEnv":
-    """Activate build_dependencies and dependencies from app.json for the current app."""
+    """Activate build_dependencies and dependencies from app.json for the current app.
+
+    Returns
+    -------
+    BuildEnv
+        Build environment with the app's dependencies activated.
+    """
     from koopa.app import _resolve_dep_dict
     from koopa.build import BuildEnv, activate_app
     from koopa.installers._context import get_app_name
@@ -98,6 +143,12 @@ def activate_app_deps() -> "BuildEnv":
 
 
 def remove_static_libs(prefix: str) -> None:
-    """Remove static ``.a`` libraries from prefix lib directory."""
+    """Remove static ``.a`` libraries from prefix lib directory.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
+    """
     for f in glob(os.path.join(prefix, "lib", "*.a")):
         os.unlink(f)

@@ -13,7 +13,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install elfutils."""
+    """Install elfutils.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     env = activate_app_deps()
     gettext_prefix = app_prefix("gettext")
     libiconv_prefix = app_prefix("libiconv")

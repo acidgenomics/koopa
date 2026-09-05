@@ -35,7 +35,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install neovim via conda, then patch the known unibilium soname bug."""
+    """Install neovim via conda, then patch the known unibilium soname bug.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     install_conda_package(
         name=get_str(kwargs, "name", name),
@@ -43,11 +56,18 @@ def main(
         prefix=prefix,
         yaml_file=get_str(kwargs, "yaml_file"),
         post_extract_fn=_fix_unibilium_soname if is_linux() else None,
+        app_name=name,
     )
 
 
 def _fix_unibilium_soname(libexec: str) -> None:
-    """Symlink the malformed soname nvim expects to the real library file."""
+    """Symlink the malformed soname nvim expects to the real library file.
+
+    Parameters
+    ----------
+    libexec : str
+        Path to the app's ``libexec`` directory.
+    """
     lib_dir = os.path.join(libexec, "lib")
     broken = os.path.join(lib_dir, _BROKEN_SONAME)
     if os.path.lexists(broken):

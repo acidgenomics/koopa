@@ -122,12 +122,24 @@ necessary version drop — see `apache-airflow`, `azure-cli`, `dbt`,
 - **`_SPECIAL_CASES`** — dict mapping app name → `_AppCheckSpec`. Checked first by
   `classify_app()`; apps not listed fall back to generic GitHub/PyPI/conda inference.
 - **`_run_check`** — the per-app worker (nested inside `check_app_versions`). Calls
-  `spec.check_fn`, runs the pre-release filter, writes the cache, then compares
-  `_version_key(sanitize_version(...))` to decide outdated/current/pinned-too-high.
+  `spec.check_fn`, runs the pre-release filter, calls `_hold_reason` for a hold,
+  writes the cache, then compares `_version_key(sanitize_version(...))` to decide
+  outdated/current/pinned-too-high.
+- **`_hold_reason`** — the single hold decision point. Combines `_held_message`
+  (the static `version_exclude`/`version_granularity` holds) and
+  `_pip_index_hold_message` (the dynamic pip-index-availability hold for a
+  pip-installed app). Both `_run_check` (fresh lookup) and `_cache_hit_result`
+  (cache-hit lookup) call it, so a hold applies the same way regardless of
+  which path resolved the app. Setting `latest_version = current` on a held
+  `VersionCheckResult` (not `None`) makes `is_outdated` False, so a held app
+  never lands in the "Outdated" report and is never re-cached as a pending
+  bump — this is what stops a permanently-held pip-installed app (e.g. `dbt`,
+  `pyright`) from being re-reported as newly outdated on every run.
 - **`update_app_json`** — recomputes `r.is_outdated` from `VersionCheckResult` and
-  writes `version`/`date` for every outdated app. `is_outdated` is a property that
-  re-evaluates on the stored `latest_version`; setting `latest_version = current`
-  (not `None`) suppresses an app across report, write, and cache uniformly.
+  writes `version`/`date` for every outdated app. Since `_hold_reason` already
+  ran at check time, an app reaching this function with `is_outdated` still True
+  has already cleared the `version_exclude` and pip-index holds; only the
+  `version_match` and artifact-staged holds still apply here, at write time.
 - **Cache** — `~/.cache/koopa/version-check.json`, 24-hour TTL. A cached pre-release
   is treated as a cache miss so a stale beta from a previous run can't leak.
 

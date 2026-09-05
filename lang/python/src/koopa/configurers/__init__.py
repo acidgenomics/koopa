@@ -40,6 +40,16 @@ def _candidate_platforms(platform: str) -> list[str]:
     keyed on the literal string ``"common"`` still resolves on a concrete
     host, while an explicit platform-specific entry (e.g. ``macos``) wins if
     both are registered.
+
+    Parameters
+    ----------
+    platform : str
+        Operating system platform slug requested by the caller.
+
+    Returns
+    -------
+    list[str]
+        Registry platform keys to try in order, most specific first.
     """
     if platform != "common":
         return [platform, "common"]
@@ -53,7 +63,23 @@ def _candidate_platforms(platform: str) -> list[str]:
 
 
 def _resolve_key(name: str, platform: str, mode: str) -> tuple[str, str, str] | None:
-    """Return the first matching registry key, or ``None`` if none match."""
+    """Return the first matching registry key, or ``None`` if none match.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"user"``).
+
+    Returns
+    -------
+    tuple[str, str, str] | None
+        The matching ``(name, platform, mode)`` registry key, or ``None``
+        if no candidate platform matches.
+    """
     for candidate in _candidate_platforms(platform):
         key = (name, candidate, mode)
         if key in PYTHON_CONFIGURERS:
@@ -62,7 +88,22 @@ def _resolve_key(name: str, platform: str, mode: str) -> tuple[str, str, str] | 
 
 
 def has_python_configurer(name: str, platform: str, mode: str) -> bool:
-    """Check if app has a Python-native configurer."""
+    """Check if app has a Python-native configurer.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"user"``).
+
+    Returns
+    -------
+    bool
+        True if a Python-native configurer is registered for this app.
+    """
     return _resolve_key(name, platform, mode) is not None
 
 
@@ -71,7 +112,22 @@ def get_python_configurer(
     platform: str,
     mode: str,
 ) -> Callable[..., None]:
-    """Dynamically import and return the configurer's ``main`` function."""
+    """Dynamically import and return the configurer's ``main`` function.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"user"``).
+
+    Returns
+    -------
+    Callable[..., None]
+        The configurer module's ``main`` function.
+    """
     key = _resolve_key(name, platform, mode)
     if key is None:
         raise KeyError((name, platform, mode))

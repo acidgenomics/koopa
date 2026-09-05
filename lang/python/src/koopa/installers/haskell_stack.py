@@ -17,7 +17,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install haskell-stack."""
+    """Install haskell-stack.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     machine = arch()
     os_id = "osx" if sys.platform == "darwin" else "linux"
     arch_id = "aarch64" if machine in ("aarch64", "arm64") else "x86_64"

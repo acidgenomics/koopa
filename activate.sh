@@ -49,6 +49,11 @@ details:
     Bash or Zsh is currently recommended.
     Also supports Ash, Busybox, Dash, and Ksh93 POSIX shells.
 
+    On a host where the login shell can't be changed (e.g. a shared HPC or
+    Slurm login node), koopa's '.profile' hands an interactive POSIX 'sh'
+    session off to Bash automatically, when Bash is available. Set
+    'KOOPA_NO_SHELL_UPGRADE=1' to opt out.
+
     For system-wide configuration on Linux, this should be called inside
     '/etc/profile.d/zzz-koopa.sh', owned by root.
 
@@ -58,11 +63,11 @@ details:
 
 examples:
     # Default mode.
-    . /usr/local/koopa/activate.sh
+    . /opt/koopa/activate.sh
 
     # Minimal mode.
     export KOOPA_MINIMAL=1
-    . /usr/local/koopa/activate.sh
+    . /opt/koopa/activate.sh
 END
 }
 
@@ -107,10 +112,22 @@ __koopa_export_koopa_prefix() {
         return 0
     fi
     __kvar_shell="$(__koopa_shell_name)"
-    __kvar_script="$("__koopa_${__kvar_shell}_source")"
+    case "$__kvar_shell" in
+        'bash')
+            __kvar_script="$(__koopa_bash_source)"
+            ;;
+        'zsh')
+            __kvar_script="$(__koopa_zsh_source)"
+            ;;
+        *)
+            __kvar_script="$(__koopa_sh_source)"
+            ;;
+    esac
     if [ ! -e "$__kvar_script" ]
     then
-        __koopa_warn 'Failed to locate koopa activate script.'
+        __koopa_warn \
+            'Failed to locate koopa activate script.' \
+            "Set 'KOOPA_PREFIX' to the koopa installation prefix."
         return 1
     fi
     # Note that running realpath on the file instead of the directory will
@@ -199,30 +216,6 @@ __koopa_is_arm64() {
     esac
 }
 
-__koopa_posix_source() {
-    # """
-    # POSIX source file location.
-    # @note Updated 2023-03-09.
-    #
-    # POSIX doesn't support file path resolution of sourced dot scripts.
-    # """
-    __kvar_prefix="${KOOPA_PREFIX:-}"
-    if [ -z "$__kvar_prefix" ] && [ -d '/opt/koopa' ]
-    then
-        __kvar_prefix='/opt/koopa'
-    fi
-    if [ ! -d "$__kvar_prefix" ]
-    then
-        __koopa_warn \
-            'Failed to locate koopa activation script.' \
-            "Required 'KOOPA_PREFIX' variable is unset."
-        return 1
-    fi
-    __koopa_print "${__kvar_prefix}/activate.sh"
-    unset -v __kvar_prefix
-    return 0
-}
-
 __koopa_preflight() {
     # """
     # Run pre-flight checks.
@@ -309,6 +302,31 @@ __koopa_realpath() {
     done
     unset -v __kvar_arg __kvar_string
     return 0
+}
+
+__koopa_sh_source() {
+    # """
+    # POSIX 'sh' source file location.
+    # @note Updated 2026-09-03.
+    #
+    # POSIX doesn't support file path resolution of sourced dot scripts, so
+    # check known koopa install locations instead, in priority order: an
+    # explicit 'KOOPA_PREFIX', the XDG data home (the shared-install entry
+    # point used by the user profile), and the canonical '/opt/koopa' prefix.
+    # """
+    for __kvar_dir in \
+        "${KOOPA_PREFIX:-}" \
+        "${XDG_DATA_HOME:-${HOME:?}/.local/share}/koopa" \
+        '/opt/koopa'
+    do
+        [ -n "$__kvar_dir" ] || continue
+        [ -r "${__kvar_dir}/activate.sh" ] || continue
+        __koopa_print "${__kvar_dir}/activate.sh"
+        unset -v __kvar_dir
+        return 0
+    done
+    unset -v __kvar_dir
+    return 1
 }
 
 __koopa_shell_name() {

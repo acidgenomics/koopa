@@ -13,24 +13,67 @@ from . import prefix as pfx
 
 
 def _rscript(*args: str, capture: bool = True) -> subprocess.CompletedProcess:
-    """Run an Rscript command."""
+    """Run an Rscript command.
+
+    Parameters
+    ----------
+    *args : str
+        Command-line arguments to pass to Rscript.
+    capture : bool, optional
+        Capture stdout and stderr instead of streaming them to the terminal.
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        Completed process result from running Rscript.
+    """
     cmd = ["Rscript", *args]
     return subprocess.run(cmd, capture_output=capture, text=True, check=True)
 
 
 def _r_eval(code: str, *, capture: bool = True) -> subprocess.CompletedProcess:
-    """Evaluate R code."""
+    """Evaluate R code.
+
+    Parameters
+    ----------
+    code : str
+        R code to evaluate.
+    capture : bool, optional
+        Capture stdout and stderr instead of streaming them to the terminal.
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        Completed process result from evaluating the R code.
+    """
     return _rscript("-e", code, capture=capture)
 
 
 def r_version() -> str:
-    """Get R version string."""
+    """Get R version string.
+
+    Returns
+    -------
+    str
+        R version string reported by ``R.version.string``.
+    """
     result = _r_eval("cat(R.version.string)")
     return result.stdout.strip()
 
 
 def r_prefix(r_cmd: str | None = None) -> str:
-    """Get R home directory."""
+    """Get R home directory.
+
+    Parameters
+    ----------
+    r_cmd : str | None, optional
+        Path to an R executable, used to derive the Rscript path to query.
+
+    Returns
+    -------
+    str
+        R home directory path.
+    """
     if r_cmd is not None:
         rscript = r_cmd.replace("/R", "/Rscript")
         if not os.path.isfile(rscript):
@@ -47,41 +90,93 @@ def r_prefix(r_cmd: str | None = None) -> str:
 
 
 def r_library_prefix() -> str:
-    """Get R library path."""
+    """Get R library path.
+
+    Returns
+    -------
+    str
+        Path to the first entry in R's library search path.
+    """
     result = _r_eval("cat(.libPaths()[1L])")
     return result.stdout.strip()
 
 
 def r_system_library_prefix() -> str:
-    """Get R system library path."""
+    """Get R system library path.
+
+    Returns
+    -------
+    str
+        Path to R's system library directory.
+    """
     result = _r_eval("cat(.Library)")
     return result.stdout.strip()
 
 
 def r_packages_prefix() -> str:
-    """Get R packages install prefix."""
+    """Get R packages install prefix.
+
+    Returns
+    -------
+    str
+        Installation prefix directory for R packages.
+    """
     return os.path.join(pfx.koopa_prefix(), "app", "r-packages")
 
 
 def r_scripts_prefix() -> str:
-    """Get R scripts prefix."""
+    """Get R scripts prefix.
+
+    Returns
+    -------
+    str
+        Path to the R scripts directory.
+    """
     return os.path.join(pfx.r_prefix(), "scripts")
 
 
 def r_package_version(package: str) -> str:
-    """Get version of an installed R package."""
+    """Get version of an installed R package.
+
+    Parameters
+    ----------
+    package : str
+        Name of the installed R package.
+
+    Returns
+    -------
+    str
+        Installed version string of the package.
+    """
     result = _r_eval(f'cat(as.character(packageVersion("{package}")))')
     return result.stdout.strip()
 
 
 def r_paste_to_vector(items: list[str]) -> str:
-    """Convert a Python list to an R character vector string."""
+    """Convert a Python list to an R character vector string.
+
+    Parameters
+    ----------
+    items : list[str]
+        Strings to quote and join into an R character vector.
+
+    Returns
+    -------
+    str
+        R character vector literal, e.g. ``c("a", "b")``.
+    """
     quoted = ", ".join(f'"{x}"' for x in items)
     return f"c({quoted})"
 
 
 def r_system_packages_non_base() -> list[str]:
-    """Get non-base system packages."""
+    """Get non-base system packages.
+
+    Returns
+    -------
+    list[str]
+        Names of installed packages that are not part of R's base priority set.
+    """
     code = (
         "pkgs <- installed.packages(lib.loc = .Library);"
         'base <- installed.packages(priority = "base");'
@@ -92,7 +187,13 @@ def r_system_packages_non_base() -> list[str]:
 
 
 def install_packages_in_site_library(packages: list[str]) -> None:
-    """Install R packages in site library."""
+    """Install R packages in site library.
+
+    Parameters
+    ----------
+    packages : list[str]
+        Names of R packages to install.
+    """
     vec = r_paste_to_vector(packages)
     code = f"install.packages({vec}, lib = .libPaths()[1L])"
     _r_eval(code, capture=False)
@@ -110,7 +211,15 @@ def remove_packages_in_system_library() -> None:
 
 
 def r_migrate_non_base_packages(from_lib: str, to_lib: str) -> None:
-    """Migrate non-base packages between libraries."""
+    """Migrate non-base packages between libraries.
+
+    Parameters
+    ----------
+    from_lib : str
+        Library path to migrate packages from.
+    to_lib : str
+        Library path to migrate packages to.
+    """
     code = (
         f'pkgs <- installed.packages(lib.loc = "{from_lib}");'
         'base_pkgs <- installed.packages(priority = "base");'
@@ -121,7 +230,18 @@ def r_migrate_non_base_packages(from_lib: str, to_lib: str) -> None:
 
 
 def _r_major_minor(r_home: str) -> str:
-    """Get major.minor version from an R installation."""
+    """Get major.minor version from an R installation.
+
+    Parameters
+    ----------
+    r_home : str
+        Path to the R home directory.
+
+    Returns
+    -------
+    str
+        Major.minor version string, e.g. ``"4.3"``.
+    """
     rscript = os.path.join(r_home, "bin", "Rscript")
     if not os.path.isfile(rscript):
         rscript = "Rscript"
@@ -142,7 +262,17 @@ def configure_r_environ(
     name: str = "r",
     system: bool = False,
 ) -> None:
-    """Configure R environ file."""
+    """Configure R environ file.
+
+    Parameters
+    ----------
+    r_home : str | None, optional
+        Path to the R home directory. Defaults to the current R installation.
+    name : str, optional
+        Application name, used to detect an "r-devel" build.
+    system : bool, optional
+        Configure a system-wide R environ instead of a user one.
+    """
     if r_home is None:
         r_home = r_prefix()
     environ_file = os.path.join(r_home, "etc", "Renviron.site")
@@ -156,7 +286,13 @@ def configure_r_environ(
 
 
 def configure_r_makevars(r_home: str | None = None) -> None:
-    """Configure R Makevars file."""
+    """Configure R Makevars file.
+
+    Parameters
+    ----------
+    r_home : str | None, optional
+        Path to the R home directory. Defaults to the current R installation.
+    """
     if r_home is None:
         r_home = r_prefix()
     makevars_file = os.path.join(r_home, "etc", "Makevars.site")
@@ -170,7 +306,20 @@ def configure_r_java() -> None:
 
 
 def _r_build_source(path: str, build_dir: Path) -> Path:
-    """Build a source tarball for R CMD check."""
+    """Build a source tarball for R CMD check.
+
+    Parameters
+    ----------
+    path : str
+        Path to the R package source directory.
+    build_dir : Path
+        Directory in which to run ``R CMD build``.
+
+    Returns
+    -------
+    Path
+        Path to the built source tarball.
+    """
     subprocess.run(
         ["R", "CMD", "build", path],
         cwd=build_dir,
@@ -184,7 +333,13 @@ def _r_build_source(path: str, build_dir: Path) -> Path:
 
 
 def r_check(path: str) -> None:
-    """Build an R package source tarball and run R CMD check on it."""
+    """Build an R package source tarball and run R CMD check on it.
+
+    Parameters
+    ----------
+    path : str
+        Path to the R package source directory to check.
+    """
     package_dir = Path(path).expanduser().resolve()
     with tempfile.TemporaryDirectory(prefix="koopa-r-check-") as tmp_dir:
         tarball = _r_build_source(str(package_dir), Path(tmp_dir))
@@ -196,18 +351,43 @@ def r_check(path: str) -> None:
 
 
 def r_script(script: str) -> None:
-    """Run an R script file."""
+    """Run an R script file.
+
+    Parameters
+    ----------
+    script : str
+        Path to the R script file to run.
+    """
     _rscript(script, capture=False)
 
 
 def r_shiny_run_app(app_dir: str, *, port: int = 3838) -> None:
-    """Run a Shiny app."""
+    """Run a Shiny app.
+
+    Parameters
+    ----------
+    app_dir : str
+        Path to the Shiny application directory.
+    port : int, optional
+        TCP port on which to serve the app.
+    """
     code = f'shiny::runApp("{app_dir}", port = {port}, launch.browser = FALSE)'
     _r_eval(code, capture=False)
 
 
 def _is_koopa_app(path: str) -> bool:
-    """Check if a path is within the koopa app prefix."""
+    """Check if a path is within the koopa app prefix.
+
+    Parameters
+    ----------
+    path : str
+        Filesystem path to check.
+
+    Returns
+    -------
+    bool
+        True if the resolved path is within the koopa app prefix.
+    """
     app_dir = pfx.app_prefix()
     if not os.path.isdir(app_dir):
         return False
@@ -216,7 +396,13 @@ def _is_koopa_app(path: str) -> bool:
 
 
 def r_bioconda_check(*packages: str) -> None:
-    """Acid Genomics Bioconda recipe R CMD check workflow."""
+    """Acid Genomics Bioconda recipe R CMD check workflow.
+
+    Parameters
+    ----------
+    *packages : str
+        Names of Bioconda R packages to check.
+    """
     import tempfile
 
     if not packages:
@@ -290,7 +476,13 @@ def r_bioconda_check(*packages: str) -> None:
 
 
 def r_configure_ldpaths(r_cmd: str) -> None:
-    """Configure ldpaths file for R LD linker configuration."""
+    """Configure ldpaths file for R LD linker configuration.
+
+    Parameters
+    ----------
+    r_cmd : str
+        Path to the R executable to configure ldpaths for.
+    """
     from koopa.system import arch, is_linux, is_macos
 
     is_system = not _is_koopa_app(r_cmd)
@@ -381,7 +573,13 @@ def r_configure_ldpaths(r_cmd: str) -> None:
 
 
 def r_gfortran_libs() -> str:
-    """Define FLIBS for R gfortran configuration."""
+    """Define FLIBS for R gfortran configuration.
+
+    Returns
+    -------
+    str
+        Space-separated FLIBS linker flags for gfortran.
+    """
     from koopa.system import arch, is_linux, is_macos
 
     cpu_arch = arch()
@@ -415,7 +613,14 @@ def r_gfortran_libs() -> str:
 
 
 def r_copy_files_into_etc(r_cmd: str) -> None:
-    """Copy R config files into etc/."""
+    """Copy R config files into etc/.
+
+    Parameters
+    ----------
+    r_cmd : str
+        Path to the R executable whose ``etc/`` directory receives the copied
+        config files.
+    """
     is_system = not _is_koopa_app(r_cmd)
     r_home = r_prefix(r_cmd)
     koopa_etc = os.path.join(pfx.koopa_prefix(), "etc", "R")

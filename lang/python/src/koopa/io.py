@@ -14,6 +14,16 @@ from koopa.prefix import config_prefix, koopa_prefix
 def extract_conda_bin_names(json_file: str) -> list:
     """Extract the conda bin names from JSON metadata file.
 
+    Parameters
+    ----------
+    json_file : str
+        Path to the conda package metadata JSON file.
+
+    Returns
+    -------
+    list
+        Binary names found under ``bin/`` in the package file list.
+
     Examples
     --------
     json_file='/opt/koopa/opt/anaconda/conda-meta/conda-*.json'
@@ -35,7 +45,15 @@ def extract_conda_bin_names(json_file: str) -> list:
 
 
 def _atomic_json_write(file: str, data: dict) -> None:
-    """Write JSON data atomically via temp file + rename."""
+    """Write JSON data atomically via temp file + rename.
+
+    Parameters
+    ----------
+    file : str
+        Destination file path to write.
+    data : dict
+        JSON-serializable data to write.
+    """
     dir_ = dirname(file)
     fd, tmp_path = tempfile.mkstemp(dir=dir_, suffix=".json.tmp")
     try:
@@ -52,7 +70,13 @@ def _atomic_json_write(file: str, data: dict) -> None:
 
 
 def export_app_json(data: dict) -> None:
-    """Sort and write 'app.json' data file."""
+    """Sort and write 'app.json' data file.
+
+    Parameters
+    ----------
+    data : dict
+        App registry data to sort and write to 'app.json'.
+    """
     from shutil import which
     from subprocess import run
 
@@ -75,7 +99,13 @@ def export_app_json(data: dict) -> None:
 
 
 def import_app_json() -> dict:
-    """Import 'app.json' data file."""
+    """Import 'app.json' data file.
+
+    Returns
+    -------
+    dict
+        Parsed app registry data from 'app.json'.
+    """
     file = join(config_prefix(), "app.json")
     if not isfile(file):
         msg = f"Missing app.json data file: {file!r}."
@@ -85,7 +115,18 @@ def import_app_json() -> dict:
 
 
 def import_json(file: str) -> dict:
-    """Import a JSON file with retry on parse failure."""
+    """Import a JSON file with retry on parse failure.
+
+    Parameters
+    ----------
+    file : str
+        Path to the JSON file to read.
+
+    Returns
+    -------
+    dict
+        Parsed JSON data.
+    """
     last_exc: ValueError | None = None
     for attempt in range(3):
         with open(file, encoding="utf-8") as con:

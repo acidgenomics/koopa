@@ -44,7 +44,22 @@ PYTHON_UNINSTALLERS: dict[tuple[str, str, str], str] = {
 
 
 def has_python_uninstaller(name: str, platform: str, mode: str) -> bool:
-    """Check if app has a Python-native uninstaller."""
+    """Check if app has a Python-native uninstaller.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+
+    Returns
+    -------
+    bool
+        True if a Python-native uninstaller is registered for this app.
+    """
     return (name, platform, mode) in PYTHON_UNINSTALLERS
 
 
@@ -53,7 +68,22 @@ def get_python_uninstaller(
     platform: str,
     mode: str,
 ) -> Callable[..., None]:
-    """Dynamically import and return the uninstaller's ``main`` function."""
+    """Dynamically import and return the uninstaller's ``main`` function.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+
+    Returns
+    -------
+    Callable[..., None]
+        The uninstaller module's ``main`` function.
+    """
     module_path = PYTHON_UNINSTALLERS[(name, platform, mode)]
     mod = importlib.import_module(module_path)
     return mod.main  # type: ignore[attr-defined]

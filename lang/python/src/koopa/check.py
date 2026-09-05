@@ -18,7 +18,19 @@ from koopa.prefix import (
 
 
 def _short_ver(version: str) -> str:
-    """Shorten a 40-char git SHA to its 7-char short form; otherwise unchanged."""
+    """Shorten a 40-char git SHA to its 7-char short form; otherwise unchanged.
+
+    Parameters
+    ----------
+    version : str
+        Version string or git SHA to shorten.
+
+    Returns
+    -------
+    str
+        The first 7 characters of *version* if it is a 40-char SHA,
+        otherwise *version* unchanged.
+    """
     if len(version) == 40:
         return version[:7]
     return version
@@ -31,9 +43,23 @@ def _installed_dep_state(
 ) -> tuple[str, int] | None:
     """Return (version, revision) for *dep* as actually linked under opt/.
 
-    Returns ``None`` when *dep* has no live opt/ symlink. Results are memoized
-    in *cache* since a single sweep re-checks the same dep across many
-    dependents.
+    Results are memoized in *cache* since a single sweep re-checks the same
+    dep across many dependents.
+
+    Parameters
+    ----------
+    opt_dir : str
+        Path to the koopa opt/ prefix containing app symlinks.
+    dep : str
+        Name of the dependency app to look up.
+    cache : dict[str, tuple[str, int] | None]
+        Memoization cache mapping dependency name to its resolved state.
+
+    Returns
+    -------
+    tuple[str, int] | None
+        The (version, revision) of *dep* as linked under opt/, or ``None``
+        when *dep* has no live opt/ symlink.
     """
     if dep in cache:
         return cache[dep]
@@ -62,6 +88,12 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     *actionable* is True when the issue can be fixed by reinstalling the app
     (version mismatch, broken symlink).  Unsupported or removed apps are not
     actionable.
+
+    Returns
+    -------
+    list[tuple[str, str, bool]]
+        One tuple per issue found: the app name, a human-readable reason, and
+        whether the issue is actionable via reinstall.
     """
     from koopa.prefix import bin_prefix, man1_prefix
 
@@ -292,24 +324,50 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
 
 
 def outdated_apps() -> list[str]:
-    """Return names of installed apps that need updating."""
+    """Return names of installed apps that need updating.
+
+    Returns
+    -------
+    list[str]
+        Names of installed apps with an actionable issue (version mismatch,
+        broken symlink, stale dependency, etc.).
+    """
     return [name for name, _reason, actionable in _iter_installed_app_issues() if actionable]
 
 
 def outdated_apps_with_reasons() -> list[tuple[str, str]]:
-    """Return (name, reason) for installed apps that need updating."""
+    """Return (name, reason) for installed apps that need updating.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        The app name paired with a human-readable reason it needs updating.
+    """
     return [
         (name, reason) for name, reason, actionable in _iter_installed_app_issues() if actionable
     ]
 
 
 def unsupported_apps() -> list[str]:
-    """Return names of installed apps no longer in app.json or marked removed."""
+    """Return names of installed apps no longer in app.json or marked removed.
+
+    Returns
+    -------
+    list[str]
+        Names of installed apps whose issue is not actionable via reinstall
+        (unsupported, removed, or missing from app.json).
+    """
     return [name for name, _reason, actionable in _iter_installed_app_issues() if not actionable]
 
 
 def check_installed_apps() -> bool:
-    """Check system integrity."""
+    """Check system integrity.
+
+    Returns
+    -------
+    bool
+        True if no installed app issues were found, False otherwise.
+    """
     issues = _iter_installed_app_issues()
     for name, reason, _actionable in issues:
         print(f"{name}: {reason}")
@@ -317,7 +375,14 @@ def check_installed_apps() -> bool:
 
 
 def _iter_broken_app_installs() -> list[tuple[str, str]]:
-    """Return ``(app_name, reason)`` for each broken app install."""
+    """Return ``(app_name, reason)`` for each broken app install.
+
+    Returns
+    -------
+    list[tuple[str, str]]
+        The app name paired with a human-readable reason its install is
+        broken or incomplete.
+    """
     from koopa.prefix import app_prefix as get_app_prefix
 
     app_dir = get_app_prefix()
@@ -360,7 +425,13 @@ def _iter_broken_app_installs() -> list[tuple[str, str]]:
 
 
 def broken_app_installs() -> list[str]:
-    """Return names of apps with broken or incomplete installs."""
+    """Return names of apps with broken or incomplete installs.
+
+    Returns
+    -------
+    list[str]
+        Deduplicated names of apps with a broken or incomplete install.
+    """
     return list(dict.fromkeys(name for name, _reason in _iter_broken_app_installs()))
 
 
@@ -372,6 +443,11 @@ def check_broken_app_installs() -> bool:
     directories that should be cleaned up.
 
     Skips apps already reported by check_installed_apps to avoid duplicates.
+
+    Returns
+    -------
+    bool
+        True if no broken app installs were found, False otherwise.
     """
     already_reported = {name for name, _r, a in _iter_installed_app_issues() if a}
     issues = [(n, r) for n, r in _iter_broken_app_installs() if n not in already_reported]
@@ -383,8 +459,11 @@ def check_broken_app_installs() -> bool:
 def check_circular_deps() -> list:
     """Check for circular dependencies in app.json.
 
-    Returns a list of cycles, where each cycle is a list of package names
-    forming the loop (e.g. ["curl", "zstd", "cmake", "curl"]).
+    Returns
+    -------
+    list
+        A list of cycles, where each cycle is a list of package names
+        forming the loop (e.g. ["curl", "zstd", "cmake", "curl"]).
     """
     json_data = import_app_json()
     names = list(json_data.keys())
@@ -480,7 +559,19 @@ def check_venv_version() -> bool:
 
 
 def _version_tuple(version: str) -> tuple[int, ...]:
-    """Parse a version string into a tuple of integers for comparison."""
+    """Parse a version string into a tuple of integers for comparison.
+
+    Parameters
+    ----------
+    version : str
+        Dot-separated version string (e.g. ``"3.12.1"``).
+
+    Returns
+    -------
+    tuple[int, ...]
+        The leading dot-separated numeric components of *version*, parsed
+        as integers. Parsing stops at the first non-numeric component.
+    """
     parts = []
     for part in version.split("."):
         try:
@@ -491,7 +582,19 @@ def _version_tuple(version: str) -> tuple[int, ...]:
 
 
 def _get_version(path: str) -> str:
-    """Get version string from a binary."""
+    """Get version string from a binary.
+
+    Parameters
+    ----------
+    path : str
+        Path to the executable to query with ``--version``.
+
+    Returns
+    -------
+    str
+        The extracted version string, or an empty string if the binary
+        could not be run or returned a nonzero exit status.
+    """
     from koopa.version import extract_version
 
     try:
@@ -509,7 +612,13 @@ def _get_version(path: str) -> str:
 
 
 def check_build_system() -> bool:
-    """Check that the current environment supports building from source."""
+    """Check that the current environment supports building from source.
+
+    Returns
+    -------
+    bool
+        True if all required build tools and minimum versions are present.
+    """
     from koopa.system import is_linux, is_macos
 
     ok = True
@@ -569,7 +678,18 @@ def check_build_system() -> bool:
 
 
 def check_disk(path: str = "/") -> bool:
-    """Check disk usage at a path."""
+    """Check disk usage at a path.
+
+    Parameters
+    ----------
+    path : str, optional
+        Filesystem path to check disk usage for.
+
+    Returns
+    -------
+    bool
+        True if disk usage at *path* is 90% or below, False otherwise.
+    """
     from koopa.disk import disk_pct_used
 
     pct = disk_pct_used(path)
@@ -582,7 +702,14 @@ def check_disk(path: str = "/") -> bool:
 
 
 def check_system_r() -> bool:
-    """Check if system R is current."""
+    """Check if system R is current.
+
+    Returns
+    -------
+    bool
+        True if system R is current, not installed, or the platform is not
+        checked; False if an installed system R is out of date.
+    """
     from koopa.system import is_admin, is_debian_like, is_macos
     from koopa.version import extract_version
 
@@ -632,7 +759,15 @@ def check_system_r() -> bool:
 
 
 def check_macos_system_python() -> bool:
-    """Check if system Python is current on macOS."""
+    """Check if system Python is current on macOS.
+
+    Returns
+    -------
+    bool
+        True if system Python is current, not installed, or its minor
+        version differs from the expected release; False if it is out of
+        date within the same minor version.
+    """
     from koopa.version import extract_version, major_minor_version
 
     json_data = import_app_json()
@@ -723,7 +858,14 @@ def _macos_xcode_clt_sdk_current() -> bool | None:
 
 
 def _macos_xcode_clt_installed() -> bool:
-    """Check whether a CLT package identifier is installed via `pkgutil`/`xcode-select`."""
+    """Check whether a CLT package identifier is installed via `pkgutil`/`xcode-select`.
+
+    Returns
+    -------
+    bool
+        True if a Command Line Tools package identifier or path is
+        detected, False otherwise.
+    """
     import re
     import subprocess
 
@@ -761,6 +903,12 @@ def _macos_xcode_clt_update_available() -> bool:
     By default skip the slow `softwareupdate --list` query to avoid delaying
     `koopa system check`. Only run it when explicitly opted in via the
     environment variable `KOOPA_ALLOW_MACOS_SOFTWARE_UPDATE=1`.
+
+    Returns
+    -------
+    bool
+        True if `softwareupdate --list` reports an available Command Line
+        Tools update, False otherwise (including when the check is skipped).
     """
     import re
     import subprocess
@@ -788,7 +936,14 @@ def _macos_xcode_clt_update_available() -> bool:
 
 
 def check_macos_xcode_clt() -> bool:
-    """Check if Xcode Command Line Tools SDK is current on macOS."""
+    """Check if Xcode Command Line Tools SDK is current on macOS.
+
+    Returns
+    -------
+    bool
+        True if the CLT SDK is current, installed, and no update is
+        pending; False otherwise.
+    """
     sdk_current = _macos_xcode_clt_sdk_current()
     if sdk_current is False:
         return False
@@ -815,7 +970,14 @@ def check_macos_xcode_clt() -> bool:
 
 
 def check_macos_icloud_drive() -> bool:
-    """Check iCloud Drive Desktop & Documents sync is enabled on macOS."""
+    """Check iCloud Drive Desktop & Documents sync is enabled on macOS.
+
+    Returns
+    -------
+    bool
+        True if iCloud Drive is disabled or Desktop & Documents sync is
+        enabled; False if iCloud Drive is enabled but sync is disabled.
+    """
     import subprocess
 
     def _read_bool(key: str) -> int | None:
@@ -849,7 +1011,13 @@ def check_macos_icloud_drive() -> bool:
 
 
 def check_broken_symlinks() -> bool:
-    """Check for broken symlinks in bin, opt, and man1 directories."""
+    """Check for broken symlinks in bin, opt, and man1 directories.
+
+    Returns
+    -------
+    bool
+        True if no broken symlinks were found, False otherwise.
+    """
     from koopa.file_ops import find_broken_symlinks
     from koopa.prefix import bin_prefix, man1_prefix, opt_prefix
 
@@ -916,7 +1084,13 @@ def _print_update_plan() -> None:
 
 
 def check_missing_default_apps() -> bool:
-    """Check whether all default apps are installed."""
+    """Check whether all default apps are installed.
+
+    Returns
+    -------
+    bool
+        True if every default app is installed, False otherwise.
+    """
     from koopa.app import shared_apps
 
     opt = opt_prefix()
@@ -933,8 +1107,12 @@ def check_missing_default_apps() -> bool:
 def check_tmux_server_stale() -> bool:
     """Check whether the running tmux server predates the on-disk bundled binary.
 
-    Returns True when the server is current or absent, False when stale.
     Emits a warning with the kill-server remedy when stale.
+
+    Returns
+    -------
+    bool
+        True when the server is current or absent, False when stale.
     """
     from koopa.tmux import warn_tmux_stale
 
@@ -942,7 +1120,13 @@ def check_tmux_server_stale() -> bool:
 
 
 def check_system() -> bool:
-    """Run all system checks."""
+    """Run all system checks.
+
+    Returns
+    -------
+    bool
+        True if every system check passed, False if any check failed.
+    """
     from koopa.alert import alert_note, alert_success
     from koopa.system import is_debian_like, is_macos
 

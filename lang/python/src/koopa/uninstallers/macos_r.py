@@ -15,7 +15,21 @@ def main(
     prefix: str = "",
     verbose: bool = False,
 ) -> None:
-    """Uninstall R framework on macOS."""
+    """Uninstall R framework on macOS.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+    prefix : str, optional
+        Installation prefix directory.
+    verbose : bool, optional
+        Print verbose output.
+    """
     framework = "/Library/Frameworks/R.framework"
     if not os.path.exists(framework):
         return

@@ -219,7 +219,20 @@ _APP_TREE: dict[str, Any] = {
 def _resolve_tree(
     remainder: list[str],
 ) -> tuple[str, list[str]]:
-    """Walk the dispatch tree, returning (function_key, leftover_args)."""
+    """Walk the dispatch tree, returning (function_key, leftover_args).
+
+    Parameters
+    ----------
+    remainder : list[str]
+        CLI tokens after ``koopa app``, walked against ``_APP_TREE`` to
+        find the matching handler.
+
+    Returns
+    -------
+    tuple[str, list[str]]
+        The dispatch key for the matched handler and the leftover tokens
+        to pass to it as arguments.
+    """
     node: Any = _APP_TREE
     consumed = 0
     last_key: str = ""
@@ -1332,7 +1345,13 @@ def _handle_brew_version(args: list[str]) -> None:
 
 
 def _handle_claude_archive_plans(args: list[str]) -> None:
-    """Handle ``koopa app claude archive-plans``."""
+    """Handle ``koopa app claude archive-plans``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand.
+    """
     import argparse
     import re
     from collections import defaultdict
@@ -1434,12 +1453,34 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
 
 
 def _estimate_claude_tokens(text: str) -> int:
-    """Estimate token count for Claude config text (chars / 4 heuristic)."""
+    """Estimate token count for Claude config text (chars / 4 heuristic).
+
+    Parameters
+    ----------
+    text : str
+        Claude config file content to estimate a token count for.
+
+    Returns
+    -------
+    int
+        Estimated token count.
+    """
     return len(text) // 4
 
 
 def _rule_is_path_scoped(text: str) -> bool:
-    """Return True if a rules file has YAML frontmatter declaring ``paths:``."""
+    """Return True if a rules file has YAML frontmatter declaring ``paths:``.
+
+    Parameters
+    ----------
+    text : str
+        Rules file content to inspect for a ``paths:`` frontmatter key.
+
+    Returns
+    -------
+    bool
+        True if the file's YAML frontmatter declares a ``paths:`` key.
+    """
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return False
@@ -1585,7 +1626,13 @@ def _print_config_block(
 
 
 def _handle_claude_audit_tokens(args: list[str]) -> None:
-    """Handle ``koopa app claude audit-tokens``."""
+    """Handle ``koopa app claude audit-tokens``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand.
+    """
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -2228,6 +2275,12 @@ def _handle_file_convert_line_endings(args: list[str]) -> None:
 
     Converts CRLF (\\r\\n) line endings to LF (\\n) in place.
     Accepts one or more file paths as arguments.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: one or more file paths
+        to convert in place.
     """
     import argparse
 
@@ -2269,7 +2322,13 @@ def _handle_ftp_mirror(args: list[str]) -> None:
 
 
 def _require_koopa_bundle() -> str:
-    """Resolve bundle from koopa's opt ruby. Fails if not installed."""
+    """Resolve bundle from koopa's opt ruby. Fails if not installed.
+
+    Returns
+    -------
+    str
+        Absolute path to the ``bundle`` executable in koopa's opt ruby.
+    """
     from koopa.prefix import opt_prefix
 
     ruby_opt = os.path.join(opt_prefix(), "ruby")
@@ -2761,7 +2820,14 @@ _PYTHON_HANDLERS: dict[str, Any] = {
 
 
 def handle_app(remainder: list[str]) -> None:
-    """Dispatch ``koopa app ...`` commands."""
+    """Dispatch ``koopa app ...`` commands.
+
+    Parameters
+    ----------
+    remainder : list[str]
+        CLI tokens after ``koopa app``, resolved against the dispatch
+        tree to find and invoke the matching handler.
+    """
     if not remainder:
         print("Error: no app command specified.", file=sys.stderr)
         sys.exit(1)

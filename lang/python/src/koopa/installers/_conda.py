@@ -11,11 +11,25 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install a conda package."""
+    """Install a conda package.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     install_conda_package(
         name=get_str(kwargs, "name", name),
         version=version,
         prefix=prefix,
         yaml_file=get_str(kwargs, "yaml_file"),
+        app_name=name,
     )

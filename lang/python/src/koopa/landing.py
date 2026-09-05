@@ -21,6 +21,16 @@ def _slug(heading: str) -> str:
     Lowercases, drops everything but letters/digits/spaces/hyphens, then maps
     spaces to hyphens. Reproduces the existing r.acidgenomics.com anchors,
     e.g. "Import/export" -> "importexport", "RNA sequencing" -> "rna-sequencing".
+
+    Parameters
+    ----------
+    heading : str
+        Section heading text.
+
+    Returns
+    -------
+    str
+        Anchor id derived from the heading.
     """
     stripped = re.sub(r"[^a-z0-9 -]", "", heading.lower())
     return stripped.replace(" ", "-")
@@ -39,20 +49,25 @@ def render_landing(
 
     Parameters
     ----------
-    title
+    title : str
         Page title, also used as the <h1>.
-    sections
+    sections : list[_Section]
         Ordered list of (heading, entries) pairs. A section with an empty
         heading renders its entries with no preceding <h2>.
-    license_name
+    license_name : str
         Display text for the license link (e.g. "Apache 2.0").
-    license_url
+    license_url : str
         Target URL for the license link.
-    copyright_years
+    copyright_years : str
         Footer copyright year range (e.g. "2026-pres.").
-    install_note
-        Optional extra paragraph rendered between the package list and the
-        license footer (e.g. an install command).
+    install_note : str | None, optional
+        Extra paragraph rendered between the package list and the license
+        footer (e.g. an install command).
+
+    Returns
+    -------
+    str
+        The rendered landing page as an HTML string.
     """
     lines = [
         "<!DOCTYPE html>",

@@ -15,7 +15,18 @@ from pathlib import Path
 
 
 def is_valid_archive(path: str) -> bool:
-    """Check if a file looks like a valid compressed archive via magic bytes."""
+    """Check if a file looks like a valid compressed archive via magic bytes.
+
+    Parameters
+    ----------
+    path : str
+        Path to the file to inspect.
+
+    Returns
+    -------
+    bool
+        True if the file's magic bytes match a known archive format.
+    """
     try:
         with open(path, "rb") as f:
             header = f.read(6)
@@ -41,6 +52,14 @@ def extract(path: str, output_dir: str | None = None) -> None:
 
     Supports: .tar, .tar.gz, .tgz, .tar.bz2, .tbz2, .tar.xz, .txz,
     .tar.zst, .zip, .7z
+
+    Parameters
+    ----------
+    path : str
+        Path to the archive file to extract.
+    output_dir : str | None, optional
+        Directory to extract into. Defaults to a directory named after
+        the archive, alongside the archive file.
     """
     import glob as glob_mod
     import tempfile
@@ -104,7 +123,15 @@ def extract(path: str, output_dir: str | None = None) -> None:
 
 
 def _extract_to(path: str, target: str) -> None:
-    """Extract archive contents into target directory."""
+    """Extract archive contents into target directory.
+
+    Parameters
+    ----------
+    path : str
+        Path to the archive file to extract.
+    target : str
+        Directory to extract the archive contents into.
+    """
     if not is_valid_archive(path) and not zipfile.is_zipfile(path):
         name_lower = os.path.basename(path).lower()
         if not name_lower.endswith(".7z"):
@@ -141,6 +168,20 @@ def decompress(path: str, output: str | None = None) -> str:
     """Decompress a single compressed file.
 
     Supports: .gz, .bz2, .xz, .lzma, .zst, .lz4, .lz, .br
+
+    Parameters
+    ----------
+    path : str
+        Path to the compressed file.
+    output : str | None, optional
+        Path to write the decompressed file to. Defaults to ``path`` with
+        its compression extension removed, or ``path`` plus
+        ``".decompressed"`` if the extension is unrecognized.
+
+    Returns
+    -------
+    str
+        Path to the decompressed output file.
     """
     name = path.lower()
     if output is None:
@@ -174,7 +215,21 @@ def decompress(path: str, output: str | None = None) -> str:
 
 
 def tar_multiple_dirs(dirs: list[str], output_dir: str | None = None) -> list[str]:
-    """Create tar.gz archives for multiple directories."""
+    """Create tar.gz archives for multiple directories.
+
+    Parameters
+    ----------
+    dirs : list[str]
+        Paths to the directories to archive, one archive per directory.
+    output_dir : str | None, optional
+        Directory to write the resulting archives into. Defaults to the
+        current directory.
+
+    Returns
+    -------
+    list[str]
+        Paths to the created tar.gz archives, in the same order as ``dirs``.
+    """
     if output_dir is None:
         output_dir = "."
     Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -201,6 +256,21 @@ def repackage_tar(path: str, output: str, *, method: str = "xz") -> str:
     only the outer compression changes. Used to restage vendor-downloaded tarballs
     (typically .tar.gz) as .tar.xz without disturbing the internal layout that
     installers rely on after ``extract()``.
+
+    Parameters
+    ----------
+    path : str
+        Path to the source tar archive to read.
+    output : str
+        Path to write the recompressed tar archive to.
+    method : str, optional
+        Compression method for the output archive: ``"gzip"``, ``"bzip2"``,
+        or ``"xz"``.
+
+    Returns
+    -------
+    str
+        Path to the recompressed output archive.
     """
     with tarfile.open(path, "r:*") as tf_in:
         if method == "gzip":
@@ -224,7 +294,25 @@ def compress(
     *,
     method: str = "gzip",
 ) -> str:
-    """Compress a file or directory."""
+    """Compress a file or directory.
+
+    Parameters
+    ----------
+    path : str
+        Path to the file or directory to compress. A directory is
+        archived as a tar.gz regardless of ``method``.
+    output : str | None, optional
+        Path to write the compressed output to. Defaults to ``path`` with
+        a compression extension appended.
+    method : str, optional
+        Compression method for a file input: ``"gzip"``, ``"bzip2"``,
+        ``"xz"``, or ``"zstd"``.
+
+    Returns
+    -------
+    str
+        Path to the compressed output file.
+    """
     if os.path.isdir(path):
         if output is None:
             output = path.rstrip("/") + ".tar.gz"

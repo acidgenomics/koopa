@@ -46,6 +46,11 @@
   produced no `bin/python3`, and fell through to the much slower source
   build. Fix: add `! -name '.*'` to the `find`.
 
+- **Never name a shell variable `status` in zsh.** It is a read-only special
+  variable (an alias for `$?`, the last exit code). `status=$(...)` fails
+  with `read-only variable: status`. Use a different name, e.g.
+  `<name>_status`.
+
 - **A `notes` entry in app.json is prose only; `version_check.py` never reads
   it, so it does not stop `check-app-versions` from re-bumping the version it
   describes.** This bit `node`: a `notes` entry said "held below 26.8.0" and

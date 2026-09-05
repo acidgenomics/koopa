@@ -15,7 +15,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install go."""
+    """Install go.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     arch = arch2()
     os_id = "darwin" if sys.platform == "darwin" else "linux"
     url = f"https://dl.google.com/go/go{version}.{os_id}-{arch}.tar.gz"

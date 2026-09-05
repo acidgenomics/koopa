@@ -31,7 +31,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install antigravity-cli."""
+    """Install antigravity-cli.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     os_key = "darwin" if sys.platform == "darwin" else "linux"
     machine = arch2()
     platform = f"{os_key}_{machine}"

@@ -21,10 +21,10 @@ Here is an example using `activate.sh` for POSIX shell configuration:
 # koopa shell
 # https://koopa.acidgenomics.com/
 # shellcheck source=/dev/null
-XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
-if [ -f "${XDG_CONFIG_HOME}/koopa/activate.sh" ]
+XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+if [ -f "${XDG_DATA_HOME}/koopa/activate.sh" ]
 then
-    . "${XDG_CONFIG_HOME}/koopa/activate.sh"
+    . "${XDG_DATA_HOME}/koopa/activate.sh"
 fi
 ```
 
@@ -36,3 +36,10 @@ Automatic shell configuration is enabled by our `dotfiles` management, documente
 
 User-specific activation is not required for a shared koopa installation on Linux,
 which writes a configuration file into `/etc/profile.d/zzz-koopa.sh`.
+
+On a host where the login shell can't be changed (common on shared HPC or Slurm
+login nodes), koopa's `.profile` hands an interactive `dash`/`ksh93` session off to
+Bash automatically, when Bash is on `PATH`. This runs before `activate.sh` is
+sourced, so the full Bash activation (completions, prompt, and other Bash/Zsh-only
+configuration) still applies. Set `KOOPA_NO_SHELL_UPGRADE=1` to opt out and stay on
+the POSIX shell.

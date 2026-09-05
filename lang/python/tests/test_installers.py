@@ -213,7 +213,7 @@ def test_neovim_main_skips_fix_off_linux() -> None:
 
 
 def test_pyright_main_installs_then_verifies() -> None:
-    """main() runs the pip install before the 'pyright --version' smoke test."""
+    """main() runs the pip install before the 'pyright --version' check."""
     with (
         patch("koopa.installers.pyright.install_python_package") as install_mock,
         patch("koopa.installers.pyright._verify") as verify_mock,
@@ -223,16 +223,16 @@ def test_pyright_main_installs_then_verifies() -> None:
         )
 
     install_mock.assert_called_once()
-    verify_mock.assert_called_once_with("/opt/koopa/app/pyright/1.1.411")
+    verify_mock.assert_called_once_with("/opt/koopa/app/pyright/1.1.411", "1.1.411")
 
 
 def test_pyright_verify_raises_when_npm_engine_is_broken() -> None:
-    """A broken npm/Node engine (this repo's actual failure) fails the install.
+    """A broken npm/Node engine fails the install.
 
-    Reproduces the 2026-09-02 incident: a corrupted Node build made npm warn
-    about an unsupported engine, and pyright-python mis-parsed that warning's
-    own version number as the latest pyright release, then failed to install
-    it. '_verify' must surface that npm output instead of installing silently.
+    Reproduces an incident where a corrupted Node build made npm warn about
+    an unsupported engine, and pyright-python mis-parsed that warning's own
+    version number as the latest pyright release, then failed to install it.
+    '_verify' must surface that npm output instead of installing silently.
     """
     broken = subprocess.CompletedProcess(
         args=["pyright", "--version"],
@@ -248,9 +248,11 @@ def test_pyright_verify_raises_when_npm_engine_is_broken() -> None:
         patch("koopa.installers.pyright.subprocess.run", return_value=broken) as run_mock,
         pytest.raises(RuntimeError, match="ETARGET"),
     ):
-        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411")
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411", "1.1.411")
 
-    assert run_mock.call_args.kwargs["env"]["PYRIGHT_PYTHON_FORCE_VERSION"] == "latest"
+    env = run_mock.call_args.kwargs["env"]
+    assert "PYRIGHT_PYTHON_FORCE_VERSION" not in env
+    assert env["PYRIGHT_PYTHON_IGNORE_WARNINGS"] == "1"
 
 
 def test_pyright_verify_passes_when_version_prints() -> None:
@@ -258,8 +260,63 @@ def test_pyright_verify_passes_when_version_prints() -> None:
     ok = subprocess.CompletedProcess(
         args=["pyright", "--version"],
         returncode=0,
-        stdout="pyright 1.1.413\n",
+        stdout="pyright 1.1.411\n",
         stderr="",
     )
     with patch("koopa.installers.pyright.subprocess.run", return_value=ok):
-        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411")
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411", "1.1.411")
+
+
+def test_pyright_verify_passes_with_npm_preamble_before_version_line() -> None:
+    """Regression test: an npm preamble ahead of the version line is tolerated.
+
+    Reproduces the 2026-09-04 incident: forcing PYRIGHT_PYTHON_FORCE_VERSION
+    triggered a cold-cache 'npm install' whose own progress output landed on
+    stdout ahead of the 'pyright <version>' line, so a bare 'startswith'
+    check on the whole of stdout failed even though the install succeeded.
+    '_verify' now scans stdout line by line, so this must stay silent.
+    """
+    ok = subprocess.CompletedProcess(
+        args=["pyright", "--version"],
+        returncode=0,
+        stdout=(
+            "added 1 package, and audited 2 packages in 36s\n"
+            "found 0 vulnerabilities\n"
+            "pyright 1.1.411\n"
+        ),
+        stderr="",
+    )
+    with patch("koopa.installers.pyright.subprocess.run", return_value=ok):
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411", "1.1.411")
+
+
+def test_pyright_verify_raises_when_reported_version_does_not_match_pin() -> None:
+    """A reported version that drifts from the app.json pin fails the install."""
+    mismatched = subprocess.CompletedProcess(
+        args=["pyright", "--version"],
+        returncode=0,
+        stdout="pyright 1.1.413\n",
+        stderr="",
+    )
+    with (
+        patch("koopa.installers.pyright.subprocess.run", return_value=mismatched),
+        pytest.raises(RuntimeError, match=r"1\.1\.413.*1\.1\.411"),
+    ):
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411", "1.1.411")
+
+
+def test_pyright_verify_strips_forced_version_from_child_env(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A stray PYRIGHT_PYTHON_FORCE_VERSION in the calling shell never reaches the check."""
+    monkeypatch.setenv("PYRIGHT_PYTHON_FORCE_VERSION", "latest")
+    ok = subprocess.CompletedProcess(
+        args=["pyright", "--version"],
+        returncode=0,
+        stdout="pyright 1.1.411\n",
+        stderr="",
+    )
+    with patch("koopa.installers.pyright.subprocess.run", return_value=ok) as run_mock:
+        pyright_installer._verify("/opt/koopa/app/pyright/1.1.411", "1.1.411")
+
+    assert "PYRIGHT_PYTHON_FORCE_VERSION" not in run_mock.call_args.kwargs["env"]

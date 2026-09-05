@@ -23,7 +23,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install playwright, then download its Chromium browser into the app prefix."""
+    """Install playwright, then download its Chromium browser into the app prefix.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     extra = get_list(kwargs, "extra_packages")
     install_python_package(name=name, version=version, prefix=prefix, extra_packages=extra or None)
@@ -31,7 +44,13 @@ def main(
 
 
 def _install_chromium(prefix: str) -> None:
-    """Download playwright's Chromium build into the app's own prefix."""
+    """Download playwright's Chromium build into the app's own prefix.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
+    """
     browsers_dir = os.path.join(prefix, "libexec", "browsers")
     os.makedirs(browsers_dir, exist_ok=True)
     playwright = os.path.join(prefix, "bin", "playwright")

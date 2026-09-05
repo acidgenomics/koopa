@@ -14,7 +14,14 @@ from koopa.exec import run
 
 
 def os_version() -> str:
-    """Get Linux distribution version."""
+    """Get Linux distribution version.
+
+    Returns
+    -------
+    str
+        Value of ``VERSION_ID`` from ``/etc/os-release``, or an empty string
+        if the file is missing or the field is not set.
+    """
     try:
         with open("/etc/os-release") as f:
             for line in f:
@@ -26,7 +33,14 @@ def os_version() -> str:
 
 
 def proc_cmdline() -> str:
-    """Get /proc/cmdline contents."""
+    """Get /proc/cmdline contents.
+
+    Returns
+    -------
+    str
+        Contents of ``/proc/cmdline``, or an empty string if the file is
+        missing.
+    """
     try:
         return open("/proc/cmdline").read().strip()
     except FileNotFoundError:
@@ -34,7 +48,13 @@ def proc_cmdline() -> str:
 
 
 def is_init_systemd() -> bool:
-    """Check if system uses systemd."""
+    """Check if system uses systemd.
+
+    Returns
+    -------
+    bool
+        True if ``/run/systemd/system`` exists.
+    """
     return os.path.isdir("/run/systemd/system")
 
 
@@ -49,7 +69,21 @@ def add_user(
     system: bool = False,
     sudo_access: bool = False,
 ) -> None:
-    """Add a system user."""
+    """Add a system user.
+
+    Parameters
+    ----------
+    name : str
+        User name to create.
+    home : str | None, optional
+        Home directory path. Created along with the user if given.
+    shell : str, optional
+        Login shell path.
+    system : bool, optional
+        Create a system account instead of a normal user account.
+    sudo_access : bool, optional
+        Add the new user to the ``sudo`` group.
+    """
     args = ["useradd"]
     if system:
         args.append("--system")
@@ -62,7 +96,15 @@ def add_user(
 
 
 def delete_user(name: str, *, remove_home: bool = False) -> None:
-    """Delete a system user."""
+    """Delete a system user.
+
+    Parameters
+    ----------
+    name : str
+        User name to delete.
+    remove_home : bool, optional
+        Also remove the user's home directory.
+    """
     args = ["userdel"]
     if remove_home:
         args.append("--remove")
@@ -71,7 +113,15 @@ def delete_user(name: str, *, remove_home: bool = False) -> None:
 
 
 def add_group(name: str, *, system: bool = False) -> None:
-    """Add a system group."""
+    """Add a system group.
+
+    Parameters
+    ----------
+    name : str
+        Group name to create.
+    system : bool, optional
+        Create a system group instead of a normal group.
+    """
     args = ["groupadd"]
     if system:
         args.append("--system")
@@ -80,7 +130,15 @@ def add_group(name: str, *, system: bool = False) -> None:
 
 
 def add_user_to_group(user: str, group: str) -> None:
-    """Add a user to a group."""
+    """Add a user to a group.
+
+    Parameters
+    ----------
+    user : str
+        User name to add.
+    group : str
+        Group name to add the user to.
+    """
     run("usermod", "-aG", group, user, sudo=True)
 
 
@@ -88,32 +146,73 @@ def add_user_to_group(user: str, group: str) -> None:
 
 
 def systemctl_start(service: str) -> None:
-    """Start a systemd service."""
+    """Start a systemd service.
+
+    Parameters
+    ----------
+    service : str
+        Name of the systemd service to start.
+    """
     run("systemctl", "start", service, sudo=True)
 
 
 def systemctl_stop(service: str) -> None:
-    """Stop a systemd service."""
+    """Stop a systemd service.
+
+    Parameters
+    ----------
+    service : str
+        Name of the systemd service to stop.
+    """
     run("systemctl", "stop", service, sudo=True)
 
 
 def systemctl_restart(service: str) -> None:
-    """Restart a systemd service."""
+    """Restart a systemd service.
+
+    Parameters
+    ----------
+    service : str
+        Name of the systemd service to restart.
+    """
     run("systemctl", "restart", service, sudo=True)
 
 
 def systemctl_enable(service: str) -> None:
-    """Enable a systemd service."""
+    """Enable a systemd service.
+
+    Parameters
+    ----------
+    service : str
+        Name of the systemd service to enable.
+    """
     run("systemctl", "enable", service, sudo=True)
 
 
 def systemctl_disable(service: str) -> None:
-    """Disable a systemd service."""
+    """Disable a systemd service.
+
+    Parameters
+    ----------
+    service : str
+        Name of the systemd service to disable.
+    """
     run("systemctl", "disable", service, sudo=True)
 
 
 def systemctl_status(service: str) -> str:
-    """Get systemd service status."""
+    """Get systemd service status.
+
+    Parameters
+    ----------
+    service : str
+        Name of the systemd service to query.
+
+    Returns
+    -------
+    str
+        Standard output of ``systemctl status``.
+    """
     result = run("systemctl", "status", service, capture=True)
     return result.stdout
 
@@ -122,12 +221,24 @@ def systemctl_status(service: str) -> str:
 
 
 def apt_install(*packages: str) -> None:
-    """Install packages with apt."""
+    """Install packages with apt.
+
+    Parameters
+    ----------
+    *packages : str
+        Names of apt packages to install.
+    """
     run("apt-get", "install", "-y", *packages, sudo=True)
 
 
 def apt_remove(*packages: str) -> None:
-    """Remove packages with apt."""
+    """Remove packages with apt.
+
+    Parameters
+    ----------
+    *packages : str
+        Names of apt packages to remove.
+    """
     run("apt-get", "remove", "-y", *packages, sudo=True)
 
 
@@ -153,18 +264,37 @@ def apt_clean() -> None:
 
 
 def apt_list_installed() -> list[str]:
-    """List installed apt packages."""
+    """List installed apt packages.
+
+    Returns
+    -------
+    list[str]
+        Names of packages marked as installed in ``dpkg --get-selections``
+        output.
+    """
     result = run("dpkg", "--get-selections", capture=True)
     return [line.split()[0] for line in result.stdout.splitlines() if "install" in line]
 
 
 def dnf_install(*packages: str) -> None:
-    """Install packages with dnf."""
+    """Install packages with dnf.
+
+    Parameters
+    ----------
+    *packages : str
+        Names of dnf packages to install.
+    """
     run("dnf", "install", "-y", *packages, sudo=True)
 
 
 def dnf_remove(*packages: str) -> None:
-    """Remove packages with dnf."""
+    """Remove packages with dnf.
+
+    Parameters
+    ----------
+    *packages : str
+        Names of dnf packages to remove.
+    """
     run("dnf", "remove", "-y", *packages, sudo=True)
 
 
@@ -174,12 +304,24 @@ def dnf_update() -> None:
 
 
 def apk_install(*packages: str) -> None:
-    """Install packages with apk (Alpine)."""
+    """Install packages with apk (Alpine).
+
+    Parameters
+    ----------
+    *packages : str
+        Names of apk packages to install.
+    """
     run("apk", "add", *packages, sudo=True)
 
 
 def apk_remove(*packages: str) -> None:
-    """Remove packages with apk (Alpine)."""
+    """Remove packages with apk (Alpine).
+
+    Parameters
+    ----------
+    *packages : str
+        Names of apk packages to remove.
+    """
     run("apk", "del", *packages, sudo=True)
 
 
@@ -189,12 +331,24 @@ def apk_update() -> None:
 
 
 def pacman_install(*packages: str) -> None:
-    """Install packages with pacman (Arch)."""
+    """Install packages with pacman (Arch).
+
+    Parameters
+    ----------
+    *packages : str
+        Names of pacman packages to install.
+    """
     run("pacman", "-S", "--noconfirm", *packages, sudo=True)
 
 
 def pacman_remove(*packages: str) -> None:
-    """Remove packages with pacman (Arch)."""
+    """Remove packages with pacman (Arch).
+
+    Parameters
+    ----------
+    *packages : str
+        Names of pacman packages to remove.
+    """
     run("pacman", "-R", "--noconfirm", *packages, sudo=True)
 
 
@@ -204,12 +358,24 @@ def pacman_update() -> None:
 
 
 def zypper_install(*packages: str) -> None:
-    """Install packages with zypper (openSUSE)."""
+    """Install packages with zypper (openSUSE).
+
+    Parameters
+    ----------
+    *packages : str
+        Names of zypper packages to install.
+    """
     run("zypper", "install", "-y", *packages, sudo=True)
 
 
 def zypper_remove(*packages: str) -> None:
-    """Remove packages with zypper (openSUSE)."""
+    """Remove packages with zypper (openSUSE).
+
+    Parameters
+    ----------
+    *packages : str
+        Names of zypper packages to remove.
+    """
     run("zypper", "remove", "-y", *packages, sudo=True)
 
 
@@ -227,7 +393,17 @@ def configure_system_sshd(
     password_auth: str = "no",
     port: int = 22,
 ) -> None:
-    """Configure sshd."""
+    """Configure sshd.
+
+    Parameters
+    ----------
+    permit_root_login : str, optional
+        Value for the sshd ``PermitRootLogin`` directive.
+    password_auth : str, optional
+        Value for the sshd ``PasswordAuthentication`` directive.
+    port : int, optional
+        TCP port for sshd to listen on.
+    """
     config = f"""\
 Port {port}
 PermitRootLogin {permit_root_login}
@@ -244,7 +420,14 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 
 
 def configure_lmod(prefix: str) -> None:
-    """Configure Lmod environment modules."""
+    """Configure Lmod environment modules.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory containing the Lmod ``init/profile``
+        script.
+    """
     profile_d = "/etc/profile.d"
     script = os.path.join(profile_d, "z00_lmod.sh")
     content = f"""\
@@ -279,7 +462,16 @@ _LINUX_INSTALL_APPS = (
 
 
 def install_linux_app(name: str, *, manager: str = "apt") -> None:
-    """Install a Linux application using system package manager."""
+    """Install a Linux application using system package manager.
+
+    Parameters
+    ----------
+    name : str
+        Package name to install.
+    manager : str, optional
+        Package manager to use (``"apt"``, ``"dnf"``, ``"apk"``,
+        ``"pacman"``, or ``"zypper"``).
+    """
     managers = {
         "apt": apt_install,
         "dnf": dnf_install,
@@ -295,7 +487,16 @@ def install_linux_app(name: str, *, manager: str = "apt") -> None:
 
 
 def uninstall_linux_app(name: str, *, manager: str = "apt") -> None:
-    """Uninstall a Linux application using system package manager."""
+    """Uninstall a Linux application using system package manager.
+
+    Parameters
+    ----------
+    name : str
+        Package name to uninstall.
+    manager : str, optional
+        Package manager to use (``"apt"``, ``"dnf"``, ``"apk"``,
+        ``"pacman"``, or ``"zypper"``).
+    """
     managers = {
         "apt": apt_remove,
         "dnf": dnf_remove,

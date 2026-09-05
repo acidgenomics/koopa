@@ -28,12 +28,18 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    the two under `plugins/koopa/`) — all wired via `[tool.bumpver] file_patterns`.
 2. **Write CHANGELOG.md** — prepend a new section directly above the previous
    `## koopa X.Y.Z (...)` heading. See format below.
-3. **Pre-release gate** — all must pass:
+3. **Pre-release gate** — all must pass. Run the whole gate in one command:
    ```sh
-   pytest lang/python/tests/
+   koopa develop check
+   ```
+   or the individual checks it wraps:
+   ```sh
    ruff check lang/python/src/
    ruff format --check lang/python/src/
    pyright lang/python/src/
+   ty check lang/python/src/koopa
+   numpydoc lint $(find lang/python/src/koopa -name '*.py')
+   pytest lang/python/tests/
    ```
 4. **User-owned** — tag, push, and merge:
    ```sh
@@ -81,3 +87,13 @@ if the tag hasn't been created yet for the previous release).
 `pyproject.toml:3` — `version = "X.Y.Z"`. Read at runtime by
 `koopa_version()` in `lang/python/src/koopa/version.py`. No other file
 hardcodes the koopa version.
+
+## GitHub releases
+
+When publishing a GitHub release for a koopa tag, set its name to the bare tag
+exactly (for example, `v0.29.0`), not a product-prefixed name such as
+`koopa v0.29.0`.
+
+Koopa keeps only the newest GitHub release. After publishing `vNEXT`, delete
+the prior GitHub release with `gh release delete vPREV --yes`; do not delete
+the prior `vPREV` Git tag.

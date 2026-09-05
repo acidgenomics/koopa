@@ -99,7 +99,7 @@ Applies to any package in `~/git/personal/py-<name>` that uses `bumpver` +
    pyright
    ty check
    pytest
-   numpydoc lint src/<name>/
+   numpydoc lint $(find src/<name> -name '*.py')
    ```
 3. All gates must be green before proceeding.
 
@@ -149,11 +149,21 @@ two things, both required for a real release (not just for building docs):
   invocation (`python -m doctest file.py`) does not, so a doctest that passes
   under `pytest` can still fail under `python -m doctest` and vice versa;
   treat `pytest` as authoritative since that's what the gate runs.
-- `numpydoc lint src/<name>/` checks docstring *structure* (every `Parameters`
-  entry has a description, every function has a `Returns`/`Yields` section)
-  — this is a separate tool from `pytest --doctest-modules`, which only checks
-  that `Examples` *content* is correct. Run both; each catches things the
-  other can't.
+- `numpydoc lint $(find src/<name> -name '*.py')` checks docstring
+  *structure* (every `Parameters` entry has a description, every function has
+  a `Returns`/`Yields` section). This is a separate tool from
+  `pytest --doctest-modules`, which only checks that `Examples` *content* is
+  correct. Run both; each catches things the other can't. `lint` takes a file
+  list, not a directory; a directory argument raises `IsADirectoryError`.
+- `numpydoc` is a standalone koopa app (`koopa install numpydoc`), so the bare
+  command above is correct, the same as `pyright` and `ty check` on the lines
+  before it. This differs from `pytest`, which needs
+  `uv run --extra develop` because the test suite imports the package's own
+  dependencies (see "Running `pytest`/tools inside the package's own venv"
+  below); `numpydoc lint` only parses the abstract syntax tree, so it imports
+  nothing and needs no venv. The package's own `docs` extra must still list
+  `numpydoc`, since `sphinx-build` imports it as an extension during
+  `uv run --extra docs sphinx-build`.
 - `[tool.numpydoc_validation]` needs `exclude = ['\._\w']` to skip private
   (underscore-prefixed) functions/methods. `numpydoc`'s `node_name` is dotted
   module-qualified (e.g. `case_conversion._camel_case`), so `exclude = ['^_']`
@@ -216,6 +226,24 @@ uv sync --extra develop --reinstall
 This rewrites every entry-point script's shebang in place. Packages with
 extra optional-dependency groups need those included too, e.g.
 `uv sync --extra develop --extra bio --extra docs`.
+
+### `uv.lock` is not tracked in git
+
+Every `py-<name>` package's `.gitignore` excludes `uv.lock` — it only pins
+this machine's own dev-tool versions (`pytest`, `ruff`, `pyright`, ...), and
+nothing a downstream consumer installs from PyPI ever reads it. A fresh
+clone needs one `uv sync --extra develop` (plus any other extras the package
+uses) before running the quality gates; there is no lock file to restore.
+
+**If a machine's `uv` config points `index-url` at a private/internal
+package mirror** (e.g. via `~/.config/uv/uv.toml`) rather than public PyPI,
+every `uv sync`/`uv lock` run rewrites each dependency's resolved `source`
+to that mirror's URL. Harmless while `uv.lock` stays untracked, but override
+it for any one-off command whose output you inspect or would otherwise
+commit:
+```sh
+UV_INDEX_URL="https://pypi.org/simple" uv sync --extra develop --extra docs
+```
 
 ### Publish
 

@@ -112,7 +112,19 @@ def main(
     mode: str,
     verbose: bool = False,
 ) -> None:
-    """Configure Debian/Ubuntu base system."""
+    """Configure Debian/Ubuntu base system.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"``).
+    verbose : bool, optional
+        Print verbose output.
+    """
     alert("Configuring system defaults.")
     apt_update()
     apt_full_upgrade()

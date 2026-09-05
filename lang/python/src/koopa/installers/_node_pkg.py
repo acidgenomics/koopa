@@ -11,7 +11,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install a Node.js package."""
+    """Install a Node.js package.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     kwargs = parse_passthrough(passthrough_args)
     extra = get_list(kwargs, "extra_packages")
     install_node_package(

@@ -9,13 +9,29 @@ def list_subdirs(
 ) -> list:
     """List subdirectories in a directory.
 
-    See Also
-    --------
-    - https://stackoverflow.com/questions/141291/
-    - https://stackoverflow.com/questions/800197/
-    - https://www.techiedelight.com/list-all-subdirectories-in-directory-python/
-    - For recursive listing, consider using a merge sort approach:
-      https://www.freecodecamp.org/news/how-to-sort-recursively-in-python/
+    Parameters
+    ----------
+    path : str
+        Directory to list subdirectories of.
+    recursive : bool, optional
+        Recurse into subdirectories instead of listing only the top level.
+    sort : bool, optional
+        Sort the returned list.
+    basename_only : bool, optional
+        Return only the base names instead of full paths.
+
+    Returns
+    -------
+    list
+        Subdirectory paths, or base names if `basename_only` is True.
+
+    Notes
+    -----
+    https://stackoverflow.com/questions/141291/
+    https://stackoverflow.com/questions/800197/
+    https://www.techiedelight.com/list-all-subdirectories-in-directory-python/
+    For recursive listing, consider using a merge sort approach:
+    https://www.freecodecamp.org/news/how-to-sort-recursively-in-python/
 
     Examples
     --------

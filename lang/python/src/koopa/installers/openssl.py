@@ -22,7 +22,20 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Install openssl."""
+    """Install openssl.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Application version.
+    prefix : str
+        Installation prefix directory.
+    passthrough_args : list[str] | None, optional
+        Extra ``--flag=value`` arguments derived from the app's
+        ``installer_args`` entry in app.json.
+    """
     env = activate_app_deps()
     ca_prefix = app_prefix("ca-certificates")
     ca_bundle = os.path.join(ca_prefix, "share", "ca-certificates", "cacert.pem")

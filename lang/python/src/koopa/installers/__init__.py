@@ -163,7 +163,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "zenith": f"{_M}._conda",
     "zoxide": f"{_M}._conda",
     "zsh": f"{_M}.zsh_app",
-    # -- python-package (58) ---------------------------------------------
+    # -- python-package (59) ---------------------------------------------
     "ansible-core": f"{_M}._python_pkg",
     "apache-airflow": f"{_M}._python_pkg",
     "autoflake": f"{_M}._python_pkg",
@@ -193,6 +193,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "multiqc": f"{_M}._python_pkg",
     "mutagen": f"{_M}._python_pkg",
     "mypy": f"{_M}._python_pkg",
+    "numpydoc": f"{_M}._python_pkg",
     "pipx": f"{_M}._python_pkg",
     "poetry": f"{_M}._python_pkg",
     "py-spy": f"{_M}._python_pkg",
@@ -597,7 +598,22 @@ def has_python_installer(
     platform: str = "common",
     mode: str = "shared",
 ) -> bool:
-    """Check if app has a Python-native installer."""
+    """Check if app has a Python-native installer.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str, optional
+        Operating system platform slug.
+    mode : str, optional
+        Installation mode (e.g. ``"shared"`` or ``"system"``).
+
+    Returns
+    -------
+    bool
+        True if a Python-native installer is registered for this app.
+    """
     key = (name, platform, mode)
     if key in PYTHON_PLATFORM_INSTALLERS:
         return True
@@ -609,7 +625,22 @@ def get_python_installer(
     platform: str = "common",
     mode: str = "shared",
 ) -> Callable[..., None]:
-    """Dynamically import and return the installer's ``main`` function."""
+    """Dynamically import and return the installer's ``main`` function.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str, optional
+        Operating system platform slug.
+    mode : str, optional
+        Installation mode (e.g. ``"shared"`` or ``"system"``).
+
+    Returns
+    -------
+    Callable[..., None]
+        The installer module's ``main`` function.
+    """
     key = (name, platform, mode)
     if key in PYTHON_PLATFORM_INSTALLERS:
         module_path = PYTHON_PLATFORM_INSTALLERS[key]

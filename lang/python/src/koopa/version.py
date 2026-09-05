@@ -26,6 +26,11 @@ def koopa_version() -> str:
     where no 'pyproject.toml' ships alongside the package). Falls back to
     reading 'pyproject.toml' directly for a git checkout, where the installed
     package metadata may be stale relative to the working tree.
+
+    Returns
+    -------
+    str
+        Koopa version string, or "unknown" if it cannot be determined.
     """
     import tomllib
     from importlib.metadata import PackageNotFoundError, version
@@ -42,7 +47,13 @@ def koopa_version() -> str:
 
 
 def version_pattern() -> str:
-    """Return a regex pattern for matching version strings."""
+    """Return a regex pattern for matching version strings.
+
+    Returns
+    -------
+    str
+        Regex pattern with one capture group for the version number.
+    """
     return r"(\d+\.\d+(?:\.\d+)*(?:[-+]\S*)?)"
 
 
@@ -64,19 +75,52 @@ def extract_version(string: str) -> str:
 
 
 def major_version(version: str) -> str:
-    """Extract major version number."""
+    """Extract major version number.
+
+    Parameters
+    ----------
+    version : str
+        Version string to extract from.
+
+    Returns
+    -------
+    str
+        Major version number.
+    """
     parts = version.split(".")
     return parts[0] if parts else version
 
 
 def major_minor_version(version: str) -> str:
-    """Extract major.minor version."""
+    """Extract major.minor version.
+
+    Parameters
+    ----------
+    version : str
+        Version string to extract from.
+
+    Returns
+    -------
+    str
+        Major.minor version.
+    """
     parts = version.split(".")
     return ".".join(parts[:2]) if len(parts) >= 2 else version
 
 
 def major_minor_patch_version(version: str) -> str:
-    """Extract major.minor.patch version."""
+    """Extract major.minor.patch version.
+
+    Parameters
+    ----------
+    version : str
+        Version string to extract from.
+
+    Returns
+    -------
+    str
+        Major.minor.patch version.
+    """
     parts = version.split(".")
     return ".".join(parts[:3]) if len(parts) >= 3 else version
 

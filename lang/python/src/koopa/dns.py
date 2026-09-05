@@ -10,7 +10,23 @@ _RECORD_TYPES: tuple[str, ...] = ("NS", "A", "AAAA", "MX", "TXT")
 
 
 def _dig(name: str, rtype: str, *, nameserver: str | None = None) -> list[str]:
-    """Run dig +short and return non-empty lines."""
+    """Run dig +short and return non-empty lines.
+
+    Parameters
+    ----------
+    name : str
+        Domain or hostname to query.
+    rtype : str
+        DNS record type to request (e.g. ``"A"``, ``"NS"``, ``"TXT"``).
+    nameserver : str | None, optional
+        Nameserver to query directly. Queries the resolver's default
+        nameserver when None.
+
+    Returns
+    -------
+    list[str]
+        Non-empty output lines from ``dig +short``.
+    """
     dig = shutil.which("dig")
     if dig is None:
         msg = "Command not found: dig"
@@ -23,7 +39,18 @@ def _dig(name: str, rtype: str, *, nameserver: str | None = None) -> list[str]:
 
 
 def nameserver_provider(ns_values: list[str]) -> str:
-    """Classify nameservers as Route 53, Hover, or Other."""
+    """Classify nameservers as Route 53, Hover, or Other.
+
+    Parameters
+    ----------
+    ns_values : list[str]
+        Nameserver hostnames to classify.
+
+    Returns
+    -------
+    str
+        ``"Route 53"``, ``"Hover"``, or ``"Other"``.
+    """
     # Route 53 nameservers have the pattern: ns-XXX.awsdns-YY.com
     if any(".awsdns-" in ns.lower() for ns in ns_values):
         return "Route 53"
@@ -34,7 +61,19 @@ def nameserver_provider(ns_values: list[str]) -> str:
 
 
 def dns_records(domain: str) -> dict[str, list[str]]:
-    """Query NS, A, AAAA, MX, TXT, and _dmarc TXT for a domain."""
+    """Query NS, A, AAAA, MX, TXT, and _dmarc TXT for a domain.
+
+    Parameters
+    ----------
+    domain : str
+        Domain name to query.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Record type mapped to its non-empty list of values. A record
+        type is absent from the result when the query returns nothing.
+    """
     records: dict[str, list[str]] = {}
     for rtype in _RECORD_TYPES:
         values = _dig(domain, rtype)
@@ -55,6 +94,20 @@ def route53_zone_records(
 
     Keys match dns_records() output (NS, A, AAAA, MX, TXT, _dmarc TXT).
     Alias records are represented as their target DNS name.
+
+    Parameters
+    ----------
+    domain : str
+        Domain name whose hosted zone to query.
+    profile : str, optional
+        AWS CLI profile name used for the Route 53 calls.
+
+    Returns
+    -------
+    dict[str, list[str]] | None
+        Record type mapped to its non-empty list of values, or None if
+        the AWS CLI is missing, the hosted zone lookup fails, or no
+        matching hosted zone exists.
     """
     import os
 
@@ -135,6 +188,17 @@ def _normalise(value: str) -> str:
     Strips surrounding quotes (dig returns them for TXT; R53 API also wraps
     them), trailing dots, and collapses internal whitespace so that MX
     priority spacing differences ("1  aspmx" vs "1 aspmx") are ignored.
+
+    Parameters
+    ----------
+    value : str
+        Raw DNS record value to normalise.
+
+    Returns
+    -------
+    str
+        Normalised value with quotes and trailing dot stripped and
+        internal whitespace collapsed to single spaces.
     """
     v = value.strip().strip('"').rstrip(".")
     return " ".join(v.split())
@@ -147,6 +211,18 @@ def diff_live_vs_route53(domain: str) -> list[str]:
     Skips A/AAAA (R53 stores CloudFront alias targets; live returns resolved
     IPs from the same distro — equivalent but not byte-comparable) and NS
     (R53 delegation set is not returned by list-resource-record-sets).
+
+    Parameters
+    ----------
+    domain : str
+        Domain name to compare.
+
+    Returns
+    -------
+    list[str]
+        One formatted line per record type with mismatched values.
+        Contains a single explanatory line instead when Route 53 is
+        unreachable, and is empty when live DNS matches Route 53.
     """
     live = dns_records(domain)
     r53 = route53_zone_records(domain)

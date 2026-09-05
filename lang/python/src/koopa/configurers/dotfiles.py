@@ -25,6 +25,23 @@ def _chezmoi_managed(
     reads the same state DB the install script applies.  Returns an empty set
     if the source is absent or the probe fails — a probe must never block the
     configure run.
+
+    Parameters
+    ----------
+    chezmoi : str
+        Path to the ``chezmoi`` executable.
+    source : str
+        Root directory of this tree's chezmoi source directory.
+    env : dict[str, str]
+        Environment variables to pass to the ``chezmoi`` subprocess call.
+    config : str | None, optional
+        Path to this tree's ``chezmoi.toml``, or ``None`` to omit
+        ``--config`` from the ``chezmoi`` invocation.
+
+    Returns
+    -------
+    set[str]
+        Target paths, relative to ``~``, that this tree manages.
     """
     if not os.path.isdir(source):
         return set()
@@ -50,6 +67,18 @@ def _print_chezmoi_status(
     Uses ``chezmoi status`` porcelain (``XY <path>``).  Always shown regardless
     of verbosity so the user sees which targets a tree will change.  Silent on
     probe failure.
+
+    Parameters
+    ----------
+    chezmoi : str
+        Path to the ``chezmoi`` executable.
+    source : str
+        Root directory of this tree's chezmoi source directory.
+    env : dict[str, str]
+        Environment variables to pass to the ``chezmoi`` subprocess call.
+    config : str | None, optional
+        Path to this tree's ``chezmoi.toml``, or ``None`` to omit
+        ``--config`` from the ``chezmoi`` invocation.
     """
     if not os.path.isdir(source):
         return
@@ -79,6 +108,16 @@ def _warn_cross_tree_overlap(
     The later (work/private) ``chezmoi apply`` overwrites the main tree's
     version of any shared target.  Emit one visible warning listing each
     colliding relative target path.
+
+    Parameters
+    ----------
+    tree_label : str
+        Human-readable label for the later tree (e.g. ``"work"`` or
+        ``"private"``), used in the warning message.
+    main_targets : set[str]
+        Target paths (relative to ``~``) the main tree manages.
+    tree_targets : set[str]
+        Target paths (relative to ``~``) the later tree manages.
     """
     overlap = sorted(main_targets & tree_targets)
     if not overlap:
@@ -104,6 +143,23 @@ def _chezmoiremove_targets(
     block), so it must be rendered via ``chezmoi execute-template`` rather than
     read raw.  Returns an empty set if the file is absent or the probe fails —
     a probe must never block the configure run.
+
+    Parameters
+    ----------
+    chezmoi : str
+        Path to the ``chezmoi`` executable.
+    source : str
+        Root directory of this tree's chezmoi source directory.
+    env : dict[str, str]
+        Environment variables to pass to the ``chezmoi`` subprocess call.
+    config : str | None, optional
+        Path to this tree's ``chezmoi.toml``, or ``None`` to omit
+        ``--config`` from the ``chezmoi`` invocation.
+
+    Returns
+    -------
+    set[str]
+        Target paths this tree's ``.chezmoiremove`` deletes.
     """
     remove_file = os.path.join(source, ".chezmoiremove")
     if not os.path.isfile(remove_file):
@@ -138,6 +194,16 @@ def _warn_remove_manage_conflict(
     hits, not just exact equality — a plain set intersection misses this.  Left
     unresolved, the main tree recreates the target on every run and the later
     tree deletes it again, an unbroken tug-of-war.
+
+    Parameters
+    ----------
+    tree_label : str
+        Human-readable label for the later tree (e.g. ``"work"`` or
+        ``"private"``), used in the warning message.
+    main_targets : set[str]
+        Target paths (relative to ``~``) the main tree manages.
+    remove_targets : set[str]
+        Target paths the later tree's ``.chezmoiremove`` deletes.
     """
     conflicts: list[tuple[str, str]] = []
     for removed in sorted(remove_targets):
@@ -169,6 +235,14 @@ def _check_broken_symlink(tree_label: str, prefix: str) -> None:
     re-run through the initial setup flow that would re-create the link.
     Fail loudly instead: a broken symlink here always means misconfiguration,
     never "tree absent," so raise rather than warn-and-continue.
+
+    Parameters
+    ----------
+    tree_label : str
+        Human-readable label for this tree (e.g. ``"work"`` or
+        ``"private"``), used in the raised error message.
+    prefix : str
+        Path to check for a broken symlink.
     """
     if os.path.islink(prefix) and not os.path.isdir(prefix):
         target = os.readlink(prefix)
@@ -191,6 +265,17 @@ def main(
 
     Links opt_prefix/dotfiles to the dotfiles config prefix, then runs
     the install script(s).
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Print verbose output.
     """
     if os.geteuid() == 0:
         msg = "Must not be run as root."

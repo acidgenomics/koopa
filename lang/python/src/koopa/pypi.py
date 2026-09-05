@@ -15,7 +15,13 @@ _PROFILE = "acidgenomics"
 
 
 def _aws() -> str:
-    """Return path to aws CLI, raising if absent."""
+    """Return path to aws CLI, raising if absent.
+
+    Returns
+    -------
+    str
+        Absolute path to the aws CLI executable.
+    """
     path = shutil.which("aws")
     if path is None:
         msg = "aws CLI is not installed."
@@ -24,7 +30,13 @@ def _aws() -> str:
 
 
 def _uv() -> str:
-    """Return path to uv, raising if absent."""
+    """Return path to uv, raising if absent.
+
+    Returns
+    -------
+    str
+        Absolute path to the uv executable.
+    """
     path = shutil.which("uv")
     if path is None:
         msg = "uv is not installed."
@@ -33,14 +45,26 @@ def _uv() -> str:
 
 
 def _bucket() -> str:
-    """Return the Python package S3 bucket name (loaded from environment)."""
+    """Return the Python package S3 bucket name (loaded from environment).
+
+    Returns
+    -------
+    str
+        Name of the S3 bucket used for the Python package index.
+    """
     from koopa.aws import koopa_s3_bucket
 
     return koopa_s3_bucket("python")
 
 
 def _s3_uri() -> str:
-    """Return the S3 URI prefix for the Python package bucket."""
+    """Return the S3 URI prefix for the Python package bucket.
+
+    Returns
+    -------
+    str
+        S3 URI (``s3://<bucket>``) for the Python package bucket.
+    """
     return f"s3://{_bucket()}"
 
 
@@ -52,6 +76,11 @@ def _cloudfront_distribution_id() -> str:
     distribution on a machine whose .env had a stale generic value but no
     site-specific one set, leaving python.acidgenomics.com serving a stale
     cached index with zero error surfaced. Fail loudly instead.
+
+    Returns
+    -------
+    str
+        CloudFront distribution ID for python.acidgenomics.com.
     """
     from koopa.aws import dotenv_value
 
@@ -63,7 +92,13 @@ def _cloudfront_distribution_id() -> str:
 
 
 def _s3_list_packages() -> list[str]:
-    """List all filenames under the Python package S3 bucket's packages/ prefix."""
+    """List all filenames under the Python package S3 bucket's packages/ prefix.
+
+    Returns
+    -------
+    list[str]
+        Filenames of packages stored under the ``packages/`` prefix.
+    """
     aws = _aws()
     result = subprocess.run(
         [
@@ -91,7 +126,19 @@ _DIST_PREFIX = "acidgenomics-"
 
 
 def _normalize_name(name: str) -> str:
-    """PEP 503 normalized package name."""
+    """PEP 503 normalized package name.
+
+    Parameters
+    ----------
+    name : str
+        Package or distribution name to normalize.
+
+    Returns
+    -------
+    str
+        PEP 503 normalized name, lowercased with runs of ``-``/``_``/``.``
+        collapsed to a single ``-``.
+    """
     return re.sub(r"[-_.]+", "-", name).lower()
 
 
@@ -102,12 +149,34 @@ def _docs_slug(name: str) -> str:
     (e.g. 'acidgenomics-syntactic'), but docs and the landing page keep using
     the short, pre-existing slug ('syntactic') so published doc URLs and
     Bioconda 'about.home' fields stay valid across the rename.
+
+    Parameters
+    ----------
+    name : str
+        PyPI distribution name.
+
+    Returns
+    -------
+    str
+        Short docs slug with the 'acidgenomics-' prefix removed.
     """
     return _normalize_name(name).removeprefix(_DIST_PREFIX)
 
 
 def _parse_package_name(filename: str) -> str | None:
-    """Extract normalized package name from wheel or sdist filename."""
+    """Extract normalized package name from wheel or sdist filename.
+
+    Parameters
+    ----------
+    filename : str
+        Wheel or sdist filename to parse.
+
+    Returns
+    -------
+    str | None
+        PEP 503 normalized package name, or None if the filename doesn't
+        match the expected wheel/sdist naming pattern.
+    """
     # wheel: name-version(-build)?-pythontag-abitag-platformtag.whl
     # sdist: name-version.tar.gz
     match = re.match(r"^([A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?)-\d", filename)
@@ -117,7 +186,19 @@ def _parse_package_name(filename: str) -> str | None:
 
 
 def _parse_package_version(filename: str) -> str | None:
-    """Extract the version string from a wheel or sdist filename."""
+    """Extract the version string from a wheel or sdist filename.
+
+    Parameters
+    ----------
+    filename : str
+        Wheel or sdist filename to parse.
+
+    Returns
+    -------
+    str | None
+        Version string parsed from the filename, or None if the filename
+        has neither a '.tar.gz' nor a '.whl' suffix.
+    """
     stem = filename
     for suffix in (".tar.gz", ".whl"):
         if stem.endswith(suffix):
@@ -132,7 +213,18 @@ def _parse_package_version(filename: str) -> str | None:
 
 
 def _version_sort_key(version: str) -> tuple[int, ...]:
-    """Parse a dotted version string into a comparable int tuple."""
+    """Parse a dotted version string into a comparable int tuple.
+
+    Parameters
+    ----------
+    version : str
+        Dotted version string (e.g. '0.1.1').
+
+    Returns
+    -------
+    tuple[int, ...]
+        Integer components of the version, in order, for sort comparison.
+    """
     return tuple(int(p) for p in version.split(".") if p.isdigit())
 
 
@@ -163,7 +255,18 @@ def _select_published_artifacts(filenames: list[str], dist_name: str, version: s
 
 
 def _sha256_of_file(path: str) -> str:
-    """Return the SHA-256 hex digest of a local file."""
+    """Return the SHA-256 hex digest of a local file.
+
+    Parameters
+    ----------
+    path : str
+        Path to the local file to hash.
+
+    Returns
+    -------
+    str
+        SHA-256 hex digest of the file's contents.
+    """
     h = hashlib.sha256()
     with open(path, "rb") as fh:
         for chunk in iter(lambda: fh.read(65536), b""):
@@ -172,7 +275,20 @@ def _sha256_of_file(path: str) -> str:
 
 
 def _sha256_of_s3_file(key: str, tmp_dir: str) -> str:
-    """Download an S3 object and return its SHA-256 hex digest."""
+    """Download an S3 object and return its SHA-256 hex digest.
+
+    Parameters
+    ----------
+    key : str
+        S3 object key (relative to the Python package bucket) to download.
+    tmp_dir : str
+        Scratch directory to download the object into.
+
+    Returns
+    -------
+    str
+        SHA-256 hex digest of the downloaded object's contents.
+    """
     aws = _aws()
     local = os.path.join(tmp_dir, os.path.basename(key))
     subprocess.run(
@@ -233,7 +349,19 @@ def _check_no_artifact_collision(dist_files: list[Path], tmp_dir: str) -> None:
 
 
 def _read_wheel_summary(whl_path: str) -> str:
-    """Read the Summary field from a wheel's METADATA, returning '' if absent."""
+    """Read the Summary field from a wheel's METADATA, returning '' if absent.
+
+    Parameters
+    ----------
+    whl_path : str
+        Path to the local wheel file to read.
+
+    Returns
+    -------
+    str
+        Value of the Summary field from METADATA, or '' if the wheel is
+        unreadable or has no Summary field.
+    """
     try:
         with zipfile.ZipFile(whl_path) as zf:
             meta_name = next(
@@ -260,6 +388,14 @@ def _generate_index(
 
     The index is served at /simple/ (PEP 503 convention), so the package
     pages live at /simple/<name>/index.html and link to ../../packages/<file>.
+
+    Parameters
+    ----------
+    packages : dict[str, list[tuple[str, str]]]
+        Mapping of normalized package name to a list of (filename, sha256)
+        tuples for that package's published artifacts.
+    output_dir : Path
+        Directory to write the generated index HTML tree into.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -311,6 +447,13 @@ def _generate_landing(
     Both collapse onto one docs slug (see _docs_slug) before rendering, so the
     page shows one entry per package; the prefixed name's summary always wins
     on a collision, since that is the current release.
+
+    Parameters
+    ----------
+    packages_summaries : dict[str, str]
+        Mapping of distribution name to its wheel Summary text (may be '').
+    output_path : Path
+        File path to write the generated landing page HTML to.
     """
     from koopa.landing import render_landing
 
@@ -352,6 +495,11 @@ def _sync_index_to_s3(index_dir: Path) -> None:
 
     Scoping the sync to the simple/ prefix confines --delete to that
     subtree; packages/ and per-package docs are never touched.
+
+    Parameters
+    ----------
+    index_dir : Path
+        Local directory containing the generated PEP 503 index tree.
     """
     aws = _aws()
     subprocess.run(
@@ -371,7 +519,13 @@ def _sync_index_to_s3(index_dir: Path) -> None:
 
 
 def _upload_landing(landing_path: Path) -> None:
-    """Upload the root landing page to s3://bucket/index.html."""
+    """Upload the root landing page to s3://bucket/index.html.
+
+    Parameters
+    ----------
+    landing_path : Path
+        Local path to the generated landing page HTML file.
+    """
     subprocess.run(
         [
             _aws(),
@@ -414,7 +568,7 @@ def reindex(*, invalidate: bool = True) -> None:
 
     Parameters
     ----------
-    invalidate
+    invalidate : bool, optional
         Whether to invalidate the CloudFront cache after syncing.
     """
     from koopa.alert import alert
@@ -490,6 +644,11 @@ def _tag_and_push_release(pkg_path: Path) -> None:
     the tag if missing and always pushes it (idempotent if already pushed),
     matching the 'vMAJOR.MINOR.PATCH' bumpver convention used by every sibling
     package (acidgenomes, cellosaurus, ...).
+
+    Parameters
+    ----------
+    pkg_path : Path
+        Path to the package source directory (must contain pyproject.toml).
     """
     import tomllib
 
@@ -534,6 +693,11 @@ def _publish_to_pypi(dist_files: list[Path]) -> None:
     process via `ps`. A brand-new project name needs an account-scoped
     token for its first upload; a project-scoped token can't create the
     project it's scoped to.
+
+    Parameters
+    ----------
+    dist_files : list[Path]
+        Local wheel/sdist paths to upload.
     """
     from koopa.aws import dotenv_value
 
@@ -579,18 +743,18 @@ def publish(
 
     Parameters
     ----------
-    package_dir
+    package_dir : str
         Path to a Python package source directory (must contain pyproject.toml).
-    invalidate
+    invalidate : bool, optional
         Whether to invalidate the CloudFront cache after uploading.
-    force
+    force : bool, optional
         Skip the artifact-collision check (see _check_no_artifact_collision)
         and overwrite an already-published version's artifact even if its
         content differs. Off by default -- only pass this for a deliberate,
         already-decided in-place update of a version that's already live
         (e.g. correcting the same real incident this check exists to catch).
         Every other case should bump the version instead.
-    pypi
+    pypi : bool, optional
         Whether to also upload the same dist files to public PyPI. On by
         default; pass False for a private-index-only publish.
     """
@@ -750,10 +914,10 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
 
     Parameters
     ----------
-    package_dir
+    package_dir : str
         Path to a Python package source directory (must contain pyproject.toml
         and a ``docs/`` directory with a Sphinx ``conf.py``).
-    invalidate
+    invalidate : bool, optional
         Whether to invalidate the CloudFront cache after uploading.
     """
     import tomllib
@@ -839,10 +1003,10 @@ def sync_docs_theme(package_dirs: list[str], *, check: bool = False) -> bool:
 
     Parameters
     ----------
-    package_dirs
+    package_dirs : list[str]
         Paths to package or koopa repo roots (each must contain a docs/
         directory).
-    check
+    check : bool, optional
         If True, compare instead of writing: return whether every target
         already matches the source tree, without modifying anything.
 

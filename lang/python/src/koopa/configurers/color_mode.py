@@ -30,6 +30,18 @@ def _chezmoi_source_to_target(source_root: str, source_path: str) -> str:
       - strip ``.tmpl`` suffix
 
     Returns an absolute target path under ``~``.
+
+    Parameters
+    ----------
+    source_root : str
+        Root directory of the chezmoi source tree.
+    source_path : str
+        Absolute path to a file within ``source_root``.
+
+    Returns
+    -------
+    str
+        Absolute target path under the home directory.
     """
     rel = os.path.relpath(source_path, source_root)
     parts = rel.split(os.sep)
@@ -54,6 +66,17 @@ def _scan_color_mode_candidates(chezmoi_prefix: str) -> list[str]:
 
     The launchd plist and systemd unit are naturally excluded because they don't
     reference KOOPA_COLOR_MODE.
+
+    Parameters
+    ----------
+    chezmoi_prefix : str
+        Root directory of a single chezmoi tree's source directory.
+
+    Returns
+    -------
+    list[str]
+        Target paths (under ``~``) of templates in this tree that branch on
+        ``KOOPA_COLOR_MODE``.
     """
     needle = b"KOOPA_COLOR_MODE"
     targets = []
@@ -94,6 +117,23 @@ def _discover_color_mode_targets(
     and warning here would be a permanent false alarm on every flip.  ``main()``
     instead defers the warning, via ``_apply_color_mode_tree()``, until every tree
     has had a chance to claim the target.
+
+    Parameters
+    ----------
+    chezmoi_prefix : str
+        Root directory of a single chezmoi tree's source directory.
+    managed : set[str]
+        Target paths (relative to ``~``) that this tree's ``chezmoi managed``
+        reports, as returned by ``_chezmoi_managed()``.
+    warn_on_drop : bool, optional
+        Warn immediately about every candidate dropped because it is not in
+        ``managed``.
+
+    Returns
+    -------
+    list[str]
+        Target paths (under ``~``) of this tree's color-mode candidates that
+        it actually manages.
     """
     home = os.path.expanduser("~")
     targets = []
@@ -150,6 +190,34 @@ def _apply_color_mode_tree(
     continue and the marker still get written -- raising here would reintroduce
     the documented infinite-respawn wedge, where a permanently broken overlay tree
     blocks the marker forever and every new shell retries the identical failure.
+
+    Parameters
+    ----------
+    chezmoi : str
+        Path to the ``chezmoi`` executable.
+    env : dict[str, str]
+        Environment variables to pass to the ``chezmoi`` subprocess calls.
+    tree_label : str
+        Human-readable label for this tree (e.g. ``"main"``, ``"work"``,
+        ``"private"``), used in warning messages.
+    source : str
+        Root directory of this tree's chezmoi source directory.
+    config : str | None
+        Path to this tree's ``chezmoi.toml``, or ``None`` to omit
+        ``--config`` from the ``chezmoi`` invocation.
+    verbose : bool
+        Pass ``--verbose`` to the ``chezmoi apply`` invocation.
+    required : bool
+        Whether a managed-probe or apply failure for this tree is fatal to
+        the whole color-mode run.
+
+    Returns
+    -------
+    tuple[set[str], set[str]] | None
+        A ``(candidate_rels, applied_rels)`` pair of target paths (relative
+        to ``~``): every color-mode target this tree's templates produce,
+        and the subset actually applied. ``None`` only when ``required`` is
+        true and the managed-probe failed.
     """
     if not os.path.isdir(source):
         return set(), set()
@@ -223,6 +291,17 @@ def main(
     different transient OS appearance states during a mode transition and stomp
     each other's chezmoi apply, producing light↔dark thrash.  The lock plus a
     double-checked marker ensure exactly one apply lands per mode change.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"user"``).
+    verbose : bool, optional
+        Pass ``--verbose`` to the ``chezmoi apply`` invocations.
     """
     if os.geteuid() == 0:
         msg = "Must not be run as root."

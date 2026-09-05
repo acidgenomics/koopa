@@ -24,10 +24,29 @@ _USER_AGENT = (
 )
 
 
-def _is_sourceforge_url(url: str) -> bool:
-    """Return whether a URL points at sourceforge.net or a subdomain."""
+def _blocks_spoofed_user_agent(url: str) -> bool:
+    """Return whether a URL's host rejects our desktop-browser UA string.
+
+    SourceForge's Cloudflare front 403s it on the files/.../download
+    redirect hop, and www.freedesktop.org's Anubis bot check 418s it on
+    the release path; curl's own default UA is accepted by both.
+
+    Parameters
+    ----------
+    url : str
+        URL to check.
+
+    Returns
+    -------
+    bool
+        True if the URL's host is known to block the spoofed UA string.
+    """
     host = urlparse(url).hostname or ""
-    return host == "sourceforge.net" or host.endswith(".sourceforge.net")
+    return (
+        host == "sourceforge.net"
+        or host.endswith(".sourceforge.net")
+        or host == "www.freedesktop.org"
+    )
 
 
 # Extensions that archive.is_valid_archive() can actually recognize by magic
@@ -68,6 +87,34 @@ def download(
     """Download a file from a URL.
 
     Uses curl if available, falling back to urllib.
+
+    Parameters
+    ----------
+    url : str
+        URL to download.
+    output : str | None, optional
+        Destination file path. Derived from ``url`` when not set.
+    decompress : bool, optional
+        Decompress the downloaded file after it completes.
+    retry : bool, optional
+        Retry the curl download on transient failure.
+    connect_timeout : int | None, optional
+        Maximum seconds to wait for the connection to establish.
+    max_time : int | None, optional
+        Maximum seconds for the whole download operation.
+    speed_limit : int | None, optional
+        Minimum transfer speed, in bytes per second, before the download
+        is considered too slow and aborted.
+    speed_time : int | None, optional
+        Seconds the transfer may stay below ``speed_limit`` before it is
+        aborted.
+    quiet : bool, optional
+        Suppress progress and status output.
+
+    Returns
+    -------
+    str
+        Path to the downloaded (and, if requested, decompressed) file.
     """
     if output is None:
         output = _derive_filename(url)
@@ -139,6 +186,17 @@ def _gnu_relative_path(primary_url: str) -> str | None:
     mirrors.kernel.org URLs are rooted at '/<path>' and '/gnu/<path>' respectively.
     Stripping any leading 'gnu/' segment normalizes all three to the same relative
     path, which is what every mirror host expects after its own '/gnu/' prefix.
+
+    Parameters
+    ----------
+    primary_url : str
+        URL to test and derive the relative path from.
+
+    Returns
+    -------
+    str | None
+        GNU-tree-relative path, or None if ``primary_url`` is not a
+        recognized GNU host.
     """
     hostname = urlparse(primary_url).hostname or ""
     if not any(host in hostname for host in _GNU_HOSTS):
@@ -150,7 +208,19 @@ def _gnu_relative_path(primary_url: str) -> str | None:
 
 
 def _gnu_mirrors(primary_url: str) -> list[str]:
-    """Return alternative GNU mirror URLs if primary is a GNU source."""
+    """Return alternative GNU mirror URLs if primary is a GNU source.
+
+    Parameters
+    ----------
+    primary_url : str
+        URL to test and derive mirror URLs from.
+
+    Returns
+    -------
+    list[str]
+        Alternative GNU mirror URLs, or an empty list if ``primary_url``
+        is not a recognized GNU host.
+    """
     rel = _gnu_relative_path(primary_url)
     if rel is None:
         return []
@@ -158,7 +228,19 @@ def _gnu_mirrors(primary_url: str) -> list[str]:
 
 
 def _gnupg_mirrors(primary_url: str) -> list[str]:
-    """Return alternative GnuPG download host URLs."""
+    """Return alternative GnuPG download host URLs.
+
+    Parameters
+    ----------
+    primary_url : str
+        URL to test and derive mirror URLs from.
+
+    Returns
+    -------
+    list[str]
+        Alternative GnuPG mirror URLs, or an empty list if ``primary_url``
+        is not a recognized GnuPG host.
+    """
     parsed = urlparse(primary_url)
     hostname = parsed.hostname or ""
     if hostname not in _GNUPG_HOSTS:
@@ -178,6 +260,17 @@ def _savannah_relative_path(primary_url: str) -> str | None:
     download.savannah.nongnu.org URLs are rooted at '/releases/<path>'; the mirror
     hosts are rooted at '/nongnu/<path>' or '/<path>'. Stripping the leading
     'releases/' segment normalizes to the path every mirror expects.
+
+    Parameters
+    ----------
+    primary_url : str
+        URL to test and derive the relative path from.
+
+    Returns
+    -------
+    str | None
+        Savannah-tree-relative path, or None if ``primary_url`` is not a
+        recognized Savannah host.
     """
     hostname = urlparse(primary_url).hostname or ""
     if not any(host in hostname for host in _NONGNU_HOSTS):
@@ -191,7 +284,19 @@ def _savannah_relative_path(primary_url: str) -> str | None:
 
 
 def _savannah_mirrors(primary_url: str) -> list[str]:
-    """Return alternative Savannah mirror URLs if primary is a Savannah source."""
+    """Return alternative Savannah mirror URLs if primary is a Savannah source.
+
+    Parameters
+    ----------
+    primary_url : str
+        URL to test and derive mirror URLs from.
+
+    Returns
+    -------
+    list[str]
+        Alternative Savannah mirror URLs, or an empty list if
+        ``primary_url`` is not a recognized Savannah host.
+    """
     rel = _savannah_relative_path(primary_url)
     if rel is None:
         return []
@@ -228,6 +333,41 @@ def download_with_mirror(
 
     Uses a short connect_timeout on mirror attempts so broken TLS endpoints
     fail fast instead of blocking for minutes on retries.
+
+    Parameters
+    ----------
+    primary_url : str
+        First URL to try.
+    name : str
+        Application name, used to build the koopa mirror URL.
+    filename : str
+        Destination filename, used to build the koopa mirror URL and to
+        detect archive payloads.
+    extra_urls : list[str] | None, optional
+        Additional fallback URLs to try after the GNU/GnuPG/Savannah
+        mirrors and before the koopa mirror.
+    connect_timeout : int, optional
+        Connect timeout, in seconds, applied to every non-final mirror
+        attempt.
+    max_time : int | None, optional
+        Maximum seconds for each download attempt.
+    speed_limit : int, optional
+        Minimum transfer speed, in bytes per second, before an attempt is
+        considered too slow and aborted.
+    speed_time : int, optional
+        Seconds a transfer may stay below ``speed_limit`` before it is
+        aborted.
+    output : str | None, optional
+        Destination file path. Derived from the URL when not set.
+    quiet : bool, optional
+        Suppress progress and status output.
+    skip_koopa_mirror : bool, optional
+        Do not fall back to the koopa mirror after the other sources fail.
+
+    Returns
+    -------
+    str
+        Path to the downloaded file.
     """
     from koopa.vendor import (
         vendor_config,
@@ -306,7 +446,18 @@ def download_with_mirror(
 
 
 def _derive_filename(url: str) -> str:
-    """Derive filename from URL, stripping query strings and decoding."""
+    """Derive filename from URL, stripping query strings and decoding.
+
+    Parameters
+    ----------
+    url : str
+        URL to derive the filename from.
+
+    Returns
+    -------
+    str
+        Derived filename, or "download" if none could be determined.
+    """
     parsed = urlparse(url)
     name = os.path.basename(parsed.path)
     if not name or name == "download":
@@ -335,7 +486,13 @@ def _curl_version(curl_cmd: str = "curl") -> tuple[int, ...]:
 
 
 def _check_curl(curl_cmd: str) -> None:
-    """Verify curl's RPATH targets exist. Runs once per curl_cmd."""
+    """Verify curl's RPATH targets exist. Runs once per curl_cmd.
+
+    Parameters
+    ----------
+    curl_cmd : str
+        Curl executable name or path to check.
+    """
     if curl_cmd in _curl_ok:
         return
     import shutil
@@ -363,7 +520,32 @@ def _download_curl(
     curl_cmd: str = "curl",
     quiet: bool = False,
 ) -> None:
-    """Download using curl."""
+    """Download using curl.
+
+    Parameters
+    ----------
+    url : str
+        URL to download.
+    output : str
+        Destination file path.
+    retry : bool, optional
+        Retry the download on transient failure.
+    connect_timeout : int | None, optional
+        Maximum seconds to wait for the connection to establish.
+    max_time : int | None, optional
+        Maximum seconds for the whole download operation.
+    speed_limit : int | None, optional
+        Minimum transfer speed, in bytes per second, before the download
+        is considered too slow and aborted.
+    speed_time : int | None, optional
+        Seconds the transfer may stay below ``speed_limit`` before it is
+        aborted.
+    curl_cmd : str, optional
+        Curl executable name or path to invoke.
+    quiet : bool, optional
+        Suppress progress output and raise on failure with captured
+        stderr instead of letting curl print directly.
+    """
     _check_curl(curl_cmd)
     curl_args = [
         curl_cmd,
@@ -391,9 +573,7 @@ def _download_curl(
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and os.path.isfile(ca_bundle):
         curl_args.extend(["--cacert", ca_bundle])
-    # SourceForge's Cloudflare front 403s this desktop-browser UA string on the
-    # files/.../download redirect hop; curl's own default UA is accepted.
-    if not _is_sourceforge_url(url):
+    if not _blocks_spoofed_user_agent(url):
         curl_args.extend(["--user-agent", _USER_AGENT])
     if os.environ.get("http_proxy") or os.environ.get("https_proxy"):
         curl_args.append("--insecure")
@@ -412,10 +592,17 @@ def _download_curl(
 
 
 def _download_urllib(url: str, output: str) -> None:
-    """Download using urllib."""
+    """Download using urllib.
+
+    Parameters
+    ----------
+    url : str
+        URL to download.
+    output : str
+        Destination file path.
+    """
     req = urllib.request.Request(url)
-    # See _download_curl: SourceForge 403s this UA string.
-    if not _is_sourceforge_url(url):
+    if not _blocks_spoofed_user_agent(url):
         req.add_header("User-Agent", _USER_AGENT)
     ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
     if ca_bundle and not os.path.isfile(ca_bundle):
@@ -448,7 +635,20 @@ def _download_urllib(url: str, output: str) -> None:
 
 
 def download_cran_latest(package: str, output_dir: str = ".") -> str:
-    """Download the latest CRAN package tarball."""
+    """Download the latest CRAN package tarball.
+
+    Parameters
+    ----------
+    package : str
+        CRAN package name.
+    output_dir : str, optional
+        Directory to save the tarball to.
+
+    Returns
+    -------
+    str
+        Path to the downloaded tarball.
+    """
     url = f"https://cran.r-project.org/web/packages/{package}/"
     try:
         with urllib.request.urlopen(url) as resp:
@@ -474,10 +674,20 @@ def download_github_latest(
 ) -> str:
     """Download the latest GitHub release asset.
 
-    Args:
-        repo: GitHub repo in 'owner/repo' format.
-        output_dir: Directory to save to.
-        pattern: Optional regex pattern to match against asset names.
+    Parameters
+    ----------
+    repo : str
+        GitHub repo in 'owner/repo' format.
+    output_dir : str, optional
+        Directory to save the asset to.
+    pattern : str | None, optional
+        Regex pattern to match against asset names. Uses the first asset
+        when not set.
+
+    Returns
+    -------
+    str
+        Path to the downloaded asset.
     """
     api_url = f"https://api.github.com/repos/{repo}/releases/latest"
     req = urllib.request.Request(api_url)

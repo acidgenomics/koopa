@@ -18,6 +18,17 @@ def main(
 
     Locates system R and Rscript, gets LD_LIBRARY_PATH from R, and writes
     /etc/rstudio/rserver.conf.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"``).
+    verbose : bool, optional
+        Print verbose output.
     """
     r_bin = shutil.which("R")
     rscript_bin = shutil.which("Rscript")

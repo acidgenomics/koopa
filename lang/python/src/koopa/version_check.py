@@ -40,7 +40,13 @@ class VersionCheckResult:
 
     @property
     def is_outdated(self) -> bool:
-        """Return whether the latest upstream version is newer than the current pinned version."""
+        """Return whether the latest upstream version is newer than the current pinned version.
+
+        Returns
+        -------
+        bool
+            True if the latest version is newer than the current pinned version.
+        """
         if self.latest_version is None or self.current_version == self.latest_version:
             return False
         if re.match(r"^[0-9a-f]{40}$", self.latest_version):
@@ -54,7 +60,13 @@ class VersionCheckResult:
 
     @property
     def is_pinned_too_high(self) -> bool:
-        """Return whether the pinned version is higher than the latest stable upstream."""
+        """Return whether the pinned version is higher than the latest stable upstream.
+
+        Returns
+        -------
+        bool
+            True if the current pinned version is higher than the latest stable version.
+        """
         if self.latest_version is None or self.current_version == self.latest_version:
             return False
         if re.match(r"^[0-9a-f]{40}$", self.latest_version):
@@ -165,8 +177,39 @@ _PRERELEASE_RE = re.compile(
 )
 
 
+def _short_sha(version: str, length: int = 7) -> str:
+    """Shorten a full-length git commit SHA for display purposes.
+
+    Parameters
+    ----------
+    version : str
+        Version string, which may be a full 40-character git commit SHA.
+    length : int
+        Number of leading characters to keep for a shortened SHA.
+
+    Returns
+    -------
+    str
+        The original string, or a truncated form if it is a full SHA.
+    """
+    if _SHA_RE.match(version):
+        return version[:length]
+    return version
+
+
 def _version_key(version: str) -> tuple[int, ...]:
-    """Parse version string into a comparable int tuple, handling trailing letters."""
+    """Parse version string into a comparable int tuple, handling trailing letters.
+
+    Parameters
+    ----------
+    version : str
+        Version string to parse.
+
+    Returns
+    -------
+    tuple[int, ...]
+        Comparable representation of the version, suitable for sorting.
+    """
     nums = []
     for part in re.split(r"[.\-]", version):
         m = re.match(r"(\d+)([a-zA-Z]?)(\d*)", part)
@@ -180,7 +223,20 @@ def _version_key(version: str) -> tuple[int, ...]:
 
 
 def _is_excluded(version: str, excluded: tuple[str, ...]) -> bool:
-    """Return whether a version is on an app's ``version_exclude`` list."""
+    """Return whether a version is on an app's ``version_exclude`` list.
+
+    Parameters
+    ----------
+    version : str
+        Version string to check.
+    excluded : tuple[str, ...]
+        App's ``version_exclude`` list from app.json.
+
+    Returns
+    -------
+    bool
+        True if ``version`` matches an entry in ``excluded``.
+    """
     if version in excluded:
         return True
     san = sanitize_version(version)
@@ -195,6 +251,16 @@ def _audit_version_excludes(json_data: dict[str, Any]) -> tuple[list[str], list[
     current pin, meaning the hold no longer does anything and can be removed.
     Holds with unorderable version strings are excluded from the stale-hold
     audit because their relative order cannot be determined safely.
+
+    Parameters
+    ----------
+    json_data : dict[str, Any]
+        Parsed app.json data, keyed by app name.
+
+    Returns
+    -------
+    tuple[list[str], list[str]]
+        ``(contradictions, stale_holds)`` messages, one string per finding.
     """
     contradictions: list[str] = []
     stale_holds: list[str] = []
@@ -221,7 +287,15 @@ def _audit_version_excludes(json_data: dict[str, Any]) -> tuple[list[str], list[
 
 
 def _print_version_exclude_audit(contradictions: list[str], stale_holds: list[str]) -> None:
-    """Print version_exclude health findings from _audit_version_excludes."""
+    """Print version_exclude health findings from _audit_version_excludes.
+
+    Parameters
+    ----------
+    contradictions : list[str]
+        Messages for pins that are themselves excluded.
+    stale_holds : list[str]
+        Messages for exclusion lists that no longer affect the current pin.
+    """
     for msg in contradictions:
         print(f"Warning: {msg}", file=sys.stderr)
     if stale_holds:
@@ -237,7 +311,27 @@ def _held_message(
     excluded: tuple[str, ...],
     gran: str | None,
 ) -> str | None:
-    """Return a hold message if ``latest`` should not be written, else None."""
+    """Return a hold message if ``latest`` should not be written, else None.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned version.
+    latest : str
+        Latest version detected upstream.
+    excluded : tuple[str, ...]
+        App's ``version_exclude`` list from app.json.
+    gran : str | None
+        App's ``version_granularity`` setting (e.g. ``"minor"``), or None.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
     if _is_excluded(latest, excluded):
         return f"{app_name}: {latest} available upstream; excluded, pin held at {current}"
     if gran == "minor" and not (_SHA_RE.match(latest) or _SHA_RE.match(current)):
@@ -251,6 +345,49 @@ def _held_message(
                 f"{app_name}: {latest} available upstream; not a minor bump, pin held at {current}"
             )
     return None
+
+
+def _hold_reason(
+    app_name: str,
+    current: str,
+    latest: str,
+    excluded: tuple[str, ...],
+    gran: str | None,
+    info: dict[str, Any],
+) -> str | None:
+    """Return a hold message from either hold mechanism, or None if the bump should proceed.
+
+    Combines `_held_message` (the static `version_exclude`/`version_granularity`
+    holds) and `_pip_index_hold_message` (the dynamic pip-index-availability
+    hold) into the single decision point that both the fresh-check and
+    cache-hit code paths in `check_app_versions` call, so neither path can
+    apply one hold while skipping the other.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned version.
+    latest : str
+        Latest version detected upstream (or read from cache).
+    excluded : tuple[str, ...]
+        App's ``version_exclude`` list from app.json.
+    gran : str | None
+        App's ``version_granularity`` setting (e.g. ``"minor"``), or None.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
+    held = _held_message(app_name, current, latest, excluded, gran)
+    if held is not None:
+        return held
+    return _pip_index_hold_message(app_name, current, latest, info)
 
 
 def _is_prerelease(version: str) -> bool:
@@ -426,6 +563,18 @@ def _check_pypi(package: str, current: str = "") -> str:
     regardless of its age. Cooldown only gates a *new* recommendation; it
     must never make an already-adopted, genuinely-latest pin look "pinned
     too high" just because it's recent.
+
+    Parameters
+    ----------
+    package : str
+        PyPI package name.
+    current : str, optional
+        Currently pinned version, always treated as cooldown-eligible.
+
+    Returns
+    -------
+    str
+        Newest eligible stable version string.
     """
     data = _http_get_json(f"https://pypi.org/pypi/{package}/json")
     current_san = sanitize_version(current) if current else ""
@@ -548,7 +697,18 @@ def _urlerror_message(exc: urllib.error.URLError) -> str:
 
 
 def _friendly_network_error(exc: Exception) -> str | None:
-    """Return a clean message for network exceptions, or None if not network-related."""
+    """Return a clean message for network exceptions, or None if not network-related.
+
+    Parameters
+    ----------
+    exc : Exception
+        Exception to inspect.
+
+    Returns
+    -------
+    str | None
+        Human-readable failure message, or None if ``exc`` is not network-related.
+    """
     # HTTPError is a URLError subclass whose .reason is a status-phrase string; it never
     # matches the typed reason branches below, so surface the HTTP status code explicitly.
     if isinstance(exc, urllib.error.HTTPError):
@@ -569,20 +729,38 @@ def _friendly_network_error(exc: Exception) -> str | None:
 
 
 def _check_1password_cli() -> str:
-    """Check 1Password CLI version via the AgileBits update API."""
+    """Check 1Password CLI version via the AgileBits update API.
+
+    Returns
+    -------
+    str
+        Latest 1Password CLI version string.
+    """
     data = _http_get_json("https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N")
     return data["version"]
 
 
 def _check_antigravity_cli() -> str:
-    """Check Antigravity CLI version via the Google auto-updater manifest."""
+    """Check Antigravity CLI version via the Google auto-updater manifest.
+
+    Returns
+    -------
+    str
+        Latest Antigravity CLI version string.
+    """
     base = "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
     data = _http_get_json(f"{base}/darwin_arm64.json")
     return data["version"]
 
 
 def _fetch_antigravity_cli_extra_fields() -> dict[str, Any]:
-    """Fetch build_id and per-platform sha512 hashes from the auto-updater manifests."""
+    """Fetch build_id and per-platform sha512 hashes from the auto-updater manifests.
+
+    Returns
+    -------
+    dict[str, Any]
+        Mapping with ``build_id`` and a per-platform ``sha512`` dict.
+    """
     base = "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
     platforms = ("darwin_arm64", "darwin_amd64", "linux_amd64", "linux_arm64")
     sha512: dict[str, str] = {}
@@ -599,7 +777,18 @@ def _fetch_antigravity_cli_extra_fields() -> dict[str, Any]:
 
 
 def _check_repology(project: str) -> str:
-    """Check latest upstream version via repology.org API."""
+    """Check latest upstream version via repology.org API.
+
+    Parameters
+    ----------
+    project : str
+        Repology project name.
+
+    Returns
+    -------
+    str
+        Latest version marked ``"newest"`` on repology.
+    """
     data = _http_get_json(f"https://repology.org/api/v1/project/{project}")
     newest = [e["version"] for e in data if e.get("status") == "newest"]
     if not newest:
@@ -648,7 +837,18 @@ def _mark_dead_host(base: str) -> None:
 
 
 def _fetch_first_reachable(bases: list[str]) -> str:
-    """Fetch the first base URL that resolves, skipping hosts already marked dead."""
+    """Fetch the first base URL that resolves, skipping hosts already marked dead.
+
+    Parameters
+    ----------
+    bases : list[str]
+        Candidate base URLs to try, in order.
+
+    Returns
+    -------
+    str
+        Response body text of the first URL that resolves.
+    """
     last_exc: Exception | None = None
     for base in bases:
         if _is_dead_host(base):
@@ -669,7 +869,18 @@ def _fetch_first_reachable(bases: list[str]) -> str:
 
 
 def _check_nongnu(package: str) -> str:
-    """Check version from a Savannah non-GNU mirror, with repology fallback."""
+    """Check version from a Savannah non-GNU mirror, with repology fallback.
+
+    Parameters
+    ----------
+    package : str
+        Non-GNU package name.
+
+    Returns
+    -------
+    str
+        Latest version found in the mirror's tarball listing.
+    """
     bases = [b.format(name=package) for b in _NONGNU_DIR_BASES]
     try:
         html = _fetch_first_reachable(bases)
@@ -707,6 +918,17 @@ def _check_npm(package: str) -> str:
     No age-based cooldown here: koopa's npm apps are single-vendor CLIs
     (Anthropic, OpenAI, Google, GitHub) tracked at the latest release. The
     deprecated-version skip is pure hygiene, not a delay.
+
+    Parameters
+    ----------
+    package : str
+        Npm package name.
+
+    Returns
+    -------
+    str
+        Newest non-deprecated version, or the ``dist-tags`` latest if all
+        versions are deprecated.
     """
     data = _http_get_json(f"https://registry.npmjs.org/{package}")
     versions = data.get("versions", {})
@@ -731,6 +953,18 @@ def _check_rubygems(gem: str, current: str = "") -> str:
     its age. Cooldown only gates a *new* recommendation; it must never make an
     already-adopted, genuinely-latest pin look "pinned too high" just because
     it's recent.
+
+    Parameters
+    ----------
+    gem : str
+        RubyGems gem name.
+    current : str, optional
+        Currently pinned version, always treated as cooldown-eligible.
+
+    Returns
+    -------
+    str
+        Newest eligible release version string.
     """
     data = _http_get_json(f"https://rubygems.org/api/v1/versions/{gem}.json")
     current_san = sanitize_version(current) if current else ""
@@ -920,7 +1154,13 @@ def _check_gitlab(domain: str, project_path: str) -> str:
 
 
 def _check_man_db() -> str:
-    """Check man-db via GitLab, falling back to repology on network failure."""
+    """Check man-db via GitLab, falling back to repology on network failure.
+
+    Returns
+    -------
+    str
+        Latest man-db version string.
+    """
     try:
         return _check_gitlab("gitlab.com", "man-db/man-db")
     except (urllib.error.URLError, OSError, TimeoutError, _NetworkUnavailableError):
@@ -993,6 +1233,18 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
     Without this, `_check_pypi`'s cooldown can misreport an already-adopted,
     genuinely-latest pin as "pinned too high" just because it's recent (the
     same bug fixed for `_check_rubygems`, e.g. bashcov 4.0.0).
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    info : dict
+        App's entry from app.json.
+
+    Returns
+    -------
+    _AppCheckSpec | None
+        Version-check strategy for the app, or None if unsupported.
     """
     spec = _classify_app_uncooled(name, info)
     if spec is not None and spec.source == "pypi":
@@ -1008,7 +1260,20 @@ def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
 
 
 def _classify_app_uncooled(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
-    """Classify an app into a version-check strategy, before the pypi cooldown wrap."""
+    """Classify an app into a version-check strategy, before the pypi cooldown wrap.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    info : dict
+        App's entry from app.json.
+
+    Returns
+    -------
+    _AppCheckSpec | None
+        Version-check strategy for the app, or None if unsupported.
+    """
     module_path = PYTHON_INSTALLERS.get(name, "")
     args = info.get("installer_args", {})
     urls = info.get("url", [])
@@ -1358,6 +1623,11 @@ def _check_julia() -> str:
     ``/releases/latest`` return the older LTS version instead. Fetch a page of
     tags instead and pick the highest by semver among clean ``vX.Y.Z`` tags,
     which reflects the true latest stable release regardless of channel.
+
+    Returns
+    -------
+    str
+        Latest stable Julia version string.
     """
     data = _http_get_json(
         "https://api.github.com/repos/JuliaLang/julia/tags?per_page=30",
@@ -1417,7 +1687,13 @@ def _check_staden_io_lib() -> str:
 
 
 def _check_clickhouse() -> str:
-    """Check clickhouse, tracking the latest stable release line."""
+    """Check clickhouse, tracking the latest stable release line.
+
+    Returns
+    -------
+    str
+        Latest stable ClickHouse version string.
+    """
     data = _http_get_json(
         "https://api.github.com/repos/ClickHouse/ClickHouse/tags?per_page=100",
         github=True,
@@ -1434,7 +1710,13 @@ def _check_clickhouse() -> str:
 
 
 def _check_glib() -> str:
-    """Check glib, restricting to GNOME stable (even-minor) releases."""
+    """Check glib, restricting to GNOME stable (even-minor) releases.
+
+    Returns
+    -------
+    str
+        Latest stable glib version string.
+    """
     base = "https://gitlab.gnome.org/api/v4/projects/GNOME%2Fglib"
     data = _gitlab_get_json(f"{base}/releases?per_page=20")
     versions: list[str] = []
@@ -1476,7 +1758,18 @@ def _check_temurin() -> str:
 
 
 def _liblinear_tag_to_version(tag: str) -> str | None:
-    """Translate a liblinear git tag (e.g. 'v250') to a version (e.g. '2.50')."""
+    """Translate a liblinear git tag (e.g. 'v250') to a version (e.g. '2.50').
+
+    Parameters
+    ----------
+    tag : str
+        Git tag name.
+
+    Returns
+    -------
+    str | None
+        Translated version string, or None if the tag cannot be parsed.
+    """
     digits = tag.lstrip("vV")
     if "." in digits:
         return digits
@@ -1486,7 +1779,13 @@ def _liblinear_tag_to_version(tag: str) -> str | None:
 
 
 def _check_liblinear() -> str:
-    """Check liblinear version from GitHub tags, falling back to upstream HTML."""
+    """Check liblinear version from GitHub tags, falling back to upstream HTML.
+
+    Returns
+    -------
+    str
+        Latest liblinear version string.
+    """
     try:
         tags = _http_get_json(
             "https://api.github.com/repos/cjlin1/liblinear/tags?per_page=100",
@@ -1813,6 +2112,21 @@ def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
 
     Returns the floored version if it is strictly greater than the current
     version, otherwise returns the current version (no-op / no downgrade).
+
+    Parameters
+    ----------
+    latest : str
+        Latest version detected upstream.
+    current : str
+        Currently pinned version.
+    batch_size : int
+        Patch-component batch boundary to floor to.
+
+    Returns
+    -------
+    str
+        Floored version, or ``current`` if the floored version would not be
+        an increase.
     """
 
     def _parts(v: str) -> tuple[int, ...]:
@@ -2294,11 +2608,76 @@ def _classify_by_registry_url(name: str, args: dict, urls: list[str]) -> _AppChe
     suffix match never fires) but whose ``url`` list still points at a public
     registry, e.g. playwright: a dedicated installer downloads its Chromium build
     after the pip install, so it doesn't route through ``_python_pkg``.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    args : dict
+        App's ``installer_args`` entry from app.json.
+    urls : list[str]
+        App's ``url`` list from app.json.
+
+    Returns
+    -------
+    _AppCheckSpec | None
+        A pypi version-check strategy if a PyPI project URL is found, else None.
     """
     for url in urls:
         if "pypi.org/project/" in url:
             pkg = _resolve_pypi_name(name, args, urls)
             return _AppCheckSpec("pypi", _check_pypi, (pkg,))
+    return None
+
+
+def _cache_hit_result(
+    app_name: str,
+    version: str,
+    cached: str,
+    spec: _AppCheckSpec,
+    excluded: tuple[str, ...],
+    gran: str | None,
+    info: dict[str, Any],
+) -> tuple[VersionCheckResult, str | None] | None:
+    """Resolve a cached latest-version lookup into a result, or None on a cache miss.
+
+    Mirrors the terminal branches of `_run_check` for a value already in
+    `_VersionCache`: a hold from `_hold_reason`, a SHA match, or a semver
+    match. Returns None when none of those apply, so the caller falls
+    through to a fresh network check.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    version : str
+        Currently pinned version.
+    cached : str
+        Latest version read from the on-disk cache.
+    spec : _AppCheckSpec
+        App's version-check strategy, used only for its ``source``.
+    excluded : tuple[str, ...]
+        App's ``version_exclude`` list from app.json.
+    gran : str | None
+        App's ``version_granularity`` setting (e.g. ``"minor"``), or None.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    tuple[VersionCheckResult, str | None] | None
+        A ``(result, hold_message)`` pair if the cached value resolves the
+        app, else None on a cache miss.
+    """
+    # Only a genuine change is eligible for a hold, mirroring the same guard in
+    # _run_check: a cached value equal to the pin has nothing to hold, and
+    # would otherwise mis-trigger version_granularity.
+    if sanitize_version(cached) != sanitize_version(version):
+        held = _hold_reason(app_name, version, cached, excluded, gran, info)
+        if held is not None:
+            return VersionCheckResult(app_name, version, version, spec.source, None), held
+    if _SHA_RE.match(cached) or _VERSION_RE.match(cached):
+        return VersionCheckResult(app_name, version, cached, spec.source, None), None
     return None
 
 
@@ -2312,7 +2691,24 @@ def check_app_versions(  # noqa: C901, PLR0915
     max_workers: int = 16,
     reset_cache: bool = False,
 ) -> list[VersionCheckResult]:
-    """Check upstream versions for all apps in app.json."""
+    """Check upstream versions for all apps in app.json.
+
+    Parameters
+    ----------
+    source_filter : str | None, optional
+        Only check apps whose classified source matches this value.
+    name_filter : list[str] | None, optional
+        Only check apps whose name is in this list.
+    max_workers : int, optional
+        Maximum number of concurrent version-check threads.
+    reset_cache : bool, optional
+        If True, discard the on-disk version cache before checking.
+
+    Returns
+    -------
+    list[VersionCheckResult]
+        One result per app considered, including unsupported and cached apps.
+    """
     from koopa.text import plural
 
     if _github_token is None:
@@ -2335,6 +2731,7 @@ def check_app_versions(  # noqa: C901, PLR0915
     unsupported: list[VersionCheckResult] = []
     holds: dict[str, tuple[str, ...]] = {}
     granularity: dict[str, str | None] = {}
+    infos: dict[str, dict[str, Any]] = {}
     for app_name, info in sorted(json_data.items()):
         if name_filter and app_name not in name_filter:
             continue
@@ -2356,6 +2753,7 @@ def check_app_versions(  # noqa: C901, PLR0915
             continue
         holds[app_name] = tuple(info.get("version_exclude", ()))
         granularity[app_name] = info.get("version_granularity")
+        infos[app_name] = info
         specs.append((app_name, version, spec))
     results: list[VersionCheckResult] = list(unsupported)
     if not specs:
@@ -2365,20 +2763,20 @@ def check_app_versions(  # noqa: C901, PLR0915
         if cache is not None:
             cached = cache.get(app_name)
             if cached is not None and not (_is_prerelease(cached) and not _is_prerelease(version)):
-                if _is_excluded(cached, holds.get(app_name, ())):
-                    print(
-                        f"{app_name}: {cached} available upstream; excluded, pin held at {version}",
-                        file=sys.stderr,
-                    )
-                    results.append(
-                        VersionCheckResult(app_name, version, version, spec.source, None)
-                    )
-                    continue
-                if _SHA_RE.match(cached):
-                    results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
-                    continue
-                if _VERSION_RE.match(cached):
-                    results.append(VersionCheckResult(app_name, version, cached, spec.source, None))
+                hit = _cache_hit_result(
+                    app_name,
+                    version,
+                    cached,
+                    spec,
+                    holds.get(app_name, ()),
+                    granularity.get(app_name),
+                    infos.get(app_name, {}),
+                )
+                if hit is not None:
+                    result, held = hit
+                    if held is not None:
+                        print(held, file=sys.stderr)
+                    results.append(result)
                     continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
@@ -2432,8 +2830,13 @@ def check_app_versions(  # noqa: C901, PLR0915
             # Only a genuine change is eligible for a hold: current_san == latest_san
             # already means nothing would be written, so there is nothing to hold.
             if current_san != latest_san:
-                held = _held_message(
-                    app_name, current, latest, holds.get(app_name, ()), granularity.get(app_name)
+                held = _hold_reason(
+                    app_name,
+                    current,
+                    latest,
+                    holds.get(app_name, ()),
+                    granularity.get(app_name),
+                    infos.get(app_name, {}),
                 )
                 if held is not None:
                     return VersionCheckResult(app_name, current, current, spec.source, None), held
@@ -2442,7 +2845,7 @@ def check_app_versions(  # noqa: C901, PLR0915
             if current_san == latest_san:
                 msg = None
             elif _SHA_RE.match(current) or _SHA_RE.match(latest):
-                msg = f"{app_name}: {current} -> {latest}"
+                msg = f"{app_name}: {_short_sha(current)} -> {_short_sha(latest)}"
             else:
                 try:
                     cur_p = _version_key(current_san)
@@ -2504,7 +2907,13 @@ def check_app_versions(  # noqa: C901, PLR0915
 
 
 def print_report(results: list[VersionCheckResult]) -> None:
-    """Print a human-readable version check report."""
+    """Print a human-readable version check report.
+
+    Parameters
+    ----------
+    results : list[VersionCheckResult]
+        Version check results to report on.
+    """
     outdated = [r for r in results if r.is_outdated]
     pinned_too_high = [r for r in results if r.is_pinned_too_high]
     current = [
@@ -2517,23 +2926,27 @@ def print_report(results: list[VersionCheckResult]) -> None:
     print()
     if outdated:
         print(f"Outdated ({len(outdated)}):")
+        display = {
+            r.name: (_short_sha(r.current_version), _short_sha(r.latest_version or ""))
+            for r in outdated
+        }
         name_w = max(len(r.name) for r in outdated)
-        cur_w = max(len(r.current_version) for r in outdated)
+        cur_w = max(len(display[r.name][0]) for r in outdated)
         for r in sorted(outdated, key=lambda x: x.name):
-            print(
-                f"  {r.name:<{name_w}}  {r.current_version:>{cur_w}}"
-                f"  ->  {r.latest_version}  ({r.source})"
-            )
+            cur, latest = display[r.name]
+            print(f"  {r.name:<{name_w}}  {cur:>{cur_w}}  ->  {latest}  ({r.source})")
         print()
     if pinned_too_high:
         print(f"Pinned too high ({len(pinned_too_high)}):")
+        display = {
+            r.name: (_short_sha(r.current_version), _short_sha(r.latest_version or ""))
+            for r in pinned_too_high
+        }
         name_w = max(len(r.name) for r in pinned_too_high)
-        cur_w = max(len(r.current_version) for r in pinned_too_high)
+        cur_w = max(len(display[r.name][0]) for r in pinned_too_high)
         for r in sorted(pinned_too_high, key=lambda x: x.name):
-            print(
-                f"  {r.name:<{name_w}}  {r.current_version:>{cur_w}}"
-                f"  (latest stable: {r.latest_version})  ({r.source})"
-            )
+            cur, latest = display[r.name]
+            print(f"  {r.name:<{name_w}}  {cur:>{cur_w}}  (latest stable: {latest})  ({r.source})")
         print()
     if failed:
         print(f"Failed ({len(failed)}):")
@@ -2553,7 +2966,13 @@ def print_report(results: list[VersionCheckResult]) -> None:
 
 
 def print_json_report(results: list[VersionCheckResult]) -> None:
-    """Print a JSON-formatted version check report."""
+    """Print a JSON-formatted version check report.
+
+    Parameters
+    ----------
+    results : list[VersionCheckResult]
+        Version check results to report on.
+    """
     outdated = [asdict(r) for r in results if r.is_outdated]
     pinned_too_high = [asdict(r) for r in results if r.is_pinned_too_high]
     current = [
@@ -2581,7 +3000,13 @@ def print_json_report(results: list[VersionCheckResult]) -> None:
 
 
 def _has_acidgenomics_aws() -> bool:
-    """Return True if the acidgenomics AWS profile is present in ~/.aws/credentials."""
+    """Return True if the acidgenomics AWS profile is present in ~/.aws/credentials.
+
+    Returns
+    -------
+    bool
+        True if an ``[acidgenomics]`` section exists in the credentials file.
+    """
     import re
 
     credentials = os.path.join(os.path.expanduser("~"), ".aws", "credentials")
@@ -2592,7 +3017,20 @@ def _has_acidgenomics_aws() -> bool:
 
 
 def _expand_src_url(template: str, version: str) -> str:
-    """Expand a src_url template with version components."""
+    """Expand a src_url template with version components.
+
+    Parameters
+    ----------
+    template : str
+        ``src_url`` template string with ``{version}``-style placeholders.
+    version : str
+        Version to substitute into the template.
+
+    Returns
+    -------
+    str
+        Expanded URL.
+    """
     import datetime
 
     parts = version.split(".")
@@ -2628,6 +3066,19 @@ def _mirror_src_to_s3(
     """Download source tarball and upload to the private koopa S3 src/ mirror.
 
     Also upload and/or vendor.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    version : str
+        Version to mirror.
+    src_url_template : str
+        ``src_url`` template string to expand and download from.
+    strict : bool, optional
+        If True, raise on download or upload failure instead of warning.
+    quiet : bool, optional
+        If True, suppress success messages.
     """
     import tempfile
     import time
@@ -2698,6 +3149,11 @@ def _pip_index_url() -> str | None:
     global.index-url``. Returns None for a bare PyPI/PythonHosted index so the
     ``_index_has_version`` gate in ``update_app_json`` becomes a no-op for a
     contributor or CI job that installs straight from public PyPI.
+
+    Returns
+    -------
+    str | None
+        Configured pip index URL, or None if unset or pointing at PyPI itself.
     """
     url = os.environ.get("PIP_INDEX_URL")
     if not url:
@@ -2725,6 +3181,21 @@ def _index_has_version(index_url: str, package: str, version: str) -> bool:
     Fails open (returns True) on any network or HTTP error, since a hold
     caused by the index blinking is worse than the stale-pin bug this gate
     fixes.
+
+    Parameters
+    ----------
+    index_url : str
+        Base URL of the PEP 503 index.
+    package : str
+        Package name to look up.
+    version : str
+        Version to check for.
+
+    Returns
+    -------
+    bool
+        True if ``version`` is present on the index, or if the index could
+        not be queried.
     """
     normalized = re.sub(r"[-_.]+", "-", package).lower()
     url = f"{index_url.rstrip('/')}/{normalized}/"
@@ -2740,8 +3211,64 @@ def _index_has_version(index_url: str, package: str, version: str) -> bool:
     return bool(pattern.search(body))
 
 
+def _pip_index_hold_message(
+    app_name: str, current: str, latest: str, info: dict[str, Any]
+) -> str | None:
+    """Return a hold message if `latest` is not yet on the configured pip index.
+
+    Mirrors `_held_message`, but for a hold discovered by querying the
+    configured pip index instead of a static `version_exclude` list. Checking
+    this before `is_outdated` is computed keeps a pip-installed app that the
+    index has not caught up to out of the "Outdated" report, instead of
+    re-reporting the same unreachable bump on every run.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned version.
+    latest : str
+        Latest version detected upstream.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
+    if PYTHON_INSTALLERS.get(app_name, "") not in PIP_VERSIONED_INSTALLERS:
+        return None
+    index_url = _pip_index_url()
+    if index_url is None:
+        return None
+    pkg = _resolve_pypi_name(app_name, info.get("installer_args", {}), info.get("url", []))
+    if _index_has_version(index_url, pkg, latest):
+        return None
+    return (
+        f"{app_name}: {latest} available upstream; not on the "
+        f"configured pip index, pin held at {current}"
+    )
+
+
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
-    """Update app.json with latest versions and return count of changes."""
+    """Update app.json with latest versions and return count of changes.
+
+    Parameters
+    ----------
+    results : list[VersionCheckResult]
+        Version check results to apply.
+    s3_upload : bool, optional
+        If True, warn when source-tarball mirroring is skipped because the
+        ``acidgenomics`` AWS profile is unavailable.
+
+    Returns
+    -------
+    int
+        Number of apps whose pinned version was updated.
+    """
     outdated = [r for r in results if r.is_outdated]
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
@@ -2792,24 +3319,9 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
                 file=sys.stderr,
             )
             continue
-        # Gate on the resolved installer module, not `r.source` -- an app can
-        # install via pip (koopa.installers.pyright, .playwright, ...) while
-        # still classifying as a "github" version-check source, because its
-        # url list also has a github.com entry that wins classify_app's
-        # priority order. The module is the actual install-time truth.
-        if PYTHON_INSTALLERS.get(r.name, "") in PIP_VERSIONED_INSTALLERS:
-            index_url = _pip_index_url()
-            if index_url is not None:
-                pkg = _resolve_pypi_name(
-                    r.name, data[r.name].get("installer_args", {}), data[r.name].get("url", [])
-                )
-                if not _index_has_version(index_url, pkg, r.latest_version):
-                    print(
-                        f"{r.name}: {r.latest_version} available upstream; not on the "
-                        f"configured pip index, pin held at {r.current_version}",
-                        file=sys.stderr,
-                    )
-                    continue
+        # The pip-index availability gate now runs earlier, in check_app_versions's
+        # _run_check (via _pip_index_hold_message), so a held app never reaches
+        # this loop with is_outdated still True. No belt-and-braces re-check here.
         artifact_key = installer_artifact_key(r.name, r.latest_version)
         if artifact_key is not None:
             staged = False
@@ -2875,7 +3387,18 @@ def _bootstrap_app_map() -> dict[str, str]:
 
 
 def update_bootstrap(app_data: dict[str, Any]) -> int:
-    """Sync bootstrap.sh versions with app.json and bump bootstrap version."""
+    """Sync bootstrap.sh versions with app.json and bump bootstrap version.
+
+    Parameters
+    ----------
+    app_data : dict[str, Any]
+        Parsed app.json data, keyed by app name.
+
+    Returns
+    -------
+    int
+        Number of versions changed in bootstrap.sh.
+    """
     bootstrap_path = Path(koopa_prefix()) / "bootstrap.sh"
     version_path = Path(koopa_prefix()) / "etc" / "koopa" / "bootstrap-version.txt"
     if not bootstrap_path.is_file():
@@ -2947,7 +3470,13 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
 
 
 def update_venv_version(outdated: list[VersionCheckResult]) -> None:
-    """Bump venv-version.txt if the Python interpreter version changed."""
+    """Bump venv-version.txt if the Python interpreter version changed.
+
+    Parameters
+    ----------
+    outdated : list[VersionCheckResult]
+        Version check results considered outdated.
+    """
     py_ver = (Path(koopa_prefix()) / ".python-version").read_text().strip()
     python_key = f"python{py_ver}"
     if not any(r.name == python_key for r in outdated):

@@ -386,9 +386,21 @@ for m in _option_hex_re.finditer(xml):
 
 ## macOS Sandboxed App Containers
 
-macOS TCC blocks **all** external process I/O to sandboxed app containers — including
-`defaults write`, `PlistBuddy`, `plistlib` file writes, and direct file writes into
-`~/Library/Application Support/<App>/`. This is a kernel-level restriction.
+macOS TCC blocks direct file writes into a sandboxed app's container — including
+`PlistBuddy`, `plistlib` file writes, and direct file writes into
+`~/Library/Application Support/<App>/`.
+
+**Correction (2026-09-04):** an earlier version of this lesson also claimed
+`defaults write` to a sandboxed app's preference domain fails at the kernel level.
+That claim is false, at least as of BBEdit 16.0.3: `defaults write
+com.barebones.bbedit <key> ...` from an external process succeeds and persists to
+`~/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist`,
+verified by writing a key, then reading it back from the container plist directly
+with `plutil`. `defaults write`/`defaults read` go through `cfprefsd`, which
+resolves a sandboxed app's preference domain to its container system-wide — a
+different code path than a raw file write. Do not assume `defaults write` fails
+for a sandboxed app without testing it fresh; the three BBEdit preference keys
+removed in commit `5e8fe6885c8d` may be safe to re-add.
 
 **BBEdit 16 is fully sandboxed.** `~/Library/Application Support/BBEdit/Color Schemes/`
 cannot be written from install scripts. Do not check `os.path.isdir(bbedit_schemes)`

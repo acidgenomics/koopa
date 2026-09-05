@@ -13,7 +13,21 @@ def main(
     prefix: str = "",
     verbose: bool = False,
 ) -> None:
-    """Uninstall Pi-hole."""
+    """Uninstall Pi-hole.
+
+    Parameters
+    ----------
+    name : str
+        Application name.
+    platform : str
+        Operating system platform slug.
+    mode : str
+        Installation mode (e.g. ``"system"`` or ``"shared"``).
+    prefix : str, optional
+        Installation prefix directory.
+    verbose : bool, optional
+        Print verbose output.
+    """
     if not shutil.which("pihole"):
         print("Pi-hole is not installed.")
         return
