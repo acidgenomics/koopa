@@ -570,6 +570,43 @@ Per "Never Verify by Re-Running the Installer from an Agent Session" above, this
 must be run by the user in a normal terminal, never from inside the agent
 session that produced the fix — the same stale-`KOOPA_COLOR_MODE` risk applies.
 
+## Claude Code's Own settings.json Write Re-Freezes the Theme After a Correct Apply
+
+**Symptom:** `~/.claude/settings.json`'s `theme` key is stale (e.g.
+`custom:dracula-pro-alucard` while the OS and `KOOPA_COLOR_MODE` both say
+`dark`), even though a `chezmoi apply --dry-run` of that exact target renders
+correctly with no error, `chezmoi managed` lists it fine, and
+`~/.cache/koopa/color-mode-applied` already shows the right mode with a *recent*
+mtime — the multi-tree apply logic ran and worked. The giveaway: the file's own
+mtime is a few minutes *after* the marker's mtime, not before or at the same
+time (a normal apply writes the file, then the marker, in that order).
+
+**Root cause (2026-09):** unlike `dot_config/*/User/settings.json.tmpl` for
+VS Code forks (see the "Avoiding a write race on settings.json" rule in the
+`koopa-vscode` skill), `dot_claude/settings.json.tmpl` still branches directly
+on `KOOPA_COLOR_MODE` for the `theme` key. Claude Code itself writes its own
+`~/.claude/settings.json` at runtime on ordinary in-app changes (toggling a
+plugin, changing `effortLevel`, switching output style, changing model) — it
+reads the file into memory, changes one key, and writes the whole file back.
+If that write happens in a Claude Code window that loaded the file *before*
+the last correct chezmoi render, it flushes the window's stale in-memory
+`theme` value and silently undoes the render, with no error anywhere.
+
+**No code fix exists for this one.** Confirmed against official Claude Code
+docs (2026-09): the `theme` setting has no VS Code-style
+`autoDetectColorScheme` equivalent — `"auto"` only resolves built-in presets,
+and there is no paired light/dark syntax for two *custom* themes. Render-time
+`KOOPA_COLOR_MODE` branching is the only supported way to switch between
+`custom:dracula-pro` and `custom:dracula-pro-alucard`, so removing the branch
+(the VS Code fix) is not an option here — it would just freeze the theme
+permanently instead of freezing it intermittently.
+
+**Mitigation (procedural, not automatable):** after any color-mode flip and
+re-apply, quit and relaunch every open Claude Code window, not just the one
+used to run the fix. A window left open across the flip is still holding the
+pre-flip `theme` value in memory and will re-write it on its next own settings
+save, even minutes or hours later.
+
 ## Ghostty: Symlink Creation Must Run Pre-Chezmoi, Not Post
 
 **Symptom:** a Ghostty window renders the wrong palette, or a hardcoded
