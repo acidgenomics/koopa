@@ -5,7 +5,10 @@ description: >-
   runtime pipeline, fish color architecture (fish_frozen_theme.fish override, _FISH_COLOR_ROLES
   generator, live sync hook), JetBrains/IntelliJ scheme delivery, atuin and mcfly color
   config, vim/nvim statusline theming (airline explicit g:airline_theme read, lualine
-  palette-reading theme function, why 'auto' silently produces wrong colors), and
+  palette-reading theme function, why 'auto' silently produces wrong colors), Obsidian's
+  generated theme.css (per-vault deploy, native light/dark toggle, the base-NN ramp,
+  a shortest-hue-path blend crossing an unintended hue, a base-00-only contrast check
+  missing the sidebar's own background, and the AA-floor-vs-visibly-muted tradeoff), and
   macOS sandboxed-app theme installation. Use when generating or fixing editor/terminal
   color schemes, debugging a theme that renders incorrectly, or writing theme-install
   code. For the "never hardcode Pro hex" guardrail see the path-scoped theme-colors rule.
@@ -121,6 +124,72 @@ writes through it into the upstream vendor file.
 naive `f"dracula_pro_{variant}.vim"` never matches: that variant silently got
 no named palette (fell through to the `_hex_lerp()` fallback) until fixed with
 `variant.replace("-", "_")`.
+
+## Obsidian Theme Synthesis
+
+Obsidian has no official Dracula Pro port and no community Alucard/light
+variant either, so `install` generates a real `theme.css` rather than
+transforming an upstream file — same shape as the "no upstream file" pattern
+above, but with a native light/dark toggle: one file carries a genuine
+`.theme-dark` block (whichever dark variant is active) and a genuine
+`.theme-light` block (always `alucard`), so no `KOOPA_COLOR_MODE` branching is
+needed on the Obsidian side. Key functions in `opt/dotfiles/install`:
+`_obsidian_ramp_step()`, `_obsidian_color_vars()`, `_fix_obsidian_surface_contrast()`,
+`_assert_obsidian_contrast()`, `_generate_obsidian_dracula_pro_theme()`. Deployed
+to `~/.config/koopa/obsidian-themes/dracula-pro/` and symlinked per-vault via
+`_obsidian_vault_dirs()` (themes are per-vault, not one fixed config dir).
+
+Obsidian derives most of its chrome from one `--color-base-NN` ramp
+(`--background-secondary` from `base-20`, `--text-muted` from `base-70`, etc.),
+so generating the ramp covers far more UI than listing each semantic role by
+hand — but that ramp has produced two distinct, non-obvious defects:
+
+**A straight bg→fg hue blend can cross an unintended hue.** The obvious
+approach — blend each ramp step's hue along the shortest path from `bg`'s hue
+to `fg`'s — picks whichever arc is numerically shorter with no regard for what
+color it passes through. `pro`'s `bg` (blue-purple, H≈245) to `fg` (warm
+off-white, H≈60) short arc runs forward through magenta/red, and
+`--color-base-70` (frac 0.66) landed almost exactly on pink, not purple.
+Alucard's `bg`/`fg` are both true grey (S=0.0, an undefined hue), so the same
+blend has no real hue to carry — and treating that undefined value as a real
+endpoint can pick an arbitrary wrap direction, landing intermediate steps in
+magenta too. Fix: `_obsidian_ramp_step()` holds hue fixed at a palette anchor
+(the variant's own named `selection` role — Dracula Pro's own `comment`/
+`selection`/`purple` roles all cluster at H≈230-252 in every variant, i.e.
+muted/in-between chrome is meant to stay in that family, not drift toward
+`fg`) and only blends lightness (bg→fg) and saturation (bg's own→anchor's).
+No hue delta ever exists to wrap around.
+
+**A contrast check against only the plain content bg misses the sidebar
+itself.** `_assert_obsidian_contrast()` originally checked every AA/faint
+token against `--color-base-00` only. Obsidian's own var() chain composites
+`--text-muted`, `--text-faint`, and every tag/link hue over
+`--background-secondary` (`base-20`, the whole left sidebar) and
+`--background-secondary-alt` / `--background-modifier-border` (`base-30`)
+too — confirmed failing there even though the base-00-only check passed:
+`--color-base-70` measured 4.12:1 (pro) / 3.72:1 (alucard) against `base-30`,
+both under the 4.5:1 AA floor, and several hues (`--color-accent`,
+`--color-purple`, every Alucard hue) failed the same way. Fix:
+`_OBSIDIAN_SURFACE_STEPS = ("00", "10", "20", "30")`, and
+`_fix_obsidian_surface_contrast()` re-tunes every token against all four by
+reusing `_fix_comment_contrast()` (originally written for delta's diff-tint
+backgrounds — see below) instead of one bespoke fix per token. A token that
+already clears every surface converges back to its own value within float
+rounding, so it's safe to run unconditionally.
+
+**Passing the bare AA floor still reads as washed-out.** 4.5:1 is legally
+readable but visually muted against the sidebar (confirmed against a live
+screenshot) — pushing `--color-base-70`'s own floor higher (`_OBSIDIAN_STRONG_FLOOR`,
+6.0:1) fixes that. Stop below 7:1: at that point base-70 closes in on
+`--color-base-100` (the active/hover text) and the idle/active hierarchy
+starts to collapse. Don't reflexively apply the same stronger floor to
+`--color-base-50` (`--text-faint`, meant to be the faintest tier) — its
+natural ramp position sits close enough to the untouched `--color-base-60`
+that boosting it to even 3.0:1 pushed it *past* base-60's own luminance,
+breaking the ramp's required monotonicity (the guard `_assert_obsidian_contrast()`
+already runs, and caught it immediately). Any per-token floor override on one
+ramp step needs checking against its immediate neighbors, not just against
+its own contrast target.
 
 ## Diff and Git-Status Colors
 
