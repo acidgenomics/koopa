@@ -5988,6 +5988,25 @@
     "removed": true,
     "successor": "atuin"
   },
+  "mcp-atlassian": {
+    "bin": [
+      "mcp-atlassian"
+    ],
+    "category": "AI",
+    "date": "2026-09-06",
+    "default": false,
+    "dependencies": [
+      "python"
+    ],
+    "description": "MCP server for Atlassian Jira and Confluence",
+    "installer": "python-package",
+    "type": "cli",
+    "url": [
+      "https://pypi.org/project/mcp-atlassian/",
+      "https://github.com/sooperset/mcp-atlassian"
+    ],
+    "version": "0.23.1"
+  },
   "mdcat": {
     "bin": [
       "mdcat"
