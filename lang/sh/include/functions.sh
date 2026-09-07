@@ -1875,6 +1875,10 @@ _koopa_macos_activate_homebrew() {
     then
         export HOMEBREW_NO_ENV_HINTS=1
     fi
+    if [ -z "${HOMEBREW_NO_UPDATE_REPORT_NEW:-}" ]
+    then
+        export HOMEBREW_NO_UPDATE_REPORT_NEW=1
+    fi
     unset -v __kvar_brewfile __kvar_prefix
     return 0
 }
