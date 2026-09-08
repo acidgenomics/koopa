@@ -3142,18 +3142,18 @@ def _mirror_src_to_s3(
 
 
 @lru_cache(maxsize=1)
-def _pip_index_url() -> str | None:
-    """Return the configured pip index URL, or None if it is unset or is PyPI itself.
+def _pip_index_url() -> str:
+    """Return the configured pip index URL, defaulting to public PyPI.
 
     Checks ``PIP_INDEX_URL`` first, then falls back to ``pip config get
-    global.index-url``. Returns None for a bare PyPI/PythonHosted index so the
-    ``_index_has_version`` gate in ``update_app_json`` becomes a no-op for a
-    contributor or CI job that installs straight from public PyPI.
+    global.index-url``. Public PyPI is the default when neither is set, so
+    every pip-installed app is checked against the same index that pip will
+    use during installation.
 
     Returns
     -------
-    str | None
-        Configured pip index URL, or None if unset or pointing at PyPI itself.
+    str
+        Configured pip index URL, or public PyPI if none is configured.
     """
     url = os.environ.get("PIP_INDEX_URL")
     if not url:
@@ -3165,13 +3165,10 @@ def _pip_index_url() -> str | None:
                 check=True,
             )
         except (subprocess.CalledProcessError, OSError):
-            return None
+            return "https://pypi.org/simple"
         url = result.stdout.strip()
     if not url:
-        return None
-    host = urlparse(url).hostname or ""
-    if host in ("pypi.org", "files.pythonhosted.org"):
-        return None
+        return "https://pypi.org/simple"
     return url
 
 
@@ -3214,7 +3211,7 @@ def _index_has_version(index_url: str, package: str, version: str) -> bool:
 def _pip_index_hold_message(
     app_name: str, current: str, latest: str, info: dict[str, Any]
 ) -> str | None:
-    """Return a hold message if `latest` is not yet on the configured pip index.
+    """Return a hold message if `latest` is not yet on the pip index.
 
     Mirrors `_held_message`, but for a hold discovered by querying the
     configured pip index instead of a static `version_exclude` list. Checking
@@ -3242,8 +3239,6 @@ def _pip_index_hold_message(
     if PYTHON_INSTALLERS.get(app_name, "") not in PIP_VERSIONED_INSTALLERS:
         return None
     index_url = _pip_index_url()
-    if index_url is None:
-        return None
     pkg = _resolve_pypi_name(app_name, info.get("installer_args", {}), info.get("url", []))
     if _index_has_version(index_url, pkg, latest):
         return None

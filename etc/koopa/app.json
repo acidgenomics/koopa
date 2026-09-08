@@ -7667,7 +7667,7 @@
       "pyright-python-langserver"
     ],
     "category": "Python",
-    "date": "2026-09-08",
+    "date": "2026-09-02",
     "default": true,
     "dependencies": [
       "python"
@@ -7679,7 +7679,10 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.412"
+    "version": "1.1.411",
+    "version_exclude": [
+      "1.1.412"
+    ]
   },
   "pytaglib": {
     "bin": [
