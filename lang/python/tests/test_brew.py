@@ -217,6 +217,20 @@ def test_brew_helper_starves_stdin_and_sets_env() -> None:
     assert kwargs["env"]["NONINTERACTIVE"] == "1"
 
 
+def test_brew_upgrade_quiets_the_explicit_homebrew_update() -> None:
+    """brew update must be quiet so it does not report unrelated outdated casks."""
+    with (
+        patch("koopa.brew._brew") as mock_brew,
+        patch("koopa.system.is_macos", return_value=False),
+    ):
+        from koopa.brew import brew_upgrade
+
+        brew_upgrade()
+
+    assert mock_brew.call_args_list[0].args == ("update", "--quiet")
+    assert mock_brew.call_args_list[0].kwargs == {"capture": False}
+
+
 # ---------------------------------------------------------------------------
 # Regression lock: every brew call in _update_homebrew is non-interactive
 # ---------------------------------------------------------------------------

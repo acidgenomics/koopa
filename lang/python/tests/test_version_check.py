@@ -5,7 +5,9 @@ Covers _is_prerelease, _friendly_network_error, and _is_retryable_network_error.
 
 import http.client
 import json
+import os
 import ssl
+import subprocess
 import urllib.error
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -31,6 +33,7 @@ from koopa.version_check import (
     _liblinear_tag_to_version,
     _NetworkUnavailableError,
     _pip_index_hold_message,
+    _pip_index_url,
     classify_app,
     update_app_json,
 )
@@ -611,18 +614,31 @@ def test_pip_index_hold_message_ignores_non_pip_installed_app() -> None:
     assert held is None
 
 
-def test_pip_index_hold_message_is_a_noop_when_no_index_configured() -> None:
-    """The pip-index gate is a no-op when no non-PyPI index is configured."""
-    info = {"url": ["https://pypi.org/project/pyright/"]}
+def test_pip_index_url_defaults_to_public_pypi() -> None:
+    """Public PyPI is checked when pip has no configured index."""
+    _pip_index_url.cache_clear()
     with (
-        patch("koopa.version_check._pip_index_url", return_value=None),
+        patch.dict(os.environ, {}, clear=True),
         patch(
-            "koopa.version_check._index_has_version",
-            side_effect=AssertionError("must not be called when no index is configured"),
+            "koopa.version_check.subprocess.run",
+            side_effect=subprocess.CalledProcessError(1, ["pip"]),
         ),
     ):
+        assert _pip_index_url() == "https://pypi.org/simple"
+    _pip_index_url.cache_clear()
+
+
+def test_pip_index_hold_message_holds_pin_when_public_pypi_lacks_version() -> None:
+    """Public PyPI availability is checked before scheduling a pip install."""
+    info = {"url": ["https://pypi.org/project/pyright/"]}
+    with (
+        patch("koopa.version_check._pip_index_url", return_value="https://pypi.org/simple"),
+        patch("koopa.version_check._index_has_version", return_value=False),
+    ):
         held = _pip_index_hold_message("pyright", "1.1.411", "1.1.412", info)
-    assert held is None
+    assert held == (
+        "pyright: 1.1.412 available upstream; not on the configured pip index, pin held at 1.1.411"
+    )
 
 
 def test_pip_index_hold_message_allows_bump_when_index_has_version() -> None:
