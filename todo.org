@@ -1,5 +1,20 @@
-** TODO Our `git` installer is now hanging badly:
+** DONE Our `git` installer is now hanging badly:
    - installing 1 app: git [14m06s]
-** TODO Let's make this step in `koopa develop check-app-versions` more verbose
+   - Fixed: htmldocs/manpages `download()` calls in
+     lang/python/src/koopa/installers/git_app.py now pass
+     connect_timeout=10, speed_limit=1000, speed_time=30 (matching
+     download_with_mirror() convention), so a stalled mirror fails
+     fast/retries instead of hanging. Verified with `koopa reinstall
+     --verbose git`: succeeded in 52s, no hung curl process remained.
+** DONE Let's make this step in `koopa develop check-app-versions` more verbose
     Updated 28 app versions in app.json.
     Uploading source tarballs to mirror(s).
+   - Fixed in lang/python/src/koopa/version_check.py's
+     update_app_json(): prints "name: old -> new" for each bump as it
+     happens; the mirror-upload loop now iterates only over the
+     `bumped` list (apps actually written to app.json), not every
+     `outdated` candidate held by exclusion/artifact-staging gates;
+     and `_mirror_src_to_s3()` calls no longer pass quiet=True, so
+     each S3/vendor upload reports its own success line.
+   - Verified: ruff check/format clean, test_version_check.py 96
+     passed.

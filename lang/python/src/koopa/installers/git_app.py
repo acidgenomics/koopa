@@ -53,8 +53,8 @@ def main(
     extra_urls = _resolve_extra_src_urls(name, version)
     htmldocs_url = extra_urls[0]
     manpages_url = extra_urls[1]
-    htmldocs_tarball = download(htmldocs_url)
-    manpages_tarball = download(manpages_url)
+    htmldocs_tarball = download(htmldocs_url, connect_timeout=10, speed_limit=1000, speed_time=30)
+    manpages_tarball = download(manpages_url, connect_timeout=10, speed_limit=1000, speed_time=30)
     extract(
         htmldocs_tarball,
         os.path.join(prefix, "share", "doc", "git-doc"),

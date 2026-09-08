@@ -3306,6 +3306,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             held_by_match |= members
 
     count = 0
+    bumped: list[VersionCheckResult] = []
     for r in outdated:
         if r.name not in data or not r.latest_version:
             continue
@@ -3343,6 +3344,8 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         if spec is not None and spec.extra_fields_fn is not None:
             extra = spec.extra_fields_fn()
             data[r.name].update(extra)
+        print(f"{r.name}: {r.current_version} -> {r.latest_version}", file=sys.stderr)
+        bumped.append(r)
         count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
@@ -3359,15 +3362,13 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     _do_mirror = _has_acidgenomics_aws() or (_vendor_config() is not None and vendor_can_push())
     if _do_mirror:
         print("Uploading source tarballs to mirror(s).", file=sys.stderr)
-        for r in outdated:
-            if r.name not in data or not r.latest_version:
-                continue
+        for r in bumped:
             src_url = data[r.name].get("src_url", "")
             if not src_url:
                 continue
-            _mirror_src_to_s3(r.name, r.latest_version, src_url, quiet=True)
+            _mirror_src_to_s3(r.name, r.latest_version, src_url)
             for extra_tmpl in data[r.name].get("extra_src_urls", []):
-                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl, quiet=True)
+                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
     elif s3_upload:
         print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
     return count
