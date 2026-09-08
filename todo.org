@@ -1,3 +1,5 @@
+** TODO Our `git` installer is now hanging badly:
+   - installing 1 app: git [14m06s]
 ** TODO Let's make this step in `koopa develop check-app-versions` more verbose
     Updated 28 app versions in app.json.
     Uploading source tarballs to mirror(s).
