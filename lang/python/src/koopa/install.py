@@ -4256,7 +4256,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     alert(f"{n} {label} {verb} stale or missing:")
     from koopa.alert import dl
 
-    for app, reason in plan:
+    for app, reason in sorted(plan):
         dl(app, reason or "missing dependency")
     alert(f"Installing {n} {label}.")
     _save_pending_plan(plan, source="update")

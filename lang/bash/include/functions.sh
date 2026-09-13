@@ -618,6 +618,10 @@ _koopa_activate_direnv() {
         trap - SIGINT
         return "$previous_exit_status"
     }
+    if [[ ";${precmd_functions[*]:-};" != *';_direnv_hook;'* ]]
+    then
+        precmd_functions+=(_direnv_hook)
+    fi
     local timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
     local gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
     if [[ "$timeout" -gt 0 ]] && [[ -x "$gtimeout" ]]
@@ -1001,6 +1005,15 @@ _koopa_activate_zoxide() {
     source "$cache_file"
     unalias z 2>/dev/null || true
     [[ "$nounset" -eq 1 ]] && set -o nounset
+    return 0
+}
+
+_koopa_deactivate_inherited_direnv() {
+    local direnv
+    [[ -n "${DIRENV_DIFF:-}" ]] || return 0
+    direnv="${KOOPA_PREFIX:?}/bin/direnv"
+    [[ -x "$direnv" ]] || return 0
+    eval "$(cd / && "$direnv" export bash 2>/dev/null)"
     return 0
 }
 
@@ -2736,6 +2749,10 @@ _koopa_macos_activate_homebrew() {
     if [[ -z "${HOMEBREW_NO_ENV_HINTS:-}" ]]
     then
         export HOMEBREW_NO_ENV_HINTS=1
+    fi
+    if [[ -z "${HOMEBREW_NO_UPDATE_REPORT_NEW:-}" ]]
+    then
+        export HOMEBREW_NO_UPDATE_REPORT_NEW=1
     fi
     return 0
 }

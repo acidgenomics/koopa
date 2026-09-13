@@ -254,7 +254,7 @@ def brew_upgrade() -> None:
     """Upgrade all Homebrew formulae and casks."""
     from koopa.system import is_macos
 
-    _brew("update", capture=False)
+    _brew("update", "--quiet", capture=False)
     if is_macos():
         brew_upgrade_casks()
     brew_upgrade_brews()

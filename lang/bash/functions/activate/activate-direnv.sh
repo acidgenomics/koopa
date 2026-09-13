@@ -20,6 +20,25 @@ _koopa_activate_direnv() {
     # the shell continues without direnv's exports for that directory. Set
     # 'KOOPA_DIRENV_TIMEOUT=0' to disable the bound entirely (matches legacy
     # behavior).
+    #
+    # 'direnv hook bash' only knows how to prepend itself to the raw
+    # 'PROMPT_COMMAND' string; it has no notion of bash-preexec's
+    # 'precmd_functions' array. bash-preexec's own install is lazy (deferred
+    # to the first real prompt via a queued 'PROMPT_COMMAND' entry), and once
+    # it fires it always wraps a fresh 'precmd_functions' dispatcher around
+    # whatever is *already* in 'PROMPT_COMMAND', prepending that dispatcher
+    # ahead of it. Since direnv activates before 'starship' registers into
+    # 'precmd_functions' (see 'activate-bash-extras.sh'), this leaves
+    # '_direnv_hook' trapped behind the dispatcher on every prompt, so
+    # starship renders the previous directory's exports one cycle stale, e.g.
+    # a stale virtualenv name right after leaving a project directory.
+    #
+    # Register '_direnv_hook' directly into 'precmd_functions' here too, so
+    # it is one of the functions the dispatcher itself invokes, in array
+    # order, ahead of 'starship_precmd'. This array is untouched by
+    # bash-preexec's lazy wrap (which only rewrites 'PROMPT_COMMAND'), so
+    # registering here, before starship, guarantees direnv's exports land
+    # before starship reads the environment on every prompt.
     # """
     local direnv
     direnv="${KOOPA_PREFIX:?}/bin/direnv"
@@ -55,6 +74,10 @@ _koopa_activate_direnv() {
         trap - SIGINT
         return "$previous_exit_status"
     }
+    if [[ ";${precmd_functions[*]:-};" != *';_direnv_hook;'* ]]
+    then
+        precmd_functions+=(_direnv_hook)
+    fi
     local timeout="${KOOPA_DIRENV_TIMEOUT:-5}"
     local gtimeout="${KOOPA_PREFIX:?}/bin/gtimeout"
     if [[ "$timeout" -gt 0 ]] && [[ -x "$gtimeout" ]]

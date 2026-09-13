@@ -776,6 +776,29 @@ def _fetch_antigravity_cli_extra_fields() -> dict[str, Any]:
     return {"build_id": build_id, "sha512": sha512}
 
 
+def _automake_bin_names(version: str) -> dict[str, Any]:
+    """Recompute automake's version-suffixed bin names for a new pin.
+
+    automake names two of its binaries after its own ``APIVERSION`` (the
+    release's major.minor, e.g. ``aclocal-1.19`` for version ``1.19.2``), not
+    the full pinned version. Bumping the pin without updating these leaves
+    app.json pointing at a binary the new release doesn't ship.
+
+    Parameters
+    ----------
+    version : str
+        Newly pinned automake version.
+
+    Returns
+    -------
+    dict[str, Any]
+        Mapping with the full ``bin`` list for the new pin.
+    """
+    match = re.match(r"(\d+\.\d+)", version)
+    api_version = match.group(1) if match else version
+    return {"bin": ["aclocal", f"aclocal-{api_version}", "automake", f"automake-{api_version}"]}
+
+
 def _check_repology(project: str) -> str:
     """Check latest upstream version via repology.org API.
 
@@ -1221,7 +1244,7 @@ class _AppCheckSpec:
     check_fn: Callable[..., str]
     args: tuple
     batch_size: int | None = None
-    extra_fields_fn: Callable[[], dict[str, Any]] | None = None
+    extra_fields_fn: Callable[[str], dict[str, Any]] | None = None
 
 
 def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
@@ -2181,7 +2204,13 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         "google",
         _check_antigravity_cli,
         (),
-        extra_fields_fn=_fetch_antigravity_cli_extra_fields,
+        extra_fields_fn=lambda _version: _fetch_antigravity_cli_extra_fields(),
+    ),
+    "automake": _AppCheckSpec(
+        "gnu",
+        lambda: _check_gnu("automake"),
+        (),
+        extra_fields_fn=_automake_bin_names,
     ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
     "clickhouse": _AppCheckSpec("github", _check_clickhouse, ()),
@@ -3142,18 +3171,18 @@ def _mirror_src_to_s3(
 
 
 @lru_cache(maxsize=1)
-def _pip_index_url() -> str | None:
-    """Return the configured pip index URL, or None if it is unset or is PyPI itself.
+def _pip_index_url() -> str:
+    """Return the configured pip index URL, defaulting to public PyPI.
 
     Checks ``PIP_INDEX_URL`` first, then falls back to ``pip config get
-    global.index-url``. Returns None for a bare PyPI/PythonHosted index so the
-    ``_index_has_version`` gate in ``update_app_json`` becomes a no-op for a
-    contributor or CI job that installs straight from public PyPI.
+    global.index-url``. Public PyPI is the default when neither is set, so
+    every pip-installed app is checked against the same index that pip will
+    use during installation.
 
     Returns
     -------
-    str | None
-        Configured pip index URL, or None if unset or pointing at PyPI itself.
+    str
+        Configured pip index URL, or public PyPI if none is configured.
     """
     url = os.environ.get("PIP_INDEX_URL")
     if not url:
@@ -3165,13 +3194,10 @@ def _pip_index_url() -> str | None:
                 check=True,
             )
         except (subprocess.CalledProcessError, OSError):
-            return None
+            return "https://pypi.org/simple"
         url = result.stdout.strip()
     if not url:
-        return None
-    host = urlparse(url).hostname or ""
-    if host in ("pypi.org", "files.pythonhosted.org"):
-        return None
+        return "https://pypi.org/simple"
     return url
 
 
@@ -3204,17 +3230,22 @@ def _index_has_version(index_url: str, package: str, version: str) -> bool:
     except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
         print(f"Warning: could not query pip index for {package!r}: {exc}", file=sys.stderr)
         return True
+    # The index page's own link text uses the PEP 503 normalized name (hyphens), but
+    # the distribution filenames it links to use the PEP 427/625 escaped name
+    # (underscores), e.g. "pyproject_fmt-2.28.2-py3-none-any.whl" for package
+    # "pyproject-fmt". Matching only on hyphens never finds any version of a
+    # multi-word package, holding its pin forever. Accept either separator between
+    # the name's parts.
+    name_pattern = "[-_.]+".join(re.escape(part) for part in normalized.split("-"))
     escaped = re.escape(version)
-    pattern = re.compile(
-        rf"{re.escape(normalized)}[-_]{escaped}(?:[-_.]|\.tar|\.whl|\.zip)", re.IGNORECASE
-    )
+    pattern = re.compile(rf"{name_pattern}[-_]{escaped}(?:[-_.]|\.tar|\.whl|\.zip)", re.IGNORECASE)
     return bool(pattern.search(body))
 
 
 def _pip_index_hold_message(
     app_name: str, current: str, latest: str, info: dict[str, Any]
 ) -> str | None:
-    """Return a hold message if `latest` is not yet on the configured pip index.
+    """Return a hold message if `latest` is not yet on the pip index.
 
     Mirrors `_held_message`, but for a hold discovered by querying the
     configured pip index instead of a static `version_exclude` list. Checking
@@ -3242,8 +3273,6 @@ def _pip_index_hold_message(
     if PYTHON_INSTALLERS.get(app_name, "") not in PIP_VERSIONED_INSTALLERS:
         return None
     index_url = _pip_index_url()
-    if index_url is None:
-        return None
     pkg = _resolve_pypi_name(app_name, info.get("installer_args", {}), info.get("url", []))
     if _index_has_version(index_url, pkg, latest):
         return None
@@ -3306,6 +3335,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
             held_by_match |= members
 
     count = 0
+    bumped: list[VersionCheckResult] = []
     for r in outdated:
         if r.name not in data or not r.latest_version:
             continue
@@ -3341,8 +3371,10 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         data[r.name].pop("revision", None)
         spec = _SPECIAL_CASES.get(r.name)
         if spec is not None and spec.extra_fields_fn is not None:
-            extra = spec.extra_fields_fn()
+            extra = spec.extra_fields_fn(r.latest_version)
             data[r.name].update(extra)
+        print(f"{r.name}: {r.current_version} -> {r.latest_version}", file=sys.stderr)
+        bumped.append(r)
         count += 1
     export_app_json(data)
     print(f"Updated {count} app versions in app.json.", file=sys.stderr)
@@ -3359,15 +3391,15 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     _do_mirror = _has_acidgenomics_aws() or (_vendor_config() is not None and vendor_can_push())
     if _do_mirror:
         print("Uploading source tarballs to mirror(s).", file=sys.stderr)
-        for r in outdated:
-            if r.name not in data or not r.latest_version:
+        for r in bumped:
+            if r.latest_version is None:
                 continue
             src_url = data[r.name].get("src_url", "")
             if not src_url:
                 continue
-            _mirror_src_to_s3(r.name, r.latest_version, src_url, quiet=True)
+            _mirror_src_to_s3(r.name, r.latest_version, src_url)
             for extra_tmpl in data[r.name].get("extra_src_urls", []):
-                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl, quiet=True)
+                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
     elif s3_upload:
         print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
     return count

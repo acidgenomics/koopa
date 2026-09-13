@@ -37,5 +37,9 @@ _koopa_macos_activate_homebrew() {
     then
         export HOMEBREW_NO_ENV_HINTS=1
     fi
+    if [[ -z "${HOMEBREW_NO_UPDATE_REPORT_NEW:-}" ]]
+    then
+        export HOMEBREW_NO_UPDATE_REPORT_NEW=1
+    fi
     return 0
 }

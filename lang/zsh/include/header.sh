@@ -63,6 +63,7 @@ __koopa_warn() {
 }
 
 __koopa_activate_koopa() {
+    _koopa_deactivate_inherited_direnv || return 1
     if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
     then
         _koopa_activate_path_helper || return 1

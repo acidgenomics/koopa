@@ -188,6 +188,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "jupyterlab": f"{_M}._python_pkg",
     "latch": f"{_M}._python_pkg",
     "marimo": f"{_M}._python_pkg",
+    "mcp-atlassian": f"{_M}._python_pkg",
     "meson": f"{_M}._python_pkg",
     "mosaicml-cli": f"{_M}._python_pkg",
     "multiqc": f"{_M}._python_pkg",
