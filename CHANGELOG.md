@@ -1,5 +1,49 @@
 # Changelog
 
+## koopa 0.31.0 (2026-09-13)
+
+Major changes:
+
+- Shell activation now reverts a direnv environment inherited from a parent
+  process. A long-lived parent, such as an editor started with `code .` inside a
+  project, previously exported that project's variables into every child shell
+  in any directory, including secrets loaded by `.envrc`. New
+  `_koopa_deactivate_inherited_direnv` runs as the first step of koopa
+  activation in Bash, POSIX, and Zsh.
+- Bash sessions now register direnv's hook in `precmd_functions` instead of
+  leaving it behind bash-preexec's dispatcher in `PROMPT_COMMAND`. Starship no
+  longer renders the previous directory's environment one prompt cycle late.
+- The `git` installer no longer hangs. Its HTML-docs and man-pages downloads now
+  pass `connect_timeout=10`, `speed_limit=1000`, and `speed_time=30`, so a
+  stalled mirror fails fast and retries instead of blocking for minutes.
+- Version checking now matches distribution filenames that escape a hyphenated
+  package name with underscores, and it checks every pip-installed app against
+  the index that pip will actually use. Eighteen pip-installed apps, including
+  `dbt` and `pyproject-fmt`, were held at every version before this fix.
+- An `automake` version bump now rewrites the API-versioned `bin` entries
+  (`aclocal-1.19`, `automake-1.19`), so the registry no longer points at
+  binaries the new release does not ship.
+- Homebrew output is quieter. Activation exports
+  `HOMEBREW_NO_UPDATE_REPORT_NEW=1`, and `brew_upgrade()` calls
+  `brew update --quiet`, so unrelated outdated casks are no longer reported.
+
+Minor changes:
+
+- `koopa develop check-app-versions` now prints `name: old -> new` for each bump
+  as it happens, uploads source tarballs only for apps actually written to
+  `app.json`, and reports each mirror upload separately.
+- The stale-app update plan now lists apps alphabetically.
+- Bootstrap now installs `xz` 5.8.4, matching the app registry.
+- Bumped the `dotfiles` pin, which brings the Obsidian Dracula Pro theme
+  contrast fixes, and the `doom-emacs` pin.
+- Routine upstream version bumps across the app registry (52 apps), including
+  major jumps for `automake`, `bioconda-utils`, `deeptools`, and `tokei`.
+
+New apps:
+
+- `mcp-atlassian` 0.23.1: MCP server for Atlassian Jira and Confluence
+  (CLI, non-default).
+
 ## koopa 0.30.0 (2026-09-05)
 
 Major changes:

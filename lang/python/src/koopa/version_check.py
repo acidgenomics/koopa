@@ -3392,6 +3392,8 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     if _do_mirror:
         print("Uploading source tarballs to mirror(s).", file=sys.stderr)
         for r in bumped:
+            if r.latest_version is None:
+                continue
             src_url = data[r.name].get("src_url", "")
             if not src_url:
                 continue
