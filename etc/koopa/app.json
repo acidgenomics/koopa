@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5211191891591168",
+    "build_id": "6061403484848128",
     "category": "AI",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "cd627f798e059f84a88bfe21dbde54cc5262e2d93d1943f120eb4b386823f4a1f7c4a57d4d0f876557709b6061a4c02f1fc13157f0047c5df6f300afa471e411",
-      "darwin_amd64": "a2db814cf7ee3a50442caf0907a470fa2073d6d8bd6cd1039fac2022b0abb4a15a75b70191a0cdbc08183907bfac23b3f9a4bada994552c34e9b9ff806378bca",
-      "linux_amd64": "793d4b9ea2c08d9a7e50bafa02cfc8c19424bd60d6e83f91408d45f9c6d4ce79a5d576fede5bef164d823abf84f81359a14b4ca665952c47b0a7cfd743bb69c0",
-      "linux_arm64": "ed45f6930785aa4b42f14e07ace1c9d91a94fb76e760f54acbd7d3d3951e1f957fd456a0dae2a3124dd9a3b689bf7afb7c9303a3e4ba95037fc10063424d9bf9"
+      "darwin_arm64": "8a3b5edea51e107a74413cea5eed1c5b02dede945ba21c7625b7c86f477c2c8ac423581de0ed84ff2f97c3bf6818c1fc24ca84cf9a76c2fb02a50e89d8a0d29a",
+      "darwin_amd64": "b3a61aa3f07bffcdc23b2816573e9d299d38fc028900f4b50525713da732933a7c666baa662e6c8e7ce64c39ddfe6c4ea3b5475de63e8ac144cd21e2787d9f0d",
+      "linux_amd64": "74342cf2a78b344392e573b638a648a6ad1f8e877f494b96e20f9c2b79158d5c423c40b2dcf788703362bb0a9150f09c707fde599d7557ce01c12208802a63cb",
+      "linux_arm64": "a1645a30f36b767c7534c2f6a53e99a9bfade993267efcca715f7a45d797d47d6561df787e9d4a51a3bdfc9be855d49d23fa3f4b91b2c661fd17314050836048"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.1.27"
+    "version": "1.2.2"
   },
   "apache-airflow": {
     "bin": [
@@ -573,28 +573,29 @@
   "automake": {
     "bin": [
       "aclocal",
-      "aclocal-1.18",
+      "aclocal-1.19",
       "automake",
-      "automake-1.18"
+      "automake-1.19"
     ],
     "build_dependencies": [
       "make",
       "pkg-config"
     ],
     "category": "Build",
-    "date": "2026-05-02",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "autoconf"
     ],
     "description": "generates Makefiles from simple descriptions",
     "installer": "gnu-app",
+    "revision": 1,
     "src_url": "https://mirrors.kernel.org/gnu/automake/automake-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/automake/?C=M;O=D"
     ],
-    "version": "1.18.1"
+    "version": "1.19"
   },
   "aws-azure-login": {
     "bin": [
@@ -1230,7 +1231,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": false,
     "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
@@ -1239,7 +1240,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.60.0"
+    "version": "1.60.1"
   },
   "brotli": {
     "bin": [
@@ -1598,7 +1599,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": true,
     "dependencies": [
       "node"
@@ -1612,7 +1613,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.263"
+    "version": "2.1.270"
   },
   "claude-replay": {
     "bin": [
@@ -2233,14 +2234,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-09-04",
+    "date": "2026-09-13",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.15.0"
+    "version": "1.16.1"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2989,7 +2990,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": false,
     "description": "friendly interactive shell",
     "installer": "conda-package",
@@ -3001,7 +3002,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.9.2"
+    "version": "4.9.3"
   },
   "flac": {
     "bin": [
@@ -3524,7 +3525,7 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-05-24",
+    "date": "2026-09-13",
     "default": false,
     "description": "PostScript and PDF interpreter",
     "installer": "conda-package",
@@ -3535,7 +3536,7 @@
     "url": [
       "https://www.ghostscript.com/"
     ],
-    "version": "10.07.1"
+    "version": "10.08.0"
   },
   "git": {
     "bin": [
@@ -3674,7 +3675,7 @@
       "python"
     ],
     "category": "Library",
-    "date": "2026-07-30",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "libffi",
@@ -3688,7 +3689,7 @@
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/-/releases"
     ],
-    "version": "2.88.3"
+    "version": "2.90.0"
   },
   "gmp": {
     "build_dependencies": [
@@ -3972,7 +3973,7 @@
       "go"
     ],
     "category": "Terminal",
-    "date": "2026-08-21",
+    "date": "2026-09-13",
     "default": false,
     "description": "tool for building charming interactive shell scripts",
     "man1": [
@@ -3982,7 +3983,7 @@
     "url": [
       "https://github.com/charmbracelet/gum/"
     ],
-    "version": "2.0.0"
+    "version": "2.0.1"
   },
   "gzip": {
     "bin": [
@@ -4380,7 +4381,7 @@
       "go"
     ],
     "category": "Documentation",
-    "date": "2026-08-14",
+    "date": "2026-09-13",
     "default": false,
     "description": "fast static site generator written in Go",
     "notes": [
@@ -4391,7 +4392,7 @@
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
     ],
-    "version": "0.165.0",
+    "version": "0.166.0",
     "version_granularity": "minor"
   },
   "hurl": {
@@ -4687,7 +4688,7 @@
       "julia"
     ],
     "category": "Language",
-    "date": "2026-08-16",
+    "date": "2026-09-13",
     "default": false,
     "description": "high-performance dynamic programming language",
     "type": "cli",
@@ -4696,7 +4697,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.12.7"
+    "version": "1.13.0"
   },
   "jupyterlab": {
     "bin": [
@@ -4943,7 +4944,7 @@
       "make"
     ],
     "category": "Filesystem",
-    "date": "2026-08-16",
+    "date": "2026-09-13",
     "default": true,
     "dependencies": [
       "ncurses",
@@ -4960,7 +4961,7 @@
       "https://github.com/gwsw/less/",
       "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
     ],
-    "version": "709"
+    "version": "710"
   },
   "lesspipe": {
     "bin": [
@@ -4971,7 +4972,7 @@
       "make"
     ],
     "category": "Filesystem",
-    "date": "2026-06-11",
+    "date": "2026-09-13",
     "default": true,
     "description": "preprocessor for less to display non-text files",
     "src_url": "https://github.com/wofr06/lesspipe/archive/refs/tags/v{version}.tar.gz",
@@ -4979,7 +4980,7 @@
     "url": [
       "https://github.com/wofr06/lesspipe/"
     ],
-    "version": "2.27"
+    "version": "2.28"
   },
   "libaec": {
     "build_dependencies": [
@@ -5176,7 +5177,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-08-27",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "libgpg-error"
@@ -5187,7 +5188,7 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "1.12.3"
+    "version": "1.12.4"
   },
   "libgeotiff": {
     "date": "2026-05-02",
@@ -5638,7 +5639,7 @@
     ],
     "category": "Build",
     "conda_channel": "conda-forge",
-    "date": "2026-08-27",
+    "date": "2026-09-13",
     "default": false,
     "description": "LLVM compiler infrastructure",
     "installer": "conda-package",
@@ -5646,7 +5647,7 @@
     "url": [
       "https://llvm.org/"
     ],
-    "version": "23.1.0"
+    "version": "23.1.1"
   },
   "lmod": {
     "build_dependencies": [
@@ -5654,7 +5655,7 @@
       "pkg-config"
     ],
     "category": "Dotfile",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "lua",
@@ -5675,7 +5676,7 @@
       "https://lmod.readthedocs.io/",
       "https://github.com/TACC/Lmod/"
     ],
-    "version": "9.4"
+    "version": "9.4.2"
   },
   "lsd": {
     "bin": [
@@ -6015,7 +6016,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": true,
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
@@ -6023,7 +6024,7 @@
     "url": [
       "https://github.com/lunaryorn/mdcat/"
     ],
-    "version": "2.16.0"
+    "version": "2.16.1"
   },
   "meson": {
     "bin": [
@@ -6099,7 +6100,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6109,7 +6110,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.9.2"
+    "version": "2026.9.4"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6570,7 +6571,7 @@
     ],
     "category": "Language",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-13",
     "default": false,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
@@ -6582,20 +6583,11 @@
       "npm.1",
       "npx.1"
     ],
-    "notes": [
-      "Held below 26.8.0: that upstream release stamps its own build as",
-      "'v26.8.0-alpha.0.0.0' (see node_version.h), which fails npm's engine",
-      "check on every invocation. Bump past this only once conda-forge ships",
-      "26.8.1 or later."
-    ],
     "type": "build_tool",
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.8.1",
-    "version_exclude": [
-      "26.8.0"
-    ]
+    "version": "26.8.2"
   },
   "npth": {
     "build_dependencies": [
@@ -6741,7 +6733,7 @@
       "make"
     ],
     "category": "Library",
-    "date": "2026-08-08",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "openssl3"
@@ -6753,7 +6745,7 @@
     "url": [
       "https://www.openldap.org/software/"
     ],
-    "version": "2.7.0"
+    "version": "2.7.1"
   },
   "openssh": {
     "build_dependencies": [
@@ -7290,7 +7282,7 @@
       "poetry"
     ],
     "category": "Python",
-    "date": "2026-05-09",
+    "date": "2026-09-13",
     "default": true,
     "dependencies": [
       "python"
@@ -7302,7 +7294,7 @@
       "https://python-poetry.org/",
       "https://pypi.org/project/poetry/"
     ],
-    "version": "2.4.1"
+    "version": "2.4.2"
   },
   "poppler": {
     "bin": [
@@ -7368,14 +7360,14 @@
       "pwsh"
     ],
     "category": "Shell",
-    "date": "2026-08-16",
+    "date": "2026-09-13",
     "default": false,
     "description": "cross-platform task automation shell by Microsoft",
     "type": "cli",
     "url": [
       "https://github.com/PowerShell/PowerShell/"
     ],
-    "version": "7.6.5"
+    "version": "7.6.6"
   },
   "prettier": {
     "bin": [
@@ -7578,7 +7570,7 @@
       "pylint"
     ],
     "category": "Python",
-    "date": "2026-08-10",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "python"
@@ -7591,7 +7583,7 @@
       "https://github.com/PyCQA/pylint/",
       "https://pypi.org/project/pylint/"
     ],
-    "version": "4.0.7"
+    "version": "4.0.8"
   },
   "pymol": {
     "bin": [
@@ -7625,7 +7617,7 @@
       "pyproject-fmt"
     ],
     "category": "Python",
-    "date": "2026-08-27",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "python"
@@ -7637,7 +7629,7 @@
       "https://pypi.org/project/pyproject-fmt/",
       "https://github.com/tox-dev/pyproject-fmt/"
     ],
-    "version": "2.28.1"
+    "version": "2.28.2"
   },
   "pyrefly": {
     "bin": [
@@ -7667,7 +7659,7 @@
       "pyright-python-langserver"
     ],
     "category": "Python",
-    "date": "2026-09-02",
+    "date": "2026-09-13",
     "default": true,
     "dependencies": [
       "python"
@@ -7679,10 +7671,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.411",
-    "version_exclude": [
-      "1.1.412"
-    ]
+    "version": "1.1.414"
   },
   "pytaglib": {
     "bin": [
@@ -8254,7 +8243,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-08-27",
+    "date": "2026-09-13",
     "default": false,
     "description": "universal conda package builder",
     "installer": "conda-package",
@@ -8263,7 +8252,7 @@
       "https://rattler.build/",
       "https://github.com/prefix-dev/rattler-build"
     ],
-    "version": "0.75.0"
+    "version": "0.76.0"
   },
   "rbenv": {
     "bin": [
@@ -8522,7 +8511,7 @@
   },
   "rstudio-server": {
     "category": "R",
-    "date": "2026-08-27",
+    "date": "2026-09-13",
     "default": false,
     "description": "web-based RStudio IDE server",
     "installer_platform": "debian",
@@ -8536,7 +8525,7 @@
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
-    "version": "2026.08.2+200"
+    "version": "2026.09.0+174"
   },
   "rsync": {
     "bin": [
@@ -8776,19 +8765,18 @@
       "scanpy"
     ],
     "category": "Bioinformatics",
-    "date": "2026-09-02",
+    "date": "2026-09-13",
     "default": false,
     "dependencies": [
       "python"
     ],
     "description": "single-cell analysis in Python",
     "installer": "python-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://scanpy.readthedocs.io/"
     ],
-    "version": "1.12.3"
+    "version": "1.12.4"
   },
   "scons": {
     "category": "Build",
@@ -9694,7 +9682,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-01-02",
+    "date": "2026-09-13",
     "default": false,
     "description": "count lines of code quickly",
     "installer": "conda-package",
@@ -9702,7 +9690,7 @@
     "url": [
       "https://github.com/XAMPPRocky/tokei/"
     ],
-    "version": "14.0.0"
+    "version": "15.0.0"
   },
   "tooluniverse": {
     "bin": [
@@ -9749,7 +9737,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-07-30",
+    "date": "2026-09-13",
     "default": false,
     "description": "upgrade all your tools with one command",
     "installer": "conda-package",
@@ -9757,7 +9745,7 @@
     "url": [
       "https://github.com/topgrade-rs/topgrade/"
     ],
-    "version": "17.9.0"
+    "version": "17.10.1"
   },
   "tqdm": {
     "bin": [
@@ -10008,7 +9996,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-07-20",
+    "date": "2026-09-13",
     "default": true,
     "description": "highly configurable text editor",
     "installer": "conda-package",
@@ -10026,7 +10014,7 @@
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.0785"
+    "version": "9.2.1054"
   },
   "visidata": {
     "bin": [
@@ -10646,7 +10634,7 @@
       "pkg-config"
     ],
     "category": "Compression",
-    "date": "2026-04-15",
+    "date": "2026-09-13",
     "default": true,
     "description": "general-purpose lossless data compressor using LZMA",
     "man1": [
@@ -10680,7 +10668,7 @@
       "https://tukaani.org/xz/",
       "https://github.com/tukaani-project/xz"
     ],
-    "version": "5.8.3"
+    "version": "5.8.4"
   },
   "yaml-cpp": {
     "date": "2026-02-06",

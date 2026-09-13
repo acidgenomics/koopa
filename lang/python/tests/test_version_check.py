@@ -19,6 +19,7 @@ from koopa.version_check import (
     VersionCheckResult,
     _AppCheckSpec,
     _audit_version_excludes,
+    _automake_bin_names,
     _cache_hit_result,
     _check_npm,
     _check_pypi,
@@ -496,6 +497,56 @@ def test_fetch_first_reachable_raises_network_unavailable_when_all_fail(
         _fetch_first_reachable(["https://a.example/sed/", "https://b.example/sed/"])
 
 
+# ── _automake_bin_names (extra_fields_fn: version-suffixed bin names) ──────
+
+
+def test_automake_bin_names_uses_major_minor_api_version() -> None:
+    """A patch-level version is truncated to automake's major.minor APIVERSION.
+
+    Regression test: automake's own APIVERSION (and therefore its
+    aclocal-X.Y/automake-X.Y binary names) is the release's major.minor, not
+    the full pinned version. A prior manual edit left these bin names at
+    "1.18" after the pin moved to "1.19", which broke the install because
+    the new release never shipped an "aclocal-1.18".
+    """
+    assert _automake_bin_names("1.19.2") == {
+        "bin": ["aclocal", "aclocal-1.19", "automake", "automake-1.19"]
+    }
+
+
+def test_automake_bin_names_handles_a_bare_major_minor_version() -> None:
+    """A version with no patch component is used as-is."""
+    assert _automake_bin_names("1.19") == {
+        "bin": ["aclocal", "aclocal-1.19", "automake", "automake-1.19"]
+    }
+
+
+def test_update_app_json_refreshes_automake_bin_names_on_bump(tmp_path: Path) -> None:
+    """A real automake bump rewrites `bin` via the registered extra_fields_fn."""
+    json_data = {
+        "automake": {
+            "bin": ["aclocal", "aclocal-1.18", "automake", "automake-1.18"],
+            "version": "1.18.1",
+            "installer": "gnu-app",
+            "url": ["https://mirrors.kernel.org/gnu/automake/?C=M;O=D"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("automake", "1.18.1", "1.19.2", "gnu", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=False),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["automake"]["version"] == "1.19.2"
+    assert written["automake"]["bin"] == ["aclocal", "aclocal-1.19", "automake", "automake-1.19"]
+    assert count == 1
+
+
 # ── update_app_json artifact gate ────────────────────────────────────────────
 
 
@@ -726,6 +777,25 @@ def test_index_has_version_true_when_version_present() -> None:
     with patch("koopa.version_check._http_get_text", return_value=html):
         assert _index_has_version("https://example.test/simple", "pyright", "1.1.412") is True
         assert _index_has_version("https://example.test/simple", "pyright", "1.1.413") is False
+
+
+def test_index_has_version_matches_underscore_filename_for_hyphenated_package() -> None:
+    """A hyphenated package name matches an underscore-separated filename.
+
+    Regression test: dbt, pyproject-fmt, and 16 other pip-installed apps were
+    held at every version, forever, because a PEP 503 index page for
+    "pyproject-fmt" links to filenames like
+    "pyproject_fmt-2.28.1-py3-none-any.whl" -- a literal hyphen never matches
+    the underscore in the filename. The existing tests above only exercise
+    "pyright", a single-word name with no separator, so they never caught
+    this.
+    """
+    html = (
+        "<a href='pyproject_fmt-2.28.1-py3-none-any.whl'>pyproject_fmt-2.28.1-py3-none-any.whl</a>"
+    )
+    with patch("koopa.version_check._http_get_text", return_value=html):
+        assert _index_has_version("https://example.test/simple", "pyproject-fmt", "2.28.1") is True
+        assert _index_has_version("https://example.test/simple", "pyproject-fmt", "2.29.0") is False
 
 
 # ── version_exclude / version_granularity holds (_held_message) ─────────────

@@ -789,7 +789,7 @@ BZIP2_PC_EOF
 }
 
 install_xz() {
-    __kvar_version='5.8.3'
+    __kvar_version='5.8.4'
     printf 'Installing xz.\n'
     __kvar_filename="xz-${__kvar_version}.tar.gz"
     download_with_fallback \
