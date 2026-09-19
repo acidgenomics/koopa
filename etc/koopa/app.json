@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "4931130160447488",
+    "build_id": "6731160148115456",
     "category": "AI",
-    "date": "2026-09-17",
+    "date": "2026-09-19",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "5bbe4c40c31c8b1665e073c4b6a8b65a2d60340a5a7d698c10231921b67531840126d68c7a2bedd994cb63b26ca026aa105cce413bc9aeaa9057cfc6cf0af345",
-      "darwin_amd64": "8c7a6aa2bd878ffe0beeeb7d5b83be56d8ed2ca97ce6549a511db62b52ed64f698f2e184194603a393fd61b0c885a8cdd29b0ffbe8bb1540031ad4485d3d228a",
-      "linux_amd64": "1f89973759ec9608983708be985d715af1669f50a43ef721a7389b9a8de78141333e18bedfef7d15d0073cbe4d6b8984c86b23d8d073cc28dd29290a781f4b65",
-      "linux_arm64": "e11c990024b3f253fdd6ffd552e117478cb320bbf5bf2ff67a218fada718c8eeebad7cd916b691e39a3b206a09bc754d177319b002c1aaa546ab4e5ee4633bf0"
+      "darwin_arm64": "e26032ce420985a18e720b6ec1c09d8360aed851d3e3345148c9a052b7918989a52b62dd2c8db453599ea341b8b29720737846ffd37dd9c68b6bc6ece4a05994",
+      "darwin_amd64": "4b271a5332e68416081a5fccdc07c5eda42ee7e964c46fc9bbec5e8f9d1fbfd37eeb9953855cc080f9a3eff850bafa9cb03f7980f1f0b1cdd3c7f9402972b1f0",
+      "linux_amd64": "fec769d611c4afdf0ae72d38bdb2652c8e2c8e71e4f6de97a27b80dda3c50429160d9e03776a36a59b8857c20e76783c4a49cb0feb8b2f5c3bf925b0cc03bb77",
+      "linux_arm64": "d39f939ffc80776bfd2dc10db7b9a1a1b58650f08115fa21065c11d10882c71210f368c2e6060f26966d1a33d6b2dd2bc19bfd641062305af6546c51d494511a"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.2.5"
+    "version": "1.2.7"
   },
   "apache-airflow": {
     "bin": [
@@ -1599,7 +1599,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-09-17",
+    "date": "2026-09-19",
     "default": true,
     "dependencies": [
       "node"
@@ -1613,7 +1613,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.274"
+    "version": "2.1.278"
   },
   "claude-replay": {
     "bin": [
@@ -1644,7 +1644,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-09-17",
+    "date": "2026-09-19",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1652,7 +1652,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.7.10.6"
+    "version": "26.7.11.16"
   },
   "cloud-sql-proxy": {
     "bin": [
@@ -1802,7 +1802,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-09-17",
+    "date": "2026-09-19",
     "default": true,
     "dependencies": [
       "node"
@@ -1816,7 +1816,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.86-0"
+    "version": "1.0.87-0"
   },
   "coreutils": {
     "bin": [
@@ -2505,7 +2505,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-09-08",
+    "date": "2026-09-19",
     "default": false,
     "dependencies": [
       "chezmoi"
@@ -2515,7 +2515,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "dc6a6c165b406414c540a9107157df48d7f1c09d"
+    "version": "a37dd3faf522dd5abe347249d21051e36debdcff"
   },
   "du-dust": {
     "bin": [
@@ -2910,7 +2910,7 @@
     ],
     "category": "Multimedia",
     "conda_channel": "conda-forge",
-    "date": "2026-08-14",
+    "date": "2026-09-19",
     "default": false,
     "description": "record, convert, and stream audio and video",
     "installer": "conda-package",
@@ -2923,7 +2923,7 @@
       "https://ffmpeg.org/",
       "https://github.com/FFmpeg/FFmpeg/"
     ],
-    "version": "9.0.1"
+    "version": "9.0.2"
   },
   "ffq": {
     "date": "2026-06-02",
@@ -4585,7 +4585,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-04-15",
+    "date": "2026-09-19",
     "default": false,
     "description": "general-purpose malloc implementation with profiling support",
     "src_url": "https://github.com/jemalloc/jemalloc/releases/download/{version}/jemalloc-{version}.tar.bz2",
@@ -4594,7 +4594,7 @@
       "http://jemalloc.net/",
       "https://github.com/jemalloc/jemalloc/"
     ],
-    "version": "5.3.1"
+    "version": "5.4.0"
   },
   "jfrog-cli": {
     "bin": [
@@ -4888,7 +4888,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-19",
     "default": false,
     "description": "terminal UI for git with a simple and intuitive interface",
     "installer": "conda-package",
@@ -4896,7 +4896,7 @@
     "url": [
       "https://github.com/jesseduffield/lazygit/"
     ],
-    "version": "0.65.0"
+    "version": "0.65.1"
   },
   "ldc": {
     "build_dependencies": [
@@ -7282,7 +7282,7 @@
       "poetry"
     ],
     "category": "Python",
-    "date": "2026-09-13",
+    "date": "2026-09-19",
     "default": true,
     "dependencies": [
       "python"
@@ -7294,7 +7294,7 @@
       "https://python-poetry.org/",
       "https://pypi.org/project/poetry/"
     ],
-    "version": "2.4.2"
+    "version": "2.4.3"
   },
   "poppler": {
     "bin": [
@@ -8592,7 +8592,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-08-28",
+    "date": "2026-09-19",
     "default": true,
     "dependencies": [
       "python"
@@ -8603,7 +8603,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.16.5"
+    "version": "0.16.6"
   },
   "ruff-lsp": {
     "bin": [
@@ -9947,14 +9947,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-09-17",
+    "date": "2026-09-19",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.12.9"
+    "version": "0.12.10"
   },
   "valkey": {
     "bin": [
@@ -10593,7 +10593,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2024-12-30",
+    "date": "2026-09-19",
     "default": false,
     "description": "extremely fast non-cryptographic hash algorithm library",
     "src_url": "https://github.com/Cyan4973/xxHash/archive/v{version}.tar.gz",
@@ -10601,7 +10601,7 @@
     "url": [
       "https://github.com/Cyan4973/xxHash/"
     ],
-    "version": "0.8.3"
+    "version": "0.8.4"
   },
   "xz": {
     "bin": [
