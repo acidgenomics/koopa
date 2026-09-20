@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Agent skills for koopa: a shell bootloader for data science.",
-    "version": "0.31.0"
+    "version": "0.32.0"
   },
   "plugins": [
     {

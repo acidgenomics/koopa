@@ -4,7 +4,7 @@ requires = [ "setuptools" ]
 
 [project]
 name = "koopa"
-version = "0.31.0"
+version = "0.32.0"
 description = "Shell bootloader for data science."
 readme = "README.md"
 keywords = [ "bioinformatics", "data science", "fair data", "ngs", "shell" ]

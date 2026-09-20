@@ -1,5 +1,27 @@
 # Changelog
 
+## koopa 0.32.0 (2026-09-20)
+
+Major changes:
+
+- App version checks now select the newest stable, non-yanked PyPI and RubyGems
+  release immediately. The release-age cooldown now applies only to unpinned
+  dependency resolution, rather than delaying a direct application pin.
+- Python-package installation now installs the exact vetted app pin first, then
+  resolves its dependencies and extra packages with the user's configured
+  cooldown. koopa's own unpinned venv extras likewise honor the user's uv
+  cooldown.
+- Shell activation disables Copilot CLI's startup auto-updater whenever koopa's
+  managed Copilot CLI is installed, across Bash, POSIX sh, Zsh, Fish, Elvish,
+  Nushell, and PowerShell.
+- Today-bucket activation now exports its resolved `KOOPA_BUCKET` path, allowing
+  Obsidian vault detection and other child tools to use the canonical bucket
+  location.
+
+Minor changes:
+
+- Routine upstream version bumps across the app registry (54 apps).
+
 ## koopa 0.31.0 (2026-09-13)
 
 Major changes:
