@@ -1652,7 +1652,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.7.12.6"
+    "version": "26.7.13.12"
   },
   "cloud-sql-proxy": {
     "bin": [
