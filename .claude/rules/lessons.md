@@ -14,6 +14,20 @@
   machine-specific values (for example `KOOPA_BUILDER`), do not suggest editing
   `~/.zshrc` / `~/.bashrc` directly; route users to their chezmoi-managed
   sidecar files in the dotfiles source instead.
+- **A general env-var default does not belong in a shell-specific chezmoi
+  file, even a chezmoi-managed one.** Proposed exporting a new app-specific
+  default in a Zsh-only profile template in a downstream dotfiles repo --
+  wrong, since not every user of that repo runs Zsh, so bash/fish/nu users
+  would never source it. koopa already solves exactly this: any cross-shell
+  env default belongs in koopa's own activation
+  (`lang/{sh,bash,zsh,fish}/functions/activate/*.sh`, sourced by every
+  shell's `activate.*` entry point), not duplicated per-shell in a
+  downstream dotfiles repo. Confirmed live 2026-09-19:
+  `_koopa_activate_today_bucket` already resolved a bucket dir via
+  `KOOPA_BUCKET` -> `~/bucket` -> `~/Documents/bucket` but never exported
+  it; fixing that (plus regenerating the cached `include/functions.sh` via
+  `koopa develop cache-functions`) gave every koopa-activated shell a real
+  `KOOPA_BUCKET` for free, with zero downstream dotfiles changes needed.
 - **Never run `find /` or any filesystem-root search.** Scope every `find`/search
   to a known root: the repo, `~/git`, an app prefix, or a specific cache dir (e.g.
   `~/.cache/uv/...`). A root-wide search is slow, noisy, and reaches unrelated

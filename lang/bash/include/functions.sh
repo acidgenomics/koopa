@@ -951,6 +951,7 @@ _koopa_activate_today_bucket() {
         return 0
     fi
     bucket_dir="$(_koopa_realpath "$bucket_dir")"
+    export KOOPA_BUCKET="$bucket_dir"
     local today_subdirs
     today_subdirs="$(date '+%Y/%m/%d')"
     mkdir -p \
