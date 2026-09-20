@@ -1644,7 +1644,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-09-19",
+    "date": "2026-09-20",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1652,7 +1652,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.7.11.16"
+    "version": "26.7.12.6"
   },
   "cloud-sql-proxy": {
     "bin": [
@@ -2505,7 +2505,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-09-19",
+    "date": "2026-09-20",
     "default": false,
     "dependencies": [
       "chezmoi"
@@ -2515,7 +2515,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "a37dd3faf522dd5abe347249d21051e36debdcff"
+    "version": "d803cf02e133dbfe15608d68989bf59ff8cbef76"
   },
   "du-dust": {
     "bin": [
@@ -4005,7 +4005,7 @@
       "make"
     ],
     "category": "Compression",
-    "date": "2026-05-02",
+    "date": "2026-09-20",
     "default": true,
     "description": "GNU file compression and decompression utility",
     "installer": "gnu-app",
@@ -4027,14 +4027,13 @@
       "gzmore.1",
       "gznew.1"
     ],
-    "revision": 1,
     "src_url": "https://mirrors.kernel.org/gnu/gzip/gzip-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://www.gnu.org/software/gzip/",
       "https://mirrors.kernel.org/gnu/gzip/?C=M;O=D"
     ],
-    "version": "1.14"
+    "version": "1.15"
   },
   "hadolint": {
     "bin": [
@@ -6016,7 +6015,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-13",
+    "date": "2026-09-20",
     "default": true,
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
@@ -6024,7 +6023,7 @@
     "url": [
       "https://github.com/lunaryorn/mdcat/"
     ],
-    "version": "2.16.1"
+    "version": "2.17.0"
   },
   "meson": {
     "bin": [
@@ -6100,7 +6099,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-09-17",
+    "date": "2026-09-20",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6110,7 +6109,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.9.9"
+    "version": "2026.9.11"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -10105,7 +10104,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-09-20",
     "default": false,
     "description": "execute commands when watched files change",
     "installer": "conda-package",
@@ -10114,7 +10113,7 @@
       "https://watchexec.github.io/",
       "https://github.com/watchexec/watchexec/"
     ],
-    "version": "2.7.2"
+    "version": "2.7.3"
   },
   "wget": {
     "bin": [
