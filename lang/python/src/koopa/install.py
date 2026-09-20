@@ -1644,26 +1644,44 @@ def install_python_package(
     os.makedirs(bin_dir, exist_ok=True)
     # Create venv.
     subprocess.run([python, "-m", "venv", libexec], check=True)
-    # koopa always installs an exact, already-vetted pin here (never a
-    # floating resolve), so a user-configured dependency cooldown
-    # (global.uploaded-prior-to in ~/.config/pip/pip.conf) adds no safety
-    # value and only breaks installs of recently released app.json pins.
-    # A site-level pip.conf (sys.prefix/pip.conf) outranks the user config
-    # and, set to an empty value, un-sets the key for this venv only.
-    with open(os.path.join(libexec, "pip.conf"), "w") as f:
-        f.write("[global]\nuploaded-prior-to =\n")
+    pip_conf = os.path.join(libexec, "pip.conf")
     venv_pip = os.path.join(libexec, "bin", "pip")
-    pip_args = [venv_pip, "install", "--no-cache-dir"]
+    no_binary_args: list[str] = []
     if no_binary:
-        pip_args.extend(["--no-binary", ":all:"])
+        no_binary_args = ["--no-binary", ":all:"]
     elif build_env:
-        pip_args.extend(["--no-binary", pip_name])
-    pip_args.append(f"{pip_name}=={version}")
-    if extra_packages:
-        pip_args.extend(extra_packages)
+        no_binary_args = ["--no-binary", pip_name]
     pip_env: dict[str, str] | None = None
     if build_env:
         pip_env = {**safe_build_env(), **build_env}
+    # Phase 1: install the exact, already-vetted app.json pin. A site-level
+    # pip.conf (sys.prefix/pip.conf) outranks the user config and, set to an
+    # empty value, un-sets any configured dependency cooldown
+    # (global.uploaded-prior-to) for this one resolve. A freshly released
+    # pin must always install regardless of the cooldown's age.
+    with open(pip_conf, "w") as f:
+        f.write("[global]\nuploaded-prior-to =\n")
+    subprocess.run(
+        [
+            venv_pip,
+            "install",
+            "--no-cache-dir",
+            "--no-deps",
+            *no_binary_args,
+            f"{pip_name}=={version}",
+        ],
+        check=True,
+        env=pip_env,
+    )
+    # Phase 2: resolve dependencies and extra_packages (both unpinned).
+    # Removing the site override restores whatever cooldown the user has
+    # configured, so transitive dependencies are gated by it. The pin
+    # installed in phase 1 already satisfies its own requirement, so pip
+    # offers it as a candidate without needing a matching index link.
+    os.remove(pip_conf)
+    pip_args = [venv_pip, "install", "--no-cache-dir", *no_binary_args, f"{pip_name}=={version}"]
+    if extra_packages:
+        pip_args.extend(extra_packages)
     subprocess.run(pip_args, check=True, env=pip_env)
     _link_pip_binaries(
         egg_name=egg_name,
@@ -3201,13 +3219,10 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
-            # Overrides any user-configured dependency cooldown
-            # (exclude-newer in ~/.config/uv/uv.toml). This installs the
-            # extras pinned in koopa's own pyproject.toml, not a floating
-            # resolve, so the cooldown adds no safety value here and would
-            # only break installs of a recently released extra.
-            "--exclude-newer",
-            "false",
+            # No --exclude-newer override here: `syntactic` and `tqdm` in
+            # `optional-dependencies.extra` are unpinned, so they resolve
+            # under whatever dependency cooldown the user has configured
+            # (exclude-newer in ~/.config/uv/uv.toml).
             # uv bundles its own TLS cert store rather than consulting the OS
             # one. On networks where the OS store trusts a cert uv's bundled
             # store doesn't (observed against python.acidgenomics.com), uv
