@@ -10,6 +10,7 @@
 .vscode/
 /.claude/reports/
 /.claude/settings.local.json
+/.github/copilot/settings.local.json
 /app/
 /bin/
 /bootstrap/

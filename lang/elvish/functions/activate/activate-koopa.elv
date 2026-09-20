@@ -16,6 +16,7 @@ fn activate-koopa {
 
     export-env
     activate-ca-certificates
+    activate-copilot-cli
     activate-conda
     activate-fzf
     activate-direnv

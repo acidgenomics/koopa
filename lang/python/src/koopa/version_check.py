@@ -15,7 +15,6 @@ import urllib.request
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
-from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -545,13 +544,8 @@ def _check_github(owner: str, repo: str) -> str:
     return _sanitize_github_tag(tag, repo)
 
 
-# Matches the P14D dependency cooldown used elsewhere (pip's uploaded-prior-to,
-# uv's exclude-newer): a release must be at least this many days old to pin.
-_PYPI_COOLDOWN_DAYS = 14
-
-
-def _check_pypi(package: str, current: str = "") -> str:
-    """Return the newest stable PyPI release at least `_PYPI_COOLDOWN_DAYS` days old.
+def _check_pypi(package: str) -> str:
+    """Return the newest stable, non-yanked PyPI release.
 
     A pre-release (alpha, beta, rc, dev, ...) is never eligible, so it can
     never win `max()` over an older stable release. Without this, a package
@@ -559,17 +553,14 @@ def _check_pypi(package: str, current: str = "") -> str:
     latest version forever, even after the pin has already drifted onto a
     pre-release itself.
 
-    The currently pinned *stable* version is always treated as eligible,
-    regardless of its age. Cooldown only gates a *new* recommendation; it
-    must never make an already-adopted, genuinely-latest pin look "pinned
-    too high" just because it's recent.
+    No age-based cooldown is applied here: app.json pins track direct
+    application releases, while dependency age gates belong to the install
+    resolver.
 
     Parameters
     ----------
     package : str
         PyPI package name.
-    current : str, optional
-        Currently pinned version, always treated as cooldown-eligible.
 
     Returns
     -------
@@ -577,20 +568,11 @@ def _check_pypi(package: str, current: str = "") -> str:
         Newest eligible stable version string.
     """
     data = _http_get_json(f"https://pypi.org/pypi/{package}/json")
-    current_san = sanitize_version(current) if current else ""
-    cutoff = time.time() - _PYPI_COOLDOWN_DAYS * 86400
     eligible: list[str] = []
     for version, files in data.get("releases", {}).items():
         if _is_prerelease(version):
             continue
-        upload_times = [
-            datetime.fromisoformat(f["upload_time_iso_8601"]).timestamp()
-            for f in files
-            if f.get("upload_time_iso_8601") and not f.get("yanked", False)
-        ]
-        is_old_enough = bool(upload_times) and min(upload_times) <= cutoff
-        is_current = bool(current_san) and sanitize_version(version) == current_san
-        if is_old_enough or is_current:
+        if any(not f.get("yanked", False) for f in files):
             eligible.append(version)
     if eligible:
         return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
@@ -966,49 +948,26 @@ def _check_crates(crate: str) -> str:
     return data["crate"]["max_stable_version"]
 
 
-_RUBYGEMS_COOLDOWN_DAYS = 14
+def _check_rubygems(gem: str) -> str:
+    """Return the newest RubyGems release.
 
-
-def _check_rubygems(gem: str, current: str = "") -> str:
-    """Return the newest RubyGems release at least `_RUBYGEMS_COOLDOWN_DAYS` days old.
-
-    The currently pinned version is always treated as eligible, regardless of
-    its age. Cooldown only gates a *new* recommendation; it must never make an
-    already-adopted, genuinely-latest pin look "pinned too high" just because
-    it's recent.
+    No age-based cooldown is applied here: app.json pins track direct
+    application releases, while dependency age gates belong to the install
+    resolver.
 
     Parameters
     ----------
     gem : str
         RubyGems gem name.
-    current : str, optional
-        Currently pinned version, always treated as cooldown-eligible.
 
     Returns
     -------
     str
-        Newest eligible release version string.
+        Newest release version string.
     """
     data = _http_get_json(f"https://rubygems.org/api/v1/versions/{gem}.json")
-    current_san = sanitize_version(current) if current else ""
-    cutoff = time.time() - _RUBYGEMS_COOLDOWN_DAYS * 86400
-    eligible: list[str] = []
-    all_versions: list[str] = []
-    for release in data:
-        number = release.get("number")
-        if not number:
-            continue
-        all_versions.append(number)
-        created_at = release.get("created_at")
-        is_old_enough = bool(
-            created_at and datetime.fromisoformat(created_at).timestamp() <= cutoff
-        )
-        is_current = bool(current_san) and sanitize_version(number) == current_san
-        if is_old_enough or is_current:
-            eligible.append(number)
-    if eligible:
-        return max(eligible, key=lambda v: _version_key(sanitize_version(v)))
-    return max(all_versions, key=lambda v: _version_key(sanitize_version(v)))
+    versions = [release["number"] for release in data if release.get("number")]
+    return max(versions, key=lambda v: _version_key(sanitize_version(v)))
 
 
 def _check_metacpan(distribution: str) -> str:
@@ -1247,43 +1206,8 @@ class _AppCheckSpec:
     extra_fields_fn: Callable[[str], dict[str, Any]] | None = None
 
 
-def classify_app(name: str, info: dict) -> _AppCheckSpec | None:
+def classify_app(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
     """Classify an app into a version-check strategy.
-
-    Wraps `_classify_app_uncooled` so a "pypi" spec's check_fn always sees the
-    app's currently pinned version, regardless of which branch produced the
-    spec (a hardcoded `_SPECIAL_CASES` entry or a dynamically classified one).
-    Without this, `_check_pypi`'s cooldown can misreport an already-adopted,
-    genuinely-latest pin as "pinned too high" just because it's recent (the
-    same bug fixed for `_check_rubygems`, e.g. bashcov 4.0.0).
-
-    Parameters
-    ----------
-    name : str
-        Application name.
-    info : dict
-        App's entry from app.json.
-
-    Returns
-    -------
-    _AppCheckSpec | None
-        Version-check strategy for the app, or None if unsupported.
-    """
-    spec = _classify_app_uncooled(name, info)
-    if spec is not None and spec.source == "pypi":
-        current = info.get("version", "")
-        return _AppCheckSpec(
-            "pypi",
-            lambda fn=spec.check_fn, a=spec.args, c=current: fn(*a, current=c),
-            (),
-            batch_size=spec.batch_size,
-            extra_fields_fn=spec.extra_fields_fn,
-        )
-    return spec
-
-
-def _classify_app_uncooled(name: str, info: dict) -> _AppCheckSpec | None:  # noqa: PLR0911
-    """Classify an app into a version-check strategy, before the pypi cooldown wrap.
 
     Parameters
     ----------
@@ -2581,12 +2505,7 @@ def _classify_generic(  # noqa: PLR0911
     if source == "crates":
         return _AppCheckSpec("crates", _check_crates, (name,))
     if source == "rubygems":
-        current = info.get("version", "")
-        return _AppCheckSpec(
-            "rubygems",
-            lambda g=name, c=current: _check_rubygems(g, current=c),
-            (),
-        )
+        return _AppCheckSpec("rubygems", _check_rubygems, (name,))
     if source == "metacpan":
         cpan_path = _get_str(args, "cpan_path")
         if cpan_path:

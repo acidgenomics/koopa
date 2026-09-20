@@ -43,6 +43,7 @@ function __koopa_activate_koopa
     end
     _koopa_export_env
     _koopa_activate_ca_certificates
+    _koopa_activate_copilot_cli
     _koopa_activate_ruby
     _koopa_activate_julia
     _koopa_activate_python

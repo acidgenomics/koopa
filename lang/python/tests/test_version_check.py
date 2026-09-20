@@ -9,7 +9,6 @@ import os
 import ssl
 import subprocess
 import urllib.error
-from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -203,36 +202,20 @@ def test_is_retryable_value_error() -> None:
     assert _is_retryable_network_error(ValueError()) is False
 
 
-# ── _check_pypi (P14D dependency cooldown) ───────────────────────────────────
+# ── _check_pypi ──────────────────────────────────────────────────────────────
 
 
-def _pypi_file(days_old: int, *, yanked: bool = False) -> dict:
-    uploaded = datetime.now(UTC) - timedelta(days=days_old)
-    return {"upload_time_iso_8601": uploaded.isoformat(), "yanked": yanked}
+def _pypi_file(*, yanked: bool = False) -> dict:
+    return {"yanked": yanked}
 
 
-def test_check_pypi_skips_release_inside_cooldown(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A release younger than 14 days is skipped in favor of the next-newest one."""
+def test_check_pypi_returns_newest_stable_release(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A stable app release is eligible immediately. No age-based cooldown applies."""
     data = {
         "info": {"version": "2.0.0"},
         "releases": {
-            "1.0.0": [_pypi_file(days_old=30)],
-            "2.0.0": [_pypi_file(days_old=1)],
-        },
-    }
-    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
-    assert _check_pypi("example") == "1.0.0"
-
-
-def test_check_pypi_falls_back_when_all_releases_inside_cooldown(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """If every release is inside the cooldown, the newest one is still returned."""
-    data = {
-        "info": {"version": "2.0.0"},
-        "releases": {
-            "1.0.0": [_pypi_file(days_old=2)],
-            "2.0.0": [_pypi_file(days_old=1)],
+            "1.0.0": [_pypi_file()],
+            "2.0.0": [_pypi_file()],
         },
     }
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
@@ -244,32 +227,12 @@ def test_check_pypi_ignores_yanked_files(monkeypatch: pytest.MonkeyPatch) -> Non
     data = {
         "info": {"version": "2.0.0"},
         "releases": {
-            "1.0.0": [_pypi_file(days_old=30, yanked=True)],
-            "2.0.0": [_pypi_file(days_old=1)],
+            "1.0.0": [_pypi_file(yanked=True)],
+            "2.0.0": [_pypi_file()],
         },
     }
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
     assert _check_pypi("example") == "2.0.0"
-
-
-def test_check_pypi_keeps_pin_already_on_a_young_release(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """A recent release already pinned as `current` is never reported as too high.
-
-    Regression: mirrors the bashcov/RubyGems fix. Without whitelisting
-    `current`, a package pinned to a release younger than 14 days would fall
-    back to `data["info"]["version"]` and misreport the pin as "too high".
-    """
-    data = {
-        "info": {"version": "1.0.0"},
-        "releases": {
-            "1.0.0": [_pypi_file(days_old=30)],
-            "2.0.0": [_pypi_file(days_old=1)],
-        },
-    }
-    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
-    assert _check_pypi("example", current="2.0.0") == "2.0.0"
 
 
 def test_check_pypi_skips_prerelease_releases(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -282,10 +245,10 @@ def test_check_pypi_skips_prerelease_releases(monkeypatch: pytest.MonkeyPatch) -
     data = {
         "info": {"version": "1.0.0"},
         "releases": {
-            "1.0.0": [_pypi_file(days_old=30)],
-            "2.0.0a1": [_pypi_file(days_old=30)],
-            "2.0.0b1": [_pypi_file(days_old=30)],
-            "2.0.0b2": [_pypi_file(days_old=1)],
+            "1.0.0": [_pypi_file()],
+            "2.0.0a1": [_pypi_file()],
+            "2.0.0b1": [_pypi_file()],
+            "2.0.0b2": [_pypi_file()],
         },
     }
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
@@ -304,13 +267,13 @@ def test_check_pypi_ignores_a_current_pin_stuck_on_a_prerelease(
     data = {
         "info": {"version": "1.0.0"},
         "releases": {
-            "1.0.0": [_pypi_file(days_old=30)],
-            "2.0.0b1": [_pypi_file(days_old=30)],
-            "2.0.0b2": [_pypi_file(days_old=1)],
+            "1.0.0": [_pypi_file()],
+            "2.0.0b1": [_pypi_file()],
+            "2.0.0b2": [_pypi_file()],
         },
     }
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
-    assert _check_pypi("example", current="2.0.0b1") == "1.0.0"
+    assert _check_pypi("example") == "1.0.0"
 
 
 # ── _check_npm (deprecated-version skip) ─────────────────────────────────────
@@ -357,51 +320,17 @@ def test_check_npm_falls_back_when_all_versions_deprecated(
     assert _check_npm("example") == "2.0.0"
 
 
-# ── _check_rubygems (14-day dependency cooldown) ─────────────────────────────
+# ── _check_rubygems ───────────────────────────────────────────────────────────
 
 
-def _gem_release(number: str, days_old: int) -> dict:
-    created_at = datetime.now(UTC) - timedelta(days=days_old)
-    return {"number": number, "created_at": created_at.isoformat()}
-
-
-def test_check_rubygems_skips_release_inside_cooldown(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A release younger than 14 days is skipped in favor of the next-newest one."""
+def test_check_rubygems_returns_newest_release(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The newest release wins. No age-based cooldown gates an app's own pin."""
     data = [
-        _gem_release("2.0.0", days_old=1),
-        _gem_release("1.0.0", days_old=30),
-    ]
-    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
-    assert _check_rubygems("example") == "1.0.0"
-
-
-def test_check_rubygems_falls_back_when_all_releases_inside_cooldown(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """If every release is inside the cooldown, the newest one is still returned."""
-    data = [
-        _gem_release("2.0.0", days_old=1),
-        _gem_release("1.0.0", days_old=2),
+        {"number": "2.0.0"},
+        {"number": "1.0.0"},
     ]
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
     assert _check_rubygems("example") == "2.0.0"
-
-
-def test_check_rubygems_keeps_pin_already_on_a_young_release(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """A recent release already pinned as `current` is never reported as too high.
-
-    Regression: bashcov 4.0.0 (published 8 days before this test was written)
-    was already the adopted pin. Without whitelisting `current`, the cooldown
-    fell back to 3.3.0 and the checker misreported the pin as "too high".
-    """
-    data = [
-        _gem_release("4.0.0", days_old=8),
-        _gem_release("3.3.0", days_old=30),
-    ]
-    monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
-    assert _check_rubygems("example", current="4.0.0") == "4.0.0"
 
 
 # ── _fetch_first_reachable (dead-host circuit breaker) ──────────────────────
@@ -967,9 +896,7 @@ def test_classify_app_registry_url_fallback_for_bespoke_installer() -> None:
     spec = classify_app("playwright", info)
     assert spec is not None
     assert spec.source == "pypi"
-    # classify_app wraps the pypi check_fn to bind the current pin (see the
-    # cooldown fix below), so args is empty; behavior is verified functionally.
-    assert spec.args == ()
+    assert spec.args == ("playwright",)
 
 
 def test_classify_app_python_plugin_uses_pypi_not_monorepo_github() -> None:
@@ -993,28 +920,25 @@ def test_classify_app_python_plugin_uses_pypi_not_monorepo_github() -> None:
     assert spec.source == "pypi"
 
 
-def test_classify_app_pypi_wrap_passes_current_pin_to_check_fn(
+def test_classify_app_pypi_special_case_calls_check_fn_unwrapped(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """classify_app binds the current pin into a pypi spec's check_fn.
+    """A hardcoded `_SPECIAL_CASES` pypi entry (e.g. "uv") calls `_check_pypi` directly.
 
-    Regression guard: this covers both a dynamically classified app and a
-    hardcoded `_SPECIAL_CASES` entry (e.g. "uv"), since a naive fix at the
-    `_classify_generic`/`_classify_by_registry_url` call sites alone would
-    miss every hardcoded pypi entry in `_SPECIAL_CASES`.
+    `classify_app` applies no cooldown wrap: it returns the spec as classified,
+    so `check_fn(*args)` is a plain `_check_pypi(package)` call.
     """
     data = {
         "info": {"version": "1.0.0"},
         "releases": {
-            "2.0.5": [{"upload_time_iso_8601": datetime.now(UTC).isoformat(), "yanked": False}],
+            "2.0.5": [{"yanked": False}],
         },
     }
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
     spec = classify_app("uv", {"version": "2.0.5"})
     assert spec is not None
     assert spec.source == "pypi"
-    # 2.0.5 is younger than the cooldown, but it's the current pin, so it must
-    # be returned as-is, not the stale `data["info"]["version"]` fallback.
+    assert spec.args == ("uv",)
     assert spec.check_fn(*spec.args) == "2.0.5"
 
 

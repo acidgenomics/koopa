@@ -180,6 +180,7 @@ __koopa_activate_koopa() {
     _koopa_export_manpager || return 1
     _koopa_export_pager || return 1
     _koopa_activate_ca_certificates || return 1
+    _koopa_activate_copilot_cli || return 1
     _koopa_activate_ruby || return 1
     _koopa_activate_julia || return 1
     _koopa_activate_python || return 1

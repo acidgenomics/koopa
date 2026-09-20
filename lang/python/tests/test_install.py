@@ -1025,3 +1025,86 @@ def test_run_install_plan_marks_non_retryable_failure() -> None:
 
     assert exc_info.value.failed_apps == ["pyright"]
     assert exc_info.value.non_retryable == ["pyright"]
+
+
+def test_install_python_package_two_phase_pip_install(tmp_path: Path) -> None:
+    """The app.json pin installs unpinned-by-age; its dependencies do not.
+
+    Phase 1 installs the exact pin with `--no-deps` while a site pip.conf
+    suppresses any configured dependency cooldown. Phase 2 removes that
+    file before resolving dependencies and `extra_packages`, so a
+    user-configured cooldown (global.uploaded-prior-to) governs them.
+    """
+    import os
+
+    from koopa.install import install_python_package
+
+    prefix = tmp_path / "prefix"
+    libexec = str(prefix / "libexec")
+    pip_conf = os.path.join(libexec, "pip.conf")
+    calls: list[list[str]] = []
+    pip_conf_present_at_call: list[bool] = []
+
+    def fake_run(args, **_kwargs):  # noqa: ANN001, ANN202
+        calls.append(args)
+        if args[1:3] == ["-m", "venv"]:
+            os.makedirs(os.path.join(args[3], "bin"), exist_ok=True)
+        if args[1:2] == ["install"]:
+            pip_conf_present_at_call.append(os.path.isfile(pip_conf))
+        return None
+
+    with (
+        patch("koopa.install.subprocess.run", side_effect=fake_run),
+        patch("koopa.install._link_pip_binaries"),
+    ):
+        install_python_package(
+            pip_name="example",
+            egg_name="example",
+            version="2.0.0",
+            prefix=str(prefix),
+            extra_packages=["extra-dep"],
+        )
+
+    pip_calls = [c for c in calls if c[1:2] == ["install"]]
+    assert len(pip_calls) == 2
+    phase1, phase2 = pip_calls
+    assert "--no-deps" in phase1
+    assert "example==2.0.0" in phase1
+    assert "extra-dep" not in phase1
+    assert "--no-deps" not in phase2
+    assert "example==2.0.0" in phase2
+    assert "extra-dep" in phase2
+    assert pip_conf_present_at_call == [True, False]
+    assert not os.path.isfile(pip_conf)
+
+
+def test_update_venv_uv_extras_no_exclude_newer_override(tmp_path: Path) -> None:
+    """koopa's own venv extras install carries no `--exclude-newer` override.
+
+    A configured dependency cooldown (exclude-newer in ~/.config/uv/uv.toml)
+    must govern the unpinned `syntactic` and `tqdm` extras, not be overridden.
+    """
+    from koopa.install import _update_venv
+
+    prefix = tmp_path
+    (prefix / ".python-version").write_text("3.14\n")
+    venv_dir = prefix / ".venv"
+    (venv_dir / "bin").mkdir(parents=True)
+    (venv_dir / "bin" / "python3").touch()
+    (venv_dir / "pyvenv.cfg").write_text("version = 3.14.0\n")
+
+    captured: list[list[str]] = []
+
+    def fake_run(args, **_kwargs):  # noqa: ANN001, ANN202
+        captured.append(args)
+        return None
+
+    with (
+        patch("koopa.install.is_owner", return_value=True),
+        patch("koopa.install.shutil.which", return_value="/usr/bin/uv"),
+        patch("koopa.install.subprocess.run", side_effect=fake_run),
+    ):
+        _update_venv(str(prefix))
+
+    assert len(captured) == 1
+    assert "--exclude-newer" not in captured[0]

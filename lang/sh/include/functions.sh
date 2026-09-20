@@ -373,6 +373,12 @@ _koopa_activate_conda() {
     return 0
 }
 
+_koopa_activate_copilot_cli() {
+    [ -x "${KOOPA_PREFIX:?}/bin/copilot" ] || return 0
+    export COPILOT_AUTO_UPDATE=false
+    return 0
+}
+
 _koopa_activate_coreutils_aliases() {
     __kvar_bin_prefix="${KOOPA_PREFIX:?}/bin"
     if [ -x "${__kvar_bin_prefix}/gcp" ]
@@ -801,6 +807,7 @@ _koopa_activate_today_bucket() {
         return 0
     fi
     __kvar_bucket_dir="$(_koopa_realpath "$__kvar_bucket_dir")"
+    export KOOPA_BUCKET="$__kvar_bucket_dir"
     __kvar_today_subdirs="$(date '+%Y/%m/%d')"
     mkdir -p \
         "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \

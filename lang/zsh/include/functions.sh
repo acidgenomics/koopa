@@ -431,6 +431,12 @@ _koopa_activate_conda() {
     return 0
 }
 
+_koopa_activate_copilot_cli() {
+    [[ -x "${KOOPA_PREFIX:?}/bin/copilot" ]] || return 0
+    export COPILOT_AUTO_UPDATE=false
+    return 0
+}
+
 _koopa_activate_coreutils_aliases() {
     local bin_prefix
     bin_prefix="${KOOPA_PREFIX:?}/bin"
@@ -870,6 +876,7 @@ _koopa_activate_today_bucket() {
         return 0
     fi
     bucket_dir="$(_koopa_realpath "$bucket_dir")"
+    export KOOPA_BUCKET="$bucket_dir"
     local today_subdirs
     today_subdirs="$(date '+%Y/%m/%d')"
     mkdir -p \
