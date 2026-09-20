@@ -1,2 +1,4 @@
 ** TODO gmp version check error
     gmp: check failed (network error)
+** TODO poetry app version is lagging behind too much
+** TODO difft is lagging behindm v0.71.0 is current
