@@ -1,10 +1,4 @@
-** DONE gmp version check error
-   Fresh check passes:
-   =koopa develop check-app-versions --reset-cache --no-update gmp=
-** DONE poetry app version is lagging behind too much
-   Fixed PyPI app version checks to track newest stable releases immediately;
-   the dependency cooldown belongs to install resolution, not app pinning.
-   Updated =poetry= from =2.4.3= to =2.5.1=.
+** TODO Configuration of Ghostty browser tabs seems to be messed up on Golden Gate.
 ** TODO difftastic is lagging behind; v0.71.0 is current
    koopa tracks the conda-forge package for =difftastic=, where the latest
    available version is still =0.70.0=. Upstream GitHub has =0.71.0=, so this
