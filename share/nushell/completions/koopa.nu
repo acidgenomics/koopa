@@ -92,7 +92,7 @@ def koopa_app_star_cmds [] { ["align", "index"] }
 
 def koopa_app_star_align_cmds [] { ["paired-end", "single-end"] }
 
-def koopa_app_sys_cmds [] { ["linker-info"] }
+def koopa_app_sys_cmds [] { ["linker-check", "linker-info"] }
 
 def koopa_app_wget_cmds [] { ["recursive"] }
 

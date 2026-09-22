@@ -1231,7 +1231,10 @@ _koopa_complete() {
                             )
                             ;;
                         'sys')
-                            args+=('linker-info')
+                            args+=(
+                                'linker-check'
+                                'linker-info'
+                            )
                             ;;
                         'wget')
                             args+=('recursive')

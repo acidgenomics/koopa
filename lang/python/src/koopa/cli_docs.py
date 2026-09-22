@@ -500,6 +500,7 @@ APP_DESCRIPTIONS: dict[str, str] = {
     # ssh
     "ssh-generate-key": "Generate one or more SSH key pairs.",
     # sys
+    "sys-linker-check": "Audit installed apps for Mach-O linkage problems.",
     "sys-linker-info": "Show shared library dependencies (ldd on Linux, otool -L on macOS).",
     # wget
     "wget-recursive": "Recursively mirror a password-protected site with wget.",

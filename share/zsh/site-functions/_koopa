@@ -606,6 +606,7 @@ _koopa_app_star_align() {
 _koopa_app_sys() {
     local -a cmds
     cmds=(
+        'linker-check'
         'linker-info'
     )
     _describe -t commands 'sys command' cmds

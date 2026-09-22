@@ -217,7 +217,8 @@ complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcomman
 complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from star; and __fish_seen_subcommand_from align' -a 'single-end'
 complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from star; and not __fish_seen_subcommand_from align index' -a 'index'
 # app sys
-complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from sys; and not __fish_seen_subcommand_from linker-info' -a 'linker-info'
+complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from sys; and not __fish_seen_subcommand_from linker-check linker-info' -a 'linker-check'
+complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from sys; and not __fish_seen_subcommand_from linker-check linker-info' -a 'linker-info'
 # app wget
 complete -c koopa -n '__fish_seen_subcommand_from app; and __fish_seen_subcommand_from wget; and not __fish_seen_subcommand_from recursive' -a 'recursive'
 

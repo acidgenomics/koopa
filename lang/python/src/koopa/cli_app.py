@@ -201,6 +201,7 @@ _APP_TREE: dict[str, Any] = {
         "generate-key": "ssh-generate-key",
     },
     "sys": {
+        "linker-check": "sys-linker-check",
         "linker-info": "sys-linker-info",
     },
     "star": {
@@ -2575,6 +2576,26 @@ def _handle_sys_linker_info(args: list[str]) -> None:
         subprocess.run(cmd_fn(path), check=True)  # ty: ignore[no-matching-overload]
 
 
+def _handle_sys_linker_check(args: list[str]) -> None:
+    import argparse
+
+    from koopa.system import is_macos
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app sys linker-check",
+        description="Audit installed apps for Mach-O linkage problems.",
+    )
+    parser.add_argument("apps", nargs="*", help="limit the audit to these apps")
+    parsed = parser.parse_args(args)
+    if not is_macos():
+        msg = "'koopa app sys linker-check' is currently macOS-only."
+        raise RuntimeError(msg)
+    from koopa.linker import linker_check
+
+    if not linker_check(parsed.apps or None):
+        sys.exit(1)
+
+
 def _handle_wget_recursive(args: list[str]) -> None:
     import argparse
 
@@ -2622,6 +2643,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
     "photos-rename-with-exiftool": _handle_photos_rename_with_exiftool,
     "wget-recursive": _handle_wget_recursive,
+    "sys-linker-check": _handle_sys_linker_check,
     "sys-linker-info": _handle_sys_linker_info,
     # aws
     "aws-batch-fetch-and-run": _handle_aws_batch_fetch_and_run,

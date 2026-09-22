@@ -273,7 +273,7 @@ set edit:completion:arg-completer[koopa] = {|@args|
             } elif (eq $args[2] 'star') {
                 put align index
             } elif (eq $args[2] 'sys') {
-                put linker-info
+                put linker-check linker-info
             } elif (eq $args[2] 'wget') {
                 put recursive
             }
