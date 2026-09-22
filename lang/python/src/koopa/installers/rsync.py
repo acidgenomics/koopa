@@ -31,6 +31,10 @@ def main(
     download_extract_cd()
     conf_args = [
         "--disable-debug",
+        # rsync 3.5.1 added IDN support and now probes idn2.h by default,
+        # aborting configure entirely when it is absent. No koopa app
+        # provides libidn2 for rsync's default build, so disable it.
+        "--disable-idn",
         "--enable-ipv6",
         "--enable-lz4",
         "--enable-openssl",
