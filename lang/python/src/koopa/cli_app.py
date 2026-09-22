@@ -2579,17 +2579,12 @@ def _handle_sys_linker_info(args: list[str]) -> None:
 def _handle_sys_linker_check(args: list[str]) -> None:
     import argparse
 
-    from koopa.system import is_macos
-
     parser = argparse.ArgumentParser(
         prog="koopa app sys linker-check",
         description="Audit installed apps for Mach-O linkage problems.",
     )
     parser.add_argument("apps", nargs="*", help="limit the audit to these apps")
     parsed = parser.parse_args(args)
-    if not is_macos():
-        msg = "'koopa app sys linker-check' is currently macOS-only."
-        raise RuntimeError(msg)
     from koopa.linker import linker_check
 
     if not linker_check(parsed.apps or None):

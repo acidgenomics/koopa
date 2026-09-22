@@ -644,10 +644,10 @@ def test_sys_linker_check_exits_1_on_findings() -> None:
     assert exc_info.value.code == 1
 
 
-def test_sys_linker_check_raises_on_non_macos() -> None:
-    """The handler raises on a non-macOS platform."""
+def test_sys_linker_check_runs_on_non_macos_too() -> None:
+    """The handler carries no platform gate of its own; linker_check() dispatches by platform."""
     with (
-        patch("koopa.system.is_macos", return_value=False),
-        pytest.raises(RuntimeError, match="macOS-only"),
+        patch("koopa.linker.linker_check", return_value=True) as mock_linker_check,
     ):
         _PYTHON_HANDLERS["sys-linker-check"]([])
+    mock_linker_check.assert_called_once_with(None)
