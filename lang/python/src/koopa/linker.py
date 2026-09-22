@@ -59,6 +59,15 @@ _LINUX_EXEMPT_PREFIXES = ("/lib", "/lib64", "/usr/lib", "/usr/lib64")
 _LDD_ADDRESS_SUFFIX_RE = re.compile(r" \(0x[0-9a-fA-F]+\)$")
 _LOADER_ENV_VARS = ("LD_LIBRARY_PATH", "LD_PRELOAD", "LD_AUDIT")
 _MACHO_SUBDIRS = ("bin", "libexec/bin", "lib", "lib64", "libexec/lib")
+_PKGCONFIG_SUBDIRS = ("lib/pkgconfig", "lib64/pkgconfig", "share/pkgconfig")
+_PC_BUILD_KEYS = (
+    "Cflags:",
+    "Cflags.private:",
+    "Libs:",
+    "Libs.private:",
+    "Requires:",
+    "Requires.private:",
+)
 _CHECK_LABELS = {
     "dangling": "dangling absolute dependency",
     "rpath": "unresolvable dependency",
@@ -253,7 +262,15 @@ def expand_at_path(entry: str, binary_dir: str) -> str:
 
 
 def parse_pc_koopa_paths(text: str, app_root: str) -> list[str]:
-    """Extract koopa app-prefix paths embedded in a pkg-config file.
+    """Extract koopa app-prefix paths that actually feed a build.
+
+    Scoped to ``Cflags``/``Libs``/``Requires`` (and their ``.private``
+    variants) — the only keys a real ``pkg-config --cflags``/``--libs``
+    call ever reads. A vendored conda package's ``.pc`` file routinely
+    carries its own custom runtime-only variables (a D-Bus socket address,
+    a CA-bundle search path, an X11 app-defaults directory) that happen to
+    embed a koopa app-prefix path and happen not to exist yet — inert
+    metadata no build consumes, not a linkage problem.
 
     Parameters
     ----------
@@ -267,15 +284,18 @@ def parse_pc_koopa_paths(text: str, app_root: str) -> list[str]:
     Returns
     -------
     list[str]
-        De-duplicated paths found under *app_root*, in first-seen order,
-        with trailing punctuation stripped.
+        De-duplicated paths found under *app_root* on a build-relevant
+        line, in first-seen order, with trailing punctuation stripped.
     """
     pattern = re.compile(re.escape(app_root) + r"/[^\s:'\"<>()]+")
     seen: list[str] = []
-    for match in pattern.finditer(text):
-        path = match.group(0).rstrip("/,;")
-        if path not in seen:
-            seen.append(path)
+    for line in text.splitlines():
+        if not line.startswith(_PC_BUILD_KEYS):
+            continue
+        for match in pattern.finditer(line):
+            path = match.group(0).rstrip("/,;")
+            if path not in seen:
+                seen.append(path)
     return seen
 
 
@@ -687,6 +707,13 @@ def _macho_candidates(prefixes: dict[str, str]) -> tuple[list[str], dict[str, st
 def _pkgconfig_candidates(prefixes: dict[str, str]) -> list[tuple[str, str]]:
     """Enumerate pkg-config files under each app's current prefix.
 
+    Deliberately not ``build._find_pc_files()``, which recurses the whole
+    prefix tree: that reaches e.g. a conda app's ``libexec/lib/pkgconfig``,
+    a directory no real build's ``PKG_CONFIG_PATH`` ever includes (see
+    ``build._add_pkg_config_paths()``, which only ever adds the three
+    directories below). Scanning it produced false-positive dangling-path
+    findings for vendored ``.pc`` files no build would ever read.
+
     Parameters
     ----------
     prefixes : dict[str, str]
@@ -699,12 +726,19 @@ def _pkgconfig_candidates(prefixes: dict[str, str]) -> list[tuple[str, str]]:
         ``lib/pkgconfig``, ``lib64/pkgconfig``, and ``share/pkgconfig``
         directories that ``PKG_CONFIG_PATH`` actually searches.
     """
-    from koopa.build import _find_pc_files
-
     pairs: list[tuple[str, str]] = []
     for name, prefix in prefixes.items():
-        for pc_path in sorted(_find_pc_files(prefix)):
-            pairs.append((name, pc_path))
+        for sub in _PKGCONFIG_SUBDIRS:
+            directory = os.path.join(prefix, sub)
+            if not os.path.isdir(directory):
+                continue
+            try:
+                entries = sorted(os.listdir(directory))
+            except OSError:
+                continue
+            for entry in entries:
+                if entry.endswith(".pc"):
+                    pairs.append((name, os.path.join(directory, entry)))
     return pairs
 
 

@@ -112,7 +112,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "neovim": f"{_M}.neovim",
     "nextflow": f"{_M}._conda",
     "node": f"{_M}._conda",
-    "nushell": f"{_M}._conda",
+    "nushell": f"{_M}.nushell",
     "onefetch": f"{_M}._conda",
     "ouch": f"{_M}._conda",
     "pandoc": f"{_M}._conda",

@@ -368,12 +368,11 @@ def test_audit_macho_macos_dedupes_across_architectures() -> None:
 
 
 def test_parse_pc_koopa_paths_extracts_and_dedupes() -> None:
-    """-L/-I koopa paths are extracted; ${libdir} and trailing punctuation are handled."""
+    """Cflags/Libs koopa paths are extracted, deduped, trailing punctuation stripped."""
     text = (
         "libdir=${prefix}/lib\n"
         "Cflags: -I/koopa/app/foo/1.0/include\n"
-        "Libs: -L/koopa/app/foo/1.0/lib -L/koopa/app/foo/1.0/lib\n"
-        'extra="/koopa/app/foo/1.0/lib",\n'
+        "Libs: -L/koopa/app/foo/1.0/lib -L/koopa/app/foo/1.0/lib,\n"
     )
     paths = parse_pc_koopa_paths(text, "/koopa/app")
     assert paths == ["/koopa/app/foo/1.0/include", "/koopa/app/foo/1.0/lib"]
@@ -382,6 +381,20 @@ def test_parse_pc_koopa_paths_extracts_and_dedupes() -> None:
 def test_parse_pc_koopa_paths_ignores_unexpanded_libdir() -> None:
     """An unexpanded ${libdir} reference never starts with the literal app_root."""
     text = "Libs: -L${libdir}\n"
+    assert parse_pc_koopa_paths(text, "/koopa/app") == []
+
+
+def test_parse_pc_koopa_paths_ignores_non_build_lines() -> None:
+    """A custom runtime variable outside Cflags/Libs/Requires is ignored.
+
+    Regression test: a vendored conda .pc file's own custom variable (a
+    D-Bus socket address, here) can embed a koopa app-prefix path that
+    legitimately doesn't exist yet without that being a linkage problem,
+    since no pkg-config --cflags/--libs call ever reads it.
+    """
+    text = (
+        "system_bus_default_address=unix:path=/koopa/app/dbus/1.0/var/run/dbus/system_bus_socket\n"
+    )
     assert parse_pc_koopa_paths(text, "/koopa/app") == []
 
 

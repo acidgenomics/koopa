@@ -168,9 +168,41 @@ def _install_from_uv(*, version: str, prefix: str, env: BuildEnv) -> None:
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
             shutil.copy2(src, dst)
+    if sys.platform == "darwin":
+        _fix_uv_dylib_install_name(prefix, maj_min_ver)
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     _check_python_install(python)
     _create_unversioned_symlinks(prefix)
+
+
+def _fix_uv_dylib_install_name(prefix: str, maj_min_ver: str) -> None:
+    """Rewrite libpython's install name from relative to absolute.
+
+    ``uv python install --install-dir uv`` is run from a throwaway temp
+    directory with a relative ``--install-dir``, so ``uv`` stamps that
+    literal relative string into ``LC_ID_DYLIB``. The dylib still loads
+    today, purely by luck of whatever the process's cwd happens to be; any
+    binary later linked against it captures the same broken relative path.
+    ``install_name_tool`` invalidates the ad-hoc code signature, so a
+    ``codesign`` re-sign follows it.
+
+    Parameters
+    ----------
+    prefix : str
+        Installation prefix directory.
+    maj_min_ver : str
+        Major.minor Python version (e.g. ``"3.14"``).
+    """
+    install_name_tool = shutil.which("install_name_tool")
+    if install_name_tool is None:
+        return
+    dylib = os.path.join(prefix, "lib", f"libpython{maj_min_ver}.dylib")
+    if not os.path.isfile(dylib):
+        return
+    subprocess.run([install_name_tool, "-id", dylib, dylib], check=True)
+    codesign = shutil.which("codesign")
+    if codesign is not None:
+        subprocess.run([codesign, "--sign", "-", "--force", dylib], check=True)
 
 
 def _check_python_install(python: str) -> None:

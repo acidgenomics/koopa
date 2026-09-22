@@ -6184,6 +6184,7 @@
     "date": "2026-05-02",
     "default": false,
     "description": "C library for correct decimal floating point",
+    "revision": 1,
     "src_url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-{version}.tar.gz",
     "type": "library",
     "url": [
@@ -6652,6 +6653,7 @@
     "default": false,
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/nushell/nushell/"
@@ -7792,6 +7794,7 @@
     "man1": [
       "python3.10.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -7853,6 +7856,7 @@
     "man1": [
       "python3.11.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "cli",
     "url": [
@@ -7914,6 +7918,7 @@
     "man1": [
       "python3.12.1"
     ],
+    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "cli",
     "url": [
@@ -7975,7 +7980,7 @@
     "man1": [
       "python3.13.1"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
@@ -8049,7 +8054,7 @@
       "python3.1",
       "python3.14.1"
     ],
-    "revision": 1,
+    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
