@@ -1654,6 +1654,23 @@
     ],
     "version": "26.7.13.12"
   },
+  "cloc": {
+    "bin": [
+      "cloc"
+    ],
+    "category": "Terminal",
+    "date": "2026-09-22",
+    "default": true,
+    "dependencies": [
+      "perl"
+    ],
+    "description": "count lines of code across many programming languages",
+    "type": "cli",
+    "url": [
+      "https://github.com/AlDanial/cloc/"
+    ],
+    "version": "2.10"
+  },
   "cloud-sql-proxy": {
     "bin": [
       "cloud-sql-proxy"
@@ -8777,6 +8794,23 @@
     ],
     "version": "1.12.4"
   },
+  "scc": {
+    "bin": [
+      "scc"
+    ],
+    "build_dependencies": [
+      "go"
+    ],
+    "category": "Terminal",
+    "date": "2026-09-22",
+    "default": true,
+    "description": "fast source code line counter with complexity estimation",
+    "type": "cli",
+    "url": [
+      "https://github.com/boyter/scc/"
+    ],
+    "version": "4.1.0"
+  },
   "scons": {
     "category": "Build",
     "date": "2026-08-27",
@@ -9682,7 +9716,7 @@
     "category": "Terminal",
     "conda_channel": "conda-forge",
     "date": "2026-09-13",
-    "default": false,
+    "default": true,
     "description": "count lines of code quickly",
     "installer": "conda-package",
     "type": "cli",
