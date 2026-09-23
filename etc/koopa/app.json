@@ -269,7 +269,7 @@
       "pkg-config"
     ],
     "category": "Container",
-    "date": "2026-07-23",
+    "date": "2026-09-22",
     "default": false,
     "description": "container runtime for HPC environments",
     "installer_platform": "linux",
@@ -282,7 +282,7 @@
     "url": [
       "https://github.com/apptainer/apptainer/"
     ],
-    "version": "1.5.3"
+    "version": "1.5.4"
   },
   "apr": {
     "build_dependencies": [
@@ -366,7 +366,7 @@
     "url": [
       "https://github.com/asdf-vm/asdf/"
     ],
-    "version": "0.20.1"
+    "version": "0.20.2"
   },
   "aspell": {
     "bin": [
@@ -1599,7 +1599,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-09-19",
+    "date": "2026-09-22",
     "default": true,
     "dependencies": [
       "node"
@@ -1613,7 +1613,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.278"
+    "version": "2.1.280"
   },
   "claude-replay": {
     "bin": [
@@ -1652,7 +1652,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.9.1.1629"
+    "version": "26.9.2.8"
   },
   "cloc": {
     "bin": [
@@ -1833,7 +1833,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.88-0"
+    "version": "1.0.89-0"
   },
   "coreutils": {
     "bin": [
@@ -2824,7 +2824,7 @@
       "xz"
     ],
     "category": "Library",
-    "date": "2026-09-02",
+    "date": "2026-09-22",
     "default": false,
     "description": "fast stream-oriented XML parser library",
     "src_url": "https://github.com/libexpat/libexpat/releases/download/R_{version_underscore}/expat-{version}.tar.xz",
@@ -2832,7 +2832,7 @@
     "url": [
       "https://libexpat.github.io/"
     ],
-    "version": "2.8.4"
+    "version": "2.8.5"
   },
   "eza": {
     "bin": [
@@ -3048,7 +3048,7 @@
       "flake8"
     ],
     "category": "Python",
-    "date": "2026-01-02",
+    "date": "2026-09-22",
     "default": false,
     "dependencies": [
       "python"
@@ -3061,7 +3061,7 @@
       "https://flake8.pycqa.org/",
       "https://github.com/PyCQA/flake8/"
     ],
-    "version": "7.3.0"
+    "version": "7.4.0"
   },
   "flex": {
     "build_dependencies": [
@@ -3735,7 +3735,7 @@
       "sed"
     ],
     "category": "Miscellaneous",
-    "date": "2026-09-02",
+    "date": "2026-09-22",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3760,7 +3760,7 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "2.5.22"
+    "version": "2.5.23"
   },
   "gnutls": {
     "build_dependencies": [
@@ -6046,7 +6046,7 @@
       "meson"
     ],
     "category": "Build",
-    "date": "2026-08-10",
+    "date": "2026-09-22",
     "default": true,
     "dependencies": [
       "python"
@@ -6059,7 +6059,7 @@
       "https://github.com/mesonbuild/meson/",
       "https://pypi.org/project/meson/"
     ],
-    "version": "1.12.0"
+    "version": "1.12.1"
   },
   "miller": {
     "bin": [
@@ -7190,7 +7190,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.17.5"
+    "version": "1.17.6"
   },
   "pixi": {
     "bin": [
@@ -7508,7 +7508,7 @@
       "pycodestyle"
     ],
     "category": "Python",
-    "date": "2024-12-30",
+    "date": "2026-09-22",
     "default": false,
     "dependencies": [
       "python"
@@ -7520,7 +7520,7 @@
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
     ],
-    "version": "2.14.0"
+    "version": "2.15.0"
   },
   "pyenv": {
     "bin": [
@@ -7548,7 +7548,7 @@
       "pyflakes"
     ],
     "category": "Python",
-    "date": "2025-08-24",
+    "date": "2026-09-22",
     "default": true,
     "dependencies": [
       "python"
@@ -7560,7 +7560,7 @@
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
     ],
-    "version": "3.4.0"
+    "version": "4.0.0"
   },
   "pygments": {
     "bin": [
@@ -9984,14 +9984,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-09-20",
+    "date": "2026-09-22",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.12.17"
+    "version": "0.12.18"
   },
   "valkey": {
     "bin": [
