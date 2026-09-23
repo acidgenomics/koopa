@@ -1,7 +1,5 @@
 """Install rsync."""
 
-import sys
-
 from koopa.build import make_build
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 
@@ -31,16 +29,17 @@ def main(
     download_extract_cd()
     conf_args = [
         "--disable-debug",
+        # rsync 3.5.1 added IDN support and now probes idn2.h by default,
+        # aborting configure entirely when it is absent. No koopa app
+        # provides libidn2 for rsync's default build, so disable it.
+        "--disable-idn",
         "--enable-ipv6",
         "--enable-lz4",
         "--enable-openssl",
         "--enable-xxhash",
+        "--enable-zstd",
         "--with-included-popt=no",
         "--with-included-zlib=no",
         f"--prefix={prefix}",
     ]
-    if sys.platform == "darwin":
-        conf_args.append("--disable-zstd")
-    else:
-        conf_args.append("--enable-zstd")
     make_build(conf_args=conf_args, env=env)

@@ -1,5 +1,21 @@
-** TODO Configuration of Ghostty browser tabs seems to be messed up on Golden Gate.
+** DONE Configuration of Ghostty browser tabs seems to be messed up on Golden Gate.
+   Root cause: macOS 27 renamed the AppKit view "NSTitlebarAccessoryClipView"
+   to "NSTitlebarAccessoryContainerView", so Ghostty's "macos-titlebar-style
+   = tabs" layout code returns early. Fixed upstream in PR
+   ghostty-org/ghostty#13069, not yet in a stable release (stable is 1.3.1).
+   Tracking: https://github.com/ghostty-org/ghostty/issues/13001 (pinned
+   meta) and https://github.com/ghostty-org/ghostty/issues/13070 (open).
+   Worked around by version-gating "macos-titlebar-style" to "transparent"
+   on macOS 27+ in opt/dotfiles/chezmoi/dot_config/ghostty/config.tmpl.
+   Revert once #13069 ships stable AND issue #14103 (grey tab strip,
+   ignores theme color even on tip) closes.
 ** TODO difftastic is lagging behind; v0.71.0 is current
    koopa tracks the conda-forge package for =difftastic=, where the latest
    available version is still =0.70.0=. Upstream GitHub has =0.71.0=, so this
    remains blocked until conda-forge updates or we switch installer strategy.
+** TODO Seeing double update message for homebrew cask
+    ==> Updating Homebrew...
+    Updated 2 taps (homebrew/core and homebrew/cask).
+    9 outdated casks: antigravity, claude, cursor, dbeaver-community, firefox, google-chrome, netnewswire, temurin, vlc
+    ==> Would reinstall 9 casks:
+    antigravity claude cursor dbeaver-community firefox google-chrome netnewswire temurin vlc

@@ -975,6 +975,11 @@ Build a STAR genome index.
 
 Low-level system inspection utilities.
 
+(koopa-app-sys-linker-check)=
+### `app sys linker-check`
+
+Audit installed apps for Mach-O linkage problems.
+
 (koopa-app-sys-linker-info)=
 ### `app sys linker-info`
 

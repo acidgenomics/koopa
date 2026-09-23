@@ -230,6 +230,51 @@ def _r_quoted(value: str) -> str:
     return f'"{escaped}"'
 
 
+def _check_no_home_dir_leak(docs_dir: Path) -> None:
+    """Abort if the operator's home directory path is baked into a generated file.
+
+    An R example that prints an absolute path (e.g. ``getwd()``,
+    ``Sys.getenv("PATH")``, or a ``BiocFileCache`` cache path) gets captured
+    verbatim by pkgdown into rendered HTML/Markdown and ``search.json``. This
+    is a deterministic backstop for that class of leak, run just before the
+    ``docs/`` tree is synced to S3. ``docs_dir`` is built from a throwaway
+    copy under a temp directory that is removed once ``publish_docs()``
+    returns, so the offending line is reported here rather than left on disk
+    for later inspection.
+
+    Parameters
+    ----------
+    docs_dir : Path
+        Path to the pkgdown-generated ``docs/`` directory.
+
+    Raises
+    ------
+    RuntimeError
+        If any file under ``docs_dir`` contains the operator's home
+        directory path.
+    """
+    home = str(Path.home())
+    offenders: list[str] = []
+    for path in sorted(docs_dir.rglob("*")):
+        if not path.is_file():
+            continue
+        text = path.read_text(errors="ignore")
+        if home not in text:
+            continue
+        line = next((ln.strip() for ln in text.splitlines() if home in ln), "")
+        offenders.append(f"{path.relative_to(docs_dir)}: {line}")
+    if offenders:
+        shown = "\n".join(f"  {offender}" for offender in offenders[:5])
+        if len(offenders) > 5:
+            shown += f"\n  ... and {len(offenders) - 5} more"
+        msg = (
+            f"Refusing to publish: found operator home directory '{home}' in "
+            f"{len(offenders)} generated file(s):\n{shown}\nFix the leaking "
+            "@examples or vignette content, then re-run."
+        )
+        raise RuntimeError(msg)
+
+
 def _parse_dcf(text: str) -> dict[str, str]:
     """Parse a single DCF (Debian Control File) record into a dict.
 
@@ -1025,15 +1070,36 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
         msg = "Rscript is not installed."
         raise RuntimeError(msg)
 
-    docs_dir = pkg_path / "docs"
     alert(f"Building pkgdown site for '{name}' in '{pkg_path}'.")
-    code = _BUILD_DOCS_R.replace("PKG_DIR", _r_quoted(str(pkg_path)))
-    subprocess.run([rscript, "-e", code], check=True)
-    if not docs_dir.is_dir():
-        msg = f"pkgdown did not produce a docs/ directory in '{pkg_path}'."
-        raise RuntimeError(msg)
+    with tempfile.TemporaryDirectory(prefix="koopa-r-docs-build-") as build_root:
+        # Build from a throwaway copy of the package, not the operator's real
+        # clone. An @examples block that calls getwd() (e.g. AcidBase's
+        # realpath()/parentDirectory()) would otherwise bake the operator's
+        # real home directory into the rendered site.
+        build_dir = Path(build_root) / "pkg"
+        shutil.copytree(pkg_path, build_dir, ignore=shutil.ignore_patterns(".git", "docs"))
+        docs_dir = build_dir / "docs"
 
-    try:
+        # Point HOME and the XDG base dirs at a throwaway directory too, so an
+        # @examples block that resolves a cache path (e.g. BiocFileCache via
+        # tools::R_user_dir()) can't bake the operator's real home directory
+        # into the rendered site either. R_user_dir() ignores HOME and reads
+        # the system's real home directory unless XDG_CACHE_HOME etc. are set.
+        fake_home = Path(build_root) / "home"
+        fake_home.mkdir()
+        env = os.environ.copy()
+        env["HOME"] = str(fake_home)
+        env["XDG_CACHE_HOME"] = str(fake_home / ".cache")
+        env["XDG_DATA_HOME"] = str(fake_home / ".local" / "share")
+        env["XDG_CONFIG_HOME"] = str(fake_home / ".config")
+
+        code = _BUILD_DOCS_R.replace("PKG_DIR", _r_quoted(str(build_dir)))
+        subprocess.run([rscript, "-e", code], check=True, env=env)
+        if not docs_dir.is_dir():
+            msg = f"pkgdown did not produce a docs/ directory in '{build_dir}'."
+            raise RuntimeError(msg)
+        _check_no_home_dir_leak(docs_dir)
+
         dest = f"{_s3_uri()}/{name}/"
         alert(f"Syncing docs to '{dest}'.")
         aws_s3_sync(str(docs_dir) + "/", dest, delete=True, profile=_PROFILE)
@@ -1041,8 +1107,6 @@ def publish_docs(package_dir: str, *, invalidate: bool = True) -> None:
         if invalidate:
             alert(f"Invalidating CloudFront cache for '/{name}/*'.")
             _invalidate_cloudfront([f"/{name}/*"])
-    finally:
-        shutil.rmtree(docs_dir, ignore_errors=True)
 
     alert(f"Docs published: https://r.acidgenomics.com/{name}/")
 

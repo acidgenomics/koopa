@@ -1058,20 +1058,6 @@ def check_multiple_users() -> bool:
     return len(logged_in_users()) > 1
 
 
-def macos_os_version() -> str:
-    """Get macOS version string.
-
-    Returns
-    -------
-    str
-        MacOS version string, or an empty string when not running on
-        macOS.
-    """
-    if not is_macos():
-        return ""
-    return platform.mac_ver()[0]
-
-
 def major_version(version: str) -> str:
     """Extract major version.
 
