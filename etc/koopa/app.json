@@ -4843,6 +4843,25 @@
     ],
     "version": "1.0.10"
   },
+  "kubectl": {
+    "bin": [
+      "kubectl"
+    ],
+    "category": "Cloud",
+    "date": "2026-09-25",
+    "default": false,
+    "description": "command-line tool for controlling Kubernetes clusters",
+    "notes": [
+      "No conda-forge feedstock exists for kubectl (confirmed live 2026-09-25 -- conda-forge ships 'kubectl-krew', a plugin manager, not kubectl itself), so this app uses a bespoke Python installer (installers/kubectl.py) instead of the 'conda-package' installer its sibling k9s uses.",
+      "Downloads the official static binary from Kubernetes' own release CDN (dl.k8s.io), verified against the matching '.sha256' file published alongside every release -- no per-version checksum is hardcoded here."
+    ],
+    "type": "cli",
+    "url": [
+      "https://kubernetes.io/docs/reference/kubectl/",
+      "https://github.com/kubernetes/kubernetes"
+    ],
+    "version": "1.37.1"
+  },
   "lame": {
     "bin": [
       "lame"

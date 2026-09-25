@@ -467,6 +467,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "illumina-ica-cli": f"{_M}.illumina_ica_cli",
     "julia": f"{_M}.julia",
     "ksh93": f"{_M}.ksh93",
+    "kubectl": f"{_M}.kubectl",
     "ldc": f"{_M}.ldc",
     "libgeotiff": f"{_M}.libgeotiff",
     "libheif": f"{_M}.libheif",
