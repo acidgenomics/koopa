@@ -13,3 +13,9 @@
    koopa tracks the conda-forge package for =difftastic=, where the latest
    available version is still =0.70.0=. Upstream GitHub has =0.71.0=, so this
    remains blocked until conda-forge updates or we switch installer strategy.
+** TODO Seeing double update message for homebrew cask
+    ==> Updating Homebrew...
+    Updated 2 taps (homebrew/core and homebrew/cask).
+    9 outdated casks: antigravity, claude, cursor, dbeaver-community, firefox, google-chrome, netnewswire, temurin, vlc
+    ==> Would reinstall 9 casks:
+    antigravity claude cursor dbeaver-community firefox google-chrome netnewswire temurin vlc
