@@ -1,7 +1,7 @@
 ---
 name: koopa-rust
 description: >-
-  Rust and cargo conventions for koopa installers — hermetic CARGO_HOME, build
+  Rust and cargo conventions for koopa installers: hermetic CARGO_HOME, build
   dependency wiring, and the NO_RUST opt-out pattern. Use when writing or debugging
   any installer that builds with cargo, whether directly (rust-package installers) or
   indirectly (build tools like git that shell out to cargo from their own Makefile).
@@ -12,7 +12,7 @@ description: >-
 ## Hermetic `CARGO_HOME` (required for all koopa cargo builds)
 
 **Always point `CARGO_HOME` at a temp dir.** Never let cargo read from or write to
-`~/.cargo` during an installer build — that leaks toolchain state across builds and
+`~/.cargo` during an installer build; that leaks toolchain state across builds and
 can corrupt the user's personal cargo registry.
 
 ```python
@@ -31,11 +31,11 @@ This applies whether:
   to `cargo` (e.g. git ≥ 2.50, which runs `cargo build target/release/libgitcore.a`).
 
 Existing examples using this pattern:
-- `lang/python/src/koopa/installers/rust_app.py` — sets `CARGO_HOME` in the rustup
+- `lang/python/src/koopa/installers/rust_app.py`: sets `CARGO_HOME` in the rustup
   install env.
-- `lang/python/src/koopa/install.py:1313` (`install_rust_package`) — uses
+- `lang/python/src/koopa/install.py:1313` (`install_rust_package`): uses
   `tempfile.mkdtemp(prefix="koopa-cargo-")`.
-- `lang/python/src/koopa/installers/git_app.py` — sets `CARGO_HOME` on `subprocess_env`
+- `lang/python/src/koopa/installers/git_app.py`: sets `CARGO_HOME` on `subprocess_env`
   before the `make` build so git's internal cargo call is hermetic.
 
 ## Declaring `rust` as a build dependency
@@ -56,7 +56,7 @@ Any installer that needs `cargo` must list `"rust"` in the app's
 ]
 ```
 
-`rust` has `"default": false` in the registry — that is intentional and correct (it
+`rust` has `"default": false` in the registry: that is intentional and correct (it
 is a large optional toolchain). Listing it in `build_dependencies` still causes it to
 be installed before the dependent app regardless of `default`.
 

@@ -1,7 +1,7 @@
 ---
 name: koopa-release
 description: >-
-  koopa release procedure — CHANGELOG authoring, bumpver contract, pre-release
+  koopa release procedure: CHANGELOG authoring, bumpver contract, pre-release
   gate, and what stays with the user. Use when preparing a release, writing
   release notes, or understanding what "prepare the release" entails.
 ---
@@ -17,18 +17,18 @@ description: >-
 - `version = "<pep440>"` (no `v` prefix)
 - `current_version = "v<version>"` (with `v` prefix)
 
-It creates a single commit `Bump version to vX.Y.Z.` — **no tag, no push**.
+It creates a single commit `Bump version to vX.Y.Z.`: **no tag, no push**.
 Tagging, pushing, and merging `develop`→`main` are always the user's job.
 
 ## Release checklist
 
-1. **Version bump** — already done by `bumpver` (the `Bump version to vX.Y.Z.`
+1. **Version bump**: already done by `bumpver` (the `Bump version to vX.Y.Z.`
    commit). Confirm `pyproject.toml:3` reads the new version, and confirm the
    3 plugin manifest versions moved too (`.claude-plugin/marketplace.json` and
-   the two under `plugins/koopa/`) — all wired via `[tool.bumpver] file_patterns`.
-2. **Write CHANGELOG.md** — prepend a new section directly above the previous
+   the two under `plugins/koopa/`), all wired via `[tool.bumpver] file_patterns`.
+2. **Write CHANGELOG.md**: prepend a new section directly above the previous
    `## koopa X.Y.Z (...)` heading. See format below.
-3. **Pre-release gate** — all must pass. Run the whole gate in one command:
+3. **Pre-release gate**: all must pass. Run the whole gate in one command:
    ```sh
    koopa develop check
    ```
@@ -41,7 +41,7 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    numpydoc lint $(find lang/python/src/koopa -name '*.py')
    pytest lang/python/tests/
    ```
-4. **User-owned** — tag, push, and merge:
+4. **User-owned**: tag, push, and merge:
    ```sh
    git tag vX.Y.Z
    git push origin develop
@@ -54,14 +54,14 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
 File: `CHANGELOG.md` at the repo root.
 
 Section heading: `## koopa X.Y.Z (YYYY-MM-DD)`
-- Bare version — no `v` prefix.
-- ISO date in parentheses — use the date of the version-bump commit.
+- Bare version, no `v` prefix.
+- ISO date in parentheses, use the date of the version-bump commit.
 - Insert a blank line between `## heading` and the first subsection heading.
 
 Subsections (in order, omit if empty):
-- `Major changes:` — substantive user-facing changes, ~4-6 bullets.
-- `Minor changes:` — small fixes, housekeeping, version bumps.
-- `New apps:` — **only present when new top-level keys were added to
+- `Major changes:` substantive user-facing changes, ~4-6 bullets.
+- `Minor changes:` small fixes, housekeeping, version bumps.
+- `New apps:` **only present when new top-level keys were added to
   `etc/koopa/app.json`** this cycle. Verify with:
   `git diff vPREV..HEAD -- etc/koopa/app.json | grep -E '^\+  "[a-z]'`
 
@@ -84,7 +84,7 @@ if the tag hasn't been created yet for the previous release).
 
 ## Version source of truth
 
-`pyproject.toml:3` — `version = "X.Y.Z"`. Read at runtime by
+`pyproject.toml:3`: `version = "X.Y.Z"`. Read at runtime by
 `koopa_version()` in `lang/python/src/koopa/version.py`. No other file
 hardcodes the koopa version.
 

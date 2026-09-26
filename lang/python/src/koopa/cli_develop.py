@@ -4,6 +4,7 @@ Replaces the 34-line ``_koopa_cli_develop`` Bash function.
 """
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -699,6 +700,9 @@ def _handle_shellcheck() -> None:
 
 
 _SKILL_DESCRIPTION_MAX_LEN = 1023
+_SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_SKILL_TRIGGER_RE = re.compile(r"\b(?:use (?:when|after|before|to|this)|whenever)\b", re.IGNORECASE)
+_SKILL_BODY_SOFT_MAX_LINES = 600
 
 
 def _skill_frontmatter_errors(path: str) -> list[str]:
@@ -707,10 +711,15 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
     Enforces the cross-CLI compatibility contract: ``description: >-`` (folded-strip
     block scalar), never plain ``>`` or an inline scalar, and a 1023-char raw length
     budget. The 1024-char cap on the *parsed* description is a spec-level constraint
-    of the open Agent Skills format (agentskills.io), not just a Copilot CLI quirk --
+    of the open Agent Skills format (agentskills.io), not just a Copilot CLI quirk:
     Codex CLI hardcodes the same ``MAX_DESCRIPTION_LEN=1024``. Plain ``>`` folds in a
     trailing newline (parsed = raw + 1), silently spending 1 char of that budget for
     nothing; an over-cap skill gets dropped by whichever CLI reads it.
+
+    Also enforces naming (lowercase, hyphen-separated, ``name:`` equal to the
+    directory name) and requires a trigger phrase in the description (one of
+    "use when", "use after", "use before", "use to", "use this", or "whenever"),
+    since the description is what a CLI reads to decide when to load the skill.
 
     Parameters
     ----------
@@ -731,8 +740,24 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
         return [f"{path}:1: missing closing '---' frontmatter delimiter"]
     fm = lines[1:end]
     errors: list[str] = []
-    if not any(line.startswith("name:") for line in fm):
+    name_idx = next((i for i, line in enumerate(fm) if line.startswith("name:")), None)
+    if name_idx is None:
         errors.append(f"{path}:1: missing 'name:' key in frontmatter")
+    else:
+        name_lineno = name_idx + 2  # +1 for 0-index, +1 for the opening '---' line
+        name = fm[name_idx].split(":", 1)[1].strip().strip("'\"")
+        dirname = os.path.basename(os.path.dirname(path))
+        if not _SKILL_NAME_RE.match(name):
+            errors.append(
+                f"{path}:{name_lineno}: name {name!r} must be lowercase letters "
+                "and digits joined by single hyphens"
+            )
+        if name != dirname:
+            errors.append(
+                f"{path}:{name_lineno}: name {name!r} does not match its "
+                f"directory {dirname!r}; skills are keyed by directory, so the "
+                "two must agree"
+            )
     desc_idx = next((i for i, line in enumerate(fm) if line.startswith("description:")), None)
     if desc_idx is None:
         errors.append(f"{path}:1: missing 'description:' key in frontmatter")
@@ -759,14 +784,87 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
             f"{_SKILL_DESCRIPTION_MAX_LEN}-char budget (the Agent Skills spec caps "
             "the parsed description at 1024 chars; over-cap skills get dropped)"
         )
+    if not _SKILL_TRIGGER_RE.search(raw):
+        errors.append(
+            f"{path}:{lineno}: description has no trigger phrase (one of 'use "
+            "when', 'use after', 'use before', 'use to', 'use this', or "
+            "'whenever'); the description is what decides when the skill loads"
+        )
     return errors
+
+
+def _skill_infer_prefix(names: list[str]) -> str | None:
+    """Infer a shared naming prefix from a list of skill directory names.
+
+    Returns the hyphen-joined first segment shared by a strict majority of
+    ``names``, or ``None`` if fewer than 2 names are given or no single segment
+    covers more than half of them (for example a tie, or all-unprefixed names).
+
+    Parameters
+    ----------
+    names : list[str]
+        Skill directory names to infer a shared prefix from.
+
+    Returns
+    -------
+    str | None
+        The inferred prefix (without the trailing hyphen), or ``None``.
+    """
+    if len(names) < 2:
+        return None
+    segments = [name.split("-", 1)[0] for name in names if "-" in name]
+    if not segments:
+        return None
+    counts: dict[str, int] = {}
+    for segment in segments:
+        counts[segment] = counts.get(segment, 0) + 1
+    prefix, count = max(counts.items(), key=lambda item: item[1])
+    return prefix if count > len(names) / 2 else None
+
+
+def _skill_prefix_errors(root: str, skill_files: list[str]) -> list[str]:
+    """Flag skill directories that lack the prefix shared by most skills in a root.
+
+    Parameters
+    ----------
+    root : str
+        The skill-directory root being checked (used only for the error message).
+    skill_files : list[str]
+        Paths to each ``SKILL.md`` file found directly under ``root``.
+
+    Returns
+    -------
+    list[str]
+        Error messages naming each directory that lacks the inferred prefix.
+    """
+    dirnames = [os.path.basename(os.path.dirname(path)) for path in skill_files]
+    prefix = _skill_infer_prefix(dirnames)
+    if prefix is None:
+        return []
+    want = f"{prefix}-"
+    outliers = sorted(name for name in dirnames if not name.startswith(want))
+    matched = len(dirnames) - len(outliers)
+    return [
+        f"{path}:1: skill directory {os.path.basename(os.path.dirname(path))!r} "
+        f"lacks the {want!r} prefix shared by {matched} of {len(dirnames)} skills "
+        f"under {root}"
+        for path in skill_files
+        if os.path.basename(os.path.dirname(path)) in outliers
+    ]
 
 
 def _handle_check_skills(args: list[str]) -> None:
     """Handle ``koopa develop check-skills [path...]``.
 
-    Validates every ``SKILL.md``'s frontmatter for cross-CLI compatibility. See
-    ``_skill_frontmatter_errors`` for the exact rules enforced.
+    Validates every ``SKILL.md``'s frontmatter, naming, and trigger phrase. See
+    ``_skill_frontmatter_errors`` for the exact rules enforced, and
+    ``_skill_prefix_errors`` for the per-root naming-prefix check. A body over
+    ``_SKILL_BODY_SOFT_MAX_LINES`` lines is reported as an advisory note, not
+    an error.
+
+    Point this at a source tree (a repo's own ``.claude/skills``), not at a
+    deployed directory shared by several trees (for example ``~/.claude/skills``)
+    -- a minority tree's skills would be flagged as prefix outliers there.
 
     Parameters
     ----------
@@ -777,12 +875,12 @@ def _handle_check_skills(args: list[str]) -> None:
     import argparse
     import glob
 
-    from koopa.alert import alert, alert_success
+    from koopa.alert import alert, alert_note, alert_success
     from koopa.prefix import koopa_prefix
 
     parser = argparse.ArgumentParser(
         prog="koopa develop check-skills",
-        description="Validate SKILL.md frontmatter for cross-CLI compatibility.",
+        description="Validate SKILL.md frontmatter, naming, and trigger phrases.",
     )
     parser.add_argument(
         "roots",
@@ -806,15 +904,19 @@ def _handle_check_skills(args: list[str]) -> None:
             *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
 
-    skill_files: list[str] = []
+    files_by_root: dict[str, list[str]] = {}
     for root in roots:
         if not os.path.isdir(root):
             continue
+        found = []
         for name in sorted(os.listdir(root)):
             skill_md = os.path.join(root, name, "SKILL.md")
             if os.path.isfile(skill_md):
-                skill_files.append(skill_md)
+                found.append(skill_md)
+        if found:
+            files_by_root[root] = found
 
+    skill_files = [path for files in files_by_root.values() for path in files]
     if not skill_files:
         print("Error: no SKILL.md files found under the given roots.", file=sys.stderr)
         sys.exit(1)
@@ -823,6 +925,18 @@ def _handle_check_skills(args: list[str]) -> None:
     errors: list[str] = []
     for path in skill_files:
         errors += _skill_frontmatter_errors(path)
+    for root, files in files_by_root.items():
+        errors += _skill_prefix_errors(root, files)
+
+    for path in skill_files:
+        with open(path, errors="replace") as fh:
+            n_lines = sum(1 for _ in fh)
+        if n_lines > _SKILL_BODY_SOFT_MAX_LINES:
+            alert_note(
+                f"{path}: {n_lines} lines, over the "
+                f"~{_SKILL_BODY_SOFT_MAX_LINES}-line soft ceiling; shrink by moving "
+                "reference detail into a sibling file, not by summarizing"
+            )
 
     if errors:
         for line in errors:

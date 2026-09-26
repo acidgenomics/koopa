@@ -1,7 +1,7 @@
 ---
 name: koopa-git
 description: >-
-  koopa git workflow — develop→main PR pattern, merge conflict resolution,
+  koopa git workflow: develop→main PR pattern, merge conflict resolution,
   tag management, and how to avoid rebase hell. Use when dealing with PR
   conflicts, moving tags, or pushing a release branch.
 ---
@@ -10,10 +10,10 @@ description: >-
 
 ## Branch model
 
-- `develop` — active development. All work lands here.
-- `main` — release snapshots only. Updated exclusively via PR from `develop`.
+- `develop`: active development. All work lands here.
+- `main`: release snapshots only. Updated exclusively via PR from `develop`.
 - Tags (`vX.Y.Z`) sit on `develop` at the **bumpver commit** (or the
-  "Prepare release" commit if bumpver ran first — see `koopa-release`).
+  "Prepare release" commit if bumpver ran first, see `koopa-release`).
 
 ## Pushing a release
 
@@ -29,11 +29,11 @@ Then open (or merge) the `develop`→`main` PR on GitHub.
 ## Merge conflicts on the develop→main PR
 
 The tag points to a merge commit on `main` (the previous PR), so
-`vPREV..HEAD` looks enormous — that's expected, not a real conflict.
+`vPREV..HEAD` looks enormous; that's expected, not a real conflict.
 
 The actual conflict is almost always just `CHANGELOG.md` (and occasionally
 `pyproject.toml`), because `main` lags behind `develop` by one or more
-release cycles. `develop`'s version is always the correct one — it is a
+release cycles. `develop`'s version is always the correct one: it is a
 strict superset.
 
 **Fix: merge main into develop with `-X ours`**
@@ -47,7 +47,7 @@ git push origin develop
 `-X ours` auto-resolves every conflict by keeping `develop`'s version.
 No interactive editor, no rebase, no cherry-pick warnings.
 
-**Never** use `git rebase origin/main` here — the branch history is shared
+**Never** use `git rebase origin/main` here: the branch history is shared
 with the remote and has already been merged into `main` multiple times.
 Rebasing causes every previously-merged commit to be "skipped" as a
 cherry-pick duplicate, then explodes on the first real conflict.
@@ -63,7 +63,7 @@ git push origin vX.Y.Z --force
 ```
 
 If the remote already has the tag at the right SHA, `git push` reports
-"Everything up-to-date" — that's fine, no action needed.
+"Everything up-to-date"; that's fine, no action needed.
 
 ## Checking tag placement
 
@@ -86,7 +86,7 @@ Confirmed live: after a real `develop`→`main` merge already happened on
 GitHub, `git diff origin/main origin/develop --stat` still showed the old,
 pre-merge difference, because the local clone hadn't fetched since before
 the merge. `gh pr create` then correctly refused with "No commits between
-main and develop" — GitHub's own server-side state was right the whole
+main and develop"; GitHub's own server-side state was right the whole
 time; the local remote-tracking refs were just stale. A plain `git fetch
 origin` before re-checking made the diff empty.
 
@@ -104,5 +104,5 @@ git rebase --abort
 ```
 
 This restores the autostash and puts you back on `develop` at HEAD.
-The `[!]` dirty-tree indicator afterward is normal — just the stashed
+The `[!]` dirty-tree indicator afterward is normal: just the stashed
 `todo.org` changes coming back.

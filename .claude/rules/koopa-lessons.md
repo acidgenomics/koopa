@@ -1,122 +1,38 @@
 # Lessons (koopa core)
 
 > Cross-project patterns live in `~/.claude/rules/dotfiles-lessons.md` (user-curated).
-> Per-project lessons that grow beyond a one-liner belong in a skill or path-scoped
-> rule below — don't accumulate prose here.
+> A lesson longer than a one-liner belongs in the owning skill's Gotchas
+> section, or in a path-scoped rule if it fires on a file pattern: don't
+> accumulate long narratives here.
 
 ## Conventions
 
 - **Plan filenames**: use the system-generated filename as-is; never add a
   `YYYY-MM-DD-` prefix. VS Code's plan review UI requires the exact system filename.
-- **Plans / TODOs**: write to `todo.org` (Org mode) at the repo root —
-  NOT `.claude/todo.md`.
-- **Persistent shell env guidance must follow dotfiles+chezmoi flow.** For
-  machine-specific values (for example `KOOPA_BUILDER`), do not suggest editing
-  `~/.zshrc` / `~/.bashrc` directly; route users to their chezmoi-managed
-  sidecar files in the dotfiles source instead.
-- **A general env-var default does not belong in a shell-specific chezmoi
-  file, even a chezmoi-managed one.** Proposed exporting a new app-specific
-  default in a Zsh-only profile template in a downstream dotfiles repo --
-  wrong, since not every user of that repo runs Zsh, so bash/fish/nu users
-  would never source it. koopa already solves exactly this: any cross-shell
-  env default belongs in koopa's own activation
-  (`lang/{sh,bash,zsh,fish}/functions/activate/*.sh`, sourced by every
-  shell's `activate.*` entry point), not duplicated per-shell in a
-  downstream dotfiles repo. Confirmed live 2026-09-19:
-  `_koopa_activate_today_bucket` already resolved a bucket dir via
-  `KOOPA_BUCKET` -> `~/bucket` -> `~/Documents/bucket` but never exported
-  it; fixing that (plus regenerating the cached `include/functions.sh` via
-  `koopa develop cache-functions`) gave every koopa-activated shell a real
-  `KOOPA_BUCKET` for free, with zero downstream dotfiles changes needed.
-- **Never run `find /` or any filesystem-root search.** Scope every `find`/search
-  to a known root: the repo, `~/git`, an app prefix, or a specific cache dir (e.g.
-  `~/.cache/uv/...`). A root-wide search is slow, noisy, and reaches unrelated
-  trees the task never asked about. The same risk hides inside a plain `rg` call
-  here: `~/.config/ripgrep/config` set `--no-ignore`, which disables `.gitignore`
-  (and any repo-local `.rgignore`, which the same flag also disables) for every
-  invocation. A bare `rg --files` at the koopa repo root walked 700,000 files
-  (the `app/` install prefix included) instead of the 1,226 `.gitignore` allows,
-  and a content search over that many files can hang. Fixed at the source in
-  `dot_config/ripgrep/config.tmpl` (`-u`/`-uu`/`-uuu` is the per-command opt-in
-  now); on a host still running the old config, add `--ignore-vcs` as a stopgap.
+- **Persistent env values route through the dotfiles and chezmoi sidecars.**
+  Cross-shell defaults belong in koopa's own activation
+  (`lang/{sh,bash,zsh,fish}/functions/activate/`), never a shell-specific
+  dotfiles template. See `koopa-shell-internals` Gotchas.
+- **Never search from the filesystem root; scope to a known root.** Plain `rg`
+  may still walk ignored trees here (`~/.config/ripgrep/config` sets
+  `--no-ignore`), so prefer `git ls-files` or `rg --ignore-vcs`. See
+  `koopa-dotfiles` Gotchas.
 - **Vendor-mirror docs and examples stay product-neutral.** Never name a
-  specific artifact manager in `docs/`, `etc/koopa/vendor.json.example`, tests,
-  or code comments. The backend identifier is `http` for exactly this reason.
-  `base_url` examples are plain `https://artifacts.example.com`, no context
-  path.
+  specific artifact manager in `docs/`, `etc/koopa/vendor.json.example`,
+  tests, or code comments; the backend identifier is `http` for exactly this
+  reason.
 - **Agent scratch files never land in the repo working directory or `/tmp`.**
-  `uv pip compile` has no `-` = stdout convention — `-o -` writes a literal file
-  named `-` into the cwd (this is how `-` reached commit 73ed328a). Omit `-o`
-  entirely for stdout. Put scratch inputs in a `mktemp -d` directory (respects
-  `$TMPDIR`) and delete them in the same command, so a blanket `git add ./`
-  has nothing to pick up.
-- **`uv python install --install-dir` output has hidden entries; never `find
-  | head -1` for the real subdir.** The directory also holds `.lock`, `.temp`,
-  and `.gitignore`, plus a minor-version alias (a symlink, so `-type d`
-  already excludes it). `find` gives no ordering guarantee, so a bare
-  `-mindepth 1 -maxdepth 1 -type d | head -1` can pick the empty `.temp`
-  instead of the real `cpython-<version>-...` directory — reproduced live in
-  `install_python_uv()` in `bootstrap.sh`, where it silently copied nothing,
-  produced no `bin/python3`, and fell through to the much slower source
-  build. Fix: add `! -name '.*'` to the `find`.
+  `uv pip compile` has no `-` = stdout convention: `-o -` writes a literal
+  file named `-` into the cwd. Omit `-o` entirely for stdout, and put scratch
+  inputs in a `mktemp -d` directory (respects `$TMPDIR`), deleted in the same
+  command.
+- **An advisory check called from `koopa update`/`koopa system check` must be
+  fast/local or self-cached, never an unconditional live network call.** If
+  it can't be, move it behind an explicit command instead. See
+  `koopa-theming` (Dracula Pro update-check case).
 
-- **Never name a shell variable `status` in zsh.** It is a read-only special
-  variable (an alias for `$?`, the last exit code). `status=$(...)` fails
-  with `read-only variable: status`. Use a different name, e.g.
-  `<name>_status`.
+## Skills and path-scoped rules
 
-- **A `notes` entry in app.json is prose only; `version_check.py` never reads
-  it, so it does not stop `check-app-versions` from re-bumping the version it
-  describes.** This bit `node`: a `notes` entry said "held below 26.8.0" and
-  the next unguarded run re-bumped it anyway. Use `version_exclude`,
-  `version_granularity`, or `version_match` instead — see
-  `.claude/rules/koopa-app-json.md` and the `koopa-app-registry` skill. The same
-  gap exists for `python_version_pin`: it is a human-readable marker paired
-  with `dependencies: ["python3.13"]`, but no code in `src/koopa` reads it —
-  confirmed by grep. It documents a pin that `dependencies` alone already
-  enforces; it enforces nothing on its own.
-
-## Skills (load body on invocation)
-
-| Skill | Covers |
-|---|---|
-| `koopa-atuin` | bash hook architecture (bash-preexec requirement), activation files, installer patterns, DB reset + re-import, config.toml inventory |
-| `koopa-app-registry` | `koopa install` syntax, atuin import, successor/default, completions, zsh version format, tool-inclusion scope, installer `main()` contract (only name/version/prefix/passthrough_args passed), `import_app_json()` pattern for extra fields, `extra_fields_fn` in `_AppCheckSpec` for auto-update of non-version metadata, GNU/Savannah host unreliability + mirror-relative-path derivation (`_gnu_mirrors`/`_savannah_mirrors` in `download.py`), dead-host circuit breaker (`_fetch_first_reachable` in `version_check.py`), `koopa develop mirror-src` verification, binary package push/pull `/opt/koopa` prefix invariant (`_can_push_binary`/`push_app_build`/`_require_binary_prefix`, and the separate `cli_develop.py` push path that needs its own guard), S3 `binaries/<os_slug>/<arch>/<name>/` key layout, `.koopa-binary` marker, `push_app_build`'s silent-success `--only-show-errors` trap, audit recipe for a wrong-prefix tarball |
-| `koopa-release` | CHANGELOG format, bumpver contract (tag=false/push=false), pre-release gate (pytest+ruff+pyright), what's user-owned (tag/push/merge) |
-| `koopa-python-release` | Acid Genomics Python package release, published to public PyPI (as `acidgenomics-<name>`, import name unchanged), the private python.acidgenomics.com PEP 503 index at `/simple/` with same-domain docs at the short `/<slug>/` path and a generated landing page, and Bioconda under the bare recipe name. `koopa app python publish/publish-docs/sync-docs-theme/reindex`, `--pypi-only` as the resume path when a publish run's S3 half succeeds but the PyPI upload then fails (e.g. a rate limit), `UV_PUBLISH_TOKEN` in `.env`, quality gate config (ty/pyright exclude tests, pythonpath src), CHANGELOG format, verification smoke-test, `uv run` venv-shebang gotcha, Sphinx docs-build RST/numpydoc gotchas, shared acidgenomics Sphinx theme vendored from koopa (basic-theme based, no pydata-sphinx-theme). See `koopa-r-release` for the R analog. |
-| `koopa-aws-env` | `.env` design — `load_dotenv()`/`aws_account_id()`/`koopa_s3_bucket()` helpers in `aws.py`, required vars (`AWS_ACCOUNT_ID`, `AWS_CLOUDFRONT_DISTRIBUTION_ID_*`), bucket naming convention, lazy-eval rule (never module scope), how to add new secrets, history-scrub provenance, missing-CloudFront-ID publish-docs failure mode (S3 sync succeeds, invalidation step raises) |
-| `koopa-cloudfront-redirects` | Path-scoped HTTP redirects on an S3+CloudFront domain — why Route 53 can't do it, S3 website vs REST origin (only website endpoints honor `x-amz-website-redirect-location`), CloudFront Function create/test/publish/associate workflow, `test-function --event-object` `fileb://` plain-JSON gotcha (not an `EventObject` wrapper), edge-function-authoritative vs S3-metadata-fallback layering when origin content is still resynced, scoped invalidation, `~/.curlrc` `location` auto-follow trap that masks 301s as 200s in verification |
-| `koopa-r-release` | Acid Genomics R package release — cloud-native S3 + CloudFront, profile `acidgenomics`, CF distribution ID in `.env` (IDs/bucket via `koopa_s3_bucket('r')` in `cran.py`), `koopa app r publish/publish-from-github/reindex/archive/publish-docs`, sonoma-arm64 only active binaries, dep auto-install for binary builds, `_SKELETON_BINARY_PREFIXES` for big-sur-arm64 warning suppression, 16 packages still need Apache-2 relicense, pre-release gate via `AcidDevtools::check()`, impl in `cran.py`, pkgdown NEWS.md/reference-index/one_page silent-failure traps |
-| `koopa-acid-r-package` | Acid Genomics R package dev conventions — per-project `air.toml` required (no global config), `~/.lintr` global only (no per-project files), `object_usage_linter = NULL` for S4, roxygen2 8.x single-line `@importFrom` split pattern (never `# nolint` on `#'` lines), `keyword_quote_linter` unquote list names, `leftJoin` type coercion before join, `future::plan("multicore")` not `"multiprocess"`, `AcidDevtools::check()` gate |
-| `koopa-bioconda` | bioconda-recipes maintenance — global r-base pin location, dependency solve failures (migration lag diagnosis + build-number bump fix), Acid R dep order (tier 1–4), `license_file` LICENSE→LICENSE.md mismatch (sign of Apache-2 relicense), GitHub Contents API for PRs (avoids slow `git push` on 700 MB repo), autobump PR patterns, verification commands |
-| `koopa-shell-internals` | git recovery in `update_koopa()`, lazy-load vs eager init, activation fork budget + verify commands, cache-functions-before-reload ordering constraint, non-interactive activation is opt-in (`KOOPA_AUTO_ACTIVATE=1`; rc-file-read matrix per invocation, `KOOPA_FORCE` side effects, side-effect-gating across all 3 shell families, bash-3.2 header routing, re-activation short-circuit, why default-on was reverted) |
-| `koopa-update` | `koopa update` full flow (pull→apps; system-apps are opt-in only via `koopa update system`, never part of the default sequence), admin-gated automatic system updates (`is_admin()` macOS admin-group membership vs `has_sudo()` probe), `koopa update system [<app>...]` per-app names + `resolve_system_update_entries()` validation (unknown name/wrong-platform raises before the admin gate), `_SYSTEM_UPDATERS` registry-keyed dispatch dict, Homebrew brew-on-PATH trigger, system-R string-inequality version check + "out of date" warning, update-system platform matrix |
-| `koopa-nushell` | parse-time `use`/`source` constraints, `nu -c` doesn't load config, env.nu→config.nu load order, starship+zoxide cache bootstrap, deprecated syntax (0.78→0.113), `ν` prompt glyph |
-| `koopa-color-mode` | SSH OSC 2031, env- vs file-driven timing, VS Code OSC 11 leak, targeted chezmoi apply, render-from-OS rule, never re-verify from agent session, abrupt-SSH-death terminal wedge (mouse+mode-2031 leak) + `koopa run reset-terminal` recovery, Linux gdbus `uint32` substring-collision stuck-light bug, POSIX `read` clobbering a successfully-read cache value, dead in-tmux re-derive in `activate-color-mode.sh`, two-repo fix needs both halves pushed + pin bumped, on-disk-only target check wedges the whole `chezmoi apply` when one discovered target is unmanaged (filter against `chezmoi managed`, never disk existence), main-tree-only apply silently freezing a work-tree-owned target (e.g. Claude Code's settings.json) until a full dotfiles run, a code fix to color_mode.py not taking effect until the applied-marker is cleared, and a tool with zero `.tmpl` anywhere being invisible to the whole pipeline (no drift, no log entry — check onboarding before assuming a sync bug) |
-| `koopa-theming` | JetBrains scheme delivery + synthesis, macOS sandbox/BBEdit, atuin `[theme]` format, mcfly ANSI palette, Dracula Pro runtime architecture, synthesizing a theme with no upstream Dracula Pro file (`_parse_vim_palette()` named bg-ramp/orange/pink/purple over ANSI-only `_parse_ghostty_palette()`, `_hex_lerp()`-derived gradient stops, `removed: true` predecessor as porting reference, per-variant contrast verification), fish color pipeline (`fish_frozen_theme.fish` override, `_FISH_COLOR_ROLES`, live sync hook, alucard ANSI-8 quirk, proprietary hex audit), vim airline explicit theme read + nvim lualine palette-reading theme function (why `theme = 'auto'` silently produces wrong colors), ANSI slot 8 too-low-contrast-to-read in every variant not just Alucard (htop meter-shadow pair decoded from the shipped binary, kitty `color8`, WezTerm `brights[0]`, RStudio ANSI remap; fix via `_dracula_dim_color()` reading the Vim `comment` role), Ghostty's own theme file generated not symlinked (`_generate_ghostty_dracula_pro_theme()`, stale-symlink-write-through trap), `_parse_vim_palette()` hyphen/underscore slug mismatch silently dropping `van-helsing`, JetBrains role-aware light-mode substitution (`_darken_for_light_bg()` vs `_lightify_hex()` by option-name role, named-map/`selection_bg` text-role collision), green/red git/VS Code diff colors (`_generate_diff_palette()`, reverted an earlier blue/orange colorblind override back to plain green/red by explicit request, `git status`'s real `color.status.<slot>` list has no `deleted` key, two-different-target-ratios trick for mutual background separation, `_nudge_hue_toward()` for a vendor-exact `status.changed` orange that still reads "too red", pre-composited terminal tints vs live-composited VS Code alpha), Obsidian's generated `theme.css` (native light/dark toggle via a real `.theme-light`/`.theme-dark` pair, per-vault symlink deploy, `_obsidian_ramp_step()` holding hue fixed at a palette anchor instead of a shortest-hue-path bg→fg blend that crossed pink, `_fix_obsidian_surface_contrast()` re-checking AA/faint tokens against the sidebar's own `--background-secondary`/`-alt` surfaces instead of only the plain content bg, and the AA-floor-passes-but-still-reads-muted tradeoff with the monotonicity trap that appears when boosting one ramp step's floor past an untouched neighbor) |
-| `koopa-chezmoi-dotfiles` | source path, always-edit-source-first, templates-before-generators (with a self-inflicted worked example: a fragment generated post-chezmoi is always one run behind, tmux's own source-file-at-runtime pattern as the general fix shape), XDG in templates, re-run command, sharing one template body across N targets (`.chezmoi.sourceFile` for source-tree symlinks vs `.chezmoitemplates` partials for structurally-shared content, named-template `$var`-scope trap, `dict` vs bare `list` when a partial needs `.chezmoi.*` too, two partials each emitting the same top-level JSON key so the last one silently wins on parse), verifying a config setting name is real (installed extension `package.json` > core app bundle grep > marketplace vsix fetch, editor.* core options rarely appear as full literal strings, `gitDecoration.*` lives in the Git extension not the core bundle), stale-`KOOPA_COLOR_MODE` false alarm shaped like two dozen unrelated files suddenly "modified", `stat`-gated fallback branch drift when the stat target is transient (`~/.venv` coming and going), three distinct Go-template whitespace-trim bug shapes (`-}}` eating a partial's own first-line indent, a bare `{{ template }}` call site doubling into a blank line vs the `includeTemplate \| trimAll "\n"` fix, an inline `if`/`else` needing trim-left-only with no downstream `trimAll` to clean up after it, a raw `{{ include $path }}`'s own trailing newline stacking with the template's), plus a repeatable tree-wide audit recipe (static scan, render-don't-reason, artifact grep, content-diff, narrow apply), and the `--source`-omitted-on-a-query-command trap (`chezmoi managed`/`diff`/`status` with no `--source` silently check the wrong, nonexistent default tree instead of erroring — a false "not managed" for `~/.curlrc`/`dot_curlrc.tmpl` reversed the instant `--source` was added back), and a `--config` path that does not exist silently creating a stray `chezmoistate.boltdb` in the main tree's repo root instead of erroring (main tree has no `chezmoi.toml`, so never pass `--config` for it) |
-| `koopa-homebrew` | hung `brew reinstall --cask` root cause (no `--connect-timeout`/`--speed-limit`/`--speed-time` on Homebrew's own curl call, so a stalled-not-closed connection through a TLS-inspecting proxy never becomes a `--retry`-able error), live diagnostic recipe (`pgrep`/`stat`/`lsof`/`ps`), `HOMEBREW_CURLRC` as the only curl-settings hook (file path only, `--disable` when unset, hard fail exit 26 on a missing path), `_user_curlrc_path()`/`_brew_curlrc_fallback()` in `koopa.brew` preferring the user's real `~/.curlrc` over a generated one, the permanent fix living in `opt/dotfiles/chezmoi/dot_curlrc.tmpl` (not just the Python fallback), sudo keep-alive for multi-cask upgrades (`_sudo_authenticate()`/`_sudo_keepalive_start()`/`_sudo_keepalive_stop()` around `brew_upgrade_casks()`, scoped away from the non-interactive `koopa update` sweep on purpose) |
-| `koopa-dotfiles` | opt/dotfiles standalone clone, detached-HEAD-before-commit, license metadata, SHA-pin rollout (app.json `version` field) + known "fix looks unshipped" failure mode |
-| `koopa-google-ai-cli` | Antigravity CLI (`agy`) installer — GCS versioned-URL pinning, build_id+SHA512 stored in app.json (auto-updated via `extra_fields_fn`), self-update gate, `~/.gemini/` config layout, gemini-cli successor relationship |
-| `koopa-completion` | completion generator architecture, bash lazy-load, zsh compdump freshness, flag-gate bug pattern (bare TAB on leaf commands), phantom `update user` mode + `update system <app>` completion-vs-parser drift fix, registry-entry-listed-twice dedupe trap, `generate-completion` regen workflow |
-| `koopa-neovim` | lazy.nvim architecture (checker disabled, `LazyDone` autocmd), `koopa configure user neovim` headless `:Lazy! sync`, orphaned-plugin detection (directory with no spec and no lock entry), versioned `lazy-lock.json` + `chezmoi re-add` drift note, `after/syntax/org.vim` `oneline` fix for inline emphasis bleeding past an unclosed marker |
-| `koopa-git-features` | git 2.55 features — `git history` (fixup/reword/split), `format-rev` (EXPERIMENTAL), `url-parse`, `checkout -m` autostash, `--graph-lane-limit`, `--max-count-oldest`, push to remote groups, Linux fsmonitor |
-| `koopa-git` | koopa develop→main PR pattern, `-X ours` conflict resolution, tag management, rebase-abort recovery |
-| `dotfiles-git-history-surgery` | git filter-repo identity rewrites, commit-tree replay for dedup (user-global skill) |
-| `koopa-elvish` | `eval` namespace isolation, closure/fn capture order, `use` compile-time lexical scoping, `edit:` interactive-only, `path:` 0.21.0 API, `brew shellenv` workaround, `(src)` under eval, koopa activation architecture |
-| `koopa-powershell` | activation architecture, starship mtime-guarded cache + header.ps1 ordering constraint, color-mode sync hook (file re-render trigger, marker+sentinel guard, `Start-Process -NoNewWindow` idiom), `_koopa_is_light_mode` per-platform detection, `sys.platform == "win32"` guard for `winreg` |
-| `koopa-rust` | Rust/cargo conventions for koopa installers — hermetic `CARGO_HOME` (always `tempfile.mkdtemp(prefix="koopa-cargo-")`), `"rust"` in `build_dependencies`, `NO_RUST` opt-out policy, offline crate check |
-| `koopa-vscode` | VS Code terminal font + Nerd Font glyph debugging (CoreText family names, `mdls` lookup, App Support symlink bridge, write-race prevention via `autoDetectColorScheme`), shared settings.json.tmpl architecture across Code/Antigravity/Cursor/Positron (`vscode-fork-common`/`vscode-universal-common`/`dracula-pro-theme`/`dracula-pro-diff-colors` partials, Positron's smaller shape is by design not drift, fork-common-must-be-called-last convention, diff-colors partial spliced into an existing `colorCustomizations` object per app rather than owning its own, worked example of a blank-line + lost-indent bug at all four apps' partial boundaries with pointer to `koopa-chezmoi-dotfiles` for the trim mechanics), `python.defaultInterpreterPath` stat-vs-lookPath fallback drift (drop the fallback, don't add a second unstable branch), Quarto VS Code plugin + LuaLS `.luarc.json` — portable path pattern, remove `Generator` key, LuaLS placeholder support |
-| `koopa-license` | Apache-2.0 LICENSE file conventions — canonical sources per repo type (Python/koopa/dotfiles: `gh api /licenses/apache-2.0`; R packages: usethis template), how GitHub licensee detection works, corruption history, badge wiring |
-| `koopa-distribution` | install/distribution mechanics outside `curl \| sh` — pinned (non-git) tree already supports app management + update detection via `_require_git_managed_install()`/`update_koopa()`, why conda-forge/package-manager distribution doesn't fit (prefix self-management conflict, seed-package update-divergence bug), `git archive` reads `.gitattributes` from the committed tree (`--worktree-attributes` for uncommitted testing), `KOOPA_FORCE=1` needed to test activation non-interactively, bootstrap.sh has no vendor-mirror awareness |
-
-## Path-scoped rules (load when matching file is opened)
-
-| Rule file | Paths | Covers |
-|---|---|---|
-| `rules/koopa-python.md` | `**/*.py`, `**/pyproject.toml` | `check=True`, `has_sudo`, dev-tools-standalone, XDG helpers, CLI completions, color-mode apply paths |
-| `rules/koopa-app-json.md` | `**/app.json` | `format-app-json`, revision bump, completions, successor invariant, version URL verification |
-| `rules/koopa-zsh.md` | `lang/zsh/**` | ShellCheck doesn't support zsh |
-| `rules/koopa-fish.md` | `**/*.fish` | `$VAR` not `${VAR}`; `set -g` vs `-gx` vs `-U` for color vars; `fish_variables` clobber trap; `fish_frozen_theme.fish`; conf.d load order; `fish_color_*` hex format; `set -S` diagnostic |
-| `rules/koopa-bash.md` | `lang/bash/**`, `lang/sh/**`, `**/*.sh`, `.claude/skills/**/*.md` | `${VAR}` only when adjacent text follows (path suffix, concatenation); bare `$VAR` when standalone; fish excepted |
-| `rules/koopa-theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |
+Claude Code lists every skill's description, and loads each `paths:`-scoped
+rule when a matching file opens, so no index is kept here. Sources:
+`.claude/skills/koopa-*/SKILL.md`, `.claude/rules/koopa-*.md`.

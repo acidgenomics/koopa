@@ -1,7 +1,7 @@
 ---
 name: koopa-license
 description: >-
-  Apache-2.0 LICENSE file conventions (Acid Genomics) — canonical sources per repo type,
+  Apache-2.0 LICENSE file conventions (Acid Genomics): canonical sources per repo type,
   how GitHub licensee detection works (>=98% match), corruption history, badge wiring.
   Use when adding or repairing a LICENSE file or a repo shows NOASSERTION.
 ---
@@ -14,8 +14,8 @@ Applies to all repos under `~/git/personal/` and `~/.local/share/koopa/`.
 
 GitHub uses the Ruby `licensee` gem. It normalizes the LICENSE file body
 (strips markdown, collapses whitespace, normalizes quote characters) and
-computes similarity against SPDX canonical texts. Detection requires ≥98% match
-— any abridged or *substantively* altered text drops below the threshold and the
+computes similarity against SPDX canonical texts. Detection requires ≥98% match:
+any abridged or *substantively* altered text drops below the threshold and the
 repo shows `NOASSERTION` in the sidebar.
 
 **Content is what matters, not filename or cosmetics.** `LICENSE`, `LICENSE.md`,
@@ -28,14 +28,14 @@ to detection:
 
 So only *wording* changes (missing clauses, swapped words) break detection.
 
-Verify detection status — this is the ground truth, not the rendered sidebar:
+Verify detection status; this is the ground truth, not the rendered sidebar:
 ```sh
 gh api repos/acidgenomics/<repo> --jq '.license.spdx_id'
 # Apache-2.0 = detected; NOASSERTION = not detected
 ```
 
 Detection runs only on the repo's **default branch**. Pushing the fix to a
-non-default branch (e.g. koopa's `develop`) leaves the sidebar unchanged — the
+non-default branch (e.g. koopa's `develop`) leaves the sidebar unchanged: the
 canonical `LICENSE` must reach `main`:
 ```sh
 gh api repos/acidgenomics/<repo> --jq '.default_branch'
@@ -90,7 +90,7 @@ once shared an abridged variant (MD5 `7216c64b041f0b8284981ca10dddaf1c`, 193
 lines, 10805 bytes). Key missing/altered content vs canonical:
 
 - §8 "Limitation of Liability": said **"exemplary damages"**, canonical says
-  **"consequential damages"** — the single fastest check.
+  **"consequential damages"**: the single fastest check.
 - §1 "Contribution" definition: truncated (dropped "any work of authorship,
   including the original version of the Work…").
 - §1 "Derivative Works" definition: dropped "whether in Source or Object form".
@@ -102,12 +102,12 @@ everything else was not (`NOASSERTION`).
 
 Fixed 2026-06-20:
 
-- **9 plaintext repos (real fix):** koopa, dotfiles, all 7 `py-*` — replaced the
+- **9 plaintext repos (real fix):** koopa, dotfiles, all 7 `py-*`; replaced the
   abridged `LICENSE` with `gh api /licenses/apache-2.0`. This is what flips
   `NOASSERTION` → `Apache-2.0`.
 - **24 R repos (cosmetic only):** re-copied the installed usethis template into
   `LICENSE.md`. The sole diff was straight-quote → curly-quote typography, which
-  licensee normalizes away — detection was already correct, so this commit is
+  licensee normalizes away; detection was already correct, so this commit is
   optional consistency, not a fix. Do not mistake an R `LICENSE.md` working-tree
   diff for a compliance problem; `grep -c consequential` was already 1.
 
@@ -119,12 +119,12 @@ Fixed 2026-06-20:
 | `py-acidbase`, `py-acidgenomes`, `py-acidplyr`, `py-cellosaurus`, `py-goalie`, `py-pipette`, `py-syntactic` | `LICENSE` | `gh api /licenses/apache-2.0` |
 | all 24 `r-*` | `LICENSE.md` | usethis template |
 
-R packages do NOT have a plain `LICENSE` file — `LICENSE.md` + `.Rbuildignore`
+R packages do NOT have a plain `LICENSE` file: `LICENSE.md` + `.Rbuildignore`
 entry is the complete, correct setup.
 
 ## Adding a license badge (README)
 
-Dynamic badge — renders "Apache-2.0" once detection is working:
+Dynamic badge: renders "Apache-2.0" once detection is working:
 ```md
 ![License: Apache-2.0](https://img.shields.io/github/license/acidgenomics/<repo>)
 ```

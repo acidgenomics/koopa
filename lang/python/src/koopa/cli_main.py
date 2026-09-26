@@ -995,7 +995,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             return
         from koopa.alert import alert_success, stop, styled_name, warn
         from koopa.app import prune_apps
-        from koopa.check import check_dracula_pro_update_available, prune_broken_symlinks
+        from koopa.check import prune_broken_symlinks
         from koopa.install import repair_app_symlinks
 
         _cleanup_legacy_config()
@@ -1055,7 +1055,6 @@ def _handle_update(args: argparse.Namespace) -> None:
             warn(f"Prune failed: {exc}")
         if install_error is not None:
             stop(f"koopa update failed: {install_error}")
-        check_dracula_pro_update_available()
         alert_success(f"{styled_name('koopa')} update was successful.")
     finally:
         if acquired:

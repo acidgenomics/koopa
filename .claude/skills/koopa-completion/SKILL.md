@@ -1,7 +1,7 @@
 ---
 name: koopa-completion
 description: >-
-  koopa shell completion architecture — generator, flag extraction, bash/zsh/PowerShell/elvish
+  koopa shell completion architecture: generator, flag extraction, bash/zsh/PowerShell/elvish
   emitters, lazy-load mechanism, compdump freshness, and known bug patterns. Use when
   debugging missing completions, editing generate_completion.py, or adding flags to a
   CLI handler that need to appear in TAB completion.
@@ -11,7 +11,7 @@ description: >-
 
 ## Source of truth
 
-All completion files are **auto-generated** — never hand-edit them:
+All completion files are **auto-generated**; never hand-edit them:
 
 | Generated file | Shell |
 |---|---|
@@ -27,7 +27,7 @@ Invoke via: `koopa develop generate-completion`
 After a successful run it prints `"Reload your shell to apply changes."`.
 
 The CLI handler (`cli_develop.py:543`) already emits both the success and reload
-messages — no need to add them.
+messages: no need to add them.
 
 ## How flags reach completions
 
@@ -38,7 +38,7 @@ function and collects literal `"--..."` strings from `parser.add_argument(...)` 
 
 **Adding a new flag to a command:** add `parser.add_argument("--my-flag", ...)` in
 the handler, then run `koopa develop generate-completion`. The flag is picked up
-automatically — no manual edits to the completion files.
+automatically: no manual edits to the completion files.
 
 Flags are only picked up if the literal `"--flag-name"` string appears directly in
 the handler function body (not constructed dynamically).
@@ -53,7 +53,7 @@ completion file on first TAB. Until that first TAB:
 - `complete -p koopa` returns nothing
 - `_koopa_complete` is not defined in memory
 
-This is normal — it is **not** a sign that completion is broken. Running
+This is normal: it is **not** a sign that completion is broken. Running
 `complete -p koopa` before ever TABbing on `koopa` will always show "NOT
 registered".
 
@@ -70,7 +70,7 @@ koopa's versioned framework always wins over any system-installed v2.
 - After `koopa develop generate-completion`, the `_koopa` mtime changes, so the
   next new shell forces a full `compinit` rebuild automatically.
 
-A live session never picks up completion file changes — `exec zsh` or open a new
+A live session never picks up completion file changes: `exec zsh` or open a new
 terminal.
 
 ## Known bug pattern: flag-gate too strict (fixed 2026-06-19)
@@ -79,13 +79,13 @@ terminal.
 nothing; had to type `--` first.
 
 **Root cause:** the bash flag-collection block in the generator was gated on
-`[[ "${COMP_WORDS[COMP_CWORD]}" == --* ]]` — only fired when the current word
+`[[ "${COMP_WORDS[COMP_CWORD]}" == --* ]]`: only fired when the current word
 already started with two dashes.
 
 **Fix applied to `generate_completion.py`:**
 
 ```python
-# Bash emitter (~line 1649) — was `--*`, now `-*` || empty args
+# Bash emitter (~line 1649): was `--*`, now `-*` || empty args
 lines.append(f'{_I}if [[ "${{COMP_WORDS[COMP_CWORD]}}" == -* ]] || [[ -z "${{args[*]}}" ]]')
 ```
 
@@ -158,7 +158,7 @@ offer-then-reject.
 
 `koopa run` completions are auto-discovered from `cli_bin.py:_HANDLERS` via
 `_load_run_commands()` in `generate_completion.py`. No manual completion edits
-are needed — just:
+are needed, just:
 
 1. Add `_handle_my_cmd(args: list[str]) -> None` in `cli_bin.py`.
 2. Register `"my-cmd": _handle_my_cmd,` in `_HANDLERS` (keep alphabetical).
@@ -169,7 +169,7 @@ string-comparison chain, but require explicitly adding a `if subcmd == "my-cmd":
 `koopa admin` subcommands are discovered from `_ADMIN_HANDLERS`.
 
 Top-level commands (`koopa install`, `koopa configure`, …) require manual edits to
-`_build_parser` and to `_TOP_CMDS` in 8 places in `generate_completion.py` — avoid
+`_build_parser` and to `_TOP_CMDS` in 8 places in `generate_completion.py`; avoid
 adding top-level commands unless truly necessary.
 
 ## Diagnosing "completion not working"
@@ -178,12 +178,12 @@ adding top-level commands unless truly necessary.
 # In the live interactive shell:
 complete -p koopa 2>/dev/null || echo "NOT registered (normal before first TAB)"
 declare -F _koopa_complete >/dev/null && echo "DEFINED" || echo "NOT defined (normal before first TAB)"
-echo "framework: ${BASH_COMPLETION_VERSINFO[*]:-UNSET — framework not loaded}"
-echo "user dir:  ${BASH_COMPLETION_USER_DIR:-UNSET — wrong activation}"
+echo "framework: ${BASH_COMPLETION_VERSINFO[*]:-UNSET, framework not loaded}"
+echo "user dir:  ${BASH_COMPLETION_USER_DIR:-UNSET, wrong activation}"
 ```
 
 If `BASH_COMPLETION_VERSINFO` is unset after opening a new shell, the framework
-didn't load — check that activation ran (`echo $KOOPA_PREFIX`) and that the shell
+didn't load: check that activation ran (`echo $KOOPA_PREFIX`) and that the shell
 is interactive (`PS1` set).
 
 ## Dead symlink cleanup (done 2026-06-19)
@@ -191,5 +191,5 @@ is interactive (`PS1` set).
 `~/.local/share/bash-completion/completions/koopa` was a dangling symlink to
 the deleted file `etc/completion/koopa.sh`. It was harmless (bash-completion's
 `_comp_load` uses `[[ -e ]]` which is false for dangling links, so it silently
-skips it), but it was removed as cruft. If it reappears, just `rm` it — it is
+skips it), but it was removed as cruft. If it reappears, just `rm` it: it is
 not managed by chezmoi or koopa.

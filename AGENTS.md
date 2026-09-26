@@ -64,7 +64,7 @@ lang/python/
     └── test_*.py
 ```
 
-- `etc/koopa/app.json` — central app registry (version, default, installer).
+- `etc/koopa/app.json`: central app registry (version, default, installer).
   Edit freely; run `koopa develop format-app-json` after changes; bump `revision`.
 - Dotfiles: chezmoi-managed, source at `opt/dotfiles/chezmoi/`. Always edit the
   source file, never the deployed copy under `~`.
@@ -73,12 +73,12 @@ lang/python/
 
 ## Key Conventions
 
-- Never commit or push — leave version control to the user.
+- Never commit or push; leave version control to the user.
 - Never install packages or add dependencies without being asked.
-- Never suppress linting errors with `# noqa` — fix the underlying code.
-- Use `subprocess.run(..., check=True)` — never `check=False`.
-- XDG base dirs: use `from koopa.xdg import xdg_config_home, xdg_data_home`
-  — never hardcode `~/.config` or `~/.local/share`.
+- Never suppress linting errors with `# noqa`; fix the underlying code.
+- Use `subprocess.run(..., check=True)`, never `check=False`.
+- XDG base dirs: use `from koopa.xdg import xdg_config_home, xdg_data_home`.
+  Never hardcode `~/.config` or `~/.local/share`.
 
 ## Global Behavior Rules
 

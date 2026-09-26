@@ -31,7 +31,7 @@ exists in the namespace at the moment `fn` runs.
 **Consequence for the concat-and-eval-once loader**: if `activate-koopa.elv`
 (alphabetically mid-sort in `activate/`) is concatenated in filename order,
 `activate-starship` and `activate-zoxide` (which sort after it) don't exist yet when
-`fn activate-koopa { ... }` executes — so calls to them fall through to external
+`fn activate-koopa { ... }` executes, so calls to them fall through to external
 command lookup.
 
 **Fix**: filter `activate-koopa.elv` out of the main glob loop and append it last,
@@ -52,22 +52,22 @@ are harmless.
 
 Because `use path`/`platform`/`str`/`math` are hoisted once at the top of the
 assembled blob (see above), an individual function file calling `str:trim-space` or
-`path:is-regular` with no `use` line of its own is **not broken** — it relies on the
+`path:is-regular` with no `use` line of its own is **not broken**: it relies on the
 hoist, exactly like every other file in `functions/`. Running that file's function
 standalone (`eval (slurp < functions/export/export-env.elv); export-env`) without
 also hoisting those `use` lines first produces a `Command not found` error that
 looks like a real bug but is a testing artifact.
 
-**Rule**: always verify against the real mechanism — replicate `header.elv`'s
+**Rule**: always verify against the real mechanism; replicate `header.elv`'s
 concat-and-hoist (or just source `header.elv` itself, excluding
-`activate-color-mode-sync.elv` for headless runs per the note below) — never eval a
+`activate-color-mode-sync.elv` for headless runs per the note below); never eval a
 single function file in isolation and conclude it's broken from that alone.
 
 ## edit: Module Is Interactive-Only (Eager Compilation)
 
 The `edit:` namespace (`$edit:before-readline`, etc.) only exists in a real
-interactive line-editor session. References to `edit:` in any code — even inside a
-function body — cause a **compilation error** when eval'd under `elvish -c` or
+interactive line-editor session. References to `edit:` in any code, even inside a
+function body, cause a **compilation error** when eval'd under `elvish -c` or
 piped stdin, because elvish compiles the whole blob eagerly before running.
 
 **Consequence**: the full blob (including `activate-color-mode-sync.elv`) cannot be
@@ -95,7 +95,7 @@ for f [(path:glob $dir'/*.elv')] { ... } # WRONG on two counts
 `[nomatch-ok]` attaches directly after the wildcard character (`*[nomatch-ok].elv`),
 NOT at the end of the pattern. Without it, elvish throws on zero matches.
 
-## path: Module — What Exists in 0.21.0
+## path: Module: What Exists in 0.21.0
 
 **Valid**: `path:abs`, `path:base`, `path:clean`, `path:dir`, `path:eval-symlinks`,
 `path:ext`, `path:is-dir`, `path:is-regular` (accepts `&follow-symlink`),
@@ -148,7 +148,7 @@ and valid.
           → eval the whole blob once in a shared namespace
 ```
 
-The concatenate-and-eval-once loader is intentional — it is the only way to share
+The concatenate-and-eval-once loader is intentional: it is the only way to share
 functions across files given elvish's `eval` namespace isolation.
 
 ## Starship elvish_indicator

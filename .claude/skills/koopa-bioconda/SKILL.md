@@ -2,7 +2,7 @@
 name: koopa-bioconda
 description: >-
   Procedures for maintaining Acid Genomics R package recipes in
-  bioconda-recipes — recipe structure, Apache-2.0 license fields, GitHub
+  bioconda-recipes: recipe structure, Apache-2.0 license fields, GitHub
   Contents API PR workflow (never git push, repo is ~700 MB), autobump PR
   supersession, dependency tier ordering for CI, migration-lag dep solve
   failures, PR labeling/merge process via Mergify, and post-merge
@@ -20,7 +20,7 @@ Procedures for maintaining Acid Genomics R package recipes in
 
 All recipes live at `recipes/r-<pkgname>/meta.yaml` in bioconda-recipes.
 Maintainer handles: `@acidgenomics`, `@mjsteinbaugh`.
-Fork: `mjsteinbaugh/bioconda-recipes` — all edits go here, PRs target upstream.
+Fork: `mjsteinbaugh/bioconda-recipes`; all edits go here, PRs target upstream.
 
 ## Canonical recipe structure (noarch R package)
 
@@ -78,7 +78,7 @@ license_file: LICENSE.md
 license_family: APACHE
 ```
 
-Error on `license: AGPL-3` or `license_file: LICENSE` (no .md) — that is stale.
+Error on `license: AGPL-3` or `license_file: LICENSE` (no .md); that is stale.
 All 24 packages were relicensed in the 2026-06-20 sweep. The `LICENSE.md` file
 (Apache-2.0 markdown from `usethis::use_apache_license()`) is present in every
 release tarball ≥ the versions in the current recipes.
@@ -92,7 +92,7 @@ curl -fsSL https://github.com/acidgenomics/r-<pkg>/archive/v<ver>.tar.gz \
 
 ## GitHub Contents API workflow (NEVER git push to bioconda-recipes)
 
-The repo is ~700 MB — never clone or push. Use the GitHub Contents API.
+The repo is ~700 MB; never clone or push. Use the GitHub Contents API.
 All PRs must target `master` as base.
 
 ```sh
@@ -124,14 +124,14 @@ gh api repos/mjsteinbaugh/bioconda-recipes/contents/recipes/r-<pkg>/meta.yaml \
   --field "sha=${FILE_SHA}" \
   --field "branch=<branch>"
 
-# 5b. Create new recipe (PUT without sha — file doesn't exist yet)
+# 5b. Create new recipe (PUT without sha; file doesn't exist yet)
 gh api repos/mjsteinbaugh/bioconda-recipes/contents/recipes/r-<pkg>/meta.yaml \
   --method PUT \
   --field "message=Add r-<pkg> <ver>" \
   --field "content=${CONTENT}" \
   --field "branch=<branch>"
 
-# 6. Open PR — always --base master
+# 6. Open PR: always --base master
 gh pr create \
   --repo bioconda/bioconda-recipes \
   --head "mjsteinbaugh:<branch>" \
@@ -145,7 +145,7 @@ gh pr create \
 ## Autobump PRs from the bioconda bot
 
 The bot opens `bump/r_<pkgname>` PRs on new upstream tags. These only update
-`version` and `sha256` — they do NOT fix license fields.
+`version` and `sha256`; they do NOT fix license fields.
 
 **Always supersede autobump PRs** with a fresh PR that also fixes:
 - `license: Apache-2.0`
@@ -163,7 +163,7 @@ gh pr close <number> --repo bioconda/bioconda-recipes \
   --comment "Superseded by #<new-pr> which also fixes license AGPL-3 → Apache-2.0 and license_file → LICENSE.md"
 ```
 
-**Do NOT base your PR on the bot's bump branch** — bioconda lint CI only fetches
+**Do NOT base your PR on the bot's bump branch**: bioconda lint CI only fetches
 `origin/master` and will fail with:
 ```
 fatal: Not a valid object name origin/bump/r_<pkg>
@@ -200,9 +200,9 @@ Tier 7: r-cellosaurus, r-eggnog, r-panther, r-wormbase
 24 active packages; all Apache-2.0 in PRs #66513–#66535.
 
 **New recipes added in sweep** (previously absent from bioconda):
-- r-acidroxygen 0.3.3 — PR #66516
-- r-acidtest 0.9.2 — PR #66520
-- r-pointillism 0.8.0 — PR #66529
+- r-acidroxygen 0.3.3: PR #66516
+- r-acidtest 0.9.2: PR #66520
+- r-pointillism 0.8.0: PR #66529
 
 **r-aciddevtools**: intentionally omitted (dev-only package; CI would need many
 extra Suggests installed). Add later if desired.
@@ -215,7 +215,7 @@ curl -fsSL https://raw.githubusercontent.com/bioconda/bioconda-utils/master/bioc
 ```
 
 Current: `4.5.*`. All `noarch: generic` recipes rebuild automatically against the
-current pin — no recipe-side `r-base` version pin needed.
+current pin; no recipe-side `r-base` version pin needed.
 
 ### Dep solve failures (migration lag)
 
@@ -253,7 +253,7 @@ gh pr list --repo bioconda/bioconda-recipes --state open \
          elif (.statusCheckRollup | all(.conclusion == "SUCCESS" or .conclusion == "NEUTRAL")) then "ALL_GREEN"
          elif (.statusCheckRollup | any(.conclusion == "FAILURE")) then "FAILING"
          else "in_progress" end)
-  } | "\(.n) [\(.ci)] \(.labels | join(",")) — \(.title)"' | sort -n
+  } | "\(.n) [\(.ci)] \(.labels | join(",")): \(.title)"' | sort -n
 ```
 
 Label only `ALL_GREEN` PRs:
@@ -262,10 +262,10 @@ gh pr edit <number> --repo bioconda/bioconda-recipes \
   --add-label "please review & merge"
 ```
 
-### Migration lag — most CI failures are not recipe bugs
+### Migration lag: most CI failures are not recipe bugs
 
 When Tier 1 PRs (goalie, acidgenerics) are FAILING, all downstream tiers will
-also fail with `Unsatisfiable dependencies` — they can't install the in-flight
+also fail with `Unsatisfiable dependencies`; they can't install the in-flight
 Tier 1 packages because the r45 binaries don't exist in the channel yet.
 
 **Do not attempt to fix** these downstream failures. They self-resolve once the
@@ -278,7 +278,7 @@ Unsatisfiable dependencies for platform linux-64:
 {MatchSpec("r-goalie>=0.7.0"), MatchSpec("r-base[version='>=4.5']")}
 r-goalie [0.7.8|0.7.9] would require r-base >=4.4,<4.5.0a0
 ```
-This means r-goalie doesn't have an r45 build yet — wait for Tier 1 to land.
+This means r-goalie doesn't have an r45 build yet; wait for Tier 1 to land.
 
 ### Closing stale/duplicate PRs
 
@@ -295,11 +295,11 @@ gh pr close <number> --repo bioconda/bioconda-recipes \
   --comment "Superseded by #<new-pr>"
 ```
 
-Never close today's active sweep PRs — they are waiting for tier-ordered CI.
+Never close today's active sweep PRs; they are waiting for tier-ordered CI.
 
 ## Merge process
 
-bioconda uses **Mergify** — a human maintainer from `bioconda/bioconda-contrib`
+bioconda uses **Mergify**: a human maintainer from `bioconda/bioconda-contrib`
 must approve the PR, then Mergify auto-merges it into the queue.
 
 **BiocondaBot does NOT approve PRs.** Requesting review from BiocondaBot is
@@ -356,4 +356,4 @@ gh api "repos/bioconda/bioconda-recipes/contents/recipes/r-<pkg>" \
   --jq 'if type=="array" then "EXISTS" else .message end' 2>/dev/null \
   || echo "MISSING"
 ```
-Note: `--jq '.type'` returns empty for directories (arrays) — use the above form.
+Note: `--jq '.type'` returns empty for directories (arrays); use the above form.

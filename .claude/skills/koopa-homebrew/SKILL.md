@@ -16,7 +16,7 @@ description: >-
 Homebrew's own curl invocation passes `--retry 3` but sets no
 `--connect-timeout`, `--speed-limit`, or `--speed-time`. A curl transfer with
 those unset can block forever on a connection that stays open (`ESTABLISHED`)
-but stops delivering bytes — e.g. a corporate TLS-inspection proxy that drops
+but stops delivering bytes, e.g. a corporate TLS-inspection proxy that drops
 a stream without closing the socket. `--retry` never fires, because a stall is
 not itself an error for it to retry.
 
@@ -28,7 +28,7 @@ corporate proxy tunnel process, not the download host.
 Diagnostic recipe (placeholders in `<...>`, not shell variables):
 ```sh
 pgrep -fl "curl|brew"                # find the stuck process tree
-stat -f '%z %Sm' <file>.incomplete   # sample size across a sleep — 0 growth = stalled, not slow
+stat -f '%z %Sm' <file>.incomplete   # sample size across a sleep: 0 growth = stalled, not slow
 lsof -nP -p <curl_pid> -i            # confirm ESTABLISHED with an idle socket
 ps -o pid,etime,time -p <curl_pid>   # long ELAPSED, near-zero TIME = waiting on I/O, not working
 ```
@@ -36,7 +36,7 @@ ps -o pid,etime,time -p <curl_pid>   # long ELAPSED, near-zero TIME = waiting on
 ## The only hook Homebrew exposes for curl settings
 
 `HOMEBREW_CURLRC` is the only environment variable Homebrew's curl wrapper
-respects for custom directives — confirmed against
+respects for custom directives; confirmed against
 `Library/Homebrew/env_config.rb`: only `HOMEBREW_CURLRC`,
 `HOMEBREW_CURL_PATH`, `HOMEBREW_CURL_RETRIES`, `HOMEBREW_CURL_VERBOSE` exist.
 There is no per-directive variable such as a connect-timeout knob.
@@ -67,7 +67,7 @@ env.setdefault("HOMEBREW_CURLRC", _user_curlrc_path() or _brew_curlrc_fallback()
 
 An earlier iteration parsed a `cacert` directive out of the user's curlrc
 into a separately generated file. That was dropped as unneeded complexity
-once the design switched to pointing straight at the real file — the real
+once the design switched to pointing straight at the real file: the real
 file already carries everything in it (`cacert`, `proxy`, `referer`,
 whatever the user has), with zero parsing needed.
 
@@ -104,7 +104,7 @@ Warning: An exception occurred within a child process:
   RuntimeError: Failed to generate pwsh completions from /opt/homebrew/bin/zed: Operation not permitted @ dir_s_mkdir - /opt/homebrew/share/pwsh
 ```
 
-This is **not** a permissions or MDM/proxy restriction — the user owns
+This is **not** a permissions or MDM/proxy restriction; the user owns
 `/opt/homebrew/share` and can `mkdir` there by hand. The denial comes from
 Homebrew's own sandbox profile. Evidence chain:
 
@@ -116,7 +116,7 @@ Homebrew's own sandbox profile. Evidence chain:
    (`Library/Homebrew/sandbox.rb`). This covers the directory and its
    contents, not an as-yet-nonexistent parent.
 3. The sandboxed child then does `output_path.dirname.mkpath`
-   (`Library/Homebrew/cask_artifact.rb`) — creating the directory, not just
+   (`Library/Homebrew/cask_artifact.rb`), creating the directory, not just
    writing inside an existing one.
 4. When that directory has never been created before, `mkpath` must first
    create its parent. The profile's `(deny file-write*)` default rejects
@@ -140,7 +140,7 @@ Target directories, from `Library/Homebrew/cask/config.rb` and
 
 Homebrew's own installed-keg manifest (`Library/Homebrew/keg.rb`) already
 lists `share/pwsh` and `share/pwsh/completions` among the directories every
-keg link expects to exist — pre-creating them restores an invariant
+keg link expects to exist; pre-creating them restores an invariant
 Homebrew assumes, it is not a workaround for a permissions problem that
 doesn't exist.
 
@@ -158,11 +158,11 @@ upgrade` and the `koopa update` sweep (`installers/homebrew.py`'s
 the directories before the first cask reinstall.
 
 `brew_fix_completion_dirs()` is the public wrapper, reachable as `koopa app
-brew fix-completion-dirs` — the escape hatch for repairing a machine that
+brew fix-completion-dirs`: the escape hatch for repairing a machine that
 already hit the warning, without waiting for a full `koopa update`.
 
 Test pattern: patch `koopa.brew.brew_prefix` to a `tmp_path`, never a real
-prefix — `_ensure_completion_dirs` does real `os.makedirs` calls, and every
+prefix; `_ensure_completion_dirs` does real `os.makedirs` calls, and every
 existing `brew_upgrade_casks()` test needed `patch("koopa.brew
 ._ensure_completion_dirs")` added once this call was wired in, or it would
 have either written into the developer's real `/opt/homebrew` (tests that
@@ -182,7 +182,7 @@ first one.
 
 Fix, inside `brew_upgrade_casks()`:
 ```python
-_sudo_authenticate()  # one real sudo -v, inherits the tty — the only intentional prompt
+_sudo_authenticate()  # one real sudo -v, inherits the tty; the only intentional prompt
 keepalive = _sudo_keepalive_start()  # background thread: sudo -n -v every 50s
 try:
     for cask in casks:
@@ -191,7 +191,7 @@ finally:
     _sudo_keepalive_stop(keepalive)  # always stopped, even after a failed reinstall
 ```
 
-`_sudo_authenticate()` deliberately does not redirect stdin — Touch ID does
+`_sudo_authenticate()` deliberately does not redirect stdin: Touch ID does
 not need it, but a password fallback does. `_brew()`'s own calls use
 `stdin=subprocess.DEVNULL` to keep Homebrew's own prompts non-interactive;
 reusing that on the authentication call would silently break the password
@@ -214,5 +214,5 @@ of it: real `brew`/`curl`/`sudo` calls, and the keep-alive thread's own `sudo
 -n -v` refresh. A keep-alive test must call `_sudo_keepalive_stop()` (which
 does `stop_event.set(); thread.join(timeout=2)`) before asserting, or the
 background thread is still parked in `Event.wait(50)` when the test body
-finishes — harmless (it is a daemon thread), but leaves nothing to assert
+finishes, harmless (it is a daemon thread), but leaves nothing to assert
 against.

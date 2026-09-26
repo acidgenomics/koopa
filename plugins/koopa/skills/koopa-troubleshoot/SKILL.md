@@ -31,7 +31,7 @@ non-zero with no clear error on screen.
 `koopa system prune-apps` removes old, unlinked versions of installed CLI
 apps, keeping only the currently active version on disk. This deletes files.
 Confirm with the user before running it, and prefer describing what it would
-do rather than running it unprompted — there is no dry-run flag exposed on
+do rather than running it unprompted; there is no dry-run flag exposed on
 the CLI surface, so treat every invocation as live.
 
 ## When a check fails

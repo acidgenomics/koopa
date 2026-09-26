@@ -1,7 +1,7 @@
 ---
 name: koopa-dotfiles
 description: >-
-  Managing the opt/dotfiles standalone git clone — git state, committing changes,
+  Managing the opt/dotfiles standalone git clone: git state, committing changes,
   license/metadata updates, and the app.json pin rollout to hosts. Use when making
   changes to opt/dotfiles/ that need to be committed, when the clone is in a
   detached HEAD state, or when a fix that touches both the koopa repo and
@@ -20,7 +20,7 @@ specific commit (blobless partial clone with `partialclonefilter = blob:none`).
 The chezmoi source tree lives inside it at `opt/dotfiles/chezmoi/`. See skill
 `koopa-chezmoi-dotfiles` for editing dotfiles via chezmoi.
 
-## Detached HEAD — always check before committing
+## Detached HEAD: always check before committing
 
 `koopa install` pins the clone at a specific commit, leaving it in **detached HEAD**
 state. Any `git commit` from a detached HEAD lands on no branch and will be
@@ -52,11 +52,11 @@ Apache-2.0 — Copyright 2016 Acid Genomics LLC — see [LICENSE](LICENSE).
 To verify no AGPL traces remain: `grep -i "affero\|agpl" opt/dotfiles/LICENSE`
 should return nothing.
 
-## Pinned version — a fix touching both repos needs two pushes, and the pin auto-tracks main HEAD
+## Pinned version: a fix touching both repos needs two pushes, and the pin auto-tracks main HEAD
 
 The `dotfiles` app entry in `etc/koopa/app.json` pins `opt/dotfiles/` to an exact
 commit SHA (`version` field, e.g. `"d1281d312911bcbb893a333f715fbe2e9aee6e77"`).
-`koopa install dotfiles` on any host checks out exactly that SHA — pushing new
+`koopa install dotfiles` on any host checks out exactly that SHA; pushing new
 commits to `github.com/acidgenomics/dotfiles` main does not change what any host
 installs until this pin advances.
 
@@ -65,7 +65,7 @@ installs until this pin advances.
 `_check_github_head()` in
 [version_check.py](lang/python/src/koopa/version_check.py) and, if it differs
 from the pinned SHA, calls `update_app_json()` to rewrite `app.json`'s `version`
-and `date` fields and drop any stale `revision` — this is the source of the
+and `date` fields and drop any stale `revision`: this is the source of the
 `"Update dotfiles"` commits you'll see in `git log -- etc/koopa/app.json`. Do not
 manually edit the `dotfiles` entry's `version` field; run the check command
 instead, from the koopa repo whose `opt/dotfiles/` clone already has the new
@@ -77,19 +77,19 @@ commit pushed.
    pull the new pin into `app.json`. **`--reset-cache` is not optional here:** the
    version cache has a 24h TTL (per `koopa-app-registry`), so if the check ran
    earlier the same day for any reason, the cached pre-push HEAD masks the commit
-   you just pushed until the cache expires — the check reports "up to date" against
+   you just pushed until the cache expires; the check reports "up to date" against
    stale data instead of fetching the new SHA.
 3. Commit + push that `app.json` change in the koopa repo itself.
 4. On every host that needs the fix, **including this one**: `git pull` (koopa
    repo) → `koopa install dotfiles` (re-clones at the new SHA into a new
-   `app/dotfiles/<short-sha>/` and relinks `opt/dotfiles/` to it — the version-check
+   `app/dotfiles/<short-sha>/` and relinks `opt/dotfiles/` to it; the version-check
    step above only patches the `app.json` pin, it does not touch the local clone or
    symlink) → `koopa configure user dotfiles` (re-renders).
 
 **Known failure mode:** shipping only the koopa-side half of a fix (e.g. a Python
 probe bug) looks fully resolved once it's live, because most such bugs are
 one-repo. But if the same investigation also touched a chezmoi template (as the
-2026-08 stuck-light-mode fix did — the Python `gdbus` parse bug in `koopa`, plus a
+2026-08 stuck-light-mode fix did: the Python `gdbus` parse bug in `koopa`, plus a
 tmux-hook trailing-newline fix in `opt/dotfiles/chezmoi/dot_config/tmux/
 tmux.conf.tmpl`), the dotfiles half is invisible until steps 2–4 above happen.
 Symptom on the host: `koopa install dotfiles` reports the **old** SHA as already
@@ -98,3 +98,21 @@ dotfiles` pending-changes list. Check `git log -1 origin/main` in `opt/dotfiles`
 against the `version` pin currently in `app.json` (or just run
 `check-app-versions dotfiles` and look for "outdated") to confirm the SHA a fix
 landed in has actually been promoted, not just pushed.
+
+## Gotchas
+
+### Never search from the filesystem root
+
+Scope every `find`/search to a known root: the repo, `~/git`, an app prefix,
+or a specific cache directory (for example `~/.cache/uv/...`). A root-wide
+search is slow, noisy, and reaches unrelated trees the task never asked
+about.
+
+The same risk hides inside a plain `rg` call. `~/.config/ripgrep/config` sets
+`--no-ignore`, which disables `.gitignore` (and any repo-local `.rgignore`)
+for every invocation. A bare `rg --files` at the koopa repo root walked
+700,000 files, including the `app/` install prefix, instead of the 1,226
+files `.gitignore` allows, and a content search over that many files can
+hang. Fixed at the source in `dot_config/ripgrep/config.tmpl`, where
+`-u`/`-uu`/`-uuu` is now the per-command opt-in. On a host still running the
+old config, add `--ignore-vcs` as a stopgap, or use `git ls-files`.

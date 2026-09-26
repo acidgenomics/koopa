@@ -1127,29 +1127,6 @@ def check_dracula_pro_layout() -> bool:
     return False
 
 
-def check_dracula_pro_update_available() -> None:
-    """Print a note if a newer Dracula Pro release is published.
-
-    Advisory only -- never raises and never fails the caller. Dracula Pro is
-    a paid, manually-downloaded bundle with no auto-download path, so a
-    newer release can only be reported here, not fixed by `koopa update`.
-    """
-    import ssl
-    import urllib.error
-
-    from koopa.dracula_pro import check, installed_version
-
-    if installed_version() is None:
-        return
-    try:
-        check()
-    except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError, ValueError):
-        # Network unreachable, or the changelog feed had no version mention
-        # this time -- a remote hiccup must not fail `koopa system check` or
-        # `koopa update`.
-        return
-
-
 def check_tmux_server_stale() -> bool:
     """Check whether the running tmux server predates the on-disk bundled binary.
 
@@ -1198,9 +1175,6 @@ def check_system() -> bool:
         needs_tmux_restart = True
     if not check_dracula_pro_layout():
         needs_dracula_pro_update = True
-    # Advisory only -- a newer release existing is not a system problem, so
-    # this never contributes to the pass/fail result below.
-    check_dracula_pro_update_available()
     if (is_macos() or is_debian_like()) and not check_system_r():
         needs_system_update = True
     if is_macos():

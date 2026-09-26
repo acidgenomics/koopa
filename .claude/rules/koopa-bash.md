@@ -11,9 +11,9 @@ paths:
 ## Variable bracing
 
 Use `${VAR}` (braced) only when the variable is immediately adjacent to other
-text that would otherwise be parsed as part of the name — path suffixes, string
-concatenation, filename suffixes, etc. Use bare `$VAR` when the variable stands
-alone in quotes or as an argument.
+text that would otherwise be parsed as part of the name: path suffixes, string
+concatenation, filename suffixes, and so on. Use bare `$VAR` when the variable
+stands alone in quotes or as an argument.
 
 ```sh
 # Braces required: adjacent text follows
@@ -39,7 +39,7 @@ uv venv --quiet "${tmp}/venv"
 rm -rf "$tmp"               # standalone: bare
 ```
 
-**Exception — fish:** fish uses bare `$VAR` and never `${VAR}` (see
+**Exception, fish:** fish uses bare `$VAR` and never `${VAR}` (see
 `rules/koopa-fish.md`). This rule does not apply to ` ```fish ` blocks or `*.fish` files.
 
 **Nested defaults:** the adjacency rule also applies inside a `${VAR:-...}`

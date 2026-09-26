@@ -36,7 +36,7 @@ colors via `KOOPA_COLOR_MODE` chezmoi branch, (3) sets `FZF_DEFAULT_OPTS`.
 
 **Debugging tip:** `activate.ps1` removes `KOOPA_ACTIVATE` from the environment on
 its last line after the header returns. An empty `$env:KOOPA_ACTIVATE` after activation
-is normal — not evidence that activation failed. Check instead for the presence of
+is normal, not evidence that activation failed. Check instead for the presence of
 `_koopa_activate_starship` as a function, or count loaded functions:
 ```powershell
 (Get-ChildItem Function: | Measure-Object).Count  # ~77 when fully activated
@@ -46,7 +46,7 @@ is normal — not evidence that activation failed. Check instead for the presenc
 
 ### Activation
 
-`lang/powershell/functions/activate/activate-starship.ps1` — mtime-guarded cache:
+`lang/powershell/functions/activate/activate-starship.ps1`: mtime-guarded cache:
 ```powershell
 $starship = Join-Path $env:KOOPA_PREFIX 'bin/starship'
 $cacheFile = Join-Path $env:XDG_CACHE_HOME 'koopa/shell-init/starship-powershell.ps1'
@@ -59,17 +59,17 @@ Cache: `~/.cache/koopa/shell-init/starship-powershell.ps1`.
 The cached init is `starship init powershell --print-full-init`, which runs starship
 as a **subprocess on every prompt render** and re-reads `~/.config/starship.toml`
 each time. This means re-rendering `starship.toml` (e.g. via `chezmoi apply`) takes
-effect on the **next prompt** — no re-sourcing or shell restart required.
+effect on the **next prompt**, no re-sourcing or shell restart required.
 
 ### Starship Config
 
 Shell-agnostic. Source: `opt/dotfiles/chezmoi/dot_config/starship.toml.tmpl`.
 Dark/light palette selected at chezmoi-render time via `KOOPA_COLOR_MODE`.
-PowerShell consumes it automatically — no per-shell toml needed.
+PowerShell consumes it automatically; no per-shell toml needed.
 
 The `[shell]` module in `starship.toml.tmpl` uses `powershell_indicator = '>'`,
-matching PowerShell's own default prompt character (`PS C:\>`). Elvish also uses `>`
-— that's fine, they're mutually exclusive in any session.
+matching PowerShell's own default prompt character (`PS C:\>`). Elvish also uses `>`;
+that's fine, they're mutually exclusive in any session.
 
 ### header.ps1 Ordering (Critical)
 
@@ -77,8 +77,8 @@ matching PowerShell's own default prompt character (`PS C:\>`). Elvish also uses
 (line 80). Starship's `--print-full-init` output defines `function global:prompt` inside
 a `New-Module` block, which overwrites `$function:prompt` wholesale when executed via
 `Invoke-Expression`. The color-mode-sync wrapper must therefore run *after* starship
-has set `$function:prompt`, so it captures starship's scriptblock — not the built-in
-default — as `$origPrompt`. If the order is reversed, the wrapper captures the default
+has set `$function:prompt`, so it captures starship's scriptblock, not the built-in
+default, as `$origPrompt`. If the order is reversed, the wrapper captures the default
 prompt, and starship never renders.
 
 ## Color Mode Sync
@@ -105,7 +105,7 @@ prompt render it:
    ```
 4. Calls `& $origPrompt` (starship).
 
-The marker check is **outside** the `$newMode -ne $env:KOOPA_COLOR_MODE` block — so a
+The marker check is **outside** the `$newMode -ne $env:KOOPA_COLOR_MODE` block, so a
 new shell whose env already matches but whose `color-mode-applied` marker is stale still
 self-heals on its first prompt. This removes the need for a separate
 `_koopa_activate_color_mode` function (bash/zsh have one; PowerShell doesn't need it).
@@ -114,30 +114,30 @@ self-heals on its first prompt. This removes the need for a separate
 
 Set by `color_mode.py::main()` in the chezmoi apply subprocess env (line 154 of
 `lang/python/src/koopa/configurers/color_mode.py`). Any koopa pwsh spawned during
-the apply sees this and skips the background spawn — prevents flock deadlock / spawn
+the apply sees this and skips the background spawn: prevents flock deadlock / spawn
 storm. Always check `$env:KOOPA_COLOR_MODE_SYNCING` before firing the background job.
 
-### `_koopa_is_light_mode` — Per-Platform Detection
+### `_koopa_is_light_mode`: Per-Platform Detection
 
 `lang/powershell/functions/core/is-light-mode.ps1`:
 
-- **`$IsMacOS`** — reads `~/.cache/koopa/color-mode` cache first (set by OSC 11
+- **`$IsMacOS`**: reads `~/.cache/koopa/color-mode` cache first (set by OSC 11
   query or prior detection), then falls back to
   `defaults read -g AppleInterfaceStyle` (absent key = light mode).
-- **`$IsWindows`** — reads registry:
+- **`$IsWindows`**: reads registry:
   `HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize\AppsUseLightTheme`
   (DWORD 1 = light, 0 = dark; `catch` → `$false`/dark as fallback).
-- **tmux/screen** — reads `~/.cache/koopa/color-mode` cache.
-- **Fallback** — `_koopa_terminal_is_light_background` (OSC 11 query).
+- **tmux/screen**: reads `~/.cache/koopa/color-mode` cache.
+- **Fallback**: `_koopa_terminal_is_light_background` (OSC 11 query).
 
-### Python `os_appearance_mode()` — Windows Support
+### Python `os_appearance_mode()`: Windows Support
 
 `lang/python/src/koopa/system.py::os_appearance_mode()` (line 100):
 
 - Darwin: `defaults read -g AppleInterfaceStyle`.
 - Linux: XDG portal → gsettings → cache file.
 - **Windows**: `sys.platform == "win32"` guard (NOT `platform.system() == "Windows"`)
-  with lazy `import winreg`. The `sys.platform` guard is required — pyright and ty
+  with lazy `import winreg`. The `sys.platform` guard is required; pyright and ty
   use it for type narrowing so they resolve `winreg.*` attributes without ignore
   comments. `platform.system()` does not narrow:
   ```python
@@ -160,7 +160,7 @@ storm. Always check `$env:KOOPA_COLOR_MODE_SYNCING` before firing the background
 PowerShell scriptblocks do **not** automatically close over locals from an enclosing
 function. When `_koopa_activate_color_mode_sync` assigns a scriptblock to
 `$function:prompt`, the scriptblock references `$origPrompt` by name. After the
-function returns, its local scope is gone — `$origPrompt` resolves to `$null` at
+function returns, its local scope is gone; `$origPrompt` resolves to `$null` at
 every subsequent prompt render, causing `& $origPrompt` to fail with:
 
 ```
@@ -217,7 +217,7 @@ Note: some pwsh versions reject identical paths for `-RedirectStandardOutput` an
 | `lang/powershell/functions/activate/activate-color-mode-sync.ps1` | Per-prompt flip detection + file re-render trigger |
 | `lang/powershell/functions/core/is-light-mode.ps1` | OS appearance detection (macOS/Windows/tmux/OSC11) |
 | `lang/powershell/functions/export/export-env.ps1` | Sets `KOOPA_COLOR_MODE` + writes color-mode cache at activation |
-| `lang/python/src/koopa/system.py` | `os_appearance_mode()` — Python-side appearance detection inc. Windows |
+| `lang/python/src/koopa/system.py` | `os_appearance_mode()`, Python-side appearance detection inc. Windows |
 | `opt/dotfiles/chezmoi/dot_config/powershell/Microsoft.PowerShell_profile.ps1.tmpl` | Chezmoi source for the profile |
 | `~/.cache/koopa/shell-init/starship-powershell.ps1` | Cached `starship init powershell` output |
 | `~/.cache/koopa/color-mode-applied` | Marker: last mode rendered by `koopa configure user color-mode` |

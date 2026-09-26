@@ -12,7 +12,7 @@ description: >-
 
 ## Install an app
 
-`koopa install <app>` — not `koopa app install <app>`. The `app` subcommand
+`koopa install <app>`: not `koopa app install <app>`. The `app` subcommand
 does not take an install action.
 
 `koopa reinstall <app>` and `koopa uninstall <app>` follow the same pattern.
@@ -31,16 +31,16 @@ System updates are opt-in, never part of the default `koopa update` sweep.
 
 ## List and inspect
 
-- `koopa list` — installed apps.
-- `koopa list --all` — every app koopa knows about, installed or not.
-- `koopa app <name> <subcommand>` — app-specific helpers (for example `koopa
+- `koopa list`: installed apps.
+- `koopa list --all`: every app koopa knows about, installed or not.
+- `koopa app <name> <subcommand>`: app-specific helpers (for example `koopa
   app git ...`, `koopa app aws ...`). Run `koopa app --help` for the current
   list; it changes as apps are added.
 
 ## Configure
 
-- `koopa configure user <app> [<app>...]` — configure for the current user.
-- `koopa configure system <app> [<app>...]` — requires admin; system-wide.
+- `koopa configure user <app> [<app>...]`: configure for the current user.
+- `koopa configure system <app> [<app>...]`: requires admin; system-wide.
 
 ## Before reaching for another package manager
 

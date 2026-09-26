@@ -1,7 +1,7 @@
 ---
 name: koopa-theming
 description: >-
-  Reference for koopa theme synthesis across editors and terminals — Dracula Pro
+  Reference for koopa theme synthesis across editors and terminals: Dracula Pro
   runtime pipeline, fish color architecture (fish_frozen_theme.fish override, _FISH_COLOR_ROLES
   generator, live sync hook), JetBrains/IntelliJ scheme delivery, atuin and mcfly color
   config, vim/nvim statusline theming (airline explicit g:airline_theme read, lualine
@@ -19,7 +19,7 @@ description: >-
 ## Dracula Pro: Runtime Derivation Architecture
 
 Proprietary paid-theme hex values (Dracula Pro, Dracula Pro Alucard) must **never**
-appear as literals in any tracked file — derive them at runtime only.
+appear as literals in any tracked file; derive them at runtime only.
 
 **Allowed as literals:**
 - Free Dracula OSS colors: `#282a36`, `#6272a4`, `#50fa7b`, `#f1fa8c`, `#ff79c6`,
@@ -48,14 +48,14 @@ grep -iE '<THE_HEX>' ~/.local/share/dracula-pro/themes/ghostty/pro
 ```
 If it matches, the code must read it at runtime.
 
-### Vendor renames fail silently -- 2.2.3's lowercase-hyphen rewrite
+### Vendor renames fail silently: 2.2.3's lowercase-hyphen rewrite
 
 Dracula Pro 2.2.3 renamed nearly every bundle file to a lowercase-hyphen
 scheme: `Dracula Pro (Alucard).tmTheme` became `dracula-pro-alucard.tmTheme`,
 `colors/dracula_pro_alucard.vim` became `colors/dracula-pro-alucard.vim`, and
 so on. Every generator in `install` guards its vendor-file read with
 `os.path.isfile`/`os.path.isdir` and returns `None`/skips when the source is
-missing -- so `koopa configure user dotfiles` kept reporting success while
+missing, so `koopa configure user dotfiles` kept reporting success while
 most Pro themes (bat, RStudio, Zed, vim/nvim, BBEdit, and more) went stale
 or fell back to the free Dracula theme, and the Ghostty "comment" color
 changed with no warning at all (`_parse_vim_palette()` silently returned
@@ -75,7 +75,7 @@ remedy (`koopa app dracula-pro install --zip <path>`).
 ### Synthesizing a Theme When No Upstream Dracula Pro File Exists
 
 Most terminal tools (kitty, alacritty, wezterm, atuin) have an official Dracula
-Pro theme file to parse. Some don't — no `find ~/.local/share/dracula-pro
+Pro theme file to parse. Some don't: no `find ~/.local/share/dracula-pro
 -ipath '*<tool>*'` hit anywhere in the vendor tree (btop, in the 2026-08 case:
 `btop`/`bpytop`/`bashtop` share a `.theme` key=value grammar, but Dracula Pro
 never shipped one). The generator has to build the file from a parsed palette
@@ -86,14 +86,14 @@ rather than transform an existing one.
 ANSI slots. `_parse_ghostty_palette()` only gives ANSI red/green/yellow/etc.
 `_parse_vim_palette()` additionally names `orange`/`pink`/`purple` explicitly
 and provides a 5-step background ramp (`bg`/`bgdark`/`bgdarker`/`bglight`/
-`bglighter`) — exactly what a system-monitor theme's `main_bg`/`meter_bg`/
+`bglighter`), exactly what a system-monitor theme's `main_bg`/`meter_bg`/
 `selected_bg`/`div_line` roles need and the ANSI-only palette can't supply.
 
 **Gradient stops: derive with `_hex_lerp()`, never hand-pick intermediate hex.**
 When the target format wants a 3-stop gradient (`theme[foo_start]`/`_mid`/
 `_end`) but the palette only names one color per role, blend that named role
 toward `bg` (for the pale `start`) and toward `fg` (for the saturated `end`)
-with the existing `_hex_lerp()` helper — same shape the free `dracula.theme`
+with the existing `_hex_lerp()` helper: same shape the free `dracula.theme`
 uses for its `free_start`/`free_mid`/`free_end` ramps. This keeps every value
 runtime-derived (passes the proprietary-hex audit) instead of inventing a
 plausible-looking literal.
@@ -102,7 +102,7 @@ plausible-looking literal.
 new tool has a predecessor in `etc/koopa/app.json` marked
 `{"removed": true, "successor": "<tool>"}` that used the same config grammar
 (`bpytop` → `btop`: both are the `.theme` format), that predecessor's existing
-`.tmpl` — even though dead code and not installed — is the fastest way to find
+`.tmpl`, even though dead code and not installed, is the fastest way to find
 the working non-color settings to seed the new template from, and its dark/light
 branching (however primitive) shows which lines actually need to vary.
 
@@ -110,7 +110,7 @@ branching (however primitive) shows which lines actually need to vary.
 compute WCAG contrast of every candidate foreground role against that variant's
 `bg` (reuse `_wcag_relative_luminance()`/`_contrast_ratio()`, already in
 `install`). A role that reads fine on `pro`'s near-black `bg` can fail on
-`alucard`'s near-white `bg` — this is a broader case of the documented
+`alucard`'s near-white `bg`; this is a broader case of the documented
 Alucard-`comment`-is-white quirk in `_generate_atuin_dracula_pro_toml`/
 `_fzf_color_opts`: assume nothing about legibility carries between variants,
 check both.
@@ -145,7 +145,7 @@ writes through it into the upstream vendor file.
 
 **`_parse_vim_palette()` variant slugs match the vendor filenames directly
 (2.2.3+).** `van-helsing`'s Vim colorscheme file is
-`colors/dracula-pro-van-helsing.vim` -- the same hyphenated slug used
+`colors/dracula-pro-van-helsing.vim`, the same hyphenated slug used
 everywhere else in koopa, via `_dracula_pro_file_name(variant, ".vim")`. Before
 2.2.3, the vendor's own filenames used underscores while its variant slugs
 were already hyphenated, so a naive `f"dracula_pro_{variant}.vim"` needed a
@@ -156,7 +156,7 @@ vendor's names and koopa's slugs finally agree.
 
 Obsidian has no official Dracula Pro port and no community Alucard/light
 variant either, so `install` generates a real `theme.css` rather than
-transforming an upstream file — same shape as the "no upstream file" pattern
+transforming an upstream file: same shape as the "no upstream file" pattern
 above, but with a native light/dark toggle: one file carries a genuine
 `.theme-dark` block (whichever dark variant is active) and a genuine
 `.theme-light` block (always `alucard`), so no `KOOPA_COLOR_MODE` branching is
@@ -169,19 +169,19 @@ to `~/.config/koopa/obsidian-themes/dracula-pro/` and symlinked per-vault via
 Obsidian derives most of its chrome from one `--color-base-NN` ramp
 (`--background-secondary` from `base-20`, `--text-muted` from `base-70`, etc.),
 so generating the ramp covers far more UI than listing each semantic role by
-hand — but that ramp has produced two distinct, non-obvious defects:
+hand, but that ramp has produced two distinct, non-obvious defects:
 
 **A straight bg→fg hue blend can cross an unintended hue.** The obvious
-approach — blend each ramp step's hue along the shortest path from `bg`'s hue
-to `fg`'s — picks whichever arc is numerically shorter with no regard for what
+approach, blend each ramp step's hue along the shortest path from `bg`'s hue
+to `fg`'s, picks whichever arc is numerically shorter with no regard for what
 color it passes through. `pro`'s `bg` (blue-purple, H≈245) to `fg` (warm
 off-white, H≈60) short arc runs forward through magenta/red, and
 `--color-base-70` (frac 0.66) landed almost exactly on pink, not purple.
 Alucard's `bg`/`fg` are both true grey (S=0.0, an undefined hue), so the same
-blend has no real hue to carry — and treating that undefined value as a real
+blend has no real hue to carry, and treating that undefined value as a real
 endpoint can pick an arbitrary wrap direction, landing intermediate steps in
 magenta too. Fix: `_obsidian_ramp_step()` holds hue fixed at a palette anchor
-(the variant's own named `selection` role — Dracula Pro's own `comment`/
+(the variant's own named `selection` role: Dracula Pro's own `comment`/
 `selection`/`purple` roles all cluster at H≈230-252 in every variant, i.e.
 muted/in-between chrome is meant to stay in that family, not drift toward
 `fg`) and only blends lightness (bg→fg) and saturation (bg's own→anchor's).
@@ -193,24 +193,24 @@ token against `--color-base-00` only. Obsidian's own var() chain composites
 `--text-muted`, `--text-faint`, and every tag/link hue over
 `--background-secondary` (`base-20`, the whole left sidebar) and
 `--background-secondary-alt` / `--background-modifier-border` (`base-30`)
-too — confirmed failing there even though the base-00-only check passed:
+too, confirmed failing there even though the base-00-only check passed:
 `--color-base-70` measured 4.12:1 (pro) / 3.72:1 (alucard) against `base-30`,
 both under the 4.5:1 AA floor, and several hues (`--color-accent`,
 `--color-purple`, every Alucard hue) failed the same way. Fix:
 `_OBSIDIAN_SURFACE_STEPS = ("00", "10", "20", "30")`, and
 `_fix_obsidian_surface_contrast()` re-tunes every token against all four by
 reusing `_fix_comment_contrast()` (originally written for delta's diff-tint
-backgrounds — see below) instead of one bespoke fix per token. A token that
+backgrounds, see below) instead of one bespoke fix per token. A token that
 already clears every surface converges back to its own value within float
 rounding, so it's safe to run unconditionally.
 
 **Passing the bare AA floor still reads as washed-out.** 4.5:1 is legally
 readable but visually muted against the sidebar (confirmed against a live
-screenshot) — pushing `--color-base-70`'s own floor higher (`_OBSIDIAN_STRONG_FLOOR`,
+screenshot); pushing `--color-base-70`'s own floor higher (`_OBSIDIAN_STRONG_FLOOR`,
 6.0:1) fixes that. Stop below 7:1: at that point base-70 closes in on
 `--color-base-100` (the active/hover text) and the idle/active hierarchy
 starts to collapse. Don't reflexively apply the same stronger floor to
-`--color-base-50` (`--text-faint`, meant to be the faintest tier) — its
+`--color-base-50` (`--text-faint`, meant to be the faintest tier); its
 natural ramp position sits close enough to the untouched `--color-base-60`
 that boosting it to even 3.0:1 pushed it *past* base-60's own luminance,
 breaking the ramp's required monotonicity (the guard `_assert_obsidian_contrast()`
@@ -233,7 +233,7 @@ precedent, and it was reverted by explicit request in 2026-08 in favor of the
 familiar convention. If you're tempted to reintroduce a non-standard
 diff-line pairing, confirm first: check `contributes.colors`/`tokenColors` in
 the installed `.vsix`'s theme JSON, and `DiffAdd`/`DiffDelete`/`DiffChange` in
-`themes/vim/colors/dracula-pro-base.vim` — every one of them is red/green.
+`themes/vim/colors/dracula-pro-base.vim`: every one of them is red/green.
 
 **What's adopted from the vendor for the file-state roles:** orange for a
 "modified/changed" role. Confirmed independently in three places:
@@ -245,13 +245,13 @@ treat it as vendor-exact, not koopa-derived, when reasoning about it.
 `gitDecoration.deletedResourceForeground` is cyan, not red, specifically
 *because* `modified` and `deleted` co-occur in VS Code's Source Control view
 and can't share a hue there. Also adopted from the vendor: VS Code's alpha
-suffixes (`20` line background, `40` text background, `80` gutter) — read
+suffixes (`20` line background, `40` text background, `80` gutter), read
 directly from the installed `.vsix`'s `colors.diffEditor.*` keys, not
 invented.
 
 **`git status` itself has no `deleted` color slot.** `color.status.<slot>`
 only defines `header`, `added`, `updated`, `changed`, `untracked`,
-`noBranch`, `unmerged`, `localBranch`, `remoteBranch` — confirmed by grepping
+`noBranch`, `unmerged`, `localBranch`, `remoteBranch`; confirmed by grepping
 the shipped git binary's strings table, since the installed git ships no
 `git-config` adoc/man page. A `[color "status"] deleted = ...` line is silently
 ignored by git; it is not an error, so nothing catches it at review time. The
@@ -274,7 +274,7 @@ passing the assert floor doesn't mean the two washes read as balanced; check
 the actual measured ratios, not just pass/fail. This tint treatment only
 applies to backgrounds/washes; for plain text (git status labels,
 gitDecoration foregrounds), hue-only separation is enough, because each entry
-is always paired with its own English word ("modified:", "deleted:") — the
+is always paired with its own English word ("modified:", "deleted:"), the
 same standard the vendor's own theme uses for that specific distinction.
 
 **A vendor-exact color can still fail on user taste even when it's not a
@@ -285,14 +285,14 @@ red (0 degrees) than to a hue most people would call orange (30-40 degrees)
 only 18 degrees from Alucard's own `red` role (1.15:1 mutual contrast). This
 is real and measurable (compute hue via `colorsys.rgb_to_hls`), not merely
 subjective, and it is the vendor's own value (confirmed identical in the
-Fleet experimental palette) — not a koopa derivation bug to "fix" by changing
+Fleet experimental palette), not a koopa derivation bug to "fix" by changing
 the source. `_nudge_hue_toward(hexcolor, target_hex, min_hue_deg)` blends
 toward another real, already-verified palette color (the Vim `yellow` role,
 in this case) only as far as needed to clear a hue floor, and is a no-op when
 the input already clears it (Pro's orange, hue ~35, is untouched). Its only
 remaining caller is the `status.changed` role, now that the diff-line roles
 are plain green/red. Never invent a replacement hex to fix a "looks wrong"
-complaint — derive the correction from another real color in the same
+complaint; derive the correction from another real color in the same
 palette, the same way every other value in this pipeline is derived.
 
 **Terminal (pre-composited) vs VS Code (live-composited) need opposite math
@@ -302,7 +302,7 @@ via `_hex_lerp` at generation time (used for delta's `plus-style`/`minus-style`
 and nothing else needs this). VS Code composites `colorCustomizations`
 values live over the actual syntax-highlighted text underneath, so the same
 visual effect there is the *raw* saturated color plus an alpha suffix, with
-no pre-blending at all — pre-blending toward `bg` for VS Code would produce
+no pre-blending at all; pre-blending toward `bg` for VS Code would produce
 an opaque wash that hides syntax highlighting entirely, the opposite of what
 alpha compositing is for.
 
@@ -330,16 +330,16 @@ loop over role→variable pairs and emit `set -g fish_color_*` lines, followed b
 `set -gx FZF_DEFAULT_OPTS`. Colors are runtime-derived from `_parse_ghostty_palette` —
 no Pro hex literals in tracked files.
 
-### fish_frozen_theme.fish — the One Light override problem
+### fish_frozen_theme.fish: the One Light override problem
 
 Fish 4.3 auto-generates `~/.config/fish/conf.d/fish_frozen_theme.fish` when upgrading,
 migrating theme vars from universal to global scope. This file:
 - Is fish-owned; header says "Don't edit this file."
 - Sets the full One Light palette (`A0A1A7` autosuggestion, `383A42` normal, etc.) as
   `set --global` on every startup.
-- Loads *before* `koopa.fish` alphabetically — so `koopa.fish`'s globals win.
+- Loads *before* `koopa.fish` alphabetically, so `koopa.fish`'s globals win.
 
-Never edit or delete `fish_frozen_theme.fish` — the fix is always to override via a
+Never edit or delete `fish_frozen_theme.fish`; the fix is always to override via a
 conf.d file that loads later (alphabetically after `f`).
 
 ### Alucard quirk: ANSI 8 = white
@@ -351,7 +351,7 @@ redundant for alucard, but still correct (cursor and the Vim comment role
 both clear contrast there). Kept as the fish-specific implementation record.
 
 In the Dracula Pro Alucard palette, ANSI 8 (the `comment` role from
-`_parse_ghostty_palette`) is white — invisible on the light background. The fish
+`_parse_ghostty_palette`) is white, invisible on the light background. The fish
 generator handles this:
 
 ```python
@@ -391,9 +391,9 @@ error/quote/selection etc.).
 
 ### Proprietary hex audit command
 
-Run after any change to the fish pipeline. **Comments count** — do not name proprietary
+Run after any change to the fish pipeline. **Comments count**: do not name proprietary
 hex values in comments even when the code itself is runtime-derived. The audit pattern
-is derived at runtime from the installed palette — never hardcode the hex here.
+is derived at runtime from the installed palette; never hardcode the hex here.
 
 ```sh
 cd ~/.local/share/koopa
@@ -430,10 +430,10 @@ for stale in (
 
 ### Runtime substitution map
 
-Build the dark→light substitution map entirely at runtime — never hardcode map keys
+Build the dark→light substitution map entirely at runtime; never hardcode map keys
 or values:
 
-- **Keys**: `_parse_ghostty_palette(dp_dir, "<dark-variant>")` — parsed from local
+- **Keys**: `_parse_ghostty_palette(dp_dir, "<dark-variant>")`, parsed from local
   vendor source.
 - **Values**: `_parse_ghostty_palette(dp_dir, "<light-variant>")`, aligned by ANSI
   index. Non-ANSI roles (orange, etc.) from the Fleet experimental palette JSON at
@@ -472,7 +472,7 @@ assert not survivors, f"Dark tokens survived: {sorted(survivors)}"
 for m in re.finditer(r'name="[A-Z_]*BACKGROUND[^"]*"\s+value="([0-9A-Fa-f]{6})"', xml):
     assert _relative_luminance("#" + m.group(1)) >= 0.55
 
-# All foreground/text values are actually readable -- the background
+# All foreground/text values are actually readable: the background
 # check above doesn't cover this.
 for m in _option_hex_re.finditer(xml):
     if _bg_role_re.search(m.group(1)):
@@ -482,7 +482,7 @@ for m in _option_hex_re.finditer(xml):
 
 ## macOS Sandboxed App Containers
 
-macOS TCC blocks direct file writes into a sandboxed app's container — including
+macOS TCC blocks direct file writes into a sandboxed app's container, including
 `PlistBuddy`, `plistlib` file writes, and direct file writes into
 `~/Library/Application Support/<App>/`.
 
@@ -493,14 +493,14 @@ com.barebones.bbedit <key> ...` from an external process succeeds and persists t
 `~/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist`,
 verified by writing a key, then reading it back from the container plist directly
 with `plutil`. `defaults write`/`defaults read` go through `cfprefsd`, which
-resolves a sandboxed app's preference domain to its container system-wide — a
+resolves a sandboxed app's preference domain to its container system-wide: a
 different code path than a raw file write. Do not assume `defaults write` fails
 for a sandboxed app without testing it fresh; the three BBEdit preference keys
 removed in commit `5e8fe6885c8d` may be safe to re-add.
 
 **BBEdit 16 is fully sandboxed.** `~/Library/Application Support/BBEdit/Color Schemes/`
 cannot be written from install scripts. Do not check `os.path.isdir(bbedit_schemes)`
-and write there — it will silently fail.
+and write there; it will silently fail.
 
 **Pattern for sandboxed app theme files:**
 
@@ -510,7 +510,7 @@ os.makedirs(out_dir, exist_ok=True)
 with open(os.path.join(out_dir, "MyTheme.bbColorScheme"), "w") as fh:
     fh.write(scheme_content)
 
-# Tell the user — do NOT write into ~/Library/Application Support/BBEdit/
+# Tell the user: do NOT write into ~/Library/Application Support/BBEdit/
 print(f"BBEdit: open .bbColorScheme files from {out_dir} in BBEdit to install.")
 ```
 
@@ -540,7 +540,7 @@ McFly's `config.toml` only supports the 16 named ANSI colors (e.g., `"grey"`,
 `"black"`, `"blue"`). Hex values **silently fall back to white**.
 
 Named ANSI colors render differently depending on the **local terminal emulator's
-palette** — the ANSI palette passes through SSH unchanged, but tmux re-renders using
+palette**: the ANSI palette passes through SSH unchanged, but tmux re-renders using
 its internal state.
 
 **Ghostty + Dracula Pro Alucard ANSI mapping:**
@@ -552,12 +552,12 @@ its internal state.
 For light mode with Dracula Pro Alucard (Ghostty): `results_fg = "grey"` works;
 `results_fg = "black"` or `"dark_grey"` do NOT.
 
-Always test mcfly colors from the specific terminal emulator that will be used — VS
+Always test mcfly colors from the specific terminal emulator that will be used; VS
 Code and Ghostty can give opposite results for the same config.
 
 ## Vim Colorscheme and Airline Theme
 
-### Airline is not auto-adaptive — set it explicitly
+### Airline is not auto-adaptive: set it explicitly
 
 vim-airline does **not** inherit the theme from the active colorscheme. When
 `colorscheme dracula-pro-alucard` (light) is set without also setting
@@ -569,7 +569,7 @@ agree.** The vendor ships `autoload/airline/themes/dracula-pro.vim`, and
 `airline#switch_theme(name)` (`vim-airline/autoload/airline.vim`) picks the
 theme name from that *file name*, then reads
 `g:airline#themes#{name}#palette`. But the file itself still defines
-`g:airline#themes#dracula_pro#palette` (underscore) — so neither
+`g:airline#themes#dracula_pro#palette` (underscore), so neither
 `AirlineTheme dracula-pro` (file matches, variable doesn't) nor
 `AirlineTheme dracula_pro` (variable matches, no file has that name) works
 as shipped. koopa's fix: symlink the vendor file under a *second* file name,
@@ -580,11 +580,11 @@ defines matches. The vendor file defines only script-local `s:` functions,
 so re-sourcing it under a second name is harmless. It is palette-adaptive:
 it reads `g:dracula_pro#palette` at the time the theme is applied. Since
 Alucard populates that palette with light values before
-`dracula-pro-base.vim` runs, the airline theme is light-safe — one theme
+`dracula-pro-base.vim` runs, the airline theme is light-safe: one theme
 name is correct for both light and dark modes.
 
 **Pattern:** set `g:airline_theme='dracula_pro'` immediately after every
-`colorscheme dracula-pro*` call — both in the startup block and in any live-switch
+`colorscheme dracula-pro*` call, both in the startup block and in any live-switch
 function. In the live-switch function, pair it with `silent! AirlineTheme dracula_pro`
 to repaint a running airline instance (a `let g:` alone does not refresh the running
 statusline).
@@ -605,18 +605,18 @@ airline theme) unchanged.
 ### `set background=dark` is baked into the Dracula Pro base scheme
 
 `dracula-pro-base.vim` always sets `set background=dark` regardless of which variant
-is loaded. This is intentional — the scheme uses explicit `guifg`/`guibg` values and
+is loaded. This is intentional: the scheme uses explicit `guifg`/`guibg` values and
 does not rely on Vim's `background` option for palette selection. A `background=dark`
 value after loading Alucard is therefore expected and correct, not a bug. The
 Alucard-specific `dracula-pro-alucard.vim` overrides the palette dict entries before
 calling `runtime colors/dracula-pro-base.vim`, so the light colors are already in
 `g:dracula_pro#palette` when the base file runs.
 
-### nvim (lualine) needs the same explicit read as airline — `auto` does not work
+### nvim (lualine) needs the same explicit read as airline: `auto` does not work
 
 Unlike vim-airline, lualine ships **no** Dracula Pro theme file at all (no
 `lua/lualine/themes/dracula_pro.lua`), so `theme = 'auto'` was never deriving
-from the colorscheme — it was falling through to lualine's bundled `auto.lua`,
+from the colorscheme; it was falling through to lualine's bundled `auto.lua`,
 which *guesses* by scraping unrelated highlight groups (`PmenuSel`,
 `StatusLine`, `String`) through a ±10% brightness modifier and a contrast-
 iteration loop. Measured result: gray-on-gray in both dark and Alucard, with
@@ -630,7 +630,7 @@ read `g:dracula_pro#palette` directly, just via the Lua accessor
 `dracula_pro_lualine_theme()` function builds the lualine theme table from
 `purple`/`green`/`yellow`/`red`/`cyan` per mode, with `fg` on `selection` for
 section `b` (the vendor airline theme's `fg` on `comment` measures 2.78:1 in
-Alucard — fails WCAG AA) and `bgdark` for section `c` (Alucard's `bglight`
+Alucard, fails WCAG AA) and `bgdark` for section `c` (Alucard's `bglight`
 equals `Normal.bg` exactly, so the bar's middle would vanish).
 
 ```lua
@@ -643,14 +643,30 @@ local function dracula_pro_lualine_theme()
 end
 ```
 
-`opts` must be a **function**, not a table literal — a literal is evaluated at
+`opts` must be a **function**, not a table literal: a literal is evaluated at
 lazy.nvim spec-parse time, before any colorscheme has loaded, so the palette
 global wouldn't exist yet. `theme` must also be a function: lualine's own
 `autocmd lualine ColorScheme *` re-invokes it on every `:colorscheme` call,
-which is what makes a live dark↔light flip re-derive automatically — the
+which is what makes a live dark↔light flip re-derive automatically; the
 Lua-side equivalent of airline's `silent! AirlineTheme dracula_pro` re-paint.
 
 Leave non-Pro fallbacks unchanged: the function returns `nil` when Pro isn't
-installed, so `theme` falls back to the string `'auto'` — correct for
+installed, so `theme` falls back to the string `'auto'`, which is correct for
 `dracula.nvim` (bundled `lualine/themes/dracula.lua`, free OSS hex) and
 `vim-one` (no bundled match either way).
+
+## Dracula Pro Update Check: No Unthrottled Network Call
+
+`check_dracula_pro_update_available()` in `check.py` used to hit
+`https://draculatheme.com/changelog-rss.xml` on every single `koopa update`
+and `koopa system check`, with no cache and no throttle. It was reported as
+"too noisy" even after quieting the success message, because the network
+call itself, not just its output, was the real complaint.
+
+The fix was to delete the wrapper and its two call sites, not to add a
+`quiet` flag or a cache: the check now runs only through the explicit,
+user-run `koopa app dracula-pro check` command. `koopa develop
+check-app-versions` was confirmed to be the wrong home for a fix like this
+too: it only iterates apps already present in `etc/koopa/app.json`, requires
+a GitHub token, and is a maintainer-only command never run by ordinary
+users, so a per-user advisory notice would go unseen there.

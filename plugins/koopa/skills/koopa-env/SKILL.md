@@ -27,7 +27,7 @@ resolved."
 ## Non-interactive sessions do not activate by default
 
 Interactive shells activate koopa automatically. Non-interactive shells (`ssh
-host 'cmd'`, CI steps, agentic harnesses) do **not** — PATH and environment
+host 'cmd'`, CI steps, agentic harnesses) do **not**: PATH and environment
 exports are opt-in there.
 
 Set `KOOPA_AUTO_ACTIVATE=1` to opt in. This exports PATH and environment only;

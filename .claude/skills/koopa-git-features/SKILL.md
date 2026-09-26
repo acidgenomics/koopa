@@ -1,7 +1,7 @@
 ---
 name: koopa-git-features
 description: >-
-  Notable git features and flags introduced in git 2.55 — new builtins
+  Notable git features and flags introduced in git 2.55: new builtins
   (history, format-rev, url-parse), checkout -m autostash, config set advice,
   --graph-lane-limit, push to remote groups, --max-count-oldest, Linux fsmonitor.
   Use when reaching for a recent git command/flag, or unsure whether a 2.55 feature
@@ -24,18 +24,18 @@ principle: **an alias earns its keep by saving keystrokes on things you type
 constantly. Commands you'd look up once don't belong there.**
 
 Corollaries:
-- No cheat-sheet entries — if you need to look it up, look it up.
-- No footguns wrapped in convenience — `clean -dfx` nukes gitignored files
+- No cheat-sheet entries: if you need to look it up, look it up.
+- No footguns wrapped in convenience: `clean -dfx` nukes gitignored files
   (`.env`, build caches); `stash clear` destroys all stashes silently. Strip
   the dangerous flags or remove the alias.
 - One safe force-push alias (`pf = push --force-with-lease`) paired with the
-  amend aliases (`u`, `ua`, `um`, `touch`) — never bare `push --force`.
+  amend aliases (`u`, `ua`, `um`, `touch`); never bare `push --force`.
 - Hardcoded branch names (`upstream/main`, `origin/main`) belong in project
   config, not a global alias.
 
 ## New builtins
 
-### `git history` — single-commit editing without interactive rebase
+### `git history`: single-commit editing without interactive rebase
 
 Replaces the common `git rebase -i HEAD~N` just-to-touch-one-commit pattern:
 
@@ -48,7 +48,7 @@ git history split <commit>    # break a commit into smaller pieces
 Shared flags: `--dry-run`, `--update-refs=(branches|head)`,
 `--empty=(drop|keep|abort)`. `fixup` additionally takes `--reedit-message`.
 
-### `git format-rev` — pretty-format revisions on demand *(EXPERIMENTAL)*
+### `git format-rev`: pretty-format revisions on demand *(EXPERIMENTAL)*
 
 > **Warning:** This command is experimental. Behavior may change without notice.
 
@@ -63,7 +63,7 @@ git log --format="%H" | git format-rev --stdin-mode=lines --format="%an <%ae>"
 git format-rev --stdin-mode=text --format="%s" < commit-message.txt
 ```
 
-### `git url-parse` — expose git's internal URL parser
+### `git url-parse`: expose git's internal URL parser
 
 Extract components from any URL git understands:
 
@@ -86,7 +86,7 @@ switches, then reapplies. If reapply conflicts, the stash entry is preserved:
 git checkout -m other-branch
 # if conflicts after reapply:
 # 1. resolve files
-# 2. git stash drop   — or clear tree and git stash pop later
+# 2. git stash drop   (or clear tree and git stash pop later)
 ```
 
 If local changes don't overlap with the branch diff at all, no stash is created
@@ -150,7 +150,7 @@ git push all-remotes main   # pushes to origin then backup, same args each
 ```
 
 Equivalent to running `git push origin main && git push backup main`. No special
-behavior beyond being a shorthand — refspecs, options, and errors behave
+behavior beyond being a shorthand; refspecs, options, and errors behave
 identically to individual pushes.
 
 ### `git cat-file --batch` inline `mailmap` command
@@ -179,7 +179,7 @@ Most useful on large repos with many files. Verify it started: `git fsmonitor--d
 ## Notable fixes
 
 **`git fetch --deepen=<n>` on a full clone is now a no-op.** Previously it
-truncated the full clone's history to N commits deep — a significant footgun.
+truncated the full clone's history to N commits deep, a significant footgun.
 Now it correctly does nothing on a non-shallow repo.
 
 **`http.emptyAuth=auto`** now tries Negotiate (Kerberos) before falling back to
