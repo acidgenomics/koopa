@@ -27,6 +27,7 @@ from koopa.version_check import (
     _fetch_first_reachable,
     _friendly_network_error,
     _held_message,
+    _hold_reason,
     _index_has_version,
     _is_prerelease,
     _is_retryable_network_error,
@@ -34,6 +35,7 @@ from koopa.version_check import (
     _NetworkUnavailableError,
     _pip_index_hold_message,
     _pip_index_url,
+    _src_url_hold_message,
     classify_app,
     update_app_json,
 )
@@ -632,6 +634,54 @@ def test_pip_index_hold_message_allows_bump_when_index_has_version() -> None:
     assert held is None
 
 
+def test_src_url_hold_message_holds_pin_when_tarball_is_missing() -> None:
+    """A hold message is returned when the latest version's source tarball 404s upstream.
+
+    Regression test for tcl-tk 9.1.0: SourceForge published the release
+    directory before the final tarball, so the directory-listing scraper
+    picked a version with nothing to download.
+    """
+    info = {
+        "src_url": "https://x/{version}/tcl{version}-src.tar.gz",
+        "extra_src_urls": ["https://x/{version}/tk{version}-src.tar.gz"],
+    }
+    with patch("koopa.version_check._http_url_missing", return_value=True):
+        held = _src_url_hold_message("tcl-tk", "9.0.4", "9.1.0", info)
+    assert held == "tcl-tk: 9.1.0 available upstream; source not published, pin held at 9.0.4"
+
+
+def test_src_url_hold_message_allows_bump_when_tarball_is_present() -> None:
+    """No hold is returned once the latest version's source tarball resolves upstream."""
+    info = {"src_url": "https://x/{version}/tcl{version}-src.tar.gz"}
+    with patch("koopa.version_check._http_url_missing", return_value=False):
+        held = _src_url_hold_message("tcl-tk", "9.0.4", "9.1.0", info)
+    assert held is None
+
+
+def test_src_url_hold_message_ignores_an_app_with_no_src_url() -> None:
+    """The src_url gate never applies to an app with no src_url, and never probes the network."""
+    with patch(
+        "koopa.version_check._http_url_missing",
+        side_effect=AssertionError("must not be called for an app with no src_url"),
+    ):
+        held = _src_url_hold_message("node", "26.6.0", "26.9.0", {})
+    assert held is None
+
+
+def test_hold_reason_suppresses_outdated_status_for_a_missing_tarball() -> None:
+    """A missing source tarball keeps a real bump out of the "Outdated" report, not just the write.
+
+    Regression test: holding the write in ``update_app_json`` alone is not
+    enough. Unless the check phase itself also holds, ``is_outdated`` stays
+    True and the same unpublished bump re-appears in the "Outdated" report on
+    every single run, indefinitely.
+    """
+    info = {"src_url": "https://x/{version}/tcl{version}-src.tar.gz"}
+    with patch("koopa.version_check._http_url_missing", return_value=True):
+        held = _hold_reason("tcl-tk", "9.0.4", "9.1.0", (), None, info)
+    assert held == "tcl-tk: 9.1.0 available upstream; source not published, pin held at 9.0.4"
+
+
 # ── _cache_hit_result (cache-hit path must apply the same holds as fresh) ───
 
 
@@ -881,6 +931,80 @@ def test_update_app_json_bumps_a_version_match_group_on_agreement(tmp_path: Path
     assert written["xorg-libxcb"]["version"] == "1.18.0"
     assert written["xorg-xcb-proto"]["version"] == "1.18.0"
     assert count == 2
+
+
+# ── update_app_json: missing src_url write-time gate ─────────────────────────
+
+
+def test_update_app_json_holds_pin_when_src_url_is_missing(tmp_path: Path) -> None:
+    """A latest version whose source tarball 404s upstream is held at write time."""
+    json_data = {
+        "tcl-tk": {
+            "version": "9.0.4",
+            "src_url": "https://x/{version}/tcl{version}-src.tar.gz",
+            "extra_src_urls": ["https://x/{version}/tk{version}-src.tar.gz"],
+            "url": ["https://x"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("tcl-tk", "9.0.4", "9.1.0", "dirlist", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.version_check._http_url_missing", return_value=True),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["tcl-tk"]["version"] == "9.0.4"
+    assert count == 0
+
+
+def test_update_app_json_bumps_when_src_url_is_present(tmp_path: Path) -> None:
+    """A latest version whose source tarball resolves upstream bumps normally."""
+    json_data = {
+        "tcl-tk": {
+            "version": "9.0.4",
+            "src_url": "https://x/{version}/tcl{version}-src.tar.gz",
+            "extra_src_urls": ["https://x/{version}/tk{version}-src.tar.gz"],
+            "url": ["https://x"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("tcl-tk", "9.0.4", "9.1.0", "dirlist", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.version_check._http_url_missing", return_value=False),
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["tcl-tk"]["version"] == "9.1.0"
+    assert count == 1
+
+
+def test_update_app_json_skips_src_url_probe_when_app_has_none(tmp_path: Path) -> None:
+    """An app with no src_url never calls the missing-URL probe."""
+    json_data = {
+        "node": {"version": "26.6.0", "url": ["https://x"]},
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("node", "26.6.0", "26.9.0", "conda", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.version_check._http_url_missing") as mock_missing,
+    ):
+        count = update_app_json(results)
+    written = mock_export.call_args[0][0]
+    assert written["node"]["version"] == "26.9.0"
+    assert count == 1
+    mock_missing.assert_not_called()
 
 
 # ── classify_app ─────────────────────────────────────────────────────────────

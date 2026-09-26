@@ -32,6 +32,12 @@ Before changing any app version, confirm the resolved `src_url` tarball actually
 exists. Zsh versions are `5.x.y` (e.g., `5.9.1`) — never a bare integer like `26`
 (that is a GNU project release number and produces a 404 download URL).
 
+`check-app-versions` now enforces this rule itself: it expands `src_url` and
+every `extra_src_urls` entry for the candidate version and probes each with an
+HTTP HEAD request. It holds the pin, with a printed reason, on an explicit 404
+or 410. Any other outcome (timeout, other status) does not hold the pin, since
+that does not confirm the file is absent.
+
 ## Holding a version back from `check-app-versions`
 
 A hold written only as prose in `notes` is not enforced. `check-app-versions`

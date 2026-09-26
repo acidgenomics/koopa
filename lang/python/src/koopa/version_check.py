@@ -386,6 +386,9 @@ def _hold_reason(
     held = _held_message(app_name, current, latest, excluded, gran)
     if held is not None:
         return held
+    held = _src_url_hold_message(app_name, current, latest, info)
+    if held is not None:
+        return held
     return _pip_index_hold_message(app_name, current, latest, info)
 
 
@@ -498,6 +501,34 @@ def _http_url_exists(url: str, *, timeout: int = 10) -> bool:
         with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
             return resp.status == 200
     except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError):
+        return False
+
+
+def _http_url_missing(url: str, *, timeout: int = 10) -> bool:
+    """Return whether a URL is confirmed absent, not merely unreachable.
+
+    Parameters
+    ----------
+    url : str
+        URL to probe with an HTTP ``HEAD`` request.
+    timeout : int, optional
+        Request timeout in seconds.
+
+    Returns
+    -------
+    bool
+        True only when the server responds with 404 or 410. A timeout,
+        connection failure, or any other status returns False, since those
+        do not confirm the file is absent.
+    """
+    req = urllib.request.Request(url, method="HEAD")
+    req.add_header("User-Agent", "koopa-version-checker")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx):
+            return False
+    except urllib.error.HTTPError as exc:
+        return exc.code in (404, 410)
+    except (urllib.error.URLError, TimeoutError):
         return False
 
 
@@ -3008,6 +3039,33 @@ def _expand_src_url(template: str, version: str) -> str:
     )
 
 
+def _missing_src_urls(entry: dict[str, Any], version: str) -> list[str]:
+    """Return which of an app's expanded source URLs are confirmed absent.
+
+    Checks the app's ``src_url`` and every ``extra_src_urls`` entry, expanded
+    for the given version, against the upstream server.
+
+    Parameters
+    ----------
+    entry : dict[str, Any]
+        App's app.json entry.
+    version : str
+        Version to check for.
+
+    Returns
+    -------
+    list[str]
+        Expanded URLs confirmed missing (HTTP 404 or 410). Empty if every
+        templated URL is present.
+    """
+    templates = [entry.get("src_url", ""), *entry.get("extra_src_urls", [])]
+    return [
+        url
+        for url in (_expand_src_url(t, version) for t in templates if t)
+        if _http_url_missing(url)
+    ]
+
+
 def _mirror_src_to_s3(
     name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
@@ -3161,6 +3219,40 @@ def _index_has_version(index_url: str, package: str, version: str) -> bool:
     return bool(pattern.search(body))
 
 
+def _src_url_hold_message(
+    app_name: str, current: str, latest: str, info: dict[str, Any]
+) -> str | None:
+    """Return a hold message if `latest`'s source tarball is not yet published.
+
+    Mirrors `_pip_index_hold_message`, but for a hold discovered by probing
+    the app's `src_url` and `extra_src_urls`, expanded for `latest`, instead
+    of querying a pip index. Checking this before `is_outdated` is computed
+    keeps an app whose upstream release directory exists but whose tarball
+    does not out of the "Outdated" report, instead of re-reporting the same
+    unpublished bump on every run.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned version.
+    latest : str
+        Latest version detected upstream.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
+    if not _missing_src_urls(info, latest):
+        return None
+    return f"{app_name}: {latest} available upstream; source not published, pin held at {current}"
+
+
 def _pip_index_hold_message(
     app_name: str, current: str, latest: str, info: dict[str, Any]
 ) -> str | None:
@@ -3285,6 +3377,14 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
                     file=sys.stderr,
                 )
                 continue
+        missing = _missing_src_urls(data[r.name], r.latest_version)
+        if missing:
+            print(
+                f"{r.name}: {r.latest_version} available upstream; "
+                f"source not published, pin held at {r.current_version}",
+                file=sys.stderr,
+            )
+            continue
         data[r.name]["version"] = r.latest_version
         data[r.name]["date"] = today
         data[r.name].pop("revision", None)

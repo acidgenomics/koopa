@@ -1599,7 +1599,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-09-24",
+    "date": "2026-09-26",
     "default": true,
     "dependencies": [
       "node"
@@ -1613,7 +1613,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.282"
+    "version": "2.1.283"
   },
   "claude-replay": {
     "bin": [
@@ -2863,7 +2863,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-02",
+    "date": "2026-09-26",
     "default": false,
     "description": "fast system information display tool",
     "installer": "conda-package",
@@ -2871,7 +2871,7 @@
     "url": [
       "https://github.com/fastfetch-cli/fastfetch/"
     ],
-    "version": "2.68.1"
+    "version": "2.69.0"
   },
   "fastqc": {
     "bin": [
@@ -4704,7 +4704,7 @@
       "julia"
     ],
     "category": "Language",
-    "date": "2026-09-13",
+    "date": "2026-09-26",
     "default": false,
     "description": "high-performance dynamic programming language",
     "type": "cli",
@@ -4713,7 +4713,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.13.0"
+    "version": "1.13.1"
   },
   "jupyterlab": {
     "bin": [
@@ -6134,7 +6134,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-09-25",
+    "date": "2026-09-26",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6144,7 +6144,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.9.13"
+    "version": "2026.9.14"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -8730,7 +8730,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-09-02",
+    "date": "2026-09-26",
     "default": false,
     "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
@@ -8739,7 +8739,7 @@
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "2.7.0"
+    "version": "2.8.0"
   },
   "sambamba": {
     "date": "2024-12-30",
@@ -9146,7 +9146,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-09-22",
+    "date": "2026-09-26",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9156,7 +9156,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "baf53d86c4f77e494a98cc23a3fe83b37261624e"
+    "version": "9bc6300f2409582f2dacd4aacdc12a175d213d54"
   },
   "spacevim": {
     "date": "2026-05-10",
