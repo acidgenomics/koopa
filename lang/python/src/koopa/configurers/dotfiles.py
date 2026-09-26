@@ -1,8 +1,14 @@
 """Configure dotfiles."""
 
+import hashlib
+import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
+from collections.abc import Iterator
+from contextlib import contextmanager
 
 from koopa.alert import alert_info, alert_note, warn
 from koopa.build import locate
@@ -10,6 +16,7 @@ from koopa.git import git_pull_safe
 from koopa.prefix import koopa_prefix, opt_prefix
 from koopa.system import os_appearance_mode
 from koopa.text import plural
+from koopa.xdg import xdg_cache_home
 
 
 def _chezmoi_managed(
@@ -181,6 +188,211 @@ def _chezmoiremove_targets(
     return targets
 
 
+def _chezmoi_entry_state(
+    chezmoi: str,
+    source: str,
+    env: dict[str, str],
+    config: str | None = None,
+) -> dict[str, dict[str, object]]:
+    """Return chezmoi's last-applied record for every target it has written.
+
+    Read-only.  Keys are absolute paths; values are the raw ``entryState``
+    records from ``chezmoi state dump`` (each carries at least ``type`` and,
+    for a file or symlink, ``contentsSHA256``).  Returns an empty dict if the
+    source is absent or the probe fails — an empty map makes every existing
+    path look user-owned to ``_is_chezmoi_copy``, which is the safe default
+    for a shield that must never delete a file it can't positively identify.
+
+    Parameters
+    ----------
+    chezmoi : str
+        Path to the ``chezmoi`` executable.
+    source : str
+        Root directory of this tree's chezmoi source directory.
+    env : dict[str, str]
+        Environment variables to pass to the ``chezmoi`` subprocess call.
+    config : str | None, optional
+        Path to this tree's ``chezmoi.toml``, or ``None`` to omit
+        ``--config`` from the ``chezmoi`` invocation.
+
+    Returns
+    -------
+    dict[str, dict[str, object]]
+        Map of absolute path to its ``entryState`` record.
+    """
+    if not os.path.isdir(source):
+        return {}
+    args = [chezmoi, "state", "dump", f"--source={source}", "--format=json"]
+    if config is not None:
+        args.append(f"--config={config}")
+    try:
+        result = subprocess.run(args, env=env, capture_output=True, text=True, check=True)
+    except (subprocess.CalledProcessError, OSError):
+        return {}
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {}
+    entry_state = data.get("entryState")
+    if not isinstance(entry_state, dict):
+        return {}
+    return entry_state
+
+
+def _is_chezmoi_copy(path: str, entry: dict[str, object] | None) -> bool:
+    """Return whether *path* still holds exactly what chezmoi last wrote there.
+
+    A file matches when its content sha256 equals the entry's
+    ``contentsSHA256``.  A symlink matches when the sha256 of its link target
+    string equals the same field (chezmoi hashes the target string, not
+    followed content).  A missing entry, a type mismatch (e.g. a symlink
+    where chezmoi last wrote a file), or a read error all count as "not
+    chezmoi's copy" — the safe direction for a shield deciding what to keep.
+
+    Parameters
+    ----------
+    path : str
+        Absolute path to check.
+    entry : dict[str, object] | None
+        This path's ``entryState`` record, or ``None`` if chezmoi has no
+        record of it.
+
+    Returns
+    -------
+    bool
+        ``True`` if *path* is unmodified since chezmoi last wrote it.
+    """
+    if entry is None:
+        return False
+    expected = entry.get("contentsSHA256")
+    if not isinstance(expected, str):
+        return False
+    entry_type = entry.get("type")
+    if entry_type == "symlink" and os.path.islink(path):
+        return hashlib.sha256(os.readlink(path).encode()).hexdigest() == expected
+    if entry_type == "file" and os.path.isfile(path) and not os.path.islink(path):
+        try:
+            with open(path, "rb") as fh:
+                actual = hashlib.sha256(fh.read()).hexdigest()
+        except OSError:
+            return False
+        return actual == expected
+    return False
+
+
+def _user_owned_remove_paths(
+    home: str,
+    remove_targets: set[str],
+    entry_state: dict[str, dict[str, object]],
+) -> list[str]:
+    """Return existing paths under *remove_targets* that are not chezmoi's copy.
+
+    A ``.chezmoiremove`` entry may be a file or a directory; a directory is
+    walked (without following symlinks) so each file or symlink underneath is
+    checked individually against ``entry_state``.  A symlink is treated as a
+    leaf, never descended into — its own record is checked, not its target's
+    content.
+
+    Parameters
+    ----------
+    home : str
+        Absolute path to the user's home directory.
+    remove_targets : set[str]
+        Target paths, relative to *home*, that a tree's ``.chezmoiremove``
+        deletes.
+    entry_state : dict[str, dict[str, object]]
+        Map of absolute path to its ``entryState`` record, from
+        ``_chezmoi_entry_state``.
+
+    Returns
+    -------
+    list[str]
+        Absolute paths that exist and are not chezmoi's unmodified copy.
+    """
+    kept: list[str] = []
+    for target in sorted(remove_targets):
+        abs_target = os.path.join(home, target.rstrip("/"))
+        if os.path.islink(abs_target) or os.path.isfile(abs_target):
+            if not _is_chezmoi_copy(abs_target, entry_state.get(abs_target)):
+                kept.append(abs_target)
+            continue
+        if not os.path.isdir(abs_target):
+            continue
+        for root, dirnames, filenames in os.walk(abs_target, followlinks=False):
+            leaf_dirnames = [d for d in dirnames if os.path.islink(os.path.join(root, d))]
+            for name in leaf_dirnames:
+                dirnames.remove(name)
+            for name in [*leaf_dirnames, *filenames]:
+                path = os.path.join(root, name)
+                if not _is_chezmoi_copy(path, entry_state.get(path)):
+                    kept.append(path)
+    return kept
+
+
+@contextmanager
+def _shield_user_files(tree_label: str, paths: list[str]) -> Iterator[None]:
+    """Temporarily move user-owned files out of the way of a chezmoi apply.
+
+    Moves each path in *paths* into a fresh directory under
+    ``<xdg_cache_home>/koopa``, preserving its path relative to ``~`` so
+    nested targets round-trip cleanly, then restores every path once the
+    ``with`` block exits (success or exception).  A path recreated by the
+    tree's own install script during the block is left alone at restore
+    time — the stashed copy stays under the cache directory instead of
+    silently overwriting whatever the tree just wrote.
+
+    Parameters
+    ----------
+    tree_label : str
+        Human-readable label for this tree (e.g. ``"main"``, ``"work"``,
+        ``"private"``), used in warning messages.
+    paths : list[str]
+        Absolute paths to shield, from ``_user_owned_remove_paths``.
+
+    Yields
+    ------
+    None
+        Nothing; this is a plain context manager.
+    """
+    if not paths:
+        yield
+        return
+    n = len(paths)
+    warn(
+        f"{tree_label} tree's .chezmoiremove would delete {n} {plural(n, 'file')} "
+        "not written by chezmoi; keeping:"
+    )
+    home = os.path.expanduser("~")
+    cache_dir = os.path.join(xdg_cache_home(), "koopa")
+    os.makedirs(cache_dir, exist_ok=True)
+    stash_dir = tempfile.mkdtemp(prefix="koopa-dotfiles-shield-", dir=cache_dir)
+    stashed: list[tuple[str, str]] = []
+    for path in paths:
+        print(f"  {path}", file=sys.stderr)
+        stash_path = os.path.join(stash_dir, os.path.relpath(path, home))
+        os.makedirs(os.path.dirname(stash_path), exist_ok=True)
+        shutil.move(path, stash_path)
+        stashed.append((path, stash_path))
+    try:
+        yield
+    finally:
+        any_left = False
+        for original, stash_path in stashed:
+            if os.path.lexists(original):
+                any_left = True
+                warn(
+                    f"{tree_label} tree recreated {original}; your prior copy stays at "
+                    f"{stash_path}."
+                )
+                continue
+            os.makedirs(os.path.dirname(original), exist_ok=True)
+            shutil.move(stash_path, original)
+        if any_left:
+            alert_note(f"Shielded copies kept under {stash_dir}.")
+        else:
+            shutil.rmtree(stash_dir, ignore_errors=True)
+
+
 def _warn_remove_manage_conflict(
     tree_label: str,
     main_targets: set[str],
@@ -313,7 +525,11 @@ def main(
         raise FileNotFoundError(msg)
     alert_info(f"Running '{install_script}'.")
     _print_chezmoi_status(chezmoi, main_source, env)
-    subprocess.run([install_script], check=True, env=env)
+    main_removes = _chezmoiremove_targets(chezmoi, main_source, env)
+    main_state = _chezmoi_entry_state(chezmoi, main_source, env)
+    main_shielded = _user_owned_remove_paths(home, main_removes, main_state)
+    with _shield_user_files("main", main_shielded):
+        subprocess.run([install_script], check=True, env=env)
     work_install_script = os.path.join(dotfiles_work_prefix, "install")
     _check_broken_symlink("work", dotfiles_work_prefix)
     if os.path.isfile(work_install_script):
@@ -324,7 +540,10 @@ def main(
         work_removes = _chezmoiremove_targets(chezmoi, work_source, env, config=wcfg)
         _warn_remove_manage_conflict("work", main_targets, work_removes)
         _print_chezmoi_status(chezmoi, work_source, env, config=wcfg)
-        subprocess.run([work_install_script], check=True, env=env)
+        work_state = _chezmoi_entry_state(chezmoi, work_source, env, config=wcfg)
+        work_shielded = _user_owned_remove_paths(home, work_removes, work_state)
+        with _shield_user_files("work", work_shielded):
+            subprocess.run([work_install_script], check=True, env=env)
     private_install_script = os.path.join(dotfiles_private_prefix, "install")
     _check_broken_symlink("private", dotfiles_private_prefix)
     if os.path.isfile(private_install_script):
@@ -335,7 +554,10 @@ def main(
         private_removes = _chezmoiremove_targets(chezmoi, private_source, env, config=pcfg)
         _warn_remove_manage_conflict("private", main_targets, private_removes)
         _print_chezmoi_status(chezmoi, private_source, env, config=pcfg)
-        subprocess.run([private_install_script], check=True, env=env)
+        private_state = _chezmoi_entry_state(chezmoi, private_source, env, config=pcfg)
+        private_shielded = _user_owned_remove_paths(home, private_removes, private_state)
+        with _shield_user_files("private", private_shielded):
+            subprocess.run([private_install_script], check=True, env=env)
     # Hot-reload any running tmux server so rewritten color confs take effect
     # without requiring a manual prefix+r or reconnect.  Also warn when the
     # running server predates the newly-installed binary.

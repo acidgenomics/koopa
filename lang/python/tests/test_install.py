@@ -548,15 +548,23 @@ def test_push_app_build_raises_when_not_linked(tmp_path: Path) -> None:
 
 
 def test_push_missing_app_builds_checks_linked_version(tmp_path: Path) -> None:
-    """push_missing_app_builds queries S3 for the linked version, not the string-max sibling."""
+    """push_missing_app_builds queries S3 for the linked version, not the string-max sibling.
+
+    Pins ``import_app_json`` to a fixed revision rather than reading the real
+    ``app.json`` -- the live python3.13 ``revision`` changes over time as the
+    registry gets bumped, which previously made this test's hardcoded
+    ``-r1`` suffix go stale on its own with no code regression involved.
+    """
     from koopa.install import push_missing_app_builds
 
     _app_dir, opt_dir, _linked, _older = _link_python_versions(tmp_path)
+    json_data = {"python3.13": {"version": "3.13.15", "revision": 1}}
 
     with (
         patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
         patch("koopa.install.arch2", return_value="arm64"),
         patch("koopa.install.os_slug", return_value="macos"),
+        patch("koopa.install.import_app_json", return_value=json_data),
         patch("shutil.which", return_value="/usr/bin/aws"),
         patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-bucket"),
         patch("koopa.aws.s3_object_exists", return_value=True) as mock_exists,

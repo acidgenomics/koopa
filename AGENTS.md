@@ -13,7 +13,11 @@ koopa develop check
 
 Runs every check below in one command: `ruff check`, `ruff format --check`,
 `pyright`, `ty check`, `numpydoc`, then `pytest`. All phases run even after one
-fails, so a single invocation reports every problem.
+fails, so a single invocation reports every problem. A passing phase's output
+is hidden; a failing phase prints its full output before its "failed" warning.
+
+`.githooks/pre-push` runs this gate before every `git push`, through the
+machine's global git hook. Skip once with `git push --no-verify`.
 
 ### Running Tests
 

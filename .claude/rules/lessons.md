@@ -70,7 +70,7 @@
   describes.** This bit `node`: a `notes` entry said "held below 26.8.0" and
   the next unguarded run re-bumped it anyway. Use `version_exclude`,
   `version_granularity`, or `version_match` instead — see
-  `.claude/rules/app-json.md` and the `koopa-app-registry` skill. The same
+  `.claude/rules/koopa-app-json.md` and the `koopa-app-registry` skill. The same
   gap exists for `python_version_pin`: it is a human-readable marker paired
   with `dependencies: ["python3.13"]`, but no code in `src/koopa` reads it —
   confirmed by grep. It documents a pin that `dependencies` alone already
@@ -114,9 +114,9 @@
 
 | Rule file | Paths | Covers |
 |---|---|---|
-| `rules/python.md` | `**/*.py`, `**/pyproject.toml` | `check=True`, `has_sudo`, dev-tools-standalone, XDG helpers, CLI completions, color-mode apply paths |
-| `rules/app-json.md` | `**/app.json` | `format-app-json`, revision bump, completions, successor invariant, version URL verification |
-| `rules/zsh.md` | `lang/zsh/**` | ShellCheck doesn't support zsh |
-| `rules/fish.md` | `**/*.fish` | `$VAR` not `${VAR}`; `set -g` vs `-gx` vs `-U` for color vars; `fish_variables` clobber trap; `fish_frozen_theme.fish`; conf.d load order; `fish_color_*` hex format; `set -S` diagnostic |
-| `rules/bash.md` | `lang/bash/**`, `lang/sh/**`, `**/*.sh`, `.claude/skills/**/*.md` | `${VAR}` only when adjacent text follows (path suffix, concatenation); bare `$VAR` when standalone; fish excepted |
-| `rules/theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |
+| `rules/koopa-python.md` | `**/*.py`, `**/pyproject.toml` | `check=True`, `has_sudo`, dev-tools-standalone, XDG helpers, CLI completions, color-mode apply paths |
+| `rules/koopa-app-json.md` | `**/app.json` | `format-app-json`, revision bump, completions, successor invariant, version URL verification |
+| `rules/koopa-zsh.md` | `lang/zsh/**` | ShellCheck doesn't support zsh |
+| `rules/koopa-fish.md` | `**/*.fish` | `$VAR` not `${VAR}`; `set -g` vs `-gx` vs `-U` for color vars; `fish_variables` clobber trap; `fish_frozen_theme.fish`; conf.d load order; `fish_color_*` hex format; `set -S` diagnostic |
+| `rules/koopa-bash.md` | `lang/bash/**`, `lang/sh/**`, `**/*.sh`, `.claude/skills/**/*.md` | `${VAR}` only when adjacent text follows (path suffix, concatenation); bare `$VAR` when standalone; fish excepted |
+| `rules/koopa-theme-colors.md` | `**/*.tmpl`, `**/themes/**`, etc. | Never hardcode Dracula Pro hex in tracked files |

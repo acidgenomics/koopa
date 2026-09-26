@@ -40,7 +40,7 @@ rm -rf "$tmp"               # standalone: bare
 ```
 
 **Exception — fish:** fish uses bare `$VAR` and never `${VAR}` (see
-`rules/fish.md`). This rule does not apply to ` ```fish ` blocks or `*.fish` files.
+`rules/koopa-fish.md`). This rule does not apply to ` ```fish ` blocks or `*.fish` files.
 
 **Nested defaults:** the adjacency rule also applies inside a `${VAR:-...}`
 expansion, judged on the inner variable alone:

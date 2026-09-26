@@ -156,3 +156,22 @@ def test_dep_sha_version_normalized_before_compare(tmp_path: Path) -> None:
         info={"dep_versions": {"dep": sha}, "dep_revisions": {}},
     )
     assert issues == []
+
+
+def test_check_dracula_pro_layout_outdated_fails() -> None:
+    """Warns and fails when an installed Dracula Pro bundle predates the supported layout."""
+    from koopa.check import check_dracula_pro_layout
+
+    with (
+        patch("koopa.dracula_pro.is_outdated_layout", return_value=True),
+        patch("koopa.dracula_pro.installed_version", return_value="2.2.2"),
+    ):
+        assert check_dracula_pro_layout() is False
+
+
+def test_check_dracula_pro_layout_current_passes() -> None:
+    """Passes when no outdated Dracula Pro bundle is installed."""
+    from koopa.check import check_dracula_pro_layout
+
+    with patch("koopa.dracula_pro.is_outdated_layout", return_value=False):
+        assert check_dracula_pro_layout() is True

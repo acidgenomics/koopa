@@ -1,6 +1,7 @@
 """CLI develop dispatch module unit tests."""
 
 import gzip
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -8,6 +9,7 @@ import pytest
 from koopa.cli_develop import (
     _DEVELOP_HANDLERS,
     _detect_color_mode_thrash,
+    _run_tool,
     _skill_frontmatter_errors,
     _version_from_filename,
 )
@@ -487,3 +489,78 @@ def test_scrub_install_info_dry_run_reports_without_writing(
     captured = capsys.readouterr()
     assert "Would scrub" in captured.err
     assert info_file.read_text() == original_text
+
+
+def test_run_tool_quiet_pass_hides_output(capsys: pytest.CaptureFixture[str]) -> None:
+    """_run_tool with quiet=True prints nothing on a pass."""
+    returncode = _run_tool([sys.executable, "-c", "print('noise')"], quiet=True)
+
+    assert returncode == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
+
+
+def test_run_tool_quiet_fail_prints_captured_output(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """_run_tool with quiet=True prints captured output only on failure."""
+    returncode = _run_tool(
+        [sys.executable, "-c", "print('boom'); raise SystemExit(3)"],
+        quiet=True,
+    )
+
+    assert returncode == 3
+    captured = capsys.readouterr()
+    assert "boom" in captured.out
+
+
+def test_run_tool_not_quiet_streams_live() -> None:
+    """_run_tool with quiet=False lets the command's own output print live."""
+    returncode = _run_tool([sys.executable, "-c", "print('noise')"], quiet=False)
+
+    assert returncode == 0
+
+
+def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
+    """Develop check reports success when every phase passes."""
+    runners = [
+        "_run_ruff_check",
+        "_run_ruff_format_check",
+        "_run_pyright",
+        "_run_ty",
+        "_run_numpydoc",
+        "_run_pytest",
+    ]
+    patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
+    for p in patches:
+        p.start()
+    try:
+        _DEVELOP_HANDLERS["check"]([])
+    finally:
+        for p in patches:
+            p.stop()
+
+    captured = capsys.readouterr()
+    assert "All checks passed." in captured.err
+
+
+def test_handle_check_one_failure_still_runs_all_phases(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Develop check runs every phase quietly and reports the one that failed."""
+    with (
+        patch("koopa.cli_develop._run_ruff_check", return_value=0) as ruff_check,
+        patch("koopa.cli_develop._run_ruff_format_check", return_value=1) as ruff_format,
+        patch("koopa.cli_develop._run_pyright", return_value=0) as pyright,
+        patch("koopa.cli_develop._run_ty", return_value=0) as ty,
+        patch("koopa.cli_develop._run_numpydoc", return_value=0) as numpydoc,
+        patch("koopa.cli_develop._run_pytest", return_value=0) as pytest_,
+    ):
+        with pytest.raises(RuntimeError, match="ruff format"):
+            _DEVELOP_HANDLERS["check"]([])
+
+        for runner in (ruff_check, ruff_format, pyright, ty, numpydoc, pytest_):
+            runner.assert_called_once_with([], quiet=True)
+
+    captured = capsys.readouterr()
+    assert "ruff format failed" in captured.err

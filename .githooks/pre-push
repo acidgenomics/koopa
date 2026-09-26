@@ -1,0 +1,26 @@
+#!/bin/sh
+# Run koopa's full Python quality gate ('koopa develop check') before every
+# push: ruff check, ruff format --check, pyright, ty check, numpydoc, pytest.
+#
+# No per-clone setup. The global pre-push hook in core.hooksPath
+# (opt/dotfiles/chezmoi/dot_config/git/hooks/executable_pre-push) runs this
+# file after its own identity check. Do not set a repo-local core.hooksPath:
+# that replaces the global hook directory and disables its guards.
+#
+# Call this checkout's own bin/koopa, not 'koopa' on PATH. bin/koopa exports
+# KOOPA_PREFIX from its own location, so the gate checks the tree being
+# pushed, not the activated install.
+#
+# Clear git's repo-local env vars (GIT_DIR, GIT_INDEX_FILE, ...) first. Git
+# can export them to hooks, and tests such as test_pypi.py run git in temp
+# repos: an inherited GIT_DIR would point those commands at this repo.
+#
+# Skip once with: git push --no-verify
+
+set -eu
+root="$(git rev-parse --show-toplevel)"
+for var in $(git rev-parse --local-env-vars)
+do
+    unset "$var"
+done
+exec "${root}/bin/koopa" develop check

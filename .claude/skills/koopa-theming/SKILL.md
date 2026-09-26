@@ -48,6 +48,30 @@ grep -iE '<THE_HEX>' ~/.local/share/dracula-pro/themes/ghostty/pro
 ```
 If it matches, the code must read it at runtime.
 
+### Vendor renames fail silently -- 2.2.3's lowercase-hyphen rewrite
+
+Dracula Pro 2.2.3 renamed nearly every bundle file to a lowercase-hyphen
+scheme: `Dracula Pro (Alucard).tmTheme` became `dracula-pro-alucard.tmTheme`,
+`colors/dracula_pro_alucard.vim` became `colors/dracula-pro-alucard.vim`, and
+so on. Every generator in `install` guards its vendor-file read with
+`os.path.isfile`/`os.path.isdir` and returns `None`/skips when the source is
+missing -- so `koopa configure user dotfiles` kept reporting success while
+most Pro themes (bat, RStudio, Zed, vim/nvim, BBEdit, and more) went stale
+or fell back to the free Dracula theme, and the Ghostty "comment" color
+changed with no warning at all (`_parse_vim_palette()` silently returned
+`None`, so `_dracula_dim_color()` took its `_hex_lerp()` fallback branch
+instead of the real vendor `comment` role).
+
+`_warn_on_missing_dracula_pro_sources(dp_dir)` in `install` now checks a
+short list of required 2.2.3-layout paths at the top of
+`_configure_dracula_pro()` and prints a warning for each one missing, so the
+next rename like this is loud instead of silent. It is not exhaustive --
+extend the list first if a future rename breaks something it does not cover.
+koopa also only targets the current vendor layout going forward (no
+compatibility shim for a pre-2.2.3 bundle); `koopa system check` fails via
+`check_dracula_pro_layout()` when an older version is on record, naming the
+remedy (`koopa app dracula-pro install --zip <path>`).
+
 ### Synthesizing a Theme When No Upstream Dracula Pro File Exists
 
 Most terminal tools (kitty, alacritty, wezterm, atuin) have an official Dracula
@@ -119,11 +143,14 @@ file under `~/.config/ghostty/themes/`. If an older install symlinked that
 path, clear the symlink before writing: `open(dest, "w")` on a stale symlink
 writes through it into the upstream vendor file.
 
-**`_parse_vim_palette()` variant slugs are hyphenated, filenames are not.**
-`van-helsing`'s Vim colorscheme file is `dracula_pro_van_helsing.vim`, so the
-naive `f"dracula_pro_{variant}.vim"` never matches: that variant silently got
-no named palette (fell through to the `_hex_lerp()` fallback) until fixed with
-`variant.replace("-", "_")`.
+**`_parse_vim_palette()` variant slugs match the vendor filenames directly
+(2.2.3+).** `van-helsing`'s Vim colorscheme file is
+`colors/dracula-pro-van-helsing.vim` -- the same hyphenated slug used
+everywhere else in koopa, via `_dracula_pro_file_name(variant, ".vim")`. Before
+2.2.3, the vendor's own filenames used underscores while its variant slugs
+were already hyphenated, so a naive `f"dracula_pro_{variant}.vim"` needed a
+`variant.replace("-", "_")` patch to match; that patch is gone now that the
+vendor's names and koopa's slugs finally agree.
 
 ## Obsidian Theme Synthesis
 
@@ -206,7 +233,7 @@ precedent, and it was reverted by explicit request in 2026-08 in favor of the
 familiar convention. If you're tempted to reintroduce a non-standard
 diff-line pairing, confirm first: check `contributes.colors`/`tokenColors` in
 the installed `.vsix`'s theme JSON, and `DiffAdd`/`DiffDelete`/`DiffChange` in
-`themes/vim/colors/dracula_pro_base.vim` — every one of them is red/green.
+`themes/vim/colors/dracula-pro-base.vim` — every one of them is red/green.
 
 **What's adopted from the vendor for the file-state roles:** orange for a
 "modified/changed" role. Confirmed independently in three places:
@@ -533,30 +560,42 @@ Code and Ghostty can give opposite results for the same config.
 ### Airline is not auto-adaptive — set it explicitly
 
 vim-airline does **not** inherit the theme from the active colorscheme. When
-`colorscheme dracula_pro_alucard` (light) is set without also setting
+`colorscheme dracula-pro-alucard` (light) is set without also setting
 `g:airline_theme`, airline falls back to its implicit dark theme (`theme=dark`),
 producing a neon-yellow/near-black statusline over a light Alucard buffer.
 
-The `dracula_pro` airline theme file
-(`~/.vim/pack/theme/start/dracula_pro/autoload/airline/themes/dracula_pro.vim`)
-is palette-adaptive: it reads `g:dracula_pro#palette` at the time the theme is
-applied. Since Alucard populates that palette with light values before
-`dracula_pro_base.vim` runs, the airline theme is light-safe — one theme name is
-correct for both light and dark modes.
+**Vendor naming bug: the airline theme file and its palette variable don't
+agree.** The vendor ships `autoload/airline/themes/dracula-pro.vim`, and
+`airline#switch_theme(name)` (`vim-airline/autoload/airline.vim`) picks the
+theme name from that *file name*, then reads
+`g:airline#themes#{name}#palette`. But the file itself still defines
+`g:airline#themes#dracula_pro#palette` (underscore) — so neither
+`AirlineTheme dracula-pro` (file matches, variable doesn't) nor
+`AirlineTheme dracula_pro` (variable matches, no file has that name) works
+as shipped. koopa's fix: symlink the vendor file under a *second* file name,
+`dracula_pro.vim`, in its own pack dir
+(`~/.vim/pack/theme/start/dracula_pro_airline/autoload/airline/themes/dracula_pro.vim`),
+so airline finds a file called `dracula_pro` and the palette variable it
+defines matches. The vendor file defines only script-local `s:` functions,
+so re-sourcing it under a second name is harmless. It is palette-adaptive:
+it reads `g:dracula_pro#palette` at the time the theme is applied. Since
+Alucard populates that palette with light values before
+`dracula-pro-base.vim` runs, the airline theme is light-safe — one theme
+name is correct for both light and dark modes.
 
 **Pattern:** set `g:airline_theme='dracula_pro'` immediately after every
-`colorscheme dracula_pro*` call — both in the startup block and in any live-switch
+`colorscheme dracula-pro*` call — both in the startup block and in any live-switch
 function. In the live-switch function, pair it with `silent! AirlineTheme dracula_pro`
 to repaint a running airline instance (a `let g:` alone does not refresh the running
 statusline).
 
 ```vim
 " Startup (both light and dark branches):
-colorscheme dracula_pro_alucard   " or dracula_pro / dracula_pro_<variant>
+colorscheme dracula-pro-alucard   " or dracula-pro / dracula-pro-<variant>
 let g:airline_theme='dracula_pro'
 
 " Live-switch function (s:KoopaApplyColorMode):
-colorscheme dracula_pro_alucard   " or variant
+colorscheme dracula-pro-alucard   " or variant
 silent! AirlineTheme dracula_pro
 ```
 
@@ -565,12 +604,12 @@ airline theme) unchanged.
 
 ### `set background=dark` is baked into the Dracula Pro base scheme
 
-`dracula_pro_base.vim` always sets `set background=dark` regardless of which variant
+`dracula-pro-base.vim` always sets `set background=dark` regardless of which variant
 is loaded. This is intentional — the scheme uses explicit `guifg`/`guibg` values and
 does not rely on Vim's `background` option for palette selection. A `background=dark`
 value after loading Alucard is therefore expected and correct, not a bug. The
-Alucard-specific `dracula_pro_alucard.vim` overrides the palette dict entries before
-calling `runtime colors/dracula_pro_base.vim`, so the light colors are already in
+Alucard-specific `dracula-pro-alucard.vim` overrides the palette dict entries before
+calling `runtime colors/dracula-pro-base.vim`, so the light colors are already in
 `g:dracula_pro#palette` when the base file runs.
 
 ### nvim (lualine) needs the same explicit read as airline — `auto` does not work

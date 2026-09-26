@@ -931,13 +931,53 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json(results, s3_upload=parsed.s3_upload)
 
 
-def _run_pytest(args: list[str]) -> int:
+def _run_tool(cmd: list[str], *, quiet: bool, env: dict[str, str] | None = None) -> int:
+    """Run a quality-gate tool, hiding its output when it succeeds.
+
+    Parameters
+    ----------
+    cmd : list[str]
+        Full command line to run.
+    quiet : bool
+        If ``True``, capture combined stdout/stderr and print it only on
+        failure. If ``False``, stream output live as the command runs.
+    env : dict[str, str] | None
+        Environment to run the command with. Defaults to the current
+        process environment.
+
+    Returns
+    -------
+    int
+        Exit code returned by the command.
+    """
+    try:
+        if quiet:
+            subprocess.run(
+                cmd,
+                env=env,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+        else:
+            subprocess.run(cmd, env=env, check=True)
+    except subprocess.CalledProcessError as exc:
+        if quiet and exc.stdout:
+            print(exc.stdout, end="")
+        return exc.returncode
+    return 0
+
+
+def _run_pytest(args: list[str], *, quiet: bool = False) -> int:
     """Run ``pytest`` over the koopa test suite.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``pytest`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -956,7 +996,7 @@ def _run_pytest(args: list[str]) -> int:
     env = os.environ.copy()
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = f"{src_dir}:{existing}" if existing else src_dir
-    return subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode
+    return _run_tool([pytest_cmd, tests_dir, *args], quiet=quiet, env=env)
 
 
 def _handle_pytest(args: list[str]) -> None:
@@ -970,13 +1010,15 @@ def _handle_pytest(args: list[str]) -> None:
     sys.exit(_run_pytest(args))
 
 
-def _run_pyright(args: list[str]) -> int:
+def _run_pyright(args: list[str], *, quiet: bool = False) -> int:
     """Run ``pyright`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``pyright`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -990,7 +1032,7 @@ def _run_pyright(args: list[str]) -> int:
     if pyright_cmd is None:
         msg = "pyright is not installed."
         raise RuntimeError(msg)
-    return subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode
+    return _run_tool([pyright_cmd, src_dir, *args], quiet=quiet)
 
 
 def _handle_pyright(args: list[str]) -> None:
@@ -1004,7 +1046,7 @@ def _handle_pyright(args: list[str]) -> None:
     sys.exit(_run_pyright(args))
 
 
-def _run_ty(args: list[str]) -> int:
+def _run_ty(args: list[str], *, quiet: bool = False) -> int:
     """Run ``ty check`` over the koopa source tree.
 
     Passes ``--project`` explicitly, since ``ty`` resolves ``pyproject.toml``
@@ -1017,6 +1059,8 @@ def _run_ty(args: list[str]) -> int:
     ----------
     args : list[str]
         Extra arguments passed through to the ``ty check`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1031,7 +1075,7 @@ def _run_ty(args: list[str]) -> int:
         msg = "ty is not installed."
         raise RuntimeError(msg)
     cmd = [ty_cmd, "check", "--project", koopa_prefix(), src_dir, *args]
-    return subprocess.run(cmd, check=False).returncode
+    return _run_tool(cmd, quiet=quiet)
 
 
 def _handle_ty(args: list[str]) -> None:
@@ -1045,13 +1089,15 @@ def _handle_ty(args: list[str]) -> None:
     sys.exit(_run_ty(args))
 
 
-def _run_numpydoc(args: list[str]) -> int:
+def _run_numpydoc(args: list[str], *, quiet: bool = False) -> int:
     """Run ``numpydoc lint`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``numpydoc lint`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1068,7 +1114,7 @@ def _run_numpydoc(args: list[str]) -> int:
         msg = "numpydoc is not installed."
         raise RuntimeError(msg)
     files = sorted(str(p) for p in Path(src_dir).rglob("*.py"))
-    return subprocess.run([numpydoc_cmd, "lint", *files, *args], check=False).returncode
+    return _run_tool([numpydoc_cmd, "lint", *files, *args], quiet=quiet)
 
 
 def _handle_numpydoc(args: list[str]) -> None:
@@ -1082,13 +1128,15 @@ def _handle_numpydoc(args: list[str]) -> None:
     sys.exit(_run_numpydoc(args))
 
 
-def _run_ruff_check(args: list[str]) -> int:
+def _run_ruff_check(args: list[str], *, quiet: bool = False) -> int:
     """Run ``ruff check`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``ruff check`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1102,10 +1150,10 @@ def _run_ruff_check(args: list[str]) -> int:
     if ruff_cmd is None:
         msg = "ruff is not installed."
         raise RuntimeError(msg)
-    return subprocess.run([ruff_cmd, "check", src_dir, *args], check=False).returncode
+    return _run_tool([ruff_cmd, "check", src_dir, *args], quiet=quiet)
 
 
-def _run_ruff_format_check(args: list[str]) -> int:
+def _run_ruff_format_check(args: list[str], *, quiet: bool = False) -> int:
     """Run ``ruff format --check`` over the koopa source tree.
 
     Parameters
@@ -1113,6 +1161,8 @@ def _run_ruff_format_check(args: list[str]) -> int:
     args : list[str]
         Extra arguments passed through to the ``ruff format --check``
         invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1127,7 +1177,7 @@ def _run_ruff_format_check(args: list[str]) -> int:
         msg = "ruff is not installed."
         raise RuntimeError(msg)
     cmd = [ruff_cmd, "format", "--check", src_dir, *args]
-    return subprocess.run(cmd, check=False).returncode
+    return _run_tool(cmd, quiet=quiet)
 
 
 def _handle_check(args: list[str]) -> None:
@@ -1136,7 +1186,9 @@ def _handle_check(args: list[str]) -> None:
     Runs the full Python quality gate as one command: ``ruff check``,
     ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
     ``pytest``. Every phase runs even after an earlier one fails, so a single
-    invocation surfaces every problem instead of stopping at the first.
+    invocation surfaces every problem instead of stopping at the first. A
+    passing phase's output is hidden; a failing phase prints its full output
+    before its "failed" warning.
 
     Parameters
     ----------
@@ -1153,7 +1205,7 @@ def _handle_check(args: list[str]) -> None:
             "ty, numpydoc, pytest."
         )
         raise RuntimeError(msg)
-    phases: list[tuple[str, Callable[[list[str]], int]]] = [
+    phases: list[tuple[str, Callable[..., int]]] = [
         ("ruff check", _run_ruff_check),
         ("ruff format", _run_ruff_format_check),
         ("pyright", _run_pyright),
@@ -1164,7 +1216,7 @@ def _handle_check(args: list[str]) -> None:
     failed: list[str] = []
     for label, runner in phases:
         alert(f"Running {label}.")
-        if runner([]) == 0:
+        if runner([], quiet=True) == 0:
             alert_success(f"{label} passed.")
         else:
             warn(f"{label} failed.")

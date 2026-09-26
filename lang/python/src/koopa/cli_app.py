@@ -91,6 +91,10 @@ _APP_TREE: dict[str, Any] = {
         "remove": "docker-remove",
         "run": "docker-run",
     },
+    "dracula-pro": {
+        "check": "dracula-pro-check",
+        "install": "dracula-pro-install",
+    },
     "ftp": {
         "mirror": "ftp-mirror",
     },
@@ -2224,6 +2228,37 @@ def _handle_bioconda_autobump_recipe(args: list[str]) -> None:
     subprocess.run([vim, meta_yaml], cwd=repo, check=True)
 
 
+# -- dracula-pro handlers -----------------------------------------------------
+
+
+def _handle_dracula_pro_install(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app dracula-pro install")
+    parser.add_argument(
+        "--zip",
+        required=True,
+        dest="zip_path",
+        help="Path to a Dracula Pro zip downloaded from your Gumroad library.",
+    )
+    parser.add_argument(
+        "--no-configure",
+        action="store_true",
+        help="Skip re-running 'koopa configure user dotfiles' after installing.",
+    )
+    parsed = parser.parse_args(args)
+
+    from koopa.dracula_pro import install
+
+    install(parsed.zip_path, configure=not parsed.no_configure)
+
+
+def _handle_dracula_pro_check(_: list[str]) -> None:
+    from koopa.dracula_pro import check
+
+    check()
+
+
 # -- ftp handlers ------------------------------------------------------------
 
 
@@ -2629,6 +2664,8 @@ def _handle_wget_recursive(args: list[str]) -> None:
 _PYTHON_HANDLERS: dict[str, Any] = {
     # app utilities
     "bioconda-autobump-recipe": _handle_bioconda_autobump_recipe,
+    "dracula-pro-check": _handle_dracula_pro_check,
+    "dracula-pro-install": _handle_dracula_pro_install,
     "file-compress": _handle_file_compress,
     "file-convert-line-endings": _handle_file_convert_line_endings,
     "file-rename-to-lowercase-ext": _handle_file_rename_to_lowercase_ext,

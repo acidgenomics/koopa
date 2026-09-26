@@ -1104,6 +1104,29 @@ def check_missing_default_apps() -> bool:
     return False
 
 
+def check_dracula_pro_layout() -> bool:
+    """Check whether an installed Dracula Pro bundle uses a supported file layout.
+
+    Returns
+    -------
+    bool
+        True if no Dracula Pro version is on record, or the installed
+        version meets koopa's minimum. False if an older, unsupported
+        version is installed.
+    """
+    from koopa.dracula_pro import MIN_SUPPORTED_VERSION, installed_version, is_outdated_layout
+
+    if not is_outdated_layout():
+        return True
+    print(
+        f"Dracula Pro {installed_version()} is installed; koopa's theme "
+        f"support requires {MIN_SUPPORTED_VERSION} or newer. Download the "
+        "current bundle from your Gumroad library, then run "
+        "'koopa app dracula-pro install --zip <path>'."
+    )
+    return False
+
+
 def check_tmux_server_stale() -> bool:
     """Check whether the running tmux server predates the on-disk bundled binary.
 
@@ -1134,6 +1157,7 @@ def check_system() -> bool:
     needs_system_update = False
     needs_disk_space = False
     needs_tmux_restart = False
+    needs_dracula_pro_update = False
     check_build_system()
     if not check_bootstrap_version():
         needs_update = True
@@ -1149,6 +1173,8 @@ def check_system() -> bool:
         needs_disk_space = True
     if not check_tmux_server_stale():
         needs_tmux_restart = True
+    if not check_dracula_pro_layout():
+        needs_dracula_pro_update = True
     if (is_macos() or is_debian_like()) and not check_system_r():
         needs_system_update = True
     if is_macos():
@@ -1158,7 +1184,13 @@ def check_system() -> bool:
             needs_system_update = True
         # iCloud Drive Desktop & Documents sync is not a reliable system check for
         # our macOS environment, so do not fail `koopa system check` on this.
-    if needs_update or needs_system_update or needs_disk_space or needs_tmux_restart:
+    if (
+        needs_update
+        or needs_system_update
+        or needs_disk_space
+        or needs_tmux_restart
+        or needs_dracula_pro_update
+    ):
         if needs_update or needs_system_update:
             alert_note("Run 'koopa update' to resolve these issues.")
         return False

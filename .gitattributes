@@ -14,6 +14,7 @@
 .agents/             export-ignore
 .idea/               export-ignore
 .github/             export-ignore
+.githooks/           export-ignore
 CLAUDE.md            export-ignore
 AGENTS.md            export-ignore
 .claudeignore        export-ignore
