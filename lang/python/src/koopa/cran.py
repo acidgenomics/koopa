@@ -950,7 +950,10 @@ def publish(
     tag : bool, optional
         Create an annotated git tag vX.Y.Z and push it to origin after a
         successful deploy. Only runs when the package dir is a git repo.
-        Tag message: "<Package> v<Version> (<Date>)".
+        Tag message: "<Package> v<Version> (<Date>)". Tags whatever commit
+        is currently checked out; warns (never raises) if that isn't the
+        repo's default branch, since the tag then lands on a commit the
+        default branch does not have yet.
     """
     from koopa.alert import alert
 
@@ -1007,7 +1010,14 @@ def publish(
             alert(f"Published '{src_base}' to {_INDEX_URL}")
 
             if tag:
-                from koopa.git import git_create_tag, git_push_tag, git_tag_exists, is_git_repo
+                from koopa.git import (
+                    git_branch,
+                    git_create_tag,
+                    git_default_branch,
+                    git_push_tag,
+                    git_tag_exists,
+                    is_git_repo,
+                )
                 from koopa.system import today
 
                 if is_git_repo(str(pkg_path)):
@@ -1016,6 +1026,13 @@ def publish(
                     date = desc.get("Date") or today()
                     tag_name = f"v{version}"
                     message = f"{desc['Package']} v{version} ({date})"
+                    branch = git_branch(str(pkg_path))
+                    default_branch = git_default_branch(str(pkg_path))
+                    if branch != default_branch:
+                        alert(
+                            f"Warning: '{pkg_path}' is on branch '{branch}', not "
+                            f"'{default_branch}' -- tagging HEAD anyway."
+                        )
                     if git_tag_exists(tag_name, str(pkg_path)):
                         alert(f"Tag '{tag_name}' already exists locally; skipping creation.")
                     else:

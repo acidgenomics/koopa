@@ -1,5 +1,5 @@
 ---
-name: elvish
+name: koopa-elvish
 description: >-
   Elvish shell programming pitfalls, namespace semantics, and koopa activation
   architecture. Use when writing or debugging .elv files, editing

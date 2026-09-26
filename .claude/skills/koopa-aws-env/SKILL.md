@@ -165,4 +165,4 @@ source and git history in June 2026 using `git filter-repo --replace-text`. The
 `goalie/DESCRIPTION` artefact (accidentally committed working-directory R build output)
 was removed in the same pass via `--path goalie/ --invert-paths`.
 
-See `git-history-surgery` skill (user-global) for the filter-repo procedure.
+See `dotfiles-git-history-surgery` skill (user-global) for the filter-repo procedure.

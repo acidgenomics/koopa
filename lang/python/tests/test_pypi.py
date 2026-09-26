@@ -20,13 +20,23 @@ _GIT_ENV = ["-c", "user.name=Test", "-c", "user.email=test@example.com"]
 
 
 def _init_repo_with_remote(tmp_path: Path, version: str = "1.2.3") -> Path:
-    """Create a package dir with a bare 'origin' remote and one commit."""
+    """Create a package dir with a bare 'origin' remote and one commit.
+
+    Pushes the initial commit on 'main' and sets 'refs/remotes/origin/HEAD',
+    mirroring what a real 'git clone' sets up automatically -- needed for
+    git_default_branch() to resolve, the same as it would against a real
+    '~/git/personal/py-<name>' clone.
+    """
     bare = tmp_path / "origin.git"
     subprocess.run(["git", "init", "--bare", "-q", str(bare)], check=True)
+    subprocess.run(
+        ["git", f"--git-dir={bare}", "symbolic-ref", "HEAD", "refs/heads/main"],
+        check=True,
+    )
 
     pkg = tmp_path / "pkg"
     pkg.mkdir()
-    subprocess.run(["git", *_GIT_ENV, "init", "-q", str(pkg)], check=True)
+    subprocess.run(["git", *_GIT_ENV, "init", "-q", "-b", "main", str(pkg)], check=True)
     subprocess.run(
         ["git", "-C", str(pkg), "remote", "add", "origin", str(bare)],
         check=True,
@@ -37,6 +47,8 @@ def _init_repo_with_remote(tmp_path: Path, version: str = "1.2.3") -> Path:
         ["git", *_GIT_ENV, "-C", str(pkg), "commit", "-q", "-m", "Initial commit."],
         check=True,
     )
+    subprocess.run(["git", "-C", str(pkg), "push", "-q", "-u", "origin", "main"], check=True)
+    subprocess.run(["git", "-C", str(pkg), "remote", "set-head", "origin", "-a"], check=True)
     return pkg
 
 
@@ -126,6 +138,25 @@ def test_tag_and_push_release_pushes_a_preexisting_local_tag(tmp_path: Path) -> 
     _tag_and_push_release(pkg)
 
     assert "v1.2.3" in _remote_tags(tmp_path / "origin.git")
+
+
+def test_tag_and_push_release_warns_on_non_default_branch(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Test it warns, but still tags and pushes, when not on the default branch.
+
+    Regression test: acidgenomes 0.4.0 was built, tagged, and published from
+    'develop' with nothing flagging that 'main' didn't have that commit yet.
+    """
+    pkg = _init_repo_with_remote(tmp_path, version="1.2.3")
+    subprocess.run(
+        ["git", *_GIT_ENV, "-C", str(pkg), "checkout", "-q", "-b", "develop"], check=True
+    )
+
+    _tag_and_push_release(pkg)
+
+    assert "v1.2.3" in _remote_tags(tmp_path / "origin.git")
+    assert "not 'main'" in capsys.readouterr().err
 
 
 def test_tag_and_push_release_skips_non_git_directory(tmp_path: Path) -> None:

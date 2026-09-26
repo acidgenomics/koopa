@@ -1,6 +1,6 @@
 ---
 name: koopa-rust
-description: >
+description: >-
   Rust and cargo conventions for koopa installers — hermetic CARGO_HOME, build
   dependency wiring, and the NO_RUST opt-out pattern. Use when writing or debugging
   any installer that builds with cargo, whether directly (rust-package installers) or

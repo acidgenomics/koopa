@@ -1,5 +1,5 @@
 ---
-name: nushell
+name: koopa-nushell
 description: >-
   Nushell (nu) pitfalls, parse-time constraints, and koopa activation architecture.
   Use when writing or debugging .nu files, editing lang/nushell/include/header.nu or

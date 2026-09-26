@@ -1,5 +1,5 @@
 ---
-name: powershell
+name: koopa-powershell
 description: >-
   PowerShell (pwsh 7+) activation architecture, starship integration, and color-mode
   sync in koopa. Use when writing or debugging lang/powershell/ files, editing

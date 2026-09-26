@@ -74,6 +74,27 @@ git log --oneline -1        # current HEAD
 
 The tag should sit on the bumpver commit (`Bump version to vX.Y.Z.`).
 
+## Always `git fetch` before trusting an `origin/*` ref
+
+`origin/main` and `origin/develop` are local, cached copies of the remote's
+last known state at your last fetch, not a live read of GitHub. Comparing
+them (`git diff origin/main origin/develop`, `git rev-parse origin/main`)
+without a fresh `git fetch origin` first can report a gap that no longer
+exists, or miss one that just opened.
+
+Confirmed live: after a real `develop`→`main` merge already happened on
+GitHub, `git diff origin/main origin/develop --stat` still showed the old,
+pre-merge difference, because the local clone hadn't fetched since before
+the merge. `gh pr create` then correctly refused with "No commits between
+main and develop" — GitHub's own server-side state was right the whole
+time; the local remote-tracking refs were just stale. A plain `git fetch
+origin` before re-checking made the diff empty.
+
+Run `git fetch origin` immediately before any check that reasons about
+`origin/*` refs, not just once per session. Treat `gh pr create`'s own
+refusal as a stronger signal of the true state than a local diff you
+haven't just refreshed.
+
 ## Escaping a bad rebase
 
 If you accidentally started a rebase, abort immediately:

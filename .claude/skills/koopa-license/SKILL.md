@@ -1,5 +1,5 @@
 ---
-name: license
+name: koopa-license
 description: >-
   Apache-2.0 LICENSE file conventions (Acid Genomics) — canonical sources per repo type,
   how GitHub licensee detection works (>=98% match), corruption history, badge wiring.

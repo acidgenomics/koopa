@@ -532,7 +532,7 @@ All must pass. The function errors on any lint; it does NOT error on URL failure
 Always run with `LANG=LC_ALL=en_US.UTF-8` to avoid Greek-letter translation
 warnings from S4 method dispatch during `load_all`.
 
-See skill `acid-r-package` for the full dev conventions (tooling, lintr, roxygen2 8.x).
+See skill `koopa-acid-r-package` for the full dev conventions (tooling, lintr, roxygen2 8.x).
 
 ## AcidDevTools Integration
 

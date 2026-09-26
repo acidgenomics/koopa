@@ -783,7 +783,7 @@ The sdist filename uses underscores (`acidgenomics_syntactic-...`), matching
 PEP 503 wheel/sdist normalization, not the hyphenated distribution name. This
 also lets Bioconda's autobump bot track PyPI releases instead of GitHub tags.
 `package.name`, `about.home` (still the short docs slug), `run_exports`, and
-`test.imports` are untouched by the rename — see the `bioconda` skill for the
+`test.imports` are untouched by the rename — see the `koopa-bioconda` skill for the
 GitHub Contents API PR workflow (never `git push`; the upstream clone is
 about 700 MB and checked out sparse).
 

@@ -1,5 +1,5 @@
 ---
-name: acid-r-package
+name: koopa-acid-r-package
 description: >-
   Acid Genomics R package development conventions — per-project air.toml, global
   ~/.lintr only, roxygen2 8.x @importFrom split, S4 linter tuning, AcidDevTools::check()
@@ -366,3 +366,85 @@ or `koopa app r publish` — documentation-only PRs can be merged without
 republishing to S3.
 
 See `koopa-r-release` for the complete publish workflow.
+
+## `AcidDevTools::valid()` — Bioconductor Source/Binary Lag
+
+`valid()` calls `BiocManager::valid()` which compares installed versions against
+Bioconductor repo versions. When Bioconductor releases a source update but the
+binary hasn't been built yet for `sonoma-arm64`, it falsely flags the package as
+outdated — installing would force source compilation with no benefit.
+
+**Fixed in AcidDevTools ≥ 0.7.11**: `valid()` now filters `BiocManager::valid()`
+results to only flag packages where a binary is available at the newer version.
+Packages in source-only lag state (e.g. AnnotationHub 4.2.0 installed, 4.2.1
+source-only) are silently skipped until the binary lands.
+
+## `.requireNamespaces()` with Base Packages
+
+`base` R packages (`utils`, `methods`, `parallel`, `tools`, `stats`) must NOT
+be passed to `.requireNamespaces()`. In `R CMD check` subprocesses, these
+packages may fail `requireNamespace()` even though they're always available,
+causing tests to fail spuriously.
+
+```r
+## BAD — fails in R CMD check subprocess:
+stopifnot(.requireNamespaces("utils"))
+x <- utils::object.size(x)
+
+## GOOD — base packages need no guard:
+x <- utils::object.size(x)
+```
+
+## R CMD check `examples` failures from Suggests
+
+`R CMD check` runs `@examples` in a subprocess without Suggests available.
+Any example that calls a function requiring a Suggests package will fail with
+`Error: .requireNamespaces("pkg") is not TRUE`.
+
+**Fix**: use the `## >` prefix on `@examples` lines to show in docs but skip
+execution:
+
+```r
+#' @examples
+#' ## > x <- installedPackages()
+#' ## > table(x[["source"]])
+```
+
+NEVER use `# nolint` on `#'` lines — roxygen2 8.x parses `#` and `nolint` as
+function names to import.
+
+## S3 Binary Archive Cleanup
+
+`koopa app r archive` only cleans `src/contrib/`. Old `.tgz` files in
+`bin/macosx/sonoma-arm64/contrib/4.6/` must be deleted manually after a sweep:
+
+```sh
+# Delete old binary versions (no Archive/ — just delete)
+aws s3 rm s3://<bucket>/bin/macosx/sonoma-arm64/contrib/4.6/<Pkg>_<old>.tgz \
+  --profile=acidgenomics
+# Then reindex to regenerate PACKAGES manifests + invalidate CloudFront
+koopa app r reindex
+```
+
+**Orphan binaries** (binaries with no matching source package) must also be
+deleted. Use `koopa app r clean-orphan-binaries` (added 2026-06-20) to detect
+and remove them automatically.
+
+## CloudFront Cache Stale After Manual S3 Operations
+
+After any manual `aws s3` operations on the binary prefix, always follow with
+`koopa app r reindex` to regenerate manifests and invalidate CloudFront.
+Without this, R clients may see stale PACKAGES manifests for up to 60 seconds
+after the S3 change.
+
+## `koopa app r clean-orphan-binaries`
+
+New command (2026-06-20): detects and deletes binary `.tgz` files in the active
+binary prefix that have no corresponding source tarball in `src/contrib/`. These
+orphan binaries prevent clean install behavior (R picks the binary but no source
+matches, causing version mismatches).
+
+```sh
+koopa app r clean-orphan-binaries        # detect + delete + reindex + invalidate
+koopa app r clean-orphan-binaries --no-invalidate
+```
