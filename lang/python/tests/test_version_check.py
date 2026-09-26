@@ -23,6 +23,7 @@ from koopa.version_check import (
     _check_npm,
     _check_pypi,
     _check_rubygems,
+    _check_sourceforge_versions,
     _dead_hosts,
     _fetch_first_reachable,
     _friendly_network_error,
@@ -333,6 +334,60 @@ def test_check_rubygems_returns_newest_release(monkeypatch: pytest.MonkeyPatch) 
     ]
     monkeypatch.setattr("koopa.version_check._http_get_json", lambda _url: data)
     assert _check_rubygems("example") == "2.0.0"
+
+
+# ── _check_sourceforge_versions ──────────────────────────────────────────────
+
+
+def test_check_sourceforge_versions_skips_a_directory_with_no_release_tarball(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A newer directory holding only rc artifacts is skipped for an older, real release.
+
+    Regression test for tcl-tk 9.1.0: SourceForge created the ``9.1.0``
+    directory ahead of the release, populated only with
+    ``tcl9.1.0rc0-src.tar.gz``. The directory-name scrape alone (no
+    ``filename_template``) would pick ``9.1.0``, laundering the rc marker out
+    of the version string. Verifying the expected filename per directory
+    catches this.
+    """
+
+    def fake_get(url: str, **_kwargs: object) -> str:
+        if url.endswith("/Tcl/"):
+            return '<a title="9.0.4">9.0.4</a> <a title="9.1.0">9.1.0</a>'
+        if url.endswith("/9.1.0/"):
+            return "tcl9.1.0rc0-src.tar.gz"
+        if url.endswith("/9.0.4/"):
+            return "tcl9.0.4-src.tar.gz"
+        raise AssertionError(f"unexpected URL: {url}")
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
+    version = _check_sourceforge_versions("tcl/files/Tcl/", "tcl{version}-src.tar.gz")
+    assert version == "9.0.4"
+
+
+def test_check_sourceforge_versions_returns_newest_directory_when_unverified(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """With no filename_template, the newest directory name is returned unverified."""
+    html = '<a title="1.6.57">1.6.57</a> <a title="1.6.58">1.6.58</a>'
+    monkeypatch.setattr("koopa.version_check._http_get_text", lambda _url, **_k: html)
+    assert _check_sourceforge_versions("libpng/files/libpng16/") == "1.6.58"
+
+
+def test_check_sourceforge_versions_raises_when_no_directory_has_the_tarball(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A RuntimeError is raised when no candidate directory holds the expected filename."""
+
+    def fake_get(url: str, **_kwargs: object) -> str:
+        if url.endswith("/Tcl/"):
+            return '<a title="9.1.0">9.1.0</a>'
+        return "tcl9.1.0rc0-src.tar.gz"
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
+    with pytest.raises(RuntimeError, match="No version"):
+        _check_sourceforge_versions("tcl/files/Tcl/", "tcl{version}-src.tar.gz")
 
 
 # ── _fetch_first_reachable (dead-host circuit breaker) ──────────────────────

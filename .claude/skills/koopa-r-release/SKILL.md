@@ -82,6 +82,11 @@ koopa app r publish-from-github r-acidcli --org acidgenomics --no-check
 
 **Dep install:** missing `Imports`/`Depends` are auto-installed into the system
 R library before building the binary. BiocManager repos are included when available.
+The install list excludes R's own base packages (`methods`, `parallel`, `utils`,
+etc., via `installed.packages(priority = "base")`) — passing one to
+`install.packages()` triggers `packages '...' are base packages, and should not
+be updated`, harmless but noisy on every publish for a package whose `Imports`
+lists a base package (common; `AcidGenomes` lists all three).
 
 **Note:** `pointillism 0.8.0` has been updated for Seurat 5 compatibility and
 the binary build now succeeds.

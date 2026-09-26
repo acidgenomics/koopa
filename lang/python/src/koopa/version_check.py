@@ -1059,7 +1059,39 @@ def _check_directory_version_dirs(url: str, prefix: str = "") -> str:
     return best
 
 
-def _check_sourceforge_versions(project_path: str) -> str:
+def _check_sourceforge_versions(
+    project_path: str,
+    filename_template: str | None = None,
+    *,
+    max_candidates: int = 5,
+) -> str:
+    """Return the newest SourceForge version directory that holds its release tarball.
+
+    A SourceForge project can create a release's numbered directory before
+    the release itself ships, populated only with release-candidate
+    artifacts (e.g. ``tcl9.1.0rc0-src.tar.gz`` inside a directory named
+    ``9.1.0``). The directory name alone does not confirm a real release, so
+    when `filename_template` is given, this walks candidate directories
+    newest-first and accepts the first one whose listing actually contains
+    the expected filename.
+
+    Parameters
+    ----------
+    project_path : str
+        SourceForge project path, e.g. ``"tcl/files/Tcl/"``.
+    filename_template : str | None, optional
+        ``src_url``-style filename template (e.g. ``"tcl{version}-src.tar.gz"``)
+        to verify inside each candidate directory. If None, the newest
+        directory name is returned without verification.
+    max_candidates : int, optional
+        Maximum number of newest directories to check when verifying.
+
+    Returns
+    -------
+    str
+        Newest version confirmed to hold its release tarball, or the newest
+        directory name if `filename_template` is None.
+    """
     url = f"https://sourceforge.net/projects/{project_path}"
     html = _http_get_text(url)
     pattern = re.compile(r'title="([\d]+(?:\.[\d]+)+)"')
@@ -1067,11 +1099,20 @@ def _check_sourceforge_versions(project_path: str) -> str:
     if not versions:
         msg = f"No versions found at {url}"
         raise RuntimeError(msg)
-    best = max(
+    ordered = sorted(
         set(versions),
         key=lambda v: tuple(int(x) for x in v.split(".")),
+        reverse=True,
     )
-    return best
+    if filename_template is None:
+        return ordered[0]
+    for version in ordered[:max_candidates]:
+        filename = _expand_src_url(filename_template, version)
+        listing = _http_get_text(f"{url}{version}/")
+        if filename in listing:
+            return version
+    msg = f"No version at {url} has a published '{filename_template}' tarball"
+    raise RuntimeError(msg)
 
 
 def _check_xorg(subdir: str, tarball_prefix: str) -> str:
@@ -2255,7 +2296,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "libpng": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions("libpng/files/libpng16/"),
+        lambda: _check_sourceforge_versions("libpng/files/libpng16/", "libpng-{version}.tar.xz"),
         (),
     ),
     "nano": _AppCheckSpec(
@@ -2296,7 +2337,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "swig": _AppCheckSpec("github", _check_github, ("swig", "swig")),
     "tcl-tk": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions("tcl/files/Tcl/"),
+        lambda: _check_sourceforge_versions("tcl/files/Tcl/", "tcl{version}-src.tar.gz"),
         (),
     ),
     "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
@@ -2478,7 +2519,9 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "zip": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions("infozip/files/Zip%203.x%20%28latest%29/"),
+        lambda: _check_sourceforge_versions(
+            "infozip/files/Zip%203.x%20%28latest%29/", "zip{version_nodot}.tar.gz"
+        ),
         (),
     ),
     "bcl-convert": _AppCheckSpec("dirlist", _check_bcl_convert, ()),

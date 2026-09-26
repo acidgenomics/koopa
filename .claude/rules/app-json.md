@@ -38,6 +38,14 @@ HTTP HEAD request. It holds the pin, with a printed reason, on an explicit 404
 or 410. Any other outcome (timeout, other status) does not hold the pin, since
 that does not confirm the file is absent.
 
+A SourceForge project can name a release directory ahead of the release
+itself, holding only release-candidate filenames (e.g. `9.1.0/` holding
+`tcl9.1.0rc0-src.tar.gz`, no `tcl9.1.0-src.tar.gz`). The directory name alone
+never carries that `rc0` marker, so a version check reading directory names
+must also confirm the expected filename inside, or it launders a pre-release
+into a clean-looking version string. See `_check_sourceforge_versions` in
+`version_check.py`.
+
 ## Holding a version back from `check-app-versions`
 
 A hold written only as prose in `notes` is not enforced. `check-app-versions`

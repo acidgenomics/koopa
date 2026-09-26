@@ -114,7 +114,8 @@ repos <- c(INDEX_URL, if (requireNamespace("BiocManager", quietly=TRUE))
     BiocManager::repositories() else c(CRAN="https://cloud.r-project.org"))
 deps <- desc::desc_get_deps(file = descFile)
 deps <- deps[deps[["type"]] %in% c("Imports", "Depends"), "package"]
-deps <- setdiff(deps, c("R", name))
+base_pkgs <- rownames(installed.packages(priority = "base"))
+deps <- setdiff(deps, c("R", name, base_pkgs))
 if (length(deps) > 0L) {
     message(sprintf("Installing %d missing dependencies.", length(deps)))
     install.packages(deps, repos = repos)
