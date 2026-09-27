@@ -24,8 +24,8 @@ def test_estimate_claude_tokens_empty() -> None:
 
 
 def test_estimate_claude_tokens_heuristic() -> None:
-    """100 chars yields 25 tokens (chars // 4)."""
-    assert _estimate_claude_tokens("x" * 100) == 25
+    """100 chars yields 33 tokens (chars // 3)."""
+    assert _estimate_claude_tokens("x" * 100) == 33
 
 
 def test_claude_audit_tokens_help(capsys: pytest.CaptureFixture[str]) -> None:
@@ -55,8 +55,8 @@ def test_claude_audit_tokens_reports_files(
     captured = capsys.readouterr()
     assert "CLAUDE.md" in captured.out
     assert "workflow.md" in captured.out
-    # total: 1200 chars -> 300 tokens
-    assert "300" in captured.out
+    # total: 1200 chars -> 400 tokens (chars // 3)
+    assert "400" in captured.out
 
 
 def test_claude_audit_tokens_max_tokens_pass(
@@ -66,7 +66,7 @@ def test_claude_audit_tokens_max_tokens_pass(
     """Exits 0 when total tokens are within --max-tokens."""
     claude_dir = tmp_path / ".claude"
     claude_dir.mkdir()
-    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 100 tokens
+    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 133 tokens
 
     monkeypatch.setenv("HOME", str(tmp_path))
 
@@ -81,7 +81,7 @@ def test_claude_audit_tokens_max_tokens_fail(
     """Exits 1 when total tokens exceed --max-tokens."""
     claude_dir = tmp_path / ".claude"
     claude_dir.mkdir()
-    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 100 tokens
+    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 133 tokens
 
     monkeypatch.setenv("HOME", str(tmp_path))
 
@@ -122,22 +122,22 @@ def test_claude_audit_tokens_path_scoped_excluded_from_always_loaded(
     claude_dir = tmp_path / ".claude"
     rules_dir = claude_dir / "rules"
     rules_dir.mkdir(parents=True)
-    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 100 tokens always-loaded
+    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 133 tokens always-loaded
     # Path-scoped rule: large but conditional — must NOT count toward always-loaded
-    scoped_content = "---\npaths:\n  - '**/*.py'\n---\n" + "b" * 4000  # 1000 tokens
+    scoped_content = "---\npaths:\n  - '**/*.py'\n---\n" + "b" * 4000  # 1333 tokens
     (rules_dir / "python.md").write_text(scoped_content)
 
     monkeypatch.setenv("HOME", str(tmp_path))
 
-    # --max-tokens 200 should PASS: only 100 always-loaded tokens (CLAUDE.md),
-    # not 1100 (which would exceed it).
+    # --max-tokens 200 should PASS: only 133 always-loaded tokens (CLAUDE.md),
+    # not ~1466 (which would exceed it).
     _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "global", "--max-tokens", "200"])
 
     captured = capsys.readouterr()
     assert "Global" in captured.out
     assert "Path-scoped" in captured.out
-    # always-loaded total: 100 tokens
-    assert "100" in captured.out
+    # always-loaded total: 133 tokens
+    assert "133" in captured.out
     # python.md listed under conditional section
     assert "python.md" in captured.out
 
@@ -161,14 +161,14 @@ def test_claude_audit_tokens_project_dir(
     claude_dir = proj_dir / ".claude"
     rules_dir = claude_dir / "rules"
     rules_dir.mkdir(parents=True)
-    (proj_dir / "CLAUDE.md").write_text("a" * 200)  # 50 tokens
-    (rules_dir / "project_rule.md").write_text("b" * 400)  # 100 tokens
+    (proj_dir / "CLAUDE.md").write_text("a" * 200)  # 66 tokens
+    (rules_dir / "project_rule.md").write_text("b" * 400)  # 133 tokens
 
     _PYTHON_HANDLERS["claude-audit-tokens"](["--project-dir", str(proj_dir)])
     captured = capsys.readouterr()
     assert "Project" in captured.out
-    # combined always-loaded: (200+400)//4 = 150 tokens
-    assert "150" in captured.out
+    # combined always-loaded: 200 // 3 + 400 // 3 = 66 + 133 = 199 tokens
+    assert "199" in captured.out
 
 
 def test_claude_audit_tokens_scope_global_only(
@@ -179,7 +179,7 @@ def test_claude_audit_tokens_scope_global_only(
     """--scope global prints only Global block; Combined footer is absent."""
     claude_dir = tmp_path / ".claude"
     claude_dir.mkdir()
-    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 100 tokens
+    (claude_dir / "CLAUDE.md").write_text("a" * 400)  # 133 tokens
     monkeypatch.setenv("HOME", str(tmp_path))
 
     _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "global"])
@@ -202,8 +202,8 @@ def test_claude_audit_tokens_scope_project_only(
     claude_dir = proj_dir / ".claude"
     rules_dir = claude_dir / "rules"
     rules_dir.mkdir(parents=True)
-    (proj_dir / "CLAUDE.md").write_text("a" * 200)  # 50 tokens
-    (rules_dir / "project_rule.md").write_text("b" * 400)  # 100 tokens
+    (proj_dir / "CLAUDE.md").write_text("a" * 200)  # 66 tokens
+    (rules_dir / "project_rule.md").write_text("b" * 400)  # 133 tokens
 
     _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "project", "--project-dir", str(proj_dir)])
     captured = capsys.readouterr()
@@ -219,23 +219,23 @@ def test_claude_audit_tokens_combined_max_tokens(
     global_home = tmp_path / "home"
     global_claude = global_home / ".claude"
     global_claude.mkdir(parents=True)
-    (global_claude / "CLAUDE.md").write_text("a" * 400)  # 100 tokens
+    (global_claude / "CLAUDE.md").write_text("a" * 400)  # 133 tokens
     monkeypatch.setenv("HOME", str(global_home))
 
     proj_dir = tmp_path / "myproject"
     proj_claude = proj_dir / ".claude"
     proj_claude.mkdir(parents=True)
-    (proj_dir / "CLAUDE.md").write_text("b" * 400)  # 100 tokens
+    (proj_dir / "CLAUDE.md").write_text("b" * 400)  # 133 tokens
 
-    # combined = 200 tokens; --max-tokens 150 → fail
+    # combined = 266 tokens; --max-tokens 200 → fail
     with pytest.raises(SystemExit) as exc_info:
         _PYTHON_HANDLERS["claude-audit-tokens"](
-            ["--project-dir", str(proj_dir), "--max-tokens", "150"]
+            ["--project-dir", str(proj_dir), "--max-tokens", "200"]
         )
     assert exc_info.value.code == 1
 
-    # combined = 200 tokens; --max-tokens 250 → pass
-    _PYTHON_HANDLERS["claude-audit-tokens"](["--project-dir", str(proj_dir), "--max-tokens", "250"])
+    # combined = 266 tokens; --max-tokens 300 → pass
+    _PYTHON_HANDLERS["claude-audit-tokens"](["--project-dir", str(proj_dir), "--max-tokens", "300"])
 
 
 def test_claude_audit_tokens_project_scoped_rule_conditional(
@@ -251,11 +251,11 @@ def test_claude_audit_tokens_project_scoped_rule_conditional(
     claude_dir = proj_dir / ".claude"
     rules_dir = claude_dir / "rules"
     rules_dir.mkdir(parents=True)
-    (proj_dir / "CLAUDE.md").write_text("a" * 400)  # 100 tokens always-loaded
+    (proj_dir / "CLAUDE.md").write_text("a" * 400)  # 133 tokens always-loaded
     scoped_content = "---\npaths:\n  - '**/*.py'\n---\n" + "b" * 1000  # scoped
     (rules_dir / "scoped.md").write_text(scoped_content)
 
-    # always-loaded = 100 tokens; --max-tokens 200 passes
+    # always-loaded = 133 tokens; --max-tokens 200 passes
     _PYTHON_HANDLERS["claude-audit-tokens"](
         ["--scope", "project", "--project-dir", str(proj_dir), "--max-tokens", "200"]
     )
@@ -280,6 +280,45 @@ def test_claude_audit_tokens_no_project_claude_dir(
     captured = capsys.readouterr()
     # No crash; note about no project config (goes to stderr via alert_note)
     assert "No project" in captured.err
+
+
+def test_claude_audit_tokens_warns_past_150k_chars(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Warns on stderr once combined always-loaded chars exceed 150,000.
+
+    This mirrors Claude Code's own instruction-file limit, which the older
+    chars // 4 heuristic and a per-file-only budget both missed: the
+    combined total across every always-loaded file is what the harness
+    actually gates on.
+    """
+    claude_dir = tmp_path / ".claude"
+    claude_dir.mkdir()
+    (claude_dir / "CLAUDE.md").write_text("a" * 150_001)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+    _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "global"])
+    captured = capsys.readouterr()
+    assert "150" in captured.err
+    assert "exceeds" in captured.err.lower()
+
+
+def test_claude_audit_tokens_no_warning_under_150k_chars(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """No 150k-char warning when combined always-loaded chars are within budget."""
+    claude_dir = tmp_path / ".claude"
+    claude_dir.mkdir()
+    (claude_dir / "CLAUDE.md").write_text("a" * 400)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+    _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "global"])
+    captured = capsys.readouterr()
+    assert "exceeds" not in captured.err.lower()
 
 
 def test_scan_claude_config_dedup(tmp_path: Path) -> None:
