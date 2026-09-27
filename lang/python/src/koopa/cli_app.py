@@ -1754,11 +1754,11 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
     # Claude Code warns, and stops loading further files, past 150,000
     # combined chars of always-loaded instructions. Surface the same signal
     # here so it can be caught before the next session start.
-    _CLAUDE_CHAR_LIMIT = 150_000
-    if combined_chars > _CLAUDE_CHAR_LIMIT:
+    claude_char_limit = 150_000
+    if combined_chars > claude_char_limit:
         print(
             f"Warning: {combined_chars} combined chars exceeds Claude Code's"
-            f" {_CLAUDE_CHAR_LIMIT}-char instruction-file limit.",
+            f" {claude_char_limit}-char instruction-file limit.",
             file=sys.stderr,
         )
 

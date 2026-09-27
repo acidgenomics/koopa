@@ -1299,10 +1299,10 @@ def _handle_check(args: list[str]) -> None:
 
     Runs the full Python quality gate as one command: ``ruff check``,
     ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
-    ``pytest``. Every phase runs even after an earlier one fails, so a single
-    invocation surfaces every problem instead of stopping at the first. A
-    passing phase's output is hidden; a failing phase prints its full output
-    before its "failed" warning.
+    ``pytest``. Phases run in cheap-to-expensive order and stop at the first
+    failure, so a fast lint error fails in seconds instead of waiting for
+    pytest. A passing phase's output is hidden; the failing phase prints its
+    full output before the gate raises.
 
     Parameters
     ----------
@@ -1310,7 +1310,7 @@ def _handle_check(args: list[str]) -> None:
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
         an argument cannot be routed unambiguously across six tools.
     """
-    from koopa.alert import alert, alert_success, warn
+    from koopa.alert import alert, alert_success
 
     if args:
         msg = (
@@ -1327,17 +1327,12 @@ def _handle_check(args: list[str]) -> None:
         ("numpydoc", _run_numpydoc),
         ("pytest", _run_pytest),
     ]
-    failed: list[str] = []
     for label, runner in phases:
         alert(f"Running {label}.")
-        if runner([], quiet=True) == 0:
-            alert_success(f"{label} passed.")
-        else:
-            warn(f"{label} failed.")
-            failed.append(label)
-    if failed:
-        msg = f"{len(failed)} of {len(phases)} checks failed: {', '.join(failed)}."
-        raise RuntimeError(msg)
+        if runner([], quiet=True) != 0:
+            msg = f"{label} failed."
+            raise RuntimeError(msg)
+        alert_success(f"{label} passed.")
     alert_success("All checks passed.")
 
 

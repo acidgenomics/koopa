@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "6016716732497920",
+    "build_id": "5784551402897408",
     "category": "AI",
-    "date": "2026-09-25",
+    "date": "2026-09-27",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "6d9c1f2a30eaf41686dfe40e5a644c9d37c170019be5c89113b3745f5fe6cdf55f1c5c5e2300c5e797529f878b6970ab4725a38cd7ecd6ab250e5fbad42cf79b",
-      "darwin_amd64": "48f35265bc31870730bf5757af5bc7e717293e48eee60308f4aa8816b9782a66988bc2113eec56104355068fa3127bd0465dad638a9f73fe7c34edc2d0528f9b",
-      "linux_amd64": "ca12c262343f29a2b87423d1ff1e4244989e936e37fe1f8e56056b0f91cd02f93f133321229ce35c86c2d84b977e919937a3fd9430cfd769a16d6b03ede25081",
-      "linux_arm64": "4fd4f8e1960e000b7803da2365c64a733677f1ed80fedc1c344331978f129171dd1d128e85255a4f2f0d3882cf097b3897cc2704b4faf4d3669f7e3c69cc3012"
+      "darwin_arm64": "92bcd4d1976b570d6f053a1b5716e2f2962c22ca3cf7657a3fcb66b05b0f5523fa2d6f1899f157c09b66abda2c2f81938101ad7cd31845e1eda8f277addc2b8e",
+      "darwin_amd64": "07e56833460bc8999ea44f7fc4cff795e0304a08a05e5e296d6096ac8e1ef15c95aee6b692803734bb7f488e416c8bc80be640dfa7089d927fe79dbefdb56d21",
+      "linux_amd64": "d5f0fe7433cb7c43ea878c07627a4fdb82d218f3bef5e6436266f5d9fdd2df145523453b9be0c4250391a64a007f5f42f7faff797bc2b2d502e7efb4874e383a",
+      "linux_arm64": "e2f10960197efbf2455edb1284ae686821e244908367f507bcb6a0d0f616e945d3eec5cdf29b41bbcd7f630826d0e9e233f457184d1696fa91e81d6a7ed440c9"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.2.11"
+    "version": "1.2.12"
   },
   "apache-airflow": {
     "bin": [
@@ -1231,7 +1231,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-13",
+    "date": "2026-09-27",
     "default": false,
     "description": "interactive tree view and fuzzy file finder",
     "installer": "conda-package",
@@ -1240,7 +1240,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.60.1"
+    "version": "1.60.2"
   },
   "brotli": {
     "bin": [
@@ -1644,7 +1644,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-09-24",
+    "date": "2026-09-27",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1652,7 +1652,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.9.2.8"
+    "version": "26.9.3.38"
   },
   "cloc": {
     "bin": [
@@ -3666,7 +3666,7 @@
       "glances"
     ],
     "category": "Terminal",
-    "date": "2026-08-03",
+    "date": "2026-09-27",
     "default": false,
     "dependencies": [
       "python"
@@ -3681,7 +3681,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.5.6"
+    "version": "4.5.7"
   },
   "glib": {
     "build_dependencies": [
@@ -6089,7 +6089,7 @@
     ],
     "category": "Text",
     "conda_channel": "conda-forge",
-    "date": "2026-08-14",
+    "date": "2026-09-27",
     "default": false,
     "description": "like awk/sed/cut/join for name-indexed data formats",
     "installer": "conda-package",
@@ -6098,7 +6098,7 @@
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.21.0"
+    "version": "6.22.0"
   },
   "mimalloc": {
     "date": "2026-05-02",
@@ -6668,16 +6668,15 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-08-23",
+    "date": "2026-09-27",
     "default": false,
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/nushell/nushell/"
     ],
-    "version": "0.115.1"
+    "version": "0.116.0"
   },
   "onefetch": {
     "bin": [
@@ -9760,7 +9759,7 @@
       "tu-datastore"
     ],
     "category": "AI",
-    "date": "2026-09-25",
+    "date": "2026-09-27",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -9782,7 +9781,7 @@
       "https://github.com/mims-harvard/ToolUniverse",
       "https://zitniklab.hms.harvard.edu/ToolUniverse/"
     ],
-    "version": "1.5.3"
+    "version": "1.5.4"
   },
   "topgrade": {
     "bin": [

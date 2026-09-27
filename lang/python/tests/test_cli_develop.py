@@ -642,10 +642,10 @@ def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
     assert "All checks passed." in captured.err
 
 
-def test_handle_check_one_failure_still_runs_all_phases(
+def test_handle_check_stops_at_first_failure(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    """Develop check runs every phase quietly and reports the one that failed."""
+    """Develop check stops at the first failed phase instead of running the rest."""
     with (
         patch("koopa.cli_develop._run_ruff_check", return_value=0) as ruff_check,
         patch("koopa.cli_develop._run_ruff_format_check", return_value=1) as ruff_format,
@@ -657,8 +657,12 @@ def test_handle_check_one_failure_still_runs_all_phases(
         with pytest.raises(RuntimeError, match="ruff format"):
             _DEVELOP_HANDLERS["check"]([])
 
-        for runner in (ruff_check, ruff_format, pyright, ty, numpydoc, pytest_):
-            runner.assert_called_once_with([], quiet=True)
+        ruff_check.assert_called_once_with([], quiet=True)
+        ruff_format.assert_called_once_with([], quiet=True)
+        for runner in (pyright, ty, numpydoc, pytest_):
+            runner.assert_not_called()
 
     captured = capsys.readouterr()
-    assert "ruff format failed" in captured.err
+    assert "ruff check passed" in captured.err
+    assert "Running ruff format." in captured.err
+    assert "Running pyright." not in captured.err
