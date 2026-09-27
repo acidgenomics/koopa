@@ -19,6 +19,7 @@ call to resolve reliably.
 import json
 import re
 import shutil
+import ssl
 import subprocess
 import urllib.error
 
@@ -59,8 +60,8 @@ def fetch_release_notifications() -> list[dict[str, str]]:
             "--paginate",
             "notifications?all=true&per_page=50",
             "--jq",
-            '.[] | select(.subject.type == "Release") '
-            "| {repo: .repository.full_name, title: .subject.title, url: .subject.url}",
+            '.[] | select(.subject.type == "Release") | '
+            "{repo: .repository.full_name, title: .subject.title, url: .subject.url}",
         ],
         check=True,
         capture_output=True,
@@ -85,7 +86,13 @@ def _resolve_release_tag(url: str) -> tuple[str, bool] | None:
     """
     try:
         data = _http_get_json(url, github=True)
-    except urllib.error.HTTPError:
+    except (
+        ssl.SSLError,
+        ConnectionResetError,
+        TimeoutError,
+        urllib.error.HTTPError,
+        urllib.error.URLError,
+    ):
         return None
     tag = data.get("tag_name")
     if not tag:

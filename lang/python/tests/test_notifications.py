@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+import urllib.error
 from unittest.mock import patch
 
 import pytest
@@ -64,7 +65,8 @@ def _result_by_name(results: list[VersionCheckResult], name: str) -> VersionChec
     return matches[0]
 
 
-def test_compare_release_notifications_outdated_app(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_outdated_app() -> None:
     """Test that a newer release tag than the pinned version is outdated."""
     results, _untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     result = _result_by_name(results, "fqtk")
@@ -73,7 +75,8 @@ def test_compare_release_notifications_outdated_app(_mock_http_get_json: None) -
     assert result.is_outdated
 
 
-def test_compare_release_notifications_current_app(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_current_app() -> None:
     """Test that a release tag equal to the pinned version is up to date."""
     results, _untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     result = _result_by_name(results, "seqkit")
@@ -82,7 +85,8 @@ def test_compare_release_notifications_current_app(_mock_http_get_json: None) ->
     assert not result.is_outdated
 
 
-def test_compare_release_notifications_name_fallback(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_name_fallback() -> None:
     """Test that an app with no GitHub url is matched by bare repo name."""
     results, _untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     result = _result_by_name(results, "poetry")
@@ -90,13 +94,15 @@ def test_compare_release_notifications_name_fallback(_mock_http_get_json: None) 
     assert result.latest_version == "2.5.1"
 
 
-def test_compare_release_notifications_untracked_repo(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_untracked_repo() -> None:
     """Test that a repo with no matching app.json entry is reported as untracked."""
     _results, untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     assert untracked == {"some-org/untracked-repo": "v1.0.0"}
 
 
-def test_compare_release_notifications_removed_tombstone(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_removed_tombstone() -> None:
     """Test that a repo matching a 'removed' tombstone is reported separately.
 
     Also exercises the repo-name-prefix stripping in the tag-to-version
@@ -107,24 +113,43 @@ def test_compare_release_notifications_removed_tombstone(_mock_http_get_json: No
     assert removed == {"rui314/mold": "mold 2.42.1"}
 
 
-def test_compare_release_notifications_drops_prerelease(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_drops_prerelease() -> None:
     """Test that a beta tag is dropped, not reported as an untracked repo."""
     _results, untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     assert "pycqa/isort" not in untracked
 
 
-def test_compare_release_notifications_monorepo_prefix(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_monorepo_prefix() -> None:
     """Test that the higher of two differently-prefixed monorepo tags wins."""
     results, _untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     result = _result_by_name(results, "bash-language-server")
     assert result.latest_version == "5.8.1"
 
 
-def test_compare_release_notifications_key_collision(_mock_http_get_json: None) -> None:
+@pytest.mark.usefixtures("_mock_http_get_json")
+def test_compare_release_notifications_key_collision() -> None:
     """Test that two keys sourced from the same repo resolve to the one named after it."""
     results, _untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
     assert any(r.name == "samtools" for r in results)
     assert not any(r.name == "htslib" for r in results)
+
+
+def test_compare_release_notifications_skips_unresolvable_release(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test that one failed release lookup does not abort the whole report."""
+
+    def fail_for_one_url(url: str, **_kwargs: object) -> dict[str, object]:
+        if url == "u1":
+            raise urllib.error.URLError("temporary failure")
+        return _TAG_DATA[url]
+
+    monkeypatch.setattr("koopa.notifications._http_get_json", fail_for_one_url)
+    results, untracked, _removed = compare_release_notifications(_NOTIFICATIONS, _APP_JSON)
+    assert not any(result.name == "fqtk" for result in results)
+    assert "some-org/untracked-repo" in untracked
 
 
 # -- fetch_release_notifications -------------------------------------------------
