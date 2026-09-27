@@ -6,7 +6,6 @@ from pathlib import Path
 import pytest
 from koopa.dracula_pro import (
     CHANGELOG_RSS_URL,
-    MIN_SUPPORTED_VERSION,
     _mentioned_version,
     check,
     dracula_pro_dir,
@@ -14,6 +13,7 @@ from koopa.dracula_pro import (
     installed_version,
     is_outdated_layout,
     latest_version,
+    required_version,
     version_from_zip_filename,
 )
 
@@ -164,11 +164,20 @@ def test_is_outdated_layout_old_version(tmp_path: Path, monkeypatch: pytest.Monk
 def test_is_outdated_layout_current_version(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Returns False for an installed version at MIN_SUPPORTED_VERSION."""
+    """Returns False for an installed version at the registry version."""
     monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
-    zip_path = _make_zip(tmp_path, f"dracula-pro-v{MIN_SUPPORTED_VERSION}.zip", {"readme.md": "x"})
+    zip_path = _make_zip(tmp_path, f"dracula-pro-v{required_version()}.zip", {"readme.md": "x"})
     install(str(zip_path), configure=False)
     assert is_outdated_layout() is False
+
+
+def test_required_version_reads_app_json(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Reads the required version from the app registry."""
+    monkeypatch.setattr(
+        "koopa.io.import_app_json",
+        lambda: {"dracula-pro": {"version": "9.8.7"}},
+    )
+    assert required_version() == "9.8.7"
 
 
 def test_latest_version_skips_entries_without_a_version(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -189,8 +198,9 @@ def test_latest_version_raises_when_feed_has_no_version(monkeypatch: pytest.Monk
     """Raises ValueError when no feed entry mentions a version."""
     monkeypatch.setattr(
         "koopa.version_check._http_get_text",
-        lambda _url, **_kwargs: "<rss><channel><item><title>No version here</title></item>"
-        "</channel></rss>",
+        lambda _url, **_kwargs: (
+            "<rss><channel><item><title>No version here</title></item></channel></rss>"
+        ),
     )
     with pytest.raises(ValueError, match="No version number found"):
         latest_version()

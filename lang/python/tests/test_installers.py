@@ -45,10 +45,10 @@ def test_no_installer_bypasses_koopa_cpu_count() -> None:
 
 
 def test_every_app_has_an_installer() -> None:
-    """Every non-tombstoned app.json entry resolves to a Python installer."""
+    """Every koopa-managed app.json entry resolves to a Python installer."""
     unroutable = []
     for name, entry in sorted(import_app_json().items()):
-        if not isinstance(entry, dict) or entry.get("removed"):
+        if not isinstance(entry, dict) or entry.get("removed") or entry.get("user"):
             continue
         if has_python_installer(name):
             continue

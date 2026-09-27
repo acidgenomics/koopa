@@ -18,12 +18,6 @@ from koopa.xdg import xdg_data_home
 
 CHANGELOG_RSS_URL = "https://draculatheme.com/changelog-rss.xml"
 
-# Dracula Pro 2.2.3 renamed its bundle files to lowercase-hyphen names (e.g.
-# "dracula-pro-alucard.tmTheme"). koopa's theme generators read only that
-# layout, so an older bundle's files are not found -- not read wrong, just
-# silently skipped. This floor lets `koopa system check` catch that instead.
-MIN_SUPPORTED_VERSION = "2.2.3"
-
 _VERSION_MARKER_NAME = ".koopa-version"
 _ZIP_VERSION_RE = re.compile(r"dracula-pro-v(\d+\.\d+(?:\.\d+)?)", re.IGNORECASE)
 _VERSION_MENTION_RE = re.compile(
@@ -62,6 +56,32 @@ def installed_version() -> str | None:
     return version or None
 
 
+def required_version() -> str:
+    """Return the Dracula Pro version required by koopa.
+
+    Returns
+    -------
+    str
+        Version pinned in the ``dracula-pro`` app registry entry.
+
+    Raises
+    ------
+    RuntimeError
+        If the registry entry or its version is missing.
+    """
+    from koopa.io import import_app_json
+
+    entry = import_app_json().get("dracula-pro")
+    if not isinstance(entry, dict):
+        msg = "Missing 'dracula-pro' entry in app.json."
+        raise RuntimeError(msg)
+    version = entry.get("version")
+    if not isinstance(version, str) or not version:
+        msg = "Missing version for 'dracula-pro' in app.json."
+        raise RuntimeError(msg)
+    return version
+
+
 def _version_tuple(version: str) -> tuple[int, ...]:
     """Parse a dotted version string into a tuple of integers for comparison.
 
@@ -85,13 +105,13 @@ def is_outdated_layout() -> bool:
     -------
     bool
         True if an installed version is on record and it precedes
-        `MIN_SUPPORTED_VERSION`. False if nothing is installed, or the
-        installed version already meets the minimum.
+        the registry version. False if nothing is installed, or the
+        installed version already meets the requirement.
     """
     current = installed_version()
     if current is None:
         return False
-    return _version_tuple(current) < _version_tuple(MIN_SUPPORTED_VERSION)
+    return _version_tuple(current) < _version_tuple(required_version())
 
 
 def version_from_zip_filename(path: str) -> str | None:

@@ -4,26 +4,37 @@
 
 Major changes:
 
-- Added `koopa app dracula-pro install` and `koopa app dracula-pro check` for
-  installing Dracula Pro themes and auditing their versions against the
-  configured dotfiles.
+- Added Dracula Pro management. `koopa app dracula-pro install` installs a
+  user-provided archive and reapplies dotfiles, while the explicit `check`
+  command compares it with the live changelog feed. `koopa system check`
+  instead uses the version pinned in `app.json`, so it detects an outdated
+  local bundle without a network request.
 - Added `koopa app sys linker-check` to audit installed applications for
-  Mach-O linkage problems.
-- Expanded version checking to handle more upstream release formats, package
-  indexes, and mirror behavior, including improved diagnostics for stale or
-  mismatched application metadata.
-- Added installer and configuration support for new command-line and
-  bioinformatics applications, including `kubectl`, `cloc`, and `scc`.
-- Added Claude configuration auditing with character and token estimates,
-  including a warning when always-loaded instructions exceed Claude Code's
-  documented limit.
+  unresolved, foreign, or stale native-library links and dangling pkg-config
+  paths on macOS and Linux.
+- Dotfiles configuration now protects user-owned files from
+  `.chezmoiremove`. Files that do not match chezmoi's last-applied state are
+  temporarily shielded and restored instead of being deleted.
+- Added `koopa run check-release-notifications`, which compares authenticated
+  GitHub release notifications with `app.json`, resolves authoritative release
+  tags, and reports outdated, untracked, and removed applications.
+- Version checking now holds a pin when an upstream version directory exists
+  before its source archive is published. SourceForge checks likewise verify
+  the expected archive rather than trusting the newest directory name.
+- Added Claude configuration auditing with per-file character and token
+  estimates, path-scoped totals, and a warning when always-loaded instructions
+  exceed Claude Code's 150,000-character limit.
 
 Minor changes:
 
-- Improved `koopa develop check` output and coverage, including application
-  registry validation and more targeted failure reporting.
-- Added notification helpers and expanded dotfiles configuration support.
-- Routine upstream version bumps across the app registry.
+- `koopa develop check` now runs its quality phases from cheapest to most
+  expensive, hides successful output, stops at the first failure, and runs
+  automatically through the repository's pre-push hook.
+- R documentation publishing now builds under an isolated temporary home and
+  refuses to upload generated files that expose the operator's home path.
+- Updated the rsync build for 3.5.1 by disabling unavailable IDN support and
+  enabling zstd consistently across platforms.
+- Routine upstream version bumps across the app registry (52 apps).
 
 New apps:
 
@@ -33,6 +44,8 @@ New apps:
   (CLI, default).
 - `cuttlefish` 3.0.3: compacted de Bruijn graph construction
   (CLI, non-default).
+- `dracula-pro` 2.2.3: paid color theme bundle installed from a user-provided
+  archive (library, non-default).
 - `genrich` 0.6.2: peak calling for ChIP-seq, ATAC-seq, and related assays
   (CLI, non-default).
 - `kraken2` 2.17.2: taxonomic classification for metagenomic sequences

@@ -1114,13 +1114,13 @@ def check_dracula_pro_layout() -> bool:
         version meets koopa's minimum. False if an older, unsupported
         version is installed.
     """
-    from koopa.dracula_pro import MIN_SUPPORTED_VERSION, installed_version, is_outdated_layout
+    from koopa.dracula_pro import installed_version, is_outdated_layout, required_version
 
     if not is_outdated_layout():
         return True
     print(
         f"Dracula Pro {installed_version()} is installed; koopa's theme "
-        f"support requires {MIN_SUPPORTED_VERSION} or newer. Download the "
+        f"support requires {required_version()} or newer. Download the "
         "current bundle from your Gumroad library, then run "
         "'koopa app dracula-pro install --zip <path>'."
     )
