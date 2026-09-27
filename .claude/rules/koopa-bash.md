@@ -3,10 +3,29 @@ paths:
   - "lang/bash/**"
   - "lang/sh/**"
   - "**/*.sh"
+  - "bin/koopa"
   - ".claude/skills/**/*.md"
 ---
 
 # Bash / POSIX-sh Conventions
+
+## Control-flow keywords
+
+Put `then` and `do` on their own line, at the same indent as the matching
+`if`/`elif`/`for`/`while`. Never join them to the condition with a semicolon.
+
+```sh
+# Correct
+if [ -z "$var" ]
+then
+    ...
+fi
+
+# Wrong
+if [ -z "$var" ]; then
+    ...
+fi
+```
 
 ## Variable bracing
 

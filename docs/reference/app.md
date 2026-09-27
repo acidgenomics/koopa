@@ -411,6 +411,23 @@ Run a Docker image, with platform and bind-mount shortcuts.
 - `--bash`
 - `--bind`
 
+## dracula-pro
+
+Dracula Pro theme bundle install and update-check utilities.
+
+(koopa-app-dracula-pro-check)=
+### `app dracula-pro check`
+
+Check the installed Dracula Pro version against the changelog feed.
+
+(koopa-app-dracula-pro-install)=
+### `app dracula-pro install`
+
+Install a Dracula Pro zip downloaded from your Gumroad library.
+
+- `--zip`
+- `--no-configure`
+
 ## file
 
 File compression and renaming utilities.

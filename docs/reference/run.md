@@ -5,6 +5,11 @@
 
 Autopad zeros in numbered file names.
 
+(koopa-run-check-release-notifications)=
+## `run check-release-notifications`
+
+Compare GitHub release notifications against app.json.
+
 (koopa-run-clone)=
 ## `run clone source target`
 

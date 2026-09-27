@@ -818,21 +818,20 @@
     "bin": [
       "bash-language-server"
     ],
-    "build_dependencies": [
-      "conda"
-    ],
     "category": "Shell",
-    "conda_channel": "conda-forge",
-    "date": "2025-04-15",
+    "date": "2026-09-27",
     "default": false,
+    "dependencies": [
+      "node"
+    ],
     "description": "LSP server for bash scripts",
-    "installer": "conda-package",
+    "installer": "node-package",
     "type": "cli",
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "5.6.0"
+    "version": "5.8.1"
   },
   "bash-preexec": {
     "category": "Shell",
@@ -922,6 +921,31 @@
     "url": [
       "https://github.com/bcbio/bcbio-nextgen/"
     ]
+  },
+  "bcftools": {
+    "bin": [
+      "bcftools"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "utilities for variant calling and manipulating VCF/BCF files",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/samtools/bcftools/",
+      "https://bioconda.github.io/recipes/bcftools/README.html"
+    ],
+    "version": "1.24"
   },
   "bcl-convert": {
     "bin": [
@@ -2176,6 +2200,31 @@
     ],
     "version": "8.22.0"
   },
+  "cuttlefish": {
+    "bin": [
+      "cuttlefish"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "compacted de Bruijn graph construction",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/COMBINE-lab/cuttlefish/",
+      "https://bioconda.github.io/recipes/cuttlefish/README.html"
+    ],
+    "version": "3.0.3"
+  },
   "cyto": {
     "bin": [
       "cyto"
@@ -3387,6 +3436,31 @@
     ],
     "version": "0.16.4"
   },
+  "genrich": {
+    "bin": [
+      "Genrich"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "peak-calling for ChIP-seq, ATAC-seq, and related assays",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/jsh58/Genrich/",
+      "https://bioconda.github.io/recipes/genrich/README.html"
+    ],
+    "version": "0.6.2"
+  },
   "gentropy": {
     "bin": [
       "gentropy"
@@ -4317,8 +4391,8 @@
     "src_url": "https://github.com/samtools/htslib/releases/download/{version}/htslib-{version}.tar.bz2",
     "type": "build_tool",
     "url": [
-      "https://github.com/samtools/samtools/",
-      "https://bioconda.github.io/recipes/samtools/README.html"
+      "https://github.com/samtools/htslib/",
+      "https://www.htslib.org/"
     ],
     "version": "1.24"
   },
@@ -4799,6 +4873,34 @@
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
     "version": "0.52.0"
+  },
+  "kraken2": {
+    "bin": [
+      "k2",
+      "kraken2",
+      "kraken2-build",
+      "kraken2-inspect"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "taxonomic classification system for metagenomic sequences",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/DerrickWood/kraken2/",
+      "https://bioconda.github.io/recipes/kraken2/README.html"
+    ],
+    "version": "2.17.2"
   },
   "krb5": {
     "build_dependencies": [
@@ -5898,6 +6000,31 @@
     ],
     "version": "1.4.21"
   },
+  "macs3": {
+    "bin": [
+      "macs3"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "model-based analysis of ChIP-seq peak calling",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/macs3-project/MACS/",
+      "https://bioconda.github.io/recipes/macs3/README.html"
+    ],
+    "version": "3.0.4"
+  },
   "make": {
     "bin": [
       "gmake"
@@ -6079,6 +6206,28 @@
       "https://pypi.org/project/meson/"
     ],
     "version": "1.12.1"
+  },
+  "mgatk": {
+    "bin": [
+      "mgatk",
+      "mgatk-del",
+      "mgatk-del-find"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "mitochondrial genome analysis toolkit for single-cell data",
+    "installer": "conda-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/caleblareau/mgatk/",
+      "https://bioconda.github.io/recipes/mgatk/README.html"
+    ],
+    "version": "0.9.0"
   },
   "miller": {
     "bin": [
@@ -9112,6 +9261,31 @@
       "https://github.com/snowflakedb/snowflake-cli"
     ],
     "version": "3.28.0"
+  },
+  "somalier": {
+    "bin": [
+      "somalier"
+    ],
+    "build_dependencies": [
+      "conda"
+    ],
+    "category": "Bioinformatics",
+    "conda_channel": "bioconda",
+    "date": "2026-09-27",
+    "default": false,
+    "description": "sample relatedness checks from sequencing data",
+    "installer": "conda-package",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-arm64": true
+    },
+    "type": "cli",
+    "url": [
+      "https://github.com/brentp/somalier/",
+      "https://bioconda.github.io/recipes/somalier/README.html"
+    ],
+    "version": "0.3.5"
   },
   "sox": {
     "bin": [

@@ -214,6 +214,7 @@ DEVELOP_SYNOPSIS: dict[str, str] = {
 
 RUN_DESCRIPTIONS: dict[str, str] = {
     "autopad-zeros": "Autopad zeros in numbered file names.",
+    "check-release-notifications": "Compare GitHub release notifications against app.json.",
     "clone": "Clone directory contents using rsync.",
     "convert-svg-to-png": "Convert SVG files to PNG using macOS sips.",
     "convert-utf8-nfd-to-nfc": "Convert UTF-8 NFD filenames to NFC.",
