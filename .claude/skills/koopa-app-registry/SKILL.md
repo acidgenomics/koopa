@@ -12,7 +12,9 @@ description: >-
   dependency-staleness detection compares installed state, not app.json's target,
   or debugging a binary-package push/pull issue (why a push must run from the
   canonical '/opt/koopa' prefix, KOOPA_BUILDER gating, or a tarball uploaded from
-  the wrong prefix that a puller can never extract).
+  the wrong prefix that a puller can never extract), or why
+  check-release-notifications misreports a tracked app as untracked after a
+  GitHub org rename.
 ---
 
 # koopa App Registry & Command Conventions
@@ -252,6 +254,36 @@ by `check-app-versions` after a version bump, with `strict=True` so a failed
 download raises instead of silently printing "Mirror upload skipped". Use it to
 confirm a `src_url` or mirror-list fix actually resolves before trusting the
 next full `check-app-versions` run.
+
+### Release-notification repo matching (`koopa run check-release-notifications`, `notifications.py`)
+
+- **A stale GitHub org/repo `url` silently drops an app into "Untracked"
+  even though it's fully tracked.** `notifications.py`'s
+  `_primary_repo_to_keys()` marks a key "claimed" by whatever repo its
+  recorded `url` points to, then blocks the bare-repo-name fallback from
+  ever re-matching that key under a different repo string. After an
+  upstream org rename (`xianyi/OpenBLAS` -> `OpenMathLib/OpenBLAS`,
+  `dbrgn/tealdeer` -> `tealdeer-rs/tealdeer`), the notification's repo no
+  longer equals the recorded one, and the claim blocks the fallback that
+  would otherwise catch it by bare name. `check-app-versions`'s own
+  `_check_github()` keeps working through this regardless, because
+  GitHub's REST API transparently 301-redirects a renamed repo's old
+  path and `urllib` follows redirects by default — so this class of bug
+  is invisible to `check-app-versions` and only surfaces in the
+  notifications tool's exact-string matching. The fix is to correct the
+  stale `url` (and `src_url`, if the app builds from a GitHub source
+  tarball) to the current org/name, not to loosen the matching logic.
+- **A release notification's `subject.title` is not its tag.** GitHub
+  lets a maintainer set an arbitrary release name (e.g. "fixes
+  hom-ref/hom-alt counts" on a `somalier` release) that carries no version
+  number at all. `fetch_release_notifications()` therefore also captures
+  `subject.url` (the release resource's own API URL), and
+  `_resolve_release_tag()` fetches that resource to get the authoritative
+  `tag_name` and `prerelease` flag. This costs one extra rate-limited
+  GitHub API call per notification (~1.2/sec via the existing
+  `_rate_github` limiter), so a full history of ~140 releases takes about
+  2 minutes — acceptable for a manually run report, not for anything
+  called from an unconditional update path.
 
 ## Private Staged-Artifact Apps (cellranger, bcl-convert)
 
