@@ -19,3 +19,7 @@
     9 outdated casks: antigravity, claude, cursor, dbeaver-community, firefox, google-chrome, netnewswire, temurin, vlc
     ==> Would reinstall 9 casks:
     antigravity claude cursor dbeaver-community firefox google-chrome netnewswire temurin vlc
+** Need to error / warn on Dracula Pro version mismatch in koopa system check
+    I need help reworking `koopa system check` to error if dracula pro is installed but out of date. I don't want to do a LIVE CHECK for dracula pro, I want to make sure we're storing the current version, which is currently v2.2.3
+
+    I enhanced this on another machine, and I want to know that this machine is out of date and running v2.2.2 instead, which will break
