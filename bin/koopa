@@ -3,7 +3,8 @@ set -eu
 
 __koopa_realpath() {
     _rp_out="$(readlink -f "$1" 2>/dev/null || true)"
-    if [ -z "$_rp_out" ]; then
+    if [ -z "$_rp_out" ]
+    then
         _rp_out="$( \
             perl -MCwd -le \
                 'print Cwd::abs_path shift' \
@@ -12,7 +13,8 @@ __koopa_realpath() {
             || true \
         )"
     fi
-    if [ -z "$_rp_out" ]; then
+    if [ -z "$_rp_out" ]
+    then
         _rp_out="$( \
             python3 -c \
                 "import os, sys; print(os.path.realpath(sys.argv[1]))" \
@@ -41,7 +43,8 @@ __koopa_python_version_matches() {
 }
 
 _koopa_bin="$0"
-if [ -L "$_koopa_bin" ]; then
+if [ -L "$_koopa_bin" ]
+then
     _koopa_bin="$(__koopa_realpath "$_koopa_bin")"
 fi
 [ -x "$_koopa_bin" ] || exit 1
@@ -49,7 +52,8 @@ _koopa_prefix="$(__koopa_realpath "$(dirname "$_koopa_bin")/..")"
 [ -d "$_koopa_prefix" ] || exit 1
 
 _venv_python="${_koopa_prefix}/.venv/bin/python3"
-if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]; then
+if [ -n "${KOOPA_BOOTSTRAP_PREFIX:-}" ]
+then
     _bootstrap_python="${KOOPA_BOOTSTRAP_PREFIX}/bin/python3"
 else
     _bootstrap_python="${_koopa_prefix}-bootstrap/bin/python3"
@@ -61,7 +65,8 @@ _python=""
 # stale interpreter left over from a prior pin still passes the module
 # probe below and would otherwise win outright, so a host can silently run
 # the wrong Python indefinitely instead of self-healing.
-if [ -n "$_required_ver" ]; then
+if [ -n "$_required_ver" ]
+then
     if __koopa_python_version_matches "$_venv_python" "$_required_ver" && \
         __koopa_check_python "$_venv_python"
     then
@@ -72,17 +77,23 @@ if [ -n "$_required_ver" ]; then
         _python="$_bootstrap_python"
     fi
 fi
-if [ -z "$_python" ] && __koopa_check_python "$_venv_python"; then
+if [ -z "$_python" ] && __koopa_check_python "$_venv_python"
+then
     _python="$_venv_python"
 fi
-if [ -z "$_python" ]; then
-    if __koopa_check_python "$_bootstrap_python"; then
+if [ -z "$_python" ]
+then
+    if __koopa_check_python "$_bootstrap_python"
+    then
         _python="$_bootstrap_python"
-    elif [ -x "$_bootstrap_python" ]; then
-        if [ "${1:-}" = "uninstall" ]; then
+    elif [ -x "$_bootstrap_python" ]
+    then
+        if [ "${1:-}" = "uninstall" ]
+        then
             exec sh "${_koopa_prefix}/uninstall.sh"
         fi
-        if [ -z "$_python" ]; then
+        if [ -z "$_python" ]
+        then
             printf '%s\n' \
                 'Error: koopa bootstrap Python is invalid.' \
                 '' \
@@ -96,8 +107,10 @@ if [ -z "$_python" ]; then
         fi
     fi
 fi
-if [ -z "$_python" ]; then
-    if [ -n "$_required_ver" ]; then
+if [ -z "$_python" ]
+then
+    if [ -n "$_required_ver" ]
+    then
         # /usr/bin/python3 first (matches historical behavior), then whatever
         # the .python-version-derived name (e.g. python3.12) or bare python3
         # resolve to on PATH -- an already-installed matching interpreter
@@ -117,7 +130,8 @@ if [ -z "$_python" ]; then
         done
     fi
 fi
-if [ -z "$_python" ]; then
+if [ -z "$_python" ]
+then
     printf '%s\n' \
         'Error: koopa bootstrap Python not found.' \
         '' \
