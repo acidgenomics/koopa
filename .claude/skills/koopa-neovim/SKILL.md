@@ -22,14 +22,14 @@ a targeted apply (see skill `koopa-chezmoi-dotfiles`). Never edit
 
 ```
 dot_config/nvim/
-  init.vim              -- loads lua/init.lua, nothing else
-  lazy-lock.json         -- versioned plugin pins, see below
+  init.vim              : loads lua/init.lua, nothing else
+  lazy-lock.json        : versioned plugin pins, see below
   lua/
-    init.lua.tmpl        -- lazy.nvim bootstrap, LSP enable
-    opts.lua              -- options, keymaps, filetype detection
-    plugins/*.lua         -- one lazy.nvim spec table per file
+    init.lua.tmpl       : lazy.nvim bootstrap, LSP enable
+    opts.lua            : options, keymaps, filetype detection
+    plugins/*.lua       : one lazy.nvim spec table per file
   after/
-    syntax/org.vim        -- inline emphasis fix, see below
+    syntax/org.vim      : inline emphasis fix, see below
 ```
 
 ## Plugin lifecycle

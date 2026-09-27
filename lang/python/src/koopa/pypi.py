@@ -645,6 +645,12 @@ def _tag_and_push_release(pkg_path: Path) -> None:
     matching the 'vMAJOR.MINOR.PATCH' bumpver convention used by every sibling
     package (acidgenomes, cellosaurus, ...).
 
+    Also warns (never raises) when the checked-out branch isn't the repo's
+    default branch: publish() builds and tags whatever commit is currently
+    checked out, so a release run from 'develop' tags a commit 'main' does
+    not have yet, until a separate PR/merge catches 'main' up. Confirmed
+    live on acidgenomes 0.4.0, tagged from 'develop'.
+
     Parameters
     ----------
     pkg_path : Path
@@ -654,7 +660,9 @@ def _tag_and_push_release(pkg_path: Path) -> None:
 
     from koopa.alert import alert
     from koopa.git import (
+        git_branch,
         git_create_tag,
+        git_default_branch,
         git_push_tag,
         git_repo_has_unstaged_changes,
         git_tag_exists,
@@ -673,6 +681,14 @@ def _tag_and_push_release(pkg_path: Path) -> None:
         msg = f"[project] version not found in '{pkg_path / 'pyproject.toml'}'."
         raise RuntimeError(msg)
     tag = f"v{version}"
+
+    branch = git_branch(path)
+    default_branch = git_default_branch(path)
+    if branch != default_branch:
+        alert(
+            f"Warning: '{pkg_path}' is on branch '{branch}', not "
+            f"'{default_branch}' -- tagging HEAD anyway."
+        )
 
     if git_repo_has_unstaged_changes(path):
         alert(f"Warning: '{pkg_path}' has unstaged changes -- tagging HEAD anyway.")

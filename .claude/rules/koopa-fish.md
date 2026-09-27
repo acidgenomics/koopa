@@ -7,7 +7,7 @@ paths:
 
 ## Variable style
 
-Fish uses `$VAR` — never `${VAR}` (bash-ism). Fish's parser already unambiguously
+Fish uses `$VAR`, never `${VAR}` (bash-ism). Fish's parser already unambiguously
 delimits variable names without braces; curly braces add noise with no benefit.
 
 Applies to all environment variables referenced in fish scripts: `$KOOPA_PREFIX`,
@@ -19,24 +19,24 @@ Applies to all environment variables referenced in fish scripts: `$KOOPA_PREFIX`
 |------|---------|
 | `set -g VAR` | fish-internal vars (`fish_color_*`, `fish_pager_color_*`). Global scope, **not** exported to child processes. |
 | `set -gx VAR` | Env vars consumed by child processes (`FZF_DEFAULT_OPTS`, `KOOPA_COLOR_MODE`, etc.). Global + exported. |
-| `set -U VAR` | Universal vars — persist across sessions. Fish 4.3+ migrated theme vars *away* from `-U`; don't use for colors. |
+| `set -U VAR` | Universal vars: persist across sessions. Fish 4.3+ migrated theme vars *away* from `-U`; don't use for colors. |
 
-`fish_color_*` and `fish_pager_color_*` are fish line-editor vars — always `set -g`, never `-gx`.
+`fish_color_*` and `fish_pager_color_*` are fish line-editor vars, always `set -g`, never `-gx`.
 
-## `fish_variables` is fish-owned — don't manage theme vars there
+## `fish_variables` is fish-owned: don't manage theme vars there
 
 `~/.config/fish/fish_variables` stores universal variables. Fish itself rewrites this
 file freely (on upgrade, `fish_config` use, etc.). A chezmoi-managed `fish_variables.tmpl`
-that sets `SETUVAR fish_color_*` will be clobbered — fish will strip the color block the
+that sets `SETUVAR fish_color_*` will be clobbered: fish will strip the color block the
 next time it rewrites the file, silently reverting the colors.
 
 **Rule:** set theme/color vars via `set -g` in a conf.d file, not via `fish_variables`.
 
-## `fish_frozen_theme.fish` — fish 4.3 migration artifact
+## `fish_frozen_theme.fish`: fish 4.3 migration artifact
 
 Fish 4.3 migrated theme vars from universal to global scope by auto-generating
 `~/.config/fish/conf.d/fish_frozen_theme.fish`. This file:
-- Is **fish-owned and untracked** — `fish_config` web tool may overwrite it.
+- Is **fish-owned and untracked**: the `fish_config` web tool may overwrite it.
 - Sets the full theme palette as `set --global fish_color_*` globals on every startup.
 - Should **never be edited directly** (the header says so, and it would be clobbered).
 

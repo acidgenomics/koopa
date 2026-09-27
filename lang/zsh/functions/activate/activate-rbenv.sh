@@ -19,7 +19,8 @@ _koopa_activate_rbenv() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/rbenv-${KOOPA_SHELL##*/}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$rbenv" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$rbenv" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$rbenv" init - > "$cache_file"
     fi

@@ -4,6 +4,7 @@ Replaces the 34-line ``_koopa_cli_develop`` Bash function.
 """
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -699,6 +700,9 @@ def _handle_shellcheck() -> None:
 
 
 _SKILL_DESCRIPTION_MAX_LEN = 1023
+_SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_SKILL_TRIGGER_RE = re.compile(r"\b(?:use (?:when|after|before|to|this)|whenever)\b", re.IGNORECASE)
+_SKILL_BODY_SOFT_MAX_LINES = 600
 
 
 def _skill_frontmatter_errors(path: str) -> list[str]:
@@ -707,10 +711,15 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
     Enforces the cross-CLI compatibility contract: ``description: >-`` (folded-strip
     block scalar), never plain ``>`` or an inline scalar, and a 1023-char raw length
     budget. The 1024-char cap on the *parsed* description is a spec-level constraint
-    of the open Agent Skills format (agentskills.io), not just a Copilot CLI quirk --
+    of the open Agent Skills format (agentskills.io), not just a Copilot CLI quirk:
     Codex CLI hardcodes the same ``MAX_DESCRIPTION_LEN=1024``. Plain ``>`` folds in a
     trailing newline (parsed = raw + 1), silently spending 1 char of that budget for
     nothing; an over-cap skill gets dropped by whichever CLI reads it.
+
+    Also enforces naming (lowercase, hyphen-separated, ``name:`` equal to the
+    directory name) and requires a trigger phrase in the description (one of
+    "use when", "use after", "use before", "use to", "use this", or "whenever"),
+    since the description is what a CLI reads to decide when to load the skill.
 
     Parameters
     ----------
@@ -731,8 +740,24 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
         return [f"{path}:1: missing closing '---' frontmatter delimiter"]
     fm = lines[1:end]
     errors: list[str] = []
-    if not any(line.startswith("name:") for line in fm):
+    name_idx = next((i for i, line in enumerate(fm) if line.startswith("name:")), None)
+    if name_idx is None:
         errors.append(f"{path}:1: missing 'name:' key in frontmatter")
+    else:
+        name_lineno = name_idx + 2  # +1 for 0-index, +1 for the opening '---' line
+        name = fm[name_idx].split(":", 1)[1].strip().strip("'\"")
+        dirname = os.path.basename(os.path.dirname(path))
+        if not _SKILL_NAME_RE.match(name):
+            errors.append(
+                f"{path}:{name_lineno}: name {name!r} must be lowercase letters "
+                "and digits joined by single hyphens"
+            )
+        if name != dirname:
+            errors.append(
+                f"{path}:{name_lineno}: name {name!r} does not match its "
+                f"directory {dirname!r}; skills are keyed by directory, so the "
+                "two must agree"
+            )
     desc_idx = next((i for i, line in enumerate(fm) if line.startswith("description:")), None)
     if desc_idx is None:
         errors.append(f"{path}:1: missing 'description:' key in frontmatter")
@@ -759,14 +784,87 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
             f"{_SKILL_DESCRIPTION_MAX_LEN}-char budget (the Agent Skills spec caps "
             "the parsed description at 1024 chars; over-cap skills get dropped)"
         )
+    if not _SKILL_TRIGGER_RE.search(raw):
+        errors.append(
+            f"{path}:{lineno}: description has no trigger phrase (one of 'use "
+            "when', 'use after', 'use before', 'use to', 'use this', or "
+            "'whenever'); the description is what decides when the skill loads"
+        )
     return errors
+
+
+def _skill_infer_prefix(names: list[str]) -> str | None:
+    """Infer a shared naming prefix from a list of skill directory names.
+
+    Returns the hyphen-joined first segment shared by a strict majority of
+    ``names``, or ``None`` if fewer than 2 names are given or no single segment
+    covers more than half of them (for example a tie, or all-unprefixed names).
+
+    Parameters
+    ----------
+    names : list[str]
+        Skill directory names to infer a shared prefix from.
+
+    Returns
+    -------
+    str | None
+        The inferred prefix (without the trailing hyphen), or ``None``.
+    """
+    if len(names) < 2:
+        return None
+    segments = [name.split("-", 1)[0] for name in names if "-" in name]
+    if not segments:
+        return None
+    counts: dict[str, int] = {}
+    for segment in segments:
+        counts[segment] = counts.get(segment, 0) + 1
+    prefix, count = max(counts.items(), key=lambda item: item[1])
+    return prefix if count > len(names) / 2 else None
+
+
+def _skill_prefix_errors(root: str, skill_files: list[str]) -> list[str]:
+    """Flag skill directories that lack the prefix shared by most skills in a root.
+
+    Parameters
+    ----------
+    root : str
+        The skill-directory root being checked (used only for the error message).
+    skill_files : list[str]
+        Paths to each ``SKILL.md`` file found directly under ``root``.
+
+    Returns
+    -------
+    list[str]
+        Error messages naming each directory that lacks the inferred prefix.
+    """
+    dirnames = [os.path.basename(os.path.dirname(path)) for path in skill_files]
+    prefix = _skill_infer_prefix(dirnames)
+    if prefix is None:
+        return []
+    want = f"{prefix}-"
+    outliers = sorted(name for name in dirnames if not name.startswith(want))
+    matched = len(dirnames) - len(outliers)
+    return [
+        f"{path}:1: skill directory {os.path.basename(os.path.dirname(path))!r} "
+        f"lacks the {want!r} prefix shared by {matched} of {len(dirnames)} skills "
+        f"under {root}"
+        for path in skill_files
+        if os.path.basename(os.path.dirname(path)) in outliers
+    ]
 
 
 def _handle_check_skills(args: list[str]) -> None:
     """Handle ``koopa develop check-skills [path...]``.
 
-    Validates every ``SKILL.md``'s frontmatter for cross-CLI compatibility. See
-    ``_skill_frontmatter_errors`` for the exact rules enforced.
+    Validates every ``SKILL.md``'s frontmatter, naming, and trigger phrase. See
+    ``_skill_frontmatter_errors`` for the exact rules enforced, and
+    ``_skill_prefix_errors`` for the per-root naming-prefix check. A body over
+    ``_SKILL_BODY_SOFT_MAX_LINES`` lines is reported as an advisory note, not
+    an error.
+
+    Point this at a source tree (a repo's own ``.claude/skills``), not at a
+    deployed directory shared by several trees (for example ``~/.claude/skills``)
+    -- a minority tree's skills would be flagged as prefix outliers there.
 
     Parameters
     ----------
@@ -777,12 +875,12 @@ def _handle_check_skills(args: list[str]) -> None:
     import argparse
     import glob
 
-    from koopa.alert import alert, alert_success
+    from koopa.alert import alert, alert_note, alert_success
     from koopa.prefix import koopa_prefix
 
     parser = argparse.ArgumentParser(
         prog="koopa develop check-skills",
-        description="Validate SKILL.md frontmatter for cross-CLI compatibility.",
+        description="Validate SKILL.md frontmatter, naming, and trigger phrases.",
     )
     parser.add_argument(
         "roots",
@@ -806,15 +904,19 @@ def _handle_check_skills(args: list[str]) -> None:
             *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
 
-    skill_files: list[str] = []
+    files_by_root: dict[str, list[str]] = {}
     for root in roots:
         if not os.path.isdir(root):
             continue
+        found = []
         for name in sorted(os.listdir(root)):
             skill_md = os.path.join(root, name, "SKILL.md")
             if os.path.isfile(skill_md):
-                skill_files.append(skill_md)
+                found.append(skill_md)
+        if found:
+            files_by_root[root] = found
 
+    skill_files = [path for files in files_by_root.values() for path in files]
     if not skill_files:
         print("Error: no SKILL.md files found under the given roots.", file=sys.stderr)
         sys.exit(1)
@@ -823,6 +925,18 @@ def _handle_check_skills(args: list[str]) -> None:
     errors: list[str] = []
     for path in skill_files:
         errors += _skill_frontmatter_errors(path)
+    for root, files in files_by_root.items():
+        errors += _skill_prefix_errors(root, files)
+
+    for path in skill_files:
+        with open(path, errors="replace") as fh:
+            n_lines = sum(1 for _ in fh)
+        if n_lines > _SKILL_BODY_SOFT_MAX_LINES:
+            alert_note(
+                f"{path}: {n_lines} lines, over the "
+                f"~{_SKILL_BODY_SOFT_MAX_LINES}-line soft ceiling; shrink by moving "
+                "reference detail into a sibling file, not by summarizing"
+            )
 
     if errors:
         for line in errors:
@@ -931,13 +1045,53 @@ def _handle_check_app_versions(args: list[str]) -> None:
         update_app_json(results, s3_upload=parsed.s3_upload)
 
 
-def _run_pytest(args: list[str]) -> int:
+def _run_tool(cmd: list[str], *, quiet: bool, env: dict[str, str] | None = None) -> int:
+    """Run a quality-gate tool, hiding its output when it succeeds.
+
+    Parameters
+    ----------
+    cmd : list[str]
+        Full command line to run.
+    quiet : bool
+        If ``True``, capture combined stdout/stderr and print it only on
+        failure. If ``False``, stream output live as the command runs.
+    env : dict[str, str] | None
+        Environment to run the command with. Defaults to the current
+        process environment.
+
+    Returns
+    -------
+    int
+        Exit code returned by the command.
+    """
+    try:
+        if quiet:
+            subprocess.run(
+                cmd,
+                env=env,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+        else:
+            subprocess.run(cmd, env=env, check=True)
+    except subprocess.CalledProcessError as exc:
+        if quiet and exc.stdout:
+            print(exc.stdout, end="")
+        return exc.returncode
+    return 0
+
+
+def _run_pytest(args: list[str], *, quiet: bool = False) -> int:
     """Run ``pytest`` over the koopa test suite.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``pytest`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -956,7 +1110,7 @@ def _run_pytest(args: list[str]) -> int:
     env = os.environ.copy()
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = f"{src_dir}:{existing}" if existing else src_dir
-    return subprocess.run([pytest_cmd, tests_dir, *args], env=env, check=False).returncode
+    return _run_tool([pytest_cmd, tests_dir, *args], quiet=quiet, env=env)
 
 
 def _handle_pytest(args: list[str]) -> None:
@@ -970,13 +1124,15 @@ def _handle_pytest(args: list[str]) -> None:
     sys.exit(_run_pytest(args))
 
 
-def _run_pyright(args: list[str]) -> int:
+def _run_pyright(args: list[str], *, quiet: bool = False) -> int:
     """Run ``pyright`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``pyright`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -990,7 +1146,7 @@ def _run_pyright(args: list[str]) -> int:
     if pyright_cmd is None:
         msg = "pyright is not installed."
         raise RuntimeError(msg)
-    return subprocess.run([pyright_cmd, src_dir, *args], check=False).returncode
+    return _run_tool([pyright_cmd, src_dir, *args], quiet=quiet)
 
 
 def _handle_pyright(args: list[str]) -> None:
@@ -1004,7 +1160,7 @@ def _handle_pyright(args: list[str]) -> None:
     sys.exit(_run_pyright(args))
 
 
-def _run_ty(args: list[str]) -> int:
+def _run_ty(args: list[str], *, quiet: bool = False) -> int:
     """Run ``ty check`` over the koopa source tree.
 
     Passes ``--project`` explicitly, since ``ty`` resolves ``pyproject.toml``
@@ -1017,6 +1173,8 @@ def _run_ty(args: list[str]) -> int:
     ----------
     args : list[str]
         Extra arguments passed through to the ``ty check`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1031,7 +1189,7 @@ def _run_ty(args: list[str]) -> int:
         msg = "ty is not installed."
         raise RuntimeError(msg)
     cmd = [ty_cmd, "check", "--project", koopa_prefix(), src_dir, *args]
-    return subprocess.run(cmd, check=False).returncode
+    return _run_tool(cmd, quiet=quiet)
 
 
 def _handle_ty(args: list[str]) -> None:
@@ -1045,13 +1203,15 @@ def _handle_ty(args: list[str]) -> None:
     sys.exit(_run_ty(args))
 
 
-def _run_numpydoc(args: list[str]) -> int:
+def _run_numpydoc(args: list[str], *, quiet: bool = False) -> int:
     """Run ``numpydoc lint`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``numpydoc lint`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1068,7 +1228,7 @@ def _run_numpydoc(args: list[str]) -> int:
         msg = "numpydoc is not installed."
         raise RuntimeError(msg)
     files = sorted(str(p) for p in Path(src_dir).rglob("*.py"))
-    return subprocess.run([numpydoc_cmd, "lint", *files, *args], check=False).returncode
+    return _run_tool([numpydoc_cmd, "lint", *files, *args], quiet=quiet)
 
 
 def _handle_numpydoc(args: list[str]) -> None:
@@ -1082,13 +1242,15 @@ def _handle_numpydoc(args: list[str]) -> None:
     sys.exit(_run_numpydoc(args))
 
 
-def _run_ruff_check(args: list[str]) -> int:
+def _run_ruff_check(args: list[str], *, quiet: bool = False) -> int:
     """Run ``ruff check`` over the koopa source tree.
 
     Parameters
     ----------
     args : list[str]
         Extra arguments passed through to the ``ruff check`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1102,10 +1264,10 @@ def _run_ruff_check(args: list[str]) -> int:
     if ruff_cmd is None:
         msg = "ruff is not installed."
         raise RuntimeError(msg)
-    return subprocess.run([ruff_cmd, "check", src_dir, *args], check=False).returncode
+    return _run_tool([ruff_cmd, "check", src_dir, *args], quiet=quiet)
 
 
-def _run_ruff_format_check(args: list[str]) -> int:
+def _run_ruff_format_check(args: list[str], *, quiet: bool = False) -> int:
     """Run ``ruff format --check`` over the koopa source tree.
 
     Parameters
@@ -1113,6 +1275,8 @@ def _run_ruff_format_check(args: list[str]) -> int:
     args : list[str]
         Extra arguments passed through to the ``ruff format --check``
         invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
 
     Returns
     -------
@@ -1127,7 +1291,7 @@ def _run_ruff_format_check(args: list[str]) -> int:
         msg = "ruff is not installed."
         raise RuntimeError(msg)
     cmd = [ruff_cmd, "format", "--check", src_dir, *args]
-    return subprocess.run(cmd, check=False).returncode
+    return _run_tool(cmd, quiet=quiet)
 
 
 def _handle_check(args: list[str]) -> None:
@@ -1135,8 +1299,10 @@ def _handle_check(args: list[str]) -> None:
 
     Runs the full Python quality gate as one command: ``ruff check``,
     ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
-    ``pytest``. Every phase runs even after an earlier one fails, so a single
-    invocation surfaces every problem instead of stopping at the first.
+    ``pytest``. Phases run in cheap-to-expensive order and stop at the first
+    failure, so a fast lint error fails in seconds instead of waiting for
+    pytest. A passing phase's output is hidden; the failing phase prints its
+    full output before the gate raises.
 
     Parameters
     ----------
@@ -1144,7 +1310,7 @@ def _handle_check(args: list[str]) -> None:
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
         an argument cannot be routed unambiguously across six tools.
     """
-    from koopa.alert import alert, alert_success, warn
+    from koopa.alert import alert, alert_success
 
     if args:
         msg = (
@@ -1153,7 +1319,7 @@ def _handle_check(args: list[str]) -> None:
             "ty, numpydoc, pytest."
         )
         raise RuntimeError(msg)
-    phases: list[tuple[str, Callable[[list[str]], int]]] = [
+    phases: list[tuple[str, Callable[..., int]]] = [
         ("ruff check", _run_ruff_check),
         ("ruff format", _run_ruff_format_check),
         ("pyright", _run_pyright),
@@ -1161,17 +1327,12 @@ def _handle_check(args: list[str]) -> None:
         ("numpydoc", _run_numpydoc),
         ("pytest", _run_pytest),
     ]
-    failed: list[str] = []
     for label, runner in phases:
         alert(f"Running {label}.")
-        if runner([]) == 0:
-            alert_success(f"{label} passed.")
-        else:
-            warn(f"{label} failed.")
-            failed.append(label)
-    if failed:
-        msg = f"{len(failed)} of {len(phases)} checks failed: {', '.join(failed)}."
-        raise RuntimeError(msg)
+        if runner([], quiet=True) != 0:
+            msg = f"{label} failed."
+            raise RuntimeError(msg)
+        alert_success(f"{label} passed.")
     alert_success("All checks passed.")
 
 

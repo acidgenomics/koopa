@@ -174,7 +174,8 @@ _koopa_activate_atuin() {
         return 0
     fi
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/atuin-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$atuin" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$atuin" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$atuin" init bash --disable-up-arrow > "$cache_file"
     fi
@@ -511,7 +512,8 @@ _koopa_activate_conda() {
     esac
     [[ "$(type -t conda)" == 'alias' ]] && unalias conda
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/conda-${shell}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$conda" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$conda" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$conda" "shell.${shell}" 'hook' > "$cache_file"
     fi
@@ -605,7 +607,8 @@ _koopa_activate_direnv() {
         DIRENV_FILE \
         DIRENV_WATCHES
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/direnv-hook-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$direnv" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$direnv" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$direnv" hook bash > "$cache_file"
     fi
@@ -789,7 +792,8 @@ _koopa_activate_pyenv() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/pyenv-${KOOPA_SHELL##*/}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$pyenv" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$pyenv" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$pyenv" virtualenv-init - > "$cache_file"
     fi
@@ -857,7 +861,8 @@ _koopa_activate_rbenv() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/rbenv-${KOOPA_SHELL##*/}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$rbenv" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$rbenv" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$rbenv" init - > "$cache_file"
     fi
@@ -915,7 +920,8 @@ _koopa_activate_starship() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/starship-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$starship" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$starship" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$starship" init bash > "$cache_file"
     fi
@@ -1005,7 +1011,8 @@ _koopa_activate_zoxide() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/zoxide-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$zoxide" init bash > "$cache_file"
     fi

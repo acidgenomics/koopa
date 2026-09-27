@@ -727,6 +727,34 @@ def _handle_dns(args: list[str]) -> None:
         print()
 
 
+def _handle_check_release_notifications(args: list[str]) -> None:
+    import argparse
+
+    from koopa.io import import_app_json
+    from koopa.notifications import compare_release_notifications, fetch_release_notifications
+    from koopa.version_check import print_report
+
+    parser = argparse.ArgumentParser(
+        prog="check-release-notifications",
+        description="Compare GitHub release notifications against app.json.",
+    )
+    parser.parse_args(args)
+    notifications = fetch_release_notifications()
+    app_json = import_app_json()
+    results, untracked, removed = compare_release_notifications(notifications, app_json)
+    print_report(results)
+    if untracked:
+        print(f"Untracked ({len(untracked)}):")
+        for repo in sorted(untracked):
+            print(f"  {repo}  {untracked[repo]}")
+        print()
+    if removed:
+        print(f"Removed from koopa ({len(removed)}):")
+        for repo in sorted(removed):
+            print(f"  {repo}  {removed[repo]}")
+        print()
+
+
 def _handle_ip_address(args: list[str]) -> None:
     import argparse
 
@@ -1170,6 +1198,7 @@ def _handle_update_today_bucket(args: list[str]) -> None:
 
 _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "autopad-zeros": _handle_autopad_zeros,
+    "check-release-notifications": _handle_check_release_notifications,
     "clone": _handle_clone,
     "convert-svg-to-png": _handle_convert_svg_to_png,
     "create-dmg": _handle_create_dmg,

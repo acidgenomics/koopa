@@ -859,7 +859,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.12.18'
+    __kvar_uv_version='0.12.19'
     __kvar_python_version='3.14.7'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
@@ -1076,13 +1076,15 @@ stage_commit() {
     if [ -d "$PREFIX" ]
     then
         rm -fr "${PREFIX}.old" 2>/dev/null || true
-        if [ -d "${PREFIX}.old" ]; then
+        if [ -d "${PREFIX}.old" ]
+        then
             mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
         fi
         mv "$PREFIX" "${PREFIX}.old"
     else
         rm -fr "${PREFIX}.old" 2>/dev/null || true
-        if [ -d "${PREFIX}.old" ]; then
+        if [ -d "${PREFIX}.old" ]
+        then
             mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
         fi
     fi

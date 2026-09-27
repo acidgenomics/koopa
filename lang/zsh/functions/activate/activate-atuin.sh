@@ -19,7 +19,8 @@ _koopa_activate_atuin() {
             ;;
     esac
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/atuin-${shell}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$atuin" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$atuin" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$atuin" init "$shell" --disable-up-arrow > "$cache_file"
     fi

@@ -25,7 +25,7 @@ appear as literals in any tracked file. Committing them is an IP violation.
 grep -iE '<THE_HEX>' ~/.local/share/dracula-pro/themes/ghostty/pro
 ```
 
-If it matches, the code must read it at runtime — not embed it as a literal.
+If it matches, the code must read it at runtime, not embed it as a literal.
 
 See skill `koopa-theming` for the runtime-derivation architecture (`_parse_ghostty_palette`,
 the conditional-include chezmoi template pattern, and JetBrains synthesis asserts).

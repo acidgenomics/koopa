@@ -11,7 +11,7 @@ from collections.abc import Callable
 _M = "koopa.installers"
 
 PYTHON_INSTALLERS: dict[str, str] = {
-    # -- conda-package (150) ---------------------------------------------
+    # -- conda-package (156) ---------------------------------------------
     "actionlint": f"{_M}._conda",
     "age": f"{_M}._conda",
     "agat": f"{_M}._conda",
@@ -47,8 +47,8 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "woff2": f"{_M}._conda",
     "aws-cli": f"{_M}.aws_cli",
     "bamtools": f"{_M}._conda",
-    "bash-language-server": f"{_M}._conda",
     "bat": f"{_M}._conda",
+    "bcftools": f"{_M}._conda",
     "bedtk": f"{_M}._conda",
     "bedtools": f"{_M}._conda",
     "bioconda-utils": f"{_M}._conda",
@@ -62,6 +62,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "choose": f"{_M}._conda",
     "conda-build": f"{_M}._conda",
     "csvtk": f"{_M}._conda",
+    "cuttlefish": f"{_M}._conda",
     "deeptools": f"{_M}._conda",
     "delta": f"{_M}._conda",
     "difftastic": f"{_M}._conda",
@@ -83,6 +84,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "gatk": f"{_M}._conda",
     "gdc-client": f"{_M}._conda",
     "genomepy": f"{_M}._conda",
+    "genrich": f"{_M}._conda",
     "gffutils": f"{_M}._conda",
     "gh": f"{_M}._conda",
     "gitui": f"{_M}._conda",
@@ -99,13 +101,16 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "just": f"{_M}._conda",
     "k9s": f"{_M}._conda",
     "kallisto": f"{_M}._conda",
+    "kraken2": f"{_M}._conda",
     "lazygit": f"{_M}._conda",
     "libnetcdf": f"{_M}._conda",
     "lsd": f"{_M}._conda",
     "luigi": f"{_M}._conda",
+    "macs3": f"{_M}._conda",
     "mamba": f"{_M}._conda",
     "atuin": f"{_M}._conda",
     "mdcat": f"{_M}._conda",
+    "mgatk": f"{_M}._conda",
     "minimap2": f"{_M}._conda",
     "mise": f"{_M}._conda",
     "ncbi-sra-tools": f"{_M}._conda",
@@ -139,6 +144,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "shellcheck": f"{_M}._conda",
     "shfmt": f"{_M}._conda",
     "snakemake": f"{_M}._conda",
+    "somalier": f"{_M}._conda",
     "sox": f"{_M}._conda",
     "star": f"{_M}._conda",
     "star-fusion": f"{_M}._conda",
@@ -273,7 +279,8 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "wget2": f"{_M}._gnu",
     "antigravity-cli": f"{_M}.antigravity_cli",
     "aws-azure-login": f"{_M}.aws_azure_login",
-    # -- node-package (7) ------------------------------------------------
+    # -- node-package (8) ------------------------------------------------
+    "bash-language-server": f"{_M}._node_pkg",
     "claude-code": f"{_M}._node_pkg",
     "claude-replay": f"{_M}._node_pkg",
     "codex": f"{_M}._node_pkg",
@@ -467,6 +474,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "illumina-ica-cli": f"{_M}.illumina_ica_cli",
     "julia": f"{_M}.julia",
     "ksh93": f"{_M}.ksh93",
+    "kubectl": f"{_M}.kubectl",
     "ldc": f"{_M}.ldc",
     "libgeotiff": f"{_M}.libgeotiff",
     "libheif": f"{_M}.libheif",

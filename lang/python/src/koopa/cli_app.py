@@ -91,6 +91,10 @@ _APP_TREE: dict[str, Any] = {
         "remove": "docker-remove",
         "run": "docker-run",
     },
+    "dracula-pro": {
+        "check": "dracula-pro-check",
+        "install": "dracula-pro-install",
+    },
     "ftp": {
         "mirror": "ftp-mirror",
     },
@@ -1454,7 +1458,13 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
 
 
 def _estimate_claude_tokens(text: str) -> int:
-    """Estimate token count for Claude config text (chars / 4 heuristic).
+    """Estimate token count for Claude config text (chars / 3 heuristic).
+
+    Calibrated against a live `/context` reading of Claude Code's own
+    reported per-file token counts across a real set of Markdown
+    instruction files (arrows, em dashes, and other multi-byte characters
+    included): about 3.0 chars per token, not the more common chars / 4
+    English-prose approximation.
 
     Parameters
     ----------
@@ -1466,7 +1476,7 @@ def _estimate_claude_tokens(text: str) -> int:
     int
         Estimated token count.
     """
-    return len(text) // 4
+    return len(text) // 3
 
 
 def _rule_is_path_scoped(text: str) -> bool:
@@ -1496,7 +1506,7 @@ def _rule_is_path_scoped(text: str) -> bool:
 def _scan_claude_config(
     claude_dir: str,
     display_root: str,
-) -> list[tuple[str, int, int, bool]]:
+) -> list[tuple[str, int, int, int, bool]]:
     """Scan a .claude config dir and root CLAUDE.md for always/conditional files.
 
     Parameters
@@ -1508,9 +1518,13 @@ def _scan_claude_config(
 
     Returns
     -------
-    list[tuple[str, int, int, bool]]
-        Each tuple is ``(rel_path, byte_count, token_count, is_path_scoped)``.
-        ``rel_path`` is relative to ``display_root``.
+    list[tuple[str, int, int, int, bool]]
+        Each tuple is ``(rel_path, char_count, byte_count, token_count,
+        is_path_scoped)``. ``rel_path`` is relative to ``display_root``.
+        ``char_count`` is what Claude Code's own 150,000-char instruction
+        limit counts against; ``byte_count`` (UTF-8) is shown only as a
+        disk-size reference and is not the same number, since multi-byte
+        characters (arrows, em dashes, curly quotes) make it run higher.
     """
     import glob
 
@@ -1523,7 +1537,7 @@ def _scan_claude_config(
         candidates.extend(sorted(glob.glob(os.path.join(rules_dir, "**", "*.md"), recursive=True)))
 
     seen: set[str] = set()
-    rows: list[tuple[str, int, int, bool]] = []
+    rows: list[tuple[str, int, int, int, bool]] = []
     for path in candidates:
         if not os.path.isfile(path):
             continue
@@ -1535,7 +1549,9 @@ def _scan_claude_config(
             text = fh.read()
         rel = os.path.relpath(path, display_root)
         scoped = _rule_is_path_scoped(text)
-        rows.append((rel, len(text.encode("utf-8")), _estimate_claude_tokens(text), scoped))
+        rows.append(
+            (rel, len(text), len(text.encode("utf-8")), _estimate_claude_tokens(text), scoped)
+        )
 
     return rows
 
@@ -1580,50 +1596,52 @@ def _find_project_root(start: str) -> str | None:
 
 def _print_config_block(
     label: str,
-    rows: list[tuple[str, int, int, bool]],
+    rows: list[tuple[str, int, int, int, bool]],
     prefix: str,
-) -> tuple[int, int]:
-    """Print a formatted config block and return (always_tokens, always_file_count).
+) -> tuple[int, int, int]:
+    """Print a formatted config block and return the always-loaded totals.
 
     Parameters
     ----------
     label : str
         Section header label (e.g. ``"Global (~/.claude)"``).
-    rows : list[tuple[str, int, int, bool]]
+    rows : list[tuple[str, int, int, int, bool]]
         Rows from ``_scan_claude_config``.
     prefix : str
         Prefix prepended to each displayed path (e.g. ``"~/"`` or ``"myrepo/"``).
 
     Returns
     -------
-    tuple[int, int]
-        ``(always_tokens, always_file_count)`` for the always-loaded rows.
+    tuple[int, int, int]
+        ``(always_tokens, always_chars, always_file_count)`` for the
+        always-loaded rows.
     """
-    always = [(r, b, t) for r, b, t, s in rows if not s]
-    conditional = [(r, b, t) for r, b, t, s in rows if s]
+    always = [(r, c, b, t) for r, c, b, t, s in rows if not s]
+    conditional = [(r, c, b, t) for r, c, b, t, s in rows if s]
 
-    always_tokens = sum(t for _, _, t in always)
-    always_bytes = sum(b for _, b, _ in always)
+    always_tokens = sum(t for _, _, _, t in always)
+    always_chars = sum(c for _, c, _, _ in always)
+    always_bytes = sum(b for _, _, b, _ in always)
 
     print(f"{label} ({len(always)} files):")
-    for rel, nbytes, tokens in always:
+    for rel, _nchars, nbytes, tokens in always:
         print(f"  {tokens:5d} tokens  {nbytes:6d} B  {prefix}{rel}")
     print(f"  {'─' * 38}")
     print(f"  {always_tokens:5d} tokens  {always_bytes:6d} B  total (approx)")
 
     if conditional:
-        cond_tokens = sum(t for _, _, t in conditional)
-        cond_bytes = sum(b for _, b, _ in conditional)
+        cond_tokens = sum(t for _, _, _, t in conditional)
+        cond_bytes = sum(b for _, _, b, _ in conditional)
         print(
             f"\nPath-scoped / conditional ({len(conditional)} files,"
             " loads only when matching files are open):"
         )
-        for rel, nbytes, tokens in conditional:
+        for rel, _nchars, nbytes, tokens in conditional:
             print(f"  {tokens:5d} tokens  {nbytes:6d} B  {prefix}{rel}")
         print(f"  {'─' * 38}")
         print(f"  {cond_tokens:5d} tokens  {cond_bytes:6d} B  total (approx)")
 
-    return always_tokens, len(always)
+    return always_tokens, always_chars, len(always)
 
 
 def _handle_claude_audit_tokens(args: list[str]) -> None:
@@ -1642,7 +1660,9 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
             "Report approximate token cost of Claude config files. "
             "Rules with 'paths:' frontmatter load conditionally (not every session). "
             "--max-tokens gates the combined always-loaded total. "
-            "Token estimate: chars / 4."
+            "Warns past 150,000 combined chars, matching Claude Code's own "
+            "instruction-file limit. "
+            "Token estimate: chars / 3."
         ),
     )
     parser.add_argument(
@@ -1670,6 +1690,7 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
     global_claude = os.path.join(home, ".claude")
 
     combined_tokens = 0
+    combined_chars = 0
     combined_files = 0
     printed_global = False
     printed_project = False
@@ -1680,12 +1701,13 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
         if not global_rows:
             alert_note("No globally-loaded Claude config files found.")
         else:
-            g_tokens, g_files = _print_config_block(
+            g_tokens, g_chars, g_files = _print_config_block(
                 "Global (~/.claude) config",
                 global_rows,
                 "~/",
             )
             combined_tokens += g_tokens
+            combined_chars += g_chars
             combined_files += g_files
             printed_global = True
 
@@ -1711,19 +1733,34 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
                 basename = os.path.basename(proj_root)
                 if printed_global:
                     print()
-                p_tokens, p_files = _print_config_block(
+                p_tokens, p_chars, p_files = _print_config_block(
                     f"Project ({basename}) config",
                     proj_rows,
                     f"{basename}/",
                 )
                 combined_tokens += p_tokens
+                combined_chars += p_chars
                 combined_files += p_files
                 printed_project = True
 
     # --- Combined footer ---
     if printed_global and printed_project:
         print(f"\n{'─' * 38}")
-        print(f"Combined always-loaded: {combined_tokens} tokens across {combined_files} files")
+        print(
+            f"Combined always-loaded: {combined_tokens} tokens"
+            f" ({combined_chars} chars) across {combined_files} files"
+        )
+
+    # Claude Code warns, and stops loading further files, past 150,000
+    # combined chars of always-loaded instructions. Surface the same signal
+    # here so it can be caught before the next session start.
+    claude_char_limit = 150_000
+    if combined_chars > claude_char_limit:
+        print(
+            f"Warning: {combined_chars} combined chars exceeds Claude Code's"
+            f" {claude_char_limit}-char instruction-file limit.",
+            file=sys.stderr,
+        )
 
     if parsed.max_tokens is not None and combined_tokens > parsed.max_tokens:
         print(
@@ -1735,7 +1772,7 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
 
     alert_success(
         f"claude-audit-tokens: ~{combined_tokens} always-loaded tokens"
-        f" across {combined_files} files."
+        f" ({combined_chars} chars) across {combined_files} files."
     )
 
 
@@ -2224,6 +2261,37 @@ def _handle_bioconda_autobump_recipe(args: list[str]) -> None:
     subprocess.run([vim, meta_yaml], cwd=repo, check=True)
 
 
+# -- dracula-pro handlers -----------------------------------------------------
+
+
+def _handle_dracula_pro_install(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app dracula-pro install")
+    parser.add_argument(
+        "--zip",
+        required=True,
+        dest="zip_path",
+        help="Path to a Dracula Pro zip downloaded from your Gumroad library.",
+    )
+    parser.add_argument(
+        "--no-configure",
+        action="store_true",
+        help="Skip re-running 'koopa configure user dotfiles' after installing.",
+    )
+    parsed = parser.parse_args(args)
+
+    from koopa.dracula_pro import install
+
+    install(parsed.zip_path, configure=not parsed.no_configure)
+
+
+def _handle_dracula_pro_check(_: list[str]) -> None:
+    from koopa.dracula_pro import check
+
+    check()
+
+
 # -- ftp handlers ------------------------------------------------------------
 
 
@@ -2629,6 +2697,8 @@ def _handle_wget_recursive(args: list[str]) -> None:
 _PYTHON_HANDLERS: dict[str, Any] = {
     # app utilities
     "bioconda-autobump-recipe": _handle_bioconda_autobump_recipe,
+    "dracula-pro-check": _handle_dracula_pro_check,
+    "dracula-pro-install": _handle_dracula_pro_install,
     "file-compress": _handle_file_compress,
     "file-convert-line-endings": _handle_file_convert_line_endings,
     "file-rename-to-lowercase-ext": _handle_file_rename_to_lowercase_ext,

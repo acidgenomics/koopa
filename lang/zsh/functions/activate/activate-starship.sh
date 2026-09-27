@@ -26,7 +26,8 @@ _koopa_activate_starship() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/starship-${shell}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$starship" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$starship" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$starship" init "$shell" > "$cache_file"
     fi

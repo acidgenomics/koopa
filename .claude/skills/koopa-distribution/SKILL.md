@@ -21,7 +21,7 @@ run `install`/`uninstall`/`configure` normally.
 `update_koopa()` in `lang/python/src/koopa/install.py` calls `is_git_repo()`
 (a plain `.git`-directory check in `git.py`). On a pinned tree this is False,
 so it prints `alert_note("Pinned release detected at '<prefix>'.")` and
-returns cleanly — it never attempts `git pull`. This is deliberate, existing
+returns cleanly; it never attempts `git pull`. This is deliberate, existing
 behavior, not something that needs new code to support restricted-network
 distribution.
 
@@ -34,13 +34,13 @@ all work correctly against a pinned tree with zero apps installed.
 koopa self-manages its own prefix: it writes `app/`, creates ~450 `bin/`
 symlinks, and self-updates via `git pull`. That conflicts structurally with a
 package manager's externally-managed, relocatable prefix (`conda update`
-would clobber it). The only workaround — a "seed" package whose sole job is
-to copy its payload out to `~/.local/share/koopa` — creates a silent
+would clobber it). The only workaround (a "seed" package whose sole job is
+to copy its payload out to `~/.local/share/koopa`) creates a silent
 divergence bug: `conda update koopa` refreshes the staged copy inside
 `$CONDA_PREFIX` while the live extracted tree is untouched, so the user
 believes they updated and didn't. A draft `conda-recipe/` (recipe.yaml +
 build.sh) existed for a while shipping a read-only Python-package subset (no
-`activate.sh`, no `lang/`) and was removed rather than fixed — the pinned-
+`activate.sh`, no `lang/`) and was removed rather than fixed: the pinned-
 tarball path below is the actual fit for "install koopa from a reviewed,
 pinned artifact on a restricted network."
 
@@ -49,7 +49,7 @@ pinned artifact on a restricted network."
 `export-ignore` rules in `.gitattributes` exclude paths from `git archive`
 output (which is what GitHub's codeload tag tarballs use). Plain
 `git archive HEAD` resolves attributes from the **committed** tree, not the
-working tree — an uncommitted `.gitattributes` edit has no effect on it.
+working tree; an uncommitted `.gitattributes` edit has no effect on it.
 
 To test an uncommitted change, use `--worktree-attributes`:
 
@@ -74,7 +74,7 @@ env -i HOME="$scratch" KOOPA_FORCE=1 sh -c \
   '. "${scratch}/koopa/activate.sh"; echo "$KOOPA_PREFIX"'
 ```
 
-Without `KOOPA_FORCE=1` this silently no-ops (exit 0, empty output) — a false
+Without `KOOPA_FORCE=1` this silently no-ops (exit 0, empty output): a false
 pass, not a failure you'll notice.
 
 ## Bootstrap Python has no restricted-network awareness
@@ -82,7 +82,7 @@ pass, not a failure you'll notice.
 `bin/koopa` requires `/usr/bin/python3` to exactly match `.python-version`
 (currently `3.12`); anything else (including a newer or older system Python)
 falls through to running `bootstrap.sh`. `bootstrap.sh` downloads a Python
-build directly from `python.org` or `koopa.acidgenomics.com/src` — it does
+build directly from `python.org` or `koopa.acidgenomics.com/src`; it does
 not consult `etc/koopa/vendor.json` or any mirror config at all. On a
 `pull_priority: "vendor_only"` network this download fails outright. The only
 workaround today is ensuring a matching system Python 3.12 is already at

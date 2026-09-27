@@ -3,17 +3,36 @@ paths:
   - "lang/bash/**"
   - "lang/sh/**"
   - "**/*.sh"
+  - "bin/koopa"
   - ".claude/skills/**/*.md"
 ---
 
 # Bash / POSIX-sh Conventions
 
+## Control-flow keywords
+
+Put `then` and `do` on their own line, at the same indent as the matching
+`if`/`elif`/`for`/`while`. Never join them to the condition with a semicolon.
+
+```sh
+# Correct
+if [ -z "$var" ]
+then
+    ...
+fi
+
+# Wrong
+if [ -z "$var" ]; then
+    ...
+fi
+```
+
 ## Variable bracing
 
 Use `${VAR}` (braced) only when the variable is immediately adjacent to other
-text that would otherwise be parsed as part of the name — path suffixes, string
-concatenation, filename suffixes, etc. Use bare `$VAR` when the variable stands
-alone in quotes or as an argument.
+text that would otherwise be parsed as part of the name: path suffixes, string
+concatenation, filename suffixes, and so on. Use bare `$VAR` when the variable
+stands alone in quotes or as an argument.
 
 ```sh
 # Braces required: adjacent text follows
@@ -39,8 +58,8 @@ uv venv --quiet "${tmp}/venv"
 rm -rf "$tmp"               # standalone: bare
 ```
 
-**Exception — fish:** fish uses bare `$VAR` and never `${VAR}` (see
-`rules/fish.md`). This rule does not apply to ` ```fish ` blocks or `*.fish` files.
+**Exception, fish:** fish uses bare `$VAR` and never `${VAR}` (see
+`rules/koopa-fish.md`). This rule does not apply to ` ```fish ` blocks or `*.fish` files.
 
 **Nested defaults:** the adjacency rule also applies inside a `${VAR:-...}`
 expansion, judged on the inner variable alone:

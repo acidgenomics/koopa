@@ -214,6 +214,7 @@ DEVELOP_SYNOPSIS: dict[str, str] = {
 
 RUN_DESCRIPTIONS: dict[str, str] = {
     "autopad-zeros": "Autopad zeros in numbered file names.",
+    "check-release-notifications": "Compare GitHub release notifications against app.json.",
     "clone": "Clone directory contents using rsync.",
     "convert-svg-to-png": "Convert SVG files to PNG using macOS sips.",
     "convert-utf8-nfd-to-nfc": "Convert UTF-8 NFD filenames to NFC.",
@@ -323,6 +324,7 @@ APP_NAMESPACE_DESCRIPTIONS: dict[str, str] = {
     "conda": "conda environment management utilities.",
     "current": "Query the current upstream version of a package or resource.",
     "docker": "Docker image build, run, and cleanup utilities.",
+    "dracula-pro": "Dracula Pro theme bundle install and update-check utilities.",
     "ftp": "FTP mirroring utilities.",
     "file": "File compression and renaming utilities.",
     "git": "Git repository maintenance utilities.",
@@ -435,6 +437,9 @@ APP_DESCRIPTIONS: dict[str, str] = {
     "docker-prune-old-images": "Remove old, unused local Docker images.",
     "docker-remove": "Remove Docker images matching a pattern.",
     "docker-run": "Run a Docker image, with platform and bind-mount shortcuts.",
+    # dracula-pro
+    "dracula-pro-check": "Check the installed Dracula Pro version against the changelog feed.",
+    "dracula-pro-install": "Install a Dracula Pro zip downloaded from your Gumroad library.",
     # file
     "file-compress": "Compress a file or directory into a tar.gz archive.",
     "file-convert-line-endings": "Convert CRLF line endings to LF in place.",

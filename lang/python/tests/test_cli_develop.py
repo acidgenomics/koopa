@@ -1,6 +1,7 @@
 """CLI develop dispatch module unit tests."""
 
 import gzip
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -8,9 +9,12 @@ import pytest
 from koopa.cli_develop import (
     _DEVELOP_HANDLERS,
     _detect_color_mode_thrash,
+    _run_tool,
     _skill_frontmatter_errors,
+    _skill_infer_prefix,
     _version_from_filename,
 )
+from koopa.prefix import koopa_prefix
 
 
 def test_handlers_not_empty() -> None:
@@ -272,7 +276,7 @@ def test_color_mode_audit_missing_log_is_pass(
 _CLEAN_SKILL_MD = """---
 name: example
 description: >-
-  A short description under the budget.
+  A short description under the budget. Use when testing.
 ---
 
 # Example
@@ -351,6 +355,102 @@ def test_check_skills_repo_trees_pass() -> None:
     _DEVELOP_HANDLERS["check-skills"]([])
 
 
+def test_check_skills_fails_on_name_dir_mismatch(tmp_path: Path) -> None:
+    """A 'name:' that does not match its directory fails."""
+    root = _write_skill(tmp_path, "other", _CLEAN_SKILL_MD)
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["check-skills"]([str(root)])
+    assert exc_info.value.code == 1
+
+
+def test_check_skills_fails_on_bad_name_format(tmp_path: Path) -> None:
+    """An uppercase or underscored 'name:' fails, even when it matches its directory."""
+    content = _CLEAN_SKILL_MD.replace("name: example", "name: Example_Skill")
+    root = _write_skill(tmp_path, "Example_Skill", content)
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["check-skills"]([str(root)])
+    assert exc_info.value.code == 1
+
+
+def test_check_skills_fails_on_missing_trigger_phrase(tmp_path: Path) -> None:
+    """A description with no trigger phrase fails."""
+    content = _CLEAN_SKILL_MD.replace(" Use when testing.", "")
+    root = _write_skill(tmp_path, "example", content)
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["check-skills"]([str(root)])
+    assert exc_info.value.code == 1
+
+
+def test_check_skills_trigger_phrase_across_line_break(tmp_path: Path) -> None:
+    """A trigger phrase split across a folded line break still counts."""
+    content = """---
+name: example
+description: >-
+  A short description under the budget. Use
+  when testing.
+---
+"""
+    root = _write_skill(tmp_path, "example", content)
+    _DEVELOP_HANDLERS["check-skills"]([str(root)])
+
+
+def test_check_skills_fails_on_prefix_outlier(tmp_path: Path) -> None:
+    """A skill directory lacking the majority prefix in its root fails."""
+    for name in ("acme-a", "acme-b", "other-c"):
+        content = _CLEAN_SKILL_MD.replace("name: example", f"name: {name}")
+        skill_dir = tmp_path / name
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text(content)
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["check-skills"]([str(tmp_path)])
+    assert exc_info.value.code == 1
+
+
+@pytest.mark.parametrize(
+    ("names", "expected"),
+    [
+        (["a-x", "a-y", "b-z"], "a"),
+        (["a-x", "b-y"], None),
+        (["solo"], None),
+        (["a-x", "a-y", "plain"], "a"),
+    ],
+)
+def test_skill_infer_prefix(names: list[str], expected: str | None) -> None:
+    """The inferred prefix is the segment shared by a strict majority of names."""
+    assert _skill_infer_prefix(names) == expected
+
+
+def test_check_skills_body_soft_ceiling_is_advisory(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A skill body over the soft ceiling gets a note, not an error."""
+    long_body = "\n".join(f"line {i}" for i in range(601))
+    content = _CLEAN_SKILL_MD + long_body + "\n"
+    root = _write_skill(tmp_path, "example", content)
+    _DEVELOP_HANDLERS["check-skills"]([str(root)])
+    captured = capsys.readouterr()
+    assert "soft ceiling" in (captured.out + captured.err).lower()
+
+
+@pytest.mark.parametrize(
+    ("relpath", "prefix"),
+    [
+        (".claude/rules", "koopa-"),
+        ("opt/dotfiles/chezmoi/dot_claude/rules", "dotfiles-"),
+    ],
+)
+def test_rule_files_carry_prefix(relpath: str, prefix: str) -> None:
+    """Every rule file under a known rules tree carries that tree's prefix."""
+    rules_dir = Path(koopa_prefix()) / relpath
+    if not rules_dir.is_dir():
+        pytest.skip(f"{rules_dir} not present (separate clone)")
+    rule_files = sorted(rules_dir.glob("*.md"))
+    assert rule_files, f"no rule files found under {rules_dir}"
+    for rule_file in rule_files:
+        assert rule_file.name.startswith(prefix), f"{rule_file} does not start with {prefix!r}"
+
+
 @pytest.mark.parametrize(
     ("length", "should_fail"),
     [(1023, False), (1024, True)],
@@ -361,7 +461,7 @@ def test_skill_frontmatter_errors_length_boundary(
     should_fail: bool,
 ) -> None:
     """1023 raw chars passes; 1024 fails — the exact Agent Skills spec budget boundary."""
-    description = "x" * length
+    description = ("Use when x. " + "x" * length)[:length]
     content = f"""---
 name: example
 description: >-
@@ -487,3 +587,82 @@ def test_scrub_install_info_dry_run_reports_without_writing(
     captured = capsys.readouterr()
     assert "Would scrub" in captured.err
     assert info_file.read_text() == original_text
+
+
+def test_run_tool_quiet_pass_hides_output(capsys: pytest.CaptureFixture[str]) -> None:
+    """_run_tool with quiet=True prints nothing on a pass."""
+    returncode = _run_tool([sys.executable, "-c", "print('noise')"], quiet=True)
+
+    assert returncode == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
+
+
+def test_run_tool_quiet_fail_prints_captured_output(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """_run_tool with quiet=True prints captured output only on failure."""
+    returncode = _run_tool(
+        [sys.executable, "-c", "print('boom'); raise SystemExit(3)"],
+        quiet=True,
+    )
+
+    assert returncode == 3
+    captured = capsys.readouterr()
+    assert "boom" in captured.out
+
+
+def test_run_tool_not_quiet_streams_live() -> None:
+    """_run_tool with quiet=False lets the command's own output print live."""
+    returncode = _run_tool([sys.executable, "-c", "print('noise')"], quiet=False)
+
+    assert returncode == 0
+
+
+def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
+    """Develop check reports success when every phase passes."""
+    runners = [
+        "_run_ruff_check",
+        "_run_ruff_format_check",
+        "_run_pyright",
+        "_run_ty",
+        "_run_numpydoc",
+        "_run_pytest",
+    ]
+    patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
+    for p in patches:
+        p.start()
+    try:
+        _DEVELOP_HANDLERS["check"]([])
+    finally:
+        for p in patches:
+            p.stop()
+
+    captured = capsys.readouterr()
+    assert "All checks passed." in captured.err
+
+
+def test_handle_check_stops_at_first_failure(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Develop check stops at the first failed phase instead of running the rest."""
+    with (
+        patch("koopa.cli_develop._run_ruff_check", return_value=0) as ruff_check,
+        patch("koopa.cli_develop._run_ruff_format_check", return_value=1) as ruff_format,
+        patch("koopa.cli_develop._run_pyright", return_value=0) as pyright,
+        patch("koopa.cli_develop._run_ty", return_value=0) as ty,
+        patch("koopa.cli_develop._run_numpydoc", return_value=0) as numpydoc,
+        patch("koopa.cli_develop._run_pytest", return_value=0) as pytest_,
+    ):
+        with pytest.raises(RuntimeError, match="ruff format"):
+            _DEVELOP_HANDLERS["check"]([])
+
+        ruff_check.assert_called_once_with([], quiet=True)
+        ruff_format.assert_called_once_with([], quiet=True)
+        for runner in (pyright, ty, numpydoc, pytest_):
+            runner.assert_not_called()
+
+    captured = capsys.readouterr()
+    assert "ruff check passed" in captured.err
+    assert "Running ruff format." in captured.err
+    assert "Running pyright." not in captured.err

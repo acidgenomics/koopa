@@ -1,5 +1,66 @@
 # Changelog
 
+## koopa 0.33.0 (2026-09-27)
+
+Major changes:
+
+- Added Dracula Pro management. `koopa app dracula-pro install` installs a
+  user-provided archive and reapplies dotfiles, while the explicit `check`
+  command compares it with the live changelog feed. `koopa system check`
+  instead uses the version pinned in `app.json`, so it detects an outdated
+  local bundle without a network request.
+- Added `koopa app sys linker-check` to audit installed applications for
+  unresolved, foreign, or stale native-library links and dangling pkg-config
+  paths on macOS and Linux.
+- Dotfiles configuration now protects user-owned files from
+  `.chezmoiremove`. Files that do not match chezmoi's last-applied state are
+  temporarily shielded and restored instead of being deleted.
+- Added `koopa run check-release-notifications`, which compares authenticated
+  GitHub release notifications with `app.json`, resolves authoritative release
+  tags, and reports outdated, untracked, and removed applications.
+- Version checking now holds a pin when an upstream version directory exists
+  before its source archive is published. SourceForge checks likewise verify
+  the expected archive rather than trusting the newest directory name.
+- Added Claude configuration auditing with per-file character and token
+  estimates, path-scoped totals, and a warning when always-loaded instructions
+  exceed Claude Code's 150,000-character limit.
+
+Minor changes:
+
+- `koopa develop check` now runs its quality phases from cheapest to most
+  expensive, hides successful output, stops at the first failure, and runs
+  automatically through the repository's pre-push hook.
+- R documentation publishing now builds under an isolated temporary home and
+  refuses to upload generated files that expose the operator's home path.
+- Updated the rsync build for 3.5.1 by disabling unavailable IDN support and
+  enabling zstd consistently across platforms.
+- Routine upstream version bumps across the app registry (52 apps).
+
+New apps:
+
+- `bcftools` 1.24: utilities for manipulating VCF/BCF files
+  (CLI, non-default).
+- `cloc` 2.10: counts lines of code across many programming languages
+  (CLI, default).
+- `cuttlefish` 3.0.3: compacted de Bruijn graph construction
+  (CLI, non-default).
+- `dracula-pro` 2.2.3: paid color theme bundle installed from a user-provided
+  archive (library, non-default).
+- `genrich` 0.6.2: peak calling for ChIP-seq, ATAC-seq, and related assays
+  (CLI, non-default).
+- `kraken2` 2.17.2: taxonomic classification for metagenomic sequences
+  (CLI, non-default).
+- `kubectl` 1.37.1: command-line tool for controlling Kubernetes clusters
+  (CLI, non-default).
+- `macs3` 3.0.4: model-based analysis of ChIP-seq peak calling
+  (CLI, non-default).
+- `mgatk` 0.9.0: mitochondrial genome analysis toolkit for single-cell data
+  (CLI, non-default).
+- `scc` 4.1.0: fast source-code line counter with complexity estimation
+  (CLI, default).
+- `somalier` 0.3.5: sample relatedness checks from sequencing data
+  (CLI, non-default).
+
 ## koopa 0.32.0 (2026-09-20)
 
 Major changes:

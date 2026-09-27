@@ -10,7 +10,8 @@ _EMACS_PRELUDE_WRAPPER = """\
 #!/bin/sh
 set -eu
 _self="$0"
-if [ -L "$_self" ]; then
+if [ -L "$_self" ]
+then
     _self="$(readlink "$_self")"
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"

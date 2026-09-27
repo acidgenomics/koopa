@@ -4,7 +4,8 @@
 set -eu
 
 _script="$0"
-if [ -L "$_script" ]; then
+if [ -L "$_script" ]
+then
     _script="$(readlink -f "$_script" 2>/dev/null || \
         perl -MCwd -le 'print Cwd::abs_path shift' "$_script" 2>/dev/null)" || true
 fi
@@ -16,7 +17,8 @@ _xdg_config="${XDG_CONFIG_HOME:-${HOME}/.config}/koopa"
 _xdg_data="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
 
 printf 'Uninstalling koopa from: %s\n' "$_koopa_prefix" >&2
-if [ -t 0 ]; then
+if [ -t 0 ]
+then
     printf 'This will permanently remove koopa and all associated data. Proceed? [y/N] ' >&2
     read -r _answer
     case "$_answer" in
@@ -25,27 +27,32 @@ if [ -t 0 ]; then
     esac
 fi
 
-if [ -d "$_bootstrap" ]; then
+if [ -d "$_bootstrap" ]
+then
     printf 'Removing bootstrap prefix.\n' >&2
     rm -rf "$_bootstrap"
 fi
 
-if [ -d "${_koopa_prefix}/etc/koopa" ]; then
+if [ -d "${_koopa_prefix}/etc/koopa" ]
+then
     printf 'Removing config prefix.\n' >&2
     rm -rf "${_koopa_prefix}/etc/koopa"
 fi
 
-if [ -d "$_xdg_config" ]; then
+if [ -d "$_xdg_config" ]
+then
     printf 'Removing %s.\n' "$_xdg_config" >&2
     rm -rf "$_xdg_config"
 fi
 
-if [ -L "$_xdg_data" ]; then
+if [ -L "$_xdg_data" ]
+then
     printf 'Removing %s.\n' "$_xdg_data" >&2
     rm -f "$_xdg_data"
 fi
 
-if [ -f "/etc/profile.d/zzz-koopa.sh" ]; then
+if [ -f "/etc/profile.d/zzz-koopa.sh" ]
+then
     printf 'Removing /etc/profile.d/zzz-koopa.sh.\n' >&2
     sudo rm -f "/etc/profile.d/zzz-koopa.sh"
 fi

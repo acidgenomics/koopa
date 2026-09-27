@@ -418,7 +418,8 @@ __koopa_activate() {
             ;;
     esac
     __koopa_preflight || return 0
-    if __koopa_is_macos && __koopa_is_amd64; then
+    if __koopa_is_macos && __koopa_is_amd64
+    then
         __koopa_warn 'koopa: Intel Mac (x86_64) is no longer supported. Run "koopa uninstall" to remove.'
     fi
     __koopa_export_koopa_subshell || return 1

@@ -25,18 +25,18 @@ aws --profile <profile> cloudfront get-distribution-config --id <dist-id> \
   --query 'DistributionConfig.Origins.Items[].DomainName'
 ```
 
-- **`<bucket>.s3-website-<region>.amazonaws.com`** (S3 *website* endpoint) —
+- **`<bucket>.s3-website-<region>.amazonaws.com`** (S3 *website* endpoint):
   honors `x-amz-website-redirect-location` object metadata and returns a
   real `301`. Both mechanisms below are available.
-- **`<bucket>.s3.<region>.amazonaws.com`** or an OAC/OAI REST origin — ignores
+- **`<bucket>.s3.<region>.amazonaws.com`** or an OAC/OAI REST origin: ignores
   that metadata entirely. A CloudFront Function is the *only* option.
 
 ## Two mechanisms, and when each is authoritative
 
 | Mechanism | Like an Apache... | Scope | Survives a content resync? |
 |---|---|---|---|
-| S3 object redirect metadata (`--website-redirect-location`) | per-file `Redirect` directive | one S3 key | No — a rebuild that overwrites that object's content also drops its metadata |
-| CloudFront Function (`viewer-request`) | `mod_rewrite` rule | any path pattern, edge-side | Yes — lives on the distribution, independent of bucket contents |
+| S3 object redirect metadata (`--website-redirect-location`) | per-file `Redirect` directive | one S3 key | No: a rebuild that overwrites that object's content also drops its metadata |
+| CloudFront Function (`viewer-request`) | `mod_rewrite` rule | any path pattern, edge-side | Yes: lives on the distribution, independent of bucket contents |
 
 If the origin content is still rebuilt and re-synced periodically (a static
 site generator, a docs publish job, etc.), **the CloudFront Function must be
@@ -47,7 +47,7 @@ backwards means the redirect silently disappears on the next publish.
 ## CloudFront Function: create, test, publish, associate
 
 ```js
-// One example shape — a root-only redirect. Match only what should redirect;
+// One example shape: a root-only redirect. Match only what should redirect;
 // everything else must fall through via `return event.request`.
 function handler(event) {
   var uri = event.request.uri;
@@ -67,10 +67,10 @@ aws --profile <profile> cloudfront create-function \
   --name <fn-name> \
   --function-config 'Comment=<comment>,Runtime=cloudfront-js-2.0' \
   --function-code fileb://path/to/function.js
-# Returns an ETag — needed for the next two calls.
+# Returns an ETag, needed for the next two calls.
 ```
 
-**Test before publishing** — `--event-object` must be a `fileb://` file
+**Test before publishing**: `--event-object` must be a `fileb://` file
 containing the *plain* event object, not the `{"EventObject": "..."}`
 wrapper the CLI docs sometimes imply:
 
@@ -85,7 +85,7 @@ aws --profile <profile> cloudfront test-function \
   --event-object fileb:///tmp/event.json
 ```
 
-Wrapping the event in `{"EventObject": ...}` fails with `Invalid base64` —
+Wrapping the event in `{"EventObject": ...}` fails with `Invalid base64`:
 the CLI expects to base64-encode the raw event content itself, not a JSON
 envelope around it. Test every distinct URI shape (the redirected path, and
 at least one path that must pass through untouched) before publishing.
@@ -129,7 +129,7 @@ copy elsewhere.
 
 If `~/.curlrc` sets `location` (auto-follow), every plain `curl -o /dev/null
 -w '%{http_code}'` check against a redirected path reports the *final*
-destination's status, not the redirect itself — a `301` silently reads as a
+destination's status, not the redirect itself; a `301` silently reads as a
 `200`, making the fix look like it did nothing. Override per-invocation:
 
 ```sh
@@ -146,5 +146,5 @@ aws --profile <profile> cloudfront create-invalidation --distribution-id <dist-i
   --paths / /index.html
 ```
 
-Scope to the specific paths that changed rather than `/*` — a root-only
+Scope to the specific paths that changed rather than `/*`; a root-only
 redirect fix has no reason to force a refetch of every cached asset.

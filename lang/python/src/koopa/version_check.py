@@ -386,6 +386,9 @@ def _hold_reason(
     held = _held_message(app_name, current, latest, excluded, gran)
     if held is not None:
         return held
+    held = _src_url_hold_message(app_name, current, latest, info)
+    if held is not None:
+        return held
     return _pip_index_hold_message(app_name, current, latest, info)
 
 
@@ -498,6 +501,34 @@ def _http_url_exists(url: str, *, timeout: int = 10) -> bool:
         with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
             return resp.status == 200
     except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError):
+        return False
+
+
+def _http_url_missing(url: str, *, timeout: int = 10) -> bool:
+    """Return whether a URL is confirmed absent, not merely unreachable.
+
+    Parameters
+    ----------
+    url : str
+        URL to probe with an HTTP ``HEAD`` request.
+    timeout : int, optional
+        Request timeout in seconds.
+
+    Returns
+    -------
+    bool
+        True only when the server responds with 404 or 410. A timeout,
+        connection failure, or any other status returns False, since those
+        do not confirm the file is absent.
+    """
+    req = urllib.request.Request(url, method="HEAD")
+    req.add_header("User-Agent", "koopa-version-checker")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx):
+            return False
+    except urllib.error.HTTPError as exc:
+        return exc.code in (404, 410)
+    except (urllib.error.URLError, TimeoutError):
         return False
 
 
@@ -1028,7 +1059,39 @@ def _check_directory_version_dirs(url: str, prefix: str = "") -> str:
     return best
 
 
-def _check_sourceforge_versions(project_path: str) -> str:
+def _check_sourceforge_versions(
+    project_path: str,
+    filename_template: str | None = None,
+    *,
+    max_candidates: int = 5,
+) -> str:
+    """Return the newest SourceForge version directory that holds its release tarball.
+
+    A SourceForge project can create a release's numbered directory before
+    the release itself ships, populated only with release-candidate
+    artifacts (e.g. ``tcl9.1.0rc0-src.tar.gz`` inside a directory named
+    ``9.1.0``). The directory name alone does not confirm a real release, so
+    when `filename_template` is given, this walks candidate directories
+    newest-first and accepts the first one whose listing actually contains
+    the expected filename.
+
+    Parameters
+    ----------
+    project_path : str
+        SourceForge project path, e.g. ``"tcl/files/Tcl/"``.
+    filename_template : str | None, optional
+        ``src_url``-style filename template (e.g. ``"tcl{version}-src.tar.gz"``)
+        to verify inside each candidate directory. If None, the newest
+        directory name is returned without verification.
+    max_candidates : int, optional
+        Maximum number of newest directories to check when verifying.
+
+    Returns
+    -------
+    str
+        Newest version confirmed to hold its release tarball, or the newest
+        directory name if `filename_template` is None.
+    """
     url = f"https://sourceforge.net/projects/{project_path}"
     html = _http_get_text(url)
     pattern = re.compile(r'title="([\d]+(?:\.[\d]+)+)"')
@@ -1036,11 +1099,20 @@ def _check_sourceforge_versions(project_path: str) -> str:
     if not versions:
         msg = f"No versions found at {url}"
         raise RuntimeError(msg)
-    best = max(
+    ordered = sorted(
         set(versions),
         key=lambda v: tuple(int(x) for x in v.split(".")),
+        reverse=True,
     )
-    return best
+    if filename_template is None:
+        return ordered[0]
+    for version in ordered[:max_candidates]:
+        filename = _expand_src_url(filename_template, version)
+        listing = _http_get_text(f"{url}{version}/")
+        if filename in listing:
+            return version
+    msg = f"No version at {url} has a published '{filename_template}' tarball"
+    raise RuntimeError(msg)
 
 
 def _check_xorg(subdir: str, tarball_prefix: str) -> str:
@@ -2224,7 +2296,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "libpng": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions("libpng/files/libpng16/"),
+        lambda: _check_sourceforge_versions("libpng/files/libpng16/", "libpng-{version}.tar.xz"),
         (),
     ),
     "nano": _AppCheckSpec(
@@ -2265,7 +2337,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "swig": _AppCheckSpec("github", _check_github, ("swig", "swig")),
     "tcl-tk": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions("tcl/files/Tcl/"),
+        lambda: _check_sourceforge_versions("tcl/files/Tcl/", "tcl{version}-src.tar.gz"),
         (),
     ),
     "liblinear": _AppCheckSpec("github", _check_liblinear, ()),
@@ -2447,7 +2519,9 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "zip": _AppCheckSpec(
         "dirlist",
-        lambda: _check_sourceforge_versions("infozip/files/Zip%203.x%20%28latest%29/"),
+        lambda: _check_sourceforge_versions(
+            "infozip/files/Zip%203.x%20%28latest%29/", "zip{version_nodot}.tar.gz"
+        ),
         (),
     ),
     "bcl-convert": _AppCheckSpec("dirlist", _check_bcl_convert, ()),
@@ -3008,6 +3082,33 @@ def _expand_src_url(template: str, version: str) -> str:
     )
 
 
+def _missing_src_urls(entry: dict[str, Any], version: str) -> list[str]:
+    """Return which of an app's expanded source URLs are confirmed absent.
+
+    Checks the app's ``src_url`` and every ``extra_src_urls`` entry, expanded
+    for the given version, against the upstream server.
+
+    Parameters
+    ----------
+    entry : dict[str, Any]
+        App's app.json entry.
+    version : str
+        Version to check for.
+
+    Returns
+    -------
+    list[str]
+        Expanded URLs confirmed missing (HTTP 404 or 410). Empty if every
+        templated URL is present.
+    """
+    templates = [entry.get("src_url", ""), *entry.get("extra_src_urls", [])]
+    return [
+        url
+        for url in (_expand_src_url(t, version) for t in templates if t)
+        if _http_url_missing(url)
+    ]
+
+
 def _mirror_src_to_s3(
     name: str, version: str, src_url_template: str, *, strict: bool = False, quiet: bool = False
 ) -> None:
@@ -3161,6 +3262,40 @@ def _index_has_version(index_url: str, package: str, version: str) -> bool:
     return bool(pattern.search(body))
 
 
+def _src_url_hold_message(
+    app_name: str, current: str, latest: str, info: dict[str, Any]
+) -> str | None:
+    """Return a hold message if `latest`'s source tarball is not yet published.
+
+    Mirrors `_pip_index_hold_message`, but for a hold discovered by probing
+    the app's `src_url` and `extra_src_urls`, expanded for `latest`, instead
+    of querying a pip index. Checking this before `is_outdated` is computed
+    keeps an app whose upstream release directory exists but whose tarball
+    does not out of the "Outdated" report, instead of re-reporting the same
+    unpublished bump on every run.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned version.
+    latest : str
+        Latest version detected upstream.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
+    if not _missing_src_urls(info, latest):
+        return None
+    return f"{app_name}: {latest} available upstream; source not published, pin held at {current}"
+
+
 def _pip_index_hold_message(
     app_name: str, current: str, latest: str, info: dict[str, Any]
 ) -> str | None:
@@ -3285,6 +3420,14 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
                     file=sys.stderr,
                 )
                 continue
+        missing = _missing_src_urls(data[r.name], r.latest_version)
+        if missing:
+            print(
+                f"{r.name}: {r.latest_version} available upstream; "
+                f"source not published, pin held at {r.current_version}",
+                file=sys.stderr,
+            )
+            continue
         data[r.name]["version"] = r.latest_version
         data[r.name]["date"] = today
         data[r.name].pop("revision", None)

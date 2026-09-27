@@ -30,6 +30,7 @@ def test_handlers_expected_commands() -> None:
         "find-and-replace",
         "sort-lines",
         "ip-address",
+        "check-release-notifications",
     ]
     for cmd in expected:
         assert cmd in _HANDLERS, f"Expected command '{cmd}' not in _HANDLERS"
@@ -47,6 +48,15 @@ def test_handler_rename_snake_case_help(capsys: pytest.CaptureFixture[str]) -> N
     assert exc_info.value.code == 0
     captured = capsys.readouterr()
     assert "snake_case" in captured.out.lower() or "snake" in captured.out.lower()
+
+
+def test_handler_check_release_notifications_help(capsys: pytest.CaptureFixture[str]) -> None:
+    """Test check-release-notifications --help exits cleanly."""
+    with pytest.raises(SystemExit) as exc_info:
+        _HANDLERS["check-release-notifications"](["--help"])
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "release notifications" in captured.out.lower()
 
 
 def test_handler_download_help(capsys: pytest.CaptureFixture[str]) -> None:
