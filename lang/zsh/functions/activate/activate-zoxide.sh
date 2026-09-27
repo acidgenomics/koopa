@@ -16,7 +16,8 @@ _koopa_activate_zoxide() {
         'bash' | \
         'zsh')
             local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/zoxide-${shell}.sh"
-            if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]; then
+            if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]
+            then
                 mkdir -p "${cache_file%/*}"
                 "$zoxide" init "$shell" > "$cache_file"
             fi

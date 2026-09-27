@@ -41,7 +41,8 @@ _koopa_activate_direnv() {
         'bash' | \
         'zsh')
             local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/direnv-hook-${shell}.sh"
-            if [[ ! -f "$cache_file" ]] || [[ "$direnv" -nt "$cache_file" ]]; then
+            if [[ ! -f "$cache_file" ]] || [[ "$direnv" -nt "$cache_file" ]]
+            then
                 mkdir -p "${cache_file%/*}"
                 "$direnv" hook "$shell" > "$cache_file"
             fi

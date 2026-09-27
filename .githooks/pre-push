@@ -15,9 +15,16 @@
 # can export them to hooks, and tests such as test_pypi.py run git in temp
 # repos: an inherited GIT_DIR would point those commands at this repo.
 #
-# Skip once with: git push --no-verify
+# Skip once with: KOOPA_NO_PUSH_CHECK=1 git push
+# This keeps the global identity guard. 'git push --no-verify' skips the
+# whole hook chain, including that guard.
 
 set -eu
+if [ "${KOOPA_NO_PUSH_CHECK:-0}" = 1 ]
+then
+    echo 'KOOPA_NO_PUSH_CHECK=1: skipping koopa develop check.' >&2
+    exit 0
+fi
 root="$(git rev-parse --show-toplevel)"
 for var in $(git rev-parse --local-env-vars)
 do

@@ -10,7 +10,8 @@ _DOOM_WRAPPER = """\
 #!/bin/sh
 set -eu
 _self="$0"
-if [ -L "$_self" ]; then
+if [ -L "$_self" ]
+then
     _self="$(readlink "$_self")"
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"
@@ -23,13 +24,15 @@ _DOOM_EMACS_WRAPPER = """\
 #!/bin/sh
 set -eu
 _self="$0"
-if [ -L "$_self" ]; then
+if [ -L "$_self" ]
+then
     _self="$(readlink "$_self")"
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"
 export EMACSDIR="${prefix}/libexec"
 export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
-if [ ! -d "${DOOMLOCALDIR}/straight" ]; then
+if [ ! -d "${DOOMLOCALDIR}/straight" ]
+then
     printf 'First run: configuring Doom Emacs...\\n' >&2
     koopa configure user doom-emacs
 fi

@@ -431,7 +431,8 @@ def configure_lmod(prefix: str) -> None:
     profile_d = "/etc/profile.d"
     script = os.path.join(profile_d, "z00_lmod.sh")
     content = f"""\
-if [ -f "{prefix}/lmod/init/profile" ]; then
+if [ -f "{prefix}/lmod/init/profile" ]
+then
     . "{prefix}/lmod/init/profile"
 fi
 """

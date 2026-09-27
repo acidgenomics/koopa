@@ -11,7 +11,8 @@ _koopa_activate_zoxide() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/zoxide-bash.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$zoxide" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$zoxide" init bash > "$cache_file"
     fi

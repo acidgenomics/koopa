@@ -25,7 +25,8 @@ _koopa_activate_pyenv() {
     [[ -o nounset ]] && nounset=1
     [[ "$nounset" -eq 1 ]] && set +o nounset
     local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/pyenv-${KOOPA_SHELL##*/}.sh"
-    if [[ ! -f "$cache_file" ]] || [[ "$pyenv" -nt "$cache_file" ]]; then
+    if [[ ! -f "$cache_file" ]] || [[ "$pyenv" -nt "$cache_file" ]]
+    then
         mkdir -p "${cache_file%/*}"
         "$pyenv" virtualenv-init - > "$cache_file"
     fi

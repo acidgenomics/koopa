@@ -6898,11 +6898,11 @@
     "date": "2026-07-20",
     "default": false,
     "description": "optimized BLAS (Basic Linear Algebra Subprograms) library",
-    "src_url": "https://github.com/xianyi/OpenBLAS/archive/v{version}.tar.gz",
+    "src_url": "https://github.com/OpenMathLib/OpenBLAS/archive/v{version}.tar.gz",
     "type": "library",
     "url": [
       "https://www.openblas.net/",
-      "https://github.com/xianyi/OpenBLAS/"
+      "https://github.com/OpenMathLib/OpenBLAS/"
     ],
     "version": "0.3.34"
   },
@@ -9750,7 +9750,7 @@
     "installer": "conda-package",
     "type": "cli",
     "url": [
-      "https://github.com/dbrgn/tealdeer/"
+      "https://github.com/tealdeer-rs/tealdeer/"
     ],
     "version": "1.9.0"
   },

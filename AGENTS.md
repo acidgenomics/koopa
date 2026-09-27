@@ -18,7 +18,8 @@ fails in seconds instead of waiting for pytest. A passing phase's output is
 hidden; the failing phase prints its full output before the gate raises.
 
 `.githooks/pre-push` runs this gate before every `git push`, through the
-machine's global git hook. Skip once with `git push --no-verify`.
+machine's global git hook. Skip once with `KOOPA_NO_PUSH_CHECK=1 git push`.
+Avoid `--no-verify`: it also skips the global corporate-identity guard.
 
 ### Running Tests
 

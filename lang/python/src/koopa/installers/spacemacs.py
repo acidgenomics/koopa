@@ -10,12 +10,14 @@ _SPACEMACS_WRAPPER = """\
 #!/bin/sh
 set -eu
 _self="$0"
-if [ -L "$_self" ]; then
+if [ -L "$_self" ]
+then
     _self="$(readlink "$_self")"
 fi
 prefix="$(cd "$(dirname "$_self")/.." && pwd)"
 init_dir="${prefix}/libexec"
-if [ ! -f "${HOME}/.spacemacs" ] && [ ! -f "${HOME}/.spacemacs.d/init.el" ]; then
+if [ ! -f "${HOME}/.spacemacs" ] && [ ! -f "${HOME}/.spacemacs.d/init.el" ]
+then
     printf 'First run: configuring spacemacs...\\n' >&2
     koopa configure user spacemacs
 fi

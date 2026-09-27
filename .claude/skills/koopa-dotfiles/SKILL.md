@@ -101,6 +101,24 @@ landed in has actually been promoted, not just pushed.
 
 ## Gotchas
 
+### The corporate-identity push guard already covers this repo
+
+`opt/dotfiles/` needs no repo-local `.githooks/pre-push` of its own to get
+the corporate-identity guard some hosts run. That guard lives in the
+machine-global hook (`core.hooksPath`, `~/.config/git/hooks/pre-push`) and
+runs its identity check unconditionally, for every repo, before any
+delegation to a repo-tracked hook. `opt/dotfiles/` has no repo-local
+`core.hooksPath` override, so on a host that sets one up, it inherits the
+same global hook the koopa repo does.
+
+Confirmed 2026-09-27 on a host with the guard configured: the corporate
+remote allowlist (`git config --get-all koopa.corpRemoteAllowlist`) does not
+match the `dotfiles` remote (`github.com/acidgenomics/dotfiles.git`), so a
+push carrying a commit authored under a listed corporate email domain
+(`git config --get-all koopa.corpEmailDomains`) would be blocked. Full
+`dotfiles` history carries a single personal-address author; no
+corporate-email commit has ever landed there.
+
 ### Never search from the filesystem root
 
 Scope every `find`/search to a known root: the repo, `~/git`, an app prefix,

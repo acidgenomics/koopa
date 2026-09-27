@@ -1076,13 +1076,15 @@ stage_commit() {
     if [ -d "$PREFIX" ]
     then
         rm -fr "${PREFIX}.old" 2>/dev/null || true
-        if [ -d "${PREFIX}.old" ]; then
+        if [ -d "${PREFIX}.old" ]
+        then
             mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
         fi
         mv "$PREFIX" "${PREFIX}.old"
     else
         rm -fr "${PREFIX}.old" 2>/dev/null || true
-        if [ -d "${PREFIX}.old" ]; then
+        if [ -d "${PREFIX}.old" ]
+        then
             mv -f "${PREFIX}.old" "${PREFIX}.old.$$"
         fi
     fi
