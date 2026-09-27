@@ -1,5 +1,53 @@
 # Changelog
 
+## koopa 0.33.0 (2026-09-27)
+
+Major changes:
+
+- Added `koopa app dracula-pro install` and `koopa app dracula-pro check` for
+  installing Dracula Pro themes and auditing their versions against the
+  configured dotfiles.
+- Added `koopa app sys linker-check` to audit installed applications for
+  Mach-O linkage problems.
+- Expanded version checking to handle more upstream release formats, package
+  indexes, and mirror behavior, including improved diagnostics for stale or
+  mismatched application metadata.
+- Added installer and configuration support for new command-line and
+  bioinformatics applications, including `kubectl`, `cloc`, and `scc`.
+- Added Claude configuration auditing with character and token estimates,
+  including a warning when always-loaded instructions exceed Claude Code's
+  documented limit.
+
+Minor changes:
+
+- Improved `koopa develop check` output and coverage, including application
+  registry validation and more targeted failure reporting.
+- Added notification helpers and expanded dotfiles configuration support.
+- Routine upstream version bumps across the app registry.
+
+New apps:
+
+- `bcftools` 1.24: utilities for manipulating VCF/BCF files
+  (CLI, non-default).
+- `cloc` 2.10: counts lines of code across many programming languages
+  (CLI, default).
+- `cuttlefish` 3.0.3: compacted de Bruijn graph construction
+  (CLI, non-default).
+- `genrich` 0.6.2: peak calling for ChIP-seq, ATAC-seq, and related assays
+  (CLI, non-default).
+- `kraken2` 2.17.2: taxonomic classification for metagenomic sequences
+  (CLI, non-default).
+- `kubectl` 1.37.1: command-line tool for controlling Kubernetes clusters
+  (CLI, non-default).
+- `macs3` 3.0.4: model-based analysis of ChIP-seq peak calling
+  (CLI, non-default).
+- `mgatk` 0.9.0: mitochondrial genome analysis toolkit for single-cell data
+  (CLI, non-default).
+- `scc` 4.1.0: fast source-code line counter with complexity estimation
+  (CLI, default).
+- `somalier` 0.3.5: sample relatedness checks from sequencing data
+  (CLI, non-default).
+
 ## koopa 0.32.0 (2026-09-20)
 
 Major changes:
