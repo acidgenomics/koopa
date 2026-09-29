@@ -7526,6 +7526,8 @@
   "postgresql": {
     "bin": [
       "pg_ctl",
+      "pg_dump",
+      "pg_restore",
       "psql"
     ],
     "build_dependencies": [
@@ -7544,6 +7546,7 @@
     "default": true,
     "description": "powerful open-source relational database",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
