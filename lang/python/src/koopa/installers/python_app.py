@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import sys
+import sysconfig
 
 from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
@@ -121,6 +122,7 @@ def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
     )
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     _check_python_install(python)
+    _install_private_ca_compatibility(prefix)
     _create_unversioned_symlinks(prefix)
 
 
@@ -172,7 +174,57 @@ def _install_from_uv(*, version: str, prefix: str, env: BuildEnv) -> None:
         _fix_uv_dylib_install_name(prefix, maj_min_ver)
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     _check_python_install(python)
+    _install_private_ca_compatibility(prefix)
     _create_unversioned_symlinks(prefix)
+
+
+def _install_private_ca_compatibility(prefix: str) -> None:
+    """Install Python compatibility for malformed corporate TLS inspection certificates.
+
+    Python 3.13 and newer enable OpenSSL's strict RFC 5280 checks in default
+    client contexts. Some corporate TLS inspection gateways mint otherwise
+    trusted leaf certificates without an Authority Key Identifier, which
+    strict mode rejects. The generated ``sitecustomize`` module relaxes only
+    that structural check when koopa's user-managed private CA bundle is
+    active. Certificate trust, expiry, and hostname verification remain
+    enabled.
+
+    Parameters
+    ----------
+    prefix : str
+        Python installation prefix directory.
+    """
+    paths = sysconfig.get_paths(
+        vars={
+            "base": prefix,
+            "platbase": prefix,
+        }
+    )
+    site_packages = paths["purelib"]
+    os.makedirs(site_packages, exist_ok=True)
+    path = os.path.join(site_packages, "sitecustomize.py")
+    source = '''"""Koopa compatibility for malformed corporate TLS inspection certificates."""
+
+import os
+import ssl
+
+
+def _using_private_ca_bundle() -> bool:
+    data_home = os.environ.get("XDG_DATA_HOME")
+    if not data_home:
+        data_home = os.path.expanduser("~/.local/share")
+    expected = os.path.realpath(os.path.join(data_home, "ca-certificates", "cacert.pem"))
+    configured = os.environ.get("SSL_CERT_FILE")
+    return bool(configured) and os.path.realpath(configured) == expected
+
+
+if _using_private_ca_bundle():
+    ssl.VERIFY_X509_STRICT = 0
+    if hasattr(ssl, "VERIFY_X509_PARTIAL_CHAIN"):
+        ssl.VERIFY_X509_PARTIAL_CHAIN = 0
+'''
+    with open(path, "w") as file:
+        file.write(source)
 
 
 def _fix_uv_dylib_install_name(prefix: str, maj_min_ver: str) -> None:

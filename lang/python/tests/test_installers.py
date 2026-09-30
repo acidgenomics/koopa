@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import pytest
 from koopa.install import _app_json_installer
-from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim
+from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim, python_app
 from koopa.installers import pyright as pyright_installer
 from koopa.io import import_app_json
 
@@ -61,6 +61,28 @@ def test_every_app_has_an_installer() -> None:
         f"{', '.join(unroutable)}. Add each to PYTHON_INSTALLERS in "
         "lang/python/src/koopa/installers/__init__.py."
     )
+
+
+def test_python_private_ca_compatibility_is_guarded(tmp_path: Path) -> None:
+    """The TLS compatibility shim activates only for koopa's private CA bundle."""
+    prefix = str(tmp_path / "python")
+    python_app._install_private_ca_compatibility(prefix)
+    matches = list((tmp_path / "python").glob("lib/python*/site-packages/sitecustomize.py"))
+    assert len(matches) == 1
+    source = matches[0].read_text()
+    assert 'os.path.join(data_home, "ca-certificates", "cacert.pem")' in source
+    assert 'os.environ.get("SSL_CERT_FILE")' in source
+    assert "ssl.VERIFY_X509_STRICT = 0" in source
+    assert "ssl.CERT_NONE" not in source
+    assert "check_hostname = False" not in source
+
+
+def test_synapseclient_uses_current_python_package() -> None:
+    """Synapse installs from PyPI with complete extras on koopa's Python."""
+    entry = import_app_json()["synapseclient"]
+    assert entry["installer"] == "python-package"
+    assert entry["dependencies"] == ["python"]
+    assert entry["installer_args"]["pip_name"] == "synapseclient[pandas,curator]"
 
 
 # -- private artifact preflight: cellranger, bcl-convert ----------------------

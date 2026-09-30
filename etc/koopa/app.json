@@ -9626,20 +9626,19 @@
     "bin": [
       "synapse"
     ],
-    "build_dependencies": [
-      "conda"
+    "dependencies": [
+      "python"
     ],
     "category": "Bioinformatics",
-    "conda_channel": "bioconda",
-    "date": "2026-08-13",
+    "date": "2026-09-30",
     "default": false,
     "description": "command-line client for the Synapse research data platform",
-    "installer": "conda-package",
+    "installer": "python-package",
+    "installer_args": {
+      "pip_name": "synapseclient[pandas,curator]"
+    },
     "notes": [
-      "Scoped to downloading. 'synapse get -r <synID>' works because syncFromSynapse writes its manifest with csv.DictWriter; only the upload manifest reader calls test_import_pandas().",
-      "'synapse sync' (upload) does not work here. The bioconda recipe carries no pandas dependency.",
-      "The curator subcommands (generate-json-schema, register-json-schema, bind-json-schema) do not work here. They need pandas, pandarallel, networkx, rdflib, dataclasses-json and inflection.",
-      "The recipe dependency list is stale. It pins 'urllib3 <2' and 'python >=3.9,<3.13', omits 'httpcore >=1.0.9', and keeps a 'loky' leftover. Upstream moved to 'urllib3>=2.6.3' at v4.11.0 and requires python <3.15. Autobump only refreshes version and sha256. Switch to installer 'python-package' with pip_name 'synapseclient[pandas,curator]' if the full CLI or upstream-correct pins are ever needed."
+      "Install from PyPI with the pandas and curator extras so the complete upstream CLI is available on koopa's current Python."
     ],
     "type": "cli",
     "url": [
