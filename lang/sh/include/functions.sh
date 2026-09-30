@@ -1890,6 +1890,12 @@ _koopa_macos_activate_homebrew() {
     return 0
 }
 
+_koopa_macos_activate_vscode() {
+    _koopa_add_to_path_end \
+        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    return 0
+}
+
 _koopa_asdf_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/asdf"
     return 0
