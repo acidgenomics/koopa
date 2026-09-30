@@ -8,7 +8,7 @@ import sysconfig
 
 from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
-from koopa.install import can_build_binary
+from koopa.install import can_build_binary, write_private_ca_sitecustomize
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 from koopa.system import cpu_count
 from koopa.version import major_minor_version
@@ -200,31 +200,7 @@ def _install_private_ca_compatibility(prefix: str) -> None:
             "platbase": prefix,
         }
     )
-    site_packages = paths["purelib"]
-    os.makedirs(site_packages, exist_ok=True)
-    path = os.path.join(site_packages, "sitecustomize.py")
-    source = '''"""Koopa compatibility for malformed corporate TLS inspection certificates."""
-
-import os
-import ssl
-
-
-def _using_private_ca_bundle() -> bool:
-    data_home = os.environ.get("XDG_DATA_HOME")
-    if not data_home:
-        data_home = os.path.expanduser("~/.local/share")
-    expected = os.path.realpath(os.path.join(data_home, "ca-certificates", "cacert.pem"))
-    configured = os.environ.get("SSL_CERT_FILE")
-    return bool(configured) and os.path.realpath(configured) == expected
-
-
-if _using_private_ca_bundle():
-    ssl.VERIFY_X509_STRICT = 0
-    if hasattr(ssl, "VERIFY_X509_PARTIAL_CHAIN"):
-        ssl.VERIFY_X509_PARTIAL_CHAIN = 0
-'''
-    with open(path, "w") as file:
-        file.write(source)
+    write_private_ca_sitecustomize(paths["purelib"])
 
 
 def _fix_uv_dylib_install_name(prefix: str, maj_min_ver: str) -> None:

@@ -2,11 +2,13 @@
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 from types import ModuleType
 from unittest.mock import patch
 
 import pytest
+from koopa import install
 from koopa.install import _app_json_installer
 from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim, python_app
 from koopa.installers import pyright as pyright_installer
@@ -72,6 +74,24 @@ def test_python_private_ca_compatibility_is_guarded(tmp_path: Path) -> None:
     source = matches[0].read_text()
     assert 'os.path.join(data_home, "ca-certificates", "cacert.pem")' in source
     assert 'os.environ.get("SSL_CERT_FILE")' in source
+    assert "ssl.VERIFY_X509_STRICT = 0" in source
+    assert "ssl.CERT_NONE" not in source
+    assert "check_hostname = False" not in source
+
+
+def test_python_package_venv_receives_private_ca_shim(tmp_path: Path) -> None:
+    """Venv applications receive the shim; they do not inherit the base one.
+
+    A venv created without ``--system-site-packages`` cannot import a
+    ``sitecustomize`` module installed into the base interpreter, so the
+    venv needs its own copy for TLS inspection compatibility to apply.
+    """
+    libexec = tmp_path / "libexec"
+    subprocess.run([sys.executable, "-m", "venv", str(libexec)], check=True)
+    install._write_venv_private_ca_sitecustomize(str(libexec))
+    matches = list(libexec.glob("lib/python*/site-packages/sitecustomize.py"))
+    assert len(matches) == 1
+    source = matches[0].read_text()
     assert "ssl.VERIFY_X509_STRICT = 0" in source
     assert "ssl.CERT_NONE" not in source
     assert "check_hostname = False" not in source
