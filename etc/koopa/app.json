@@ -2571,7 +2571,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-09-26",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": [
       "chezmoi"
@@ -2581,7 +2581,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "2767ddcd3c34b479de963f9e4116397e561f980b"
+    "version": "874aa7a617e7b06f67c40feb78e6069848b0f57c"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -9626,12 +9626,12 @@
     "bin": [
       "synapse"
     ],
-    "dependencies": [
-      "python"
-    ],
     "category": "Bioinformatics",
     "date": "2026-09-30",
     "default": false,
+    "dependencies": [
+      "python"
+    ],
     "description": "command-line client for the Synapse research data platform",
     "installer": "python-package",
     "installer_args": {
