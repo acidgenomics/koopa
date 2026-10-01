@@ -156,6 +156,62 @@ def test_bootstrap_pinned_versions_match_app_json() -> None:
         )
 
 
+def _run_install_python_lib_harness(tmp_path: Path, *, preexisting_prefix_lib: bool) -> Path:
+    """Run install_python() on macOS with the actual build stubbed to fail.
+
+    Exercises only the PREFIX/lib staging-symlink setup and
+    _python_restore_lib() cleanup around it; download_with_fallback() is
+    stubbed to fail immediately so no network access or compiling happens.
+    is_macos() is overridden to always return true, so this is deterministic
+    on any host platform running the test. Returns the PREFIX used.
+    """
+    prefix = tmp_path / "prefix"
+    koopa_prefix_dir = tmp_path / "koopa"
+    koopa_prefix_dir.mkdir()
+    (koopa_prefix_dir / ".python-version").write_text("3.14\n")
+    if preexisting_prefix_lib:
+        (prefix / "lib").mkdir(parents=True)
+        (prefix / "lib" / "marker.txt").write_text("original\n")
+    script = (
+        "set -eu\n"
+        f"{_function_defs_only()}\n"
+        "is_macos() { return 0; }\n"
+        "download_with_fallback() { return 1; }\n"
+        f'KOOPA_PREFIX="{koopa_prefix_dir}"\n'
+        f'PREFIX="{prefix}"\n'
+        f'DESTDIR="{tmp_path / "destdir"}"\n'
+        '_curl_verbose=""\n'
+        '_make_verbose=""\n'
+        "( install_python ) || true\n"
+    )
+    subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    return prefix
+
+
+def test_install_python_restores_a_preexisting_prefix_lib_on_failure(tmp_path: Path) -> None:
+    """A real PREFIX/lib present before the build is restored after a failed build.
+
+    Regression test: PREFIX/lib already existing (e.g. from a prior
+    uv-fast-path bootstrap, which never populates libcrypto/libssl/libz
+    there) used to make install_python() skip the staging-lib symlink
+    outright, leaving the freshly built openssl3/zlib's absolute dylib
+    paths unresolvable. The fix always stages the symlink and must restore
+    whatever real directory was there before, even when the build fails
+    immediately.
+    """
+    prefix = _run_install_python_lib_harness(tmp_path, preexisting_prefix_lib=True)
+    assert not (prefix / "lib").is_symlink()
+    assert (prefix / "lib" / "marker.txt").read_text() == "original\n"
+    assert list(prefix.parent.glob("prefix/lib.koopa-saved.*")) == []
+
+
+def test_install_python_removes_a_freshly_created_prefix_lib_on_failure(tmp_path: Path) -> None:
+    """A PREFIX/lib created fresh for the build is removed after a failed build."""
+    prefix = _run_install_python_lib_harness(tmp_path, preexisting_prefix_lib=False)
+    assert not (prefix / "lib").exists()
+    assert not prefix.exists()
+
+
 def _run_vendor_sh(
     script_body: str,
     vendor_json: dict,

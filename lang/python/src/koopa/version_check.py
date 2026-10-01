@@ -15,6 +15,7 @@ import urllib.request
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -3467,6 +3468,42 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     return count
 
 
+_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS = 14
+
+
+def _past_bootstrap_uv_cooldown(pinned_date: str) -> bool:
+    """Return whether an app.json pin date has cleared the uv-path cooldown.
+
+    install_python_uv()'s fast path fetches a prebuilt CPython from
+    python-build-standalone, which cuts its own release on a schedule
+    separate from (and often behind) python.org's. Syncing bootstrap.sh's
+    pin the same day app.json bumps can request a patch version
+    python-build-standalone has no download for yet, forcing every host to
+    fall back to a full source build. Holding the sync back for a few days
+    gives python-build-standalone time to publish a matching build, the
+    same way `~/.config/uv/uv.toml`'s `exclude-newer` holds back unpinned
+    dependency installs.
+
+    Parameters
+    ----------
+    pinned_date : str
+        App.json ``date`` field (``YYYY-MM-DD``) for the pin under test.
+
+    Returns
+    -------
+    bool
+        True if the date is missing or unparseable (fail open), or old
+        enough to clear the cooldown.
+    """
+    if not pinned_date:
+        return True
+    try:
+        pinned = date.fromisoformat(pinned_date)
+    except ValueError:
+        return True
+    return (date.today() - pinned).days >= _BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS
+
+
 def _bootstrap_app_map() -> dict[str, str]:
     py_ver = (Path(koopa_prefix()) / ".python-version").read_text().strip()
     return {
@@ -3522,7 +3559,7 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
     py_entry = app_data.get(py_app_key, {})
     if isinstance(py_entry, dict):
         py_version = py_entry.get("version", "")
-        if py_version:
+        if py_version and _past_bootstrap_uv_cooldown(py_entry.get("date", "")):
             uv_pattern = re.compile(
                 r"(install_python_uv\(\) \{\n"
                 r"    __kvar_uv_version='[^']+'\n"
@@ -3536,6 +3573,13 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                     f"  bootstrap python_uv: {uv_match.group(2)} -> {py_version}",
                     file=sys.stderr,
                 )
+        elif py_version:
+            print(
+                f"  bootstrap python_uv: {py_version} available; held for "
+                f"cooldown (python-build-standalone needs time to publish a "
+                f"matching build)",
+                file=sys.stderr,
+            )
     uv_entry = app_data.get("uv", {})
     uv_updated = False
     if isinstance(uv_entry, dict):

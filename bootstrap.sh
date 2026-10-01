@@ -668,21 +668,52 @@ install_openssl() {
     return 0
 }
 
+_python_restore_lib() {
+    # usage: _python_restore_lib
+    # Reverses install_python()'s PREFIX/lib staging-lib symlink: removes
+    # the symlink and restores any real directory moved aside first. Called
+    # on every exit path below (success or failure), so a failed build
+    # never leaves a previously working bootstrap's PREFIX/lib replaced by
+    # a dangling symlink into a since-removed staging directory.
+    [ "${__kvar_restore_lib:-0}" -eq 1 ] || return 0
+    rm -f "${PREFIX}/lib"
+    if [ -n "$__kvar_saved_lib" ]
+    then
+        mv "$__kvar_saved_lib" "${PREFIX}/lib"
+    else
+        rmdir "$PREFIX" 2>/dev/null || true
+    fi
+    __kvar_restore_lib=0
+    return 0
+}
+
 install_python() {
     __kvar_version='3.14.8'
     printf 'Installing python.\n'
     # On macOS, dylib install_names are baked in as absolute paths at build
-    # time. Symlink PREFIX/lib -> staged lib so they resolve during build and
-    # integrity checks. Not needed on Linux where LD_LIBRARY_PATH suffices.
-    __kvar_remove_lib_symlink=0
-    if is_macos && [ -n "$DESTDIR" ] && [ ! -d "${PREFIX}/lib" ]
+    # time, so point PREFIX/lib at the staged lib for the duration of this
+    # build. A real PREFIX/lib may already exist here -- e.g. from a prior
+    # uv-fast-path bootstrap, which bundles its own OpenSSL and never
+    # populates PREFIX/lib with libcrypto/libssl/libz -- so this run's
+    # freshly built openssl3/zlib would otherwise be invisible to the python
+    # build and its install-time integrity check. Move any such directory
+    # aside; _python_restore_lib() restores it on every exit path below.
+    # Not needed on Linux where LD_LIBRARY_PATH suffices.
+    __kvar_saved_lib=''
+    __kvar_restore_lib=0
+    if is_macos && [ -n "$DESTDIR" ]
     then
         # Every 'stage_init' outcome leaves PREFIX writable by this user (or
         # its parent writable enough to create it) by the time this runs, so
         # this never needs its own sudo call.
         mkdir -p "$PREFIX"
+        if [ -d "${PREFIX}/lib" ] && [ ! -L "${PREFIX}/lib" ]
+        then
+            __kvar_saved_lib="${PREFIX}/lib.koopa-saved.$$"
+            mv "${PREFIX}/lib" "$__kvar_saved_lib"
+        fi
         ln -snf "${DESTDIR}${PREFIX}/lib" "${PREFIX}/lib"
-        __kvar_remove_lib_symlink=1
+        __kvar_restore_lib=1
     fi
     __kvar_filename="Python-${__kvar_version}.tar.xz"
     # NOTE: mirror name tracks .python-version (e.g. 'python3.12'), matching
@@ -694,7 +725,7 @@ install_python() {
         "Python-${__kvar_version}" \
         "https://www.python.org/ftp/python/${__kvar_version}/${__kvar_filename}" \
         "https://koopa.acidgenomics.com/src/${__kvar_mirror_name}/${__kvar_filename}" \
-        || return 1
+        || { _python_restore_lib; return 1; }
     unset -v __kvar_filename __kvar_mirror_name
     export BZIP2_CFLAGS="-I${DESTDIR}${PREFIX}/include"
     export BZIP2_LIBS="-L${DESTDIR}${PREFIX}/lib -lbz2"
@@ -708,11 +739,16 @@ install_python() {
         --without-ensurepip \
         --prefix="$PREFIX" \
         --with-openssl="${DESTDIR}${PREFIX}" \
-        || return 1
-    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" || return 1
-    make install DESTDIR="$DESTDIR" || return 1
+        || { _python_restore_lib; return 1; }
+    make ${_make_verbose:+"$_make_verbose"} --jobs="${CPU_COUNT:?}" \
+        || { _python_restore_lib; return 1; }
+    make install DESTDIR="$DESTDIR" || { _python_restore_lib; return 1; }
     unset -v BZIP2_CFLAGS BZIP2_LIBS LDLIBS LIBFFI_CFLAGS LIBFFI_LIBS LIBLZMA_CFLAGS LIBLZMA_LIBS
-    [ -x "${DESTDIR}${PREFIX}/bin/python3" ] || return 1
+    if [ ! -x "${DESTDIR}${PREFIX}/bin/python3" ]
+    then
+        _python_restore_lib
+        return 1
+    fi
     printf 'Checking python module integrity.\n'
     if is_macos
     then
@@ -721,6 +757,7 @@ install_python() {
             "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
         then
             printf 'Python module integrity check failed.\n' >&2
+            _python_restore_lib
             return 1
         fi
     else
@@ -729,15 +766,12 @@ install_python() {
             "${DESTDIR}${PREFIX}/bin/python3" -c 'import _bz2, _ctypes, _hashlib, _lzma, _ssl, zlib'
         then
             printf 'Python module integrity check failed.\n' >&2
+            _python_restore_lib
             return 1
         fi
     fi
-    if [ "$__kvar_remove_lib_symlink" -eq 1 ]
-    then
-        rm -f "${PREFIX}/lib"
-        rmdir "$PREFIX" 2>/dev/null || true
-    fi
-    unset -v __kvar_remove_lib_symlink
+    _python_restore_lib
+    unset -v __kvar_restore_lib __kvar_saved_lib
     unset -v __kvar_version
     return 0
 }
@@ -860,7 +894,7 @@ install_zlib() {
 
 install_python_uv() {
     __kvar_uv_version='0.12.21'
-    __kvar_python_version='3.14.8'
+    __kvar_python_version='3.14.7'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
     if is_macos && is_arm64
