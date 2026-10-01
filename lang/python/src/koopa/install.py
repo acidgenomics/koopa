@@ -1572,6 +1572,7 @@ def install_node_package(
 
 PRIVATE_CA_SITECUSTOMIZE = '''"""Koopa compatibility for malformed corporate TLS certificates."""
 
+import functools
 import os
 import ssl
 
@@ -1585,10 +1586,31 @@ def _using_private_ca_bundle() -> bool:
     return bool(configured) and os.path.realpath(configured) == expected
 
 
+def _relax_x509_strict(create_default_context):
+    @functools.wraps(create_default_context)
+    def wrapper(*args, **kwargs):
+        context = create_default_context(*args, **kwargs)
+        context.verify_flags &= ~_KOOPA_STRICT_FLAG
+        return context
+
+    return wrapper
+
+
 if _using_private_ca_bundle():
+    # Captured before the module-level names below are cleared.
+    _KOOPA_STRICT_FLAG = getattr(ssl.VerifyFlags, "VERIFY_X509_STRICT", 0)
+    # urllib3 (requests) reads these module-level names when building contexts.
     ssl.VERIFY_X509_STRICT = 0
     if hasattr(ssl, "VERIFY_X509_PARTIAL_CHAIN"):
         ssl.VERIFY_X509_PARTIAL_CHAIN = 0
+    # ssl.create_default_context() sets the strict flag from the C module, so
+    # clearing the name above does not reach it. httpx, aiohttp, and
+    # http.client all build contexts through this function.
+    if _KOOPA_STRICT_FLAG:
+        _koopa_original = ssl.create_default_context
+        ssl.create_default_context = _relax_x509_strict(_koopa_original)
+        if ssl._create_default_https_context is _koopa_original:
+            ssl._create_default_https_context = ssl.create_default_context
 '''
 
 
