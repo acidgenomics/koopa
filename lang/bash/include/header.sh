@@ -201,6 +201,7 @@ __koopa_activate_koopa() {
         _koopa_macos_activate_cli_colors || return 1
         _koopa_macos_activate_egnyte || return 1
         _koopa_macos_activate_homebrew || return 1
+        _koopa_macos_activate_vscode || return 1
     fi
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \

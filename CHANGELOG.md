@@ -1,5 +1,24 @@
 # Changelog
 
+## koopa 0.34.0 (2026-10-01)
+
+Major changes:
+
+- Python package environments now relax OpenSSL's strict X.509 verification
+  when using koopa-managed private CA bundles, preserving certificate and
+  hostname verification for clients such as Synapse, httpx, and aiohttp.
+- Python package installation now handles private CA certificates through a
+  shared sitecustomize shim, including environments created by uv and venv.
+- macOS activation now adds the Visual Studio Code command-line tools to
+  `PATH` in Bash, POSIX sh, and Zsh.
+- PostgreSQL installations now consistently expose `pg_dump` and `pg_restore`
+  through the expected koopa-managed links.
+
+Minor changes:
+
+- Updated the bootstrap Python and OpenSSL versions and refreshed routine
+  application registry pins.
+
 ## koopa 0.33.0 (2026-09-27)
 
 Major changes:

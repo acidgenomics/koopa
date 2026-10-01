@@ -1,14 +1,17 @@
 """Installer registry unit tests."""
 
+import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 from types import ModuleType
 from unittest.mock import patch
 
 import pytest
+from koopa import install
 from koopa.install import _app_json_installer
-from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim
+from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim, python_app
 from koopa.installers import pyright as pyright_installer
 from koopa.io import import_app_json
 
@@ -61,6 +64,103 @@ def test_every_app_has_an_installer() -> None:
         f"{', '.join(unroutable)}. Add each to PYTHON_INSTALLERS in "
         "lang/python/src/koopa/installers/__init__.py."
     )
+
+
+def test_python_private_ca_compatibility_is_guarded(tmp_path: Path) -> None:
+    """The TLS compatibility shim activates only for koopa's private CA bundle."""
+    prefix = str(tmp_path / "python")
+    python_app._install_private_ca_compatibility(prefix)
+    matches = list((tmp_path / "python").glob("lib/python*/site-packages/sitecustomize.py"))
+    assert len(matches) == 1
+    source = matches[0].read_text()
+    assert 'os.path.join(data_home, "ca-certificates", "cacert.pem")' in source
+    assert 'os.environ.get("SSL_CERT_FILE")' in source
+    assert "ssl.VERIFY_X509_STRICT = 0" in source
+    assert "ssl.CERT_NONE" not in source
+    assert "check_hostname = False" not in source
+
+
+def test_python_package_venv_receives_private_ca_shim(tmp_path: Path) -> None:
+    """Venv applications receive the shim; they do not inherit the base one.
+
+    A venv created without ``--system-site-packages`` cannot import a
+    ``sitecustomize`` module installed into the base interpreter, so the
+    venv needs its own copy for TLS inspection compatibility to apply.
+    """
+    libexec = tmp_path / "libexec"
+    subprocess.run([sys.executable, "-m", "venv", str(libexec)], check=True)
+    install._write_venv_private_ca_sitecustomize(str(libexec))
+    matches = list(libexec.glob("lib/python*/site-packages/sitecustomize.py"))
+    assert len(matches) == 1
+    source = matches[0].read_text()
+    assert "ssl.VERIFY_X509_STRICT = 0" in source
+    assert "ssl.CERT_NONE" not in source
+    assert "check_hostname = False" not in source
+
+
+def _venv_ssl_flags(libexec: Path, env_extra: dict[str, str]) -> dict[str, bool]:
+    """Report which verify flags the venv's default TLS contexts carry."""
+    python = libexec / "bin" / "python"
+    code = (
+        "import json, ssl\n"
+        "strict = ssl.VerifyFlags.VERIFY_X509_STRICT\n"
+        "print(json.dumps({\n"
+        "    'create_default_context': bool(ssl.create_default_context().verify_flags & strict),\n"
+        "    'https_context': bool(ssl._create_default_https_context().verify_flags & strict),\n"
+        "    'check_hostname': ssl.create_default_context().check_hostname,\n"
+        "    'cert_required': ssl.create_default_context().verify_mode == ssl.CERT_REQUIRED,\n"
+        "}))\n"
+    )
+    env = {k: v for k, v in os.environ.items() if k not in ("SSL_CERT_FILE", "XDG_DATA_HOME")}
+    env.update(env_extra)
+    result = subprocess.run(
+        [str(python), "-c", code], env=env, check=True, capture_output=True, text=True
+    )
+    return json.loads(result.stdout)
+
+
+@pytest.mark.skipif(
+    not hasattr(__import__("ssl").VerifyFlags, "VERIFY_X509_STRICT"),
+    reason="OpenSSL build lacks VERIFY_X509_STRICT",
+)
+def test_private_ca_shim_relaxes_default_context_strict_flag(tmp_path: Path) -> None:
+    """The shim clears strict mode on ``ssl.create_default_context()`` itself.
+
+    Clearing ``ssl.VERIFY_X509_STRICT`` only reaches urllib3, which reads the
+    module-level name. ``ssl.create_default_context()`` sets the flag from the
+    C module, so httpx (synapseclient's async download path) kept rejecting
+    TLS inspection certificates that lack an Authority Key Identifier. Trust
+    and hostname verification must stay enabled either way.
+    """
+    libexec = tmp_path / "libexec"
+    subprocess.run([sys.executable, "-m", "venv", str(libexec)], check=True)
+    install._write_venv_private_ca_sitecustomize(str(libexec))
+    data_home = tmp_path / "share"
+    bundle = data_home / "ca-certificates" / "cacert.pem"
+    bundle.parent.mkdir(parents=True)
+    bundle.write_text("")
+    active = _venv_ssl_flags(
+        libexec, {"XDG_DATA_HOME": str(data_home), "SSL_CERT_FILE": str(bundle)}
+    )
+    assert active == {
+        "create_default_context": False,
+        "https_context": False,
+        "check_hostname": True,
+        "cert_required": True,
+    }
+    inactive = _venv_ssl_flags(libexec, {"XDG_DATA_HOME": str(data_home)})
+    if sys.version_info >= (3, 13):
+        assert inactive["create_default_context"] is True
+        assert inactive["https_context"] is True
+    assert inactive["check_hostname"] is True
+
+
+def test_synapseclient_uses_current_python_package() -> None:
+    """Synapse installs from PyPI with complete extras on koopa's Python."""
+    entry = import_app_json()["synapseclient"]
+    assert entry["installer"] == "python-package"
+    assert entry["dependencies"] == ["python"]
+    assert entry["installer_args"]["pip_name"] == "synapseclient[pandas,curator]"
 
 
 # -- private artifact preflight: cellranger, bcl-convert ----------------------

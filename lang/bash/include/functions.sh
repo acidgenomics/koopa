@@ -2771,6 +2771,12 @@ _koopa_macos_activate_homebrew() {
     return 0
 }
 
+_koopa_macos_activate_vscode() {
+    _koopa_add_to_path_end \
+        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    return 0
+}
+
 _koopa_bin_prefix() {
     _koopa_print "${KOOPA_PREFIX:?}/bin"
     return 0

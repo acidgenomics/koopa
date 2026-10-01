@@ -123,7 +123,7 @@
       "rust"
     ],
     "category": "R",
-    "date": "2026-07-23",
+    "date": "2026-10-01",
     "default": false,
     "description": "R code formatter",
     "type": "cli",
@@ -131,7 +131,7 @@
       "https://posit-dev.github.io/air/",
       "https://github.com/posit-dev/air"
     ],
-    "version": "0.11.0"
+    "version": "0.12.0"
   },
   "anaconda": {
     "category": "Python",
@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5784551402897408",
+    "build_id": "4571742832820224",
     "category": "AI",
-    "date": "2026-09-27",
+    "date": "2026-09-30",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "92bcd4d1976b570d6f053a1b5716e2f2962c22ca3cf7657a3fcb66b05b0f5523fa2d6f1899f157c09b66abda2c2f81938101ad7cd31845e1eda8f277addc2b8e",
-      "darwin_amd64": "07e56833460bc8999ea44f7fc4cff795e0304a08a05e5e296d6096ac8e1ef15c95aee6b692803734bb7f488e416c8bc80be640dfa7089d927fe79dbefdb56d21",
-      "linux_amd64": "d5f0fe7433cb7c43ea878c07627a4fdb82d218f3bef5e6436266f5d9fdd2df145523453b9be0c4250391a64a007f5f42f7faff797bc2b2d502e7efb4874e383a",
-      "linux_arm64": "e2f10960197efbf2455edb1284ae686821e244908367f507bcb6a0d0f616e945d3eec5cdf29b41bbcd7f630826d0e9e233f457184d1696fa91e81d6a7ed440c9"
+      "darwin_arm64": "953afacb5f7cdebe68f02efa6c7322450fb3ecf0cf4bcc65747d3af15e8973ba58df22c41e8151c72c6e82d26a8c3c3ca4d696ec314feb39ad83be34f548a854",
+      "darwin_amd64": "91b695493415ea75186b86b87fd6213d580489098bb62a837d281215a0b4c0d4ae3044135bff084d901bbb5254aefc21c2ed4713f57dea2442c6aa2891e118cb",
+      "linux_amd64": "fd771dfc74ddd07b61c8b0a6fd7a238f53a3a098a51052583a01d97ab84ee60db741ce5f041e87a9da3c1a9aabe95b053113374437df1e231773552781edaf09",
+      "linux_arm64": "d96a67d6952a8ec1da16c8b6515f1393ed0260658cf104d9b57b8d13c92c591322ed5e08a62894842be81888116da0f5f80def7971c913d1f462300103426954"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.2.12"
+    "version": "1.2.14"
   },
   "apache-airflow": {
     "bin": [
@@ -1584,7 +1584,7 @@
     ],
     "category": "Dotfile",
     "conda_channel": "conda-forge",
-    "date": "2026-09-22",
+    "date": "2026-09-29",
     "default": true,
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
@@ -1593,7 +1593,7 @@
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
     ],
-    "version": "2.72.2"
+    "version": "2.73.0"
   },
   "choose": {
     "bin": [
@@ -1623,7 +1623,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-09-26",
+    "date": "2026-10-01",
     "default": true,
     "dependencies": [
       "node"
@@ -1637,7 +1637,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.283"
+    "version": "2.1.286"
   },
   "claude-replay": {
     "bin": [
@@ -1668,7 +1668,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-09-27",
+    "date": "2026-10-01",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1676,7 +1676,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.9.3.38"
+    "version": "26.9.7.9"
   },
   "cloc": {
     "bin": [
@@ -1704,7 +1704,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-08-28",
+    "date": "2026-09-29",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1713,7 +1713,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.25.4"
+    "version": "2.26.0"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -1843,7 +1843,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-09-24",
+    "date": "2026-10-01",
     "default": true,
     "dependencies": [
       "node"
@@ -1857,7 +1857,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.89-0"
+    "version": "1.0.91-0"
   },
   "coreutils": {
     "bin": [
@@ -2300,14 +2300,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-09-24",
+    "date": "2026-10-01",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.18.0"
+    "version": "1.19.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2571,7 +2571,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-09-26",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": [
       "chezmoi"
@@ -2581,7 +2581,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "2767ddcd3c34b479de963f9e4116397e561f980b"
+    "version": "874aa7a617e7b06f67c40feb78e6069848b0f57c"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -2628,7 +2628,7 @@
     ],
     "category": "Database",
     "conda_channel": "conda-forge",
-    "date": "2026-07-23",
+    "date": "2026-09-30",
     "default": true,
     "description": "in-process analytical SQL database",
     "installer": "conda-package",
@@ -2640,7 +2640,7 @@
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.5.5"
+    "version": "1.5.6"
   },
   "ed": {
     "bin": [
@@ -2781,7 +2781,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-07-20",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2792,7 +2792,7 @@
     "url": [
       "https://github.com/bbatsov/prelude/"
     ],
-    "version": "94e38ff80fecfcc98c4e3f67f7cb803df3844ad6"
+    "version": "649e477bb32553359c500300f482417d8b796daf"
   },
   "ensembl-perl-api": {
     "category": "Bioinformatics",
@@ -3213,7 +3213,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-06-19",
+    "date": "2026-09-30",
     "default": false,
     "description": "full-featured FASTQ toolkit for genomics",
     "installer": "conda-package",
@@ -3227,7 +3227,7 @@
       "https://github.com/fulcrumgenomics/fqtk/",
       "https://bioconda.github.io/recipes/fqtk/README.html"
     ],
-    "version": "0.4.0"
+    "version": "0.4.1"
   },
   "freetype": {
     "build_dependencies": [
@@ -3479,7 +3479,7 @@
       "gentropy"
     ],
     "category": "Bioinformatics",
-    "date": "2026-07-14",
+    "date": "2026-09-29",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -3494,7 +3494,7 @@
       "https://pypi.org/project/gentropy/",
       "https://github.com/opentargets/gentropy"
     ],
-    "version": "3.3.0"
+    "version": "3.4.0"
   },
   "geos": {
     "bin": [
@@ -3610,7 +3610,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-09-17",
+    "date": "2026-09-30",
     "default": true,
     "description": "official GitHub command-line interface",
     "installer": "conda-package",
@@ -3618,7 +3618,7 @@
     "url": [
       "https://github.com/cli/cli/"
     ],
-    "version": "2.101.0"
+    "version": "2.102.0"
   },
   "ghostscript": {
     "bin": [
@@ -3664,7 +3664,7 @@
       "xz"
     ],
     "category": "VCS",
-    "date": "2026-06-30",
+    "date": "2026-09-29",
     "default": true,
     "dependencies": [
       "curl",
@@ -3680,13 +3680,12 @@
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-{version}.tar.xz",
       "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-{version}.tar.xz"
     ],
-    "revision": 1,
     "src_url": "https://mirrors.edge.kernel.org/pub/software/scm/git/git-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://git-scm.com/"
     ],
-    "version": "2.55.0"
+    "version": "2.56.0"
   },
   "git-filter-repo": {
     "bin": [
@@ -3895,7 +3894,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-09-24",
+    "date": "2026-09-30",
     "default": true,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
@@ -3904,7 +3903,7 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "586.0.0"
+    "version": "587.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -4024,7 +4023,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-05-08",
+    "date": "2026-09-29",
     "default": true,
     "description": "GNU document formatting system",
     "installer": "conda-package",
@@ -4035,7 +4034,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
     ],
-    "version": "1.23.0"
+    "version": "1.24.2"
   },
   "gseapy": {
     "bin": [
@@ -4178,14 +4177,14 @@
       "haskell-ghcup"
     ],
     "category": "Build",
-    "date": "2026-07-30",
+    "date": "2026-09-30",
     "default": false,
     "description": "Haskell package and build manager",
     "type": "cli",
     "url": [
       "https://www.haskell.org/cabal/download.html"
     ],
-    "version": "3.18.1.0"
+    "version": "3.18.2.0"
   },
   "haskell-ghcup": {
     "bin": [
@@ -4458,7 +4457,7 @@
       "hf"
     ],
     "category": "AI",
-    "date": "2026-09-24",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": [
       "python"
@@ -4474,7 +4473,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "2.0.0"
+    "version": "2.1.1"
   },
   "hugo": {
     "bin": [
@@ -4484,7 +4483,7 @@
       "go"
     ],
     "category": "Documentation",
-    "date": "2026-09-13",
+    "date": "2026-09-29",
     "default": false,
     "description": "fast static site generator written in Go",
     "notes": [
@@ -4495,7 +4494,7 @@
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
     ],
-    "version": "0.166.0",
+    "version": "0.167.0",
     "version_granularity": "minor"
   },
   "hurl": {
@@ -4597,7 +4596,7 @@
       "icav2"
     ],
     "category": "Cloud",
-    "date": "2026-09-04",
+    "date": "2026-10-01",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
     "installer_platform": "linux",
@@ -4617,7 +4616,7 @@
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
-    "version": "2.48.0"
+    "version": "2.49.0"
   },
   "imagemagick": {
     "date": "2026-05-02",
@@ -4668,7 +4667,7 @@
       "isort"
     ],
     "category": "Python",
-    "date": "2026-08-28",
+    "date": "2026-09-29",
     "default": false,
     "dependencies": [
       "python"
@@ -4680,7 +4679,7 @@
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
     ],
-    "version": "9.0.1"
+    "version": "9.0.2"
   },
   "jemalloc": {
     "build_dependencies": [
@@ -5536,7 +5535,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-05-02",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": [
       "zlib"
@@ -5547,7 +5546,7 @@
     "url": [
       "http://www.libpng.org/pub/png/libpng.html"
     ],
-    "version": "1.6.58"
+    "version": "1.6.59"
   },
   "libsolv": {
     "date": "2026-05-02",
@@ -6296,7 +6295,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-09-26",
+    "date": "2026-10-01",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6306,7 +6305,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.9.14"
+    "version": "2026.9.18"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6982,7 +6981,7 @@
       "pkg-config"
     ],
     "category": "Security",
-    "date": "2026-08-27",
+    "date": "2026-09-30",
     "default": false,
     "dependencies": [
       "ca-certificates"
@@ -6994,7 +6993,7 @@
     "url": [
       "https://www.openssl.org/source/"
     ],
-    "version": "3.6.4"
+    "version": "3.6.5"
   },
   "openssl4": {
     "bin": [
@@ -7006,7 +7005,7 @@
       "pkg-config"
     ],
     "category": "Security",
-    "date": "2026-08-27",
+    "date": "2026-09-30",
     "default": false,
     "dependencies": [
       "ca-certificates"
@@ -7018,7 +7017,7 @@
     "url": [
       "https://www.openssl.org/source/"
     ],
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   "oracle-instant-client": {
     "category": "Cloud",
@@ -7092,7 +7091,7 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-09-02",
+    "date": "2026-10-01",
     "default": false,
     "description": "universal document format converter",
     "installer": "conda-package",
@@ -7101,7 +7100,7 @@
       "https://pandoc.org/",
       "https://github.com/jgm/pandoc/"
     ],
-    "version": "3.11"
+    "version": "3.12"
   },
   "parallel": {
     "bin": [
@@ -7112,7 +7111,7 @@
     ],
     "category": "Build",
     "conda_channel": "conda-forge",
-    "date": "2026-07-23",
+    "date": "2026-09-30",
     "default": true,
     "description": "GNU shell tool for executing jobs in parallel",
     "installer": "conda-package",
@@ -7127,7 +7126,7 @@
       "https://www.gnu.org/software/parallel/",
       "https://mirrors.kernel.org/gnu/parallel/?C=M;O=D"
     ],
-    "version": "20260722"
+    "version": "20260922"
   },
   "password-store": {
     "bin": [
@@ -7235,7 +7234,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-09-02",
+    "date": "2026-09-29",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -7254,7 +7253,7 @@
       "https://github.com/PCRE2Project/pcre2/",
       "https://www.pcre.org/"
     ],
-    "version": "10.48"
+    "version": "10.49"
   },
   "perl": {
     "bin": [
@@ -7358,7 +7357,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-09-24",
+    "date": "2026-09-30",
     "default": false,
     "dependencies": [
       "python"
@@ -7370,7 +7369,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.17.6"
+    "version": "1.17.8"
   },
   "pixi": {
     "bin": [
@@ -7527,6 +7526,8 @@
   "postgresql": {
     "bin": [
       "pg_ctl",
+      "pg_dump",
+      "pg_restore",
       "psql"
     ],
     "build_dependencies": [
@@ -7545,6 +7546,7 @@
     "default": true,
     "description": "powerful open-source relational database",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.postgresql.org/",
@@ -7710,7 +7712,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-09-17",
+    "date": "2026-10-01",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7721,14 +7723,14 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.6"
+    "version": "2.8.7"
   },
   "pyflakes": {
     "bin": [
       "pyflakes"
     ],
     "category": "Python",
-    "date": "2026-09-24",
+    "date": "2026-10-01",
     "default": true,
     "dependencies": [
       "python"
@@ -7740,7 +7742,7 @@
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
     ],
-    "version": "4.0.0"
+    "version": "4.0.1"
   },
   "pygments": {
     "bin": [
@@ -7767,7 +7769,7 @@
       "pylint"
     ],
     "category": "Python",
-    "date": "2026-09-24",
+    "date": "2026-09-30",
     "default": false,
     "dependencies": [
       "python"
@@ -7780,7 +7782,7 @@
       "https://github.com/PyCQA/pylint/",
       "https://pypi.org/project/pylint/"
     ],
-    "version": "4.0.9"
+    "version": "4.1.1"
   },
   "pymol": {
     "bin": [
@@ -7833,7 +7835,7 @@
       "pyrefly"
     ],
     "category": "Python",
-    "date": "2026-09-20",
+    "date": "2026-09-29",
     "default": false,
     "dependencies": [
       "python"
@@ -7846,7 +7848,7 @@
       "https://github.com/facebook/pyrefly/",
       "https://pypi.org/project/pyrefly/"
     ],
-    "version": "1.3.1"
+    "version": "1.3.2"
   },
   "pyright": {
     "bin": [
@@ -7938,7 +7940,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-08-14",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": {
       "macos-arm64": [
@@ -7974,13 +7976,12 @@
     "man1": [
       "python3.10.1"
     ],
-    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.10.21"
+    "version": "3.10.22"
   },
   "python3.11": {
     "bin": [
@@ -8000,7 +8001,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-08-14",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": {
       "macos-arm64": [
@@ -8036,13 +8037,12 @@
     "man1": [
       "python3.11.1"
     ],
-    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.11.16"
+    "version": "3.11.17"
   },
   "python3.12": {
     "bin": [
@@ -8062,7 +8062,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-08-14",
+    "date": "2026-10-01",
     "default": true,
     "dependencies": {
       "macos-arm64": [
@@ -8098,13 +8098,12 @@
     "man1": [
       "python3.12.1"
     ],
-    "revision": 1,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.12.14"
+    "version": "3.12.15"
   },
   "python3.13": {
     "bin": [
@@ -8124,7 +8123,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-08-08",
+    "date": "2026-10-01",
     "default": true,
     "dependencies": {
       "macos-arm64": [
@@ -8160,13 +8159,12 @@
     "man1": [
       "python3.13.1"
     ],
-    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.13.15"
+    "version": "3.13.16"
   },
   "python3.14": {
     "bin": [
@@ -8196,7 +8194,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-08-08",
+    "date": "2026-10-01",
     "default": true,
     "dependencies": {
       "macos-arm64": [
@@ -8234,13 +8232,12 @@
       "python3.1",
       "python3.14.1"
     ],
-    "revision": 2,
     "src_url": "https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz",
     "type": "build_tool",
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.14.7"
+    "version": "3.14.8"
   },
   "quarto": {
     "bin": [
@@ -8292,7 +8289,7 @@
       "subversion"
     ],
     "category": "Language",
-    "date": "2026-09-08",
+    "date": "2026-10-01",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -8355,7 +8352,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "90500"
+    "version": "90600"
   },
   "r-gfortran": {
     "category": "R",
@@ -8402,7 +8399,7 @@
     ],
     "category": "R",
     "conda_channel": "conda-forge",
-    "date": "2025-08-24",
+    "date": "2026-10-01",
     "default": true,
     "description": "modern R console with syntax highlighting and completion",
     "installer": "conda-package",
@@ -8411,7 +8408,7 @@
       "https://github.com/randy3k/radian/",
       "https://pypi.org/project/radian/"
     ],
-    "version": "0.6.15"
+    "version": "0.7.0"
   },
   "ranger-fm": {
     "bin": [
@@ -8837,14 +8834,14 @@
       "rustfmt"
     ],
     "category": "Language",
-    "date": "2026-09-04",
+    "date": "2026-10-01",
     "default": false,
     "description": "systems programming language focused on safety and speed",
     "type": "cli",
     "url": [
       "https://www.rust-lang.org/"
     ],
-    "version": "1.98.1"
+    "version": "1.99.0"
   },
   "rustqc": {
     "bin": [
@@ -9589,7 +9586,7 @@
       "surreal"
     ],
     "category": "Database",
-    "date": "2026-08-19",
+    "date": "2026-09-29",
     "default": false,
     "description": "multi-model database with SurrealQL query language",
     "type": "cli",
@@ -9597,7 +9594,7 @@
       "https://surrealdb.com/",
       "https://github.com/surrealdb/surrealdb/"
     ],
-    "version": "3.2.4"
+    "version": "3.3.0"
   },
   "swig": {
     "bin": [
@@ -9624,20 +9621,19 @@
     "bin": [
       "synapse"
     ],
-    "build_dependencies": [
-      "conda"
-    ],
     "category": "Bioinformatics",
-    "conda_channel": "bioconda",
-    "date": "2026-08-13",
+    "date": "2026-10-01",
     "default": false,
+    "dependencies": [
+      "python"
+    ],
     "description": "command-line client for the Synapse research data platform",
-    "installer": "conda-package",
+    "installer": "python-package",
+    "installer_args": {
+      "pip_name": "synapseclient[pandas,curator]"
+    },
     "notes": [
-      "Scoped to downloading. 'synapse get -r <synID>' works because syncFromSynapse writes its manifest with csv.DictWriter; only the upload manifest reader calls test_import_pandas().",
-      "'synapse sync' (upload) does not work here. The bioconda recipe carries no pandas dependency.",
-      "The curator subcommands (generate-json-schema, register-json-schema, bind-json-schema) do not work here. They need pandas, pandarallel, networkx, rdflib, dataclasses-json and inflection.",
-      "The recipe dependency list is stale. It pins 'urllib3 <2' and 'python >=3.9,<3.13', omits 'httpcore >=1.0.9', and keeps a 'loky' leftover. Upstream moved to 'urllib3>=2.6.3' at v4.11.0 and requires python <3.15. Autobump only refreshes version and sha256. Switch to installer 'python-package' with pip_name 'synapseclient[pandas,curator]' if the full CLI or upstream-correct pins are ever needed."
+      "Install from PyPI with the pandas and curator extras so the complete upstream CLI is available on koopa's current Python."
     ],
     "type": "cli",
     "url": [
@@ -9646,7 +9642,7 @@
       "https://python-docs.synapse.org",
       "https://github.com/Sage-Bionetworks/synapsePythonClient"
     ],
-    "version": "4.13.0"
+    "version": "4.14.0"
   },
   "tabcmd": {
     "bin": [
@@ -9724,7 +9720,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-05-02",
+    "date": "2026-09-30",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -9746,7 +9742,7 @@
     "url": [
       "https://www.tcl-lang.org/"
     ],
-    "version": "9.0.4"
+    "version": "9.1.0"
   },
   "tealdeer": {
     "bin": [
@@ -10189,14 +10185,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-09-25",
+    "date": "2026-09-30",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.12.19"
+    "version": "0.12.21"
   },
   "valkey": {
     "bin": [
@@ -10981,7 +10977,7 @@
       "go"
     ],
     "category": "Text",
-    "date": "2026-08-21",
+    "date": "2026-09-29",
     "default": false,
     "description": "YAML, JSON, and XML command-line processor",
     "notes": [
@@ -10991,7 +10987,7 @@
     "url": [
       "https://github.com/mikefarah/yq/"
     ],
-    "version": "4.53.6"
+    "version": "4.54.1"
   },
   "yt-dlp": {
     "bin": [

@@ -9,6 +9,7 @@ import os
 import ssl
 import subprocess
 import urllib.error
+from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -34,11 +35,13 @@ from koopa.version_check import (
     _is_retryable_network_error,
     _liblinear_tag_to_version,
     _NetworkUnavailableError,
+    _past_bootstrap_uv_cooldown,
     _pip_index_hold_message,
     _pip_index_url,
     _src_url_hold_message,
     classify_app,
     update_app_json,
+    update_bootstrap,
 )
 
 # ── _is_prerelease ─────────────────────────────────────────────────────────
@@ -986,6 +989,70 @@ def test_update_app_json_bumps_a_version_match_group_on_agreement(tmp_path: Path
     assert written["xorg-libxcb"]["version"] == "1.18.0"
     assert written["xorg-xcb-proto"]["version"] == "1.18.0"
     assert count == 2
+
+
+# ── _past_bootstrap_uv_cooldown ───────────────────────────────────────────────
+
+
+def test_past_bootstrap_uv_cooldown_holds_a_fresh_pin() -> None:
+    """A pin dated today has not cleared the cooldown."""
+    assert _past_bootstrap_uv_cooldown(date.today().isoformat()) is False
+
+
+def test_past_bootstrap_uv_cooldown_clears_an_old_pin() -> None:
+    """A pin older than the cooldown window has cleared it."""
+    old = (date.today() - timedelta(days=20)).isoformat()
+    assert _past_bootstrap_uv_cooldown(old) is True
+
+
+def test_past_bootstrap_uv_cooldown_fails_open_on_missing_or_bad_date() -> None:
+    """A missing or unparseable date never blocks the sync forever."""
+    assert _past_bootstrap_uv_cooldown("") is True
+    assert _past_bootstrap_uv_cooldown("not-a-date") is True
+
+
+# ── update_bootstrap: uv-path python-version cooldown ────────────────────────
+
+
+def _write_bootstrap_fixture(prefix: Path, *, python_version: str, uv_python_version: str) -> None:
+    (prefix / ".python-version").write_text("3.14\n")
+    etc_dir = prefix / "etc" / "koopa"
+    etc_dir.mkdir(parents=True, exist_ok=True)
+    (etc_dir / "bootstrap-version.txt").write_text("2026.01.01.0000\n")
+    (prefix / "bootstrap.sh").write_text(
+        "install_python() {\n"
+        f"    __kvar_version='{python_version}'\n"
+        "}\n"
+        "install_python_uv() {\n"
+        "    __kvar_uv_version='0.12.21'\n"
+        f"    __kvar_python_version='{uv_python_version}'\n"
+        "}\n"
+    )
+
+
+def test_update_bootstrap_holds_uv_python_pin_during_cooldown(tmp_path: Path) -> None:
+    """A same-day app.json python bump does not sync the uv-path pin yet."""
+    _write_bootstrap_fixture(tmp_path, python_version="3.14.6", uv_python_version="3.14.6")
+    app_data = {"python3.14": {"version": "3.14.8", "date": date.today().isoformat()}}
+    with patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)):
+        update_bootstrap(app_data)
+    text = (tmp_path / "bootstrap.sh").read_text()
+    assert "__kvar_python_version='3.14.6'" in text
+    # The source-build pin, which has no python-build-standalone lag, syncs
+    # immediately and is unaffected by the uv-path cooldown.
+    assert "__kvar_version='3.14.8'" in text
+
+
+def test_update_bootstrap_syncs_uv_python_pin_after_cooldown(tmp_path: Path) -> None:
+    """An app.json python bump old enough to clear the cooldown does sync."""
+    _write_bootstrap_fixture(tmp_path, python_version="3.14.8", uv_python_version="3.14.6")
+    old_date = (date.today() - timedelta(days=20)).isoformat()
+    app_data = {"python3.14": {"version": "3.14.8", "date": old_date}}
+    with patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)):
+        count = update_bootstrap(app_data)
+    text = (tmp_path / "bootstrap.sh").read_text()
+    assert "__kvar_python_version='3.14.8'" in text
+    assert count == 1
 
 
 # ── update_app_json: missing src_url write-time gate ─────────────────────────

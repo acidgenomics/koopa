@@ -1570,6 +1570,71 @@ def install_node_package(
 # -- Python package installer -------------------------------------------------
 
 
+PRIVATE_CA_SITECUSTOMIZE = '''"""Koopa compatibility for malformed corporate TLS certificates."""
+
+import functools
+import os
+import ssl
+
+
+def _using_private_ca_bundle() -> bool:
+    data_home = os.environ.get("XDG_DATA_HOME")
+    if not data_home:
+        data_home = os.path.expanduser("~/.local/share")
+    expected = os.path.realpath(os.path.join(data_home, "ca-certificates", "cacert.pem"))
+    configured = os.environ.get("SSL_CERT_FILE")
+    return bool(configured) and os.path.realpath(configured) == expected
+
+
+def _relax_x509_strict(create_default_context):
+    @functools.wraps(create_default_context)
+    def wrapper(*args, **kwargs):
+        context = create_default_context(*args, **kwargs)
+        context.verify_flags &= ~_KOOPA_STRICT_FLAG
+        return context
+
+    return wrapper
+
+
+if _using_private_ca_bundle():
+    # Captured before the module-level names below are cleared.
+    _KOOPA_STRICT_FLAG = getattr(ssl.VerifyFlags, "VERIFY_X509_STRICT", 0)
+    # urllib3 (requests) reads these module-level names when building contexts.
+    ssl.VERIFY_X509_STRICT = 0
+    if hasattr(ssl, "VERIFY_X509_PARTIAL_CHAIN"):
+        ssl.VERIFY_X509_PARTIAL_CHAIN = 0
+    # ssl.create_default_context() sets the strict flag from the C module, so
+    # clearing the name above does not reach it. httpx, aiohttp, and
+    # http.client all build contexts through this function.
+    if _KOOPA_STRICT_FLAG:
+        _koopa_original = ssl.create_default_context
+        ssl.create_default_context = _relax_x509_strict(_koopa_original)
+        if ssl._create_default_https_context is _koopa_original:
+            ssl._create_default_https_context = ssl.create_default_context
+'''
+
+
+def write_private_ca_sitecustomize(site_packages: str) -> None:
+    """Write the private CA compatibility ``sitecustomize`` module.
+
+    Python 3.13 and newer enable OpenSSL's strict RFC 5280 checks in default
+    client contexts. Some corporate TLS inspection gateways mint otherwise
+    trusted leaf certificates without an Authority Key Identifier, which
+    strict mode rejects. The generated module relaxes only that structural
+    check when koopa's user-managed private CA bundle is active. Certificate
+    trust, expiry, and hostname verification remain enabled.
+
+    Parameters
+    ----------
+    site_packages : str
+        Target ``site-packages`` directory.
+    """
+    os.makedirs(site_packages, exist_ok=True)
+    path = os.path.join(site_packages, "sitecustomize.py")
+    with open(path, "w") as file:
+        file.write(PRIVATE_CA_SITECUSTOMIZE)
+
+
 def install_python_package(
     *,
     name: str = "",
@@ -1644,6 +1709,9 @@ def install_python_package(
     os.makedirs(bin_dir, exist_ok=True)
     # Create venv.
     subprocess.run([python, "-m", "venv", libexec], check=True)
+    # A venv does not inherit the base interpreter's site-packages, so the
+    # private CA compatibility module must be written into the venv as well.
+    _write_venv_private_ca_sitecustomize(libexec)
     pip_conf = os.path.join(libexec, "pip.conf")
     venv_pip = os.path.join(libexec, "bin", "pip")
     no_binary_args: list[str] = []
@@ -1689,6 +1757,29 @@ def install_python_package(
         prefix=prefix,
         libexec=libexec,
     )
+
+
+def _write_venv_private_ca_sitecustomize(libexec: str) -> None:
+    """Write the private CA compatibility module into a venv.
+
+    Parameters
+    ----------
+    libexec : str
+        Path to the venv directory.
+    """
+    venv_python = os.path.join(libexec, "bin", "python3")
+    if not os.path.isfile(venv_python):
+        return
+    result = subprocess.run(
+        [venv_python, "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    site_packages = result.stdout.strip()
+    if result.returncode != 0 or not site_packages:
+        return
+    write_private_ca_sitecustomize(site_packages)
 
 
 def _link_pip_binaries(

@@ -4,10 +4,11 @@ import os
 import shutil
 import subprocess
 import sys
+import sysconfig
 
 from koopa.build import BuildEnv, app_prefix, locate
 from koopa.file_ops import ln
-from koopa.install import can_build_binary
+from koopa.install import can_build_binary, write_private_ca_sitecustomize
 from koopa.installers._build_helper import activate_app_deps, download_extract_cd
 from koopa.system import cpu_count
 from koopa.version import major_minor_version
@@ -121,6 +122,7 @@ def _install_from_source(*, version: str, prefix: str, env: BuildEnv) -> None:
     )
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     _check_python_install(python)
+    _install_private_ca_compatibility(prefix)
     _create_unversioned_symlinks(prefix)
 
 
@@ -172,7 +174,33 @@ def _install_from_uv(*, version: str, prefix: str, env: BuildEnv) -> None:
         _fix_uv_dylib_install_name(prefix, maj_min_ver)
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     _check_python_install(python)
+    _install_private_ca_compatibility(prefix)
     _create_unversioned_symlinks(prefix)
+
+
+def _install_private_ca_compatibility(prefix: str) -> None:
+    """Install Python compatibility for malformed corporate TLS inspection certificates.
+
+    Python 3.13 and newer enable OpenSSL's strict RFC 5280 checks in default
+    client contexts. Some corporate TLS inspection gateways mint otherwise
+    trusted leaf certificates without an Authority Key Identifier, which
+    strict mode rejects. The generated ``sitecustomize`` module relaxes only
+    that structural check when koopa's user-managed private CA bundle is
+    active. Certificate trust, expiry, and hostname verification remain
+    enabled.
+
+    Parameters
+    ----------
+    prefix : str
+        Python installation prefix directory.
+    """
+    paths = sysconfig.get_paths(
+        vars={
+            "base": prefix,
+            "platbase": prefix,
+        }
+    )
+    write_private_ca_sitecustomize(paths["purelib"])
 
 
 def _fix_uv_dylib_install_name(prefix: str, maj_min_ver: str) -> None:
