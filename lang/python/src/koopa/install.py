@@ -1300,7 +1300,10 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 
                 set_last_push_message(push_message)
         if progress.saved_log_path:
-            shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
+            # The per-app log path is shared, so a concurrent install of the
+            # same app may already have moved it. The install itself succeeded.
+            with contextlib.suppress(FileNotFoundError):
+                shutil.move(progress.saved_log_path, os.path.join(install_dir, "build.log"))
     if not config.quiet and config.verbose:
         from koopa.alert import alert_install_success
 
@@ -3310,10 +3313,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
-            # No --exclude-newer override here: `syntactic` and `tqdm` in
-            # `optional-dependencies.extra` are unpinned, so they resolve
-            # under whatever dependency cooldown the user has configured
-            # (exclude-newer in ~/.config/uv/uv.toml).
+            # `syntactic` is first-party (Acid Genomics index), so a freshly
+            # published release must not be held back by the user's dependency
+            # cooldown (exclude-newer in ~/.config/uv/uv.toml). Third-party
+            # extras such as `tqdm` still resolve under that cooldown.
+            "--exclude-newer-package",
+            "syntactic=false",
             # uv bundles its own TLS cert store rather than consulting the OS
             # one. On networks where the OS store trusts a cert uv's bundled
             # store doesn't (observed against python.acidgenomics.com), uv

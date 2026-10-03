@@ -1086,11 +1086,11 @@ def test_install_python_package_two_phase_pip_install(tmp_path: Path) -> None:
     assert not os.path.isfile(pip_conf)
 
 
-def test_update_venv_uv_extras_no_exclude_newer_override(tmp_path: Path) -> None:
-    """koopa's own venv extras install carries no `--exclude-newer` override.
+def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path) -> None:
+    """koopa's venv extras install exempts first-party `syntactic` from cooldown.
 
     A configured dependency cooldown (exclude-newer in ~/.config/uv/uv.toml)
-    must govern the unpinned `syntactic` and `tqdm` extras, not be overridden.
+    must still govern third-party extras, so no global override is passed.
     """
     from koopa.install import _update_venv
 
@@ -1116,3 +1116,5 @@ def test_update_venv_uv_extras_no_exclude_newer_override(tmp_path: Path) -> None
 
     assert len(captured) == 1
     assert "--exclude-newer" not in captured[0]
+    idx = captured[0].index("--exclude-newer-package")
+    assert captured[0][idx + 1] == "syntactic=false"
