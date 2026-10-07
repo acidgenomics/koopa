@@ -4,7 +4,7 @@
       "op"
     ],
     "category": "Security",
-    "date": "2026-08-16",
+    "date": "2026-10-03",
     "default": true,
     "description": "1Password command-line interface for secrets management",
     "type": "cli",
@@ -12,7 +12,7 @@
       "https://developer.1password.com/docs/cli/",
       "https://app-updates.agilebits.com/product_history/CLI2"
     ],
-    "version": "2.39.0"
+    "version": "2.40.0"
   },
   "ack": {
     "bin": [
@@ -176,23 +176,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5434575321694208",
+    "build_id": "5594158052802560",
     "category": "AI",
-    "date": "2026-10-02",
+    "date": "2026-10-03",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "1b75da1501ee3e877fa708116f31bd88fabc7f25d8a4b29ef7948b9647d7ad8549b98f6c23418756a38fa210a1a25a526739005ea7b178e50847b67b967cfc7d",
-      "darwin_amd64": "663fe64c8d6c1d57d9840d9e8c9d65d1bf344cbf9fd3d8a1a374ad8d900a30a43c47e81b9d2a00bc35d5022bc5942b94b133c1f9ac931c3735df794abbb805ba",
-      "linux_amd64": "6d2e2eeda0cad6eac8e8b2df11257d684210f8d384a2ee011dc6ad0edacfa33e1ec9c554589f6ff6ef0697f4c3c777ba46b6e84639711f173377cc1554c67436",
-      "linux_arm64": "199e6419fd7549fa296f51c6035c9e0246f9ecd39b6624c46ff9a416f72b0b6579999c692c9499d218a9f88746d60ee78d0f592b31c8fab8be85b0d40533991d"
+      "darwin_arm64": "834a62dc972cfdf09cdb001c7ba79bb5bc9ae5acdba8bd9c4d2939045b76e19c9bdb6eeac58ed88a1deaa1670fc9335eee18482fe2f32603e78224de9573b0fe",
+      "darwin_amd64": "0bd11fbaf448afc675dde361383b00b03412a71ceba03f6ca28abea3c8d194624c14ab67c9390e2671b5055ec5818ec43cb55ab3d8d29c577cbba917ca846b37",
+      "linux_amd64": "c31f09265d4f6aef7c03b5105661ae98f9a8365c6c812c68adcc4a5e1f8b8f96c05fd2e4408a52f5e87e1b561ac350f4ffa7ad41a191893be7a3730ccf9d6553",
+      "linux_arm64": "d17d8044736d31e24ce7c4cb3b75faef3ce5102ecaad31aef95785c0f3c13fa0615d7b11fa411eb73b848489adf9d411178446f3148e30353a2048cd3e731971"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.2.15"
+    "version": "1.2.16"
   },
   "apache-airflow": {
     "bin": [
@@ -1730,7 +1730,7 @@
       "conda"
     ],
     "category": "Build",
-    "date": "2026-08-27",
+    "date": "2026-10-03",
     "default": true,
     "description": "cross-platform build system generator",
     "installer": "conda-package",
@@ -1738,7 +1738,7 @@
     "url": [
       "https://cmake.org/download/"
     ],
-    "version": "4.4.3"
+    "version": "4.4.4"
   },
   "codex": {
     "bin": [
@@ -1773,7 +1773,7 @@
       "git-cz"
     ],
     "category": "Python",
-    "date": "2026-09-22",
+    "date": "2026-10-03",
     "default": true,
     "dependencies": [
       "python"
@@ -1786,7 +1786,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.19.0"
+    "version": "4.19.1"
   },
   "conda": {
     "bin": [
@@ -7712,7 +7712,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-10-01",
+    "date": "2026-10-03",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7723,7 +7723,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.7"
+    "version": "2.8.8"
   },
   "pyflakes": {
     "bin": [
@@ -7769,7 +7769,7 @@
       "pylint"
     ],
     "category": "Python",
-    "date": "2026-09-30",
+    "date": "2026-10-03",
     "default": false,
     "dependencies": [
       "python"
@@ -7782,7 +7782,7 @@
       "https://github.com/PyCQA/pylint/",
       "https://pypi.org/project/pylint/"
     ],
-    "version": "4.1.1"
+    "version": "4.1.2"
   },
   "pymol": {
     "bin": [
@@ -7816,7 +7816,7 @@
       "pyproject-fmt"
     ],
     "category": "Python",
-    "date": "2026-09-20",
+    "date": "2026-10-03",
     "default": false,
     "dependencies": [
       "python"
@@ -7828,7 +7828,7 @@
       "https://pypi.org/project/pyproject-fmt/",
       "https://github.com/tox-dev/pyproject-fmt/"
     ],
-    "version": "2.29.4"
+    "version": "2.30.0"
   },
   "pyrefly": {
     "bin": [
@@ -9329,7 +9329,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-09-26",
+    "date": "2026-10-03",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9339,7 +9339,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "9bc6300f2409582f2dacd4aacdc12a175d213d54"
+    "version": "2f2122456c3925ff5412b6fb8e55cd9ca9672a05"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9379,7 +9379,7 @@
       "sqlfluff"
     ],
     "category": "Python",
-    "date": "2026-08-08",
+    "date": "2026-10-03",
     "default": true,
     "dependencies": [
       "python"
@@ -9391,7 +9391,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.3.0"
+    "version": "4.4.0"
   },
   "sqlite": {
     "bin": [
@@ -9508,7 +9508,7 @@
       "streamlit"
     ],
     "category": "Python",
-    "date": "2026-09-20",
+    "date": "2026-10-03",
     "default": false,
     "dependencies": [
       "python"
@@ -9521,7 +9521,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.64.0"
+    "version": "1.65.0"
   },
   "subread": {
     "bin": [
