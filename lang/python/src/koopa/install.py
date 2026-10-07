@@ -4207,6 +4207,12 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         ]
         if skipped:
             parts.append(f"{len(skipped)} skipped (failed deps): {', '.join(skipped)}.")
+        not_attempted = [a for a in plan_order if a not in started and a not in failed]
+        if not_attempted:
+            parts.append(
+                f"{len(not_attempted)} not attempted (stopped after first failure): "
+                f"{', '.join(not_attempted)}."
+            )
         raise InstallPlanError(" ".join(parts), root_failures, non_retryable)
     _save_pending_plan([], source=source)
 
