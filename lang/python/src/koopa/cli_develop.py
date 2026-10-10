@@ -888,7 +888,7 @@ def _handle_check_skills(args: list[str]) -> None:
         metavar="PATH",
         help=(
             "skill-directory roots to check (default: <prefix>/.agents/skills, "
-            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills, and any "
+            "<prefix>/opt/dotfiles/chezmoi/dot_agents/skills, and any "
             "<prefix>/plugins/*/skills)"
         ),
     )
@@ -900,7 +900,7 @@ def _handle_check_skills(args: list[str]) -> None:
         prefix = koopa_prefix()
         roots = [
             os.path.join(prefix, ".agents", "skills"),
-            os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_claude", "skills"),
+            os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_agents", "skills"),
             *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
 

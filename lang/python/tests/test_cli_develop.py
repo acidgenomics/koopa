@@ -438,7 +438,7 @@ def test_check_skills_body_soft_ceiling_is_advisory(
     ("relpath", "prefix"),
     [
         (".agents/rules", "koopa-"),
-        ("opt/dotfiles/chezmoi/dot_claude/rules", "dotfiles-"),
+        ("opt/dotfiles/chezmoi/dot_agents/rules", "dotfiles-"),
     ],
 )
 def test_rule_files_carry_prefix(relpath: str, prefix: str) -> None:
