@@ -7,6 +7,15 @@ plugin; both were cut. The commands/subagent/hook draft is preserved in the
 `.claude/plans/help-me-develop-copilot-binary-nest.md` plan file if the idea
 comes back later, but this plugin should stay skills-only.
 
+`plugin.json` is the canonical Agent Plugins 1.0 (agent-plugins.org) package
+identity: Copilot and Codex read it directly. `.claude-plugin/plugin.json`
+and `gemini-extension.json` are generated from it by
+`koopa develop generate-agent-config`; edit `plugin.json`, not those two,
+and regenerate.
+
+To use this plugin from Gemini CLI: `gemini extensions link
+~/.local/share/koopa/plugins/koopa`.
+
 ## Contents
 
 - `skills/koopa-cli` — command syntax: install, update, list, configure.

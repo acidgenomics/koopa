@@ -36,6 +36,7 @@ def test_handlers_expected_commands() -> None:
         "cache-functions",
         "check-skills",
         "color-mode-audit",
+        "generate-agent-config",
         "generate-completion",
         "shellcheck",
     ]
@@ -436,7 +437,7 @@ def test_check_skills_body_soft_ceiling_is_advisory(
 @pytest.mark.parametrize(
     ("relpath", "prefix"),
     [
-        (".claude/rules", "koopa-"),
+        (".agents/rules", "koopa-"),
         ("opt/dotfiles/chezmoi/dot_claude/rules", "dotfiles-"),
     ],
 )
@@ -622,6 +623,7 @@ def test_run_tool_not_quiet_streams_live() -> None:
 def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
     """Develop check reports success when every phase passes."""
     runners = [
+        "_run_agent_config_check",
         "_run_ruff_check",
         "_run_ruff_format_check",
         "_run_pyright",
@@ -647,6 +649,7 @@ def test_handle_check_stops_at_first_failure(
 ) -> None:
     """Develop check stops at the first failed phase instead of running the rest."""
     with (
+        patch("koopa.cli_develop._run_agent_config_check", return_value=0) as agent_config,
         patch("koopa.cli_develop._run_ruff_check", return_value=0) as ruff_check,
         patch("koopa.cli_develop._run_ruff_format_check", return_value=1) as ruff_format,
         patch("koopa.cli_develop._run_pyright", return_value=0) as pyright,
@@ -657,12 +660,47 @@ def test_handle_check_stops_at_first_failure(
         with pytest.raises(RuntimeError, match="ruff format"):
             _DEVELOP_HANDLERS["check"]([])
 
+        agent_config.assert_called_once_with([], quiet=True)
         ruff_check.assert_called_once_with([], quiet=True)
         ruff_format.assert_called_once_with([], quiet=True)
         for runner in (pyright, ty, numpydoc, pytest_):
             runner.assert_not_called()
 
     captured = capsys.readouterr()
+    assert "agent config passed" in captured.err
     assert "ruff check passed" in captured.err
     assert "Running ruff format." in captured.err
     assert "Running pyright." not in captured.err
+
+
+def test_generate_agent_config_help(capsys: pytest.CaptureFixture[str]) -> None:
+    """--help exits cleanly and mentions --check."""
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["generate-agent-config"](["--help"])
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "--check" in captured.out
+
+
+def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> None:
+    """Develop check's phase list runs 'agent config' before any other phase."""
+    runners = [
+        "_run_agent_config_check",
+        "_run_ruff_check",
+        "_run_ruff_format_check",
+        "_run_pyright",
+        "_run_ty",
+        "_run_numpydoc",
+        "_run_pytest",
+    ]
+    patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
+    for p in patches:
+        p.start()
+    try:
+        _DEVELOP_HANDLERS["check"]([])
+    finally:
+        for p in patches:
+            p.stop()
+
+    captured = capsys.readouterr()
+    assert captured.err.index("Running agent config.") < captured.err.index("Running ruff check.")

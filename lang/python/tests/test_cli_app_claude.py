@@ -335,6 +335,23 @@ def test_scan_claude_config_dedup(tmp_path: Path) -> None:
     assert len(rows) == 1
 
 
+def test_scan_claude_config_follows_symlinked_rules_dir(tmp_path: Path) -> None:
+    """_scan_claude_config follows a .claude/rules symlink to its real target."""
+    real_rules = tmp_path / "real_rules"
+    real_rules.mkdir()
+    (real_rules / "koopa-example.md").write_text('---\npaths:\n  - "**/*.sh"\n---\n\nbody\n')
+
+    claude_dir = tmp_path / ".claude"
+    claude_dir.mkdir()
+    (claude_dir / "rules").symlink_to(real_rules, target_is_directory=True)
+
+    rows = _scan_claude_config(str(claude_dir), str(tmp_path))
+    rel_paths = [r[0] for r in rows]
+    assert ".claude/rules/koopa-example.md" in rel_paths
+    row = next(r for r in rows if r[0] == ".claude/rules/koopa-example.md")
+    assert row[4] is True  # path-scoped
+
+
 def test_find_project_root_finds_claude_dir(tmp_path: Path) -> None:
     """_find_project_root returns the directory containing a .claude/ subdir."""
     proj = tmp_path / "myproject"

@@ -1,0 +1,3 @@
+# koopa
+
+@AGENTS.md

@@ -1,6 +1,6 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "koopa",
-  "displayName": "koopa",
   "version": "0.34.0",
   "description": "Use koopa to install apps, manage shell activation, and troubleshoot the koopa environment in any project.",
   "author": {
@@ -11,5 +11,8 @@
   "repository": "https://github.com/acidgenomics/koopa",
   "license": "Apache-2.0",
   "keywords": ["koopa", "shell", "bootloader", "package-manager"],
-  "skills": "./skills/"
+  "extensions": {
+    "com.github.copilot": {},
+    "com.openai": {}
+  }
 }

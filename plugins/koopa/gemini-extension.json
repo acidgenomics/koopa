@@ -1,0 +1,5 @@
+{
+  "name": "koopa",
+  "version": "0.34.0",
+  "description": "Use koopa to install apps, manage shell activation, and troubleshoot the koopa environment in any project."
+}

@@ -24,8 +24,12 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
 
 1. **Version bump**: already done by `bumpver` (the `Bump version to vX.Y.Z.`
    commit). Confirm `pyproject.toml:3` reads the new version, and confirm the
-   3 plugin manifest versions moved too (`.claude-plugin/marketplace.json` and
-   the two under `plugins/koopa/`), all wired via `[tool.bumpver] file_patterns`.
+   plugin manifest versions moved too: the canonical `plugins/koopa/plugin.json`
+   plus its generated adapters (`.claude-plugin/marketplace.json`,
+   `plugins/koopa/.claude-plugin/plugin.json`,
+   `plugins/koopa/gemini-extension.json`), all wired via
+   `[tool.bumpver] file_patterns`. Confirm with
+   `koopa develop generate-agent-config --check`.
 2. **Write CHANGELOG.md**: prepend a new section directly above the previous
    `## koopa X.Y.Z (...)` heading. See format below.
 3. **Pre-release gate**: all must pass. Run the whole gate in one command:
@@ -78,7 +82,7 @@ if the tag hasn't been created yet for the previous release).
 
 - Include: license changes, new modules, new CLI commands, new apps, significant
   shell/config parity work, performance fixes, version-check improvements.
-- Exclude: Claude config/skills/rules reorganizations (internal tooling), todo
+- Exclude: agent config/skills/rules reorganizations (internal tooling), todo
   updates, merge commits, `Prepare release` housekeeping commits.
 - `New apps:` entries: name, version, one-line description, default/non-default.
 

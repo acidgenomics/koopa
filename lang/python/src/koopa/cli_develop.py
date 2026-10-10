@@ -862,7 +862,7 @@ def _handle_check_skills(args: list[str]) -> None:
     ``_SKILL_BODY_SOFT_MAX_LINES`` lines is reported as an advisory note, not
     an error.
 
-    Point this at a source tree (a repo's own ``.claude/skills``), not at a
+    Point this at a source tree (a repo's own ``.agents/skills``), not at a
     deployed directory shared by several trees (for example ``~/.claude/skills``)
     -- a minority tree's skills would be flagged as prefix outliers there.
 
@@ -887,7 +887,7 @@ def _handle_check_skills(args: list[str]) -> None:
         nargs="*",
         metavar="PATH",
         help=(
-            "skill-directory roots to check (default: <prefix>/.claude/skills, "
+            "skill-directory roots to check (default: <prefix>/.agents/skills, "
             "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills, and any "
             "<prefix>/plugins/*/skills)"
         ),
@@ -899,7 +899,7 @@ def _handle_check_skills(args: list[str]) -> None:
     else:
         prefix = koopa_prefix()
         roots = [
-            os.path.join(prefix, ".claude", "skills"),
+            os.path.join(prefix, ".agents", "skills"),
             os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_claude", "skills"),
             *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
@@ -1294,32 +1294,114 @@ def _run_ruff_format_check(args: list[str], *, quiet: bool = False) -> int:
     return _run_tool(cmd, quiet=quiet)
 
 
+def _run_agent_config_check(args: list[str], *, quiet: bool = False) -> int:
+    """Check that generated agent-config adapters match their canonical sources.
+
+    Parameters
+    ----------
+    args : list[str]
+        Unused; accepted so this function matches the quality-gate
+        phase-runner signature.
+    quiet : bool, default False
+        Unused; accepted for the same reason. This check is always silent
+        on a pass and always prints its problem list on a failure.
+
+    Returns
+    -------
+    int
+        0 if the agent-config layout and generated files are current, 1
+        otherwise.
+    """
+    from pathlib import Path
+
+    from koopa import agent_config
+    from koopa.prefix import koopa_prefix
+
+    del args, quiet
+    problems = agent_config.check(Path(koopa_prefix()))
+    if problems:
+        for line in problems:
+            print(line, file=sys.stderr)
+        return 1
+    return 0
+
+
+def _handle_generate_agent_config(args: list[str]) -> None:
+    """Handle ``koopa develop generate-agent-config``.
+
+    Regenerates the Copilot ``.github/instructions/koopa-*.instructions.md``
+    adapters from ``.agents/rules/koopa-*.md``, and the Claude and Gemini
+    plugin-manifest adapters from the canonical ``plugins/koopa/plugin.json``.
+    See AGENTS.md's "Agent configuration" section for the full layout this
+    enforces.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: ``--check`` reports problems
+        and exits 1 instead of writing.
+    """
+    import argparse
+    from pathlib import Path
+
+    from koopa import agent_config
+    from koopa.alert import alert_success
+    from koopa.prefix import koopa_prefix
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop generate-agent-config",
+        description="Regenerate Copilot instructions and plugin manifests from .agents/.",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="report stale or missing generated files and exit 1 instead of writing them",
+    )
+    parsed = parser.parse_args(args)
+
+    root = Path(koopa_prefix())
+    if parsed.check:
+        if _run_agent_config_check([], quiet=True) != 0:
+            msg = "Agent config is stale. Run: koopa develop generate-agent-config"
+            raise RuntimeError(msg)
+        alert_success("agent config is current.")
+        return
+
+    written, removed = agent_config.write(root)
+    for path in written:
+        print(f"wrote {path}")
+    for path in removed:
+        print(f"removed {path}")
+    alert_success(f"agent config updated [{len(written)} written, {len(removed)} removed].")
+
+
 def _handle_check(args: list[str]) -> None:
     """Handle ``koopa develop check``.
 
-    Runs the full Python quality gate as one command: ``ruff check``,
-    ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
-    ``pytest``. Phases run in cheap-to-expensive order and stop at the first
-    failure, so a fast lint error fails in seconds instead of waiting for
-    pytest. A passing phase's output is hidden; the failing phase prints its
-    full output before the gate raises.
+    Runs the full quality gate as one command: ``agent config``,
+    ``ruff check``, ``ruff format --check``, ``pyright``, ``ty check``,
+    ``numpydoc``, then ``pytest``. Phases run in cheap-to-expensive order and
+    stop at the first failure, so a fast lint error fails in seconds instead
+    of waiting for pytest. A passing phase's output is hidden; the failing
+    phase prints its full output before the gate raises.
 
     Parameters
     ----------
     args : list[str]
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
-        an argument cannot be routed unambiguously across six tools.
+        an argument cannot be routed unambiguously across seven tools.
     """
     from koopa.alert import alert, alert_success
 
     if args:
         msg = (
             "'koopa develop check' takes no arguments. Run the individual "
-            "subcommands instead: ruff-check, ruff-format-check, pyright, "
-            "ty, numpydoc, pytest."
+            "subcommands instead: generate-agent-config --check, ruff-check, "
+            "ruff-format-check, pyright, ty, numpydoc, pytest."
         )
         raise RuntimeError(msg)
     phases: list[tuple[str, Callable[..., int]]] = [
+        ("agent config", _run_agent_config_check),
         ("ruff check", _run_ruff_check),
         ("ruff format", _run_ruff_format_check),
         ("pyright", _run_pyright),
@@ -2628,6 +2710,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "activation-fork-audit": _handle_activation_fork_audit,
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
+    "generate-agent-config": _handle_generate_agent_config,
     "update-docs": _handle_update_docs,
     "generate-completion": lambda _: _handle_generate_completion(),
     "generate-man": _handle_generate_man,

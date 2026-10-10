@@ -11,11 +11,12 @@ administration, bioinformatics, and development environment management.
 koopa develop check
 ```
 
-Runs every check below in one command: `ruff check`, `ruff format --check`,
-`pyright`, `ty check`, `numpydoc`, then `pytest`. Phases run in
-cheap-to-expensive order and stop at the first failure, so a fast lint error
-fails in seconds instead of waiting for pytest. A passing phase's output is
-hidden; the failing phase prints its full output before the gate raises.
+Runs every check below in one command: `agent config`, `ruff check`,
+`ruff format --check`, `pyright`, `ty check`, `numpydoc`, then `pytest`.
+Phases run in cheap-to-expensive order and stop at the first failure, so a
+fast lint error fails in seconds instead of waiting for pytest. A passing
+phase's output is hidden; the failing phase prints its full output before
+the gate raises.
 
 `.githooks/pre-push` runs this gate before every `git push`, through the
 machine's global git hook. Skip once with `KOOPA_NO_PUSH_CHECK=1 git push`.
@@ -81,6 +82,38 @@ lang/python/
 - Use `subprocess.run(..., check=True)`, never `check=False`.
 - XDG base dirs: use `from koopa.xdg import xdg_config_home, xdg_data_home`.
   Never hardcode `~/.config` or `~/.local/share`.
+- Plans and TODOs go in `todo.org` (Org mode) at the repo root, not
+  `.claude/todo.md`.
+- After a correction, route the lesson to its home (skill, path-scoped rule,
+  or slim core) per `.agents/rules/koopa-lessons.md`. Don't accumulate
+  everything in one file.
+
+## Agent configuration
+
+Skills and rules are authored once, under one shared tree, so every agentic
+tool reads the same content instead of a per-vendor copy:
+
+| Path | Owner | Read natively by |
+|---|---|---|
+| `AGENTS.md` | authored | Copilot, Codex, Gemini (via `GEMINI.md`), Claude (via `CLAUDE.md`) |
+| `.agents/skills/koopa-*/SKILL.md` | authored | Codex, Gemini, Copilot CLI |
+| `.agents/rules/koopa-*.md` | authored, `paths:` frontmatter | source for the generated adapter below |
+| `.claude/skills`, `.claude/rules` | symlinks to the two trees above | Claude Code, VS Code Copilot |
+| `.github/instructions/koopa-*.instructions.md` | generated, `applyTo:` | Copilot CLI, VS Code Copilot |
+| `plugins/koopa/plugin.json` | authored, Agent Plugins 1.0 | Copilot, Codex |
+| `plugins/koopa/.claude-plugin/plugin.json`, `plugins/koopa/gemini-extension.json` | generated | Claude, Gemini |
+
+Treat every generated file as owned by `koopa develop generate-agent-config`;
+edit its canonical input and regenerate, never the generated file itself.
+`koopa develop check` runs it in `--check` mode as the gate's first phase.
+
+Codex and Gemini CLI have no path-scoped instruction mechanism. Before
+editing, check `.agents/rules/`: each rule's `paths:` frontmatter names the
+files it governs, and `koopa-lessons.md` (no `paths:`) always applies.
+
+Subagents: none exist yet. When the first one is added, follow the same
+pattern: `.agents/agents/<name>.md` canonical, a `.claude/agents` directory
+symlink to it, and a generated `.github/agents/<name>.agent.md` adapter.
 
 ## Global Behavior Rules
 

@@ -61,7 +61,7 @@ Regenerate the cached Bash function library.
 (koopa-develop-check)=
 ## `develop check`
 
-Run the full Python quality gate: ruff, pyright, ty, numpydoc, pytest.
+Run the full quality gate: agent config, ruff, pyright, ty, numpydoc, pytest.
 
 (koopa-develop-check-app-versions)=
 ## `develop check-app-versions`
@@ -114,6 +114,13 @@ Find files in bin/ that are ignored by git.
 ## `develop format-app-json`
 
 Sort and format app.json.
+
+(koopa-develop-generate-agent-config)=
+## `develop generate-agent-config [--check]`
+
+Regenerate Copilot instructions and plugin manifests from .agents/ and plugins/koopa/plugin.json.
+
+- `--check`
 
 (koopa-develop-generate-completion)=
 ## `develop generate-completion`

@@ -1,0 +1,459 @@
+"""Tests for koopa.agent_config, the cross-harness agent-config generator."""
+
+import json
+import os
+from pathlib import Path
+
+import pytest
+from koopa.agent_config import (
+    apply_to,
+    build_claude_plugin,
+    build_copilot_instruction,
+    build_gemini_extension,
+    check,
+    expected_outputs,
+    layout_errors,
+    orphan_outputs,
+    parse_rule,
+    render_json,
+    write,
+)
+from koopa.prefix import koopa_prefix
+
+_PLUGIN_JSON = {
+    "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+    "name": "koopa",
+    "version": "0.1.0",
+    "description": "desc",
+    "author": {"name": "Acid Genomics", "url": "https://acidgenomics.com"},
+    "homepage": "https://koopa.acidgenomics.com",
+    "repository": "https://github.com/acidgenomics/koopa",
+    "license": "Apache-2.0",
+    "keywords": ["koopa"],
+}
+
+
+def _make_tree(root: Path) -> None:
+    """Build a minimal, layout-valid repo tree under `root`."""
+    (root / ".agents" / "skills").mkdir(parents=True)
+    (root / ".agents" / "rules").mkdir(parents=True)
+    (root / ".claude").mkdir(parents=True)
+    (root / ".claude" / "skills").symlink_to("../.agents/skills", target_is_directory=True)
+    (root / ".claude" / "rules").symlink_to("../.agents/rules", target_is_directory=True)
+
+    (root / ".agents" / "rules" / "koopa-example.md").write_text(
+        '---\npaths:\n  - "lang/bash/**"\n  - "**/*.sh"\n---\n\n# Example Rule\n\nBody text.\n'
+    )
+
+    plugin_dir = root / "plugins" / "koopa"
+    (plugin_dir / "skills" / "koopa-cli").mkdir(parents=True)
+    (plugin_dir / "skills" / "koopa-cli" / "SKILL.md").write_text("---\nname: koopa-cli\n---\n")
+    (plugin_dir / "plugin.json").write_text(json.dumps(_PLUGIN_JSON, indent=2) + "\n")
+
+    (root / "pyproject.toml").write_text('[project]\nversion = "0.1.0"\n')
+    (root / ".claude-plugin").mkdir(parents=True)
+    (root / ".claude-plugin" / "marketplace.json").write_text(
+        json.dumps(
+            {
+                "name": "koopa",
+                "metadata": {"version": "0.1.0"},
+                "plugins": [{"name": "koopa", "source": "./plugins/koopa"}],
+            }
+        )
+    )
+
+
+# ---------------------------------------------------------------------------
+# apply_to
+# ---------------------------------------------------------------------------
+
+
+def test_apply_to_joins_in_order() -> None:
+    """apply_to joins globs with commas, preserving order."""
+    assert apply_to(("lang/bash/**", "**/*.sh", "bin/koopa")) == "lang/bash/**,**/*.sh,bin/koopa"
+
+
+def test_apply_to_empty_is_all() -> None:
+    """An empty paths tuple (an always-loaded rule) maps to '**'."""
+    assert apply_to(()) == "**"
+
+
+@pytest.mark.parametrize("bad_glob", ["a,b", 'a"b'])
+def test_apply_to_rejects_comma_or_quote(bad_glob: str) -> None:
+    """A glob with a comma or quote cannot be expressed as applyTo."""
+    with pytest.raises(ValueError, match="comma-separated"):
+        apply_to((bad_glob,))
+
+
+# ---------------------------------------------------------------------------
+# parse_rule
+# ---------------------------------------------------------------------------
+
+
+def test_parse_rule_rejects_unknown_key(tmp_path: Path) -> None:
+    """A frontmatter key other than 'paths:' is rejected."""
+    path = tmp_path / "koopa-bad.md"
+    path.write_text("---\ndescription: x\n---\n\n# Title\n\nbody\n")
+    with pytest.raises(ValueError, match="unsupported frontmatter key"):
+        parse_rule(path)
+
+
+def test_parse_rule_no_frontmatter(tmp_path: Path) -> None:
+    """A rule with no frontmatter (always-loaded) parses with an empty paths tuple."""
+    path = tmp_path / "koopa-lessons.md"
+    path.write_text("# Lessons\n\nSome lesson text.\n")
+    rule = parse_rule(path)
+    assert rule.paths == ()
+    assert rule.title == "Lessons"
+    assert rule.body == "# Lessons\n\nSome lesson text.\n"
+
+
+def test_parse_rule_with_frontmatter(tmp_path: Path) -> None:
+    """A rule with paths: frontmatter parses the globs, title, and body."""
+    path = tmp_path / "koopa-bash.md"
+    path.write_text('---\npaths:\n  - "lang/bash/**"\n  - "**/*.sh"\n---\n\n# Bash Rules\n\nbody\n')
+    rule = parse_rule(path)
+    assert rule.paths == ("lang/bash/**", "**/*.sh")
+    assert rule.title == "Bash Rules"
+    assert rule.body == "# Bash Rules\n\nbody\n"
+
+
+# ---------------------------------------------------------------------------
+# build_copilot_instruction
+# ---------------------------------------------------------------------------
+
+
+def test_copilot_instruction_frontmatter_first(tmp_path: Path) -> None:
+    """The rendered file opens with YAML frontmatter, then the marker, then the body."""
+    path = tmp_path / "koopa-example.md"
+    path.write_text('---\npaths:\n  - "**/*.sh"\n---\n\n# Example\n\nbody text\n')
+    rule = parse_rule(path)
+    rendered = build_copilot_instruction(rule)
+    assert rendered.startswith('---\napplyTo: "**/*.sh"\n')
+    assert "\n---\n\n<!-- Generated by 'koopa develop generate-agent-config'" in rendered
+    assert rendered.endswith("# Example\n\nbody text\n")
+
+
+def test_copilot_instruction_deterministic(tmp_path: Path) -> None:
+    """Building the same rule twice yields byte-identical output."""
+    path = tmp_path / "koopa-example.md"
+    path.write_text("# Example\n\nbody\n")
+    rule = parse_rule(path)
+    assert build_copilot_instruction(rule) == build_copilot_instruction(rule)
+
+
+# ---------------------------------------------------------------------------
+# manifest builders
+# ---------------------------------------------------------------------------
+
+
+def test_build_claude_plugin_keys() -> None:
+    """The Claude adapter carries the expected key set and skills path."""
+    result = build_claude_plugin(_PLUGIN_JSON)
+    assert set(result) == {
+        "name",
+        "displayName",
+        "version",
+        "description",
+        "author",
+        "license",
+        "homepage",
+        "repository",
+        "keywords",
+        "skills",
+    }
+    assert result["skills"] == "./skills/"
+    assert result["displayName"] == "koopa"
+
+
+def test_build_gemini_extension_keys() -> None:
+    """The Gemini adapter carries exactly name, version, description."""
+    result = build_gemini_extension(_PLUGIN_JSON)
+    assert set(result) == {"name", "version", "description"}
+
+
+def test_render_json_two_space_indent_trailing_newline() -> None:
+    """render_json uses 2-space indentation and ends with one newline."""
+    text = render_json({"a": 1})
+    assert text == '{\n  "a": 1\n}\n'
+
+
+# ---------------------------------------------------------------------------
+# write / check round trip
+# ---------------------------------------------------------------------------
+
+
+def test_write_then_check_round_trip(tmp_path: Path) -> None:
+    """After write(), check() reports no problems."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    assert check(tmp_path) == []
+
+
+def test_check_reports_missing(tmp_path: Path) -> None:
+    """A deleted generated file is reported as missing."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    (tmp_path / ".github" / "instructions" / "koopa-example.instructions.md").unlink()
+    assert any("missing" in p for p in check(tmp_path))
+
+
+def test_check_reports_stale(tmp_path: Path) -> None:
+    """An edited generated file is reported as stale."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    out = tmp_path / ".github" / "instructions" / "koopa-example.instructions.md"
+    out.write_text(out.read_text() + "\nextra\n")
+    assert any("stale" in p for p in check(tmp_path))
+
+
+def test_check_reports_orphan(tmp_path: Path) -> None:
+    """A koopa-prefixed instructions file with no source rule is an orphan."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    orphan = tmp_path / ".github" / "instructions" / "koopa-old.instructions.md"
+    orphan.write_text("stale content\n")
+    assert any("orphaned" in p for p in check(tmp_path))
+
+
+def test_write_removes_orphan_keeps_foreign(tmp_path: Path) -> None:
+    """write() deletes an owned orphan but leaves a hand-written file alone."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    instructions_dir = tmp_path / ".github" / "instructions"
+    orphan = instructions_dir / "koopa-old.instructions.md"
+    orphan.write_text("stale\n")
+    foreign = instructions_dir / "team.instructions.md"
+    foreign.write_text("hand-written\n")
+
+    _written, removed = write(tmp_path)
+
+    assert not orphan.exists()
+    assert foreign.exists()
+    assert Path(".github/instructions/koopa-old.instructions.md") in removed
+
+
+def test_write_is_noop_when_current(tmp_path: Path) -> None:
+    """A second write() with nothing changed writes and removes nothing."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    written, removed = write(tmp_path)
+    assert written == []
+    assert removed == []
+
+
+def test_expected_outputs_builds_both_manifests(tmp_path: Path) -> None:
+    """expected_outputs produces the Claude and Gemini manifest adapters."""
+    _make_tree(tmp_path)
+    outputs = expected_outputs(tmp_path)
+    assert tmp_path / "plugins" / "koopa" / ".claude-plugin" / "plugin.json" in outputs
+    assert tmp_path / "plugins" / "koopa" / "gemini-extension.json" in outputs
+
+
+def test_orphan_outputs_ignores_foreign_files(tmp_path: Path) -> None:
+    """orphan_outputs never reports a file outside the koopa-* namespace."""
+    _make_tree(tmp_path)
+    write(tmp_path)
+    foreign = tmp_path / ".github" / "instructions" / "team.instructions.md"
+    foreign.write_text("hand-written\n")
+    expected = expected_outputs(tmp_path)
+    assert foreign not in orphan_outputs(tmp_path, expected)
+
+
+# ---------------------------------------------------------------------------
+# layout invariants
+# ---------------------------------------------------------------------------
+
+
+def test_layout_valid_tree_has_no_errors(tmp_path: Path) -> None:
+    """A tree built by _make_tree has no layout errors."""
+    _make_tree(tmp_path)
+    assert layout_errors(tmp_path) == []
+
+
+def test_layout_rejects_symlink_in_plugin(tmp_path: Path) -> None:
+    """A symlink anywhere inside plugins/koopa/ is a layout error."""
+    _make_tree(tmp_path)
+    link = tmp_path / "plugins" / "koopa" / "linked.json"
+    link.symlink_to(tmp_path / "pyproject.toml")
+    errors = layout_errors(tmp_path)
+    assert any("must not be a symlink" in e for e in errors)
+
+
+def test_layout_rejects_real_claude_skills_dir(tmp_path: Path) -> None:
+    """.claude/skills must be a symlink, not a real directory."""
+    _make_tree(tmp_path)
+    (tmp_path / ".claude" / "skills").unlink()
+    (tmp_path / ".claude" / "skills").mkdir()
+    errors = layout_errors(tmp_path)
+    assert any(".claude/skills must be a symlink" in e for e in errors)
+
+
+def test_layout_rejects_real_claude_rules_dir(tmp_path: Path) -> None:
+    """.claude/rules must be a symlink, not a real directory."""
+    _make_tree(tmp_path)
+    (tmp_path / ".claude" / "rules").unlink()
+    (tmp_path / ".claude" / "rules").mkdir()
+    errors = layout_errors(tmp_path)
+    assert any(".claude/rules must be a symlink" in e for e in errors)
+
+
+def test_layout_rejects_wrong_symlink_target(tmp_path: Path) -> None:
+    """A .claude/skills symlink pointing anywhere else is a layout error."""
+    _make_tree(tmp_path)
+    (tmp_path / ".claude" / "skills").unlink()
+    (tmp_path / "elsewhere").mkdir()
+    (tmp_path / ".claude" / "skills").symlink_to("../elsewhere", target_is_directory=True)
+    errors = layout_errors(tmp_path)
+    assert any("must point to" in e for e in errors)
+
+
+def test_layout_rejects_legacy_copilot_instructions(tmp_path: Path) -> None:
+    """A lingering .github/copilot-instructions.md is a layout error."""
+    _make_tree(tmp_path)
+    (tmp_path / ".github").mkdir(parents=True)
+    (tmp_path / ".github" / "copilot-instructions.md").write_text("stale\n")
+    errors = layout_errors(tmp_path)
+    assert any("copilot-instructions.md is a legacy file" in e for e in errors)
+
+
+def test_layout_rejects_legacy_github_plugin_manifest(tmp_path: Path) -> None:
+    """A lingering plugins/koopa/.github/plugin/plugin.json is a layout error."""
+    _make_tree(tmp_path)
+    legacy_dir = tmp_path / "plugins" / "koopa" / ".github" / "plugin"
+    legacy_dir.mkdir(parents=True)
+    (legacy_dir / "plugin.json").write_text("{}\n")
+    errors = layout_errors(tmp_path)
+    assert any("plugin/plugin.json is a legacy file" in e for e in errors)
+
+
+def test_layout_rejects_version_mismatch_with_pyproject(tmp_path: Path) -> None:
+    """A plugin.json version that disagrees with pyproject.toml is an error."""
+    _make_tree(tmp_path)
+    (tmp_path / "pyproject.toml").write_text('[project]\nversion = "9.9.9"\n')
+    errors = layout_errors(tmp_path)
+    assert any("pyproject.toml project.version" in e for e in errors)
+
+
+def test_layout_rejects_version_mismatch_with_marketplace(tmp_path: Path) -> None:
+    """A plugin.json version that disagrees with marketplace.json is an error."""
+    _make_tree(tmp_path)
+    (tmp_path / ".claude-plugin" / "marketplace.json").write_text(
+        json.dumps({"metadata": {"version": "9.9.9"}, "plugins": [{"name": "koopa"}]})
+    )
+    errors = layout_errors(tmp_path)
+    assert any("marketplace.json metadata.version" in e for e in errors)
+
+
+def test_layout_rejects_schema_mismatch(tmp_path: Path) -> None:
+    """A plugin.json missing the Agent Plugins 1.0 $schema is an error."""
+    _make_tree(tmp_path)
+    bad = dict(_PLUGIN_JSON)
+    del bad["$schema"]
+    (tmp_path / "plugins" / "koopa" / "plugin.json").write_text(json.dumps(bad) + "\n")
+    errors = layout_errors(tmp_path)
+    assert any("'$schema'" in e for e in errors)
+
+
+def test_layout_rejects_rule_without_prefix(tmp_path: Path) -> None:
+    """A rule filename not starting with 'koopa-' is a layout error."""
+    _make_tree(tmp_path)
+    (tmp_path / ".agents" / "rules" / "other-rule.md").write_text("# Title\n\nbody\n")
+    errors = layout_errors(tmp_path)
+    assert any("must start with 'koopa-'" in e for e in errors)
+
+
+def test_layout_rejects_agents_dir_until_supported(tmp_path: Path) -> None:
+    """A .agents/agents/*.md file is rejected until subagent adapters exist."""
+    _make_tree(tmp_path)
+    agents_dir = tmp_path / ".agents" / "agents"
+    agents_dir.mkdir()
+    (agents_dir / "example.md").write_text("# Agent\n")
+    errors = layout_errors(tmp_path)
+    assert any("subagent adapters are not implemented" in e for e in errors)
+
+
+def test_write_raises_on_layout_error(tmp_path: Path) -> None:
+    """write() refuses to run when the layout is invalid."""
+    _make_tree(tmp_path)
+    (tmp_path / ".claude" / "skills").unlink()
+    (tmp_path / ".claude" / "skills").mkdir()
+    with pytest.raises(ValueError, match="must be a symlink"):
+        write(tmp_path)
+
+
+# ---------------------------------------------------------------------------
+# repo-real tests
+# ---------------------------------------------------------------------------
+
+
+def test_repo_agent_config_is_current() -> None:
+    """The real koopa repo tree has no agent-config problems."""
+    assert check(Path(koopa_prefix())) == []
+
+
+def test_repo_symlink_invariants() -> None:
+    """.claude/skills and .claude/rules are symlinks onto .agents/."""
+    root = Path(koopa_prefix())
+    assert os.readlink(root / ".claude" / "skills") == "../.agents/skills"
+    assert os.readlink(root / ".claude" / "rules") == "../.agents/rules"
+    assert not os.path.islink(root / ".agents" / "skills")
+    assert not os.path.islink(root / ".agents" / "rules")
+
+
+def test_repo_plugin_has_no_symlinks() -> None:
+    """Nothing under plugins/koopa/ is a symlink."""
+    plugin_dir = Path(koopa_prefix()) / "plugins" / "koopa"
+    for path in plugin_dir.rglob("*"):
+        assert not os.path.islink(path), f"{path} is a symlink"
+
+
+def test_repo_manifest_identity() -> None:
+    """name and version agree across plugin.json, pyproject.toml, and marketplace.json."""
+    import tomllib
+
+    root = Path(koopa_prefix())
+    plugin = json.loads((root / "plugins" / "koopa" / "plugin.json").read_text())
+    with open(root / "pyproject.toml", "rb") as fh:
+        pyproject = tomllib.load(fh)
+    marketplace = json.loads((root / ".claude-plugin" / "marketplace.json").read_text())
+
+    assert plugin["version"] == pyproject["project"]["version"]
+    assert plugin["version"] == marketplace["metadata"]["version"]
+    assert plugin["name"] in [p["name"] for p in marketplace["plugins"]]
+
+
+def test_repo_bumpver_covers_manifests() -> None:
+    """bumpver's file_patterns cover all 3 generated manifests, and no legacy entry."""
+    import tomllib
+
+    root = Path(koopa_prefix())
+    with open(root / "pyproject.toml", "rb") as fh:
+        pyproject = tomllib.load(fh)
+    patterns = pyproject["tool"]["bumpver"]["file_patterns"]
+    assert "plugins/koopa/plugin.json" in patterns
+    assert "plugins/koopa/.claude-plugin/plugin.json" in patterns
+    assert "plugins/koopa/gemini-extension.json" in patterns
+    assert "plugins/koopa/.github/plugin/plugin.json" not in patterns
+
+
+def test_repo_thin_adapters() -> None:
+    """CLAUDE.md and GEMINI.md both import AGENTS.md, and no stale Copilot file remains."""
+    root = Path(koopa_prefix())
+    assert "@AGENTS.md" in (root / "CLAUDE.md").read_text()
+    assert "@AGENTS.md" in (root / "GEMINI.md").read_text()
+    assert not (root / ".github" / "copilot-instructions.md").exists()
+
+
+def test_repo_gitattributes_export_ignores() -> None:
+    """GEMINI.md, .agents/, .claude/, and .github/ are all export-ignored."""
+    text = (Path(koopa_prefix()) / ".gitattributes").read_text()
+    for entry in ("GEMINI.md", ".agents/", ".claude/", ".github/"):
+        assert entry in text
+
+
+def test_repo_bash_rule_covers_canonical_skills() -> None:
+    """koopa-bash's paths: list covers the canonical .agents/skills tree."""
+    path = Path(koopa_prefix()) / ".agents" / "rules" / "koopa-bash.md"
+    rule = parse_rule(path)
+    assert ".agents/skills/**/*.md" in rule.paths

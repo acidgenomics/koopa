@@ -5,16 +5,16 @@ description: >-
   installer/version-check machinery. Use when composing koopa commands, reasoning
   about successor/default/completions semantics, importing atuin history, deciding
   whether a tool belongs in koopa, writing a new installer, wiring auto-update
-  for apps with non-version metadata (build IDs, per-platform hashes), debugging
-  GNU/Savannah mirror failures (unreachable hosts, wrong mirror paths, the
-  dead-host circuit breaker) in version-check or source-download code, or
-  reasoning about why an app was (or wasn't) flagged as needing a rebuild —
-  dependency-staleness detection compares installed state, not app.json's target,
-  or debugging a binary-package push/pull issue (why a push must run from the
-  canonical '/opt/koopa' prefix, KOOPA_BUILDER gating, or a tarball uploaded from
-  the wrong prefix that a puller can never extract), or why
-  check-release-notifications misreports a tracked app as untracked after a
-  GitHub org rename.
+  for non-version metadata (build IDs, per-platform hashes), managing the Python
+  interpreter lifecycle (adding/removing a python3.1X entry, timing the
+  alias_of promotion cooldown), debugging GNU/Savannah mirror failures
+  (unreachable hosts, wrong paths, dead-host circuit breaker) in
+  version-check/download code, reasoning about why an app was (or wasn't)
+  flagged as needing a rebuild -- dependency-staleness detection compares
+  installed state, not app.json's target, debugging a binary-package
+  push/pull issue (the '/opt/koopa' prefix invariant, KOOPA_BUILDER gating,
+  or a wrong-prefix tarball a puller can't extract), or why
+  check-release-notifications misreports a renamed-org repo as untracked.
 ---
 
 # koopa App Registry & Command Conventions
@@ -52,6 +52,41 @@ Shell autocomplete definitions are **generated**, not hand-maintained:
 Zsh releases are `5.x.y` (e.g., `5.9.1`). Never a bare integer: `26` is a GNU project
 release number, not a tarball version, and produces a 404 URL. Always verify the resolved
 `src_url` tarball exists at `https://www.zsh.org/pub/` before bumping any zsh version.
+
+## Python Interpreter Version Lifecycle
+
+Every CPython minor version is its own registry entry: `python3.10`,
+`python3.11`, ... `python3.1X`, each `"installer": "python"`. A separate
+generic entry, `"python": {"alias_of": "python3.1X"}`, is the single switch
+for what bare `python`/`pip`/`idle` (no version suffix) resolve to. This is
+independent of any individual version's own `default` field: `default`
+only controls whether `koopa install` (bare sweep) installs that version,
+and several versions can be `default: true` at once (e.g. an older version
+stays `default: true` because other apps declare it as a build dependency,
+even though it is not the `alias_of` target).
+
+CPython ships a new minor version every October. Full lifecycle for a release:
+
+1. **Add immediately**: new entry modeled on the current second-newest
+   version (versioned-only `bin` list, no unversioned aliases, `type: "cli"`
+   unless something already depends on it, in which case `"build_tool"`).
+   Leave the new version's `default` and the `alias_of` target as the team
+   decides per release; do not assume either should flip just because the
+   entry was added.
+2. **Promote `alias_of` only after a cooldown**: hold on the current version
+   until January 1 of the year after the new version's release (a next-year
+   boundary, not a flat day count; see `.agents/rules/koopa-app-json.md` for
+   the enforced rule and the reason: installers across the registry tend to
+   break against a brand-new minor before the ecosystem catches up).
+3. **Remove once python.org marks a version end-of-life**:
+   `koopa develop remove-app python3.1X` (confirm zero reverse dependencies
+   first; the command bumps `revision` on any it finds and reports them).
+
+Worked example (October 2026): python3.15 released, python3.10 reached
+end-of-life the same month. python3.15 was added as a plain `cli` entry;
+python3.10 was removed via `remove-app` (no reverse deps); `alias_of` stayed
+on `python3.14` per the cooldown rule, with promotion to `python3.15` not
+eligible until January 2027.
 
 ## Installer Mechanics
 

@@ -160,12 +160,16 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "bump-revision": "Bump the revision of one or more apps in app.json.",
     "bump-venv-version": "Bump the Python venv version.",
     "cache-functions": "Regenerate the cached Bash function library.",
-    "check": "Run the full Python quality gate: ruff, pyright, ty, numpydoc, pytest.",
+    "check": "Run the full quality gate: agent config, ruff, pyright, ty, numpydoc, pytest.",
     "check-app-versions": "Check upstream versions for all apps in app.json.",
     "check-skills": "Validate SKILL.md frontmatter for cross-CLI compatibility.",
     "circular-dependencies": "Detect circular dependency chains in app.json.",
     "edit-app-json": "Open app.json in the default editor.",
     "format-app-json": "Sort and format app.json.",
+    "generate-agent-config": (
+        "Regenerate Copilot instructions and plugin manifests from .agents/ "
+        "and plugins/koopa/plugin.json."
+    ),
     "generate-completion": "Regenerate shell tab-completion scripts.",
     "generate-docs": "Regenerate the Sphinx CLI reference pages under docs/reference/.",
     "generate-man": "Regenerate the koopa(1) man page.",
@@ -199,6 +203,7 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
 DEVELOP_SYNOPSIS: dict[str, str] = {
     "bump-revision": "name...",
     "check-skills": "[path...]",
+    "generate-agent-config": "[--check]",
     "mirror-src": "name...",
     "push-app-build": "name...",
     "push-installer": "app file [--version version] [--force]",

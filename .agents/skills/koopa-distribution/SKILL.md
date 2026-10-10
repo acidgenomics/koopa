@@ -55,7 +55,7 @@ To test an uncommitted change, use `--worktree-attributes`:
 
 ```sh
 git archive --format=tar --worktree-attributes HEAD | tar -t \
-  | grep -cE '^\.claude/|^\.idea/|^CLAUDE\.md|^AGENTS\.md|^\.github/'
+  | grep -cE '^(\.claude|\.agents|\.idea|\.github)/|^(CLAUDE|AGENTS|GEMINI)\.md'
 ```
 
 After committing, re-run the same check **without** `--worktree-attributes`
