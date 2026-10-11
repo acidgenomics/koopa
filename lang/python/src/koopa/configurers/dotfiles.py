@@ -7,7 +7,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 
 from koopa.alert import alert_info, alert_note, warn
@@ -330,7 +330,7 @@ def _user_owned_remove_paths(
 
 
 @contextmanager
-def _shield_user_files(tree_label: str, paths: list[str]) -> Iterator[None]:
+def _shield_user_files(tree_label: str, paths: list[str]) -> Generator[None]:
     """Temporarily move user-owned files out of the way of a chezmoi apply.
 
     Moves each path in *paths* into a fresh directory under
