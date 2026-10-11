@@ -6,7 +6,7 @@ description: >-
   --graph-lane-limit, push to remote groups, --max-count-oldest, Linux fsmonitor.
   Use when reaching for a recent git command/flag, or unsure whether a 2.55 feature
   exists. For koopa's PR/tag/release workflow use koopa-git; for history rewriting
-  use dotfiles-git-history-surgery.
+  use koopa-git-history-surgery.
 ---
 
 # git 2.55 Reference
@@ -15,7 +15,7 @@ Applies to the git 2.55.0 build installed in koopa (`app/git/2.55.0/`). Every
 command and flag here was verified against the installed build.
 
 For the koopa develop→main PR / conflict / tag workflow, use `koopa-git`.
-For history rewriting with `git filter-repo`, use `dotfiles-git-history-surgery`.
+For history rewriting with `git filter-repo`, use `koopa-git-history-surgery`.
 
 ## Git alias philosophy
 

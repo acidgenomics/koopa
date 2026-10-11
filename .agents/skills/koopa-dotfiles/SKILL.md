@@ -112,7 +112,8 @@ delegation to a repo-tracked hook. `opt/dotfiles/` has no repo-local
 same global hook the koopa repo does.
 
 Confirmed 2026-09-27 on a host with the guard configured: the corporate
-remote allowlist (`git config --get-all koopa.corpRemoteAllowlist`) does not
+remote allowlist (`git config --get-all koopa.allowedRemotes`; the deprecated
+alias is `koopa.corpRemoteAllowlist`) does not
 match the `dotfiles` remote (`github.com/acidgenomics/dotfiles.git`), so a
 push carrying a commit authored under a listed corporate email domain
 (`git config --get-all koopa.corpEmailDomains`) would be blocked. Full

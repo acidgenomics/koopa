@@ -18,6 +18,7 @@ def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.Monke
     monkeypatch.setattr(cli_main, "_koopa_prefix", lambda: "/tmp/koopa")
 
     with (
+        patch("koopa.agent_plugins.update_agent_plugins"),
         patch("koopa.install._acquire_install_lock", return_value=True),
         patch("koopa.install._cleanup_legacy_config"),
         patch("koopa.install._release_install_lock"),

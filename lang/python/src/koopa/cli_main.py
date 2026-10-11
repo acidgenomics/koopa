@@ -947,6 +947,7 @@ def _handle_update(args: argparse.Namespace) -> None:
     _require_git_managed_install()
     _require_slurm_allocation()
     _revert_direnv_env(verbose=args.verbose)
+    from koopa.agent_plugins import update_agent_plugins
     from koopa.install import (
         InstallPlanError,
         _acquire_install_lock,
@@ -989,6 +990,7 @@ def _handle_update(args: argparse.Namespace) -> None:
                 _release_install_lock()
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
+            update_agent_plugins(verbose=args.verbose)
             return
         if mode == "system":
             update_system_apps(names=apps or None, verbose=args.verbose)
@@ -1017,6 +1019,7 @@ def _handle_update(args: argparse.Namespace) -> None:
             acquired = False
             _exec_restart_after_pull()
         _update_venv(_koopa_prefix())
+        update_agent_plugins(verbose=args.verbose)
         remove_alias_app_dirs()
         try:
             remove_unsupported_apps(verbose=args.verbose)

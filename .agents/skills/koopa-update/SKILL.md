@@ -104,6 +104,16 @@ Running `koopa update` (no mode) executes these steps in order:
 2. **Bootstrap + venv refresh, alias/unsupported-app cleanup, symlink repair.**
    Internal housekeeping, no user-visible output unless something changed.
 
+   Right after the venv refresh, `update_agent_plugins()` (`agent_plugins.py`)
+   refreshes the `koopa@koopa` plugin for Claude Code and Copilot CLI. It
+   never installs or enables: the work dotfiles tree declares the plugin
+   (`enabledPlugins`, `extraKnownMarketplaces`) in `~/.claude/settings.json`
+   and `~/.copilot/settings.json`, and a CLI write would drift from chezmoi.
+   It skips a CLI that is not on PATH, notes a missing plugin, and only warns
+   on failure. `koopa update koopa` runs it too. Both CLIs load the plugin
+   live from `plugins/koopa/`, so the `~/.claude/plugins/cache/koopa/` copy is
+   not what loads.
+
 3. **`update_stale_apps()` + `install_missing_default_apps()`** →
    `✓ All installed apps are up to date.` (or individual app update lines if
    anything was stale).
