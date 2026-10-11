@@ -1084,7 +1084,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-09-08",
+    "date": "2026-10-11",
     "default": false,
     "description": "helper tools for building Bioconda packages",
     "installer": "conda-package",
@@ -1101,7 +1101,7 @@
       "https://bioconda.github.io/recipes/bioconda-utils/README.html",
       "https://github.com/bioconda/bioconda-utils/"
     ],
-    "version": "5.0.0"
+    "version": "5.1.0"
   },
   "bison": {
     "build_dependencies": [
@@ -1668,7 +1668,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1676,7 +1676,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.9.14.10"
+    "version": "26.9.16.11"
   },
   "cloc": {
     "bin": [
@@ -2518,7 +2518,7 @@
     ],
     "category": "Dotfile",
     "conda_channel": "conda-forge",
-    "date": "2025-12-02",
+    "date": "2026-10-11",
     "default": true,
     "description": "loads and unloads environment variables per directory",
     "installer": "conda-package",
@@ -2526,7 +2526,7 @@
     "url": [
       "https://github.com/direnv/direnv"
     ],
-    "version": "2.37.1"
+    "version": "2.38.2"
   },
   "docker-credential-helpers": {
     "build_dependencies": [
@@ -2581,7 +2581,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "e04500be05cf2079edf4aef02b6a9a445ba83497"
+    "version": "e75aa81172010cedfd9899860189651de52c2e7a"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -3258,7 +3258,7 @@
     ],
     "category": "Filesystem",
     "conda_channel": "conda-forge",
-    "date": "2026-09-17",
+    "date": "2026-10-11",
     "default": true,
     "description": "command-line fuzzy finder",
     "installer": "conda-package",
@@ -3269,7 +3269,7 @@
     "url": [
       "https://github.com/junegunn/fzf/"
     ],
-    "version": "0.74.4"
+    "version": "0.74.5"
   },
   "gatk": {
     "bin": [
@@ -3752,7 +3752,7 @@
       "glances"
     ],
     "category": "Terminal",
-    "date": "2026-09-27",
+    "date": "2026-10-11",
     "default": false,
     "dependencies": [
       "python"
@@ -3767,7 +3767,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.5.7"
+    "version": "4.5.8"
   },
   "glib": {
     "build_dependencies": [
@@ -5036,7 +5036,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "default": false,
     "description": "terminal UI for git with a simple and intuitive interface",
     "installer": "conda-package",
@@ -5044,7 +5044,7 @@
     "url": [
       "https://github.com/jesseduffield/lazygit/"
     ],
-    "version": "0.66.0"
+    "version": "0.66.1"
   },
   "ldc": {
     "build_dependencies": [
@@ -5092,7 +5092,7 @@
       "make"
     ],
     "category": "Filesystem",
-    "date": "2026-09-13",
+    "date": "2026-10-11",
     "default": true,
     "dependencies": [
       "ncurses",
@@ -5109,7 +5109,7 @@
       "https://github.com/gwsw/less/",
       "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
     ],
-    "version": "710"
+    "version": "711"
   },
   "lesspipe": {
     "bin": [
@@ -6295,7 +6295,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6305,7 +6305,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.7"
+    "version": "2026.10.8"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7357,7 +7357,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "default": false,
     "dependencies": [
       "python"
@@ -7369,7 +7369,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.17.12"
+    "version": "1.17.13"
   },
   "pixi": {
     "bin": [
@@ -7769,7 +7769,7 @@
       "pylint"
     ],
     "category": "Python",
-    "date": "2026-10-03",
+    "date": "2026-10-11",
     "default": false,
     "dependencies": [
       "python"
@@ -7782,7 +7782,7 @@
       "https://github.com/PyCQA/pylint/",
       "https://pypi.org/project/pylint/"
     ],
-    "version": "4.1.2"
+    "version": "4.1.3"
   },
   "pymol": {
     "bin": [
