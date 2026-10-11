@@ -465,7 +465,7 @@ def test_internal_error_fails_open(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """An unexpected exception exits 0 with one line on stderr."""
-    import hook_adapter
+    hook_adapter = importlib.import_module("hook_adapter")
 
     def boom(raw: str) -> list[object]:
         raise RuntimeError("synthetic failure")
