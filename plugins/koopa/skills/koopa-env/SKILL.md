@@ -5,7 +5,8 @@ description: >-
   system, how to check that, and how koopa activation behaves in
   non-interactive and agentic sessions. Use when a command resolves to an
   unexpected binary, when PATH order looks wrong, or when working inside an
-  SSH/CI/agent harness session that needs koopa's tools on PATH.
+  SSH/CI/agent harness session that needs koopa's tools on PATH, when asking
+  which shell an agent runs, or what KOOPA_BUCKET is.
 ---
 
 # koopa Environment
@@ -47,3 +48,41 @@ project itself does not provide.
 <tool>` tells you what is actually first on PATH right now. A tool can be
 installed by koopa and still lose to a Homebrew copy earlier in PATH; checking
 `list` alone will not reveal that.
+
+## Which shell an agent harness runs
+
+Claude Code's Bash tool picks its shell from the `CLAUDE_CODE_SHELL`
+environment variable: a path to a bash or zsh binary. An invalid value silently
+falls back to auto-detection, which uses `$SHELL` when it is bash or zsh. Set it
+in the `env` block of the user-level `settings.json` (for example
+`"CLAUDE_CODE_SHELL": "/path/to/zsh"`). Documented for Claude Code, but not
+re-verified here against your installed version.
+
+Check from inside a session rather than assume:
+
+```sh
+echo "bash=${BASH_VERSION:-none} zsh=${ZSH_VERSION:-none} shell=$SHELL"
+```
+
+Exactly one of the two version variables is set in the shell actually running.
+`$SHELL` is the login shell, not necessarily the running one.
+
+How Copilot CLI and Codex choose their shell is undocumented and unverified
+here. Run the same check there. Remember that the agent shell is
+non-interactive, so koopa activates only with `KOOPA_AUTO_ACTIVATE=1`.
+
+## KOOPA_BUCKET
+
+`KOOPA_BUCKET` is the directory of koopa's dated notes bucket (typically an
+Obsidian vault). `_koopa_activate_today_bucket` resolves it from an existing
+`KOOPA_BUCKET` that is a directory, else `~/bucket`, else `~/Documents/bucket`,
+resolves symlinks, and exports it, then repoints the `~/today` and
+`~/Documents/today` links at `<bucket>/YYYY/MM/DD`. It runs in koopa-activated
+interactive shells only, so a non-interactive agent shell has it only if it
+inherited the variable from the parent process. If no bucket directory exists it
+is not set.
+
+The plugin's `guard_report_path.py` hook reads it first when finding a notes
+vault: `KOOPA_BUCKET`, then `OBSIDIAN_VAULT_DIR`, then Obsidian's own registry
+(`obsidian.json`). With none of those found, the hook does nothing. To see the
+value in use: `[ -n "${KOOPA_BUCKET:-}" ] && echo set || echo unset`.

@@ -62,6 +62,9 @@ def test_skill_layout_and_frontmatter(skill_dir: Path) -> None:
     description = fields["description"]
     assert description
     assert len(description) <= _MAX_DESCRIPTION
+    # Copilot CLI's YAML parser reads a colon followed by a space as a mapping entry and
+    # rejects the whole skill.
+    assert ": " not in description
 
 
 @pytest.mark.parametrize("skill_dir", _SKILL_DIRS, ids=lambda p: p.name)

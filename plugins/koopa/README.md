@@ -29,6 +29,9 @@ To use this plugin from Gemini CLI: `gemini extensions link
 - `skills/koopa-claude-permissions`: Claude Code permission system internals
   (protected paths, permission modes, allow/ask/deny precedence, the PreToolUse
   `permissionDecision` hook contract).
+- `skills/koopa-agent-guards`: what each guard hook blocks or asks about, why, and
+  the correct alternative; the `koopa.*` git config keys; and how not to work
+  around a block.
 - `skills/koopa-git-history-surgery`: rewriting git history safely with
   `git filter-repo` (removing secrets, rewriting author emails, de-duplicating
   commits).
@@ -73,9 +76,10 @@ Code, type `!` before the command).
   every session on the socket, including concurrent jobs you cannot see or
   recover. Use `kill-session -t <name>`.
 - `block_destructive_git.py`: hard-blocks `reset --hard`, `clean -fd`, force
-  pushes, `git rm -rf`, `checkout -- .`, `branch -D`, and pushes to
-  `main`/`master` from the current repo (a push after a `cd` or `git -C` into a
-  different repo is allowed).
+  pushes, `git rm -rf`, `checkout -- .`, `branch -D`, and `git push origin main` or
+  `master` (also `x:main`) from the current repo; `--force-with-lease` and `+refspec` count as
+  force pushes. A push after a `cd` or `git -C` into a different repo is allowed. A push
+  to `main` through another remote name, or a bare `git push`, is not matched by this rule.
 - `audit_secrets_before_push.py`: on a real `git push`, lists the files in the
   outgoing commit range (`@{u}..HEAD`, else `origin/<branch>..HEAD`) and blocks
   when a secret-shaped filename appears (an environment file, `.pem`, `.p12`,
@@ -84,7 +88,8 @@ Code, type `!` before the command).
   git failure (not a repo, no range) never blocks.
 - `guard_installs.py`: blocks commands that install software: `pip`, `npm`,
   `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`,
-  `pacman`, `port`, `R install.packages`, `koopa install`, and `curl ... | sh`.
+  `pacman`, `port`, `pipx`, `poetry add`, `uv add`, `cpan`/`cpanm`, `R install.packages`,
+  `BiocManager::install`, `renv::install`, `koopa install`, and `curl ... | sh`.
   The agent surfaces the command and you install it yourself.
 - `block_uv.py`: blocks `uv` and `uvx` in any form, including inside
   `bash -c`, `ssh host '...'`, and substitutions. When the parser cannot decide
@@ -150,7 +155,7 @@ Code, type `!` before the command).
   too. Loading the file without showing it is allowed: `source .env` or `. .env` at the
   start of a command, and `load_dotenv(...)`. `.envrc`, `.env.example`, `.venv` and a
   `.env/` directory do not match. A tool input it cannot read exits 2 (a credential check
-  must not pass on input it cannot inspect). It is a text check, not a boundary: a glob
+  must not pass on input it cannot inspect), and so does any internal error. It is a text check, not a boundary: a glob
   or `$(printf ...)` gets around it.
 - `guard_sensitive_paths.py`: asks (`permissionDecision: ask`, never denies) before a Bash
   command references `~/Documents` or `~/Downloads`, spelled `~`, `$HOME`, `${HOME}` or
@@ -177,8 +182,10 @@ Code, type `!` before the command).
   hook sees it. On `SessionStart` it adds the line numbers to the session context; on
   `Stop` it exits 2 with the message on stderr, unless `stop_hook_active` is true (the
   loop guard). The message never echoes the keyword. It is left out of the Copilot file
-  because Copilot has no such writer and a `Stop` exit 2 could loop in a harness that
-  does not send `stop_hook_active`.
+  because Copilot is documented to keep approvals in a user-level file outside the
+  repository, and its `agentStop` event expects a JSON `decision`, not exit 2. Copilot's
+  hooks reference documents a `stop_hook_active` flag for `agentStop`; this has not been
+  checked in a live session.
 - `guard_workspace_root.py` (Claude Code only): on `SessionStart`, prints one warning
   line (never blocks) when `$CLAUDE_PROJECT_DIR` is not inside any git repository, since
   a session rooted outside a repo never loads the project's `.mcp.json` and

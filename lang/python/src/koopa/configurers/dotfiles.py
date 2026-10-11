@@ -280,10 +280,200 @@ def _is_chezmoi_copy(path: str, entry: dict[str, object] | None) -> bool:
     return False
 
 
+_ATTRIBUTE_PREFIXES = ("private_", "readonly_", "executable_", "exact_", "empty_", "literal_")
+_GIT_TIMEOUT = 30
+_MAX_HISTORY_VERSIONS = 200
+
+
+def _git_output(args: list[str]) -> bytes | None:
+    """Run ``git`` read-only and return stdout bytes, or ``None`` on any failure.
+
+    Parameters
+    ----------
+    args : list[str]
+        Arguments after ``git``.
+
+    Returns
+    -------
+    bytes | None
+        Standard output, or ``None`` if git is missing, times out, or fails.
+    """
+    try:
+        result = subprocess.run(
+            ["git", *args], capture_output=True, timeout=_GIT_TIMEOUT, check=True
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError):
+        return None
+    return result.stdout
+
+
+def _normalise_source_path(rel_path: str) -> str | None:
+    """Map a chezmoi source path to the target path it would produce.
+
+    Strips chezmoi attribute prefixes on every component and turns a leading
+    ``dot_`` into ``.``.  Returns ``None`` for a template (``.tmpl`` suffix),
+    whose rendered output cannot be compared with a deployed file.
+
+    Parameters
+    ----------
+    rel_path : str
+        Source path relative to the chezmoi source directory.
+
+    Returns
+    -------
+    str | None
+        Target path relative to ``~``, or ``None`` for a template.
+    """
+    if rel_path.endswith(".tmpl"):
+        return None
+    parts: list[str] = []
+    for part in rel_path.split("/"):
+        stripped = True
+        while stripped:
+            stripped = False
+            for prefix in _ATTRIBUTE_PREFIXES:
+                if part.startswith(prefix):
+                    part = part.removeprefix(prefix)
+                    stripped = True
+        if part.startswith("dot_"):
+            part = "." + part.removeprefix("dot_")
+        parts.append(part)
+    return "/".join(parts)
+
+
+class _TreeHistory:
+    """Lazy view of every past and present non-template source file of one tree.
+
+    Parameters
+    ----------
+    source : str
+        Root directory of the tree's chezmoi source directory.
+    """
+
+    def __init__(self, source: str) -> None:
+        self._source = source
+        self._root: str | None = None
+        self._prefix = ""
+        self._index: dict[str, set[str]] | None = None
+
+    def _load(self) -> dict[str, set[str]]:
+        """Build, once, the map of target path to historical source paths."""
+        if self._index is not None:
+            return self._index
+        self._index = {}
+        top = _git_output(["-C", self._source, "rev-parse", "--show-toplevel"])
+        if top is None:
+            return self._index
+        root = os.path.realpath(top.decode(errors="replace").strip())
+        prefix = os.path.relpath(os.path.realpath(self._source), root)
+        prefix = "" if prefix == "." else prefix.replace(os.sep, "/")
+        log = _git_output(
+            [
+                "-C",
+                root,
+                "log",
+                "--all",
+                "--name-only",
+                "-z",
+                "--diff-filter=ACMRD",
+                "--pretty=format:",
+                "--",
+                f":(literal){prefix}" if prefix else ".",
+            ]
+        )
+        if log is None:
+            return self._index
+        self._root = root
+        self._prefix = prefix
+        for raw in log.decode(errors="replace").split("\0"):
+            path = raw.strip("\n")
+            if not path:
+                continue
+            rel = path.removeprefix(prefix + "/") if prefix else path
+            target = _normalise_source_path(rel)
+            if target is not None:
+                self._index.setdefault(target, set()).add(path)
+        return self._index
+
+    def matches(self, rel_target: str, digest: str) -> bool:
+        """Return whether any past version of *rel_target*'s source hashes to *digest*.
+
+        Parameters
+        ----------
+        rel_target : str
+            Target path relative to ``~``.
+        digest : str
+            Hex SHA-256 of the deployed file.
+
+        Returns
+        -------
+        bool
+            ``True`` if some historical version has exactly that content.
+        """
+        sources = self._load().get(rel_target)
+        if not sources or self._root is None:
+            return False
+        checked = 0
+        for path in sorted(sources):
+            commits = _git_output(
+                [
+                    "-C",
+                    self._root,
+                    "log",
+                    "--all",
+                    "--diff-filter=ACMR",
+                    "--format=%H",
+                    "--",
+                    f":(literal){path}",
+                ]
+            )
+            if commits is None:
+                continue
+            for commit in commits.decode(errors="replace").split():
+                if checked >= _MAX_HISTORY_VERSIONS:
+                    return False
+                checked += 1
+                blob = _git_output(["-C", self._root, "show", f"{commit}:{path}"])
+                if blob is not None and hashlib.sha256(blob).hexdigest() == digest:
+                    return True
+        return False
+
+
+def _is_history_copy(path: str, home: str, history: _TreeHistory) -> bool:
+    """Return whether *path* equals some past or present version of its source file.
+
+    Only a regular file (never a symlink) can match.
+
+    Parameters
+    ----------
+    path : str
+        Absolute path to check.
+    home : str
+        Absolute path to the user's home directory.
+    history : _TreeHistory
+        History of the tree being applied.
+
+    Returns
+    -------
+    bool
+        ``True`` if the file's content matches a version in the tree's history.
+    """
+    if os.path.islink(path) or not os.path.isfile(path):
+        return False
+    try:
+        with open(path, "rb") as fh:
+            digest = hashlib.sha256(fh.read()).hexdigest()
+    except OSError:
+        return False
+    rel = os.path.relpath(path, home).replace(os.sep, "/")
+    return history.matches(rel, digest)
+
+
 def _user_owned_remove_paths(
     home: str,
     remove_targets: set[str],
     entry_state: dict[str, dict[str, object]],
+    source: str | None = None,
 ) -> list[str]:
     """Return existing paths under *remove_targets* that are not chezmoi's copy.
 
@@ -292,6 +482,13 @@ def _user_owned_remove_paths(
     checked individually against ``entry_state``.  A symlink is treated as a
     leaf, never descended into — its own record is checked, not its target's
     content.
+
+    A path with no matching chezmoi record (absent, or a different hash) still
+    counts as chezmoi's copy when *source* is given, the path is a regular file,
+    and its content equals any past or present version of the matching
+    non-template source file in the tree's git history.  Such files predate
+    chezmoi's state database, or were copied there, so no record exists.  The
+    history is read lazily, once per call, and only widens what is deletable.
 
     Parameters
     ----------
@@ -303,17 +500,27 @@ def _user_owned_remove_paths(
     entry_state : dict[str, dict[str, object]]
         Map of absolute path to its ``entryState`` record, from
         ``_chezmoi_entry_state``.
+    source : str | None, optional
+        Root directory of the tree's chezmoi source directory, enabling the
+        git-history rule, or ``None`` to disable it.
 
     Returns
     -------
     list[str]
         Absolute paths that exist and are not chezmoi's unmodified copy.
     """
+    history = _TreeHistory(source) if source is not None else None
+
+    def is_copy(path: str) -> bool:
+        if _is_chezmoi_copy(path, entry_state.get(path)):
+            return True
+        return history is not None and _is_history_copy(path, home, history)
+
     kept: list[str] = []
     for target in sorted(remove_targets):
         abs_target = os.path.join(home, target.rstrip("/"))
         if os.path.islink(abs_target) or os.path.isfile(abs_target):
-            if not _is_chezmoi_copy(abs_target, entry_state.get(abs_target)):
+            if not is_copy(abs_target):
                 kept.append(abs_target)
             continue
         if not os.path.isdir(abs_target):
@@ -324,7 +531,7 @@ def _user_owned_remove_paths(
                 dirnames.remove(name)
             for name in [*leaf_dirnames, *filenames]:
                 path = os.path.join(root, name)
-                if not _is_chezmoi_copy(path, entry_state.get(path)):
+                if not is_copy(path):
                     kept.append(path)
     return kept
 
@@ -339,7 +546,9 @@ def _shield_user_files(tree_label: str, paths: list[str]) -> Generator[None]:
     ``with`` block exits (success or exception).  A path recreated by the
     tree's own install script during the block is left alone at restore
     time — the stashed copy stays under the cache directory instead of
-    silently overwriting whatever the tree just wrote.
+    silently overwriting whatever the tree just wrote.  The warning ends with
+    a hint that the files have no chezmoi record and no match in the tree
+    history, so the user may remove old copies by hand.
 
     Parameters
     ----------
@@ -373,6 +582,11 @@ def _shield_user_files(tree_label: str, paths: list[str]) -> Generator[None]:
         os.makedirs(os.path.dirname(stash_path), exist_ok=True)
         shutil.move(path, stash_path)
         stashed.append((path, stash_path))
+    print(
+        "  These have no chezmoi record and no match in the tree history; "
+        "remove them by hand if they are old copies.",
+        file=sys.stderr,
+    )
     try:
         yield
     finally:
@@ -475,8 +689,10 @@ def main(
 ) -> None:
     """Configure dotfiles for current user.
 
-    Links opt_prefix/dotfiles to the dotfiles config prefix, then runs
-    the install script(s).
+    Runs the install script of the public dotfiles app, then of the work and
+    private trees.  Pulls the work and private trees (unless
+    ``KOOPA_DOTFILES_SKIP_PULL`` is set), but never the public tree: it is a
+    version-pinned app, changed only through ``koopa update``.
 
     Parameters
     ----------
@@ -509,7 +725,6 @@ def main(
     if verbose:
         env["KOOPA_VERBOSE"] = "1"
     if not os.environ.get("KOOPA_DOTFILES_SKIP_PULL"):
-        git_pull_safe(opt_dotfiles)
         git_pull_safe(dotfiles_work_prefix)
         git_pull_safe(dotfiles_private_prefix)
     chezmoi = locate("chezmoi")
@@ -527,7 +742,7 @@ def main(
     _print_chezmoi_status(chezmoi, main_source, env)
     main_removes = _chezmoiremove_targets(chezmoi, main_source, env)
     main_state = _chezmoi_entry_state(chezmoi, main_source, env)
-    main_shielded = _user_owned_remove_paths(home, main_removes, main_state)
+    main_shielded = _user_owned_remove_paths(home, main_removes, main_state, main_source)
     with _shield_user_files("main", main_shielded):
         subprocess.run([install_script], check=True, env=env)
     work_install_script = os.path.join(dotfiles_work_prefix, "install")
@@ -541,7 +756,7 @@ def main(
         _warn_remove_manage_conflict("work", main_targets, work_removes)
         _print_chezmoi_status(chezmoi, work_source, env, config=wcfg)
         work_state = _chezmoi_entry_state(chezmoi, work_source, env, config=wcfg)
-        work_shielded = _user_owned_remove_paths(home, work_removes, work_state)
+        work_shielded = _user_owned_remove_paths(home, work_removes, work_state, work_source)
         with _shield_user_files("work", work_shielded):
             subprocess.run([work_install_script], check=True, env=env)
     private_install_script = os.path.join(dotfiles_private_prefix, "install")
@@ -555,7 +770,9 @@ def main(
         _warn_remove_manage_conflict("private", main_targets, private_removes)
         _print_chezmoi_status(chezmoi, private_source, env, config=pcfg)
         private_state = _chezmoi_entry_state(chezmoi, private_source, env, config=pcfg)
-        private_shielded = _user_owned_remove_paths(home, private_removes, private_state)
+        private_shielded = _user_owned_remove_paths(
+            home, private_removes, private_state, private_source
+        )
         with _shield_user_files("private", private_shielded):
             subprocess.run([private_install_script], check=True, env=env)
     # Hot-reload any running tmux server so rewritten color confs take effect

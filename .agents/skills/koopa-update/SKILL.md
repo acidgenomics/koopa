@@ -109,10 +109,16 @@ Running `koopa update` (no mode) executes these steps in order:
    never installs or enables: the work dotfiles tree declares the plugin
    (`enabledPlugins`, `extraKnownMarketplaces`) in `~/.claude/settings.json`
    and `~/.copilot/settings.json`, and a CLI write would drift from chezmoi.
-   It skips a CLI that is not on PATH, notes a missing plugin, and only warns
-   on failure. `koopa update koopa` runs it too. Both CLIs load the plugin
-   live from `plugins/koopa/`, so the `~/.claude/plugins/cache/koopa/` copy is
-   not what loads.
+   It skips, with no output, a CLI that is not on PATH or does not have the
+   plugin installed (a CLI picks up a declared plugin at its first session,
+   so a fresh machine is quiet until then). It refreshes only when the
+   committed `plugins/koopa` and `.claude-plugin` files changed since that
+   CLI's last refresh, recorded in
+   `$XDG_CACHE_HOME/koopa/agent-plugin-refresh.json`, and it only warns on
+   failure (a failure is not recorded, so the next update tries again).
+   `koopa update koopa` runs it too. Both CLIs load the plugin live from
+   `plugins/koopa/`, so the `~/.claude/plugins/cache/koopa/` copy is not what
+   loads.
 
 3. **`update_stale_apps()` + `install_missing_default_apps()`** →
    `✓ All installed apps are up to date.` (or individual app update lines if

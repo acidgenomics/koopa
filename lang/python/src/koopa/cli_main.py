@@ -882,57 +882,25 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
             _release_install_lock()
 
 
-def _retry_recoverable_failures(
-    root_failures: list[str], non_retryable: list[str], *, verbose: bool
-) -> str | None:
-    """Retry failed root apps, skipping ones whose failure cannot succeed again.
-
-    A failure whose log matches a known non-retryable pattern (e.g. a missing
-    distribution on the configured pip index) cannot succeed on a second,
-    identical attempt, so it is excluded from the retry.
+def _failed_apps_summary(failed: list[str]) -> str | None:
+    """Return the one-line summary reported at the end of an update with failures.
 
     Parameters
     ----------
-    root_failures : list[str]
-        Names of root apps that failed during the initial install attempt.
-    non_retryable : list[str]
-        Subset of ``root_failures`` whose failure matches a known
-        non-retryable pattern, and which is excluded from the retry.
-    verbose : bool
-        Enable verbose installer output.
+    failed : list[str]
+        Names of root apps that failed during the update.
 
     Returns
     -------
     str | None
-        Error message if a non-retryable failure remains unresolved or the
-        retry itself fails, else None.
+        ``"N app(s) failed: a, b."`` when *failed* is non-empty, else None.
     """
-    from koopa.alert import alert
-    from koopa.install import InstallPlanError, retry_failed_apps
     from koopa.text import plural
 
-    retryable_failures = sorted(set(root_failures) - set(non_retryable))
-    if non_retryable:
-        n = len(non_retryable)
-        alert(
-            f"Not retrying {n} {plural(n, 'app')} whose failure cannot succeed "
-            f"on retry: {', '.join(sorted(non_retryable))}."
-        )
-    # Retry apps that failed above unconditionally (not gated on a missing
-    # opt/ symlink) -- a binary pull can 404 on a brand-new OS/arch slug or a
-    # build dep that only finishes rebuilding later in this same run, and
-    # succeed cleanly once retried.
-    if retryable_failures:
-        try:
-            retry_failed_apps(retryable_failures, verbose=verbose)
-        except InstallPlanError as exc:
-            return str(exc)
-        except Exception as exc:
-            return str(exc)
-    if non_retryable:
-        n = len(non_retryable)
-        return f"{n} {plural(n, 'app')} failed: {', '.join(sorted(non_retryable))}."
-    return None
+    if not failed:
+        return None
+    n = len(failed)
+    return f"{n} {plural(n, 'app')} failed: {', '.join(sorted(failed))}."
 
 
 def _handle_update(args: argparse.Namespace) -> None:
@@ -1032,26 +1000,21 @@ def _handle_update(args: argparse.Namespace) -> None:
             warn(f"Repairing app symlinks failed: {exc}")
         install_error: str | None = None
         root_failures: list[str] = []
-        non_retryable: list[str] = []
         try:
             update_stale_apps(verbose=args.verbose)
         except InstallPlanError as exc:
             root_failures = list(exc.failed_apps)
-            non_retryable = list(exc.non_retryable)
         except Exception as exc:
             install_error = str(exc)
         try:
             install_missing_default_apps(verbose=args.verbose)
         except InstallPlanError as exc:
             root_failures = sorted(set(root_failures) | set(exc.failed_apps))
-            non_retryable = sorted(set(non_retryable) | set(exc.non_retryable))
         except Exception as exc:
             if install_error is None:
                 install_error = str(exc)
-        if install_error is None and (root_failures or non_retryable):
-            install_error = _retry_recoverable_failures(
-                root_failures, non_retryable, verbose=args.verbose
-            )
+        if install_error is None:
+            install_error = _failed_apps_summary(root_failures)
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:

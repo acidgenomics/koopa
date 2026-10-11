@@ -15,9 +15,10 @@ under the top-level `reports/` of the project (`CLAUDE_PROJECT_DIR`, else the
 working directory). `src/reports/builder.py` is never touched. The deny reason
 names the vault path to use instead.
 
-Fails open on empty or malformed input (via `hook_adapter.targets_or_deny`), so a
-bug here cannot block unrelated work. Also covers Copilot CLI's `apply_patch`,
-whose patch envelope can name several files, including a moved file's destination.
+Fails open on empty or non-JSON stdin (via `hook_adapter.targets_or_deny`). A payload
+whose tool input it cannot read exits 2, because a guard should not pass on input it
+cannot inspect. Also covers Copilot CLI's `apply_patch`, whose patch envelope can name
+several files, including a moved file's destination.
 A delete, or the source side of a move, is never checked: that is the migration
 this hook exists to encourage.
 

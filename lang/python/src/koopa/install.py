@@ -36,6 +36,7 @@ from koopa.prefix import (
 from koopa.system import (
     arch2,
     cpu_count,
+    go_network_env,
     is_admin,
     is_linux,
     is_macos,
@@ -1450,6 +1451,7 @@ def build_go_package(
     env["GOBIN"] = gobin
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
+    go_network_env(env)
     build_args: list[str] = []
     if ldflags:
         build_args.extend(["-ldflags", ldflags])
@@ -1500,6 +1502,7 @@ def install_go_package(
     env["GOBIN"] = gobin
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
+    go_network_env(env)
     try:
         subprocess.run([go, "install", url], env=env, check=True)
     finally:
@@ -2713,57 +2716,6 @@ def install_missing_default_apps(*, verbose: bool = False) -> None:
     alert_success("All missing default apps installed.")
 
 
-def retry_failed_apps(names: list[str], *, verbose: bool = False) -> None:
-    """Retry a specific list of apps that failed earlier in the same update run.
-
-    A binary pull can 404 transiently (e.g. a brand-new OS/arch slug with no
-    binary pushed yet, or a build dependency that finishes rebuilding only
-    later in the same run) and then succeed once retried. Unlike
-    ``install_missing_default_apps``, *names* is retried unconditionally,
-    regardless of whether the app's ``opt/`` symlink still exists from its
-    prior (older) install -- an existence check would silently exclude an
-    already-installed app that merely failed to update.
-
-    Parameters
-    ----------
-    names : list[str]
-        App names to retry.
-    verbose : bool, optional
-        If True, run installs with verbose build output.
-    """
-    from koopa.alert import alert, alert_success
-
-    if not names or not is_owner():
-        return
-    apps_with_reasons = [(a, "retry after failure") for a in names]
-    plan, dep_map = _compute_install_plan(apps_with_reasons)
-    apps = [a for a, _ in plan]
-    n = len(apps)
-    label = "app" if n == 1 else "apps"
-    display = ", ".join(apps[:10]) + f", ... and {n - 10} more" if n > 10 else ", ".join(apps)
-    alert(f"Retrying {n} failed {label}: {display}.")
-    acquired = _acquire_install_lock()
-    _binary = _can_install_binary()
-    _push = _can_push_binary()
-    try:
-        _run_install_plan(
-            plan,
-            dep_map,
-            make_config=lambda app, _reason: InstallConfig(
-                name=app,
-                deps=False,
-                verbose=verbose,
-                binary=_binary,
-                push=_push,
-                passthrough_args=_build_passthrough_args(app),
-            ),
-        )
-    finally:
-        if acquired:
-            _release_install_lock()
-    alert_success(f"All {n} retried {label} installed.")
-
-
 def install_shared_apps(mode: str = "default") -> None:
     """Build and install shared apps from source.
 
@@ -3832,12 +3784,9 @@ class InstallPlanError(RuntimeError):
     """Raised when one or more root apps fail during a batch install plan.
 
     Carries the specific app names that failed at the plan's root (excluding
-    apps skipped only because a dependency failed), so a caller can retry
+    apps skipped only because a dependency failed), so a caller can report
     exactly those apps instead of re-deriving the failure set by parsing the
-    formatted message text. ``non_retryable`` is the subset of those apps
-    whose failure log matches a pattern that cannot succeed on a second
-    attempt (e.g. a missing distribution on the configured pip index), so a
-    caller can skip retrying them instead of reprinting the same failure.
+    formatted message text.
 
     Parameters
     ----------
@@ -3845,49 +3794,11 @@ class InstallPlanError(RuntimeError):
         Human-readable error message.
     failed_apps : list[str]
         Names of root apps that failed.
-    non_retryable : list[str] | None, optional
-        Subset of *failed_apps* whose failure cannot succeed on retry.
     """
 
-    def __init__(
-        self, message: str, failed_apps: list[str], non_retryable: list[str] | None = None
-    ) -> None:
+    def __init__(self, message: str, failed_apps: list[str]) -> None:
         super().__init__(message)
         self.failed_apps = failed_apps
-        self.non_retryable = non_retryable or []
-
-
-# A build log matching one of these patterns cannot succeed on a second,
-# identical attempt: the requested version simply is not present on the
-# index/registry that was queried, so retrying only reprints the same failure.
-_NON_RETRYABLE_LOG_PATTERNS = (
-    "no matching distribution found",
-    "could not find a version that satisfies",
-)
-
-
-def _is_retryable_failure(message: str, tail: str) -> bool:
-    """Return whether a failed app's build output looks worth retrying.
-
-    Classifies from the log tail, not the raised exception message alone --
-    for a ``pip install`` failure, the exception message is only ``"Command
-    '[...]' returned non-zero exit status 1."`` and never holds the actual
-    ``pip`` error text.
-
-    Parameters
-    ----------
-    message : str
-        Exception message raised by the failed install.
-    tail : str
-        Tail of the captured build log for the failed install.
-
-    Returns
-    -------
-    bool
-        True if the failure looks worth retrying.
-    """
-    combined = f"{message}\n{tail}".lower()
-    return not any(pattern in combined for pattern in _NON_RETRYABLE_LOG_PATTERNS)
 
 
 def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
@@ -3975,7 +3886,6 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
     done: set[str] = set()
     failed: set[str] = set()
     fail_msgs: dict[str, str] = {}
-    fail_tails: dict[str, str] = {}
 
     cpu_busy = False
     io_running = 0
@@ -4167,8 +4077,6 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                         _clear()
                     failed.add(app)
                     fail_msgs[app] = _error
-                    if _tail:
-                        fail_tails[app] = _tail
                     alert(f"Failed to install {app}: {_error}")
                     if _tail:
                         sys.stderr.write(_tail)
@@ -4196,11 +4104,6 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         root_failures = sorted(fail_msgs)
         skipped = sorted(failed - set(root_failures))
         n_root_failures = len(root_failures)
-        non_retryable = [
-            name
-            for name in root_failures
-            if not _is_retryable_failure(fail_msgs[name], fail_tails.get(name, ""))
-        ]
         parts = [
             f"{n_root_failures} {plural(n_root_failures, 'app')} failed: "
             f"{', '.join(root_failures)}."
@@ -4213,7 +4116,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
                 f"{len(not_attempted)} not attempted (stopped after first failure): "
                 f"{', '.join(not_attempted)}."
             )
-        raise InstallPlanError(" ".join(parts), root_failures, non_retryable)
+        raise InstallPlanError(" ".join(parts), root_failures)
     _save_pending_plan([], source=source)
 
 

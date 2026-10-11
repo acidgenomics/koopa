@@ -84,7 +84,9 @@ commit pushed.
    repo) → `koopa install dotfiles` (re-clones at the new SHA into a new
    `app/dotfiles/<short-sha>/` and relinks `opt/dotfiles/` to it; the version-check
    step above only patches the `app.json` pin, it does not touch the local clone or
-   symlink) → `koopa configure user dotfiles` (re-renders).
+   symlink) → `koopa configure user dotfiles` (re-renders). `koopa configure user
+   dotfiles` never pulls the public tree: it changes only through the pinned app
+   (`koopa update`); it does pull the work and private trees.
 
 **Known failure mode:** shipping only the koopa-side half of a fix (e.g. a Python
 probe bug) looks fully resolved once it's live, because most such bugs are
