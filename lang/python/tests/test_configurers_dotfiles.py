@@ -902,14 +902,14 @@ def test_main_pulls_work_and_private_but_never_public(
     pulled: list[str] = []
     monkeypatch.setattr("koopa.configurers.dotfiles.git_pull_safe", pulled.append)
 
-    class _Stop(Exception):
+    class _StopError(Exception):
         pass
 
     def stop(name: str) -> str:
-        raise _Stop(name)
+        raise _StopError(name)
 
     monkeypatch.setattr("koopa.configurers.dotfiles.locate", stop)
-    with pytest.raises(_Stop):
+    with pytest.raises(_StopError):
         main(name="dotfiles", platform="macos", mode="user")
     assert pulled == [
         str(home / ".config" / "koopa" / "dotfiles-work"),

@@ -199,7 +199,7 @@ opt/dotfiles/chezmoi/.chezmoiremove
 On `chezmoi apply --source=~/.local/share/koopa/opt/dotfiles/chezmoi`, the listed
 targets are removed from `~`. No manual `rm` needed.
 
-`koopa configure dotfiles` shields a listed file from deletion unless it is chezmoi's own
+`koopa configure user dotfiles` shields a listed file from deletion unless it is chezmoi's own
 copy: its hash matches chezmoi's record, or (when there is no record) it equals any past
 or present version of the matching non-template source file in the tree's git history.
 Anything else is kept and reported as "not written by chezmoi".

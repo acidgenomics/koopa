@@ -327,7 +327,8 @@ def _normalise_source_path(rel_path: str) -> str | None:
     if rel_path.endswith(".tmpl"):
         return None
     parts: list[str] = []
-    for part in rel_path.split("/"):
+    for component in rel_path.split("/"):
+        part = component
         stripped = True
         while stripped:
             stripped = False
@@ -357,7 +358,13 @@ class _TreeHistory:
         self._index: dict[str, set[str]] | None = None
 
     def _load(self) -> dict[str, set[str]]:
-        """Build, once, the map of target path to historical source paths."""
+        """Build, once, the map of target path to historical source paths.
+
+        Returns
+        -------
+        dict[str, set[str]]
+            Target path relative to ``~`` mapped to repo-relative source paths.
+        """
         if self._index is not None:
             return self._index
         self._index = {}
