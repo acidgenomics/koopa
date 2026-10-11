@@ -61,7 +61,7 @@ Regenerate the cached Bash function library.
 (koopa-develop-check)=
 ## `develop check`
 
-Run the full quality gate: agent config, ruff, pyright, ty, numpydoc, pytest.
+Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest.
 
 (koopa-develop-check-app-versions)=
 ## `develop check-app-versions`
@@ -189,6 +189,11 @@ Stage a downloaded vendor installer tarball to the artifacts bucket.
 
 - `--version`
 - `--force`
+
+(koopa-develop-pyrefly)=
+## `develop pyrefly`
+
+Run the pyrefly type checker on the Python source tree.
 
 (koopa-develop-pyright)=
 ## `develop pyright`

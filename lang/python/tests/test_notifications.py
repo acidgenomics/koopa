@@ -36,7 +36,7 @@ _NOTIFICATIONS = [
     {"repo": "samtools/samtools", "title": "1.24", "url": "u9"},
 ]
 
-_TAG_DATA = {
+_TAG_DATA: dict[str, dict[str, object]] = {
     "u1": {"tag_name": "v0.4.1", "prerelease": False},
     "u2": {"tag_name": "v2.14.0", "prerelease": False},
     "u3": {"tag_name": "2.5.1", "prerelease": False},

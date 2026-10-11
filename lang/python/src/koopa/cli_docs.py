@@ -160,7 +160,9 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "bump-revision": "Bump the revision of one or more apps in app.json.",
     "bump-venv-version": "Bump the Python venv version.",
     "cache-functions": "Regenerate the cached Bash function library.",
-    "check": "Run the full quality gate: agent config, ruff, pyright, ty, numpydoc, pytest.",
+    "check": (
+        "Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest."
+    ),
     "check-app-versions": "Check upstream versions for all apps in app.json.",
     "check-skills": "Validate SKILL.md frontmatter for cross-CLI compatibility.",
     "circular-dependencies": "Detect circular dependency chains in app.json.",
@@ -195,6 +197,7 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "find-ignored-bin-files": "Find files in bin/ that are ignored by git.",
     "numpydoc": "Run the numpydoc docstring validator on the Python source tree.",
     "orphan-apps": "Find apps in app.json that no other app depends on.",
+    "pyrefly": "Run the pyrefly type checker on the Python source tree.",
     "pyright": "Run the pyright type checker on the Python source tree.",
     "reset-revisions": "Remove the revision key from all apps in app.json.",
     "ty": "Run the ty type checker on the Python source tree.",

@@ -42,6 +42,7 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    ruff format --check lang/python/src/
    pyright lang/python/src/
    ty check lang/python/src/koopa
+   pyrefly check
    numpydoc lint $(find lang/python/src/koopa -name '*.py')
    pytest lang/python/tests/
    ```

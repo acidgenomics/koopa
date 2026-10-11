@@ -1209,6 +1209,47 @@ def _handle_ty(args: list[str]) -> None:
     sys.exit(_run_ty(args))
 
 
+def _run_pyrefly(args: list[str], *, quiet: bool = False) -> int:
+    """Run ``pyrefly check`` over the koopa source tree.
+
+    Passes ``--config`` explicitly, since ``pyrefly`` otherwise finds
+    ``[tool.pyrefly]`` by walking up from the caller's working directory, and
+    silently misses it when that directory is outside the koopa checkout.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyrefly check`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``pyrefly check``.
+    """
+    from koopa.prefix import koopa_prefix
+
+    pyrefly_cmd = shutil.which("pyrefly")
+    if pyrefly_cmd is None:
+        msg = "pyrefly is not installed."
+        raise RuntimeError(msg)
+    config = os.path.join(koopa_prefix(), "pyproject.toml")
+    cmd = [pyrefly_cmd, "check", "--config", config, *args]
+    return _run_tool(cmd, quiet=quiet)
+
+
+def _handle_pyrefly(args: list[str]) -> None:
+    """Handle ``koopa develop pyrefly``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyrefly check`` invocation.
+    """
+    sys.exit(_run_pyrefly(args))
+
+
 def _run_numpydoc(args: list[str], *, quiet: bool = False) -> int:
     """Run ``numpydoc lint`` over the koopa source tree.
 
@@ -1386,7 +1427,7 @@ def _handle_check(args: list[str]) -> None:
 
     Runs the full quality gate as one command: ``agent config``,
     ``ruff check``, ``ruff format --check``, ``pyright``, ``ty check``,
-    ``numpydoc``, then ``pytest``. Phases run in cheap-to-expensive order and
+    ``pyrefly check``, ``numpydoc``, then ``pytest``. Phases run in cheap-to-expensive order and
     stop at the first failure, so a fast lint error fails in seconds instead
     of waiting for pytest. A passing phase's output is hidden; the failing
     phase prints its full output before the gate raises.
@@ -1395,7 +1436,7 @@ def _handle_check(args: list[str]) -> None:
     ----------
     args : list[str]
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
-        an argument cannot be routed unambiguously across seven tools.
+        an argument cannot be routed unambiguously across eight tools.
     """
     from koopa.alert import alert, alert_success
 
@@ -1403,7 +1444,7 @@ def _handle_check(args: list[str]) -> None:
         msg = (
             "'koopa develop check' takes no arguments. Run the individual "
             "subcommands instead: generate-agent-config --check, ruff-check, "
-            "ruff-format-check, pyright, ty, numpydoc, pytest."
+            "ruff-format-check, pyright, ty, pyrefly, numpydoc, pytest."
         )
         raise RuntimeError(msg)
     phases: list[tuple[str, Callable[..., int]]] = [
@@ -1412,6 +1453,7 @@ def _handle_check(args: list[str]) -> None:
         ("ruff format", _run_ruff_format_check),
         ("pyright", _run_pyright),
         ("ty check", _run_ty),
+        ("pyrefly check", _run_pyrefly),
         ("numpydoc", _run_numpydoc),
         ("pytest", _run_pytest),
     ]
@@ -2726,6 +2768,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "pytest": _handle_pytest,
     "pyright": _handle_pyright,
     "ty": _handle_ty,
+    "pyrefly": _handle_pyrefly,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),

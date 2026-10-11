@@ -639,6 +639,7 @@ def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
         "_run_ruff_format_check",
         "_run_pyright",
         "_run_ty",
+        "_run_pyrefly",
         "_run_numpydoc",
         "_run_pytest",
     ]
@@ -665,6 +666,7 @@ def test_handle_check_stops_at_first_failure(
         patch("koopa.cli_develop._run_ruff_format_check", return_value=1) as ruff_format,
         patch("koopa.cli_develop._run_pyright", return_value=0) as pyright,
         patch("koopa.cli_develop._run_ty", return_value=0) as ty,
+        patch("koopa.cli_develop._run_pyrefly", return_value=0) as pyrefly,
         patch("koopa.cli_develop._run_numpydoc", return_value=0) as numpydoc,
         patch("koopa.cli_develop._run_pytest", return_value=0) as pytest_,
     ):
@@ -674,7 +676,7 @@ def test_handle_check_stops_at_first_failure(
         agent_config.assert_called_once_with([], quiet=True)
         ruff_check.assert_called_once_with([], quiet=True)
         ruff_format.assert_called_once_with([], quiet=True)
-        for runner in (pyright, ty, numpydoc, pytest_):
+        for runner in (pyright, ty, pyrefly, numpydoc, pytest_):
             runner.assert_not_called()
 
     captured = capsys.readouterr()
@@ -701,6 +703,7 @@ def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> No
         "_run_ruff_format_check",
         "_run_pyright",
         "_run_ty",
+        "_run_pyrefly",
         "_run_numpydoc",
         "_run_pytest",
     ]

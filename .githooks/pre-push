@@ -1,6 +1,6 @@
 #!/bin/sh
 # Run koopa's full Python quality gate ('koopa develop check') before every
-# push: ruff check, ruff format --check, pyright, ty check, numpydoc, pytest.
+# push: ruff check, ruff format --check, pyright, ty check, pyrefly check, numpydoc, pytest.
 #
 # No per-clone setup. The global pre-push hook in core.hooksPath
 # (opt/dotfiles/chezmoi/dot_config/git/hooks/executable_pre-push) runs this

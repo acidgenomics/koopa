@@ -271,7 +271,7 @@ Bump the Python venv version.
 Regenerate the cached Bash function library.
 .TP
 \fBdevelop check\fR
-Run the full quality gate: agent config, ruff, pyright, ty, numpydoc, pytest.
+Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest.
 .TP
 \fBdevelop check\-app\-versions\fR
 Check upstream versions for all apps in app.json.
@@ -335,6 +335,9 @@ Push all stale application builds to the binary cache.
 .TP
 \fBdevelop push\-installer\fR \fIapp file [--version version] [--force]\fR
 Stage a downloaded vendor installer tarball to the artifacts bucket.
+.TP
+\fBdevelop pyrefly\fR
+Run the pyrefly type checker on the Python source tree.
 .TP
 \fBdevelop pyright\fR
 Run the pyright type checker on the Python source tree.

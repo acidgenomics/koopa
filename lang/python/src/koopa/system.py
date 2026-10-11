@@ -285,7 +285,7 @@ def cpu_count() -> int:
         if value.isdigit() and int(value) > 0:
             num = int(value)
             break
-    avail = 0
+    avail: int = 0
     # Guard on sys.platform (not hasattr) so pyright and ty resolve
     # sched_getaffinity without ignores; runtime result is identical, since
     # the attribute genuinely does not exist outside Linux.

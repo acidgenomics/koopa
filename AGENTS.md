@@ -12,7 +12,7 @@ koopa develop check
 ```
 
 Runs every check below in one command: `agent config`, `ruff check`,
-`ruff format --check`, `pyright`, `ty check`, `numpydoc`, then `pytest`.
+`ruff format --check`, `pyright`, `ty check`, `pyrefly check`, `numpydoc`, then `pytest`.
 Phases run in cheap-to-expensive order and stop at the first failure, so a
 fast lint error fails in seconds instead of waiting for pytest. A passing
 phase's output is hidden; the failing phase prints its full output before
@@ -42,6 +42,7 @@ Use `ruff format` (no `--check`) only to apply fixes, not to verify the gate.
 ```sh
 pyright lang/python/src/
 ty check lang/python/src/koopa
+pyrefly check
 ```
 
 ### Docstring Validation
