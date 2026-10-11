@@ -31,10 +31,15 @@ Before committing any change inside `opt/dotfiles/`, always check:
 ```sh
 cd opt/dotfiles
 git status         # "(HEAD detached at <sha>)" means detached
-git checkout main  # re-attach to main before committing
+git switch develop # re-attach to the working branch before committing
 ```
 
 Then commit normally and push to `origin` (`github.com/acidgenomics/dotfiles`).
+
+The checkout is replaced when `koopa update` moves the pin: the update installs a new
+`app/dotfiles/<sha>` directory and prunes the old one. Push every commit and bump the
+`dotfiles` version in `etc/koopa/app.json` before you run `koopa update`, or work from a
+separate clone of the repository and use `opt/dotfiles` only to read.
 
 ## License
 

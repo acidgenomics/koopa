@@ -70,8 +70,10 @@ lang/python/
 
 - `etc/koopa/app.json`: central app registry (version, default, installer).
   Edit freely; run `koopa develop format-app-json` after changes; bump `revision`.
-- Dotfiles: chezmoi-managed, source at `opt/dotfiles/chezmoi/`. Always edit the
-  source file, never the deployed copy under `~`.
+- Dotfiles: chezmoi-managed. `opt/dotfiles` is a version-pinned, detached checkout that
+  `koopa update` replaces; read the source at `opt/dotfiles/chezmoi/`, but commit and push
+  from a branch, then bump the `dotfiles` pin in `etc/koopa/app.json` (skill
+  `koopa-dotfiles`). Never edit the deployed copy under `~`.
 - Platform: macOS arm64 and Linux x86_64/arm64. Intel Mac not supported.
 - Line length: 100 chars. Python 3.14+. NumPy-style docstrings.
 

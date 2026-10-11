@@ -16,7 +16,8 @@ description: >-
 
 ## Source of truth
 
-Chezmoi source: `opt/dotfiles/chezmoi/dot_config/nvim/`. Edit there, then deploy with
+Chezmoi source: `opt/dotfiles/chezmoi/dot_config/nvim/`. Edit it on a branch (see skill
+`koopa-dotfiles` for the detached HEAD rule), then deploy with
 a targeted apply (see skill `koopa-chezmoi-dotfiles`). Never edit
 `~/.config/nvim/` directly.
 
