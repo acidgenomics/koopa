@@ -1,7 +1,7 @@
 ---
 name: koopa-update
 description: >-
-  How `koopa update` works end to end: the pull+apps default sequence, the
+  How `koopa update` works end to end, the pull+apps default sequence, the
   separate opt-in `koopa update system [<app>...]` mode (whole-sweep or
   per-app), and the admin-gated system updates it runs (Homebrew, system
   R/Python, TeX). Use when reasoning about what `koopa update` does or

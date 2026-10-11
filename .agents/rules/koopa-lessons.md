@@ -1,6 +1,6 @@
 # Lessons (koopa core)
 
-> Cross-project patterns live in `~/.claude/rules/dotfiles-lessons.md` (user-curated).
+> Cross-project patterns live in `~/.agents/rules/dotfiles-lessons.md` (user-curated).
 > A lesson longer than a one-liner belongs in the owning skill's Gotchas
 > section, or in a path-scoped rule if it fires on a file pattern: don't
 > accumulate long narratives here.

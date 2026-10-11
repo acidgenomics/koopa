@@ -321,6 +321,17 @@ def test_check_skills_fails_on_plain_folded_scalar(tmp_path: Path) -> None:
     assert exc_info.value.code == 1
 
 
+def test_check_skills_fails_on_colon_space_in_description(tmp_path: Path) -> None:
+    """A colon-space in the description fails, since Copilot's YAML parser rejects it."""
+    content = _CLEAN_SKILL_MD.replace(
+        "description: >-\n", "description: >-\n  Topic: details.\n", 1
+    )
+    root = _write_skill(tmp_path, "example", content)
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["check-skills"]([str(root)])
+    assert exc_info.value.code == 1
+
+
 def test_check_skills_fails_on_inline_description(tmp_path: Path) -> None:
     """An inline (non-block-scalar) description fails."""
     content = """---

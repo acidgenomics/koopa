@@ -7,7 +7,7 @@ paths:
 # koopa Python Conventions
 
 These are koopa-specific rules. Generic Python style (PEP 8, type hints) is covered
-by the user-global `~/.claude/rules/dotfiles-python.md`.
+by the user-global `~/.agents/rules/dotfiles-python.md`.
 
 ## subprocess
 

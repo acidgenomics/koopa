@@ -1,7 +1,7 @@
 ---
 name: koopa-dotfiles
 description: >-
-  Managing the opt/dotfiles standalone git clone: git state, committing changes,
+  Managing the opt/dotfiles standalone git clone, git state, committing changes,
   license/metadata updates, and the app.json pin rollout to hosts. Use when making
   changes to opt/dotfiles/ that need to be committed, when the clone is in a
   detached HEAD state, or when a fix that touches both the koopa repo and

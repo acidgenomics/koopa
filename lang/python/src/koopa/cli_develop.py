@@ -784,6 +784,12 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
             f"{_SKILL_DESCRIPTION_MAX_LEN}-char budget (the Agent Skills spec caps "
             "the parsed description at 1024 chars; over-cap skills get dropped)"
         )
+    if ": " in raw:
+        errors.append(
+            f"{path}:{lineno}: description contains ': ' (colon-space); Copilot CLI's "
+            "YAML parser reads it as a mapping entry and rejects the whole skills "
+            "directory, so reword it with a comma or parentheses"
+        )
     if not _SKILL_TRIGGER_RE.search(raw):
         errors.append(
             f"{path}:{lineno}: description has no trigger phrase (one of 'use "
@@ -863,7 +869,7 @@ def _handle_check_skills(args: list[str]) -> None:
     an error.
 
     Point this at a source tree (a repo's own ``.agents/skills``), not at a
-    deployed directory shared by several trees (for example ``~/.claude/skills``)
+    deployed directory shared by several trees (for example ``~/.agents/skills``)
     -- a minority tree's skills would be flagged as prefix outliers there.
 
     Parameters

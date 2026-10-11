@@ -1,7 +1,7 @@
 ---
 name: koopa-completion
 description: >-
-  koopa shell completion architecture: generator, flag extraction, bash/zsh/PowerShell/elvish
+  koopa shell completion architecture, generator, flag extraction, bash/zsh/PowerShell/elvish
   emitters, lazy-load mechanism, compdump freshness, and known bug patterns. Use when
   debugging missing completions, editing generate_completion.py, or adding flags to a
   CLI handler that need to appear in TAB completion.

@@ -1,7 +1,7 @@
 ---
 name: koopa-python-release
 description: >-
-  Acid Genomics Python package release, published to three targets: public
+  Acid Genomics Python package release, published to three targets, public
   PyPI (as acidgenomics-<name>, import name unchanged), the private
   python.acidgenomics.com PEP 503 S3+CloudFront index at /simple/ with
   same-domain docs at the short /<slug>/ path and a categorized landing page

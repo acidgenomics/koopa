@@ -2,7 +2,7 @@
 name: koopa-bioconda
 description: >-
   Procedures for maintaining Acid Genomics R package recipes in
-  bioconda-recipes: recipe structure, Apache-2.0 license fields, GitHub
+  bioconda-recipes, recipe structure, Apache-2.0 license fields, GitHub
   Contents API PR workflow (never git push, repo is ~700 MB), autobump PR
   supersession, dependency tier ordering for CI, migration-lag dep solve
   failures, PR labeling/merge process via Mergify, and post-merge

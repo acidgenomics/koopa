@@ -1,7 +1,7 @@
 ---
 name: koopa-cli
 description: >-
-  Command syntax for koopa: a shell bootloader that installs apps into its own
+  Command syntax for koopa, a shell bootloader that installs apps into its own
   prefix instead of the system package manager. Use when a task calls for
   installing a CLI tool, updating apps, or listing what koopa manages, so you
   reach for `koopa install`/`koopa update`/`koopa list` instead of `brew`,

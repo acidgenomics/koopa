@@ -352,12 +352,58 @@ def test_scan_claude_config_follows_symlinked_rules_dir(tmp_path: Path) -> None:
     assert row[4] is True  # path-scoped
 
 
+def test_scan_claude_config_prefers_canonical_agents_rules(tmp_path: Path) -> None:
+    """With .claude/rules aliased to .agents/rules, one row shows the canonical path."""
+    agents_rules = tmp_path / ".agents" / "rules"
+    agents_rules.mkdir(parents=True)
+    (agents_rules / "example.md").write_text("body\n")
+    claude_dir = tmp_path / ".claude"
+    claude_dir.mkdir()
+    (claude_dir / "rules").symlink_to(Path("..") / ".agents" / "rules", target_is_directory=True)
+
+    rows = _scan_claude_config(str(claude_dir), str(tmp_path))
+    assert [r[0] for r in rows] == [".agents/rules/example.md"]
+
+
+def test_scan_claude_config_reads_agents_rules_without_alias(tmp_path: Path) -> None:
+    """Rules under .agents/rules are found even when no .claude/rules alias exists."""
+    agents_rules = tmp_path / ".agents" / "rules"
+    agents_rules.mkdir(parents=True)
+    (agents_rules / "example.md").write_text("body\n")
+    claude_dir = tmp_path / ".claude"
+    claude_dir.mkdir()
+
+    rows = _scan_claude_config(str(claude_dir), str(tmp_path))
+    assert [r[0] for r in rows] == [".agents/rules/example.md"]
+
+
+def test_scan_claude_config_reads_legacy_claude_rules(tmp_path: Path) -> None:
+    """A real .claude/rules directory with no .agents tree still works."""
+    claude_dir = tmp_path / ".claude"
+    (claude_dir / "rules").mkdir(parents=True)
+    (claude_dir / "rules" / "example.md").write_text("body\n")
+
+    rows = _scan_claude_config(str(claude_dir), str(tmp_path))
+    assert [r[0] for r in rows] == [".claude/rules/example.md"]
+
+
 def test_find_project_root_finds_claude_dir(tmp_path: Path) -> None:
     """_find_project_root returns the directory containing a .claude/ subdir."""
     proj = tmp_path / "myproject"
     (proj / ".claude").mkdir(parents=True)
     start = proj / "src" / "pkg"
     start.mkdir(parents=True)
+
+    result = _find_project_root(str(start))
+    assert result == str(proj)
+
+
+def test_find_project_root_finds_agents_dir(tmp_path: Path) -> None:
+    """_find_project_root also accepts a directory with only an .agents/ subdir."""
+    proj = tmp_path / "myproject"
+    (proj / ".agents").mkdir(parents=True)
+    start = proj / "src"
+    start.mkdir()
 
     result = _find_project_root(str(start))
     assert result == str(proj)

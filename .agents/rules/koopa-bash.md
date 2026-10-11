@@ -5,7 +5,6 @@ paths:
   - "**/*.sh"
   - "bin/koopa"
   - ".agents/skills/**/*.md"
-  - ".claude/skills/**/*.md"
 ---
 
 # Bash / POSIX-sh Conventions

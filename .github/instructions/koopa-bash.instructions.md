@@ -1,5 +1,5 @@
 ---
-applyTo: "lang/bash/**,lang/sh/**,**/*.sh,bin/koopa,.agents/skills/**/*.md,.claude/skills/**/*.md"
+applyTo: "lang/bash/**,lang/sh/**,**/*.sh,bin/koopa,.agents/skills/**/*.md"
 description: "Bash / POSIX-sh Conventions"
 ---
 

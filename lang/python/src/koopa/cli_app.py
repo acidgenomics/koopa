@@ -1509,6 +1509,11 @@ def _scan_claude_config(
 ) -> list[tuple[str, int, int, int, bool]]:
     """Scan a .claude config dir and root CLAUDE.md for always/conditional files.
 
+    Rules are read from the canonical ``<display_root>/.agents/rules`` first, then
+    from ``<claude_dir>/rules`` (the Claude Code alias, usually a symlink to the
+    canonical directory). Files are deduplicated by real path, so the alias adds no
+    second row and the display path stays the canonical one.
+
     Parameters
     ----------
     claude_dir : str
@@ -1532,9 +1537,14 @@ def _scan_claude_config(
         os.path.join(display_root, "CLAUDE.md"),
         os.path.join(claude_dir, "CLAUDE.md"),
     ]
-    rules_dir = os.path.join(claude_dir, "rules")
-    if os.path.isdir(rules_dir):
-        candidates.extend(sorted(glob.glob(os.path.join(rules_dir, "**", "*.md"), recursive=True)))
+    for rules_dir in (
+        os.path.join(display_root, ".agents", "rules"),
+        os.path.join(claude_dir, "rules"),
+    ):
+        if os.path.isdir(rules_dir):
+            candidates.extend(
+                sorted(glob.glob(os.path.join(rules_dir, "**", "*.md"), recursive=True))
+            )
 
     seen: set[str] = set()
     rows: list[tuple[str, int, int, int, bool]] = []
@@ -1557,7 +1567,7 @@ def _scan_claude_config(
 
 
 def _find_project_root(start: str) -> str | None:
-    """Walk up from start to find a project root containing .claude/ or .git/.
+    """Walk up from start to find a project root containing .claude/, .agents/ or .git/.
 
     Parameters
     ----------
@@ -1578,7 +1588,10 @@ def _find_project_root(start: str) -> str | None:
 
     while True:
         claude_candidate = os.path.join(current, ".claude")
-        if os.path.isdir(claude_candidate) and os.path.realpath(claude_candidate) != global_claude:
+        has_config = (
+            os.path.isdir(claude_candidate) and os.path.realpath(claude_candidate) != global_claude
+        ) or os.path.isdir(os.path.join(current, ".agents"))
+        if has_config:
             if current != home:
                 return current
         elif os.path.isdir(os.path.join(current, ".git")) and git_root is None:

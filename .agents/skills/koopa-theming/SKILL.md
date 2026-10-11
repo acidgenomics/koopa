@@ -1,7 +1,7 @@
 ---
 name: koopa-theming
 description: >-
-  Reference for koopa theme synthesis across editors and terminals: Dracula Pro
+  Reference for koopa theme synthesis across editors and terminals, Dracula Pro
   runtime pipeline, fish color architecture (fish_frozen_theme.fish override, _FISH_COLOR_ROLES
   generator, live sync hook), JetBrains/IntelliJ scheme delivery, atuin and mcfly color
   config, vim/nvim statusline theming (airline explicit g:airline_theme read, lualine

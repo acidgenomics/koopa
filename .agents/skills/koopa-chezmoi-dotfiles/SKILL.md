@@ -1,7 +1,7 @@
 ---
 name: koopa-chezmoi-dotfiles
 description: >-
-  How koopa manages home dotfiles via chezmoi: source-of-truth layout, the
+  How koopa manages home dotfiles via chezmoi, source-of-truth layout, the
   explicit --source flag, template-vs-generator ordering, XDG path derivation in
   templates, symlink_ source files for App Support bridges, sharing one template
   body across several deployed targets (.chezmoi.sourceFile, .chezmoitemplates

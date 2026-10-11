@@ -1,7 +1,7 @@
 ---
 name: koopa-r-release
 description: >-
-  koopa R package release: cloud-native S3 + CloudFront, acidgenomics profile,
+  koopa R package release, cloud-native S3 + CloudFront, acidgenomics profile,
   koopa app r publish/reindex/archive/clean-orphan-binaries/publish-docs,
   sonoma-arm64 binaries, pre-release AcidDevTools::check() gate, pkgdown
   NEWS.md/reference-index silent-failure traps, CloudFront wildcard
