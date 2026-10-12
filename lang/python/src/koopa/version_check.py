@@ -390,7 +390,10 @@ def _hold_reason(
     held = _src_url_hold_message(app_name, current, latest, info)
     if held is not None:
         return held
-    return _pip_index_hold_message(app_name, current, latest, info)
+    held = _pip_index_hold_message(app_name, current, latest, info)
+    if held is not None:
+        return held
+    return _github_sha_hold_message(app_name, current, latest, info)
 
 
 def _is_prerelease(version: str) -> bool:
@@ -3328,6 +3331,60 @@ def _pip_index_hold_message(
     )
 
 
+def _github_sha_hold_message(
+    app_name: str, current: str, latest: str, info: dict[str, Any]
+) -> str | None:
+    """Return a hold message if the pinned commit is not behind the upstream HEAD.
+
+    A SHA-pinned app tracks the default branch of its GitHub repo. A pin
+    taken from another branch (e.g. ``develop``) can sit ahead of that
+    branch, and ``VersionCheckResult.is_outdated`` treats any different SHA
+    as newer, so the check would otherwise write a downgrade. Asks the GitHub
+    compare API whether `current` is behind `latest`. A failed request does
+    not hold the pin.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned commit SHA.
+    latest : str
+        Latest commit SHA detected upstream.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
+    if not (_SHA_RE.match(current) and _SHA_RE.match(latest)):
+        return None
+    for url in info.get("url", []):
+        m = re.match(r"^https://github\.com/([^/]+)/([^/]+?)/?$", url)
+        if m is None:
+            continue
+        owner, repo = m.groups()
+        try:
+            data = _http_get_json(
+                f"https://api.github.com/repos/{owner}/{repo}/compare/{latest}...{current}",
+                github=True,
+            )
+        except urllib.error.HTTPError:
+            return None
+        status = data.get("status")
+        if status == "ahead":
+            return f"{app_name}: pin {current[:7]} is ahead of upstream {latest[:7]}; pin held"
+        if status == "diverged":
+            return (
+                f"{app_name}: pin {current[:7]} has diverged from upstream {latest[:7]}; pin held"
+            )
+        return None
+    return None
+
+
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes.
 
@@ -3400,18 +3457,32 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         # this loop with is_outdated still True. No belt-and-braces re-check here.
         artifact_key = installer_artifact_key(r.name, r.latest_version)
         if artifact_key is not None:
+            private = _has_private_access()
             staged = False
-            if _has_private_access():
+            current_staged = False
+            if private:
                 from koopa.aws import koopa_s3_bucket, s3_object_exists
 
-                staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
+                bucket = koopa_s3_bucket("artifacts")
+                staged = s3_object_exists(bucket, artifact_key)
+                current_key = installer_artifact_key(r.name, r.current_version)
+                if not staged and current_key is not None:
+                    current_staged = s3_object_exists(bucket, current_key)
             if not staged:
+                # Hold only to protect a working install. When the current pin's
+                # artifact is not staged either, holding protects nothing.
+                if current_staged or not private:
+                    print(
+                        f"{r.name}: {r.latest_version} available upstream; "
+                        f"artifact not staged, pin held at {r.current_version}",
+                        file=sys.stderr,
+                    )
+                    continue
                 print(
-                    f"{r.name}: {r.latest_version} available upstream; "
-                    f"artifact not staged, pin held at {r.current_version}",
+                    f"{r.name}: {r.latest_version} artifact not staged either; pin bumped "
+                    "(stage with koopa develop push-installer)",
                     file=sys.stderr,
                 )
-                continue
         missing = _missing_src_urls(data[r.name], r.latest_version)
         if missing:
             print(

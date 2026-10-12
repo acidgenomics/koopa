@@ -28,6 +28,7 @@ from koopa.version_check import (
     _dead_hosts,
     _fetch_first_reachable,
     _friendly_network_error,
+    _github_sha_hold_message,
     _held_message,
     _hold_reason,
     _index_has_version,
@@ -600,6 +601,86 @@ def test_update_app_json_bumps_when_artifact_staged(tmp_path: Path) -> None:
     written = mock_export.call_args[0][0]
     assert written["cellranger"]["version"] == "10.0.0"
     assert count == 1
+
+
+def _artifact_gate_run(tmp_path: Path, staged_versions: set[str]) -> tuple[dict, int]:
+    json_data = {
+        "bcl-convert": {
+            "version": "4.5.4",
+            "installer_artifact": "installers/bcl-convert/{version}.tar.xz",
+            "url": ["https://example.test/bcl-convert"],
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("bcl-convert", "4.5.4", "4.6.2", "dirlist", None)]
+
+    def _exists(_bucket: str, key: str) -> bool:
+        return any(f"/{v}." in key for v in staged_versions)
+
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json") as mock_export,
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.install._has_private_access", return_value=True),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=False),
+        patch("koopa.aws.koopa_s3_bucket", return_value="artifacts-000000000000-us-east-1-an"),
+        patch("koopa.aws.s3_object_exists", side_effect=_exists),
+    ):
+        count = update_app_json(results)
+    return mock_export.call_args[0][0], count
+
+
+def test_update_app_json_holds_pin_when_only_current_artifact_staged(tmp_path: Path) -> None:
+    """The pin is held when the current version's artifact works and the new one is missing."""
+    written, count = _artifact_gate_run(tmp_path, {"4.5.4"})
+    assert written["bcl-convert"]["version"] == "4.5.4"
+    assert count == 0
+
+
+def test_update_app_json_bumps_when_no_artifact_staged_at_all(tmp_path: Path) -> None:
+    """Holding protects nothing when the current artifact is missing too, so the pin bumps."""
+    written, count = _artifact_gate_run(tmp_path, set())
+    assert written["bcl-convert"]["version"] == "4.6.2"
+    assert count == 1
+
+
+# ── _github_sha_hold_message (pin ahead of the tracked branch) ──────────────
+
+_SHA_PIN = "9" * 40
+_SHA_HEAD = "5" * 40
+_DOTFILES_INFO = {"url": ["https://github.com/acidgenomics/dotfiles/"]}
+
+
+@pytest.mark.parametrize(
+    ("status", "expected"),
+    [
+        ("ahead", "dotfiles: pin 9999999 is ahead of upstream 5555555; pin held"),
+        ("diverged", "dotfiles: pin 9999999 has diverged from upstream 5555555; pin held"),
+        ("behind", None),
+        ("identical", None),
+    ],
+)
+def test_github_sha_hold_message_by_compare_status(status: str, expected: str | None) -> None:
+    """Only a pin that is ahead of, or diverged from, upstream HEAD is held."""
+    with patch("koopa.version_check._http_get_json", return_value={"status": status}) as mock_get:
+        held = _github_sha_hold_message("dotfiles", _SHA_PIN, _SHA_HEAD, _DOTFILES_INFO)
+    assert held == expected
+    assert mock_get.call_args[0][0].endswith(f"/compare/{_SHA_HEAD}...{_SHA_PIN}")
+
+
+def test_github_sha_hold_message_skips_non_sha_versions() -> None:
+    """A tagged version never triggers a compare request."""
+    with patch("koopa.version_check._http_get_json", side_effect=AssertionError("no request")):
+        held = _github_sha_hold_message("ripgrep", "14.0.0", "14.1.0", _DOTFILES_INFO)
+    assert held is None
+
+
+def test_github_sha_hold_message_does_not_hold_on_http_error() -> None:
+    """A failed compare request keeps the old behavior: the bump proceeds."""
+    with patch("koopa.version_check._http_get_json", side_effect=_make_http_error(404)):
+        held = _github_sha_hold_message("dotfiles", _SHA_PIN, _SHA_HEAD, _DOTFILES_INFO)
+    assert held is None
 
 
 # ── _pip_index_hold_message (pip-index gate, checked before is_outdated) ────

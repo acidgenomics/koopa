@@ -2571,7 +2571,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-10-11",
+    "date": "2026-10-12",
     "default": false,
     "dependencies": [
       "chezmoi"
@@ -2581,7 +2581,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "9f7158ea4466665ecc7dbfa9121f15c5ac5eb67d"
+    "version": "7c6ce6566fccbdb7ddfb75e46fb6760f04ab8e85"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -7357,7 +7357,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-10-11",
+    "date": "2026-10-12",
     "default": false,
     "dependencies": [
       "python"
@@ -7369,7 +7369,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.17.13"
+    "version": "1.17.14"
   },
   "pixi": {
     "bin": [
@@ -9335,7 +9335,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-10-10",
+    "date": "2026-10-12",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9345,7 +9345,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "e59b2daecd918cdd2c4fb86ca84bf3cdfad21e3d"
+    "version": "da13fb555ce6bba1074d5571e42db4cc11318897"
   },
   "spacevim": {
     "date": "2026-05-10",
