@@ -988,7 +988,21 @@ install_python_uv() {
         --no-bin \
         --no-cache \
         --no-config \
-        "$__kvar_python_version"
+        "$__kvar_python_version" \
+        && ! {
+            # python-build-standalone can lag python.org by hours or days, so
+            # the pinned patch version may have no download yet. Take the newest
+            # build of the same minor series (e.g. '3.14') instead of falling
+            # back to a source build that takes minutes.
+            printf 'cpython %s unavailable; retrying with newest %s.\n' \
+                "$__kvar_python_version" "${__kvar_python_version%.*}"
+            "$__kvar_uv" python install \
+                --install-dir "$__kvar_cpython_dir" \
+                --no-bin \
+                --no-cache \
+                --no-config \
+                "${__kvar_python_version%.*}"
+        }
     then
         printf 'uv python install failed.\n' >&2
         rm -fr "$__kvar_tmpdir"
