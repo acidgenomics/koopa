@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 import threading
 from pathlib import Path
 from types import TracebackType
@@ -1083,6 +1084,8 @@ def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path)
     captured: list[list[str]] = []
 
     def fake_run(args, **_kwargs):  # noqa: ANN001, ANN202
+        if args[-1] == "--version":
+            return subprocess.CompletedProcess(args, 0, stdout="Python 3.14.0\n")
         captured.append(args)
         return None
 
@@ -1097,3 +1100,34 @@ def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path)
     assert "--exclude-newer" not in captured[0]
     idx = captured[0].index("--exclude-newer-package")
     assert captured[0][idx + 1] == "syntactic=false"
+
+
+def test_update_venv_recreates_on_patch_version_change(tmp_path: Path) -> None:
+    """A venv whose interpreter moved to a new patch version is recreated.
+
+    The venv symlinks the bootstrap Python, so a patch upgrade changes what
+    runs while pyvenv.cfg keeps the old patch version.
+    """
+    from koopa.install import _update_venv
+
+    (tmp_path / ".python-version").write_text("3.14\n")
+    venv_dir = tmp_path / ".venv"
+    (venv_dir / "bin").mkdir(parents=True)
+    (venv_dir / "bin" / "python3").touch()
+    (venv_dir / "pyvenv.cfg").write_text("version = 3.14.7\n")
+
+    class _RecreatedError(Exception):
+        pass
+
+    def fake_run(args, **_kwargs: object):  # noqa: ANN001, ANN202
+        return subprocess.CompletedProcess(args, 0, stdout="Python 3.14.8\n")
+
+    with (
+        patch("koopa.install.is_owner", return_value=True),
+        patch("koopa.install.subprocess.run", side_effect=fake_run),
+        patch("koopa.install.shutil.rmtree", side_effect=_RecreatedError) as rmtree,
+        pytest.raises(_RecreatedError),
+    ):
+        _update_venv(str(tmp_path))
+
+    rmtree.assert_called_once_with(str(venv_dir))

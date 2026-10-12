@@ -1,5 +1,6 @@
 """Installer registry unit tests."""
 
+import importlib
 import json
 import os
 import subprocess
@@ -11,7 +12,15 @@ from unittest.mock import patch
 import pytest
 from koopa import install
 from koopa.install import _app_json_installer
-from koopa.installers import bcl_convert, cellranger, has_python_installer, neovim, python_app
+from koopa.installers import (
+    PYTHON_INSTALLERS,
+    PYTHON_PLATFORM_INSTALLERS,
+    bcl_convert,
+    cellranger,
+    has_python_installer,
+    neovim,
+    python_app,
+)
 from koopa.installers import pyright as pyright_installer
 from koopa.io import import_app_json
 
@@ -62,6 +71,33 @@ def test_every_app_has_an_installer() -> None:
     assert not unroutable, (
         "app.json entries with no Python installer: "
         f"{', '.join(unroutable)}. Add each to PYTHON_INSTALLERS in "
+        "lang/python/src/koopa/installers/__init__.py."
+    )
+
+
+def test_every_registered_installer_module_imports() -> None:
+    """Every module named in the installer registry imports and defines ``main``.
+
+    ``test_every_app_has_an_installer`` only checks that a name is registered.
+    A registry line that outlives its module (for example after an installer
+    is deleted) passes that test, then fails with ``ImportError`` at install time.
+    """
+    modules = {
+        *PYTHON_INSTALLERS.values(),
+        *PYTHON_PLATFORM_INSTALLERS.values(),
+    }
+    broken = []
+    for module_path in sorted(modules):
+        try:
+            module = importlib.import_module(module_path)
+        except ImportError as exc:
+            broken.append(f"{module_path} ({exc})")
+            continue
+        if not callable(getattr(module, "main", None)):
+            broken.append(f"{module_path} (no main())")
+    assert not broken, (
+        "installer registry names module(s) that do not import or lack main(): "
+        f"{', '.join(broken)}. Fix or remove the matching line in "
         "lang/python/src/koopa/installers/__init__.py."
     )
 

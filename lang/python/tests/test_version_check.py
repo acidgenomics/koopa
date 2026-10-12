@@ -1136,6 +1136,18 @@ def test_update_bootstrap_syncs_uv_python_pin_after_cooldown(tmp_path: Path) -> 
     assert count == 1
 
 
+def test_update_app_json_syncs_held_bootstrap_pin_when_nothing_outdated(tmp_path: Path) -> None:
+    """A uv pin held for the cooldown syncs once it clears, with no app bump."""
+    _write_bootstrap_fixture(tmp_path, python_version="3.14.8", uv_python_version="3.14.7")
+    old_date = (date.today() - timedelta(days=20)).isoformat()
+    app_json = {"python3.14": {"version": "3.14.8", "date": old_date}}
+    (tmp_path / "etc" / "koopa" / "app.json").write_text(json.dumps(app_json))
+    with patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)):
+        count = update_app_json([VersionCheckResult("python3.14", "3.14.8", "3.14.8", "x", None)])
+    assert count == 0
+    assert "__kvar_python_version='3.14.8'" in (tmp_path / "bootstrap.sh").read_text()
+
+
 # ── update_app_json: missing src_url write-time gate ─────────────────────────
 
 

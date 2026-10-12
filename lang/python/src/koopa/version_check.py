@@ -3402,13 +3402,21 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         Number of apps whose pinned version was updated.
     """
     outdated = [r for r in results if r.is_outdated]
+    json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
+        # A bootstrap pin held for the cooldown must still sync once it clears,
+        # even when no app.json pin changed in this run.
+        bootstrap_count = update_bootstrap(json.loads(json_path.read_text()))
+        if bootstrap_count > 0:
+            print(
+                f"Updated {bootstrap_count} versions in bootstrap.sh.",
+                file=sys.stderr,
+            )
         return 0
     from koopa.app import installer_artifact_key
     from koopa.install import _has_private_access
 
-    json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     data = json.loads(json_path.read_text())
     today = time.strftime("%Y-%m-%d")
 
@@ -3529,7 +3537,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     return count
 
 
-_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS = 14
+_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS = 3
 
 
 def _past_bootstrap_uv_cooldown(pinned_date: str) -> bool:
@@ -3635,12 +3643,14 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                     file=sys.stderr,
                 )
         elif py_version:
-            print(
-                f"  bootstrap.sh python (via uv): {py_version} available, held for "
-                f"cooldown (python-build-standalone needs time to publish a "
-                f"matching build)",
-                file=sys.stderr,
+            held_match = re.search(
+                r"install_python_uv\(\) \{\n"
+                r"    __kvar_uv_version='[^']+'\n"
+                r"    __kvar_python_version='([^']+)'",
+                text,
             )
+            if held_match and held_match.group(1) != py_version:
+                print(f"  bootstrap.sh python: {py_version} held for cooldown", file=sys.stderr)
     uv_entry = app_data.get("uv", {})
     uv_updated = False
     if isinstance(uv_entry, dict):

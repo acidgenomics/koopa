@@ -308,7 +308,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "flac": f"{_M}.flac",
     "flex": f"{_M}.flex",
     "fontconfig": f"{_M}.fontconfig",
-    "geos": f"{_M}.geos",
     "gettext": f"{_M}.gettext",
     "glib": f"{_M}.glib",
     "gmp": f"{_M}.gmp",
