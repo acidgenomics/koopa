@@ -14,6 +14,27 @@
     ],
     "version": "2.40.0"
   },
+  "7zip": {
+    "bin": [
+      "7z",
+      "7za",
+      "7zz"
+    ],
+    "build_dependencies": [
+      "make"
+    ],
+    "category": "Compression",
+    "date": "2026-10-12",
+    "default": true,
+    "description": "file archiver with a high compression ratio",
+    "src_url": "https://github.com/ip7z/7zip/releases/download/{version}/7z{version_nodot}-src.tar.xz",
+    "type": "cli",
+    "url": [
+      "https://www.7-zip.org/",
+      "https://github.com/ip7z/7zip/"
+    ],
+    "version": "26.04"
+  },
   "ack": {
     "bin": [
       "ack"
@@ -4409,25 +4430,18 @@
     "version": "1.24"
   },
   "httpie": {
-    "bin": [
-      "http",
-      "https"
-    ],
-    "category": "Network",
-    "date": "2024-11-01",
-    "default": false,
-    "dependencies": [
-      "python"
-    ],
+    "date": "2026-10-12",
     "description": "user-friendly command-line HTTP client",
-    "installer": "python-package",
-    "type": "cli",
+    "notes": [
+      "No longer supported by koopa. Use xh."
+    ],
+    "removed": true,
+    "successor": "xh",
     "url": [
       "https://httpie.io/",
       "https://github.com/httpie/httpie/",
       "https://pypi.org/project/httpie/"
-    ],
-    "version": "3.2.4"
+    ]
   },
   "httpx": {
     "bin": [
@@ -7058,29 +7072,16 @@
     "version": "0.8.3"
   },
   "p7zip": {
-    "bin": [
-      "7z",
-      "7za",
-      "7zr"
-    ],
-    "build_dependencies": [
-      "make"
-    ],
-    "category": "Compression",
-    "date": "2023-05-31",
-    "default": true,
+    "date": "2026-10-12",
     "description": "port of 7-zip for POSIX systems",
-    "man1": [
-      "7z.1.gz",
-      "7za.1.gz",
-      "7zr.1.gz"
+    "notes": [
+      "Abandoned upstream in 2017. Superseded by the official 7-Zip Linux and macOS port."
     ],
-    "src_url": "https://github.com/p7zip-project/p7zip/archive/refs/tags/v{version}.tar.gz",
-    "type": "cli",
+    "removed": true,
+    "successor": "7zip",
     "url": [
       "https://github.com/p7zip-project/p7zip/"
-    ],
-    "version": "17.05"
+    ]
   },
   "pandoc": {
     "bin": [
@@ -7188,37 +7189,16 @@
     ]
   },
   "pcre": {
-    "bin": [
-      "pcre-config",
-      "pcregrep",
-      "pcretest"
-    ],
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "libtool",
-      "make",
-      "pkg-config"
-    ],
-    "category": "Library",
-    "date": "2022-08-29",
-    "default": false,
-    "dependencies": [
-      "bzip2",
-      "zlib"
-    ],
+    "date": "2026-10-12",
     "description": "Perl-compatible regular expressions library (v1)",
-    "man1": [
-      "pcre-config.1",
-      "pcregrep.1",
-      "pcretest.1"
+    "notes": [
+      "PCRE1 (8.x) is end of life upstream. Use pcre2."
     ],
-    "src_url": "https://sourceforge.net/projects/pcre/files/pcre/{version}/pcre-{version}.tar.bz2/download",
-    "type": "build_tool",
+    "removed": true,
+    "successor": "pcre2",
     "url": [
       "https://sourceforge.net/projects/pcre/"
-    ],
-    "version": "8.45"
+    ]
   },
   "pcre2": {
     "bin": [
@@ -7645,21 +7625,15 @@
     "version": "9.9.0"
   },
   "pup": {
-    "bin": [
-      "pup"
-    ],
-    "build_dependencies": [
-      "go"
-    ],
-    "category": "Text",
-    "date": "2023-12-22",
-    "default": false,
+    "date": "2026-10-12",
     "description": "command-line HTML parsing tool",
-    "type": "cli",
+    "notes": [
+      "Unmaintained upstream. No release since 2016."
+    ],
+    "removed": true,
     "url": [
       "https://github.com/ericchiang/pup"
-    ],
-    "version": "0.4.0"
+    ]
   },
   "py-spy": {
     "bin": [
@@ -8809,22 +8783,16 @@
     "version": "0.17.0"
   },
   "ruff-lsp": {
-    "bin": [
-      "ruff-lsp"
-    ],
-    "category": "Python",
-    "date": "2025-02-14",
-    "default": true,
-    "dependencies": [
-      "python"
-    ],
+    "date": "2026-10-12",
     "description": "LSP server for ruff",
-    "installer": "python-package",
-    "type": "cli",
+    "notes": [
+      "Archived upstream. The ruff language server (ruff server) replaces it."
+    ],
+    "removed": true,
+    "successor": "ruff",
     "url": [
       "https://pypi.org/project/ruff-lsp/"
-    ],
-    "version": "0.0.62"
+    ]
   },
   "rust": {
     "bin": [
@@ -9191,23 +9159,17 @@
     "version": "2.1.8"
   },
   "shyaml": {
-    "bin": [
-      "shyaml"
-    ],
-    "category": "Text",
-    "date": "2023-12-13",
-    "default": false,
-    "dependencies": [
-      "python"
-    ],
+    "date": "2026-10-12",
     "description": "YAML parsing tool for the command line",
-    "installer": "python-package",
-    "type": "cli",
+    "notes": [
+      "Unmaintained upstream. Use yq."
+    ],
+    "removed": true,
+    "successor": "yq",
     "url": [
       "https://github.com/0k/shyaml/",
       "https://pypi.org/project/shyaml/"
-    ],
-    "version": "0.6.2"
+    ]
   },
   "simdjson": {
     "date": "2026-05-02",
@@ -10037,22 +9999,16 @@
     "removed": true
   },
   "tryceratops": {
-    "bin": [
-      "tryceratops"
-    ],
-    "category": "Python",
-    "date": "2024-11-01",
-    "default": false,
-    "dependencies": [
-      "python"
-    ],
+    "date": "2026-10-12",
     "description": "Python anti-pattern linter",
-    "installer": "python-package",
-    "type": "cli",
+    "notes": [
+      "Unmaintained upstream. Ruff implements the TRY rules."
+    ],
+    "removed": true,
+    "successor": "ruff",
     "url": [
       "https://pypi.org/project/tryceratops/"
-    ],
-    "version": "2.4.1"
+    ]
   },
   "tuc": {
     "bin": [
@@ -10812,23 +10768,16 @@
     "version": "0.2.29"
   },
   "xsv": {
-    "bin": [
-      "xsv"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Text",
-    "conda_channel": "conda-forge",
-    "date": "2025-01-03",
-    "default": false,
+    "date": "2026-10-12",
     "description": "fast CSV command-line toolkit",
-    "installer": "conda-package",
-    "type": "cli",
+    "notes": [
+      "Unmaintained upstream. Use miller."
+    ],
+    "removed": true,
+    "successor": "miller",
     "url": [
       "https://github.com/BurntSushi/xsv/"
-    ],
-    "version": "0.13.0"
+    ]
   },
   "xxhash": {
     "build_dependencies": [
@@ -10934,23 +10883,17 @@
     "version": "1.38.0"
   },
   "yapf": {
-    "bin": [
-      "yapf"
-    ],
-    "category": "Python",
-    "date": "2024-12-30",
-    "default": false,
-    "dependencies": [
-      "python"
-    ],
+    "date": "2026-10-12",
     "description": "Python code formatter by Google",
-    "installer": "python-package",
-    "type": "cli",
+    "notes": [
+      "No longer supported by koopa. Use ruff format or black."
+    ],
+    "removed": true,
+    "successor": "ruff",
     "url": [
       "https://pypi.org/project/yapf/",
       "https://github.com/google/yapf/"
-    ],
-    "version": "0.43.0"
+    ]
   },
   "yazi": {
     "bin": [
