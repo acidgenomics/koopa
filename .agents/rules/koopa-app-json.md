@@ -1,0 +1,90 @@
+---
+paths:
+  - "**/app.json"
+---
+
+# app.json Editing Rules
+
+Applies to `etc/koopa/app.json`.
+
+## After every edit
+
+Run `koopa develop format-app-json` to sort keys and normalize formatting.
+Increment the `revision` field (add `"revision": 1` if absent) to signal
+that installed instances need to be re-linked or reinstalled.
+
+## Completions
+
+Adding a **new** app entry (a name not previously in the registry) → run
+`koopa develop generate-completion` afterward.
+
+Toggling `default: true/false` or bumping `version`/`date` on an **existing** entry
+→ no regeneration needed.
+
+## `python` alias promotion cooldown
+
+The `"python"` entry's `alias_of` field decides what bare `python`/`pip`/`idle`
+(no version suffix) resolve to. Add a new Python minor version as its own
+`python3.1X` app immediately, but hold `alias_of` on the current version
+until January 1 of the year after the new version's release. CPython ships
+a new minor version every October, so this is a wait of about 3 months,
+timed to the next year boundary rather than a fixed day count. Installers
+across the registry tend to break against a brand-new minor version before
+the ecosystem (wheels, build backends) catches up. Being conservative here
+avoids that churn.
+
+Example: python3.15 released October 2026, so `alias_of` stays on
+`python3.14` until January 2027 at the earliest.
+
+## `successor` field
+
+If `"successor"` is defined, `"default": false` is required. Never install an app
+by default when a known better alternative exists.
+
+## Version bumps
+
+Before changing any app version, confirm the resolved `src_url` tarball actually
+exists. Zsh versions are `5.x.y` (e.g., `5.9.1`), never a bare integer like `26`
+(that is a GNU project release number and produces a 404 download URL).
+
+`check-app-versions` now enforces this rule itself: it expands `src_url` and
+every `extra_src_urls` entry for the candidate version and probes each with an
+HTTP HEAD request. It holds the pin, with a printed reason, on an explicit 404
+or 410. Any other outcome (timeout, other status) does not hold the pin, since
+that does not confirm the file is absent.
+
+A SourceForge project can name a release directory ahead of the release
+itself, holding only release-candidate filenames (e.g. `9.1.0/` holding
+`tcl9.1.0rc0-src.tar.gz`, no `tcl9.1.0-src.tar.gz`). The directory name alone
+never carries that `rc0` marker, so a version check reading directory names
+must also confirm the expected filename inside, or it launders a pre-release
+into a clean-looking version string. See `_check_sourceforge_versions` in
+`version_check.py`.
+
+## Holding a version back from `check-app-versions`
+
+A hold written only as prose in `notes` is not enforced. `check-app-versions`
+reads none of these `notes`, so it silently re-bumps the version on the next
+run. This bit `node`: a `notes` entry said "held below 26.8.0" and the next
+unguarded run re-bumped it anyway. Use one of these fields instead:
+
+| Field | Shape | Effect |
+|---|---|---|
+| `version_exclude` | array of version strings | Never write these exact versions. Self-heals: once upstream ships a version not on the list, the pin bumps normally. |
+| `version_granularity` | `"minor"` | Accept a bump only when the major or minor component changes; hold a patch-only bump. |
+| `version_match` | another app's name | Bump only when this app and the named app agree on the same latest version; hold both otherwise. |
+| `version_pin` | `true` | Drop the app from checking entirely. Use only when the app should never be checked again; most holds should use `version_exclude` instead, so the app keeps getting checked and the hold can expire. |
+
+`check-app-versions` also reports a `version_exclude` list that is entirely
+below the current pin as a stale hold, so a dead exclusion does not linger
+unnoticed. It reports a pin that is itself excluded as a contradiction.
+
+`python_version_pin` has the same gap: it is a human-readable marker paired
+with `dependencies: ["python3.13"]`, but no code in `src/koopa` reads it. It
+documents a pin that `dependencies` alone already enforces; on its own it
+enforces nothing.
+
+## Edit freely
+
+`app.json` is a routine edit file; never prompt for confirmation before modifying it.
+The `Edit` permission already covers it.

@@ -784,6 +784,12 @@ def _skill_frontmatter_errors(path: str) -> list[str]:
             f"{_SKILL_DESCRIPTION_MAX_LEN}-char budget (the Agent Skills spec caps "
             "the parsed description at 1024 chars; over-cap skills get dropped)"
         )
+    if ": " in raw:
+        errors.append(
+            f"{path}:{lineno}: description contains ': ' (colon-space); Copilot CLI's "
+            "YAML parser reads it as a mapping entry and rejects the whole skills "
+            "directory, so reword it with a comma or parentheses"
+        )
     if not _SKILL_TRIGGER_RE.search(raw):
         errors.append(
             f"{path}:{lineno}: description has no trigger phrase (one of 'use "
@@ -862,8 +868,8 @@ def _handle_check_skills(args: list[str]) -> None:
     ``_SKILL_BODY_SOFT_MAX_LINES`` lines is reported as an advisory note, not
     an error.
 
-    Point this at a source tree (a repo's own ``.claude/skills``), not at a
-    deployed directory shared by several trees (for example ``~/.claude/skills``)
+    Point this at a source tree (a repo's own ``.agents/skills``), not at a
+    deployed directory shared by several trees (for example ``~/.agents/skills``)
     -- a minority tree's skills would be flagged as prefix outliers there.
 
     Parameters
@@ -887,8 +893,8 @@ def _handle_check_skills(args: list[str]) -> None:
         nargs="*",
         metavar="PATH",
         help=(
-            "skill-directory roots to check (default: <prefix>/.claude/skills, "
-            "<prefix>/opt/dotfiles/chezmoi/dot_claude/skills, and any "
+            "skill-directory roots to check (default: <prefix>/.agents/skills, "
+            "<prefix>/opt/dotfiles/chezmoi/dot_agents/skills, and any "
             "<prefix>/plugins/*/skills)"
         ),
     )
@@ -899,8 +905,8 @@ def _handle_check_skills(args: list[str]) -> None:
     else:
         prefix = koopa_prefix()
         roots = [
-            os.path.join(prefix, ".claude", "skills"),
-            os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_claude", "skills"),
+            os.path.join(prefix, ".agents", "skills"),
+            os.path.join(prefix, "opt", "dotfiles", "chezmoi", "dot_agents", "skills"),
             *sorted(glob.glob(os.path.join(prefix, "plugins", "*", "skills"))),
         ]
 
@@ -1203,6 +1209,47 @@ def _handle_ty(args: list[str]) -> None:
     sys.exit(_run_ty(args))
 
 
+def _run_pyrefly(args: list[str], *, quiet: bool = False) -> int:
+    """Run ``pyrefly check`` over the koopa source tree.
+
+    Passes ``--config`` explicitly, since ``pyrefly`` otherwise finds
+    ``[tool.pyrefly]`` by walking up from the caller's working directory, and
+    silently misses it when that directory is outside the koopa checkout.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyrefly check`` invocation.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
+
+    Returns
+    -------
+    int
+        Exit code returned by ``pyrefly check``.
+    """
+    from koopa.prefix import koopa_prefix
+
+    pyrefly_cmd = shutil.which("pyrefly")
+    if pyrefly_cmd is None:
+        msg = "pyrefly is not installed."
+        raise RuntimeError(msg)
+    config = os.path.join(koopa_prefix(), "pyproject.toml")
+    cmd = [pyrefly_cmd, "check", "--config", config, *args]
+    return _run_tool(cmd, quiet=quiet)
+
+
+def _handle_pyrefly(args: list[str]) -> None:
+    """Handle ``koopa develop pyrefly``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed through to the ``pyrefly check`` invocation.
+    """
+    sys.exit(_run_pyrefly(args))
+
+
 def _run_numpydoc(args: list[str], *, quiet: bool = False) -> int:
     """Run ``numpydoc lint`` over the koopa source tree.
 
@@ -1294,36 +1341,119 @@ def _run_ruff_format_check(args: list[str], *, quiet: bool = False) -> int:
     return _run_tool(cmd, quiet=quiet)
 
 
+def _run_agent_config_check(args: list[str], *, quiet: bool = False) -> int:
+    """Check that generated agent-config adapters match their canonical sources.
+
+    Parameters
+    ----------
+    args : list[str]
+        Unused; accepted so this function matches the quality-gate
+        phase-runner signature.
+    quiet : bool, default False
+        Unused; accepted for the same reason. This check is always silent
+        on a pass and always prints its problem list on a failure.
+
+    Returns
+    -------
+    int
+        0 if the agent-config layout and generated files are current, 1
+        otherwise.
+    """
+    from pathlib import Path
+
+    from koopa import agent_config
+    from koopa.prefix import koopa_prefix
+
+    del args, quiet
+    problems = agent_config.check(Path(koopa_prefix()))
+    if problems:
+        for line in problems:
+            print(line, file=sys.stderr)
+        return 1
+    return 0
+
+
+def _handle_generate_agent_config(args: list[str]) -> None:
+    """Handle ``koopa develop generate-agent-config``.
+
+    Regenerates the Copilot ``.github/instructions/koopa-*.instructions.md``
+    adapters from ``.agents/rules/koopa-*.md``, and the Claude and Gemini
+    plugin-manifest adapters from the canonical ``plugins/koopa/plugin.json``.
+    See AGENTS.md's "Agent configuration" section for the full layout this
+    enforces.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand: ``--check`` reports problems
+        and exits 1 instead of writing.
+    """
+    import argparse
+    from pathlib import Path
+
+    from koopa import agent_config
+    from koopa.alert import alert_success
+    from koopa.prefix import koopa_prefix
+
+    parser = argparse.ArgumentParser(
+        prog="koopa develop generate-agent-config",
+        description="Regenerate Copilot instructions and plugin manifests from .agents/.",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="report stale or missing generated files and exit 1 instead of writing them",
+    )
+    parsed = parser.parse_args(args)
+
+    root = Path(koopa_prefix())
+    if parsed.check:
+        if _run_agent_config_check([], quiet=True) != 0:
+            msg = "Agent config is stale. Run: koopa develop generate-agent-config"
+            raise RuntimeError(msg)
+        alert_success("agent config is current.")
+        return
+
+    written, removed = agent_config.write(root)
+    for path in written:
+        print(f"wrote {path}")
+    for path in removed:
+        print(f"removed {path}")
+    alert_success(f"agent config updated [{len(written)} written, {len(removed)} removed].")
+
+
 def _handle_check(args: list[str]) -> None:
     """Handle ``koopa develop check``.
 
-    Runs the full Python quality gate as one command: ``ruff check``,
-    ``ruff format --check``, ``pyright``, ``ty check``, ``numpydoc``, then
-    ``pytest``. Phases run in cheap-to-expensive order and stop at the first
-    failure, so a fast lint error fails in seconds instead of waiting for
-    pytest. A passing phase's output is hidden; the failing phase prints its
-    full output before the gate raises.
+    Runs the full quality gate as one command: ``agent config``,
+    ``ruff check``, ``ruff format --check``, ``pyright``, ``ty check``,
+    ``pyrefly check``, ``numpydoc``, then ``pytest``. Phases run in cheap-to-expensive order and
+    stop at the first failure, so a fast lint error fails in seconds instead
+    of waiting for pytest. A passing phase's output is hidden; the failing
+    phase prints its full output before the gate raises.
 
     Parameters
     ----------
     args : list[str]
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
-        an argument cannot be routed unambiguously across six tools.
+        an argument cannot be routed unambiguously across eight tools.
     """
     from koopa.alert import alert, alert_success
 
     if args:
         msg = (
             "'koopa develop check' takes no arguments. Run the individual "
-            "subcommands instead: ruff-check, ruff-format-check, pyright, "
-            "ty, numpydoc, pytest."
+            "subcommands instead: generate-agent-config --check, ruff-check, "
+            "ruff-format-check, pyright, ty, pyrefly, numpydoc, pytest."
         )
         raise RuntimeError(msg)
     phases: list[tuple[str, Callable[..., int]]] = [
+        ("agent config", _run_agent_config_check),
         ("ruff check", _run_ruff_check),
         ("ruff format", _run_ruff_format_check),
         ("pyright", _run_pyright),
         ("ty check", _run_ty),
+        ("pyrefly check", _run_pyrefly),
         ("numpydoc", _run_numpydoc),
         ("pytest", _run_pytest),
     ]
@@ -2628,6 +2758,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "activation-fork-audit": _handle_activation_fork_audit,
     "prune-app-binaries": lambda _: _handle_prune_app_binaries(),
     "format-app-json": _handle_format_app_json,
+    "generate-agent-config": _handle_generate_agent_config,
     "update-docs": _handle_update_docs,
     "generate-completion": lambda _: _handle_generate_completion(),
     "generate-man": _handle_generate_man,
@@ -2637,6 +2768,7 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "pytest": _handle_pytest,
     "pyright": _handle_pyright,
     "ty": _handle_ty,
+    "pyrefly": _handle_pyrefly,
     "log": lambda _: _handle_view_latest_tmp_log_file(),
     "cache-functions": lambda _: _handle_cache_functions(),
     "edit-app-json": lambda _: _handle_edit_app_json(),

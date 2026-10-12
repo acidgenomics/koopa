@@ -14,6 +14,7 @@ from koopa.configurers.dotfiles import (
     _chezmoi_managed,
     _chezmoiremove_targets,
     _is_chezmoi_copy,
+    _normalise_source_path,
     _print_chezmoi_status,
     _shield_user_files,
     _user_owned_remove_paths,
@@ -671,3 +672,247 @@ def test_shield_user_files_keeps_stash_on_collision(
     remaining = list(stash_root.rglob("lessons.md"))
     assert len(remaining) == 1
     assert remaining[0].read_text() == "my own notes"
+
+
+# ---------------------------------------------------------------------------
+# git-history rule for files with no chezmoi record
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def git_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """Isolate git from the real user and system configuration; return a fake home."""
+    home = tmp_path / "home"
+    home.mkdir()
+    gitconfig = tmp_path / "gitconfig"
+    gitconfig.write_text("")
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(gitconfig))
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", "/dev/null")
+    monkeypatch.setenv("HOME", str(home))
+    return home
+
+
+def _git(repo: Path, *args: str) -> None:
+    """Run git in *repo* with a throwaway identity."""
+    subprocess.run(
+        ["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@example.com", *args],
+        check=True,
+        capture_output=True,
+    )
+
+
+def _commit(repo: Path, relpath: str, content: bytes | None) -> None:
+    """Write (or delete, when *content* is None) a repo file and commit it."""
+    path = repo / relpath
+    if content is None:
+        _git(repo, "rm", "-q", relpath)
+    else:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+        _git(repo, "add", relpath)
+    _git(repo, "commit", "-q", "-m", f"change {relpath}")
+
+
+@pytest.fixture
+def tree(git_env: Path, tmp_path: Path) -> Path:
+    """Return the ``chezmoi`` source dir of a fresh git repo under tmp_path."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q")
+    (repo / "chezmoi").mkdir()
+    return repo / "chezmoi"
+
+
+def _owned(home: Path, rel: str, source: Path | None, state: dict | None = None) -> list[str]:
+    """Run the shield decision for one remove target."""
+    return _user_owned_remove_paths(str(home), {rel}, state or {}, str(source) if source else None)
+
+
+def test_history_old_version_of_deleted_file_not_shielded(tree: Path, git_env: Path) -> None:
+    """A copy of an old version of a source file later changed and deleted is removable."""
+    repo = tree.parent
+    rel = "chezmoi/dot_agents/skills/acme/SKILL.md"
+    _commit(repo, "chezmoi/dot_keep", b"keep\n")
+    _commit(repo, rel, b"v1\n")
+    _commit(repo, rel, b"v2\n")
+    _commit(repo, rel, None)
+    target = git_env / ".agents/skills/acme/SKILL.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"v1\n")
+    assert _owned(git_env, ".agents/skills/acme", tree) == []
+
+
+def test_history_current_version_not_shielded(tree: Path, git_env: Path) -> None:
+    """A copy of the current version, with executable_ and nested dirs, is removable."""
+    repo = tree.parent
+    _commit(repo, "chezmoi/dot_local/bin/executable_acme", b"#!/bin/sh\n")
+    target = git_env / ".local/bin/acme"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"#!/bin/sh\n")
+    assert _owned(git_env, ".local/bin/acme", tree) == []
+
+
+def test_history_modified_file_shielded(tree: Path, git_env: Path) -> None:
+    """A user-modified file matches no version and stays shielded."""
+    _commit(tree.parent, "chezmoi/dot_acmerc", b"original\n")
+    target = git_env / ".acmerc"
+    target.write_bytes(b"edited by user\n")
+    assert _owned(git_env, ".acmerc", tree) == [str(target)]
+
+
+def test_history_no_match_shielded(tree: Path, git_env: Path) -> None:
+    """A file with no corresponding source path stays shielded."""
+    _commit(tree.parent, "chezmoi/dot_other", b"x\n")
+    target = git_env / ".acmerc"
+    target.write_bytes(b"x\n")
+    assert _owned(git_env, ".acmerc", tree) == [str(target)]
+
+
+def test_history_template_never_matched(tree: Path, git_env: Path) -> None:
+    """A template source (foo.tmpl) is never compared, even with identical bytes."""
+    _commit(tree.parent, "chezmoi/dot_acmerc.tmpl", b"same\n")
+    target = git_env / ".acmerc"
+    target.write_bytes(b"same\n")
+    assert _owned(git_env, ".acmerc", tree) == [str(target)]
+
+
+def test_history_symlink_never_matched(tree: Path, git_env: Path) -> None:
+    """A symlink is never history-matched, even when its target has matching content."""
+    _commit(tree.parent, "chezmoi/dot_acmerc", b"same\n")
+    real = git_env / "real"
+    real.write_bytes(b"same\n")
+    link = git_env / ".acmerc"
+    link.symlink_to(real)
+    assert _owned(git_env, ".acmerc", tree) == [str(link)]
+
+
+def test_history_hash_differs_in_record_still_checks_history(tree: Path, git_env: Path) -> None:
+    """A record with a different hash does not block a history match."""
+    _commit(tree.parent, "chezmoi/dot_acmerc", b"same\n")
+    target = git_env / ".acmerc"
+    target.write_bytes(b"same\n")
+    state: dict[str, dict[str, object]] = {
+        str(target): {"type": "file", "contentsSHA256": "0" * 64}
+    }
+    assert _owned(git_env, ".acmerc", tree, state) == []
+
+
+def test_history_source_outside_repo_shielded(git_env: Path, tmp_path: Path) -> None:
+    """A source directory outside any git repo shields the file with no exception."""
+    source = tmp_path / "plain" / "chezmoi"
+    source.mkdir(parents=True)
+    target = git_env / ".acmerc"
+    target.write_bytes(b"x\n")
+    assert _owned(git_env, ".acmerc", source) == [str(target)]
+
+
+def test_history_git_missing_shielded(
+    tree: Path, git_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With git unavailable the file stays shielded and nothing raises."""
+    _commit(tree.parent, "chezmoi/dot_acmerc", b"same\n")
+    target = git_env / ".acmerc"
+    target.write_bytes(b"same\n")
+
+    def boom(*args: object, **kwargs: object) -> None:
+        raise FileNotFoundError("git")
+
+    monkeypatch.setattr("koopa.configurers.dotfiles.subprocess.run", boom)
+    assert _owned(git_env, ".acmerc", tree) == [str(target)]
+
+
+def test_history_matching_record_wins_without_git(
+    tree: Path, git_env: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A matching chezmoi record decides without any git call."""
+    target = git_env / ".acmerc"
+    target.write_bytes(b"x\n")
+    sha = hashlib.sha256(b"x\n").hexdigest()
+    state: dict[str, dict[str, object]] = {str(target): {"type": "file", "contentsSHA256": sha}}
+
+    def boom(*args: object, **kwargs: object) -> None:
+        raise AssertionError("git must not be called")
+
+    monkeypatch.setattr("koopa.configurers.dotfiles.subprocess.run", boom)
+    assert _owned(git_env, ".acmerc", tree, state) == []
+
+
+def test_history_no_source_disables_rule(tree: Path, git_env: Path) -> None:
+    """Without a source argument the history rule is off."""
+    _commit(tree.parent, "chezmoi/dot_acmerc", b"same\n")
+    target = git_env / ".acmerc"
+    target.write_bytes(b"same\n")
+    assert _owned(git_env, ".acmerc", None) == [str(target)]
+
+
+@pytest.mark.parametrize(
+    ("source_path", "expected"),
+    [
+        ("dot_agents/skills/acme/SKILL.md", ".agents/skills/acme/SKILL.md"),
+        ("private_dot_ssh/executable_config", ".ssh/config"),
+        ("exact_private_dot_x/readonly_y", ".x/y"),
+        ("dot_a.tmpl", None),
+        ("literal_empty_dot_b", ".b"),
+    ],
+)
+def test_normalise_source_path(source_path: str, expected: str | None) -> None:
+    """Chezmoi attributes are stripped per component and templates are skipped."""
+    assert _normalise_source_path(source_path) == expected
+
+
+def test_shield_warning_has_hint_line(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Shielded files are followed by the no-record, no-history hint line."""
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setattr(os.path, "expanduser", lambda p: str(home) if p == "~" else p)
+    monkeypatch.setattr(
+        "koopa.configurers.dotfiles.xdg_cache_home", lambda: str(tmp_path / "cache")
+    )
+    target = home / "notes.md"
+    target.write_text("mine")
+    with _shield_user_files("main", [str(target)]):
+        pass
+    err = capsys.readouterr().err
+    assert "not written by chezmoi; keeping:" in err
+    assert str(target) in err
+    assert "no chezmoi record and no match in the tree history" in err
+    assert err.index(str(target)) < err.index("no chezmoi record")
+
+
+# ---------------------------------------------------------------------------
+# main: which trees are pulled
+# ---------------------------------------------------------------------------
+
+
+def test_main_pulls_work_and_private_but_never_public(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Only the work and private trees are pulled; the pinned public tree never is."""
+    home = tmp_path / "home"
+    opt = tmp_path / "opt"
+    (opt / "dotfiles").mkdir(parents=True)
+    home.mkdir()
+    monkeypatch.delenv("KOOPA_DOTFILES_SKIP_PULL", raising=False)
+    monkeypatch.setattr(os.path, "expanduser", lambda p: str(home) if p == "~" else p)
+    monkeypatch.setattr("koopa.configurers.dotfiles.opt_prefix", lambda: str(opt))
+    monkeypatch.setattr("koopa.configurers.dotfiles.koopa_prefix", lambda: str(tmp_path))
+    monkeypatch.setattr("koopa.configurers.dotfiles.os_appearance_mode", lambda: "dark")
+    pulled: list[str] = []
+    monkeypatch.setattr("koopa.configurers.dotfiles.git_pull_safe", pulled.append)
+
+    class _StopError(Exception):
+        pass
+
+    def stop(name: str) -> str:
+        raise _StopError(name)
+
+    monkeypatch.setattr("koopa.configurers.dotfiles.locate", stop)
+    with pytest.raises(_StopError):
+        main(name="dotfiles", platform="macos", mode="user")
+    assert pulled == [
+        str(home / ".config" / "koopa" / "dotfiles-work"),
+        str(home / ".config" / "koopa" / "dotfiles-private"),
+    ]
+    assert str(opt / "dotfiles") not in pulled

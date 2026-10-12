@@ -143,6 +143,32 @@ def safe_build_env() -> dict[str, str]:
     }
 
 
+def go_network_env(env: dict[str, str]) -> None:
+    """Set network-resilience defaults for Go module downloads, in place.
+
+    Behind some corporate networks, ``proxy.golang.org`` serves small module
+    zips directly but redirects large ones to ``storage.googleapis.com``,
+    which answers 403 every time. Go's default ``GOPROXY`` falls back to
+    ``direct`` only on HTTP 404 or 410, so that 403 is fatal. The ``|``
+    separator falls back on any error. Separately, some middleboxes break
+    Go's HTTP/2 client on the ``direct`` path ("received DATA before a
+    HEADERS frame"); ``http2client=0`` makes Go use HTTP/1.1.
+
+    A ``GOPROXY`` already in *env* (for example an internal mirror passed
+    through by ``safe_build_env``) is never overridden. ``http2client=0`` is
+    appended to ``GODEBUG`` unless ``GODEBUG`` already mentions ``http2client``.
+
+    Parameters
+    ----------
+    env : dict[str, str]
+        Build environment to modify in place.
+    """
+    env.setdefault("GOPROXY", "https://proxy.golang.org|direct")
+    godebug = env.get("GODEBUG", "")
+    if "http2client" not in godebug:
+        env["GODEBUG"] = f"{godebug},http2client=0" if godebug else "http2client=0"
+
+
 def _decode_direnv_diff(diff: str) -> tuple[dict[str, Any], dict[str, Any]] | None:
     """Decode direnv's 'DIRENV_DIFF' payload into (before, after) value maps.
 
@@ -285,7 +311,7 @@ def cpu_count() -> int:
         if value.isdigit() and int(value) > 0:
             num = int(value)
             break
-    avail = 0
+    avail: int = 0
     # Guard on sys.platform (not hasattr) so pyright and ty resolve
     # sched_getaffinity without ignores; runtime result is identical, since
     # the attribute genuinely does not exist outside Linux.

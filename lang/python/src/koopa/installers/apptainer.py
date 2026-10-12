@@ -7,6 +7,7 @@ from koopa.archive import extract
 from koopa.download import download
 from koopa.file_ops import chmod
 from koopa.installers._build_helper import activate_app_deps
+from koopa.system import go_network_env
 
 
 def main(
@@ -38,6 +39,7 @@ def main(
     os.makedirs(gopath, exist_ok=True)
     subprocess_env["GOCACHE"] = gocache
     subprocess_env["GOPATH"] = gopath
+    go_network_env(subprocess_env)
     url = f"https://github.com/apptainer/apptainer/archive/refs/tags/v{version}.tar.gz"
     tarball = download(url)
     extract(tarball, "src")

@@ -18,6 +18,7 @@ def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.Monke
     monkeypatch.setattr(cli_main, "_koopa_prefix", lambda: "/tmp/koopa")
 
     with (
+        patch("koopa.agent_plugins.update_agent_plugins"),
         patch("koopa.install._acquire_install_lock", return_value=True),
         patch("koopa.install._cleanup_legacy_config"),
         patch("koopa.install._release_install_lock"),
@@ -35,6 +36,44 @@ def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.Monke
         cli_main._handle_update(argparse.Namespace(mode=None, apps=[], verbose=False, system=False))
 
     update_system_apps.assert_not_called()
+
+
+def test_handle_update_reports_failed_app_without_retry(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A failed app is reported in the final summary and never retried."""
+    from koopa import install
+    from koopa.install import InstallPlanError
+
+    assert not hasattr(install, "retry_failed_apps")
+    monkeypatch.setattr(cli_main, "_require_supported_platform", lambda: None)
+    monkeypatch.setattr(cli_main, "_require_git_managed_install", lambda: None)
+    monkeypatch.setattr(cli_main, "_require_slurm_allocation", lambda: None)
+    monkeypatch.setattr(cli_main, "_koopa_prefix", lambda: "/tmp/koopa")
+    failure = InstallPlanError("1 app failed: databricks-cli.", ["databricks-cli"])
+
+    with (
+        patch("koopa.agent_plugins.update_agent_plugins"),
+        patch("koopa.install._acquire_install_lock", return_value=True),
+        patch("koopa.install._cleanup_legacy_config"),
+        patch("koopa.install._release_install_lock"),
+        patch("koopa.install._update_venv"),
+        patch("koopa.install.install_missing_default_apps"),
+        patch("koopa.install.remove_alias_app_dirs"),
+        patch("koopa.install.remove_unsupported_apps"),
+        patch("koopa.install.repair_app_symlinks"),
+        patch("koopa.install.update_bootstrap", return_value=False),
+        patch("koopa.install.update_koopa", return_value=False),
+        patch("koopa.install.update_stale_apps", side_effect=failure),
+        patch("koopa.install._run_install_plan") as run_install_plan,
+        patch("koopa.app.prune_apps"),
+        patch("koopa.alert.stop", side_effect=SystemExit(1)) as stop,
+        pytest.raises(SystemExit),
+    ):
+        cli_main._handle_update(argparse.Namespace(mode=None, apps=[], verbose=False, system=False))
+
+    run_install_plan.assert_not_called()
+    stop.assert_called_once_with("koopa update failed: 1 app failed: databricks-cli.")
 
 
 def test_update_parser_accepts_system_mode() -> None:

@@ -16,6 +16,7 @@
 .github/             export-ignore
 .githooks/           export-ignore
 CLAUDE.md            export-ignore
+GEMINI.md            export-ignore
 AGENTS.md            export-ignore
 .claudeignore        export-ignore
 todo.org             export-ignore

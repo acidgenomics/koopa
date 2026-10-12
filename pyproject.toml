@@ -115,6 +115,17 @@ verboseOutput = true
 environment.extra-paths = [ "opt/pytest/libexec/lib/python3.14/site-packages" ]
 terminal.error-on-warning = true
 
+[tool.pyrefly]
+python-version = "3.14"
+project-includes = [ "lang/python" ]
+search-path = [ "lang/python/src" ]
+site-package-path = [ "opt/pytest/libexec/lib/python3.14/site-packages" ]
+# Matches pyright's reportMissingModuleSource: a found-but-untyped third-party
+# import (no stubs, no py.typed) should not fail the gate on its own.
+errors.untyped-import = false
+# Warnings fail the gate too, matching ty's terminal.error-on-warning.
+min-severity = "warn"
+
 [tool.pytest]
 ini_options.testpaths = [ "lang/python/tests" ]
 ini_options.pythonpath = [ "lang/python/src" ]
@@ -137,8 +148,9 @@ file_patterns."pyproject.toml" = [
   'version = "{pep440_version}"',
 ]
 file_patterns.".claude-plugin/marketplace.json" = [ '"version": "{pep440_version}"' ]
+file_patterns."plugins/koopa/plugin.json" = [ '"version": "{pep440_version}"' ]
 file_patterns."plugins/koopa/.claude-plugin/plugin.json" = [ '"version": "{pep440_version}"' ]
-file_patterns."plugins/koopa/.github/plugin/plugin.json" = [ '"version": "{pep440_version}"' ]
+file_patterns."plugins/koopa/gemini-extension.json" = [ '"version": "{pep440_version}"' ]
 
 [tool.numpydoc_validation]
 checks = [

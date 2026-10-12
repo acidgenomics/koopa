@@ -1,8 +1,8 @@
 ---
 name: koopa-troubleshoot
 description: >-
-  Diagnostic commands for a koopa installation: system checks, environment
-  info, install logs, and stale app-version cleanup. Use when a koopa-managed
+  Diagnostic commands for a koopa installation (system checks, environment
+  info, install logs, and stale app-version cleanup). Use when a koopa-managed
   tool misbehaves, an install failed, or you need a full report of koopa's
   version, prefix, and platform before debugging further.
 ---

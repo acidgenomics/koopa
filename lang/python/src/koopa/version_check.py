@@ -2865,21 +2865,9 @@ def check_app_versions(  # noqa: C901, PLR0915
                     return VersionCheckResult(app_name, current, current, spec.source, None), held
             if cache is not None:
                 cache.put(app_name, latest, spec.source)
-            if current_san == latest_san:
-                msg = None
-            elif _SHA_RE.match(current) or _SHA_RE.match(latest):
-                msg = f"{app_name}: {_short_sha(current)} -> {_short_sha(latest)}"
-            else:
-                try:
-                    cur_p = _version_key(current_san)
-                    lat_p = _version_key(latest_san)
-                    if lat_p < cur_p:
-                        msg = f"{app_name}: {current} pinned too high (latest stable: {latest})"
-                    else:
-                        msg = f"{app_name}: {current} -> {latest}"
-                except (ValueError, AttributeError):
-                    msg = f"{app_name}: {current} -> {latest}"
-            return VersionCheckResult(app_name, current, latest, spec.source, None), msg
+            # No live "name: old -> new" message here: print_report already lists
+            # every outdated and pinned-too-high app, sorted, with its source.
+            return VersionCheckResult(app_name, current, latest, spec.source, None), None
         except _NetworkUnavailableError:
             msg = f"{app_name}: check failed (network unavailable)"
             return VersionCheckResult(
@@ -3144,12 +3132,15 @@ def _mirror_src_to_s3(
     with tempfile.TemporaryDirectory() as tmp:
         local = os.path.join(tmp, filename)
         try:
+            # Always quiet: curl's progress table and the temp-path "Downloading"
+            # line are noise here, independent of whether the caller wants the
+            # "Uploaded" success message below (that is what `quiet` controls).
             download_with_mirror(
                 url,
                 name,
                 filename,
                 output=local,
-                quiet=quiet,
+                quiet=True,
                 skip_koopa_mirror=True,
                 max_time=None,
             )
@@ -3436,7 +3427,6 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         if spec is not None and spec.extra_fields_fn is not None:
             extra = spec.extra_fields_fn(r.latest_version)
             data[r.name].update(extra)
-        print(f"{r.name}: {r.current_version} -> {r.latest_version}", file=sys.stderr)
         bumped.append(r)
         count += 1
     export_app_json(data)
@@ -3552,7 +3542,7 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
             text = pattern.sub(rf"\g<1>{new_version}\g<3>", text)
             count += 1
             print(
-                f"  bootstrap {func_name}: {match.group(2)} -> {new_version}",
+                f"  bootstrap.sh {func_name}: {match.group(2)} -> {new_version}",
                 file=sys.stderr,
             )
     py_app_key = _bootstrap_app_map().get("python", "")
@@ -3570,12 +3560,12 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                 text = uv_pattern.sub(rf"\g<1>{py_version}\g<3>", text)
                 count += 1
                 print(
-                    f"  bootstrap python_uv: {uv_match.group(2)} -> {py_version}",
+                    f"  bootstrap.sh python (via uv): {uv_match.group(2)} -> {py_version}",
                     file=sys.stderr,
                 )
         elif py_version:
             print(
-                f"  bootstrap python_uv: {py_version} available; held for "
+                f"  bootstrap.sh python (via uv): {py_version} available, held for "
                 f"cooldown (python-build-standalone needs time to publish a "
                 f"matching build)",
                 file=sys.stderr,
@@ -3594,7 +3584,7 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                 text = uv_ver_pattern.sub(rf"\g<1>{uv_version}\g<3>", text)
                 uv_updated = True
                 print(
-                    f"  bootstrap uv: {uv_ver_match.group(2)} -> {uv_version}",
+                    f"  bootstrap.sh uv: {uv_ver_match.group(2)} -> {uv_version}",
                     file=sys.stderr,
                 )
     if count > 0:

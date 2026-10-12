@@ -36,6 +36,7 @@ def test_handlers_expected_commands() -> None:
         "cache-functions",
         "check-skills",
         "color-mode-audit",
+        "generate-agent-config",
         "generate-completion",
         "shellcheck",
     ]
@@ -320,6 +321,17 @@ def test_check_skills_fails_on_plain_folded_scalar(tmp_path: Path) -> None:
     assert exc_info.value.code == 1
 
 
+def test_check_skills_fails_on_colon_space_in_description(tmp_path: Path) -> None:
+    """A colon-space in the description fails, since Copilot's YAML parser rejects it."""
+    content = _CLEAN_SKILL_MD.replace(
+        "description: >-\n", "description: >-\n  Topic: details.\n", 1
+    )
+    root = _write_skill(tmp_path, "example", content)
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["check-skills"]([str(root)])
+    assert exc_info.value.code == 1
+
+
 def test_check_skills_fails_on_inline_description(tmp_path: Path) -> None:
     """An inline (non-block-scalar) description fails."""
     content = """---
@@ -436,8 +448,8 @@ def test_check_skills_body_soft_ceiling_is_advisory(
 @pytest.mark.parametrize(
     ("relpath", "prefix"),
     [
-        (".claude/rules", "koopa-"),
-        ("opt/dotfiles/chezmoi/dot_claude/rules", "dotfiles-"),
+        (".agents/rules", "koopa-"),
+        ("opt/dotfiles/chezmoi/dot_agents/rules", "dotfiles-"),
     ],
 )
 def test_rule_files_carry_prefix(relpath: str, prefix: str) -> None:
@@ -622,10 +634,12 @@ def test_run_tool_not_quiet_streams_live() -> None:
 def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
     """Develop check reports success when every phase passes."""
     runners = [
+        "_run_agent_config_check",
         "_run_ruff_check",
         "_run_ruff_format_check",
         "_run_pyright",
         "_run_ty",
+        "_run_pyrefly",
         "_run_numpydoc",
         "_run_pytest",
     ]
@@ -647,22 +661,60 @@ def test_handle_check_stops_at_first_failure(
 ) -> None:
     """Develop check stops at the first failed phase instead of running the rest."""
     with (
+        patch("koopa.cli_develop._run_agent_config_check", return_value=0) as agent_config,
         patch("koopa.cli_develop._run_ruff_check", return_value=0) as ruff_check,
         patch("koopa.cli_develop._run_ruff_format_check", return_value=1) as ruff_format,
         patch("koopa.cli_develop._run_pyright", return_value=0) as pyright,
         patch("koopa.cli_develop._run_ty", return_value=0) as ty,
+        patch("koopa.cli_develop._run_pyrefly", return_value=0) as pyrefly,
         patch("koopa.cli_develop._run_numpydoc", return_value=0) as numpydoc,
         patch("koopa.cli_develop._run_pytest", return_value=0) as pytest_,
     ):
         with pytest.raises(RuntimeError, match="ruff format"):
             _DEVELOP_HANDLERS["check"]([])
 
+        agent_config.assert_called_once_with([], quiet=True)
         ruff_check.assert_called_once_with([], quiet=True)
         ruff_format.assert_called_once_with([], quiet=True)
-        for runner in (pyright, ty, numpydoc, pytest_):
+        for runner in (pyright, ty, pyrefly, numpydoc, pytest_):
             runner.assert_not_called()
 
     captured = capsys.readouterr()
+    assert "agent config passed" in captured.err
     assert "ruff check passed" in captured.err
     assert "Running ruff format." in captured.err
     assert "Running pyright." not in captured.err
+
+
+def test_generate_agent_config_help(capsys: pytest.CaptureFixture[str]) -> None:
+    """--help exits cleanly and mentions --check."""
+    with pytest.raises(SystemExit) as exc_info:
+        _DEVELOP_HANDLERS["generate-agent-config"](["--help"])
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "--check" in captured.out
+
+
+def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> None:
+    """Develop check's phase list runs 'agent config' before any other phase."""
+    runners = [
+        "_run_agent_config_check",
+        "_run_ruff_check",
+        "_run_ruff_format_check",
+        "_run_pyright",
+        "_run_ty",
+        "_run_pyrefly",
+        "_run_numpydoc",
+        "_run_pytest",
+    ]
+    patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
+    for p in patches:
+        p.start()
+    try:
+        _DEVELOP_HANDLERS["check"]([])
+    finally:
+        for p in patches:
+            p.stop()
+
+    captured = capsys.readouterr()
+    assert captured.err.index("Running agent config.") < captured.err.index("Running ruff check.")
