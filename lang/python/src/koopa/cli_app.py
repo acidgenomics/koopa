@@ -2717,7 +2717,18 @@ _OBSIDIAN_REGISTRY_CANDIDATES = (
 
 
 def _read_obsidian_registry_vault(config_path: str) -> str | None:
-    """Return the open (else most recently used) vault path from an obsidian.json file."""
+    """Return the open (else most recently used) vault path from an obsidian.json file.
+
+    Parameters
+    ----------
+    config_path : str
+        Path to the Obsidian registry JSON file.
+
+    Returns
+    -------
+    str or None
+        Vault path from the registry, or ``None`` if no usable vault is found.
+    """
     import json
 
     try:
@@ -2737,7 +2748,13 @@ def _read_obsidian_registry_vault(config_path: str) -> str | None:
 
 
 def _resolve_obsidian_vault_dir() -> str | None:
-    """Resolve the active vault: KOOPA_BUCKET, OBSIDIAN_VAULT_DIR, then Obsidian's registry."""
+    """Resolve the active vault from environment variables or Obsidian's registry.
+
+    Returns
+    -------
+    str or None
+        Resolved vault directory, or ``None`` if no vault is configured.
+    """
     for variable in ("KOOPA_BUCKET", "OBSIDIAN_VAULT_DIR"):
         value = os.environ.get(variable)
         if value:
