@@ -86,3 +86,9 @@ The plugin's `guard_report_path.py` hook reads it first when finding a notes
 vault: `KOOPA_BUCKET`, then `OBSIDIAN_VAULT_DIR`, then Obsidian's own registry
 (`obsidian.json`). With none of those found, the hook does nothing. To see the
 value in use: `[ -n "${KOOPA_BUCKET:-}" ] && echo set || echo unset`.
+
+`KOOPA_BUCKET` is always the symlink-resolved path, so it can differ as a string
+from the path a tool reports. `~/Documents` is often a symlink (for example into
+OneDrive), so `~/Documents/bucket` (what `obsidian vaults` lists) and
+`KOOPA_BUCKET` can be the same directory. Never conclude they are different
+vaults from a string comparison: run `realpath` on both first.

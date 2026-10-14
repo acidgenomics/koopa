@@ -344,6 +344,7 @@ APP_NAMESPACE_DESCRIPTIONS: dict[str, str] = {
     "md5sum": "md5sum checksum utilities.",
     "photos": "Photo and video file renaming utilities.",
     "miso": "MISO alternative-splicing index utilities.",
+    "obsidian": "Obsidian vault utilities.",
     "python": "python.acidgenomics.com package index and docs publishing.",
     "r": "r.acidgenomics.com R package repository publishing.",
     "rnaeditingindexer": "RNA editing indexer wrapper.",
@@ -474,6 +475,8 @@ APP_DESCRIPTIONS: dict[str, str] = {
     "koopa-publish-docs": "Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.",
     # md5sum
     "md5sum-check-to-new-md5-file": "Compute md5sum checksums and log them to a new .md5 file.",
+    # obsidian
+    "obsidian-bookmark": "Add a link to the dated Obsidian bookmarks note.",
     # photos
     "photos-rename-with-exiftool": "Rename photos and videos by capture date using exiftool.",
     # python

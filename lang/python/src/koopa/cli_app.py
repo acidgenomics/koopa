@@ -148,6 +148,9 @@ _APP_TREE: dict[str, Any] = {
     "miso": {
         "index": "miso-index",
     },
+    "obsidian": {
+        "bookmark": "obsidian-bookmark",
+    },
     "python": {
         "publish": "python-publish",
         "publish-docs": "python-publish-docs",
@@ -2704,6 +2707,105 @@ def _handle_wget_recursive(args: list[str]) -> None:
     )
 
 
+# -- obsidian handlers -------------------------------------------------------
+
+
+_OBSIDIAN_REGISTRY_CANDIDATES = (
+    "~/Library/Application Support/obsidian/obsidian.json",
+    "~/.config/obsidian/obsidian.json",
+)
+
+
+def _read_obsidian_registry_vault(config_path: str) -> str | None:
+    """Return the open (else most recently used) vault path from an obsidian.json file."""
+    import json
+
+    try:
+        with open(os.path.expanduser(config_path), encoding="utf-8") as handle:
+            data = json.load(handle)
+    except (OSError, ValueError):
+        return None
+    vaults = data.get("vaults") if isinstance(data, dict) else None
+    if not isinstance(vaults, dict):
+        return None
+    entries = [entry for entry in vaults.values() if isinstance(entry, dict)]
+    chosen = next((entry for entry in entries if entry.get("open") is True), None)
+    if chosen is None and entries:
+        chosen = max(entries, key=lambda entry: entry.get("ts") or 0)
+    path = chosen.get("path") if chosen else None
+    return path if isinstance(path, str) and path else None
+
+
+def _resolve_obsidian_vault_dir() -> str | None:
+    """Resolve the active vault: KOOPA_BUCKET, OBSIDIAN_VAULT_DIR, then Obsidian's registry."""
+    for variable in ("KOOPA_BUCKET", "OBSIDIAN_VAULT_DIR"):
+        value = os.environ.get(variable)
+        if value:
+            return os.path.realpath(os.path.expanduser(value))
+    for candidate in _OBSIDIAN_REGISTRY_CANDIDATES:
+        path = _read_obsidian_registry_vault(candidate)
+        if path is not None:
+            return os.path.realpath(os.path.expanduser(path))
+    return None
+
+
+def _handle_obsidian_bookmark(args: list[str]) -> None:
+    import argparse
+    from datetime import date, datetime
+    from urllib.parse import urlparse
+
+    parser = argparse.ArgumentParser(prog="koopa app obsidian bookmark")
+    parser.add_argument("url")
+    parser.add_argument("--title", default=None, help="Visible link title. Defaults to the URL.")
+    parser.add_argument(
+        "--date",
+        dest="bookmark_date",
+        default=None,
+        help="Bookmark date as YYYY-MM-DD. Defaults to today.",
+    )
+    parser.add_argument(
+        "--vault-dir",
+        default=None,
+        help="Obsidian vault root. Defaults to the active detected vault.",
+    )
+    parsed = parser.parse_args(args)
+    url = urlparse(parsed.url)
+    if url.scheme not in {"http", "https"} or not url.netloc:
+        msg = "URL must be an absolute http:// or https:// URL."
+        raise ValueError(msg)
+    day = (
+        datetime.strptime(parsed.bookmark_date, "%Y-%m-%d").date()
+        if parsed.bookmark_date
+        else date.today()
+    )
+    vault_dir = (
+        os.path.realpath(os.path.expanduser(parsed.vault_dir))
+        if parsed.vault_dir
+        else _resolve_obsidian_vault_dir()
+    )
+    if vault_dir is None:
+        msg = (
+            "No Obsidian vault detected. "
+            "Set KOOPA_BUCKET or OBSIDIAN_VAULT_DIR, or pass --vault-dir."
+        )
+        raise RuntimeError(msg)
+    note_path = os.path.join(vault_dir, day.strftime("%Y/%m/%d"), "bookmarks.md")
+    os.makedirs(os.path.dirname(note_path), exist_ok=True)
+    entry = f"- [{parsed.title or parsed.url}]({parsed.url})"
+    existing = ""
+    if os.path.isfile(note_path):
+        with open(note_path, encoding="utf-8") as handle:
+            existing = handle.read()
+    if entry in existing.splitlines():
+        print(f"Already present: {note_path}")
+        return
+    with open(note_path, "a", encoding="utf-8") as handle:
+        if existing and not existing.endswith("\n"):
+            handle.write("\n")
+        handle.write(f"{entry}\n")
+    print(f"Added: {note_path}")
+
+
 # -- handler registry --------------------------------------------------------
 
 
@@ -2719,6 +2821,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "jekyll-deploy-to-aws": _handle_jekyll_deploy_to_aws,
     "jekyll-serve": _handle_jekyll_serve,
     "md5sum-check-to-new-md5-file": _handle_md5sum_check_to_new_md5_file,
+    "obsidian-bookmark": _handle_obsidian_bookmark,
     "photos-rename-with-exiftool": _handle_photos_rename_with_exiftool,
     "wget-recursive": _handle_wget_recursive,
     "sys-linker-check": _handle_sys_linker_check,

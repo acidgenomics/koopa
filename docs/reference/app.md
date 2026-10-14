@@ -642,6 +642,19 @@ Build a MISO alternative-splicing index.
 - `--gff-file`
 - `--output-dir`
 
+## obsidian
+
+Obsidian vault utilities.
+
+(koopa-app-obsidian-bookmark)=
+### `app obsidian bookmark`
+
+Add a link to the dated Obsidian bookmarks note.
+
+- `--title`
+- `--date`
+- `--vault-dir`
+
 ## photos
 
 Photo and video file renaming utilities.

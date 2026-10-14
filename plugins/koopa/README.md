@@ -41,6 +41,9 @@ To use this plugin from Gemini CLI: `gemini extensions link
 - `skills/koopa-maintain-claude-config`: maintaining Claude Code configuration
   (CLAUDE.md, rules, hooks, skills): auditing bloat and deciding where a new
   rule belongs.
+- `skills/koopa-obsidian`: the Obsidian desktop CLI and vault mechanics, and
+  `koopa app obsidian bookmark` for dated bookmark notes (vs. the native
+  Bookmarks pane and `bookmarks-all`).
 - `skills/koopa-python`: Python virtual environment lessons (why moving a
   project breaks `.venv/bin/activate`, and why direnv `PATH_add` survives it).
 - `skills/koopa-todo-org`: org-mode `todo.org` conventions for project task

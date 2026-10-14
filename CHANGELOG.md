@@ -1,5 +1,21 @@
 # Changelog
 
+## koopa 0.35.0 (unreleased)
+
+Major changes:
+
+- Added `koopa app obsidian bookmark`, which appends a link to the dated
+  `YYYY/MM/DD/bookmarks.md` note in the Obsidian vault. The vault resolves from
+  `KOOPA_BUCKET`, then `OBSIDIAN_VAULT_DIR`, then Obsidian's registry, and is
+  symlink-resolved with `realpath`.
+
+Minor changes:
+
+- Added the `koopa-obsidian` agent skill covering the Obsidian CLI, vault
+  configuration, bookmark mechanisms, and Bases and Dataview views.
+- The `koopa-env` skill now explains that `KOOPA_BUCKET` is symlink-resolved, so
+  compare it to other vault paths with `realpath`.
+
 ## koopa 0.34.0 (2026-10-01)
 
 Major changes:
