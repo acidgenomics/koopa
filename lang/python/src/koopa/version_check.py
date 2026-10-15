@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -159,6 +160,9 @@ def _resolve_github_token() -> str | None:
 _github_token: str | None = _resolve_github_token()
 _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
+# freedesktop.org and x.org mirrors reset or refuse bursts of parallel requests.
+_rate_freedesktop = _RateLimiter(1.0)
+_FREEDESKTOP_HOSTS = ("freedesktop.org", "x.org")
 _ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
 if _ca_bundle and not os.path.isfile(_ca_bundle):
     _ca_bundle = None
@@ -475,21 +479,34 @@ def _http_get_json(
     raise last_exc
 
 
+def _is_freedesktop_url(url: str) -> bool:
+    host = urllib.parse.urlparse(url).hostname or ""
+    return any(host == h or host.endswith(f".{h}") for h in _FREEDESKTOP_HOSTS)
+
+
 def _http_get_text(
     url: str, *, timeout: int = 15, encoding: str = "utf-8", _retries: int = 2
 ) -> str:
-    _rate_default.wait()
+    freedesktop = _is_freedesktop_url(url)
+    if freedesktop:
+        _retries = max(_retries, 4)
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | TimeoutError | None = (
-        None
-    )
+    last_exc: (
+        ssl.SSLError | ConnectionResetError | OSError | urllib.error.URLError | TimeoutError | None
+    ) = None
     for attempt in range(_retries + 1):
+        (_rate_freedesktop if freedesktop else _rate_default).wait()
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return resp.read().decode(encoding)
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError) as exc:
-            if not _is_retryable_network_error(exc):
+            transient = _is_retryable_network_error(exc) or (
+                freedesktop
+                and isinstance(exc, urllib.error.URLError)
+                and not isinstance(exc, urllib.error.HTTPError)
+            )
+            if not transient:
                 raise
             last_exc = exc
             if attempt < _retries:

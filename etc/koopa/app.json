@@ -1688,7 +1688,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-10-13",
+    "date": "2026-10-15",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1696,7 +1696,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.9.18.11"
+    "version": "26.9.19.9"
   },
   "cloc": {
     "bin": [
@@ -1724,7 +1724,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-09-29",
+    "date": "2026-10-15",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1733,7 +1733,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.26.0"
+    "version": "2.26.2"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -1813,14 +1813,14 @@
       "conda"
     ],
     "category": "Python",
-    "date": "2026-08-27",
+    "date": "2026-10-15",
     "default": true,
     "description": "cross-platform package and environment manager",
     "type": "build_tool",
     "url": [
       "https://repo.anaconda.com/miniconda/"
     ],
-    "version": "26.7.1-0"
+    "version": "26.9.3-0"
   },
   "conda-build": {
     "bin": [
@@ -1863,7 +1863,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-10-14",
+    "date": "2026-10-15",
     "default": true,
     "dependencies": [
       "node"
@@ -1877,7 +1877,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.98-0"
+    "version": "1.0.99-0"
   },
   "coreutils": {
     "bin": [
@@ -2254,17 +2254,16 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-08-15",
+    "date": "2026-10-15",
     "default": false,
     "description": "ultra high-throughput 10x Flex single-cell processing",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://bioconda.github.io/recipes/cyto/README.html",
       "https://github.com/arcinstitute/cyto"
     ],
-    "version": "0.4.6"
+    "version": "0.4.7"
   },
   "dash": {
     "bin": [
@@ -4794,7 +4793,7 @@
       "julia"
     ],
     "category": "Language",
-    "date": "2026-09-26",
+    "date": "2026-10-15",
     "default": false,
     "description": "high-performance dynamic programming language",
     "type": "cli",
@@ -4803,7 +4802,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.13.1"
+    "version": "1.13.2"
   },
   "jupyterlab": {
     "bin": [
@@ -4838,7 +4837,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-08-04",
+    "date": "2026-10-15",
     "default": true,
     "description": "handy way to save and run project-specific commands",
     "installer": "conda-package",
@@ -4847,7 +4846,7 @@
       "https://github.com/casey/just/",
       "https://crates.io/crates/just"
     ],
-    "version": "1.58.0"
+    "version": "1.59.0"
   },
   "k9s": {
     "bin": [
@@ -5157,7 +5156,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-07-30",
+    "date": "2026-10-15",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -5174,7 +5173,7 @@
     "url": [
       "https://www.libarchive.org/"
     ],
-    "version": "3.8.9"
+    "version": "3.8.10"
   },
   "libassuan": {
     "build_dependencies": [
@@ -6299,7 +6298,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-14",
+    "date": "2026-10-15",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6309,7 +6308,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.9"
+    "version": "2026.10.10"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7327,7 +7326,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-10-12",
+    "date": "2026-10-15",
     "default": false,
     "dependencies": [
       "python"
@@ -7339,7 +7338,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.17.14"
+    "version": "1.18.1"
   },
   "pixi": {
     "bin": [
@@ -8678,7 +8677,7 @@
   },
   "rstudio-server": {
     "category": "R",
-    "date": "2026-09-13",
+    "date": "2026-10-15",
     "default": false,
     "description": "web-based RStudio IDE server",
     "installer_platform": "debian",
@@ -8692,7 +8691,7 @@
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
-    "version": "2026.09.0+174"
+    "version": "2026.10.0+233"
   },
   "rsync": {
     "bin": [
@@ -9466,7 +9465,7 @@
       "streamlit"
     ],
     "category": "Python",
-    "date": "2026-10-03",
+    "date": "2026-10-15",
     "default": false,
     "dependencies": [
       "python"
@@ -9479,7 +9478,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.65.0"
+    "version": "1.66.0"
   },
   "subread": {
     "bin": [
@@ -10024,7 +10023,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-10-14",
+    "date": "2026-10-15",
     "default": true,
     "dependencies": [
       "python"
@@ -10036,7 +10035,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.87"
+    "version": "0.0.88"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10958,7 +10957,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-10-13",
+    "date": "2026-10-15",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10967,7 +10966,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.23.3"
+    "version": "1.24.2"
   },
   "zellij": {
     "bin": [

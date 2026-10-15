@@ -307,6 +307,40 @@ def brew_fix_completion_dirs() -> None:
     _ensure_completion_dirs()
 
 
+def _disabled_casks(casks: list[str]) -> set[str]:
+    """Return the subset of casks that Homebrew reports as disabled.
+
+    Parameters
+    ----------
+    casks : list[str]
+        Cask names to check.
+
+    Returns
+    -------
+    set[str]
+        Names of disabled casks. Empty if the lookup fails.
+    """
+    import json
+
+    result = subprocess.run(
+        ["brew", "info", "--cask", "--json=v2", *casks],
+        capture_output=True,
+        text=True,
+        check=False,
+        stdin=subprocess.DEVNULL,
+        env=_brew_env(),
+    )
+    try:
+        payload = json.loads(result.stdout or "{}")
+    except (TypeError, ValueError):
+        return set()
+    return {
+        entry["token"]
+        for entry in payload.get("casks", [])
+        if isinstance(entry, dict) and entry.get("disabled") and entry.get("token")
+    }
+
+
 def brew_upgrade_casks() -> None:
     """Upgrade outdated casks detected via --greedy on macOS."""
     _ensure_completion_dirs()
@@ -357,6 +391,16 @@ def brew_upgrade_casks() -> None:
     }
     if skipped_casks:
         casks = [cask for cask in casks if cask not in skipped_casks]
+    if not casks:
+        return
+    # Disabled casks (e.g. failing Gatekeeper) can never be reinstalled; skip
+    # them so they don't produce an error on every run.
+    disabled = _disabled_casks(casks)
+    if disabled:
+        from koopa.progress import note
+
+        note(f"Skipping disabled casks: {', '.join(disabled)}")
+        casks = [cask for cask in casks if cask not in disabled]
     if not casks:
         return
     from koopa.system import has_sudo
