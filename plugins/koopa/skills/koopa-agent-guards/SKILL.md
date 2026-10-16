@@ -16,7 +16,9 @@ The plugin registers Python hooks that run before a tool call
 (`PreToolUse`). A block exits 2 and the harness reports the hook command, whose
 path ends in the script name, together with the reason text that states the rule
 (the reason itself does not always repeat the script name). They are strict on
-purpose, with no per-hook switch and no override.
+purpose, with no agent-side override. The only switches belong to the user:
+`koopa.allowGitRules` turns off one named git rule in one repository, and
+`push_gate.py` stays inert until a repository opts in.
 
 Three kinds of outcome: **block** (the call does not run), **ask** (the user
 gets a permission prompt; the hook never denies), and **context** (a warning
@@ -27,8 +29,9 @@ or note, nothing is stopped).
 | Script | Event and matcher | Decision | Matches | Do this instead |
 | --- | --- | --- | --- | --- |
 | `block_tmux_kill_server.py` | PreToolUse, Bash | block | `tmux ... kill-server` | `tmux kill-session -t <name>` for your own session |
-| `block_destructive_git.py` | PreToolUse, Bash | block | `reset --hard`, `clean -fd`, any force push (`-f`, `--force*`, `+refspec`), `git rm -rf`, `checkout -- .`, `branch -D`, `git push origin main` or `master` | Use a non-destructive form, or stop and ask the user to run it. A push after `cd` or `git -C` into a different repo passes |
+| `block_destructive_git.py` | PreToolUse, Bash | block | `reset --hard`, `clean -fd`, any force push (`-f`, `--force*`, `+refspec`), `git rm -rf`, `checkout -- .`, `branch -D`, `git push origin main` or `master` (also `refs/heads/main`), `push --all`/`--branches`/`--mirror`/`:`/glob. In a checkout shared by sessions: `add -A`/`-u`/`.`, `commit -a`, a whole-tree `stash`, `stash pop`/`drop`/`clear`, `restore .`, `checkout .`, `worktree remove`/`prune` | Use a non-destructive form: name the paths (`git add -- <file>`, `git stash push -- <path>`), or stop and ask the user to run it. A push after `cd` or `git -C` into a different repo passes |
 | `audit_secrets_before_push.py` | PreToolUse, Bash | block | a real `git push` whose outgoing range (`@{u}..HEAD`, else `origin/<branch>..HEAD`) holds a file named like `.env`, `.pem`, `.p12`, `credentials.json`, `secrets.*`, `*_key.*` | Remove the file from the commits, then push. History surgery needs the user |
+| `push_gate.py` | PreToolUse, Bash | block | opt-in: a `git push` sending a commit with no receipt in `$(git rev-parse --git-path koopa-push-gate)/<sha>`. Inert until that directory exists | Run the project's check on a clean tree; it writes the receipt for HEAD when it passes. Then push |
 | `guard_installs.py` | PreToolUse, Bash | block | `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman -S`, `port`, `pipx`, `poetry add`, `cpan`, `uv add`, R `install.packages`, `koopa install`, `curl ... \| sh` | Name the command or the koopa app and let the user install it |
 | `block_uv.py` | PreToolUse, Bash | block | `uv` or `uvx` in any form, also inside `bash -c`, `ssh host '...'`, substitutions | Use the project's own environment and scripts |
 | `guard_broad_scan.py` | PreToolUse, Bash | block | `find`, `grep -r`, `rg`, `fd` rooted at `~`, `$HOME`, `/`, `/Users`, `/home`, or a bare `/Users/<name>` | Scope the scan to the project or a known subpath |
@@ -41,6 +44,8 @@ or note, nothing is stopped).
 | `guard_sensitive_paths.py` | PreToolUse, Bash | ask | a command referencing `~/Documents` or `~/Downloads` (`~`, `$HOME`, `${HOME}`, `/Users/<name>`) | Answer the prompt, or the user lists safe folders in `koopa.allowedPaths` |
 | `guard_settings_keywords.py` | SessionStart and Stop, Claude Code only | context at start, block at Stop | a configured keyword in `$CLAUDE_PROJECT_DIR/.claude/settings.json` in a publishable repo | Move that permission entry to `.claude/settings.local.json` (gitignored) |
 | `guard_workspace_root.py` | SessionStart, Claude Code only | context | session root not inside any git repo, so project `.mcp.json` and `.claude/settings.json` do not load | Reopen the editor on the intended repo. `CLAUDE_ALLOW_NONREPO_ROOT=1` silences it |
+| `session_local_time.py` | SessionStart, Claude Code only | context | every session start: the local IANA time zone and UTC offset | Show times in that zone |
+| `session_compact_snapshot.py` | PreCompact and SessionStart, Claude Code only | context | PreCompact saves branch, HEAD, recent commits and `git status` per session under `$XDG_STATE_HOME/koopa/compact/`; after a compaction it prints that snapshot | Re-check the facts the summary may have dropped against the checkout |
 
 ## Rule for an agent
 
@@ -70,6 +75,11 @@ git config --global --add koopa.allowedPaths Documents/notes
   keywords are legitimate.
 - `koopa.allowedPaths`: for `guard_sensitive_paths.py`; a path under the home
   directory starting with `Documents` or `Downloads`, matched on path segments.
+- `koopa.allowGitRules`: for `block_destructive_git.py`; a rule name as printed in
+  the block message (`push origin main/master`, `stash pop`, `add -A`, ...) that
+  this repository switches off. Set it in the repository's own config (no
+  `--global`) when its workflow needs the command, for example a mirror that
+  pushes `main`.
 - Deprecated aliases, still read as a union: `koopa.restrictedTokens`,
   `koopa.restrictedTokensContentOnly`, `koopa.corpRemoteAllowlist`.
 
@@ -88,6 +98,27 @@ to change them; that is the user's call.
 - `TMPDIR`: `guard_rm.py` only allows or accepts deletes inside it, and
   `guard_tmp.py` is inactive when it is unset or itself under `/tmp`. Create
   scratch with `mktemp`, and delete only what you created.
+
+## When a guard itself fails
+
+A hook that exits with a traceback is not handled the same way by every harness.
+Claude Code treats it as a non-blocking error and runs the tool call. VS Code
+Copilot denied the call instead ("hook errored"), so a crashing guard there blocks
+every matching tool, including the edit that would repair it. Every guard therefore
+catches its own errors and picks one posture on purpose:
+
+- Text-pattern fallback, so obvious text still blocks: `block_destructive_git.py`,
+  `block_uv.py`, `guard_installs.py`, `block_tmux_kill_server.py`,
+  `audit_secrets_before_push.py`.
+- Block: `guard_env_files.py`.
+- Fail open, so a bug skips the check instead of locking every Bash or Write call:
+  `guard_rm.py`, `guard_tmp.py`, `guard_broad_scan.py`, `guard_hook_writes.py`,
+  `guard_sensitive_paths.py`, `guard_report_path.py`, `push_gate.py`, and
+  `guard_keywords.py` (the git `pre-commit` hook is its backstop).
+- Never block, by design: `session_local_time.py` and `session_compact_snapshot.py`.
+
+When editing a guard, keep it importable at every step. Add a new import in the
+same edit as its first use, or a post-edit formatter may strip it as unused.
 
 ## Gotchas
 

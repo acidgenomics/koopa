@@ -164,6 +164,33 @@ BLOCKED = [
     pytest.param("bash -c 'git reset --hard'", id="inside bash -c"),
     pytest.param("ssh host 'git branch -D old'", id="inside ssh"),
     pytest.param("echo $(git reset --hard)", id="inside substitution"),
+    pytest.param("git add -A", id="add all"),
+    pytest.param("git add --all", id="add all long"),
+    pytest.param("git add -u", id="add update"),
+    pytest.param("git add .", id="add dot"),
+    pytest.param("git add -- .", id="add dot after separator"),
+    pytest.param("git add :/", id="add repo root"),
+    pytest.param("git commit -a -m wip", id="commit all"),
+    pytest.param("git commit -am wip", id="commit all bundled"),
+    pytest.param("git stash", id="bare stash"),
+    pytest.param("git stash -u", id="stash untracked whole tree"),
+    pytest.param("git stash push -m tag", id="stash push no pathspec"),
+    pytest.param("git stash save wip", id="stash save"),
+    pytest.param("git stash pop", id="stash pop"),
+    pytest.param("git stash drop", id="stash drop"),
+    pytest.param("git stash clear", id="stash clear"),
+    pytest.param("git restore .", id="restore dot"),
+    pytest.param("git restore --staged :/", id="restore repo root"),
+    pytest.param("git checkout .", id="checkout dot no separator"),
+    pytest.param("git worktree remove ../other", id="worktree remove"),
+    pytest.param("git worktree prune", id="worktree prune"),
+    pytest.param("git -c core.pager=cat add -A", id="add all behind -c"),
+    pytest.param("git push --all", id="push all"),
+    pytest.param("git push origin --branches", id="push branches"),
+    pytest.param("git push origin --mirror", id="push mirror"),
+    pytest.param("git push origin :", id="push matching"),
+    pytest.param("git push origin 'refs/heads/*:refs/heads/*'", id="push glob"),
+    pytest.param("git push origin refs/heads/main", id="push full main ref"),
 ]
 
 ALLOWED = [
@@ -188,6 +215,20 @@ ALLOWED = [
         "python3 -I - <<'EOF'\nprint('never run git push origin main')\nEOF",
         id="python heredoc text",
     ),
+    pytest.param("git add src/x.py", id="add named file"),
+    pytest.param("git add -- src/x.py docs/y.md", id="add named files"),
+    pytest.param("git commit --amend --no-edit", id="commit amend"),
+    pytest.param('git commit -m "add a thing"', id="commit message with a"),
+    pytest.param("git stash push -u -- src/x.py", id="stash named path"),
+    pytest.param("git stash list", id="stash list"),
+    pytest.param("git stash show -p", id="stash show"),
+    pytest.param("git stash apply 'stash@{0}'", id="stash apply"),
+    pytest.param("git restore src/x.py", id="restore one file"),
+    pytest.param("git worktree list", id="worktree list"),
+    pytest.param("git worktree add ../wt feature", id="worktree add"),
+    pytest.param("git push", id="push to upstream"),
+    pytest.param("git push upstream main", id="push main to non-origin remote"),
+    pytest.param("git rebase origin/main", id="rebase stays allowed"),
 ]
 
 
@@ -237,6 +278,22 @@ def test_a_quoted_cd_target_is_understood(tmp_path: Path) -> None:
     """A quoted path with a space still names the other repository."""
     other = _make_repo_with_remote(tmp_path / "other dir")
     assert _scan.find_destructive(f'cd "{other}" && git push origin main') is None
+
+
+def test_push_all_from_a_different_repo_is_allowed(tmp_path: Path) -> None:
+    """The cd exemption also covers a push that reaches main through --all."""
+    other = _make_repo_with_remote(tmp_path / "other")
+    assert _scan.find_destructive(f"git -C {other} push --all") is None
+
+
+def test_a_repo_can_switch_off_a_rule_by_name(project: Path) -> None:
+    """`koopa.allowGitRules` in the project's git config lifts only the named rules."""
+    _git(project, "config", "--add", "koopa.allowGitRules", "push origin main/master")
+    _git(project, "config", "--add", "koopa.allowGitRules", "stash pop")
+    assert _scan.find_destructive("git push origin main") is None
+    assert _scan.find_destructive("git stash pop") is None
+    assert _scan.find_destructive("git stash drop") == "stash drop"
+    assert _scan.find_destructive("git reset --hard") == "reset --hard"
 
 
 def test_an_unparseable_command_raises() -> None:
@@ -548,10 +605,10 @@ def test_secrets_entry_does_not_block_when_git_cannot_answer(tmp_path: Path) -> 
 
 
 def test_hooks_json_files_register_all_hooks_in_order() -> None:
-    """Both registries: nine Bash hooks in order, then one group each for four more hooks.
+    """Both registries: ten Bash hooks in order, then one group each for four more hooks.
 
-    The Claude and Codex file also registers the two Claude Code only hooks under SessionStart
-    and Stop; the Copilot file has PreToolUse only.
+    The Claude and Codex file also registers the Claude Code only hooks under SessionStart,
+    PreCompact and Stop; the Copilot file has PreToolUse only.
     """
     plugin = _HOOKS_DIR.parent
     claude = json.loads((plugin / "hooks" / "hooks.json").read_text())
@@ -560,6 +617,7 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         "block_tmux_kill_server",
         "block_destructive_git",
         "audit_secrets_before_push",
+        "push_gate",
         "guard_installs",
         "block_uv",
         "guard_broad_scan",
@@ -600,14 +658,23 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         ]
     # Copilot: PreToolUse only. The Claude Code only hooks must not be registered there.
     assert set(copilot["hooks"]) == {"PreToolUse"}
-    assert set(claude["hooks"]) == {"PreToolUse", "SessionStart", "Stop"}
+    assert set(claude["hooks"]) == {"PreToolUse", "SessionStart", "PreCompact", "Stop"}
     start = claude["hooks"]["SessionStart"]
     stop = claude["hooks"]["Stop"]
+    compact = claude["hooks"]["PreCompact"]
     assert len(start) == 1
     assert "matcher" not in start[0]
     assert [h["command"] for h in start[0]["hooks"]] == [
         'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py"',
         'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard_workspace_root.py"',
+        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/session_local_time.py"',
+        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py"',
+    ]
+    # No matcher: PreCompact fires on both the manual and the automatic trigger.
+    assert len(compact) == 1
+    assert "matcher" not in compact[0]
+    assert [h["command"] for h in compact[0]["hooks"]] == [
+        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py"'
     ]
     assert len(stop) == 1
     assert "matcher" not in stop[0]
@@ -615,11 +682,12 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py"'
     ]
     copilot_text = json.dumps(copilot)
-    assert "guard_settings_keywords" not in copilot_text
-    assert "guard_workspace_root" not in copilot_text
-    # Totals: 13 PreToolUse + 2 SessionStart + 1 Stop in the Claude file, 13 in the Copilot file.
-    assert sum(len(g["hooks"]) for e in claude["hooks"].values() for g in e) == 16
-    assert sum(len(g["hooks"]) for g in copilot["hooks"]["PreToolUse"]) == 13
+    for claude_only in ("guard_settings_keywords", "guard_workspace_root", "session_"):
+        assert claude_only not in copilot_text
+    # Totals: 14 PreToolUse + 4 SessionStart + 1 PreCompact + 1 Stop in the Claude file,
+    # 14 in the Copilot file.
+    assert sum(len(g["hooks"]) for e in claude["hooks"].values() for g in e) == 20
+    assert sum(len(g["hooks"]) for g in copilot["hooks"]["PreToolUse"]) == 14
     for group in copilot["hooks"]["PreToolUse"]:
         assert all(h["timeout"] == 5 for h in group["hooks"])
     for event in claude["hooks"].values():

@@ -15,6 +15,29 @@ Minor changes:
   configuration, bookmark mechanisms, and Bases and Dataview views.
 - The `koopa-env` skill now explains that `KOOPA_BUCKET` is symlink-resolved, so
   compare it to other vault paths with `realpath`.
+- The `block_destructive_git.py` agent hook also blocks commands that capture or
+  discard another agent session's work in a shared checkout: `git add -A`, `-u`,
+  `.` and `:/`; `git commit -a`; a whole-tree `git stash` and `stash pop`, `drop`
+  and `clear`; `git restore .`; `git checkout .`; and `git worktree remove` and
+  `prune`. Pushes that update `main` or `master` without naming it (`--all`,
+  `--branches`, `--mirror`, a bare `:` refspec, a glob, `refs/heads/main`) are
+  blocked too. `git stash push -- <path>` and `git rebase` stay allowed.
+- A repository can switch off one named git rule with
+  `git config --add koopa.allowGitRules "<rule name>"`, for example a mirror whose
+  workflow pushes `main`. Only the user sets it.
+- Added the opt-in `push_gate.py` agent hook. Once a repository's own check script
+  records receipts in `$(git rev-parse --git-path koopa-push-gate)`, it blocks an
+  agent's `git push` of any commit with no receipt. It is inert in every other
+  repository, and it fails open on a git error.
+- Added two Claude Code only session hooks. `session_compact_snapshot.py` saves
+  the branch, HEAD, recent commits, and `git status` before a context compaction
+  and prints them after it. `session_local_time.py` states the local time zone at
+  session start.
+- `guard_report_path.py` now fails open on an internal error, like the other
+  convenience guards. Before, a crash allowed the write under Claude Code and
+  denied it under Copilot.
+- The `koopa-agent-guards` skill documents what each guard does when it crashes,
+  the new rules and hooks, and the `koopa.allowGitRules` key.
 
 ## koopa 0.34.0 (2026-10-01)
 

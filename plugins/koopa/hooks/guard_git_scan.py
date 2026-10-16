@@ -24,12 +24,28 @@ On anything other than 0 or 10 the caller falls back to its original text patter
     * `git push` with a force flag (`-f`, `--force`, `--force-with-lease`) or a
       `+refspec`
     * `git rm` with recursive and force (`-rf`, `-fr`, `-r -f`)
-    * `git checkout -- .`
+    * `git checkout -- .` and `git checkout .`
     * `git branch -D`
-    * `git push origin main` or `master`, unless an earlier `cd` (or `git -C`) in
-      the same command line names a different git repository. The target is read
-      as literal text and never evaluated. Any shell syntax in it (expansion,
-      escapes, globs) counts as "the current repository", so the push is blocked.
+    * `git push origin main` or `master` (also `HEAD:main`, `refs/heads/main`), unless
+      an earlier `cd` (or `git -C`) in the same command line names a different git
+      repository. The target is read as literal text and never evaluated. Any shell
+      syntax in it (expansion, escapes, globs) counts as "the current repository",
+      so the push is blocked.
+    * `git push --all`, `--branches`, `--mirror`, a bare `:` refspec, or a glob
+      refspec to `origin` (or no remote), since each can update `main` without naming it.
+
+    Rules for a checkout shared by several agent sessions, where one session's
+    command can capture or discard another's uncommitted work:
+    * `git add -A`, `--all`, `-u`, `--update`, `git add .`, `git add :/`
+    * `git commit -a` (also bundled, such as `-am`)
+    * a bare `git stash`, `git stash push` with no pathspec, `git stash save`, and
+      `git stash pop`, `drop` or `clear`. `git stash push -- <path>` is allowed.
+    * `git restore` with a `.` or `:/` pathspec
+    * `git worktree remove` and `git worktree prune`
+
+A repository can switch a rule off by its name, for example in a checkout whose own
+workflow pushes to `main`: `git config --add koopa.allowGitRules "push origin
+main/master"`. Only the user sets this; the value is read from the project's git config.
 
 `push` finds any `git push`.
 
@@ -52,7 +68,11 @@ EXIT_UNSURE = 3
 # git options that take a separate value before the subcommand.
 _VALUE_OPTS = frozenset({"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path"})
 _UNSAFE = re.compile(r"[^A-Za-z0-9_./@%+=:,~ -]")
-_PROTECTED = re.compile(r"(^|:)(main|master)$")
+_PROTECTED = re.compile(r"(^|:)(refs/heads/)?(main|master)$")
+_ALL_BRANCH_FLAGS = frozenset({"--all", "--branches", "--mirror"})
+_WHOLE_TREE = frozenset({".", ":/"})
+_STASH_DESTROY = frozenset({"pop", "drop", "clear"})
+_STASH_VALUE_OPTS = frozenset({"-m", "--message", "--pathspec-from-file"})
 
 
 def _git_parts(argv: list[str]) -> tuple[str | None, list[str], str | None]:
@@ -113,6 +133,54 @@ def _different_repo(target: str | None, project_dir: str) -> bool:
     return bool(there) and there != here
 
 
+def _stash_rule(args: list[str]) -> str | None:
+    """Name the stash rule *args* (after `stash`) matches: a whole-tree stash or a pop/drop."""
+    words: list[str] = []
+    skip = False
+    for arg in args:
+        if skip:
+            skip = False
+        elif arg in _STASH_VALUE_OPTS:
+            skip = True
+        elif arg == "--" or not arg.startswith("-"):
+            words.append(arg)
+    if words and words[0] in _STASH_DESTROY:
+        return f"stash {words[0]}"
+    if not words or words[0] == "save" or (words[0] == "push" and words[1:] in ([], ["--"])):
+        return "stash"
+    return None
+
+
+_SHARED_CHECKOUT_NAMES = {
+    "add": "add -A",
+    "commit": "commit -a",
+    "restore": "restore .",
+    "checkout": "checkout .",
+}
+
+
+def _shared_checkout_rule(sub: str, args: list[str]) -> str | None:
+    """Name the rule for a command that captures or discards other sessions' work."""
+    positional = _positionals(args)
+    whole_tree = bool(_WHOLE_TREE.intersection(positional))
+    matched = {
+        "add": _short(args, "A")
+        or _short(args, "u")
+        or bool({"--all", "--update"}.intersection(args))
+        or whole_tree,
+        "commit": _short(args, "a") or "--all" in args,
+        "restore": whole_tree,
+        "checkout": "." in positional,
+    }
+    if matched.get(sub):
+        return _SHARED_CHECKOUT_NAMES[sub]
+    if sub == "stash":
+        return _stash_rule(args)
+    if sub == "worktree" and positional[:1] in (["remove"], ["prune"]):
+        return f"worktree {positional[0]}"
+    return None
+
+
 def _rule(sub: str, args: list[str]) -> str | None:
     """Name the always-blocked rule that *sub* with *args* matches, if any."""
     if sub == "reset" and "--hard" in args:
@@ -131,13 +199,42 @@ def _rule(sub: str, args: list[str]) -> str | None:
         return "checkout -- ."
     if sub == "branch" and _short(args, "D"):
         return "branch -D"
+    return _shared_checkout_rule(sub, args)
+
+
+def _push_main_rule(args: list[str]) -> str | None:
+    """Name the rule for a push to origin that updates main or master, named or not."""
+    positional = _positionals(args)
+    if positional and positional[0] != "origin":
+        return None
+    refspecs = positional[1:]
+    if any(_PROTECTED.search(ref) for ref in refspecs):
+        return "push origin main/master"
+    if _ALL_BRANCH_FLAGS.intersection(args) or any(ref == ":" or "*" in ref for ref in refspecs):
+        return "push --all"
     return None
+
+
+def _allowed_rules(project_dir: str) -> frozenset[str]:
+    """Rule names the project's git config switches off (`koopa.allowGitRules`)."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", project_dir, "config", "--get-all", "koopa.allowGitRules"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return frozenset()
+    return frozenset(line.strip() for line in result.stdout.splitlines() if line.strip())
 
 
 def find_destructive(command: str) -> str | None:
     """Return the name of the first destructive git rule *command* would trigger."""
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
     last_cd = None
+    allowed: frozenset[str] | None = None
     for invocation in walk(command):
         start = command_index(invocation.argv)
         if start is None:
@@ -154,17 +251,16 @@ def find_destructive(command: str) -> str | None:
         if sub is None:
             continue
         rule = _rule(sub, args)
-        if rule:
+        if rule is None and sub == "push":
+            rule = _push_main_rule(args)
+            if rule and _different_repo(c_path or last_cd, project_dir):
+                rule = None
+        if rule is None:
+            continue
+        if allowed is None:
+            allowed = _allowed_rules(project_dir)
+        if rule not in allowed:
             return rule
-        if sub == "push":
-            positional = _positionals(args)
-            if (
-                len(positional) >= 2
-                and positional[0] == "origin"
-                and _PROTECTED.search(positional[1])
-                and not _different_repo(c_path or last_cd, project_dir)
-            ):
-                return "push origin main/master"
     return None
 
 
@@ -177,6 +273,32 @@ def runs_git_push(command: str) -> bool:
         if _git_parts(invocation.argv[start:])[0] == "push":
             return True
     return False
+
+
+def project_pushes(command: str, project_dir: str) -> list[list[str]]:
+    """Return the arguments of every `git push` *command* runs in the project's own repository.
+
+    A push after a `cd` or `git -C` into a different repository is left out, with the same
+    literal, never-evaluated reading of the target that `find_destructive` uses.
+    """
+    pushes: list[list[str]] = []
+    last_cd = None
+    for invocation in walk(command):
+        start = command_index(invocation.argv)
+        if start is None:
+            continue
+        argv = invocation.argv[start:]
+        name = base(argv[0])
+        if name == "cd":
+            rest = [a for a in argv[1:] if not a.startswith("-") or a == "-"]
+            last_cd = rest[0] if rest else None
+            continue
+        if name != "git":
+            continue
+        sub, args, c_path = _git_parts(argv)
+        if sub == "push" and not _different_repo(c_path or last_cd, project_dir):
+            pushes.append(args)
+    return pushes
 
 
 def main() -> int:
