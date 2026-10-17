@@ -313,6 +313,58 @@ sight. A bare "not allowed" or "unknown setting" needs a second source before
 you touch anything: it can be a stale cache or a not-installed extension
 just as easily as a real dead key.
 
+### Terminal auto-approve regexes: test with the JavaScript engine (2026-10)
+
+`chat.tools.terminal.autoApprove` keys written as `"/pattern/flags"` are
+JavaScript regular expressions, evaluated by the editor's own engine. The shared
+rules live in `.chezmoitemplates/vscode-terminal-auto-approve.tmpl`, included by
+the Code and Antigravity templates. A deny (`false`) wins over an allow
+(`true`); an unmatched command prompts.
+
+Python's `re` is not a stand-in. Lookbehind, named groups, `\b` on non-ASCII
+text, and flag handling differ, so a pattern can pass a Python test and behave
+differently in the editor. Test with `node`, which uses the same engine family.
+Render the template to a `mktemp` directory first, and drive the test from a
+table of command to expected decision, including near-miss commands:
+
+```sh
+tmp="$(mktemp -d)"
+chezmoi execute-template --source chezmoi \
+    < chezmoi/dot_config/Code/User/settings.json.tmpl > "${tmp}/Code.json"
+node -e '
+const rules = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))
+    ["chat.tools.terminal.autoApprove"];
+const parsed = Object.entries(rules).map(([k, v]) => {
+    const m = k.match(/^\/(.*)\/([a-z]*)$/s);
+    return {v, re: new RegExp(m[1], m[2])};
+});
+const decide = c => {
+    let allow = false;
+    for (const r of parsed) {
+        if (r.re.test(c)) {
+            if (r.v === false) return "deny";
+            allow = true;
+        }
+    }
+    return allow ? "allow" : "prompt";
+};
+console.log(decide("git push origin main"));
+' "${tmp}/Code.json"
+rm "${tmp}/Code.json"
+rmdir "$tmp"
+```
+
+Pitfalls found the first time:
+
+- An allow rule for a read command (`git branch`) also allows its destructive
+  flags (`git branch -D`). Add an explicit deny for the flag form, then add that
+  case to the test table.
+- This test mimics the matching rules; it does not run the editor. A final
+  check in the app is still needed for rules that guard anything destructive.
+- The koopa guard hook blocks any shell command whose text names a credentials
+  file, even inside a test string. Test those deny rules by reading the regex,
+  not by putting such a string in the command.
+
 ## koopa VS Code Plugin Configuration
 
 ### `.luarc.json`: LuaLS config for Quarto

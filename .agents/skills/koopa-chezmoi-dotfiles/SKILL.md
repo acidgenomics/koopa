@@ -210,6 +210,34 @@ settings: anything under `opt/dotfiles/chezmoi/dot_*/`.
 Failing to add a `.chezmoiremove` entry means the orphan remains active (e.g. as a
 globally-available Claude skill) even though the source no longer tracks it.
 
+## Before Deleting a "Duplicate" Source File, Check for Symlinks (2026-10)
+
+`diff -q` and `cmp` follow symlinks, so a symlink and its target report as
+identical. Deleting the target as a "duplicate" leaves the symlink dangling, and
+chezmoi then fails on every command that reads the source tree:
+
+```
+chezmoi: stat .../dot_config/tmux/colors/dark.conf: no such file or directory
+```
+
+This happened with `dot_config/tmux/colors/`: `dark.conf` and `light.conf` are
+symlinks (git mode `120000`) to `dracula.conf` and `one-light.conf`. The two
+real files looked like unreferenced copies, and `tmux.conf.tmpl` never names
+them, because it loads the symlink names.
+
+Check before you delete anything in the source tree:
+
+```sh
+ls -l dir/                              # a "->" marks a symlink
+git ls-files -s dir/ | grep '^120000'   # mode 120000 is a symlink
+find . -type l ! -exec test -e {} \; -print   # dangling links after a delete
+```
+
+A file is only a duplicate if no symlink points at it. Treat "not referenced by
+name" as weak evidence in a tree that uses symlinks as aliases. If a delete goes
+wrong, `git checkout HEAD -- path` restores a tracked file, and
+`chezmoi managed --source chezmoi` confirms the source tree is readable again.
+
 ## macOS App Support Bridges: Use symlink_ Source Files
 
 macOS apps like VS Code, Cursor, Positron, Antigravity, nushell, and ruff read
@@ -583,6 +611,28 @@ Parse a tmux config without touching any live session:
 
 Clean exit = no parse errors. Always use koopa's bundled tmux (not `/usr/bin/tmux`)
 to match the version assumptions in the config (e.g. `%if #{>=:#{version},3.6}`).
+
+### A tmux upgrade can change a default your theme never set (2026-10)
+
+If the status bar looks different after a tmux update and the config did not
+change, the default moved. tmux 3.8 changed `window-status-current-style` from
+`default` to `underscore`, so the active window was underlined. The same release
+did it to `pane-status-current-style` and `session-status-current-style`, and it
+added a `theme` system (`themegreen`, `dark-theme-*`) that restyles any
+`*-style` option the config leaves unset.
+
+Read the real defaults from a throwaway server with no config, and compare them
+with what the theme files set:
+
+```sh
+~/.local/share/koopa/bin/tmux -L _koopa_probe -f /dev/null \
+  start-server \; show-options -gw \; show-options -g | grep -- '-style'
+~/.local/share/koopa/bin/tmux -L _koopa_probe kill-server
+```
+
+Fix a changed default in `tmux.conf.tmpl`, **above** the theme `source-file`
+lines, not in the generated Dracula Pro files (never hardcode Pro values; see the
+theme-colors rule). After `chezmoi apply`, press the prefix and `r` to reload.
 
 ### When targeted apply is safe from an agent session
 
