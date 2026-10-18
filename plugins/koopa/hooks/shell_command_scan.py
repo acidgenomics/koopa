@@ -6,7 +6,12 @@ comment all look the same as a real call. This module tokenizes the command and
 lists every simple command that would actually run, so a policy can ask about
 commands instead of about strings.
 
-`walk(command)` returns one `Invocation` per simple command. It descends into
+`walk(command)` returns one `Invocation` per simple command. A command's `argv` starts at
+the command itself: leading `NAME=value` words (quoted or not) and the reserved words that
+introduce a command list (`do`, `then`, `else`, `elif`, `if`, `while`, `until`, `{`, `!`)
+are skipped. Each `Invocation` also carries `scope`, which tells apart the shell text it came
+from (the top level, each quoted string handed to `ssh` or `bash -c`, each `$(...)`), and
+`assignments`, the `NAME=value` words that led it. It descends into
 everything the shell would execute:
 
     * `$(...)` and backtick substitutions, even inside double quotes
@@ -119,6 +124,10 @@ INTERPRETERS = frozenset(
 _PYTHON = re.compile(r"^python[0-9.]*$")
 ASSIGNMENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 
+# Reserved words that introduce a command list. The command is the next word, so
+# `do rm -rf x`, `then rm -rf x`, `{ rm -rf x; }` and `! rm -rf x` all run `rm`.
+LEADING_RESERVED = frozenset({"!", "{", "do", "elif", "else", "if", "then", "until", "while"})
+
 
 # Options of each wrapper that take a value in the next word. A wrapper missing
 # here, or an option missing from its set, is read as a flag with no value.
@@ -203,6 +212,15 @@ class Invocation:
         backtick substitutions.
     interpreter: True when the pipeline feeds an interpreter such as `python3`.
     payloads: quoted strings and heredoc bodies handed to that interpreter.
+    scope: which piece of shell text the command came from. Text handed to `ssh`,
+        `bash -c`, and the like, and each `$(...)`, is a scope of its own. A shell
+        variable set in one scope is not visible in another.
+    assignments: the `NAME=value` words that lead the command, as `(name, sub)`
+        pairs. `sub` is the text of the one `$(...)` or backtick substitution that
+        makes up the whole value, and only when the command is nothing but that
+        one assignment (`T=$(mktemp -d)`), because only then does the shell keep
+        the variable. In every other case `sub` is None, including
+        `NAME=value cmd`, which sets NAME for `cmd` alone.
     """
 
     argv: list
@@ -210,6 +228,8 @@ class Invocation:
     sub_names: frozenset
     interpreter: bool
     payloads: list
+    scope: int = 0
+    assignments: tuple = ()
 
 
 class _Word:
@@ -496,13 +516,55 @@ def base(value):
     return value.rsplit("/", 1)[-1]
 
 
-def _command_words(cmd):
-    """The command's words after any leading `NAME=value` assignments."""
+def _is_assignment(word: _Word) -> bool:
+    """True for a `NAME=value` word, whether or not the value is quoted."""
+    kind, text = word.parts[0]
+    return kind == "bare" and bool(ASSIGNMENT.match(text))
+
+
+def _leading(cmd: _Cmd) -> tuple[int, list[_Word]]:
+    """Split off what comes before the command word.
+
+    Returns `(k, assignments)`: `cmd.words[k:]` are the command and its arguments, and
+    `assignments` are the leading `NAME=value` words. Reserved words such as `do` and `{`
+    are skipped, because the command is the word after them.
+    """
     words = cmd.words
+    assignments = []
     k = 0
-    while k < len(words) and words[k].all_bare and ASSIGNMENT.match(words[k].value):
+    while k < len(words):
+        word = words[k]
+        if _is_assignment(word):
+            assignments.append(word)
+        elif not (word.all_bare and word.value in LEADING_RESERVED):
+            break
         k += 1
-    return words[k:]
+    return k, assignments
+
+
+def _command_words(cmd):
+    """The command's words after any leading `NAME=value` assignments and reserved words."""
+    return cmd.words[_leading(cmd)[0] :]
+
+
+def _assignments(cmd: _Cmd) -> tuple[tuple[str, str | None], ...]:
+    """Return the leading assignments of *cmd* as `(name, sub)` pairs (see `Invocation`)."""
+    k, words = _leading(cmd)
+    pairs = []
+    for word in words:
+        name = word.parts[0][1].split("=", 1)[0]
+        value = word.parts[0][1][len(name) + 1 :]
+        whole_sub = (
+            len(words) == 1
+            and k == len(cmd.words)
+            and len(cmd.subs) == 1
+            and (
+                (len(word.parts) == 1 and value in ("$", "`"))
+                or (len(word.parts) == 2 and not value and word.parts[1] == ("dq", " "))
+            )
+        )
+        pairs.append((name, cmd.subs[0] if whole_sub else None))
+    return tuple(pairs)
 
 
 def _names(cmd):
@@ -525,9 +587,11 @@ def _is_interpreter(name):
     return name in INTERPRETERS or bool(_PYTHON.match(name))
 
 
-def _walk(text, depth, out):
+def _walk(text, depth, out, scopes: list[int]):
     if depth > MAX_DEPTH:
         raise ParseError("commands nested too deeply")
+    scope = scopes[0]
+    scopes[0] += 1
     cmds = _Parser(text).parse()
     by_group = {}
     for cmd in cmds:
@@ -572,10 +636,12 @@ def _walk(text, depth, out):
                 sub_names=frozenset(sub_names),
                 interpreter=interp,
                 payloads=payloads,
+                scope=scope,
+                assignments=_assignments(cmd),
             )
         )
         for text_to_walk in nested:
-            _walk(text_to_walk, depth + 1, out)
+            _walk(text_to_walk, depth + 1, out, scopes)
 
 
 def walk(command):
@@ -584,7 +650,7 @@ def walk(command):
     Raises ParseError when the command cannot be tokenized with confidence.
     """
     out = []
-    _walk(command, 0, out)
+    _walk(command, 0, out, [0])
     return out
 
 

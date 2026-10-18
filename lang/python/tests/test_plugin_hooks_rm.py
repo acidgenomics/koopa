@@ -299,3 +299,121 @@ def test_hook_allows_only_when_every_batched_command_is_allowed(tree: dict) -> N
     other = {"args": {"command": "ls"}}
     assert '"allow"' in _hook_payload({"toolCalls": [allowed, allowed]}, tree).stdout
     assert _hook_payload({"toolCalls": [allowed, other]}, tree).stdout == ""
+
+
+# A directory made by `mktemp -d` in the same command text is scratch the command itself
+# created, so removing it is not denied. The hook only stops denying it: the normal
+# permission flow still decides, so every case below is no opinion, never allow.
+FRESH_NO_OPINION = [
+    "T=$(mktemp -d); touch $T/a; rm -rf $T",
+    'T="$(mktemp -d)"; rm -rf "$T"',
+    "T=`mktemp -d`; rm -rf $T",
+    "T=$(mktemp -d -p /scratch); rm -rf ${{T}}",
+    'T=$(mktemp -d); rm -rf -- "$T"',
+    'T=$(mktemp -d) && rm -rf "$T"',
+    "T=$(mktemp --directory); rm -rf $T",
+    "T=$(mktemp -dt s.XXXX); rm -rf $T",
+    'T=$(mktemp -d); sudo rm -rf "$T"',
+    "ssh host 'T=$(mktemp -d); rm -rf $T'",
+    "ssh host 'T=$(mktemp -d); for u in a b; do touch $T/$u; done; rm -rf $T'",
+    "bash -c 'T=$(mktemp -d); rm -rf \"$T\"'",
+]
+
+# Each of these must stay denied: the variable is not provably a directory just made.
+FRESH_STILL_DENIED = [
+    'T=$(mktemp -d); rm -rf "$T/sub"',  # an empty $T would make this `/sub`
+    'T=$(mktemp -d); rm -rf "$T"/*',  # an empty $T would make this `/*`
+    "T=$(mktemp -d); T=/; rm -rf $T",
+    "T=/; rm -rf $T",
+    "T=$(mktemp); rm -rf $T",  # a file, not a directory
+    "T=$(mktemp -d -u); rm -rf $T",  # -u only prints a name
+    "T=$(mktemp -d --dry-run); rm -rf $T",
+    "T=$(mktemp -d | cat); rm -rf $T",
+    "T=$(echo /); rm -rf $T",
+    "rm -rf $T; T=$(mktemp -d)",  # the rm runs before the assignment
+    "T=$(mktemp -d) rm -rf $T",  # sets T for rm alone; $T expands first, empty
+    "A=1 T=$(mktemp -d); rm -rf $T",
+    "T=$(mktemp -d); read T; rm -rf $T",
+    "T=$(mktemp -d); export T=/; rm -rf $T",
+    "T=$(mktemp -d); unset T; rm -rf $T",
+    "T=$(mktemp -d); for T in /; do :; done; rm -rf $T",
+    'T=$(mktemp -d); eval "T=/"; rm -rf $T',
+    "T=$(mktemp -d); printf -v T /; rm -rf $T",
+    "T=$(mktemp -d); ssh host 'rm -rf $T'",  # assigned here, used on another host
+    "T=$(mktemp -d); rm -rf $T $HOME",
+    "T=$(mktemp -d); rm -rf /",
+    'T=$(mktemp -d); rm -rf "$U"',
+    "rm -rf $T",
+    "echo $T | xargs rm -rf",
+]
+
+
+@pytest.mark.parametrize("template", FRESH_NO_OPINION)
+def test_a_directory_made_by_mktemp_is_not_denied(template: str, tree: dict) -> None:
+    """A directory made by mktemp -d in the same text is left to the normal flow."""
+    command = template.format(**tree)
+    assert _decide(command, tree) is None, command
+
+
+@pytest.mark.parametrize("template", FRESH_STILL_DENIED)
+def test_a_variable_that_is_not_provably_fresh_stays_denied(template: str, tree: dict) -> None:
+    """A variable that may not hold a directory just made is still denied."""
+    command = template.format(**tree)
+    assert _verdict(_decide(command, tree)) == "deny", command
+
+
+def test_hook_entry_lets_a_remote_mktemp_cleanup_through(tree: dict) -> None:
+    """Through the real entry, a remote mktemp cleanup exits 0 with no block."""
+    result = _hook("ssh host 'T=$(mktemp -d); touch $T/a; rm -rf $T'", tree)
+    assert (result.returncode, result.stdout) == (0, "")
+
+
+# A word before the command must not hide it. Each of these used to get no decision.
+HIDDEN_COMMAND_DENIED = [
+    'X="a" rm -rf /x',
+    "X='a b' rm -rf /x",
+    'A=1 B="2" rm -rf /x',
+    "for d in a b; do rm -rf /x; done",
+    "if true; then rm -rf /x; fi",
+    "if x; then :; elif y; then rm -rf /x; fi",
+    "if x; then :; else rm -rf /x; fi",
+    "while true; do rm -rf /x; done",
+    "until false; do rm -rf /x; done",
+    "{{ rm -rf /x; }}",
+    "true && {{ rm -rf /x; }}",
+    "! rm -rf /x",
+    "ssh host 'for d in a; do rm -rf /x; done'",
+    "bash -c 'if x; then rm -rf /x; fi'",
+]
+
+COMPOUND_NO_OPINION = [
+    "for d in a b; do echo $d; done",
+    "if true; then echo hi; fi",
+    'X="a" echo hi',
+    "{{ echo hi; }}",
+    "! true",
+    "while read l; do echo $l; done",
+    "for d in a; do rm /a/b; done",
+    "echo do rm -rf /x",
+]
+
+
+@pytest.mark.parametrize("template", HIDDEN_COMMAND_DENIED)
+def test_a_command_after_an_assignment_or_reserved_word_is_denied(
+    template: str, tree: dict
+) -> None:
+    """A quoted assignment prefix, `do`, `then`, `{` or `!` does not hide a recursive force rm."""
+    command = template.format(**tree)
+    assert _verdict(_decide(command, tree)) == "deny", command
+
+
+@pytest.mark.parametrize("template", COMPOUND_NO_OPINION)
+def test_harmless_compound_commands_have_no_opinion(template: str, tree: dict) -> None:
+    """Compound commands that remove nothing recursively are left to the normal flow."""
+    assert _decide(template.format(**tree), tree) is None
+
+
+def test_a_quoted_assignment_prefix_is_read_like_an_unquoted_one(tree: dict) -> None:
+    """`X="a" rm ...` is judged exactly as `X=a rm ...` is."""
+    for command in ('X="a" rm -rf {root}/tmp.abc', "X=a rm -rf {root}/tmp.abc"):
+        assert _verdict(_decide(command.format(**tree), tree)) == "allow", command
