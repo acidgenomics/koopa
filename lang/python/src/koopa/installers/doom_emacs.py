@@ -6,38 +6,60 @@ import stat
 from koopa.git import git_clone, git_submodule_init
 from koopa.installers._build_helper import activate_app_deps
 
-_DOOM_WRAPPER = """\
-#!/bin/sh
-set -eu
-_self="$0"
-if [ -L "$_self" ]
+# NOTE: Doom bakes the absolute install path into its generated profile under
+# DOOMLOCALDIR. The configurer stamps that directory with the install path it
+# synced against; a mismatch means the install was replaced (version bump), so
+# the wrapper re-syncs before running anything.
+_STAMP_CHECK = """\
+_stamp="${DOOMLOCALDIR}/.koopa-prefix"
+_real="$(cd "$prefix" && pwd -P)"
+if [ "$(cat "$_stamp" 2>/dev/null || true)" != "$_real" ]
 then
-    _self="$(readlink "$_self")"
-fi
-prefix="$(cd "$(dirname "$_self")/.." && pwd)"
-export EMACSDIR="${prefix}/libexec"
-export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
-exec "${prefix}/libexec/bin/doom" "$@"
-"""
-
-_DOOM_EMACS_WRAPPER = """\
-#!/bin/sh
-set -eu
-_self="$0"
-if [ -L "$_self" ]
-then
-    _self="$(readlink "$_self")"
-fi
-prefix="$(cd "$(dirname "$_self")/.." && pwd)"
-export EMACSDIR="${prefix}/libexec"
-export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
-if [ ! -d "${DOOMLOCALDIR}/straight" ]
-then
-    printf 'First run: configuring Doom Emacs...\\n' >&2
+    printf 'Doom Emacs install changed: configuring...\\n' >&2
     koopa configure user doom-emacs
 fi
+"""
+
+_DOOM_WRAPPER = (
+    """\
+#!/bin/sh
+set -eu
+_self="$0"
+if [ -L "$_self" ]
+then
+    _self="$(readlink "$_self")"
+fi
+prefix="$(cd "$(dirname "$_self")/.." && pwd)"
+export EMACSDIR="${prefix}/libexec"
+export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
+if [ -d "${DOOMLOCALDIR}/straight" ]
+then
+"""
+    + "\n".join(f"    {line}" if line else line for line in _STAMP_CHECK.splitlines())
+    + """
+fi
+exec "${prefix}/libexec/bin/doom" "$@"
+"""
+)
+
+_DOOM_EMACS_WRAPPER = (
+    """\
+#!/bin/sh
+set -eu
+_self="$0"
+if [ -L "$_self" ]
+then
+    _self="$(readlink "$_self")"
+fi
+prefix="$(cd "$(dirname "$_self")/.." && pwd)"
+export EMACSDIR="${prefix}/libexec"
+export DOOMLOCALDIR="${XDG_DATA_HOME:-${HOME}/.local/share}/doom"
+"""
+    + _STAMP_CHECK
+    + """\
 exec emacs --init-directory="$EMACSDIR" "$@"
 """
+)
 
 
 def main(

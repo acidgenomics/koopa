@@ -3150,15 +3150,15 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     if os.path.isdir(venv_dir):
         pyvenv_cfg = os.path.join(venv_dir, "pyvenv.cfg")
         if os.path.isfile(pyvenv_cfg):
-            venv_version = ""
+            full_ver = ""
             with open(pyvenv_cfg) as f:
                 for line in f:
                     key, _, value = line.partition("=")
                     key = key.strip()
                     if key in ("version", "version_info"):
                         full_ver = value.strip()
-                        venv_version = ".".join(full_ver.split(".")[:2])
                         break
+            venv_version = ".".join(full_ver.split(".")[:2])
             if venv_version and venv_version != python_version:
                 alert(
                     "Python version changed"
@@ -3166,6 +3166,25 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
                     " Recreating virtual environment."
                 )
                 shutil.rmtree(venv_dir)
+            elif full_ver:
+                # The venv symlinks its interpreter, so a patch upgrade of the
+                # bootstrap Python changes what runs while 'pyvenv.cfg' keeps
+                # the old patch version.
+                venv_bin = os.path.join(venv_dir, "bin", "python3")
+                res = subprocess.run(
+                    [venv_bin, "--version"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                actual = res.stdout.split()[-1] if res.returncode == 0 and res.stdout else ""
+                if actual and actual != full_ver:
+                    alert(
+                        "Python version changed"
+                        f" ({full_ver} -> {actual})."
+                        " Recreating virtual environment."
+                    )
+                    shutil.rmtree(venv_dir)
     if not os.path.isdir(venv_dir):
         from koopa.prefix import bootstrap_prefix
 

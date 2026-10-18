@@ -9,7 +9,10 @@ description: >-
   the VS Code-family templates, checking whether a setting name is real before
   adding it, editing .luarc.json, making VS Code config portable across
   machines, or debugging a rendered settings.json that has a stray blank line
-  or a key missing its 2-space indent right at a partial boundary.
+  or a key missing its 2-space indent right at a partial boundary. Also covers
+  which partial a new setting belongs in, a duplicate key that silently wins,
+  the R extension's renamed settings, per-terminal font names, and a setting
+  that seems to have no effect.
 ---
 
 # koopa VS Code Configuration
@@ -92,6 +95,23 @@ Correct font settings (no ligatures, Nerd Font Mono for glyph coverage):
 for terminals). The fallback `'JetBrains Mono'` ensures the editor stays usable
 if the Nerd Font is not installed.
 
+**Other terminals (2026-10).** Match the font name to each app's resolver. The
+CoreText names of the installed `JetBrainsMonoNLNerdFontMono-Regular.ttf` are
+family `JetBrainsMonoNL NFM`, full `JetBrainsMonoNL NFM Regular`, PostScript
+`JetBrainsMonoNLNFM-Regular`. The long name `JetBrainsMonoNL Nerd Font Mono` is
+none of them.
+
+| App | String that is safe | Why |
+|---|---|---|
+| VS Code, Cursor, Antigravity, Positron | `JetBrainsMonoNL NFM` | Chromium resolver, exact CoreText family |
+| Hyper | `"JetBrainsMonoNL NFM"` first in the list | also Electron, same resolver as VS Code |
+| kitty, Alacritty, WezTerm | `JetBrainsMonoNL NFM` | CoreText-backed; the family name is the one string that is certain to match |
+| Ghostty | the long name also works | own fuzzy font discovery; it already did before this check |
+
+A session once set the long name in kitty, Alacritty, WezTerm and Hyper after
+checking only that the font files existed, then corrected it from this skill's own
+rule. Run the `mdls` check above before you change a font string in any app.
+
 ### Shared settings.json architecture
 
 Code, Antigravity, and Cursor overlap by ~85%; Positron is structured
@@ -103,8 +123,8 @@ holds that app's own deltas:
 
 | Partial | Covers | Called by |
 |---|---|---|
-| `vscode-fork-common.tmpl` | ~130 settings byte-identical across Code/Antigravity/Cursor | Code, Antigravity, Cursor: always LAST (its final line has no trailing comma) |
-| `vscode-universal-common.tmpl` | 17 settings verified byte-identical across all four apps | Code, Antigravity, Cursor, Positron |
+| `vscode-fork-common.tmpl` | about 120 settings identical across Code/Antigravity/Cursor (not Positron) | Code, Antigravity, Cursor: always LAST (its final line has no trailing comma) |
+| `vscode-universal-common.tmpl` | about 35 settings shared by all four apps: fonts, telemetry and update switches, editor and files basics (rulers, word wrap, trailing whitespace, final newline), the macOS terminal profiles | Code, Antigravity, Cursor, Positron |
 | `dracula-pro-theme.tmpl` | Theme-name detection, parameterized by each app's own extension-glob path via `list` | all four |
 | `dracula-pro-diff-colors.tmpl` | Colorblind-safe `workbench.colorCustomizations` content (no outer key/braces of its own) | all four, but spliced differently per app: inside `vscode-fork-common.tmpl`'s existing `colorCustomizations` object for Code/Antigravity/Cursor, inside a fresh one opened in Positron's own file (it has no other `colorCustomizations` source) |
 | `vscode-app-code.tmpl`, `vscode-app-cursor.tmpl`, `vscode-app-positron.tmpl`, `vscode-app-antigravity.tmpl` | That app's own deltas, plus the `includeTemplate` calls into the four partials above | that app's `dot_config/<App>/User/settings.json.tmpl` only |
@@ -312,6 +332,123 @@ Net lesson: an enum's "Valid values: ..." is ground truth, worth fixing on
 sight. A bare "not allowed" or "unknown setting" needs a second source before
 you touch anything: it can be a stale cache or a not-installed extension
 just as easily as a real dead key.
+
+### Where a new setting goes, and the duplicate-key trap (2026-10)
+
+The assembled JSON passes through `fromJson | toPrettyJson`. A key that appears
+twice in the text is **last-wins and silent**: no error, no merge. The app file
+includes `vscode-universal-common.tmpl` then `vscode-fork-common.tmpl`, so
+fork-common is the last word. Three rules follow.
+
+1. **Shared by all four apps:** `vscode-universal-common.tmpl`. Example: telemetry
+   off, which Positron had been missing because the keys lived in fork-common.
+2. **Shared by Code, Cursor and Antigravity, not Positron:**
+   `vscode-fork-common.tmpl`. Never set the same key again in an app file; the
+   fork-common copy wins and your app-file value is dead.
+3. **Different per app, or tied to one extension:** the app file only, and remove
+   the key from fork-common. Example: `editor.inlineSuggest.enabled` was `false` in
+   fork-common, so a Code-only `true` could not take effect until the shared key was
+   removed and each app set its own (Code `true`; Cursor and Antigravity `false`,
+   since they ship their own completion). Another: `path-autocomplete.pathMappings`
+   sits in Code's file because only Code has that extension installed.
+
+**A key owned by an extension goes only where that extension exists.** A key that
+the app itself defines (`telemetry.*`, `files.*`, `editor.*`) is safe to share. A
+key an extension defines is not: `redhat.telemetry.enabled` comes from the Red Hat
+YAML extension, which Code has and Positron does not. Moving it into
+`vscode-universal-common.tmpl` made Positron show "Unknown Configuration Setting"
+for it, and a Positron audit against its manifests caught it (2026-10). It lives in
+`vscode-fork-common.tmpl` again. Before you move any extension-prefixed key into
+the universal partial, run the manifest audit for **every** app that includes it.
+Cursor was not audited because it is not installed on the work machines; its
+template stays for personal machines.
+
+A per-language block (`"[python]"`, `"[toml]"`) is one key, so it is replaced whole,
+not merged. Keep each language block in the app files, never split across a
+partial and an app file.
+
+Count the key in the raw assembled text before it is parsed, because the parsed
+file hides duplicates:
+
+```sh
+chezmoi execute-template --source chezmoi \
+    '{{ includeTemplate "vscode-app-code.tmpl" . }}' \
+    | grep -c '^  "editor.inlineSuggest.enabled"'   # expect 1
+```
+
+Do not move `security.workspace.trust.*` into the universal partial to "share"
+it: that would change Positron's security posture without a decision.
+
+### R extension 3.0.1: renamed and removed settings (2026-10)
+
+Found by reading `reditorsupport.r-3.0.1/package.json`
+(`contributes.configuration`), not from memory. The editor flagged some of these;
+`r.rpath.*` it did not.
+
+| Old key | Use instead |
+|---|---|
+| `r.plot.useHttpgd: true` | `r.plot.backend: "httpgd"` (enum `auto`, `standard`, `httpgd`, `jgd`) |
+| `r.rterm.linux`, `r.rterm.mac` | `r.consolePath` (one key, any platform) |
+| `r.rterm.option` | `r.consoleArgs` |
+| `r.rtermSendDelay` | `r.consoleSendDelay` |
+| `r.rpath.linux`, `r.rpath.mac` | `r.executablePath` (vanilla R, never radian) |
+| `r.session.data.rowLimit`, `r.session.levelOfObjectDetail`, `r.workspaceViewer.showObjectSize` | none; absent from the manifest, delete them |
+
+Positron has its own R support and does not use these keys. To audit a whole
+rendered file against every installed manifest, including the bundled ones, use the
+recipe in `koopa-chezmoi-dotfiles`, "Audit a whole rendered settings file".
+
+### Terminal auto-approve regexes: test with the JavaScript engine (2026-10)
+
+`chat.tools.terminal.autoApprove` keys written as `"/pattern/flags"` are
+JavaScript regular expressions, evaluated by the editor's own engine. The shared
+rules live in `.chezmoitemplates/vscode-terminal-auto-approve.tmpl`, included by
+the Code and Antigravity templates. A deny (`false`) wins over an allow
+(`true`); an unmatched command prompts.
+
+Python's `re` is not a stand-in. Lookbehind, named groups, `\b` on non-ASCII
+text, and flag handling differ, so a pattern can pass a Python test and behave
+differently in the editor. Test with `node`, which uses the same engine family.
+Render the template to a `mktemp` directory first, and drive the test from a
+table of command to expected decision, including near-miss commands:
+
+```sh
+tmp="$(mktemp -d)"
+chezmoi execute-template --source chezmoi \
+    < chezmoi/dot_config/Code/User/settings.json.tmpl > "${tmp}/Code.json"
+node -e '
+const rules = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))
+    ["chat.tools.terminal.autoApprove"];
+const parsed = Object.entries(rules).map(([k, v]) => {
+    const m = k.match(/^\/(.*)\/([a-z]*)$/s);
+    return {v, re: new RegExp(m[1], m[2])};
+});
+const decide = c => {
+    let allow = false;
+    for (const r of parsed) {
+        if (r.re.test(c)) {
+            if (r.v === false) return "deny";
+            allow = true;
+        }
+    }
+    return allow ? "allow" : "prompt";
+};
+console.log(decide("git push origin main"));
+' "${tmp}/Code.json"
+rm "${tmp}/Code.json"
+rmdir "$tmp"
+```
+
+Pitfalls found the first time:
+
+- An allow rule for a read command (`git branch`) also allows its destructive
+  flags (`git branch -D`). Add an explicit deny for the flag form, then add that
+  case to the test table.
+- This test mimics the matching rules; it does not run the editor. A final
+  check in the app is still needed for rules that guard anything destructive.
+- The koopa guard hook blocks any shell command whose text names a credentials
+  file, even inside a test string. Test those deny rules by reading the regex,
+  not by putting such a string in the command.
 
 ## koopa VS Code Plugin Configuration
 

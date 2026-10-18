@@ -6,7 +6,9 @@ description: >-
   changes to opt/dotfiles/ that need to be committed, when the clone is in a
   detached HEAD state, or when a fix that touches both the koopa repo and
   opt/dotfiles/chezmoi appears to not take effect on a remote host after koopa
-  side changes land.
+  side changes land. Also covers work-host layering (dotfiles-work, age-encrypted
+  work files, security changes that must be mirrored there) and why develop
+  commits do not reach other hosts until they are on main.
 ---
 
 # koopa Dotfiles Repo Management
@@ -105,6 +107,57 @@ dotfiles` pending-changes list. Check `git log -1 origin/main` in `opt/dotfiles`
 against the `version` pin currently in `app.json` (or just run
 `check-app-versions dotfiles` and look for "outdated") to confirm the SHA a fix
 landed in has actually been promoted, not just pushed.
+
+### Commits on `develop` are not what other hosts get (2026-10)
+
+The pin tracks the `main` branch HEAD, not `develop`. In a 2026-10 session
+`opt/dotfiles` resolved to `app/dotfiles/f50aecb`, a real clone on `develop`,
+two commits ahead of a pin that sat on `main`. Those commits were pushed and the
+tree was clean, yet no other host would see them. The path to other hosts is:
+
+1. Push `develop`, then merge it into `main` (a pull request on GitHub).
+2. `koopa develop check-app-versions --reset-cache dotfiles` rewrites the pin.
+3. Commit that `app.json` change in the koopa repo, then `koopa install dotfiles`
+   on each host.
+
+Do not hand-edit the pin to a `develop` commit; the next check would rewrite it
+to `main` anyway. Compare the two lines of history before you decide anything:
+
+```sh
+git -C opt/dotfiles log --oneline "<pin>..HEAD"   # commits ahead of the pin
+git -C opt/dotfiles branch -a --contains "<pin>"  # which branches hold the pin
+```
+
+On the build host itself, `koopa configure user dotfiles` renders from the local
+clone's working tree, including edits that are not yet committed, because
+`~/.config/koopa/dotfiles` is a symlink to `opt/dotfiles`. A clean `chezmoi diff`
+on that host therefore proves nothing about what the other hosts will receive.
+
+## Work-host layering (2026-10)
+
+`~/.config/koopa/dotfiles-work` is a symlink to a separate private work
+repository. When it exists, `koopa configure user dotfiles` applies the public
+tree first and then the work tree, and the public `chezmoi/.chezmoiignore` skips
+`.claude/settings.json`, `.npmrc`, `.config/pip/pip.conf`, `.config/uv/uv.toml`
+and `.config/zed/settings.json`. The work tree supplies those files instead.
+
+- **A security change to one of those files is two edits.** Change the public
+  template and the matching work template, and render each with
+  `chezmoi execute-template --source <tree>/chezmoi`. The public edit alone
+  never deploys on a work host. A 2026-10 hardening of the Claude permission
+  lists, the private `.npmrc` mode and the proxy lines needed both.
+- **Never copy work-only content into the public tree.** Hosts, registries,
+  cloud profiles and private marketplaces stay in the work repo. Read the work
+  file first, change only the lines that mirror the public change, and keep that
+  file's own path style.
+- **Encrypted work sources are out of reach for the agent shell.**
+  `encrypted_*` files (age) need an identity the agent environment lacks, so
+  `chezmoi status --source <work tree>` prints
+  `age: error: no identity matched any of the recipients` and an inflated
+  pending count. Do not open those files. The user's own `koopa configure user
+  dotfiles` run is the real status.
+- Related: `koopa-maintain-claude-config` ("Cross-tree Ownership") and
+  `koopa-claude-permissions` (Gotchas).
 
 ## Gotchas
 

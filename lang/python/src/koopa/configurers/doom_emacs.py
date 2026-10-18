@@ -9,6 +9,11 @@ from koopa.xdg import xdg_config_home, xdg_data_home
 
 _EARLY_INIT_MARKER = "Managed by koopa"
 
+# Records the install path the last sync ran against. The 'doom' and
+# 'doom-emacs' wrappers (installers/doom_emacs.py) compare it to their own
+# prefix and re-run this configurer on a mismatch.
+_PREFIX_STAMP = ".koopa-prefix"
+
 _EARLY_INIT_TEMPLATE = """\
 ;; -*- mode: emacs-lisp; lexical-binding: t; no-byte-compile: t -*-
 ;; Managed by koopa: koopa configure user doom-emacs
@@ -106,3 +111,5 @@ def main(
             env=env,
         )
     _write_early_init_shim(emacsdir=libexec, doomlocaldir=doom_local_dir)
+    with open(os.path.join(doom_local_dir, _PREFIX_STAMP), "w") as f:
+        f.write(os.path.realpath(opt_doom))

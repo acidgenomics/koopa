@@ -13,6 +13,9 @@
   Cross-shell defaults belong in koopa's own activation
   (`lang/{sh,bash,zsh,fish}/functions/activate/`), never a shell-specific
   dotfiles template. See `koopa-shell-internals` Gotchas.
+- **Agent configuration is `.agents`-canonical.** Native directories such as
+  `.claude` are compatibility bridges, never the default owner of shared skills
+  or rules.
 - **Never search from the filesystem root; scope to a known root.** Plain `rg`
   may still walk ignored trees here (`~/.config/ripgrep/config` sets
   `--no-ignore`), so prefer `git ls-files` or `rg --ignore-vcs`. See
@@ -30,6 +33,17 @@
   fast/local or self-cached, never an unconditional live network call.** If
   it can't be, move it behind an explicit command instead. See
   `koopa-theming` (Dracula Pro update-check case).
+- **A review agent's claim is a lead, not a fact.** Check it against ground
+  truth (`ls -l`, the extension's `package.json`, a measurement) before you edit
+  or tell the user. See `koopa-workflow-guidance` and the symlink and manifest
+  sections of `koopa-chezmoi-dotfiles`.
+- **A guard hook can block a harmless command.** Take the documented
+  alternative; never reword the command. See `koopa-agent-guards` (Gotchas).
+  Test git aliases with a stub `git`, because deny rules also hit throwaway
+  repos (`koopa-claude-permissions`).
+- **The `dotfiles` pin is not hand-edited, and `develop` is not what other hosts
+  get.** Merge to `main`, then run `check-app-versions --reset-cache dotfiles`.
+  See `koopa-dotfiles`.
 
 ## Skills and path-scoped rules
 

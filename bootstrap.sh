@@ -893,8 +893,8 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.13.0'
-    __kvar_python_version='3.14.7'
+    __kvar_uv_version='0.13.1'
+    __kvar_python_version='3.14.8'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
     if is_macos && is_arm64
@@ -988,7 +988,21 @@ install_python_uv() {
         --no-bin \
         --no-cache \
         --no-config \
-        "$__kvar_python_version"
+        "$__kvar_python_version" \
+        && ! {
+            # python-build-standalone can lag python.org by hours or days, so
+            # the pinned patch version may have no download yet. Take the newest
+            # build of the same minor series (e.g. '3.14') instead of falling
+            # back to a source build that takes minutes.
+            printf 'cpython %s unavailable; retrying with newest %s.\n' \
+                "$__kvar_python_version" "${__kvar_python_version%.*}"
+            "$__kvar_uv" python install \
+                --install-dir "$__kvar_cpython_dir" \
+                --no-bin \
+                --no-cache \
+                --no-config \
+                "${__kvar_python_version%.*}"
+        }
     then
         printf 'uv python install failed.\n' >&2
         rm -fr "$__kvar_tmpdir"

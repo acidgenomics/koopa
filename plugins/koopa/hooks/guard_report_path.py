@@ -87,4 +87,12 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as error:
+        # Fail open, like the other convenience guards: a bug here must not lock every write.
+        print(
+            f"guard_report_path: skipped after an internal error ({type(error).__name__})",
+            file=sys.stderr,
+        )
+        sys.exit(0)

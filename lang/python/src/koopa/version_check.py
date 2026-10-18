@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -159,6 +160,9 @@ def _resolve_github_token() -> str | None:
 _github_token: str | None = _resolve_github_token()
 _rate_github = _RateLimiter(1.2)
 _rate_default = _RateLimiter(5.0)
+# freedesktop.org and x.org mirrors reset or refuse bursts of parallel requests.
+_rate_freedesktop = _RateLimiter(1.0)
+_FREEDESKTOP_HOSTS = ("freedesktop.org", "x.org")
 _ca_bundle = os.environ.get("CURL_CA_BUNDLE") or os.environ.get("SSL_CERT_FILE")
 if _ca_bundle and not os.path.isfile(_ca_bundle):
     _ca_bundle = None
@@ -390,7 +394,10 @@ def _hold_reason(
     held = _src_url_hold_message(app_name, current, latest, info)
     if held is not None:
         return held
-    return _pip_index_hold_message(app_name, current, latest, info)
+    held = _pip_index_hold_message(app_name, current, latest, info)
+    if held is not None:
+        return held
+    return _github_sha_hold_message(app_name, current, latest, info)
 
 
 def _is_prerelease(version: str) -> bool:
@@ -472,21 +479,34 @@ def _http_get_json(
     raise last_exc
 
 
+def _is_freedesktop_url(url: str) -> bool:
+    host = urllib.parse.urlparse(url).hostname or ""
+    return any(host == h or host.endswith(f".{h}") for h in _FREEDESKTOP_HOSTS)
+
+
 def _http_get_text(
     url: str, *, timeout: int = 15, encoding: str = "utf-8", _retries: int = 2
 ) -> str:
-    _rate_default.wait()
+    freedesktop = _is_freedesktop_url(url)
+    if freedesktop:
+        _retries = max(_retries, 4)
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "koopa-version-checker")
-    last_exc: ssl.SSLError | ConnectionResetError | urllib.error.URLError | TimeoutError | None = (
-        None
-    )
+    last_exc: (
+        ssl.SSLError | ConnectionResetError | OSError | urllib.error.URLError | TimeoutError | None
+    ) = None
     for attempt in range(_retries + 1):
+        (_rate_freedesktop if freedesktop else _rate_default).wait()
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx) as resp:
                 return resp.read().decode(encoding)
         except (ssl.SSLError, ConnectionResetError, urllib.error.URLError, TimeoutError) as exc:
-            if not _is_retryable_network_error(exc):
+            transient = _is_retryable_network_error(exc) or (
+                freedesktop
+                and isinstance(exc, urllib.error.URLError)
+                and not isinstance(exc, urllib.error.HTTPError)
+            )
+            if not transient:
                 raise
             last_exc = exc
             if attempt < _retries:
@@ -1452,10 +1472,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://mirrors.kernel.org/gnu/ncurses/",
         "ncurses",
     ),
-    "nmap": (
-        "https://nmap.org/dist/",
-        "nmap",
-    ),
     "pcre": (
         "https://sourceforge.net/projects/pcre/files/pcre/",
         "pcre",
@@ -2171,6 +2187,13 @@ def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
 
 
 def _check_freetype() -> str:
+    """Check the latest FreeType release tag from its official GitHub mirror.
+
+    Returns
+    -------
+    str
+        Latest FreeType version.
+    """
     tags = _http_get_json(
         "https://api.github.com/repos/freetype/freetype/tags?per_page=100",
         github=True,
@@ -2186,7 +2209,37 @@ def _check_freetype() -> str:
     return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
+def _check_nmap() -> str:
+    """Check the latest Nmap release tag from its official GitHub mirror.
+
+    Returns
+    -------
+    str
+        Latest Nmap version.
+    """
+    tags = _http_get_json(
+        "https://api.github.com/repos/nmap/nmap/tags?per_page=100",
+        github=True,
+    )
+    versions = [
+        match.group(1)
+        for tag in tags
+        if (match := re.fullmatch(r"v(\d+(?:\.\d+)+)", tag.get("name", "")))
+    ]
+    if not versions:
+        msg = "No Nmap release tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=_version_key)
+
+
 def _check_boost() -> str:
+    """Check the latest Boost release tag from its official GitHub mirror.
+
+    Returns
+    -------
+    str
+        Latest Boost version.
+    """
     data = _http_get_json(
         "https://api.github.com/repos/boostorg/boost/releases/latest",
         github=True,
@@ -2240,6 +2293,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "man-db": _AppCheckSpec("gitlab", _check_man_db, ()),
     "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
+    "nmap": _AppCheckSpec("github", _check_nmap, ()),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-azure-login": _AppCheckSpec("npm", _check_npm, ("aws-azure-login",)),
     "aws-cli": _AppCheckSpec(
@@ -3328,6 +3382,60 @@ def _pip_index_hold_message(
     )
 
 
+def _github_sha_hold_message(
+    app_name: str, current: str, latest: str, info: dict[str, Any]
+) -> str | None:
+    """Return a hold message if the pinned commit is not behind the upstream HEAD.
+
+    A SHA-pinned app tracks the default branch of its GitHub repo. A pin
+    taken from another branch (e.g. ``develop``) can sit ahead of that
+    branch, and ``VersionCheckResult.is_outdated`` treats any different SHA
+    as newer, so the check would otherwise write a downgrade. Asks the GitHub
+    compare API whether `current` is behind `latest`. A failed request does
+    not hold the pin.
+
+    Parameters
+    ----------
+    app_name : str
+        Application name.
+    current : str
+        Currently pinned commit SHA.
+    latest : str
+        Latest commit SHA detected upstream.
+    info : dict[str, Any]
+        App's entry from app.json.
+
+    Returns
+    -------
+    str | None
+        Hold message explaining why the pin was not bumped, or None if the
+        bump should proceed.
+    """
+    if not (_SHA_RE.match(current) and _SHA_RE.match(latest)):
+        return None
+    for url in info.get("url", []):
+        m = re.match(r"^https://github\.com/([^/]+)/([^/]+?)/?$", url)
+        if m is None:
+            continue
+        owner, repo = m.groups()
+        try:
+            data = _http_get_json(
+                f"https://api.github.com/repos/{owner}/{repo}/compare/{latest}...{current}",
+                github=True,
+            )
+        except urllib.error.HTTPError:
+            return None
+        status = data.get("status")
+        if status == "ahead":
+            return f"{app_name}: pin {current[:7]} is ahead of upstream {latest[:7]}; pin held"
+        if status == "diverged":
+            return (
+                f"{app_name}: pin {current[:7]} has diverged from upstream {latest[:7]}; pin held"
+            )
+        return None
+    return None
+
+
 def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = False) -> int:
     """Update app.json with latest versions and return count of changes.
 
@@ -3345,13 +3453,21 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         Number of apps whose pinned version was updated.
     """
     outdated = [r for r in results if r.is_outdated]
+    json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     if not outdated:
         print("All versions are up to date.", file=sys.stderr)
+        # A bootstrap pin held for the cooldown must still sync once it clears,
+        # even when no app.json pin changed in this run.
+        bootstrap_count = update_bootstrap(json.loads(json_path.read_text()))
+        if bootstrap_count > 0:
+            print(
+                f"Updated {bootstrap_count} versions in bootstrap.sh.",
+                file=sys.stderr,
+            )
         return 0
     from koopa.app import installer_artifact_key
     from koopa.install import _has_private_access
 
-    json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
     data = json.loads(json_path.read_text())
     today = time.strftime("%Y-%m-%d")
 
@@ -3400,18 +3516,32 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
         # this loop with is_outdated still True. No belt-and-braces re-check here.
         artifact_key = installer_artifact_key(r.name, r.latest_version)
         if artifact_key is not None:
+            private = _has_private_access()
             staged = False
-            if _has_private_access():
+            current_staged = False
+            if private:
                 from koopa.aws import koopa_s3_bucket, s3_object_exists
 
-                staged = s3_object_exists(koopa_s3_bucket("artifacts"), artifact_key)
+                bucket = koopa_s3_bucket("artifacts")
+                staged = s3_object_exists(bucket, artifact_key)
+                current_key = installer_artifact_key(r.name, r.current_version)
+                if not staged and current_key is not None:
+                    current_staged = s3_object_exists(bucket, current_key)
             if not staged:
+                # Hold only to protect a working install. When the current pin's
+                # artifact is not staged either, holding protects nothing.
+                if current_staged or not private:
+                    print(
+                        f"{r.name}: {r.latest_version} available upstream; "
+                        f"artifact not staged, pin held at {r.current_version}",
+                        file=sys.stderr,
+                    )
+                    continue
                 print(
-                    f"{r.name}: {r.latest_version} available upstream; "
-                    f"artifact not staged, pin held at {r.current_version}",
+                    f"{r.name}: {r.latest_version} artifact not staged either; pin bumped "
+                    "(stage with koopa develop push-installer)",
                     file=sys.stderr,
                 )
-                continue
         missing = _missing_src_urls(data[r.name], r.latest_version)
         if missing:
             print(
@@ -3458,7 +3588,7 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
     return count
 
 
-_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS = 14
+_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS = 3
 
 
 def _past_bootstrap_uv_cooldown(pinned_date: str) -> bool:
@@ -3564,12 +3694,14 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                     file=sys.stderr,
                 )
         elif py_version:
-            print(
-                f"  bootstrap.sh python (via uv): {py_version} available, held for "
-                f"cooldown (python-build-standalone needs time to publish a "
-                f"matching build)",
-                file=sys.stderr,
+            held_match = re.search(
+                r"install_python_uv\(\) \{\n"
+                r"    __kvar_uv_version='[^']+'\n"
+                r"    __kvar_python_version='([^']+)'",
+                text,
             )
+            if held_match and held_match.group(1) != py_version:
+                print(f"  bootstrap.sh python: {py_version} held for cooldown", file=sys.stderr)
     uv_entry = app_data.get("uv", {})
     uv_updated = False
     if isinstance(uv_entry, dict):

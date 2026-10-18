@@ -210,6 +210,34 @@ settings: anything under `opt/dotfiles/chezmoi/dot_*/`.
 Failing to add a `.chezmoiremove` entry means the orphan remains active (e.g. as a
 globally-available Claude skill) even though the source no longer tracks it.
 
+## Before Deleting a "Duplicate" Source File, Check for Symlinks (2026-10)
+
+`diff -q` and `cmp` follow symlinks, so a symlink and its target report as
+identical. Deleting the target as a "duplicate" leaves the symlink dangling, and
+chezmoi then fails on every command that reads the source tree:
+
+```
+chezmoi: stat .../dot_config/tmux/colors/dark.conf: no such file or directory
+```
+
+This happened with `dot_config/tmux/colors/`: `dark.conf` and `light.conf` are
+symlinks (git mode `120000`) to `dracula.conf` and `one-light.conf`. The two
+real files looked like unreferenced copies, and `tmux.conf.tmpl` never names
+them, because it loads the symlink names.
+
+Check before you delete anything in the source tree:
+
+```sh
+ls -l dir/                              # a "->" marks a symlink
+git ls-files -s dir/ | grep '^120000'   # mode 120000 is a symlink
+find . -type l ! -exec test -e {} \; -print   # dangling links after a delete
+```
+
+A file is only a duplicate if no symlink points at it. Treat "not referenced by
+name" as weak evidence in a tree that uses symlinks as aliases. If a delete goes
+wrong, `git checkout HEAD -- path` restores a tracked file, and
+`chezmoi managed --source chezmoi` confirms the source tree is readable again.
+
 ## macOS App Support Bridges: Use symlink_ Source Files
 
 macOS apps like VS Code, Cursor, Positron, Antigravity, nushell, and ruff read
@@ -460,6 +488,58 @@ Verification order, most to least authoritative:
 A grep **hit** is strong positive evidence. A grep **miss** is weak negative
 evidence; confirm against a second source before reporting a setting as fake.
 
+### Audit a whole rendered settings file against the installed manifests (2026-10)
+
+Tier 1 scales: load every installed extension's `package.json` once and check
+all the extension-owned keys in a rendered `settings.json` in one pass. Do this
+before you trust any review's claim that a key is dead or renamed, including a
+subagent's: a model's memory of option names is the weakest source here.
+
+A manifest property can carry `deprecationMessage`, and that text names the
+replacement setting. The editor flags only some deprecated keys, so the scan also
+finds the ones it stays quiet about. A 2026-10 pass over the R extension (3.0.1)
+found `r.rterm.*` to `r.consolePath`, `r.rtermSendDelay` to
+`r.consoleSendDelay`, `r.rpath.*` to `r.executablePath` (the editor never
+flagged this one), and `r.plot.useHttpgd` to `r.plot.backend` with the enum
+`auto|standard|httpgd|jgd`. Three more keys had no manifest entry at all
+(removed upstream), so the fix was to delete them, not rename them.
+
+```sh
+chezmoi execute-template --source chezmoi \
+    < chezmoi/dot_config/Code/User/settings.json.tmpl > "${tmp}/Code.json"
+python3 -I - "${tmp}/Code.json" \
+    "${HOME}/.vscode/extensions" \
+    "/Applications/Visual Studio Code.app/Contents/Resources/app/extensions" <<'PY'
+import glob, json, os, sys
+settings = json.load(open(sys.argv[1]))
+props = {}
+for base in sys.argv[2:]:
+    for pj in glob.glob(os.path.join(base, '*', 'package.json')):
+        conf = json.load(open(pj)).get('contributes', {}).get('configuration', [])
+        for c in (conf if isinstance(conf, list) else [conf]):
+            props.update(c.get('properties') or {})
+core = ('editor.', 'files.', 'workbench.', 'terminal.', 'window.', 'git.', '[')
+for key in sorted(k for k in settings if not k.startswith(core)):
+    p = props.get(key)
+    if p is None:
+        print('NOT FOUND ', key)
+    elif p.get('deprecationMessage'):
+        print('DEPRECATED', key, '|', p['deprecationMessage'])
+PY
+```
+
+Scan two places per app: the user extensions directory (`~/.vscode/extensions`,
+`~/.positron/extensions`, `~/.cursor/extensions`) **and** the app's own bundled
+extensions (`<App>.app/Contents/Resources/app/extensions`). Skip core prefixes:
+no extension defines them. Bundled extensions such as Copilot live only in the
+app: VS Code 1.141.2 ships `extensions/copilot/package.json` (GitHub Copilot
+Chat 0.69.0), which defines `github.copilot.enable` and
+`github.copilot.nextEditSuggestions.enabled`. A first version of this scan read
+only the user directory and reported both as `NOT FOUND`, and the claim "bundled,
+so real" was made before anyone checked. Scanning the bundled directory settles
+it. A `NOT FOUND` for an app-specific prefix (`antigravity.*`) means the app is
+not installed here, so the keys stay unverified, not wrong.
+
 **"Not installed on this machine" ≠ "not a real setting."** A key for an
 extension that just isn't installed here (`github.copilot.*` when Copilot
 isn't installed) is still correct to keep in dotfiles meant to apply across
@@ -496,6 +576,16 @@ KOOPA_COLOR_MODE=dark chezmoi diff   --source="${HOME}/.local/share/koopa/opt/do
 ```
 Never trust inherited `KOOPA_COLOR_MODE` in a long-running agent session:
 always derive it from `defaults read -g AppleInterfaceStyle` first.
+
+**Measured again, 2026-10, from an agent shell:** `KOOPA_COLOR_MODE=light` was
+inherited while the OS was Dark. `chezmoi status` listed 27 files, among them
+`bat`, `bottom`, `btop`, `cheat`, `atuin` and `alacritty`. With
+`KOOPA_COLOR_MODE=dark` it listed 7, and those 7 were the real unapplied edits.
+So the count to trust is the one under the correct mode. Run it twice (inherited,
+then explicit) and subtract. A work tree adds a second false alarm:
+`encrypted_*` sources print `age: error: no identity matched any of the
+recipients` because the agent shell has no age identity; see `koopa-dotfiles`,
+"Work-host layering".
 
 ## A `stat`-Gated Fallback Branch Causes Perpetual Drift If the Stat Target Is Transient
 
@@ -583,6 +673,28 @@ Parse a tmux config without touching any live session:
 
 Clean exit = no parse errors. Always use koopa's bundled tmux (not `/usr/bin/tmux`)
 to match the version assumptions in the config (e.g. `%if #{>=:#{version},3.6}`).
+
+### A tmux upgrade can change a default your theme never set (2026-10)
+
+If the status bar looks different after a tmux update and the config did not
+change, the default moved. tmux 3.8 changed `window-status-current-style` from
+`default` to `underscore`, so the active window was underlined. The same release
+did it to `pane-status-current-style` and `session-status-current-style`, and it
+added a `theme` system (`themegreen`, `dark-theme-*`) that restyles any
+`*-style` option the config leaves unset.
+
+Read the real defaults from a throwaway server with no config, and compare them
+with what the theme files set:
+
+```sh
+~/.local/share/koopa/bin/tmux -L _koopa_probe -f /dev/null \
+  start-server \; show-options -gw \; show-options -g | grep -- '-style'
+~/.local/share/koopa/bin/tmux -L _koopa_probe kill-server
+```
+
+Fix a changed default in `tmux.conf.tmpl`, **above** the theme `source-file`
+lines, not in the generated Dracula Pro files (never hardcode Pro values; see the
+theme-colors rule). After `chezmoi apply`, press the prefix and `r` to reload.
 
 ### When targeted apply is safe from an agent session
 

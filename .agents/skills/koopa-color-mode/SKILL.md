@@ -9,7 +9,8 @@ description: >-
   host stuck on the wrong palette over SSH (gdbus/XDG-portal parsing, `read`
   clobbering, or dead in-tmux re-derive logic), confirming whether a fix that
   touches opt/dotfiles/chezmoi has actually rolled out to a host, or a code fix
-  to color_mode.py appearing to have no effect even after relaunching an app.
+  to color_mode.py appearing to have no effect even after relaunching an app, or
+  a terminal program that only shows 256 colors (COLORTERM, terminfo, truecolor).
 ---
 
 # koopa Color Mode
@@ -35,7 +36,8 @@ initial-value hint (seeds mode before the first tmux hook fires) but is not the
 live-tracking mechanism and silently fails when sshd lacks `AcceptEnv KOOPA_COLOR_MODE`.
 
 **Root cause of the `slurm` server "washed out" bug:** `RemoteCommand` was pointing to
-`/usr/bin/tmux` (3.2a) instead of koopa's bundled tmux (3.6b). Fixing the
+`/usr/bin/tmux` (3.2a) instead of koopa's bundled tmux (3.6b when this was fixed;
+3.8 as of 2026-10). Fixing the
 `RemoteCommand` is the only change needed.
 
 ## SSH Login Hang: Pre-tmux RemoteCommand Shell
@@ -87,9 +89,11 @@ as literal keystrokes into the prompt.
 
 **Cause:** remote tmux enables these DEC private modes on the *local* terminal over the
 SSH data channel:
-- Mouse tracking: `set-option -g mouse on` ([tmux.conf.tmpl:200](opt/dotfiles/chezmoi/dot_config/tmux/tmux.conf.tmpl#L200))
+- Mouse tracking: `set-option -g mouse on` (in `opt/dotfiles/chezmoi/dot_config/tmux/tmux.conf.tmpl`;
+  find it with `grep -n 'mouse on'`, because a line number goes stale)
 - Color-scheme notifications (mode 2031): the tmux ≥ 3.6 `client-dark-theme`/
-  `client-light-theme` hooks ([tmux.conf.tmpl:176-191](opt/dotfiles/chezmoi/dot_config/tmux/tmux.conf.tmpl#L176-L191))
+  `client-light-theme` hooks (the `set-hook -g client-dark-theme` and
+  `client-light-theme` lines in the same file)
 
 When SSH dies abruptly (e.g. `ssh_dispatch_run_fatal: message authentication code
 incorrect`, a transport-level packet integrity failure), tmux never sends the paired
@@ -149,6 +153,44 @@ Check mtime of `~/.config/bat/config`, `~/.config/starship.toml`,
 
 **Fix:** when `~/.cache/koopa/color-mode-applied` ≠ current OS mode, run
 `koopa configure user color-mode` **synchronously** for interactive shells.
+
+## Truecolor depends on `COLORTERM` or the terminfo entry, not on color mode (2026-10)
+
+Wrong or banded colors in a terminal program while dark/light mode is correct is a
+different bug: the program only sees 256 colors. Measured with Emacs 31.1 in a
+pseudo-terminal (`script -q /dev/null env ... emacs -nw`, printing
+`(display-color-cells)`):
+
+| Environment | Colors Emacs gets |
+|---|---|
+| `TERM=xterm-ghostty` or `tmux-256color`, `COLORTERM=truecolor` | 16,777,216 |
+| the same `TERM`, `COLORTERM` unset | 256 |
+| custom `xterm-24bit` (colon) or `xterm-24bits` (semicolon), no `COLORTERM` | 16,777,216 |
+| `xterm-direct` (ships with ncurses and Ghostty), no `COLORTERM` | 16,777,216 |
+
+So Emacs 28 and later turns on 24-bit color from `COLORTERM=truecolor` alone (its own
+NEWS says so), and the hand-built terminfo entries in `dot_terminfo` matter only
+where `COLORTERM` is missing: a bare `ssh` that does not forward it, `sudo`, or an
+older tmux. They are not needed in the normal Ghostty case. The colon and
+semicolon variants differ only in the separator of the 24-bit escape; the
+semicolon one is the fallback for terminals that do not parse colons.
+
+**tmux 3.8 sets it for you.** A throwaway tmux 3.8 server started with
+`COLORTERM` unset gave `COLORTERM=truecolor` to the program in its pane, whether or
+not `terminal-features ",xterm*:RGB"` was set and for both an `xterm-ghostty` and an
+`xterm-256color` client. So "tmux started without `COLORTERM`" is not a failure
+mode on 3.8, and the `RGB` feature is about what tmux emits to the outer
+terminal, not about this variable. Re-check on an older tmux before you rely on it.
+
+Test inside the session you care about:
+
+```sh
+echo "COLORTERM=$COLORTERM"
+emacs -nw -Q --eval '(message "%s" (display-color-cells))'
+```
+
+`16777216` means truecolor works there. `256` means export `COLORTERM=truecolor`
+from the shell that starts tmux, or use the custom entry.
 
 ## VS Code / Posit Workbench: OSC 11 Leaks `^[\`
 

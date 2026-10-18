@@ -4,7 +4,9 @@ description: >-
   Internals of koopa shell activation and update recovery. Use when optimizing
   shell startup, editing activation-path functions, caching plugin init output,
   debugging lazy-load wrappers, fixing update_koopa() merge/rebase recovery, or
-  reasoning about non-interactive activation (SSH, CI, agentic harnesses).
+  reasoning about non-interactive activation (SSH, CI, agentic harnesses), or
+  tracing which login, rc and logout files a bash or zsh session reads and in
+  what order (bash_profile, bashrc, profile, logout, zlogout).
 ---
 
 # koopa Shell Internals
@@ -125,6 +127,25 @@ re-attempting this.
 | `zsh -c` | **`.zshenv` only**, `.zshrc` is never read |
 | `zsh -lc` | `.zshenv`, `.zprofile`, `.zlogin` |
 | `zsh -ic` | `.zshenv`, `.zshrc` |
+
+**Interactive login bash (2026-10).** `dot_bash_profile` in the dotfiles source now
+sources `~/.bashrc`, and `~/.bashrc` sources `~/.profile`, which is where koopa
+activates. The chain is `.bash_profile` to `.bashrc` to `.profile`, so a login
+shell (Terminal.app, an ssh login, `bash -l -i`) activates koopa **once** and also
+gets the post-activation settings that live in `.bashrc` (the FZF colours). Before
+the change `.bash_profile` sourced `.profile` directly and skipped `.bashrc`. Do not
+add a second `source ~/.profile` to `.bash_profile`; that activates twice. The
+non-interactive rows above are unchanged, because `.bash_profile` returns before it
+sources anything unless the shell is interactive. A throwaway `HOME` with a stub
+`.profile` that appends to a file counts activations without touching real files.
+
+**Logout files.** `~/.logout` is the one shared script (it clears the console at
+the top-level shell, `SHLVL` 1, and does nothing in a nested shell). Both
+`~/.bash_logout` and `${ZDOTDIR}/.zlogout` source it, so bash and zsh behave the same.
+Only csh and tcsh read `~/.logout` by themselves. `/usr/bin/clear_console` exists
+on Linux only; the macOS branch runs `clear`. Test with a stub `clear` on a path the
+script names directly, because bash's login setup on macOS reorders `PATH` and the
+real `/usr/bin/clear` would run first.
 
 **Trap:** `.zshrc` is a dead end for `zsh -c`. If non-interactive zsh activation is
 ever wanted, `~/.zshenv` is the only rc file that runs, but see the hazards below
