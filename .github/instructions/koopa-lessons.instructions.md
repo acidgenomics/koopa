@@ -37,6 +37,17 @@ description: "Lessons (koopa core)"
   fast/local or self-cached, never an unconditional live network call.** If
   it can't be, move it behind an explicit command instead. See
   `koopa-theming` (Dracula Pro update-check case).
+- **A review agent's claim is a lead, not a fact.** Check it against ground
+  truth (`ls -l`, the extension's `package.json`, a measurement) before you edit
+  or tell the user. See `koopa-workflow-guidance` and the symlink and manifest
+  sections of `koopa-chezmoi-dotfiles`.
+- **A guard hook can block a harmless command.** Take the documented
+  alternative; never reword the command. See `koopa-agent-guards` (Gotchas).
+  Test git aliases with a stub `git`, because deny rules also hit throwaway
+  repos (`koopa-claude-permissions`).
+- **The `dotfiles` pin is not hand-edited, and `develop` is not what other hosts
+  get.** Merge to `main`, then run `check-app-versions --reset-cache dotfiles`.
+  See `koopa-dotfiles`.
 
 ## Skills and path-scoped rules
 

@@ -5,8 +5,11 @@ description: >-
   allow/ask/deny rule precedence, and the PreToolUse permissionDecision hook
   contract. Use when debugging unexpected permission prompts, understanding why
   Edit(.claude/**) or Bash(*) allow rules have no effect on .claude/ writes,
-  reasoning about acceptEdits vs plan vs bypassPermissions mode tradeoffs, or a
-  headless claude -p call that hangs with no output.
+  reasoning about acceptEdits vs plan vs bypassPermissions mode tradeoffs, a
+  headless claude -p call that hangs with no output, interpreter allow entries
+  (bash, python, sh, xargs) that bypass deny rules, a deny rule that blocks a
+  harmless test command, or a settings.json change that did not deploy on a
+  work host.
 ---
 
 # Claude Code Permission System
@@ -178,7 +181,43 @@ guards themselves.
 rejected with "not matched by file permission checks"; Edit rules cover all file-editing
 tools. `Edit(//**/*lessons.md)` is redundant with `Edit(**)`.
 
+## Gotchas from a settings-hardening session (2026-10)
+
+Observed while tightening the allow and deny lists. Items marked *untested* come
+from how rules match, not from a probe.
+
+- **An interpreter in `allow` can sidestep `deny` (untested).** Deny patterns
+  match the command text. `Bash(git push*)` matches `git push` but not
+  `bash -c "git push"` or `python -c "import subprocess; ..."`. So `Bash(bash:*)`,
+  `Bash(sh:*)`, `Bash(python:*)`, `Bash(python3:*)` and `Bash(xargs:*)` in `allow`
+  quietly turn the git deny list into advice. `find -exec`, `find -delete`,
+  `sed -i` and `awk` with `system()` are the same class. `env` and `printenv` in
+  `allow` read secret values past a path-based deny. The 2026-10 hardening removed
+  all of these from the allow list and added explicit denies for secret paths.
+- **Deny the secret *paths* as well as the files.** A `Read(**/.env*)` deny does
+  not stop `cat`, `rg` or `head` in a Bash command. Add `Bash(cat *.env*)` and
+  `Read` denies for `~/.aws`, `~/.gnupg`, `~/.ssh` and `*.pem`.
+- **Path styles.** `Read(~/.ssh/**)` is home-relative. A leading double slash
+  (`//Users/<name>/...`) is an absolute path, which is what a chezmoi template
+  produces from `/{{ .chezmoi.homeDir }}/...`. Keep one style per file.
+- **A changed deny list takes effect in the running session.** After
+  `koopa configure user dotfiles` rewrote `~/.claude/settings.json`, the next Bash
+  command that touched `~/.gnupg` was denied in the same session. The denial text
+  only says the command "has been denied", so it does not name the rule.
+- **Deny rules also hit throwaway test repositories.** `Bash(git add*)` and
+  `Bash(git commit*)` denied a command that built a scratch repo in `$TMPDIR`.
+  Test git aliases with a stub `git` on `PATH` that prints its arguments, and
+  append `"$@"` to the alias body to mimic how git passes arguments.
+- **On a work host the public settings template does not deploy.** When
+  `~/.config/koopa/dotfiles-work` exists, the public `.chezmoiignore` skips
+  `.claude/settings.json`, `.npmrc`, pip, uv and Zed settings, and the work repo
+  supplies them. Mirror every security change into the work repo's own
+  `dot_claude/settings.json.tmpl`, and never copy work-only content back into the
+  public repo. See `koopa-dotfiles` ("Work-host layering").
+
 ## See also
 
 - `koopa-maintain-claude-config`: where a new rule/hook/skill belongs; token budgets;
   the two-tree chezmoi ownership model for `~/.claude`.
+- `koopa-agent-guards`: the plugin hooks that block harmless commands, with the
+  alternative for each.

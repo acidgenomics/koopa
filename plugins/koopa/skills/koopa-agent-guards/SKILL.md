@@ -123,8 +123,12 @@ same edit as its first use, or a post-edit formatter may strip it as unused.
 ## Gotchas
 
 - A guard blocks a command that **runs** the thing, not text that mentions it.
-  `echo "uv sync"` or a commit message naming `reset --hard` passes. Only
-  `guard_broad_scan.py` is text-based, one line at a time.
+  `echo "uv sync"` or a commit message naming `reset --hard` passes. Two guards
+  are text-based instead: `guard_broad_scan.py` (one line at a time) and
+  `guard_env_files.py`, which blocks any command whose text names a `.env` file,
+  even inside a test string or a Python heredoc that never reads one (2026-10).
+  To test a deny rule that mentions such a name, read the rule instead of putting
+  the name in a command.
 - Unparsable input fails open, with exceptions: `block_uv.py` fails closed on a
   broad pattern, `guard_rm.py` still denies obvious `rm -rf` text, and
   `guard_env_files.py` blocks on an internal error. Empty or malformed stdin
@@ -145,3 +149,33 @@ same edit as its first use, or a post-edit formatter may strip it as unused.
   (`acmecorp` does not match `acmecorporation`), and a write is blocked only in
   an absolute path inside a git work tree whose `origin` is not allowlisted and
   whose path is not gitignored.
+
+## Harmless commands that were blocked, and the fix (2026-10)
+
+Seen in one long session. Each was a legitimate command, and each has a
+documented alternative. Take the alternative; do not reword the command.
+
+- **`rm -rf "$var"` or `rm -rf "${tmp:?}"`:** `guard_rm.py` cannot resolve the
+  variable, so it blocks. Delete files one by one with a plain `rm "${tmp:?}/name"`
+  (this worked), then `rmdir "${tmp:?}"`. For a whole tree, print the directory
+  from the command that created it and delete it by its literal absolute path
+  under `$TMPDIR`.
+- **`rmdir "${tmp}/x"` on its own:** a separate check built into Claude Code, not
+  this plugin, refuses a variable that could expand to a top-level directory
+  (`/bin`). It suggests the `${tmp:?}` form, which stops the shell when the
+  variable is empty. Use that form.
+- **`uv --version`:** `block_uv.py` blocks every `uv` command. Read the installed
+  version from `etc/koopa/app.json` instead.
+- **`grep -r` / `ls` / `find` that look broad:** `guard_broad_scan.py` blocked two
+  commands: one with `grep -rn` after a `cd ~/...`, and one that mixed `ls` of a
+  `/Applications` glob with `grep -a` on an app binary. In both cases the exact
+  trigger was not confirmed. Use `git grep` inside a repository, or name an exact
+  directory, and test the scoped form.
+- **A deny rule on `git add*` or `git commit*`:** the permission rules in the
+  user's Claude settings deny these even in a throwaway test repository. Test a
+  git alias with a stub `git` earlier on `PATH` that only prints its arguments,
+  and mimic git by appending `"$@"` to the alias body. See `koopa-claude-permissions`.
+- **Missing tools in the agent shell:** `timeout` is not installed (do not wrap
+  commands in it; end an interactive program with its own timer). `man` can hang
+  a non-interactive shell; use `GIT_PAGER=cat git help -c` for git option names.
+  A pseudo-terminal for a program that needs a tty: `script -q /dev/null env ...`.

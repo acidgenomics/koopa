@@ -9,7 +9,9 @@ description: >-
   or removing a plugin spec, when a plugin directory under
   ~/.local/share/nvim/lazy/ has no matching spec, when lazy-lock.json needs to be
   re-added after an update, or when org-mode markup renders with the wrong colors
-  past an unclosed marker.
+  past an unclosed marker. Also covers nvim-treesitter's main-branch rewrite
+  (no highlighting, empty parser directory), duplicate ruff diagnostics, and an
+  Enter-key mapping that breaks quickfix.
 ---
 
 # koopa Neovim
@@ -110,3 +112,64 @@ nvim -n --headless -c 'e <file>' \
       if n != "" | let gs[n] = 1 | endif | endfor |
       if !empty(gs) | echo l . " " . join(keys(gs), ",") | endif | endfor' -c 'qa!'
 ```
+
+## Gotchas from a 2026-10 config review
+
+### nvim-treesitter `main` is a rewrite: highlighting is off until you start it
+
+lazy.nvim installs the plugin's default branch, which is now the rewritten `main`.
+A spec written for the old `master` loads without error and then does nothing:
+
+- No `config` that starts highlighting. `main` does not start it for you. Call
+  `vim.treesitter.start()` on `FileType`, wrapped in `pcall` so a language with no
+  parser is skipped. Neovim 0.12 only starts it by itself for the parsers it bundles.
+- `build = ':TSInstall ...'` is the old style. Use `build = ':TSUpdate'` and call
+  `require('nvim-treesitter').install({ ... })` from `config`.
+- `lazy = false`. `main` does not support lazy loading.
+- It compiles parsers with the `tree-sitter` CLI. That CLI is a koopa app, so the
+  fix is `koopa install tree-sitter`. Guard the install call with
+  `vim.fn.executable('tree-sitter') == 1` so nvim still starts without it.
+
+Symptom that exposed it: `~/.local/share/nvim/site/parser` was empty and the plugin
+checkout had a `runtime/` directory (the `main` layout). See
+`dot_config/nvim/lua/plugins/treesitter.lua` in the chezmoi source.
+
+### A linter plugin plus the same language server doubles every diagnostic
+
+`nvim-lint` running `ruff` and `vim.lsp.enable('ruff')` both report the same
+findings, one under each source. Keep the language server (it also gives code
+actions) and delete the `nvim-lint` spec. Formatting through `conform.nvim` is
+separate and stays.
+
+### A global `<CR>` mapping overrides the built-in Enter in special buffers
+
+`vim.keymap.set('n', '<cr>', 'o<esc>')` makes Enter add a blank line everywhere,
+including quickfix and location lists (where Enter jumps), help and man pages
+(where it follows a link) and the command-line window. Restore it per buffer:
+
+```lua
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'qf', 'help', 'man', 'checkhealth' },
+    callback = function(args)
+        vim.keymap.set('n', '<cr>', '<cr>', { buffer = args.buf })
+    end,
+})
+vim.api.nvim_create_autocmd('CmdwinEnter', {
+    callback = function(args)
+        vim.keymap.set('n', '<cr>', '<cr>', { buffer = args.buf })
+    end,
+})
+```
+
+### Check a Lua edit headless, without installing anything
+
+`nvim -l` passes script arguments in the `arg` table, not in `...`. Compile each
+file with `loadfile`, run plugin spec files with `dofile` to see what they return,
+and read a mapping back with `vim.fn.maparg`:
+
+```sh
+nvim --headless -u NONE -i NONE -l check.lua file1.lua file2.lua
+```
+
+Write the script to a `mktemp -d` directory and delete it afterwards. `-u NONE`
+skips your config, so nothing loads and nothing is installed.
