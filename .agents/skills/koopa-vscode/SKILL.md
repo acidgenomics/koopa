@@ -286,29 +286,32 @@ grep -l "KOOPA_COLOR_MODE" \
 
 ### `python.defaultInterpreterPath` and picking a Python in Positron (2026-10)
 
-**The Positron template no longer sets `python.defaultInterpreterPath`.** It used to
-set it when `~/.venv/bin/python3` existed. Two reasons it is gone:
+**The Positron template sets `python.defaultInterpreterPath` only when
+`~/.venv/bin/python3` exists.** On a machine without that venv, which includes this
+Mac, it renders nothing. It was removed on 2026-10-18 and restored the same day at the
+user's request, together with the matching `~/.venv` entry in
+`jupyter.kernels.trusted` (`vscode-fork-common.tmpl`) and the remote-host key in
+`dot_vscode-server/data/Machine/settings.json.tmpl`. Keep all three or none.
 
-- Positron's own description says the setting is used only "when extension loads up
-  for the first time, no longer used once an interpreter is selected for the
-  workspace". It cannot correct an interpreter Positron already remembered. A stale
-  Python 3.12.11 session on a machine with no `~/.venv` was a remembered choice in
-  `~/Library/Application Support/Positron/User/globalStorage/state.vscdb`, not a
-  setting, and no template change would have fixed it.
-- The working pattern here is one `.venv` per repository. Open the repository
-  folder and Positron uses that folder's `.venv`, remembered per workspace. A home
-  level `~/.venv` default only adds a path that comes and goes.
+What the setting can and cannot do, from Positron's own description: it is used only
+"when extension loads up for the first time, no longer used once an interpreter is
+selected for the workspace". It cannot correct an interpreter Positron already
+remembered. A stale Python 3.12.11 session on a machine with no `~/.venv` was a
+remembered choice in
+`~/Library/Application Support/Positron/User/globalStorage/state.vscdb`, not a
+setting, and no template change would have fixed it.
+
+The everyday pattern here is still one `.venv` per repository. Open the repository
+folder (or `positron <repo>.code-workspace`) and Positron uses that folder's `.venv`,
+remembered per workspace. The home-level default is an optional first-run hint for
+hosts that have a `~/.venv`.
 
 Fix a wrong remembered session in the app: Console, **Start Session**, pick the
 interpreter you want (the koopa `bin/python`, "Global", for scratch work).
 
 A stat-gated key with a transient target also causes `chezmoi status` drift; see
 `koopa-chezmoi-dotfiles`, "A `stat`-Gated Fallback Branch Causes Perpetual Drift If
-the Stat Target Is Transient". The remote-host file
-`dot_vscode-server/data/Machine/settings.json.tmpl` no longer sets it either, and
-`vscode-fork-common.tmpl` no longer lists `~/.venv` among the trusted Jupyter
-kernels (2026-10). Dependencies live in each repository's own `.venv`; no template
-assumes a home-level environment, which keeps dependency tracking per project.
+the Stat Target Is Transient".
 
 **The interpreter picker lists koopa's app internals as "Conda".** Positron treats
 any folder that looks like a conda environment as one, so koopa apps with their own
