@@ -488,6 +488,27 @@ Verification order, most to least authoritative:
 A grep **hit** is strong positive evidence. A grep **miss** is weak negative
 evidence; confirm against a second source before reporting a setting as fake.
 
+### A setting's value type can change under you (2026-10)
+
+A key can be real and still carry the wrong *type*. `extensions.autoUpdate` was a
+boolean. In VS Code 1.141 its schema is a string with the values `"on"` and
+`"off"` (default `"on"`). The template set `false`; Positron rewrote that to `"off"`
+in the deployed file, which showed up as `MM` in `chezmoi status` with a one-line
+type flip as the whole diff. Treat that pattern, an app editing one value of a file
+chezmoi wrote, as the app telling you the current schema.
+
+Read a core setting's schema from the app bundle, not from memory:
+
+```sh
+grep -a -o -E 'extensions\.autoUpdate["]?:\{[^}]{0,420}\}' \
+    "/Applications/Visual Studio Code.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js"
+```
+
+Positron's bundle is formatted differently and the same pattern found nothing, so
+fall back to the value the app wrote. The 2026-10 resolution was to drop the key
+(the user wanted extensions to auto-update, which is the default), not to change
+its type in four apps whose versions differ.
+
 ### Audit a whole rendered settings file against the installed manifests (2026-10)
 
 Tier 1 scales: load every installed extension's `package.json` once and check
