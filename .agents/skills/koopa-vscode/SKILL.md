@@ -352,6 +352,17 @@ fork-common is the last word. Three rules follow.
    since they ship their own completion). Another: `path-autocomplete.pathMappings`
    sits in Code's file because only Code has that extension installed.
 
+**A key owned by an extension goes only where that extension exists.** A key that
+the app itself defines (`telemetry.*`, `files.*`, `editor.*`) is safe to share. A
+key an extension defines is not: `redhat.telemetry.enabled` comes from the Red Hat
+YAML extension, which Code has and Positron does not. Moving it into
+`vscode-universal-common.tmpl` made Positron show "Unknown Configuration Setting"
+for it, and a Positron audit against its manifests caught it (2026-10). It lives in
+`vscode-fork-common.tmpl` again. Before you move any extension-prefixed key into
+the universal partial, run the manifest audit for **every** app that includes it.
+Cursor was not audited because it is not installed on the work machines; its
+template stays for personal machines.
+
 A per-language block (`"[python]"`, `"[toml]"`) is one key, so it is replaced whole,
 not merged. Keep each language block in the app files, never split across a
 partial and an app file.
