@@ -2187,6 +2187,13 @@ def _apply_batch_version(latest: str, current: str, batch_size: int) -> str:
 
 
 def _check_freetype() -> str:
+    """Check the latest FreeType release tag from its official GitHub mirror.
+
+    Returns
+    -------
+    str
+        Latest FreeType version.
+    """
     tags = _http_get_json(
         "https://api.github.com/repos/freetype/freetype/tags?per_page=100",
         github=True,
@@ -2203,7 +2210,13 @@ def _check_freetype() -> str:
 
 
 def _check_nmap() -> str:
-    """Check the latest Nmap release tag from its official GitHub mirror."""
+    """Check the latest Nmap release tag from its official GitHub mirror.
+
+    Returns
+    -------
+    str
+        Latest Nmap version.
+    """
     tags = _http_get_json(
         "https://api.github.com/repos/nmap/nmap/tags?per_page=100",
         github=True,
@@ -2220,6 +2233,13 @@ def _check_nmap() -> str:
 
 
 def _check_boost() -> str:
+    """Check the latest Boost release tag from its official GitHub mirror.
+
+    Returns
+    -------
+    str
+        Latest Boost version.
+    """
     data = _http_get_json(
         "https://api.github.com/repos/boostorg/boost/releases/latest",
         github=True,
