@@ -4,11 +4,19 @@
 Blocks `reset --hard`, `clean -fd`, force pushes, `git rm -rf`, `checkout -- .`,
 `branch -D`, and `push origin main|master`. A push to main or master from a
 different repository than the current project (an earlier `cd`, or `git -C`, into
-another git root) is allowed.
+another git root) is allowed. `push --all`, `--branches`, `--mirror`, `:` and glob
+refspecs are blocked too, since each can update main without naming it.
 
-This is an opinionated default and a HARD block: there is no override. If you
+It also blocks commands that capture or discard other agent sessions' work in a
+shared checkout: `git add -A` / `-u` / `.`, `git commit -a`, a whole-tree `git stash`
+and `stash pop|drop|clear`, `git restore .`, `git checkout .`, and
+`git worktree remove|prune`. Name the paths instead (`git add -- <file>`,
+`git stash push -- <path>`).
+
+This is an opinionated default and a HARD block: no agent-side override. If you
 really need the command, run it yourself in the terminal (in Claude Code, type `!`
-before the command).
+before the command). A user can switch a rule off for one repository with
+`git config --add koopa.allowGitRules "<rule name>"`.
 
 It blocks a command that RUNS one of these, not text that mentions it. The decision
 comes from `guard_git_scan.py`, which reads the command the way a shell does. The cd
@@ -39,6 +47,13 @@ ALWAYS_BLOCKED = (
     "git rm -rf",
     "checkout -- .",
     "branch -D",
+    "add -A",
+    "commit -a",
+    "stash pop",
+    "stash drop",
+    "stash clear",
+    "worktree remove",
+    "worktree prune",
 )
 
 _PUSH_PROTECTED = re.compile(r"push origin (main|master)\b")
