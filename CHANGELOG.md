@@ -1,6 +1,6 @@
 # Changelog
 
-## koopa 0.35.0 (unreleased)
+## koopa 0.35.0 (2026-10-18)
 
 Major changes:
 
@@ -8,8 +8,21 @@ Major changes:
   `YYYY/MM/DD/bookmarks.md` note in the Obsidian vault. The vault resolves from
   `KOOPA_BUCKET`, then `OBSIDIAN_VAULT_DIR`, then Obsidian's registry, and is
   symlink-resolved with `realpath`.
+- Added Python 3.15 (3.15.0) as a default interpreter and 7-Zip 26.04 as the
+  default archiver. The unmaintained `p7zip`, `pcre`, `screen`, `cheat`,
+  `pup`, `diff-so-fancy` and `autodock-adfr` installers were removed.
+- Go builds now set `GOPROXY` to fall back to `direct` on any error and use
+  HTTP/1.1, so module downloads survive networks that return 403 or break
+  HTTP/2. An existing `GOPROXY` or `GODEBUG` setting is respected.
+- Dotfiles configuration protects user-owned files from `.chezmoiremove`, and
+  the Doom Emacs wrappers re-sync when the install path changes.
+- Homebrew cask upgrades skip casks that Homebrew reports as disabled.
+- Version checking is more robust, and the installer machinery was
+  simplified and hardened.
 
 Minor changes:
+
+- Added `pyrefly` to the `koopa develop check` gate.
 
 - Added the `koopa-obsidian` agent skill covering the Obsidian CLI, vault
   configuration, bookmark mechanisms, and Bases and Dataview views.
