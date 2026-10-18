@@ -13,6 +13,9 @@
   Cross-shell defaults belong in koopa's own activation
   (`lang/{sh,bash,zsh,fish}/functions/activate/`), never a shell-specific
   dotfiles template. See `koopa-shell-internals` Gotchas.
+- **Agent configuration is `.agents`-canonical.** Native directories such as
+  `.claude` are compatibility bridges, never the default owner of shared skills
+  or rules.
 - **Never search from the filesystem root; scope to a known root.** Plain `rg`
   may still walk ignored trees here (`~/.config/ripgrep/config` sets
   `--no-ignore`), so prefer `git ls-files` or `rg --ignore-vcs`. See

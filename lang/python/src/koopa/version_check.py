@@ -1472,10 +1472,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://mirrors.kernel.org/gnu/ncurses/",
         "ncurses",
     ),
-    "nmap": (
-        "https://nmap.org/dist/",
-        "nmap",
-    ),
     "pcre": (
         "https://sourceforge.net/projects/pcre/files/pcre/",
         "pcre",
@@ -2206,6 +2202,23 @@ def _check_freetype() -> str:
     return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
+def _check_nmap() -> str:
+    """Check the latest Nmap release tag from its official GitHub mirror."""
+    tags = _http_get_json(
+        "https://api.github.com/repos/nmap/nmap/tags?per_page=100",
+        github=True,
+    )
+    versions = [
+        match.group(1)
+        for tag in tags
+        if (match := re.fullmatch(r"v(\d+(?:\.\d+)+)", tag.get("name", "")))
+    ]
+    if not versions:
+        msg = "No Nmap release tags found"
+        raise RuntimeError(msg)
+    return max(versions, key=_version_key)
+
+
 def _check_boost() -> str:
     data = _http_get_json(
         "https://api.github.com/repos/boostorg/boost/releases/latest",
@@ -2260,6 +2273,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "man-db": _AppCheckSpec("gitlab", _check_man_db, ()),
     "ninja": _AppCheckSpec("github", _check_github, ("ninja-build", "ninja")),
+    "nmap": _AppCheckSpec("github", _check_nmap, ()),
     "tar": _AppCheckSpec("gnu", lambda: _check_gnu("tar"), ()),
     "aws-azure-login": _AppCheckSpec("npm", _check_npm, ("aws-azure-login",)),
     "aws-cli": _AppCheckSpec(

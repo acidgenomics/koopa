@@ -21,6 +21,7 @@ from koopa.version_check import (
     _audit_version_excludes,
     _automake_bin_names,
     _cache_hit_result,
+    _check_nmap,
     _check_npm,
     _check_pypi,
     _check_rubygems,
@@ -207,6 +208,21 @@ def test_is_retryable_bare_timeout_error() -> None:
 def test_is_retryable_value_error() -> None:
     """A non-network exception is not retryable."""
     assert _is_retryable_network_error(ValueError()) is False
+
+
+# ── _check_nmap ─────────────────────────────────────────────────────────────
+
+
+def test_check_nmap_returns_newest_stable_release_tag(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Nmap version checks use release tags from the official GitHub mirror."""
+
+    def mock_http_get_json(url: str, *, github: bool = False) -> list[dict[str, str]]:
+        assert url == "https://api.github.com/repos/nmap/nmap/tags?per_page=100"
+        assert github is True
+        return [{"name": "master"}, {"name": "v7.991"}, {"name": "v7.992"}, {"name": "v7.993rc1"}]
+
+    monkeypatch.setattr("koopa.version_check._http_get_json", mock_http_get_json)
+    assert _check_nmap() == "7.992"
 
 
 # ── _check_pypi ──────────────────────────────────────────────────────────────
