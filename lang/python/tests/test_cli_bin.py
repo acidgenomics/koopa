@@ -130,3 +130,10 @@ def test_handler_dns_output(capsys: pytest.CaptureFixture[str]) -> None:
     assert "NS:" in captured.out
     assert "MX:" in captured.out
     assert "_dmarc TXT:" in captured.out
+
+
+def test_handler_organize_screenshots_help() -> None:
+    """Test that organize-screenshots is registered and shows help."""
+    with pytest.raises(SystemExit) as exc_info:
+        _HANDLERS["organize-screenshots"](["--help"])
+    assert exc_info.value.code == 0
