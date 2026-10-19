@@ -686,7 +686,7 @@ def _check_conda(
             timeout=5,
             _retries=0,
         )
-    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+    except (urllib.error.URLError, OSError) as exc:
         raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
     version = data.get("latest_version", "")
     if not version:
@@ -945,7 +945,7 @@ def _check_nongnu(package: str) -> str:
         # All nongnu mirrors unreachable — fall back to repology.
         try:
             return _check_repology(package)
-        except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        except (urllib.error.URLError, OSError) as exc:
             _raise_network_unavailable(exc)
             raise AssertionError("unreachable") from exc
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
@@ -1238,7 +1238,7 @@ def _check_man_db() -> str:
     """
     try:
         return _check_gitlab("gitlab.com", "man-db/man-db")
-    except (urllib.error.URLError, OSError, TimeoutError, _NetworkUnavailableError):
+    except (urllib.error.URLError, OSError, _NetworkUnavailableError):
         return _check_repology("man-db")
 
 
@@ -1830,7 +1830,7 @@ def _check_liblinear() -> str:
         versions = [v for v in (_liblinear_tag_to_version(t["name"]) for t in tags) if v]
         if versions:
             return max(versions, key=_version_key)
-    except (urllib.error.URLError, OSError, TimeoutError):
+    except (urllib.error.URLError, OSError):
         pass
     # Upstream page is not valid UTF-8, so decode as latin-1.
     html = _http_get_text(

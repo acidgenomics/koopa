@@ -605,7 +605,7 @@ def test_secrets_entry_does_not_block_when_git_cannot_answer(tmp_path: Path) -> 
 
 
 def test_hooks_json_files_register_all_hooks_in_order() -> None:
-    """Both registries: ten Bash hooks in order, then one group each for four more hooks.
+    """Both registries: ten Bash hooks in order, then four more groups (two hooks in one).
 
     The Claude and Codex file also registers the Claude Code only hooks under SessionStart,
     PreCompact and Stop; the Copilot file has PreToolUse only.
@@ -650,7 +650,8 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         ]
         assert groups[3]["matcher"] == "Edit|Write|MultiEdit|NotebookEdit"
         assert [h["command"] for h in groups[3]["hooks"]] == [
-            f'python3 "{root}/hooks/guard_keywords.py"'
+            f'python3 "{root}/hooks/guard_keywords.py"',
+            f'python3 "{root}/hooks/guard_secret_content.py"',
         ]
         assert groups[4]["matcher"] == "Edit|Write|Read|Bash"
         assert [h["command"] for h in groups[4]["hooks"]] == [
@@ -684,10 +685,10 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
     copilot_text = json.dumps(copilot)
     for claude_only in ("guard_settings_keywords", "guard_workspace_root", "session_"):
         assert claude_only not in copilot_text
-    # Totals: 14 PreToolUse + 4 SessionStart + 1 PreCompact + 1 Stop in the Claude file,
-    # 14 in the Copilot file.
-    assert sum(len(g["hooks"]) for e in claude["hooks"].values() for g in e) == 20
-    assert sum(len(g["hooks"]) for g in copilot["hooks"]["PreToolUse"]) == 14
+    # Totals: 15 PreToolUse + 4 SessionStart + 1 PreCompact + 1 Stop in the Claude file,
+    # 15 in the Copilot file.
+    assert sum(len(g["hooks"]) for e in claude["hooks"].values() for g in e) == 21
+    assert sum(len(g["hooks"]) for g in copilot["hooks"]["PreToolUse"]) == 15
     for group in copilot["hooks"]["PreToolUse"]:
         assert all(h["timeout"] == 5 for h in group["hooks"])
     for event in claude["hooks"].values():
@@ -698,6 +699,7 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         "guard_tmp",
         "guard_report_path",
         "guard_keywords",
+        "guard_secret_content",
         "guard_env_files",
         "guard_settings_keywords",
         "guard_workspace_root",

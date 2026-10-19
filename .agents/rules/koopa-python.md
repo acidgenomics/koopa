@@ -14,6 +14,11 @@ by the user-global `~/.agents/rules/dotfiles-python.md`.
 Always `subprocess.run(..., check=True)`. Never `check=False`: ruff warns `PLW1510`.
 The correct fix is always `check=True`, not `check=False` and not suppressing the warning.
 
+## Exception handlers
+
+Do not list `TimeoutError` alongside `OSError` in an exception tuple:
+`TimeoutError` is an `OSError` subclass, so pyrefly flags it as unreachable.
+
 ## Sudo checks
 
 `koopa.system.has_sudo()` is the single function for checking passwordless sudo.

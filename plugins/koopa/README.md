@@ -53,15 +53,15 @@ To use this plugin from Gemini CLI: `gemini extensions link
 
 ## Hooks
 
-Thirteen `PreToolUse` hooks in five groups, plus two Claude Code only hooks on
-`SessionStart` and `Stop`. Nine run on `Bash`, registered in this order
+Fifteen `PreToolUse` hooks in five groups, plus two Claude Code only hooks on
+`SessionStart` and `Stop`. Ten run on `Bash`, registered in this order
 (`guard_sensitive_paths.py` last). `guard_tmp.py` has its own group on
 `Bash|Write|Edit|MultiEdit|NotebookEdit`, `guard_report_path.py` has a third group
-on `Write|Edit|MultiEdit`, `guard_keywords.py` has a fourth on
-`Edit|Write|MultiEdit|NotebookEdit`, and `guard_env_files.py` has a fifth on
+on `Write|Edit|MultiEdit`, `guard_keywords.py` and then `guard_secret_content.py` share a
+fourth on `Edit|Write|MultiEdit|NotebookEdit`, and `guard_env_files.py` has a fifth on
 `Edit|Write|Read|Bash`. `guard_settings_keywords.py` (`SessionStart` and `Stop`) and
 `guard_workspace_root.py` (`SessionStart`) are registered in `hooks/hooks.json` only, with
-no matcher. The Copilot file has the thirteen `PreToolUse` hooks and no `SessionStart` or
+no matcher. The Copilot file has the fifteen `PreToolUse` hooks and no `SessionStart` or
 `Stop` entry.
 
 These are opinionated defaults. They ship on for every user of the plugin, they are
@@ -121,6 +121,13 @@ Code, type `!` before the command).
   under the project's top-level `reports/`, and names the vault path to use. With
   no vault detected it does nothing. A delete, or the source side of a move, is
   never blocked. `hooks/obsidian_vault.py` is its vault resolver.
+- `guard_secret_content.py`: blocks a file write, on any path, whose new content holds a
+  well-known credential: an AWS access key ID, a presigned URL signature, a Databricks or
+  GitHub token, a bearer credential, or a private key with key material. Documented
+  placeholders pass (a value containing `EXAMPLE`, or one with fewer than six distinct
+  characters), as does text that only names a shape. The message names the kind, the
+  file, and the line, never the value. It also reads `MultiEdit` and `NotebookEdit`
+  bodies, which `hook_adapter.py` does not. Fails open on an internal error.
 - `guard_keywords.py`: blocks a Write/Edit that would put a configured restricted
   keyword into a publishable repository. It is inert until you configure it, and the
   plugin ships no keywords. It reads three git config keys. The dotfiles `pre-commit`

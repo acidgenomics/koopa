@@ -40,6 +40,7 @@ or note, nothing is stopped).
 | `guard_hook_writes.py` | PreToolUse, Bash | ask | a command that writes `.agents/hooks`, `.claude/hooks`, or `.claude/settings*.json` (`sed -i`, redirect, `tee`, `mv`, `rm`, `cp` onto it, interpreter code) | Edit the managed source and apply it, or let the user approve |
 | `guard_report_path.py` | PreToolUse, Write/Edit/MultiEdit | block | a write to `reports/YYYY/MM/DD/`, `reports/YYYY-MM-DD/`, or directly under the project's top-level `reports/`, when a notes vault is detected | Write to the vault path named in the message |
 | `guard_keywords.py` | PreToolUse, Edit/Write/MultiEdit/NotebookEdit | block | a configured keyword in the file path or new content, in a publishable repo | Move the content to a private repo, or the user allowlists the remote |
+| `guard_secret_content.py` | PreToolUse, Edit/Write/MultiEdit/NotebookEdit | block | new content, on any path, holding an AWS access key ID, a presigned URL signature, a Databricks or GitHub token, a bearer credential, or a private key. A value containing `EXAMPLE`, or with fewer than six distinct characters, passes | Reference the credential (an environment variable or a secrets manager), or use a documented placeholder |
 | `guard_env_files.py` | PreToolUse, Edit/Write/Read/Bash | block | `.env` or `.env.local` read or edited, by file tool or by any command naming it | Ask the user for the specific value. `source .env` is allowed |
 | `guard_sensitive_paths.py` | PreToolUse, Bash | ask | a command referencing `~/Documents` or `~/Downloads` (`~`, `$HOME`, `${HOME}`, `/Users/<name>`) | Answer the prompt, or the user lists safe folders in `koopa.allowedPaths` |
 | `guard_settings_keywords.py` | SessionStart and Stop, Claude Code only | context at start, block at Stop | a configured keyword in `$CLAUDE_PROJECT_DIR/.claude/settings.json` in a publishable repo | Move that permission entry to `.claude/settings.local.json` (gitignored) |
@@ -113,8 +114,9 @@ catches its own errors and picks one posture on purpose:
 - Block: `guard_env_files.py`.
 - Fail open, so a bug skips the check instead of locking every Bash or Write call:
   `guard_rm.py`, `guard_tmp.py`, `guard_broad_scan.py`, `guard_hook_writes.py`,
-  `guard_sensitive_paths.py`, `guard_report_path.py`, `push_gate.py`, and
-  `guard_keywords.py` (the git `pre-commit` hook is its backstop).
+  `guard_sensitive_paths.py`, `guard_report_path.py`, `push_gate.py`,
+  `guard_secret_content.py`, and `guard_keywords.py` (the git `pre-commit` hook is its
+  backstop).
 - Never block, by design: `session_local_time.py` and `session_compact_snapshot.py`.
 
 When editing a guard, keep it importable at every step. Add a new import in the

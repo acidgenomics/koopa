@@ -84,6 +84,11 @@
             "type": "command",
             "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_keywords.py\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_secret_content.py\"",
+            "timeout": 5
           }
         ]
       },

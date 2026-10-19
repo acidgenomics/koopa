@@ -170,6 +170,7 @@ def test_hook_files_parse_as_python_310() -> None:
         "guard_keywords.py",
         "guard_report_path.py",
         "guard_rm.py",
+        "guard_secret_content.py",
         "guard_sensitive_paths.py",
         "guard_settings_keywords.py",
         "guard_tmp.py",
