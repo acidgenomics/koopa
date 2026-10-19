@@ -1,64 +1,82 @@
 #!/usr/bin/env python3
-"""PreToolUse hook: block the `uv` / `uvx` toolchain.
+"""PreToolUse hook: ask the user before `uv` or `uvx` changes dependencies.
 
-Agents must not run `uv` or `uvx`: they can mutate the local environment, install
-packages, and silently change dependency state in ways that bypass a project's
-intended workflow. The block covers `uv`, `uvx`, and their wrappers (`uv sync`,
-`uv pip install`, `uv run`, `uvx ...`), including indirect calls such as
-`bash -lc "uv pip install ..."` and `ssh host 'uvx ...'`.
+`uv` and `uvx` can mutate the local environment, install packages, rewrite the
+lockfile, and launch tools they download first. Any such call (`uv sync`,
+`uv add`, `uv pip install`, `uv run`, `uvx ...`) needs explicit user approval: the
+hook answers `permissionDecision: ask` and never approves on the user's behalf.
+Read-only probes (`uv --version`, `uv pip list`, `uv tree --frozen`, `uv lock
+--check`, ...) pass with no decision, so the normal permission flow applies. The
+probe allowlist lives in `uv_command_scan.py`; anything not on it asks.
 
-This is an opinionated default and a HARD block: there is no override. If you
-really need the command, run it yourself in the terminal (in Claude Code, type `!`
-before the command).
+Detection covers indirect calls: `bash -lc "uv pip install ..."`, `ssh host 'uvx
+...'`, wrappers such as `sudo` and `env`, substitutions, heredocs fed to a shell,
+and every entry of a Copilot CLI `toolCalls[]` batch. The scanner reads the command
+the way a shell does: quoted text given to data commands (`echo`, `grep`, `git
+commit -m`), comments, and heredoc bodies fed to non-shell commands pass. When the
+parser cannot decide, the broad text pattern below decides, and a match asks.
 
-It blocks a command that RUNS uv, not text that mentions it. The decision comes from
-`uv_command_scan.py`, which reads the command the way a shell does: quoted text given
-to data commands (`echo`, `grep`, `git commit -m`), comments, and heredoc bodies fed
-to non-shell commands pass; unquoted uv, substitutions, and text handed to a shell
-(`bash -c`, `ssh`, `| sh`) block. Fail closed: when the parser cannot decide, the
-broad text pattern below decides instead.
+Output shape follows the harness. Claude Code and Codex get the decision wrapped in
+`hookSpecificOutput`. Copilot CLI gets a bare top-level `permissionDecision`; the
+Copilot registration sets `AGENT_HOOK_HARNESS=copilot` in the command to select it.
+The hook exits 0 in every case; empty or malformed stdin prints nothing.
 
-Input is a Claude Code `tool_input.command` payload or a Copilot CLI `toolCalls[]`
-batch. Empty or malformed stdin passes (exit 0). A block prints the reason to stderr
-and exits 2.
+The file keeps its historical name so existing registrations stay valid.
 
 Run as a script, Python puts this file's directory first on `sys.path`, so the
 sibling modules import without any path setup.
 """
 
 import json
+import os
 import re
 import sys
 
 from hook_adapter import load_payload, read_commands
-from uv_command_scan import runs_uv
+from uv_command_scan import CHANGE, uv_verdict
 
 # The pattern this guard applies on its own when the scanner cannot decide.
 _BROAD = re.compile(r"(^|[^A-Za-z0-9_-])(uvx?)(\s|$)", re.MULTILINE)
 
 REASON = (
-    "Agentic use of uv and uvx is forbidden. No uv/uvx commands, installs, or tool "
-    "launches are allowed. Use the project environment and scripts instead."
+    "This command runs uv or uvx in a way that can change dependencies, the "
+    "environment, or the lockfile, so the user must approve it. Read-only probes "
+    "(uv --version, uv pip list, uv tree --frozen, uv lock --check) need no approval."
 )
 
 
-def uses_uv(command: str) -> bool:
-    """True when *command* runs uv or uvx, using the broad pattern if the parser fails."""
+def needs_approval(command: str) -> bool:
+    """True when *command* may change dependencies through uv or uvx.
+
+    When the scanner cannot decide, the broad pattern decides, so any uv word asks.
+    """
     try:
-        return runs_uv(command)
-    except Exception:  # ParseError, RecursionError, anything unexpected: fail closed
+        return uv_verdict(command) == CHANGE
+    except Exception:  # ParseError, RecursionError, anything unexpected
         return bool(_BROAD.search(command))
 
 
+def _ask_output() -> dict:
+    """The ask decision in the shape of the running harness."""
+    if os.environ.get("AGENT_HOOK_HARNESS") == "copilot":
+        return {"permissionDecision": "ask", "permissionDecisionReason": REASON}
+    return {
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "ask",
+            "permissionDecisionReason": REASON,
+        }
+    }
+
+
 def main() -> int:
-    """Read the hook payload from stdin and return the process exit code."""
+    """Read the hook payload from stdin, print an ask decision if needed, return 0."""
     payload = load_payload(sys.stdin.read())
     if payload is None:
         return 0
-    if not uses_uv("\n".join(read_commands(payload))):
-        return 0
-    sys.stderr.write(json.dumps({"decision": "block", "reason": REASON}) + "\n")
-    return 2
+    if needs_approval("\n".join(read_commands(payload))):
+        print(json.dumps(_ask_output()))
+    return 0
 
 
 if __name__ == "__main__":

@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """Decide whether a shell command line would install software.
 
-Used by `guard-installs.sh`. That guard used to match install phrases such as
-`pip install` anywhere in the raw command text, so it also blocked a command
+Used by `guard_installs.py`. That guard used to match install phrases such as
+`pip install` anywhere in the raw command text, so it also flagged a command
 that only mentioned one: a commit message, a `grep` pattern, a heredoc body
 holding documentation, or a comment. This scanner asks the question the guard
 cares about: would an install command run?
 
-Exit codes (read by guard-installs.sh):
+Exit codes of `main` (a debugging aid; the guard imports the module):
     0   no install command found
     10  an install command was found
     3   the command could not be parsed with confidence
     any other code (a crash, a missing interpreter) also means "could not decide"
 
-On anything other than 0 or 10 the caller falls back to its original text
-patterns, so a scanner failure never lets an install through and never blocks
-an ordinary command.
+When the scanner cannot decide, the guard falls back to its text patterns, so a
+scanner failure never lets an install through without an approval prompt and
+never prompts for an ordinary command.
 
 What counts as an install:
     * a package manager's install verb as the first non-flag argument:
@@ -23,7 +23,7 @@ What counts as an install:
       install`, `gem update`, `pipx upgrade`, `uv add`, `koopa install`, ...
     * `python -m pip install`, `pacman -S`, and any `cpan`/`cpanm` call
     * the same commands behind a wrapper (`sudo`, `env`, `nohup`, `xargs`) or
-      inside `bash -c "..."`, `ssh host '...'`, `$(...)`, or a heredoc or pipe
+      inside `bash -c "..."`, `ssh host '...'` (quoted or not), `$(...)`, or a heredoc or pipe
       that reaches a shell
     * R package installs given to an interpreter (`Rscript -e
       'install.packages("x")'`)
@@ -104,13 +104,14 @@ def _is_install(argv):
 
 
 def _candidates(argv):
-    """The command itself, and after a wrapper every suffix that could be the
-    real command (`sudo -u root pip install x` -> `pip install x`).
+    """The command itself, and after a wrapper or `ssh` every suffix that could
+    be the real command (`sudo -u root pip install x` -> `pip install x`).
     """
     if not argv:
         return
     yield argv
-    if base(argv[0]) in WRAPPERS:
+    # `ssh host pip install x` runs its unquoted remote words as a command.
+    if base(argv[0]) in WRAPPERS or base(argv[0]) == "ssh":
         for i in range(1, len(argv)):
             yield argv[i:]
 

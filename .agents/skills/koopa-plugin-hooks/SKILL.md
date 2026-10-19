@@ -33,8 +33,9 @@ what it blocks.
 - Claude Code only hooks (`guard_settings_keywords.py` on `SessionStart` and `Stop`,
   `guard_workspace_root.py` on `SessionStart`) are registered only in the first file.
 - A hook that must answer in Copilot's output shape (the ask hooks
-  `guard_hook_writes.py` and `guard_sensitive_paths.py`) is registered in the Copilot
-  file with an `env AGENT_HOOK_HARNESS=copilot` prefix before `python3`.
+  `guard_hook_writes.py`, `guard_sensitive_paths.py`, `guard_installs.py` and
+  `block_uv.py`) is registered in the Copilot file with an
+  `env AGENT_HOOK_HARNESS=copilot` prefix before `python3`.
 
 ## Checklist for adding a hook
 

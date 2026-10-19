@@ -625,8 +625,8 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         "guard_hook_writes",
         "guard_sensitive_paths",
     ]
-    # These two read AGENT_HOOK_HARNESS to pick the Copilot output shape.
-    harness_hooks = {"guard_hook_writes", "guard_sensitive_paths"}
+    # These read AGENT_HOOK_HARNESS to pick the Copilot output shape for their ask.
+    harness_hooks = {"guard_installs", "block_uv", "guard_hook_writes", "guard_sensitive_paths"}
     for registry, root, is_copilot in (
         (claude, "${CLAUDE_PLUGIN_ROOT}", False),
         (copilot, "${PLUGIN_ROOT}", True),

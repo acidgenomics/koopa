@@ -65,8 +65,8 @@ no matcher. The Copilot file has the fifteen `PreToolUse` hooks and no `SessionS
 `Stop` entry.
 
 These are opinionated defaults. They ship on for every user of the plugin, they are
-strict on purpose, and they encode one person's safety habits: no software installs
-by the agent, no `uv`, no `rm -rf` outside `$TMPDIR`, no `/tmp` scratch files, session
+strict on purpose, and they encode one person's safety habits: no software install
+or `uv` dependency change by the agent without your approval, no `rm -rf` outside `$TMPDIR`, no `/tmp` scratch files, session
 reports go to your Obsidian vault instead of a `reports/` folder, no reading or editing
 of `.env` files, a prompt before the agent touches `~/Documents` or `~/Downloads`, a
 warning when a Claude Code session is not rooted in a git repository, and (once you
@@ -89,14 +89,24 @@ Code, type `!` before the command).
   `credentials.json`, `secrets.*`, `*_key.*`). The repository comes from
   `CLAUDE_PROJECT_DIR`, else the payload `cwd`, else the current directory. A
   git failure (not a repo, no range) never blocks.
-- `guard_installs.py`: blocks commands that install software: `pip`, `npm`,
-  `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`,
-  `pacman`, `port`, `pipx`, `poetry add`, `uv add`, `cpan`/`cpanm`, `R install.packages`,
-  `BiocManager::install`, `renv::install`, `koopa install`, and `curl ... | sh`.
-  The agent surfaces the command and you install it yourself.
-- `block_uv.py`: blocks `uv` and `uvx` in any form, including inside
-  `bash -c`, `ssh host '...'`, and substitutions. When the parser cannot decide
-  it fails closed on a broad text pattern.
+- `guard_installs.py`: asks (`permissionDecision: ask`, never denies) before a
+  command that installs software: `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`,
+  `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman`, `port`, `pipx`, `poetry add`,
+  `uv add`, `cpan`/`cpanm`, `R install.packages`, `BiocManager::install`,
+  `renv::install`, `koopa install`, and `curl ... | sh`. Detection holds behind
+  wrappers (`sudo`, `env`, `timeout`), `bash -c`, `ssh host` (quoted or not),
+  substitutions, and every command of a batched Copilot call. Read-only probes
+  (`pip show`, `npm ls`, `brew info`) pass with no prompt. When the parser cannot
+  decide, a text pattern decides whether to ask. Nothing is ever auto-approved.
+- `block_uv.py`: asks (never denies) before a `uv` or `uvx` command that can
+  change dependencies or environments (`uv sync`, `uv add`, `uv run`, `uv pip
+  install`, `uv lock`, any `uvx` tool run), with the same wrapper, `ssh`, and
+  batch detection. Read-only probes pass with no prompt: `uv --version`, `uv help`,
+  `<sub> --help`, `uv pip list/show/freeze/tree/check`, `uv python list/find/dir`,
+  `uv tool list/dir`, `uv cache dir/size`, `uv self version`, `uv version` (no
+  bump), `uv tree --frozen/--locked`, and `uv lock --check`. When the parser
+  cannot decide, a broad text pattern decides whether to ask. The file name is
+  kept so existing registrations stay valid.
 - `guard_broad_scan.py`: blocks `find`, `grep -r`, `rg`, and `fd` rooted at `~`,
   `$HOME`, `/`, `/Users`, `/home`, or a bare home directory. Deeper paths pass.
 - `guard_rm.py`: denies recursive-force `rm` (and `find -delete`, `find -exec rm`)
@@ -222,7 +232,8 @@ Files:
   (for destructive git with no `cd` exemption). `guard_broad_scan.py` is text
   based only. A block prints the reason to stderr and exits 2; `guard_rm.py` also
   prints an allow decision on stdout for `rm` inside `$TMPDIR`. The ask hooks
-  (`guard_hook_writes.py`, `guard_sensitive_paths.py`) print an ask decision on stdout.
+  (`guard_hook_writes.py`, `guard_sensitive_paths.py`, `guard_installs.py`,
+  `block_uv.py`) print an ask decision on stdout and exit 0.
   `guard_workspace_root.py` prints a plain warning line on stdout. Empty or malformed
   stdin exits 0.
 - `hooks/hook_adapter.py`, `hooks/shell_command_scan.py`,

@@ -27,12 +27,12 @@
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_installs.py\"",
+            "command": "env AGENT_HOOK_HARNESS=copilot python3 \"${PLUGIN_ROOT}/hooks/guard_installs.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/block_uv.py\"",
+            "command": "env AGENT_HOOK_HARNESS=copilot python3 \"${PLUGIN_ROOT}/hooks/block_uv.py\"",
             "timeout": 5
           },
           {

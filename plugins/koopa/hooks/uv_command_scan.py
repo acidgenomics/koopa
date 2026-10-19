@@ -1,23 +1,43 @@
 #!/usr/bin/env python3
-"""Decide whether a shell command line would run `uv` or `uvx`.
+"""Decide whether a shell command line would run `uv` or `uvx`, and how.
 
-Used by `block-uv.sh`. The guard used to run one regex over the raw command
+Used by `block_uv.py`. The guard used to run one regex over the raw command
 text, so it could not tell a command from text that merely mentions `uv`: a
-heredoc body, a commit message, a `grep` pattern, or a comment all blocked.
-This scanner reads the command the way a shell does and answers only the
-question the guard cares about: would `uv` or `uvx` run?
+heredoc body, a commit message, a `grep` pattern, or a comment all matched.
+This scanner reads the command the way a shell does and answers the question
+the guard cares about: would `uv` or `uvx` run, and could that run change
+dependencies?
 
-Exit codes (read by block-uv.sh):
+Verdicts (`uv_verdict`), the worst one across the whole command line wins:
+    NONE     no uv/uvx command runs
+    PROBE    every uv/uvx call is a known read-only probe
+    CHANGE   at least one uv/uvx call may change dependencies, the
+             environment, or the lockfile, or cannot be classified
+
+Exit codes of `main` (a debugging aid; the guard imports the module):
     0   no uv/uvx command found
-    10  a uv/uvx command was found
+    10  a uv/uvx call that may change dependencies was found
+    11  only read-only uv/uvx probes were found
     3   the command could not be parsed with confidence
-    any other code (a crash exits 1, a missing interpreter 127) also means
-    "could not decide"; the caller must then fall back to its own broad regex
-    (fail closed). "Found" is 10, not 1, so a crash never reads as a hit.
+    any other code (a crash exits 1) also means "could not decide".
 
-What counts as a hit:
-    * any unquoted word that is `uv` or `uvx`, or a path ending in /uv or /uvx
-      (this keeps `pip install uv`, `which uv`, and `./uv sync` blocked)
+Read-only probes are an allowlist; anything else is CHANGE:
+    * `uv` or `uvx` with no arguments, `-h`/`--help`/`-V`/`--version` before
+      the subcommand, and `uv help ...`
+    * `uv <subcommand> --help` (or `-h`), except `uv run` and `uv tool`,
+      whose trailing arguments belong to the launched program
+    * `uv pip list|show|freeze|tree|check`, `uv python list|find|dir`,
+      `uv tool list|dir`, `uv cache dir|size`, `uv self version`
+    * `uv tree --frozen|--locked`, `uv lock --check|--locked|--check-exists|
+      --dry-run`, and `uv version` with only `--short`/`--output-format`
+    An unknown option before the subcommand, or a uv word fed by `xargs`, is
+    CHANGE, because the real subcommand cannot be read.
+
+Where uv is found:
+    * any unquoted word that is `uv` or `uvx`, or a path ending in /uv or /uvx;
+      the words after it are read as its arguments (this keeps
+      `sudo -u x uv sync`, `timeout 5 uv sync`, and `python3 -m uv sync`
+      classified)
     * a quoted command word (`'uv' sync`) and spellings like `u"v"`
     * anything inside `$(...)` or backticks, even inside double quotes
     * quoted strings passed to a shell or launcher (`bash -c "..."`, `ssh host
@@ -25,7 +45,8 @@ What counts as a hit:
     * heredoc bodies and piped text that reach a shell (`bash <<EOF`,
       `echo "..." | sh`)
     * code-shaped strings passed to an interpreter (`python3 -c 'os.system(
-      "uv sync")'`, `["uv", "sync"]`)
+      "uv sync")'`, `["uv", "sync"]`); always CHANGE, since their arguments
+      are not read
 
 What does not count: `uv` inside quoted text given to a data command (`echo`,
 `grep`, `git commit -m`, `gh pr create --body`), heredoc bodies fed to a
@@ -34,7 +55,8 @@ non-shell command, and comments.
 Known limits, accepted because this guard is a speed bump and not a security
 boundary: variable indirection (`$UV sync`), `$'...'` quoting, and text built
 at run time and handed to a shell through process substitution are not
-resolved. Anything that confuses the parser exits 3 instead of passing.
+resolved. Anything that confuses the parser raises ParseError instead of
+passing.
 
 Compatible with Python 3.10 and newer, the floor for the deployed hooks.
 """
@@ -44,6 +66,50 @@ import sys
 
 UV_NAMES = frozenset({"uv", "uvx"})
 MAX_DEPTH = 6
+
+NONE = 0
+PROBE = 1
+CHANGE = 2
+
+_HELP_FLAGS = frozenset({"-h", "--help", "-V", "--version"})
+# Global options that take no value, and those that take one.
+_GLOBAL_SWITCHES = frozenset(
+    {
+        "-n",
+        "-q",
+        "-v",
+        "--managed-python",
+        "--native-tls",
+        "--no-cache",
+        "--no-config",
+        "--no-managed-python",
+        "--no-progress",
+        "--no-python-downloads",
+        "--offline",
+        "--quiet",
+        "--verbose",
+    }
+)
+_GLOBAL_VALUED = frozenset({"--cache-dir", "--color", "--config-file", "--directory", "--project"})
+_REPEATED_SHORT = re.compile(r"^-[nqv]+$")
+# Second-level verbs that only read, keyed by the first-level subcommand.
+_READ_ONLY_VERBS = {
+    "cache": frozenset({"dir", "size"}),
+    "pip": frozenset({"check", "freeze", "list", "show", "tree"}),
+    "python": frozenset({"dir", "find", "list"}),
+    "self": frozenset({"version"}),
+    "tool": frozenset({"dir", "list"}),
+}
+# Subcommands that only read when one of these flags is present.
+_READ_ONLY_WITH = {
+    "lock": frozenset({"--check", "--check-exists", "--dry-run", "--locked"}),
+    "tree": frozenset({"--frozen", "--locked"}),
+}
+_VERSION_READ_ARGS = frozenset(
+    {"--short", "--output-format", "--output-format=json", "--output-format=text", "json", "text"}
+)
+# Subcommands whose trailing arguments belong to a launched program.
+_LAUNCHERS = frozenset({"run", "tool"})
 
 # Commands whose quoted arguments, or piped and heredoc text, run as shell code.
 CODE_CARRIERS = frozenset(
@@ -453,37 +519,89 @@ def _is_interpreter(name):
     return name in INTERPRETERS or bool(_PYTHON.match(name))
 
 
-def _cmd_runs_uv(cmd, carrier, interp, depth):
+def classify_uv(name, args):
+    """Return PROBE when `uv` or `uvx` with *args* only reads, else CHANGE."""
+    if name == "uvx":
+        return PROBE if not args or args[0] in _HELP_FLAGS else CHANGE
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg in _HELP_FLAGS:
+            return PROBE
+        if arg in _GLOBAL_SWITCHES or _REPEATED_SHORT.match(arg):
+            i += 1
+        elif arg in _GLOBAL_VALUED:
+            i += 2
+        elif arg.startswith("--") and arg.split("=", 1)[0] in _GLOBAL_VALUED:
+            i += 1
+        elif arg.startswith("-"):
+            return CHANGE  # an unknown option hides where the subcommand starts
+        else:
+            break
+    rest = args[i:]
+    if not rest:
+        return PROBE  # bare `uv` prints its help
+    sub, tail = rest[0], rest[1:]
+    if sub == "help":
+        return PROBE
+    if sub not in _LAUNCHERS:
+        own = tail[: tail.index("--")] if "--" in tail else tail
+        if any(arg in ("-h", "--help") for arg in own):
+            return PROBE
+    verbs = _READ_ONLY_VERBS.get(sub)
+    if verbs is not None:
+        return PROBE if tail and tail[0] in verbs else CHANGE
+    flags = _READ_ONLY_WITH.get(sub)
+    if flags is not None:
+        return PROBE if any(arg in flags for arg in tail) else CHANGE
+    if sub == "version":
+        return PROBE if all(arg in _VERSION_READ_ARGS for arg in tail) else CHANGE
+    return CHANGE
+
+
+def _cmd_verdict(cmd, carrier, interp, depth):
+    """The worst verdict for one simple command; stops early at CHANGE."""
     words = cmd.words
-    for word in words:
-        if _base(word.value) in UV_NAMES and word.has_bare:
-            return True  # unquoted `uv`, or a mixed spelling such as u"v"
-    command_words = _command_words(cmd)
-    if command_words and _base(command_words[0].value) in UV_NAMES:
-        return True  # a fully quoted command word: 'uv' sync
-    if carrier and any(_base(word.value) in UV_NAMES for word in words):
-        return True
+    start = len(words) - len(_command_words(cmd))
+    verdict = NONE
+    for idx, word in enumerate(words):
+        name = _base(word.value)
+        if name not in UV_NAMES:
+            continue
+        # Unquoted (or a mixed spelling such as u"v"), a fully quoted command
+        # word ('uv' sync), or any spelling handed to a shell carrier.
+        if not (word.has_bare or idx == start or carrier):
+            continue
+        if any(_base(w.value) == "xargs" for w in words[:idx]):
+            return CHANGE  # xargs appends arguments the scanner cannot see
+        verdict = max(verdict, classify_uv(name, [w.value for w in words[idx + 1 :]]))
+        if verdict == CHANGE:
+            return CHANGE
     for sub in cmd.subs:
-        if _scan(sub, depth + 1):
-            return True
+        verdict = max(verdict, _scan(sub, depth + 1))
+        if verdict == CHANGE:
+            return CHANGE
     for word in words:
         for kind, part in word.parts:
             if kind == "bare":
                 continue
-            if carrier and _scan(part, depth + 1):
-                return True
             if interp and CODE_SHAPED.search(part):
-                return True
+                return CHANGE
+            if carrier:
+                verdict = max(verdict, _scan(part, depth + 1))
+                if verdict == CHANGE:
+                    return CHANGE
     for body, expands in cmd.heredocs:
-        if carrier and _scan(body, depth + 1):
-            return True
         if interp and CODE_SHAPED.search(body):
-            return True
-        if expands and not carrier:
+            return CHANGE
+        if carrier:
+            verdict = max(verdict, _scan(body, depth + 1))
+        elif expands:
             for sub in _extract_subs(body):
-                if _scan(sub, depth + 1):
-                    return True
-    return False
+                verdict = max(verdict, _scan(sub, depth + 1))
+        if verdict == CHANGE:
+            return CHANGE
+    return verdict
 
 
 def _scan(text, depth):
@@ -502,25 +620,32 @@ def _scan(text, depth):
             bool(names & CODE_CARRIERS),
             any(_is_interpreter(name) for name in names),
         )
+    verdict = NONE
     for cmd in cmds:
         carrier, interp = flags[cmd.group]
-        if _cmd_runs_uv(cmd, carrier, interp, depth):
-            return True
-    return False
+        verdict = max(verdict, _cmd_verdict(cmd, carrier, interp, depth))
+        if verdict == CHANGE:
+            return CHANGE
+    return verdict
+
+
+def uv_verdict(command):
+    """Return NONE, PROBE, or CHANGE for *command*. Raise ParseError if unsure."""
+    return _scan(command, 0)
 
 
 def runs_uv(command):
-    """Return True if *command* would run uv or uvx. Raise ParseError if unsure."""
-    return _scan(command, 0)
+    """Return True if *command* would run uv or uvx at all. Raise ParseError if unsure."""
+    return uv_verdict(command) != NONE
 
 
 def main():
     text = sys.stdin.read()
     try:
-        found = runs_uv(text)
-    except Exception:  # ParseError, RecursionError, anything unexpected: fail closed
+        verdict = uv_verdict(text)
+    except Exception:  # ParseError, RecursionError, anything unexpected: cannot decide
         return 3
-    return 10 if found else 0
+    return {NONE: 0, PROBE: 11, CHANGE: 10}[verdict]
 
 
 if __name__ == "__main__":
