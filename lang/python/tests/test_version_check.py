@@ -46,6 +46,14 @@ from koopa.version_check import (
     update_bootstrap,
 )
 
+
+@pytest.fixture(autouse=True)
+def _no_src_mirror(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep update_app_json off the network on a host with mirror credentials."""
+    monkeypatch.setattr("koopa.version_check._has_acidgenomics_aws", lambda: False)
+    monkeypatch.setattr("koopa.vendor.vendor_config", lambda: None)
+
+
 # ── _is_prerelease ─────────────────────────────────────────────────────────
 
 

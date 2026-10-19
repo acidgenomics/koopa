@@ -1,5 +1,18 @@
 # Changelog
 
+## koopa 0.35.1 (2026-10-19)
+
+Minor changes:
+
+- `block_uv.py` and `guard_installs.py` now ask for explicit user approval on
+  dependency-changing `uv`/`uvx` and install commands instead of hard-blocking
+  them outright. Read-only probes (`uv --version`, `uv pip list`,
+  `uv tree --frozen`, `uv lock --check`, `pip show`, `npm ls`, `brew info`, and
+  similar) still pass with no prompt. `uv_command_scan.py` and
+  `guard_installs_scan.py` were updated to distinguish a dependency-changing
+  verdict from a read-only one. Documented in `plugins/koopa/README.md` and the
+  `koopa-agent-guards` skill.
+
 ## koopa 0.35.0 (2026-10-18)
 
 Major changes:

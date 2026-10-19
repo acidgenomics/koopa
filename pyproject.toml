@@ -4,7 +4,7 @@ requires = [ "setuptools" ]
 
 [project]
 name = "koopa"
-version = "0.35.0"
+version = "0.35.1"
 description = "Shell bootloader for data science."
 readme = "README.md"
 keywords = [ "bioinformatics", "data science", "fair data", "ngs", "shell" ]
@@ -137,7 +137,7 @@ run.source = [ "lang/python/src" ]
 [tool.bumpver]
 commit = true
 commit_message = "Bump version to {new_version}."
-current_version = "v0.35.0"
+current_version = "v0.35.1"
 push = false
 tag = false
 tag_message = "{new_version}"
