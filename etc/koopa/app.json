@@ -1643,7 +1643,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-10-18",
+    "date": "2026-10-19",
     "default": true,
     "dependencies": [
       "node"
@@ -1657,7 +1657,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.302"
+    "version": "2.1.303"
   },
   "claude-replay": {
     "bin": [
@@ -5882,7 +5882,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-10-13",
+    "date": "2026-10-19",
     "default": false,
     "description": "just-in-time compiler for Lua",
     "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
@@ -5891,7 +5891,7 @@
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
     ],
-    "version": "acf8fcbd932a68d130fa3e3654e1b622e10fd6af"
+    "version": "2410b57fd466298e6a64a68986a6b696c23656ac"
   },
   "luarocks": {
     "bin": [
@@ -6298,7 +6298,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-18",
+    "date": "2026-10-19",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6308,7 +6308,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.13"
+    "version": "2026.10.14"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6651,7 +6651,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-10-13",
+    "date": "2026-10-19",
     "default": false,
     "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
@@ -6661,7 +6661,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "26.10.0"
+    "version": "26.10.2"
   },
   "nghttp2": {
     "build_dependencies": [
@@ -6852,7 +6852,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-10-10",
+    "date": "2026-10-19",
     "default": false,
     "description": "Git repository summary in the terminal",
     "installer": "conda-package",
@@ -6861,7 +6861,7 @@
       "https://onefetch.dev/",
       "https://github.com/o2sh/onefetch/"
     ],
-    "version": "3.0.0"
+    "version": "3.1.0"
   },
   "oniguruma": {
     "date": "2025-01-02",
@@ -7410,7 +7410,7 @@
     ],
     "category": "Build",
     "conda_channel": "conda-forge",
-    "date": "2026-10-18",
+    "date": "2026-10-19",
     "default": false,
     "description": "drop-in replacement for pkg-config",
     "installer": "conda-package",
@@ -7422,7 +7422,7 @@
     "url": [
       "https://github.com/pkgconf/pkgconf"
     ],
-    "version": "3.0.9"
+    "version": "3.0.10"
   },
   "playwright": {
     "bin": [
@@ -9287,7 +9287,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-10-18",
+    "date": "2026-10-19",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9297,7 +9297,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "df3646d3c6e00fd22babf310694e468162c16f63"
+    "version": "03a29948a4ff26295c91394ed999f9c8d5c862e8"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9444,7 +9444,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-06-30",
+    "date": "2026-10-19",
     "default": true,
     "description": "fast, customizable cross-shell prompt",
     "installer": "conda-package",
@@ -9453,7 +9453,7 @@
       "https://starship.rs/",
       "https://github.com/starship/starship/"
     ],
-    "version": "1.26.0"
+    "version": "1.27.0"
   },
   "stow": {
     "date": "2026-06-02",
@@ -9544,7 +9544,7 @@
       "surreal"
     ],
     "category": "Database",
-    "date": "2026-09-29",
+    "date": "2026-10-19",
     "default": false,
     "description": "multi-model database with SurrealQL query language",
     "type": "cli",
@@ -9552,7 +9552,7 @@
       "https://surrealdb.com/",
       "https://github.com/surrealdb/surrealdb/"
     ],
-    "version": "3.3.0"
+    "version": "3.3.4"
   },
   "swig": {
     "bin": [
