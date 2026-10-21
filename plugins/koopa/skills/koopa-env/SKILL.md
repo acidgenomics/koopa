@@ -6,7 +6,8 @@ description: >-
   non-interactive and agentic sessions. Use when a command resolves to an
   unexpected binary, when PATH order looks wrong, or when working inside an
   SSH/CI/agent harness session that needs koopa's tools on PATH, when asking
-  which shell an agent runs, or what KOOPA_BUCKET is.
+  which shell an agent runs, what KOOPA_BUCKET is, or when BSD `sed -i` fails
+  on macOS and `gsed` is the fix.
 ---
 
 # koopa Environment
@@ -35,6 +36,17 @@ Set `KOOPA_AUTO_ACTIVATE=1` to opt in. This exports PATH and environment only;
 it does not load prompt, alias, or history machinery. If a command that should
 resolve to a koopa-managed tool instead reports "command not found" in an
 agent session, check whether this variable is set.
+
+## On macOS, `sed` is BSD sed: use `gsed` for in-place edits
+
+macOS ships BSD `sed`. `sed -i 's/a/b/' file` fails there with `undefined label`,
+because BSD `sed -i` needs a backup-suffix argument (`sed -i '' ...`). koopa
+provides GNU sed as `gsed`, and `gsed -i` works the same on macOS and Linux.
+Prefer the Edit tool for a small known change. For a scripted bulk edit, use
+`gsed -i`. Check it first with `command -v gsed`.
+
+The koopa plugin's `guard_hook_writes.py` treats `gsed -i` like `sed -i`, so
+both still ask before they touch protected hook or settings files.
 
 ## A project's own virtual environment still wins
 

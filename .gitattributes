@@ -19,5 +19,5 @@ CLAUDE.md            export-ignore
 GEMINI.md            export-ignore
 AGENTS.md            export-ignore
 .claudeignore        export-ignore
-todo.org             export-ignore
+todo.md              export-ignore
 koopa.code-workspace export-ignore

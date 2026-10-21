@@ -3671,8 +3671,9 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
         if match and match.group(2) != new_version:
             text = pattern.sub(rf"\g<1>{new_version}\g<3>", text)
             count += 1
+            label = "python (source build)" if func_name == "python" else func_name
             print(
-                f"  bootstrap.sh {func_name}: {match.group(2)} -> {new_version}",
+                f"  bootstrap.sh {label}: {match.group(2)} -> {new_version}",
                 file=sys.stderr,
             )
     py_app_key = _bootstrap_app_map().get("python", "")
@@ -3701,7 +3702,12 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                 text,
             )
             if held_match and held_match.group(1) != py_version:
-                print(f"  bootstrap.sh python: {py_version} held for cooldown", file=sys.stderr)
+                print(
+                    f"  bootstrap.sh python (via uv): {held_match.group(1)} kept, "
+                    f"{py_version} held for {_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS}-day cooldown "
+                    f"(pinned {py_entry.get('date', 'unknown')})",
+                    file=sys.stderr,
+                )
     uv_entry = app_data.get("uv", {})
     uv_updated = False
     if isinstance(uv_entry, dict):

@@ -46,7 +46,7 @@ To use this plugin from Gemini CLI: `gemini extensions link
   Bookmarks pane and `bookmarks-all`).
 - `skills/koopa-python`: Python virtual environment lessons (why moving a
   project breaks `.venv/bin/activate`, and why direnv `PATH_add` survives it).
-- `skills/koopa-todo-org`: org-mode `todo.org` conventions for project task
+- `skills/koopa-todo-md`: Markdown `todo.md` conventions for project task
   tracking.
 - `skills/koopa-workflow-guidance`: workflow orchestration (plan mode etiquette,
   subagent discipline, session hygiene, git commit conventions).

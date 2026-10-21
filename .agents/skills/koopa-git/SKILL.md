@@ -105,4 +105,4 @@ git rebase --abort
 
 This restores the autostash and puts you back on `develop` at HEAD.
 The `[!]` dirty-tree indicator afterward is normal: just the stashed
-`todo.org` changes coming back.
+`todo.md` changes coming back.

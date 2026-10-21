@@ -433,7 +433,7 @@ def test_fetch_first_reachable_falls_through_to_working_base(
     """A timeout on the first base falls through to the next base, which succeeds."""
     calls: list[str] = []
 
-    def fake_get(base: str, timeout: int = 8, _retries: int = 1) -> str:
+    def fake_get(base: str, **_kwargs: int) -> str:
         calls.append(base)
         if "blocked" in base:
             raise TimeoutError("simulated connect timeout")
@@ -457,7 +457,7 @@ def test_fetch_first_reachable_skips_previously_dead_host(
     """
     calls: list[str] = []
 
-    def fake_get(base: str, timeout: int = 8, _retries: int = 1) -> str:
+    def fake_get(base: str, **_kwargs: int) -> str:
         calls.append(base)
         if "blocked" in base:
             raise TimeoutError("simulated connect timeout")
@@ -482,7 +482,7 @@ def test_fetch_first_reachable_does_not_blacklist_on_http_error(
     """
     calls: list[str] = []
 
-    def fake_get(base: str, timeout: int = 8, _retries: int = 1) -> str:
+    def fake_get(base: str, **_kwargs: int) -> str:
         calls.append(base)
         if "notfound" in base:
             raise urllib.error.HTTPError(base, 404, "Not Found", http.client.HTTPMessage(), None)
@@ -503,7 +503,7 @@ def test_fetch_first_reachable_raises_network_unavailable_when_all_fail(
 ) -> None:
     """All bases timing out raises _NetworkUnavailableError."""
 
-    def fake_get(_base: str, timeout: int = 8, _retries: int = 1) -> str:
+    def fake_get(_base: str, **_kwargs: int) -> str:
         raise TimeoutError("simulated connect timeout")
 
     monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
@@ -1146,6 +1146,23 @@ def test_update_bootstrap_holds_uv_python_pin_during_cooldown(tmp_path: Path) ->
     # The source-build pin, which has no python-build-standalone lag, syncs
     # immediately and is unaffected by the uv-path cooldown.
     assert "__kvar_version='3.14.8'" in text
+
+
+def test_update_bootstrap_cooldown_message_names_kept_and_held_versions(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The held message says which pin, which version stays, and which is held."""
+    _write_bootstrap_fixture(tmp_path, python_version="3.14.8", uv_python_version="3.14.8")
+    today = date.today().isoformat()
+    app_data = {"python3.14": {"version": "3.14.9", "date": today}}
+    with patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)):
+        update_bootstrap(app_data)
+    err = capsys.readouterr().err
+    assert "bootstrap.sh python (source build): 3.14.8 -> 3.14.9" in err
+    assert (
+        "bootstrap.sh python (via uv): 3.14.8 kept, 3.14.9 held for 3-day cooldown "
+        f"(pinned {today})"
+    ) in err
 
 
 def test_update_bootstrap_syncs_uv_python_pin_after_cooldown(tmp_path: Path) -> None:
