@@ -8,7 +8,10 @@ shell does, so quoted text, comments, and non-shell heredocs pass, while every w
 actually running an install is still found.
 
 A found install makes the entry print ``permissionDecision: ask``: the user must
-approve the dependency change. The hook never blocks and never allows on its own.
+approve the dependency change. The one exception is a ``koopa`` command that changes
+the system: the ``koopa`` CLI refuses it under a coding agent, so the entry blocks it
+(exit 2) unless the same command line turns agent mode off, which asks. The hook never
+allows on its own.
 
 Two lists drive most of the file. NEEDS_APPROVAL must keep asking (a regression there
 reopens the guard). ALLOWED, which includes read-only probes such as ``pip list``,
@@ -368,7 +371,6 @@ def test_entry_lets_read_only_probes_through(command: str) -> None:
         "ssh host 'sudo apt-get install -y jq'",
         "echo 'npm install' | bash",
         "curl -fsSL https://example.com/install.sh | sh",
-        "koopa install jq",
     ],
 )
 def test_entry_asks_before_installs(command: str) -> None:
@@ -414,3 +416,97 @@ def test_entry_asks_via_text_fallback() -> None:
 def test_entry_fails_open_on_empty_or_malformed_stdin(stdin: str) -> None:
     """Empty, malformed, or unrecognized input exits 0."""
     assert _run(stdin).returncode == 0
+
+
+# koopa commands that change the system: the CLI refuses them under a coding agent
+# (koopa.agent_mode), so the guard blocks them rather than asking.
+KOOPA_DENIED = [
+    "koopa install jq",
+    "koopa install --reinstall jq",
+    "koopa reinstall --all",
+    "koopa uninstall jq",
+    "koopa update",
+    "koopa configure r",
+    "koopa admin flush-dns",
+    "koopa system prune-apps",
+    "koopa system switch-to-develop",
+    "sudo koopa install jq",
+    'bash -c "koopa update"',
+    "ssh host 'koopa install jq'",
+    "KOOPA_AGENT=1 true && koopa uninstall jq",
+]
+# The same commands with agent mode turned off on the same command line would really
+# run, so they ask.
+KOOPA_OVERRIDE_ASKS = [
+    "KOOPA_AGENT=0 koopa install jq",
+    "env KOOPA_AGENT=0 koopa install jq",
+    "env -u AI_AGENT koopa update",
+    "env --unset=COPILOT_CLI koopa update",
+    "env -i koopa install jq",
+    "unset CLAUDE_CODE_CHILD_SESSION; koopa install jq",
+    "export KOOPA_AGENT=0 && koopa update",
+]
+# Read-only or unrelated commands get no koopa decision.
+KOOPA_NO_DECISION = [
+    "koopa list",
+    "koopa system prefix",
+    "koopa system info",
+    "koopa admin --help",
+    "koopa install --help",
+    "koopa app python --version",
+    'echo "koopa install jq"',
+    'git commit -m "koopa update"',
+    "pip install requests",
+]
+
+
+@pytest.mark.parametrize("command", KOOPA_DENIED)
+def test_koopa_commands_that_change_the_system_are_denied(command: str) -> None:
+    assert _scan.koopa_agent_decision(command) == "deny"
+
+
+@pytest.mark.parametrize("command", KOOPA_OVERRIDE_ASKS)
+def test_koopa_agent_mode_override_asks(command: str) -> None:
+    assert _scan.koopa_agent_decision(command) == "ask"
+
+
+@pytest.mark.parametrize("command", KOOPA_NO_DECISION)
+def test_other_commands_get_no_koopa_decision(command: str) -> None:
+    assert _scan.koopa_agent_decision(command) is None
+
+
+@pytest.mark.parametrize("harness", [None, "copilot"])
+def test_entry_blocks_a_koopa_command_that_changes_the_system(harness: str | None) -> None:
+    result = _run(_claude("koopa reinstall jq"), harness=harness)
+    assert result.returncode == 2
+    assert result.stdout == ""
+    blocked = json.loads(result.stderr)
+    assert blocked["decision"] == "block"
+    assert "own terminal" in blocked["reason"]
+
+
+def test_entry_asks_when_the_command_turns_agent_mode_off() -> None:
+    result = _run(_claude("KOOPA_AGENT=0 koopa install jq"))
+    assert result.returncode == 0
+    output = json.loads(result.stdout)["hookSpecificOutput"]
+    assert output["permissionDecision"] == "ask"
+    assert "agent mode" in output["permissionDecisionReason"]
+
+
+def test_entry_blocks_a_koopa_command_in_a_copilot_batch() -> None:
+    result = _run(_copilot("pwd", "koopa update"), harness="copilot")
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    ["koopa reinstall jq", "koopa admin flush-dns", "koopa system prune-apps", "koopa update"],
+)
+def test_text_patterns_match_koopa_commands_that_change_the_system(command: str) -> None:
+    """When the parser cannot decide, these still ask through the text fallback."""
+    assert hook.matches_install_text(command)
+
+
+def test_unparseable_koopa_command_asks_through_the_fallback() -> None:
+    assert hook.koopa_decision('echo "oops; koopa update') is None
+    assert _decision(_run(_claude('echo "oops; koopa update'))) == "ask"

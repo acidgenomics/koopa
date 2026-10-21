@@ -12,6 +12,8 @@ import platform
 import sys
 from typing import TYPE_CHECKING, Any
 
+from koopa.agent_mode import is_agent_session, is_gated, refusal_message
+
 if TYPE_CHECKING:
     from koopa.install import InstallConfig
 
@@ -1200,6 +1202,9 @@ def main() -> None:
     if args.command is None:
         parser.print_help()
         sys.exit(1)
+    if is_agent_session(os.environ) and is_gated(args.command, getattr(args, "remainder", [])):
+        print(refusal_message(argv), file=sys.stderr, end="")
+        sys.exit(2)
     handlers = {
         "install": _handle_install,
         "reinstall": _handle_reinstall,

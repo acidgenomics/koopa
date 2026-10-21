@@ -1569,6 +1569,142 @@ def _scan_claude_config(
     return rows
 
 
+def _skill_index_text(text: str) -> str:
+    """Return a SKILL.md's ``name`` followed by its folded ``description``.
+
+    Every agent harness lists each skill's name and description in context on every
+    turn, before any skill is used, so this is a skill's standing cost.
+
+    Parameters
+    ----------
+    text : str
+        Contents of a SKILL.md file.
+
+    Returns
+    -------
+    str
+        The name and the folded description, concatenated; empty without frontmatter.
+    """
+    lines = text.split("\n")
+    if not lines or lines[0].strip() != "---" or "---" not in lines[1:]:
+        return ""
+    fields: dict[str, list[str]] = {}
+    key = ""
+    for line in lines[1 : lines.index("---", 1)]:
+        if line and not line.startswith((" ", "\t")) and ":" in line:
+            key, _, value = line.partition(":")
+            value = value.strip()
+            fields[key] = [] if value in (">-", ">", "|", "|-") else [value]
+        elif key:
+            fields[key].append(line.strip())
+    name = " ".join(fields.get("name", [])).strip()
+    description = " ".join(part for part in fields.get("description", []) if part).strip()
+    return name + description
+
+
+def _scan_skill_index(skill_dirs: list[str]) -> tuple[int, int, int]:
+    """Count skills and their name plus description size across directories.
+
+    Parameters
+    ----------
+    skill_dirs : list[str]
+        Directories holding ``<skill>/SKILL.md`` files. A skill reached twice (for
+        example through a ``.claude/skills`` symlink) counts once.
+
+    Returns
+    -------
+    tuple[int, int, int]
+        ``(skill_count, chars, tokens)``.
+    """
+    import glob
+
+    seen: set[str] = set()
+    count = 0
+    chars = 0
+    tokens = 0
+    for skill_dir in skill_dirs:
+        for path in sorted(glob.glob(os.path.join(skill_dir, "*", "SKILL.md"))):
+            real = os.path.realpath(path)
+            if real in seen:
+                continue
+            seen.add(real)
+            with open(path, encoding="utf-8") as fh:
+                index_text = _skill_index_text(fh.read())
+            count += 1
+            chars += len(index_text)
+            tokens += _estimate_claude_tokens(index_text)
+    return count, chars, tokens
+
+
+def _doubly_loaded_rules(rules_dir: str, instructions_dir: str) -> list[str]:
+    """Return rules that also exist as a generated Copilot ``.instructions.md`` copy.
+
+    Copilot CLI and VS Code Copilot read both the rule (through ``.agents/rules`` or
+    ``.claude/rules``) and the copy, so each such rule loads twice there.
+
+    Parameters
+    ----------
+    rules_dir : str
+        Canonical rules directory (``.agents/rules``).
+    instructions_dir : str
+        Copilot instructions directory (``.github/instructions`` or
+        ``~/.copilot/instructions``).
+
+    Returns
+    -------
+    list[str]
+        Sorted rule file names that have a same-stem ``.instructions.md`` copy.
+    """
+    if not os.path.isdir(rules_dir) or not os.path.isdir(instructions_dir):
+        return []
+    return sorted(
+        name
+        for name in os.listdir(rules_dir)
+        if name.endswith(".md")
+        and os.path.isfile(os.path.join(instructions_dir, f"{name[:-3]}.instructions.md"))
+    )
+
+
+def _print_agent_context_notes(
+    label: str,
+    skill_dirs: list[str],
+    rules_dir: str,
+    instructions_dir: str,
+    prefix: str,
+) -> None:
+    """Print the skill-index cost and any doubly-loaded rules for one config tree.
+
+    Prints nothing when the tree has no skills and no doubly-loaded rules.
+
+    Parameters
+    ----------
+    label : str
+        Tree label, for example ``"Global"``.
+    skill_dirs : list[str]
+        Skill directories to scan.
+    rules_dir : str
+        Canonical rules directory.
+    instructions_dir : str
+        Copilot instructions directory.
+    prefix : str
+        Prefix prepended to displayed rule names.
+    """
+    count, chars, tokens = _scan_skill_index(skill_dirs)
+    if count:
+        print(
+            f"\n{label} skill index ({count} skills, name + description, listed every turn):"
+            f"\n  {tokens:5d} tokens  {chars:6d} chars"
+        )
+    doubled = _doubly_loaded_rules(rules_dir, instructions_dir)
+    if doubled:
+        print(
+            f"\n{label} rules that Copilot loads twice (rule plus generated"
+            f" .instructions.md copy, {len(doubled)}):"
+        )
+        for name in doubled:
+            print(f"  {prefix}{name}")
+
+
 def _find_project_root(start: str) -> str | None:
     """Walk up from start to find a project root containing .claude/, .agents/ or .git/.
 
@@ -1675,6 +1811,9 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
         description=(
             "Report approximate token cost of Claude config files. "
             "Rules with 'paths:' frontmatter load conditionally (not every session). "
+            "Also reports each tree's skill index (every skill's name and description, "
+            "listed every turn) and rules that Copilot loads twice (a rule plus its "
+            "generated .instructions.md copy); neither counts toward --max-tokens. "
             "--max-tokens gates the combined always-loaded total. "
             "Warns past 150,000 combined chars, matching Claude Code's own "
             "instruction-file limit. "
@@ -1726,6 +1865,13 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
             combined_chars += g_chars
             combined_files += g_files
             printed_global = True
+        _print_agent_context_notes(
+            "Global",
+            [os.path.join(home, ".agents", "skills"), os.path.join(global_claude, "skills")],
+            os.path.join(home, ".agents", "rules"),
+            os.path.join(home, ".copilot", "instructions"),
+            "~/.agents/rules/",
+        )
 
     # --- Project block ---
     if parsed.scope in ("all", "project"):
@@ -1758,6 +1904,16 @@ def _handle_claude_audit_tokens(args: list[str]) -> None:
                 combined_chars += p_chars
                 combined_files += p_files
                 printed_project = True
+                _print_agent_context_notes(
+                    "Project",
+                    [
+                        os.path.join(proj_root, ".agents", "skills"),
+                        os.path.join(proj_claude, "skills"),
+                    ],
+                    os.path.join(proj_root, ".agents", "rules"),
+                    os.path.join(proj_root, ".github", "instructions"),
+                    f"{basename}/.agents/rules/",
+                )
 
     # --- Combined footer ---
     if printed_global and printed_project:

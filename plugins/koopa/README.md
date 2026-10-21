@@ -89,15 +89,20 @@ Code, type `!` before the command).
   `credentials.json`, `secrets.*`, `*_key.*`). The repository comes from
   `CLAUDE_PROJECT_DIR`, else the payload `cwd`, else the current directory. A
   git failure (not a repo, no range) never blocks.
-- `guard_installs.py`: asks (`permissionDecision: ask`, never denies) before a
+- `guard_installs.py`: asks (`permissionDecision: ask`) before a
   command that installs software: `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`,
   `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman`, `port`, `pipx`, `poetry add`,
   `uv add`, `cpan`/`cpanm`, `R install.packages`, `BiocManager::install`,
-  `renv::install`, `koopa install`, and `curl ... | sh`. Detection holds behind
+  `renv::install`, and `curl ... | sh`. Detection holds behind
   wrappers (`sudo`, `env`, `timeout`), `bash -c`, `ssh host` (quoted or not),
   substitutions, and every command of a batched Copilot call. Read-only probes
   (`pip show`, `npm ls`, `brew info`) pass with no prompt. When the parser cannot
   decide, a text pattern decides whether to ask. Nothing is ever auto-approved.
+  A `koopa` command that changes the system (`install`, `reinstall`, `uninstall`,
+  `update`, `configure`, `admin ...`, `system prune-apps`, `system
+  switch-to-develop`) is blocked instead, because the `koopa` CLI refuses it under
+  a coding agent anyway (see Agent mode below); a command line that also turns
+  agent mode off (`KOOPA_AGENT=0`, `env -u AI_AGENT`) asks.
 - `block_uv.py`: asks (never denies) before a `uv` or `uvx` command that can
   change dependencies or environments (`uv sync`, `uv add`, `uv run`, `uv pip
   install`, `uv lock`, any `uvx` tool run), with the same wrapper, `ssh`, and
@@ -301,3 +306,30 @@ Not verified (needs a human):
   `guard_sensitive_paths.py` prints under `AGENT_HOOK_HARNESS=copilot`.
 - That a `SessionStart` hook's stdout (`guard_workspace_root.py`) and `additionalContext`
   (`guard_settings_keywords.py`) are shown to the model in each Claude Code version.
+
+## Agent mode
+
+Hooks only help in a harness that runs them, and some run none. So the rule that an
+agent never changes the system also lives in the `koopa` CLI itself
+(`lang/python/src/koopa/agent_mode.py`). When a coding agent launched the command,
+`koopa` refuses `install`, `reinstall`, `uninstall`, `update`, `configure`, every
+`admin` subcommand, `system prune-apps`, and `system switch-to-develop`. It exits 2 and
+prints the exact command for the user to run in their own terminal. Read-only commands
+(`list`, `app`, `system which`, ...) run as usual.
+
+A coding agent is detected from the markers harnesses set for the commands they run:
+`AI_AGENT`, `PI_CODING_AGENT`, `CLAUDE_CODE_CHILD_SESSION`, `COPILOT_CLI`, or
+`GEMINI_CLI`. `KOOPA_AGENT=1` forces agent mode on and `KOOPA_AGENT=0` turns it off,
+for a person running koopa through a harness's own shell escape (`!` in Claude Code or
+Copilot CLI) that passes those markers on.
+
+Which shells carry a marker, read from the installed applications:
+
+- A plain VS Code integrated terminal sets none. VS Code (1.142.0) sets `AI_AGENT` only
+  in the terminals Copilot's agent creates and in its agent-host process, so a person
+  typing into an agent-created terminal is in agent mode.
+- Claude Code (2.1.303) sets `CLAUDE_CODE_CHILD_SESSION=1`, and `AI_AGENT`, in the
+  environment of every shell it spawns. A `!` command gets the same environment as the
+  Bash tool, so no marker can tell them apart: prefix `KOOPA_AGENT=0` there, or use your
+  own terminal.
+- Copilot CLI's `!` escape is not verified.

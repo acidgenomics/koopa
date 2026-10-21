@@ -17,6 +17,15 @@ does not take an install action.
 
 `koopa reinstall <app>` and `koopa uninstall <app>` follow the same pattern.
 
+## Under a coding agent
+
+`koopa` refuses every command that changes the system when a coding agent runs it:
+`install`, `reinstall`, `uninstall`, `update`, `configure`, `admin ...`,
+`system prune-apps`, and `system switch-to-develop`. It exits 2 and prints the exact
+command. Do not try to get around it: show the user that command and stop, so they
+can run it in their own terminal. Read-only commands such as `koopa list` and
+`koopa system which` run normally.
+
 ## Update
 
 | Command | What it does |

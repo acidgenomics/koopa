@@ -32,7 +32,7 @@ or note, nothing is stopped).
 | `block_destructive_git.py` | PreToolUse, Bash | block | `reset --hard`, `clean -fd`, any force push (`-f`, `--force*`, `+refspec`), `git rm -rf`, `checkout -- .`, `branch -D`, `git push origin main` or `master` (also `refs/heads/main`), `push --all`/`--branches`/`--mirror`/`:`/glob. In a checkout shared by sessions: `add -A`/`-u`/`.`, `commit -a`, a whole-tree `stash`, `stash pop`/`drop`/`clear`, `restore .`, `checkout .`, `worktree remove`/`prune` | Use a non-destructive form: name the paths (`git add -- <file>`, `git stash push -- <path>`), or stop and ask the user to run it. A push after `cd` or `git -C` into a different repo passes |
 | `audit_secrets_before_push.py` | PreToolUse, Bash | block | a real `git push` whose outgoing range (`@{u}..HEAD`, else `origin/<branch>..HEAD`) holds a file named like `.env`, `.pem`, `.p12`, `credentials.json`, `secrets.*`, `*_key.*` | Remove the file from the commits, then push. History surgery needs the user |
 | `push_gate.py` | PreToolUse, Bash | block | opt-in: a `git push` sending a commit with no receipt in `$(git rev-parse --git-path koopa-push-gate)/<sha>`. Inert until that directory exists | Run the project's check on a clean tree; it writes the receipt for HEAD when it passes. Then push |
-| `guard_installs.py` | PreToolUse, Bash | ask | `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman -S`, `port`, `pipx`, `poetry add`, `cpan`, `uv add`, R `install.packages`, `koopa install`, `curl ... \| sh`, also behind `sudo`/`env`/`timeout`, inside `bash -c`, `ssh host` (quoted or not), substitutions, and batched calls. Probes (`pip show`, `npm ls`, `brew info`) pass | State the command and why; the user approves or declines the prompt |
+| `guard_installs.py` | PreToolUse, Bash | ask; block for koopa | `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman -S`, `port`, `pipx`, `poetry add`, `cpan`, `uv add`, R `install.packages`, `curl ... \| sh`, also behind `sudo`/`env`/`timeout`, inside `bash -c`, `ssh host` (quoted or not), substitutions, and batched calls. Probes (`pip show`, `npm ls`, `brew info`) pass. Blocks `koopa install`/`reinstall`/`uninstall`/`update`/`configure`/`admin ...`/`system prune-apps`/`system switch-to-develop`, which the `koopa` CLI refuses under an agent anyway; asks if the same line sets `KOOPA_AGENT=` or unsets a marker | State the command and why; the user approves or declines the prompt. For a blocked koopa command, show the user the command to run in their own terminal |
 | `block_uv.py` | PreToolUse, Bash | ask | a `uv` or `uvx` command that can change dependencies or environments (`sync`, `add`, `remove`, `run`, `pip install`, `lock`, `venv`, any `uvx` tool run), with the same wrapper, `ssh`, and batch detection. Read-only probes pass: `--version`, `help`, `<sub> --help`, `pip list/show/freeze/tree/check`, `python list/find/dir`, `tool list/dir`, `cache dir/size`, `self version`, `version` (no bump), `tree --frozen/--locked`, `lock --check` | Prefer the project's own environment and scripts; otherwise state the command and let the user answer the prompt |
 | `guard_broad_scan.py` | PreToolUse, Bash | block | `find`, `grep -r`, `rg`, `fd` rooted at `~`, `$HOME`, `/`, `/Users`, `/home`, or a bare `/Users/<name>` | Scope the scan to the project or a known subpath |
 | `guard_rm.py` | PreToolUse, Bash | block, or allow | block: recursive-force `rm`, `find -delete`, `find -exec rm` unless every target is strictly inside `$TMPDIR`. allow: plain `rm` or `rmdir` inside `$TMPDIR` | Name exact files, or clean up under `$TMPDIR`, or ask the user |
@@ -110,7 +110,8 @@ catches its own errors and picks one posture on purpose:
 
 - Text-pattern fallback, so obvious text still blocks: `block_destructive_git.py`,
   `block_tmux_kill_server.py`, `audit_secrets_before_push.py`.
-- Text-pattern fallback that asks (never blocks): `block_uv.py`, `guard_installs.py`.
+- Text-pattern fallback that asks (never blocks): `block_uv.py`, `guard_installs.py`
+  (its koopa block applies only when the parser can read the command).
 - Block: `guard_env_files.py`.
 - Fail open, so a bug skips the check instead of locking every Bash or Write call:
   `guard_rm.py`, `guard_tmp.py`, `guard_broad_scan.py`, `guard_hook_writes.py`,
@@ -146,7 +147,9 @@ same edit as its first use, or a post-edit formatter may strip it as unused.
 - `guard_report_path.py` does nothing with no vault detected, and never blocks a
   delete or the source side of a move.
 - `guard_hook_writes.py`, `guard_sensitive_paths.py`, `guard_installs.py` and
-  `block_uv.py` ask, never deny, and never auto-approve. They are speed bumps: a
+  `block_uv.py` ask, never deny, and never auto-approve (the one exception: a koopa
+  command that changes the system is blocked, because the `koopa` CLI's agent mode
+  refuses it in every harness, hooks or not). They are speed bumps: a
   script that writes a protected file or installs a package itself is not seen.
 - A uv probe passes only while it is on the read-only list. An unknown global
   option or subcommand, `xargs` feeding `uv`, or uv code inside an interpreter

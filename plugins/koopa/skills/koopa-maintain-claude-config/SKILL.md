@@ -89,6 +89,17 @@ satisfy every reader):
   of "Use when", "Use after", "Use before", "Use to", "Use this", or "Whenever".
   A CLI reads the description to decide when to load the skill body; without a
   trigger phrase, it has nothing to match against.
+- **Short beats complete**: every harness lists every skill's name and description
+  in context on every turn, so the whole index is a standing cost. Name the single
+  strongest trigger (a command, module, or error string) and move the full trigger
+  list into the body. `test_plugin_skills.py` caps the plugin's index at 5,000 chars
+  and koopa's repo-local `.agents/skills` at 20,000; `koopa app claude
+  audit-tokens` reports the index for any tree.
+- **Harness-neutral tool names**: say "the `<server>` MCP server's `<tool>` tool"
+  and describe actions ("ask the user", "track the steps in a file"), not one
+  harness's own names (`mcp__server__tool`, `AskUserQuestion`, `TodoWrite`,
+  `ExitPlanMode`). Skills about a harness's own configuration are exempt;
+  `test_plugin_skills.py` enforces the rest.
 - **Body size**: about 600 lines is a soft ceiling, not a hard rule. Shrink by
   moving reference detail into a sibling file in the skill directory, not by
   summarizing it away.
@@ -222,6 +233,12 @@ the `.claude/rules` alias (a symlink to it). Each file appears once, under its
 The combined `all` output is the true per-session token cost before the first prompt.
 Use `--scope global` to see only the global tree (`~/.claude/CLAUDE.md` plus the
 rules under `~/.agents/rules`), or `--scope project` for only the current project.
+
+Each tree also gets two notes, printed only when they apply and never counted toward
+`--max-tokens`: its **skill index** (every skill's name plus description under
+`.agents/skills` and `.claude/skills`, symlinks counted once), and the **rules that
+Copilot loads twice** (a rule in `.agents/rules` with a same-stem generated copy in
+`.github/instructions`, or `~/.copilot/instructions` for the global tree).
 
 ## Slimming a Bloated Lessons File (migration pattern)
 

@@ -12,8 +12,9 @@ description: >-
 ## Plan Mode
 
 A conversation, not a race. Start by understanding the problem, ask questions,
-challenge assumptions. Don't call ExitPlanMode until explicitly given the green
-light. Enter plan mode for architectural decisions or non-obvious tradeoffs.
+challenge assumptions. Don't leave plan mode or request plan approval until
+explicitly given the green light. Enter plan mode for architectural decisions or
+non-obvious tradeoffs.
 
 ## Operating Principles
 

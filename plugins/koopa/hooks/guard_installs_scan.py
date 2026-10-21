@@ -33,12 +33,18 @@ What counts as an install:
 What does not count: the same words inside quoted text given to a data command
 (`echo`, `grep`, `git commit -m`), a comment, or a heredoc fed to a non-shell
 command. `uninstall`, `reinstall`, and `pip list` are not installs.
+
+`koopa` commands that change the system (`install`, `reinstall`, `uninstall`,
+`update`, `configure`, every `admin` subcommand, `system prune-apps` and
+`system switch-to-develop`) get their own decision, `koopa_agent_decision`: the
+`koopa` CLI refuses them under a coding agent, so the guard denies them unless the
+same command line turns agent mode off, which asks instead.
 """
 
 import re
 import sys
 
-from shell_command_scan import WRAPPERS, base, walk
+from shell_command_scan import WRAPPERS, base, command_index, walk
 
 EXIT_CLEAN = 0
 EXIT_FOUND = 10
@@ -67,6 +73,26 @@ INSTALL_VERBS = {
 }
 DOWNLOADERS = frozenset({"curl", "wget"})
 SHELLS = frozenset({"bash", "sh", "zsh"})
+
+# Mirrors `koopa.agent_mode`, which this hook cannot import: under a coding agent the
+# `koopa` CLI refuses these commands, so the guard denies them up front instead of
+# asking for an approval the CLI would then ignore. `test_agent_mode.py` keeps the
+# copies in step.
+KOOPA_AGENT_MARKERS = (
+    "AI_AGENT",
+    "PI_CODING_AGENT",
+    "CLAUDE_CODE_CHILD_SESSION",
+    "COPILOT_CLI",
+    "GEMINI_CLI",
+)
+KOOPA_AGENT_OVERRIDE = "KOOPA_AGENT"
+KOOPA_GATED_COMMANDS = frozenset({"configure", "install", "reinstall", "uninstall", "update"})
+KOOPA_GATED_SUBCOMMANDS = {
+    "admin": None,
+    "system": frozenset({"prune-apps", "switch-to-develop"}),
+}
+_KOOPA_AGENT_ENV = frozenset((*KOOPA_AGENT_MARKERS, KOOPA_AGENT_OVERRIDE))
+_HELP_FLAGS = frozenset({"-h", "--help"})
 
 
 def _first_arg(rest):
@@ -130,6 +156,72 @@ def _runs_install(invocation):
 def runs_install(command):
     """True if *command* would run an install. Raises ParseError if unsure."""
     return any(_runs_install(invocation) for invocation in walk(command))
+
+
+def _koopa_gated(argv):
+    """True if *argv*, starting at its command word, is a `koopa` command that changes
+    the system: one the CLI refuses under a coding agent.
+    """
+    if not argv or base(argv[0]) != "koopa" or _HELP_FLAGS & set(argv[1:]):
+        return False
+    words = [word for word in argv[1:] if not word.startswith("-")]
+    if not words:
+        return False
+    if words[0] in KOOPA_GATED_COMMANDS:
+        return True
+    if words[0] not in KOOPA_GATED_SUBCOMMANDS or len(words) < 2:
+        return False
+    allowed = KOOPA_GATED_SUBCOMMANDS[words[0]]
+    return allowed is None or words[1] in allowed
+
+
+def _names_agent_env(word):
+    """True if *word* names an agent marker or the override, alone or as `NAME=value`."""
+    return word.split("=", 1)[0] in _KOOPA_AGENT_ENV
+
+
+def _wrapper_overrides(prefix):
+    """True if the wrapper words before a command change agent mode: `env NAME=...`,
+    `env -u NAME`, or `env -i`.
+    """
+    for i, word in enumerate(prefix):
+        if word in ("-i", "--ignore-environment"):
+            return True
+        if word in ("-u", "--unset") and i + 1 < len(prefix) and _names_agent_env(prefix[i + 1]):
+            return True
+        if word.startswith("--unset=") and _names_agent_env(word.split("=", 1)[1]):
+            return True
+        if "=" in word and not word.startswith("-") and _names_agent_env(word):
+            return True
+    return False
+
+
+def koopa_agent_decision(command):
+    """Decide on the `koopa` commands in *command* that change the system.
+
+    Returns "deny" when one runs, since the CLI refuses it under an agent anyway;
+    "ask" when the command line also turns agent mode off (`KOOPA_AGENT=0 koopa ...`,
+    `env -u AI_AGENT koopa ...`, `unset COPILOT_CLI; koopa ...`), because then the
+    install would really run and the user must approve it; and None otherwise.
+    Raises ParseError if unsure.
+    """
+    gated = False
+    override = False
+    for invocation in walk(command):
+        argv = invocation.argv
+        if argv and base(argv[0]) in ("export", "unset"):
+            override = override or any(_names_agent_env(word) for word in argv[1:])
+        start = command_index(argv)
+        if start is None or not _koopa_gated(argv[start:]):
+            continue
+        gated = True
+        if any(name in _KOOPA_AGENT_ENV for name, _ in invocation.assignments):
+            override = True
+        if _wrapper_overrides(argv[:start]):
+            override = True
+    if not gated:
+        return None
+    return "ask" if override else "deny"
 
 
 def main():
