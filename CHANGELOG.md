@@ -1,5 +1,13 @@
 # Changelog
 
+## koopa 0.36.0 (unreleased)
+
+Minor changes:
+
+- Added `koopa app copilot archive-plans`, which archives old
+  `.copilot/plans/*.md` files into `archive/YYYY/MM/DD/`. It shares its
+  implementation with `koopa app claude archive-plans`.
+
 ## koopa 0.35.1 (2026-10-19)
 
 Minor changes:

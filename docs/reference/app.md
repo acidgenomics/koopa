@@ -280,6 +280,18 @@ Create a conda environment from packages or an environment file.
 
 Remove a conda environment.
 
+## copilot
+
+GitHub Copilot CLI configuration maintenance utilities.
+
+(koopa-app-copilot-archive-plans)=
+### `app copilot archive-plans`
+
+Archive old Copilot CLI plan files into date-based subdirectories.
+
+- `--days`
+- `--dry-run`
+
 ## current
 
 Query the current upstream version of a package or resource.

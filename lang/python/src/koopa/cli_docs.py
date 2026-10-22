@@ -332,6 +332,7 @@ APP_NAMESPACE_DESCRIPTIONS: dict[str, str] = {
     "brew": "Homebrew maintenance utilities.",
     "claude": "Claude Code configuration maintenance utilities.",
     "conda": "conda environment management utilities.",
+    "copilot": "GitHub Copilot CLI configuration maintenance utilities.",
     "current": "Query the current upstream version of a package or resource.",
     "docker": "Docker image build, run, and cleanup utilities.",
     "dracula-pro": "Dracula Pro theme bundle install and update-check utilities.",
@@ -424,6 +425,8 @@ APP_DESCRIPTIONS: dict[str, str] = {
     "conda-clean-cache": "Clean the conda package cache.",
     "conda-create-env": "Create a conda environment from packages or an environment file.",
     "conda-remove-env": "Remove a conda environment.",
+    # copilot
+    "copilot-archive-plans": "Archive old Copilot CLI plan files into date-based subdirectories.",
     # current (version lookups)
     "current-aws-cli-version": "Print the current upstream AWS CLI version.",
     "current-bioconductor-version": "Print the current Bioconductor release version.",

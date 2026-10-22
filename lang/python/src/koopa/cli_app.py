@@ -65,6 +65,9 @@ _APP_TREE: dict[str, Any] = {
         "create-env": "conda-create-env",
         "remove-env": "conda-remove-env",
     },
+    "copilot": {
+        "archive-plans": "copilot-archive-plans",
+    },
     "current": {
         "aws-cli-version": "current-aws-cli-version",
         "bioconductor-version": "current-bioconductor-version",
@@ -1352,13 +1355,18 @@ def _handle_brew_version(args: list[str]) -> None:
 # -- claude handlers ---------------------------------------------------------
 
 
-def _handle_claude_archive_plans(args: list[str]) -> None:
-    """Handle ``koopa app claude archive-plans``.
+def _handle_archive_plans(args: list[str], tool: str, tool_name: str) -> None:
+    """Handle ``koopa app <tool> archive-plans``.
 
     Parameters
     ----------
     args : list[str]
         Raw CLI arguments for this subcommand.
+    tool : str
+        Tool key used in the command and the project directory, e.g. ``claude``
+        for ``.claude/plans``.
+    tool_name : str
+        Display name of the tool, e.g. ``Claude Code``.
     """
     import argparse
     import re
@@ -1366,8 +1374,8 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
     from datetime import date, timedelta
 
     parser = argparse.ArgumentParser(
-        prog="koopa app claude archive-plans",
-        description="Archive old Claude Code plan files into date-based subdirectories.",
+        prog=f"koopa app {tool} archive-plans",
+        description=f"Archive old {tool_name} plan files into date-based subdirectories.",
     )
     parser.add_argument(
         "--days",
@@ -1391,7 +1399,7 @@ def _handle_claude_archive_plans(args: list[str]) -> None:
     )
     root = result.stdout.strip() if result.returncode == 0 else os.getcwd()
 
-    plans_dir = os.path.join(root, ".claude", "plans")
+    plans_dir = os.path.join(root, f".{tool}", "plans")
     if not os.path.isdir(plans_dir):
         print(
             f"Error: Plans directory not found: '{plans_dir}'.",
@@ -3074,7 +3082,8 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "brew-upgrade": _handle_brew_upgrade,
     "brew-version": _handle_brew_version,
     # claude
-    "claude-archive-plans": _handle_claude_archive_plans,
+    "claude-archive-plans": lambda a: _handle_archive_plans(a, "claude", "Claude Code"),
+    "copilot-archive-plans": lambda a: _handle_archive_plans(a, "copilot", "GitHub Copilot CLI"),
     "claude-audit-tokens": _handle_claude_audit_tokens,
     # conda
     "conda-clean-cache": _handle_conda_clean_cache,

@@ -45,6 +45,9 @@ System updates are opt-in, never part of the default `koopa update` sweep.
 - `koopa app <name> <subcommand>`: app-specific helpers (for example `koopa
   app git ...`, `koopa app aws ...`). Run `koopa app --help` for the current
   list; it changes as apps are added.
+- `koopa app claude archive-plans` and `koopa app copilot archive-plans`: move
+  old plan files into `archive/YYYY/MM/DD/`. See the `koopa-workflow-guidance`
+  skill.
 
 ## Configure
 
