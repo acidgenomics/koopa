@@ -4,7 +4,7 @@
       "op"
     ],
     "category": "Security",
-    "date": "2026-10-13",
+    "date": "2026-10-22",
     "default": true,
     "description": "1Password command-line interface for secrets management",
     "type": "cli",
@@ -12,7 +12,7 @@
       "https://developer.1password.com/docs/cli/",
       "https://app-updates.agilebits.com/product_history/CLI2"
     ],
-    "version": "2.41.0"
+    "version": "2.41.1"
   },
   "7zip": {
     "bin": [
@@ -24,7 +24,7 @@
       "make"
     ],
     "category": "Compression",
-    "date": "2026-10-12",
+    "date": "2026-10-22",
     "default": true,
     "description": "file archiver with a high compression ratio",
     "src_url": "https://github.com/ip7z/7zip/releases/download/{version}/7z{version_nodot}-src.tar.xz",
@@ -33,7 +33,7 @@
       "https://www.7-zip.org/",
       "https://github.com/ip7z/7zip/"
     ],
-    "version": "26.04"
+    "version": "26.05"
   },
   "ack": {
     "bin": [
@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "4783783166214144",
+    "build_id": "4952523841339392",
     "category": "AI",
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "cd12c4609b8b44aa94c2fe50eed8f3884f1ace506584630cbffcff428b0d557b883db0cc5fb9cfcc92528829c519857829070590c15ed6d673adf1916e609111",
-      "darwin_amd64": "aec91417bde35e690d55af4e1ae4ff621fdd67d6b68a7a9ab50ebb506bf99d6b8a3b40395a385a42f8cf97109df22febb67dbde5ca498e75cbbca57a0dadc9ac",
-      "linux_amd64": "7ce149d350344c1046c7b59b6659bcc5d659f351bf3a07c6c085887d93427ceb89d927752e4ccd0844b53ffb91d33d6a49f72835ceb276c7cffdd13cfb8023b8",
-      "linux_arm64": "7bfc4f7e5e2dda4cd0c536c72cf9725c2918a038028ad11fa4f7f5e57db77e9ff7d6b9beca05cd85618b77dd3e77de64b63629d33e5779f29111390dc53c7aaf"
+      "darwin_arm64": "c94eccc4f0121787e62e96b46426c17dfb47ecac324cc5ef3f9111312b8dca04bf5fc7f50bae17270c486956798aec0b38a5fea35990c9d5db415ec90af88c8f",
+      "darwin_amd64": "20775c9554d7d89eae1621779133ab8bc4305bd0996b63f671e0b2ede54da2866a21fdfc991997f5037da26040914f5b3969d8cf204b8fe594e4f601ac76e476",
+      "linux_amd64": "fd30e8d256e28c4a6d0f5fddaa0f74b47c8c5a8e9fa2285cb03f85093e90eca0406f1c2fa57a0386bb820e21ed427e27c2315a01453dfda401c2223b2639ab30",
+      "linux_arm64": "cf60004b48015a2737dcb56ce11227fef3a722f2e9329c13318e290951e350c395118bd8680c1042b2fdee9d2ead05fb84bb2596fa2d0012a44bc068655d34eb"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.4.4"
+    "version": "1.4.5"
   },
   "apache-airflow": {
     "bin": [
@@ -1295,7 +1295,7 @@
       "make"
     ],
     "category": "Library",
-    "date": "2025-10-28",
+    "date": "2026-10-22",
     "default": false,
     "description": "lossless compression algorithm and library by Google",
     "src_url": "https://github.com/google/brotli/archive/v{version}.tar.gz",
@@ -1303,7 +1303,7 @@
     "url": [
       "https://github.com/google/brotli/"
     ],
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "btop": {
     "bin": [
@@ -1643,7 +1643,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "default": true,
     "dependencies": [
       "node"
@@ -1657,7 +1657,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.306"
+    "version": "2.1.308"
   },
   "claude-replay": {
     "bin": [
@@ -1688,7 +1688,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1696,7 +1696,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.9.23.15"
+    "version": "26.9.24.8"
   },
   "cloc": {
     "bin": [
@@ -1863,7 +1863,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "default": true,
     "dependencies": [
       "node"
@@ -1877,7 +1877,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.102-0"
+    "version": "1.0.103-0"
   },
   "coreutils": {
     "bin": [
@@ -2319,14 +2319,14 @@
       "go"
     ],
     "category": "Cloud",
-    "date": "2026-10-14",
+    "date": "2026-10-22",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.21.0"
+    "version": "1.22.1"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2438,7 +2438,7 @@
   },
   "dbt-snowflake": {
     "category": "Workflow",
-    "date": "2026-10-14",
+    "date": "2026-10-22",
     "default": false,
     "dependencies": [
       "dbt"
@@ -2453,7 +2453,7 @@
       "https://docs.getdbt.com",
       "https://github.com/dbt-labs/dbt-adapters"
     ],
-    "version": "1.12.3"
+    "version": "1.12.4"
   },
   "deeptools": {
     "bin": [
@@ -2647,7 +2647,7 @@
     ],
     "category": "Database",
     "conda_channel": "conda-forge",
-    "date": "2026-09-30",
+    "date": "2026-10-22",
     "default": true,
     "description": "in-process analytical SQL database",
     "installer": "conda-package",
@@ -2659,7 +2659,7 @@
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.5.6"
+    "version": "2.0.0"
   },
   "ed": {
     "bin": [
@@ -4706,7 +4706,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-10-13",
+    "date": "2026-10-22",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4714,7 +4714,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.127.0"
+    "version": "2.128.0"
   },
   "jj": {
     "bin": [
@@ -5011,7 +5011,7 @@
       "latch"
     ],
     "category": "Cloud",
-    "date": "2026-09-20",
+    "date": "2026-10-22",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -5028,7 +5028,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.77.1"
+    "version": "2.77.2"
   },
   "lazygit": {
     "bin": [
@@ -5039,7 +5039,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-10-11",
+    "date": "2026-10-22",
     "default": false,
     "description": "terminal UI for git with a simple and intuitive interface",
     "installer": "conda-package",
@@ -5047,7 +5047,7 @@
     "url": [
       "https://github.com/jesseduffield/lazygit/"
     ],
-    "version": "0.66.1"
+    "version": "0.66.2"
   },
   "ldc": {
     "build_dependencies": [
@@ -6651,7 +6651,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-10-19",
+    "date": "2026-10-22",
     "default": false,
     "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
@@ -6661,7 +6661,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "26.10.2"
+    "version": "26.10.3"
   },
   "nghttp2": {
     "build_dependencies": [
@@ -6771,7 +6771,7 @@
     ],
     "category": "Language",
     "conda_channel": "conda-forge",
-    "date": "2026-09-24",
+    "date": "2026-10-22",
     "default": false,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
@@ -6787,7 +6787,7 @@
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.10.0"
+    "version": "26.12.1"
   },
   "npth": {
     "build_dependencies": [
@@ -7350,7 +7350,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-10-15",
+    "date": "2026-10-22",
     "default": false,
     "description": "cross-platform, multi-language package management tool",
     "installer": "conda-package",
@@ -7359,7 +7359,7 @@
       "https://pixi.sh/",
       "https://github.com/prefix-dev/pixi/"
     ],
-    "version": "0.82.0"
+    "version": "0.82.1"
   },
   "pixman": {
     "build_dependencies": [
@@ -7676,7 +7676,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-10-14",
+    "date": "2026-10-22",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7687,7 +7687,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.10"
+    "version": "2.8.11"
   },
   "pyflakes": {
     "bin": [
@@ -8032,7 +8032,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-10-01",
+    "date": "2026-10-22",
     "default": false,
     "dependencies": {
       "macos-arm64": [
@@ -8073,7 +8073,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.13.16"
+    "version": "3.13.17"
   },
   "python3.14": {
     "bin": [
@@ -8734,7 +8734,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-09-17",
+    "date": "2026-10-22",
     "default": false,
     "dependencies": [
       "libffi",
@@ -8752,7 +8752,7 @@
     "url": [
       "https://www.ruby-lang.org/en/downloads/releases/"
     ],
-    "version": "4.0.7"
+    "version": "4.0.8"
   },
   "ruff": {
     "bin": [
@@ -9195,7 +9195,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-09-17",
+    "date": "2026-10-22",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -9205,7 +9205,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.27.0"
+    "version": "9.27.1"
   },
   "snowflake-cli": {
     "bin": [
@@ -9466,7 +9466,7 @@
       "streamlit"
     ],
     "category": "Python",
-    "date": "2026-10-15",
+    "date": "2026-10-22",
     "default": false,
     "dependencies": [
       "python"
@@ -9479,7 +9479,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.66.0"
+    "version": "1.66.1"
   },
   "subread": {
     "bin": [
@@ -9748,7 +9748,7 @@
       "javac"
     ],
     "category": "Language",
-    "date": "2026-08-21",
+    "date": "2026-10-22",
     "default": false,
     "description": "Eclipse Temurin OpenJDK distribution",
     "notes": [
@@ -9758,7 +9758,7 @@
     "url": [
       "https://adoptium.net/"
     ],
-    "version": "25.0.4.1+1"
+    "version": "25.0.5+8"
   },
   "termcolor": {
     "date": "2022-11-05",
@@ -10136,14 +10136,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-10-21",
+    "date": "2026-10-22",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.13.4"
+    "version": "0.13.5"
   },
   "valkey": {
     "bin": [
@@ -10435,7 +10435,7 @@
     ],
     "category": "Network",
     "conda_channel": "conda-forge",
-    "date": "2026-07-27",
+    "date": "2026-10-22",
     "default": false,
     "description": "friendly and fast HTTP client",
     "installer": "conda-package",
@@ -10444,7 +10444,7 @@
       "https://github.com/ducaale/xh/",
       "https://crates.io/crates/xh"
     ],
-    "version": "0.26.2"
+    "version": "0.26.3"
   },
   "xorg-libice": {
     "build_dependencies": [
@@ -10932,7 +10932,7 @@
       "yt-dlp"
     ],
     "category": "Multimedia",
-    "date": "2026-08-21",
+    "date": "2026-10-22",
     "default": false,
     "dependencies": [
       "python"
@@ -10947,7 +10947,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2026.8.19"
+    "version": "2026.10.21"
   },
   "zed": {
     "bin": [
