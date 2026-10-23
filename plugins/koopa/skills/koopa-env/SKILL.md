@@ -6,8 +6,9 @@ description: >-
   non-interactive and agentic sessions. Use when a command resolves to an
   unexpected binary, when PATH order looks wrong, or when working inside an
   SSH/CI/agent harness session that needs koopa's tools on PATH, when asking
-  which shell an agent runs, what KOOPA_BUCKET is, or when BSD `sed -i` fails
-  on macOS and `gsed` is the fix.
+  which shell an agent runs, what KOOPA_BUCKET is, when BSD `sed -i` fails
+  on macOS and `gsed` is the fix, or when `timeout` is a missing command on
+  macOS and `gtimeout` is the fix.
 ---
 
 # koopa Environment
@@ -47,6 +48,20 @@ Prefer the Edit tool for a small known change. For a scripted bulk edit, use
 
 The koopa plugin's `guard_hook_writes.py` treats `gsed -i` like `sed -i`, so
 both still ask before they touch protected hook or settings files.
+
+## On macOS, `timeout` does not exist: use `gtimeout`
+
+macOS has no `timeout`. A call to it prints `timeout: command not found`. Do not
+try `timeout` on macOS. koopa provides GNU `timeout` as `gtimeout` (from the
+`coreutils` app), and it takes the same arguments:
+
+```sh
+gtimeout 30 <command>
+```
+
+Exit code 124 means the command ran out of time. Check that `gtimeout` exists
+with `command -v gtimeout`. If it is missing, use
+`perl -e 'alarm 30; exec @ARGV' <command>`.
 
 ## A project's own virtual environment still wins
 

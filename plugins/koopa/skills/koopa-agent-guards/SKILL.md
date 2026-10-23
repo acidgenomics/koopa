@@ -184,7 +184,7 @@ documented alternative. Take the alternative; do not reword the command.
   user's Claude settings deny these even in a throwaway test repository. Test a
   git alias with a stub `git` earlier on `PATH` that only prints its arguments,
   and mimic git by appending `"$@"` to the alias body. See `koopa-claude-permissions`.
-- **Missing tools in the agent shell:** `timeout` is not installed (do not wrap
-  commands in it; end an interactive program with its own timer). `man` can hang
+- **Missing tools in the agent shell:** macOS has no `timeout`: use
+  `gtimeout` (see `koopa-env`). `man` can hang
   a non-interactive shell; use `GIT_PAGER=cat git help -c` for git option names.
   A pseudo-terminal for a program that needs a tty: `script -q /dev/null env ...`.
