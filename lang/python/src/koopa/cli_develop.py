@@ -9,6 +9,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 from collections.abc import Callable, Iterable, Iterator
 from typing import IO, Any, Self, cast
 
@@ -1438,7 +1440,7 @@ def _handle_check(args: list[str]) -> None:
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
         an argument cannot be routed unambiguously across eight tools.
     """
-    from koopa.alert import alert, alert_success
+    from koopa.alert import alert_success
 
     if args:
         msg = (
@@ -1457,13 +1459,51 @@ def _handle_check(args: list[str]) -> None:
         ("numpydoc", _run_numpydoc),
         ("pytest", _run_pytest),
     ]
+    live = sys.stderr.isatty()
     for label, runner in phases:
-        alert(f"Running {label}.")
-        if runner([], quiet=True) != 0:
+        stop = threading.Event()
+        start = time.monotonic()
+        spinner = threading.Thread(target=_check_spinner, args=(label, stop, start), daemon=True)
+        if live:
+            spinner.start()
+        try:
+            status = runner([], quiet=True)
+        finally:
+            stop.set()
+            if live:
+                spinner.join()
+        if status != 0:
             msg = f"{label} failed."
             raise RuntimeError(msg)
-        alert_success(f"{label} passed.")
+        alert_success(f"{label} [{time.monotonic() - start:.1f}s]")
     alert_success("All checks passed.")
+
+
+def _check_spinner(label: str, stop: threading.Event, start: float) -> None:
+    """Draw a one-line spinner for a running check phase until *stop* is set.
+
+    Parameters
+    ----------
+    label : str
+        Phase name shown beside the spinner.
+    stop : threading.Event
+        Set by the caller when the phase finishes; clears the line on exit.
+    start : float
+        ``time.monotonic()`` value when the phase began.
+    """
+    from koopa.progress import _SPINNER_FRAMES
+
+    idx = 0
+    while True:
+        frame = _SPINNER_FRAMES[idx % len(_SPINNER_FRAMES)]
+        elapsed = time.monotonic() - start
+        sys.stderr.write(f"\r\033[K=> {frame} Running {label} [{elapsed:.0f}s]")
+        sys.stderr.flush()
+        idx += 1
+        if stop.wait(0.2):
+            break
+    sys.stderr.write("\r\033[K")
+    sys.stderr.flush()
 
 
 def _handle_generate_completion() -> None:

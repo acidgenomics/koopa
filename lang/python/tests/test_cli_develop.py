@@ -680,10 +680,10 @@ def test_handle_check_stops_at_first_failure(
             runner.assert_not_called()
 
     captured = capsys.readouterr()
-    assert "agent config passed" in captured.err
-    assert "ruff check passed" in captured.err
-    assert "Running ruff format." in captured.err
-    assert "Running pyright." not in captured.err
+    assert "agent config [" in captured.err
+    assert "ruff check [" in captured.err
+    assert "ruff format [" not in captured.err
+    assert "pyright [" not in captured.err
 
 
 def test_generate_agent_config_help(capsys: pytest.CaptureFixture[str]) -> None:
@@ -717,4 +717,4 @@ def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> No
             p.stop()
 
     captured = capsys.readouterr()
-    assert captured.err.index("Running agent config.") < captured.err.index("Running ruff check.")
+    assert captured.err.index("agent config [") < captured.err.index("ruff check [")
