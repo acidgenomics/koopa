@@ -1441,6 +1441,7 @@ def _handle_check(args: list[str]) -> None:
         an argument cannot be routed unambiguously across eight tools.
     """
     from koopa.alert import alert_success
+    from koopa.progress import _fmt_duration, _styled_time
 
     if args:
         msg = (
@@ -1475,7 +1476,9 @@ def _handle_check(args: list[str]) -> None:
         if status != 0:
             msg = f"{label} failed."
             raise RuntimeError(msg)
-        alert_success(f"{label} [{time.monotonic() - start:.1f}s]")
+        elapsed = time.monotonic() - start
+        time_str = _styled_time(_fmt_duration(elapsed), seconds=elapsed)
+        alert_success(f"{label} {time_str}")
     alert_success("All checks passed.")
 
 

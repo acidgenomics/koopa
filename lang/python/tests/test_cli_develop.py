@@ -646,14 +646,21 @@ def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
     patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
     for p in patches:
         p.start()
-    try:
-        _DEVELOP_HANDLERS["check"]([])
-    finally:
-        for p in patches:
-            p.stop()
+    times = iter([0, 61, 100, 1300, *[v for _ in range(6) for v in (2000, 2001)]])
+    with (
+        patch("koopa.cli_develop.time.monotonic", side_effect=lambda: next(times)),
+        patch("koopa.progress._use_color", return_value=True),
+    ):
+        try:
+            _DEVELOP_HANDLERS["check"]([])
+        finally:
+            for p in patches:
+                p.stop()
 
     captured = capsys.readouterr()
     assert "All checks passed." in captured.err
+    assert "\033[33m[1m01s]\033[0m" in captured.err
+    assert "\033[31m[20m00s]\033[0m" in captured.err
 
 
 def test_handle_check_stops_at_first_failure(
@@ -680,10 +687,10 @@ def test_handle_check_stops_at_first_failure(
             runner.assert_not_called()
 
     captured = capsys.readouterr()
-    assert "agent config [" in captured.err
-    assert "ruff check [" in captured.err
-    assert "ruff format [" not in captured.err
-    assert "pyright [" not in captured.err
+    assert "agent config " in captured.err
+    assert "ruff check " in captured.err
+    assert "ruff format " not in captured.err
+    assert "pyright " not in captured.err
 
 
 def test_generate_agent_config_help(capsys: pytest.CaptureFixture[str]) -> None:
@@ -717,4 +724,4 @@ def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> No
             p.stop()
 
     captured = capsys.readouterr()
-    assert captured.err.index("agent config [") < captured.err.index("ruff check [")
+    assert captured.err.index("agent config ") < captured.err.index("ruff check ")

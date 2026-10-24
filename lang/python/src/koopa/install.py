@@ -3956,7 +3956,7 @@ def _run_install_plan(  # noqa: C901, PLR0912, PLR0915
         names_str = ", ".join(parts)
         if n > _max_visible_apps:
             names_str += f" +{n - _max_visible_apps} more"
-        sys.stderr.write(f"\r\033[K   {frame} installing {n} {label}: {names_str}")
+        sys.stderr.write(f"\r\033[K=> {frame} installing {n} {label}: {names_str}")
         sys.stderr.flush()
 
     def _clear() -> None:
