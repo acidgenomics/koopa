@@ -265,7 +265,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "wget2": f"{_M}._gnu",
     "antigravity-cli": f"{_M}.antigravity_cli",
     "aws-azure-login": f"{_M}.aws_azure_login",
-    # -- node-package (8) ------------------------------------------------
+    # -- node-package (9) ------------------------------------------------
     "bash-language-server": f"{_M}._node_pkg",
     "claude-code": f"{_M}._node_pkg",
     "claude-replay": f"{_M}._node_pkg",
@@ -273,6 +273,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "copilot-cli": f"{_M}._node_pkg",
     "gemini-cli": f"{_M}._node_pkg",
     "markdownlint-cli": f"{_M}._node_pkg",
+    "markdownlint-cli2": f"{_M}._node_pkg",
     "prettier": f"{_M}._node_pkg",
     # -- ruby-package (4) ------------------------------------------------
     "bashcov": f"{_M}._ruby_pkg",

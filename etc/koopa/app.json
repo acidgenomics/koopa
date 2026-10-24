@@ -6152,11 +6152,31 @@
     ],
     "description": "linter for Markdown files",
     "installer": "node-package",
+    "successor": "markdownlint-cli2",
     "type": "cli",
     "url": [
       "https://www.npmjs.com/package/markdownlint-cli/"
     ],
     "version": "0.49.1"
+  },
+  "markdownlint-cli2": {
+    "bin": [
+      "markdownlint-cli2"
+    ],
+    "category": "Documentation",
+    "date": "2026-10-24",
+    "default": false,
+    "dependencies": [
+      "node"
+    ],
+    "description": "fast, configuration-based linter for Markdown files",
+    "installer": "node-package",
+    "type": "cli",
+    "url": [
+      "https://github.com/DavidAnson/markdownlint-cli2",
+      "https://www.npmjs.com/package/markdownlint-cli2/"
+    ],
+    "version": "0.24.0"
   },
   "mcfly": {
     "date": "2026-01-02",
