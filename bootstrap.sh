@@ -894,7 +894,7 @@ install_zlib() {
 
 install_python_uv() {
     __kvar_uv_version='0.13.5'
-    __kvar_python_version='3.14.8'
+    __kvar_python_version='3.14.9'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
     if is_macos && is_arm64
