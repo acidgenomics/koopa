@@ -1420,10 +1420,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "https://www.j3e.de/linux/convmv/",
         "convmv",
     ),
-    "flac": (
-        "https://ftp.osuosl.org/pub/xiph/releases/flac/",
-        "flac",
-    ),
     "fontconfig": (
         "https://www.freedesktop.org/software/fontconfig/release/",
         "fontconfig",
@@ -2276,6 +2272,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("google-cloud-sdk", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
+    "flac": _AppCheckSpec("github", _check_github, ("xiph", "flac")),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
     "isl": _AppCheckSpec(

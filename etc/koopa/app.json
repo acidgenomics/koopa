@@ -871,7 +871,7 @@
       "bashcov"
     ],
     "category": "Shell",
-    "date": "2026-08-27",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": [
       "ruby"
@@ -883,7 +883,7 @@
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
     ],
-    "version": "4.0.0"
+    "version": "4.0.1"
   },
   "bat": {
     "bin": [
@@ -1314,7 +1314,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-05-02",
+    "date": "2026-10-26",
     "default": true,
     "description": "resource monitor showing CPU, memory, disks, and network",
     "installer": "conda-package",
@@ -1322,7 +1322,7 @@
     "url": [
       "https://github.com/aristocratos/btop"
     ],
-    "version": "1.4.7"
+    "version": "1.4.8"
   },
   "bumpver": {
     "bin": [
@@ -2381,7 +2381,7 @@
   },
   "dbt-databricks": {
     "category": "Workflow",
-    "date": "2026-10-12",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": [
       "dbt"
@@ -2396,7 +2396,7 @@
       "https://docs.getdbt.com",
       "https://github.com/databricks/dbt-databricks"
     ],
-    "version": "1.12.7"
+    "version": "1.12.8"
   },
   "dbt-postgres": {
     "category": "Workflow",
@@ -4793,7 +4793,7 @@
       "julia"
     ],
     "category": "Language",
-    "date": "2026-10-15",
+    "date": "2026-10-26",
     "default": false,
     "description": "high-performance dynamic programming language",
     "type": "cli",
@@ -4802,7 +4802,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.13.2"
+    "version": "1.13.3"
   },
   "jupyterlab": {
     "bin": [
@@ -6071,7 +6071,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-08-08",
+    "date": "2026-10-26",
     "default": false,
     "description": "fast conda-compatible package manager",
     "installer": "conda-package",
@@ -6080,7 +6080,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.9.0"
+    "version": "2.10.0"
   },
   "man-db": {
     "bin": [
@@ -6145,7 +6145,7 @@
       "markdownlint"
     ],
     "category": "Documentation",
-    "date": "2026-07-20",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": [
       "node"
@@ -6157,7 +6157,7 @@
     "url": [
       "https://www.npmjs.com/package/markdownlint-cli/"
     ],
-    "version": "0.49.1"
+    "version": "0.50.0"
   },
   "markdownlint-cli2": {
     "bin": [
@@ -6318,7 +6318,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-24",
+    "date": "2026-10-26",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6328,7 +6328,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.18"
+    "version": "2026.10.19"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7549,14 +7549,14 @@
       "pwsh"
     ],
     "category": "Shell",
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "default": false,
     "description": "cross-platform task automation shell by Microsoft",
     "type": "cli",
     "url": [
       "https://github.com/PowerShell/PowerShell/"
     ],
-    "version": "7.6.8"
+    "version": "7.6.9"
   },
   "prettier": {
     "bin": [
@@ -7930,7 +7930,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-10-01",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": {
       "macos-arm64": [
@@ -7971,7 +7971,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.11.17"
+    "version": "3.11.18"
   },
   "python3.12": {
     "bin": [
@@ -7991,7 +7991,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-10-01",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": {
       "macos-arm64": [
@@ -8032,7 +8032,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.12.15"
+    "version": "3.12.16"
   },
   "python3.13": {
     "bin": [
@@ -8052,7 +8052,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-10-22",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": {
       "macos-arm64": [
@@ -8093,7 +8093,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.13.17"
+    "version": "3.13.18"
   },
   "python3.14": {
     "bin": [
@@ -8123,7 +8123,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-10-21",
+    "date": "2026-10-26",
     "default": true,
     "dependencies": {
       "macos-arm64": [
@@ -8166,7 +8166,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.14.9"
+    "version": "3.14.10"
   },
   "python3.15": {
     "bin": [
@@ -8186,7 +8186,7 @@
       ]
     },
     "category": "Language",
-    "date": "2026-10-21",
+    "date": "2026-10-26",
     "default": true,
     "dependencies": {
       "macos-arm64": [
@@ -8227,7 +8227,7 @@
     "url": [
       "https://www.python.org/"
     ],
-    "version": "3.15.1"
+    "version": "3.15.2"
   },
   "quarto": {
     "bin": [
@@ -8627,7 +8627,7 @@
     ],
     "category": "AI",
     "conda_channel": "conda-forge",
-    "date": "2026-09-25",
+    "date": "2026-10-26",
     "default": false,
     "description": "continuous code review for AI coding agents",
     "installer": "conda-package",
@@ -8636,7 +8636,7 @@
       "https://www.roborev.io/",
       "https://github.com/kenn-io/roborev/"
     ],
-    "version": "0.69.0"
+    "version": "0.73.0"
   },
   "ronn": {
     "bin": [
@@ -9307,7 +9307,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-10-21",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9317,7 +9317,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "88393ec346620f8794348798ab28f8bdf562b767"
+    "version": "db8cfa0d6953d0d12aeb7bee00c8c221d937779a"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9731,7 +9731,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-08-27",
+    "date": "2026-10-26",
     "default": true,
     "description": "fast tldr client for concise command examples",
     "installer": "conda-package",
@@ -9739,7 +9739,7 @@
     "url": [
       "https://github.com/tealdeer-rs/tealdeer/"
     ],
-    "version": "1.9.0"
+    "version": "1.9.1"
   },
   "television": {
     "bin": [
@@ -10044,7 +10044,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "default": true,
     "dependencies": [
       "python"
@@ -10056,7 +10056,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.91"
+    "version": "0.0.92"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10978,7 +10978,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-10-21",
+    "date": "2026-10-26",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10987,7 +10987,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.24.4"
+    "version": "1.25.3"
   },
   "zellij": {
     "bin": [
