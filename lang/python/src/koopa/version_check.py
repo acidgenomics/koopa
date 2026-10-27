@@ -1827,6 +1827,7 @@ def _check_liblinear() -> str:
         if versions:
             return max(versions, key=_version_key)
     except (urllib.error.URLError, OSError):
+        # Fall back to the upstream page when GitHub is unavailable.
         pass
     # Upstream page is not valid UTF-8, so decode as latin-1.
     html = _http_get_text(
