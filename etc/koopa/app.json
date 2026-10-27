@@ -649,7 +649,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-10-18",
+    "date": "2026-10-26",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -661,7 +661,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.38.1"
+    "version": "2.38.2"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1643,7 +1643,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-10-24",
+    "date": "2026-10-26",
     "default": true,
     "dependencies": [
       "node"
@@ -1657,7 +1657,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.310"
+    "version": "2.1.311"
   },
   "claude-replay": {
     "bin": [
@@ -7698,7 +7698,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7709,7 +7709,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.13"
+    "version": "2.8.14"
   },
   "pyflakes": {
     "bin": [
@@ -9319,7 +9319,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "db8cfa0d6953d0d12aeb7bee00c8c221d937779a"
+    "version": "2efcc7912dee6ee5db14425f42388d043dad7763"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -10954,7 +10954,7 @@
       "yt-dlp"
     ],
     "category": "Multimedia",
-    "date": "2026-10-22",
+    "date": "2026-10-26",
     "default": false,
     "dependencies": [
       "python"
@@ -10969,7 +10969,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2026.10.21"
+    "version": "2026.10.26"
   },
   "zed": {
     "bin": [
