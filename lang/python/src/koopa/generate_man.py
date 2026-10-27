@@ -30,6 +30,9 @@ from koopa.cli_docs import (
     REINSTALL_FLAGS as _REINSTALL_FLAGS,
 )
 from koopa.cli_docs import (
+    SYNC_FLAGS as _SYNC_FLAGS,
+)
+from koopa.cli_docs import (
     SYSTEM_DESCRIPTIONS as _SYSTEM_DESCRIPTIONS,
 )
 from koopa.cli_docs import (
@@ -150,6 +153,10 @@ def generate_man() -> str:
 
     lines += _section("REINSTALL OPTIONS")
     for flag, desc in _REINSTALL_FLAGS:
+        lines += _tp(_bold(_roff_name(flag)), desc)
+
+    lines += _section("SYNC OPTIONS")
+    for flag, desc in _SYNC_FLAGS:
         lines += _tp(_bold(_roff_name(flag)), desc)
 
     # SYSTEM SUBCOMMANDS — names/platforms from the canonical generate_completion table.

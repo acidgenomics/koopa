@@ -20,7 +20,18 @@ Decisions:
   glob or a variable in a target counts as outside, because the hook cannot
   resolve it. A `cd` or a `TMPDIR=` assignment earlier in the command also puts
   the targets outside, since the hook cannot follow either. This keeps what the
-  old deny rule did and closes its flag-order gap.
+  old deny rule did and closes its flag-order gap. The `rm` is found after a leading
+  `NAME=value` (quoted or not) and after `do`, `then`, `else`, `{`, `!`, and the like.
+* no decision, instead of deny: a recursive force `rm` of a bare `$NAME` or `${NAME}`
+  that the same command text set from `NAME=$(mktemp -d ...)`. The directory is one
+  the command just made, so removing it is not the hazard this hook exists for, and
+  the same holds inside `ssh host '...'` or `bash -c '...'`, where $TMPDIR is not
+  this machine's. The variable must be set once, in the same piece of text, before the
+  `rm`, by a command that is only that assignment, and nothing else in that text may
+  change it (`read`, `export`, `for NAME in`, `printf -v`, `unset`, `eval`, `source`). A
+  suffix (`$NAME/x`, `$NAME/*`) does not qualify, since a failed `mktemp` leaves NAME
+  empty and the target would be `/x`. This is a decision to stop denying, never to
+  allow: the normal permission flow still runs.
 * no decision (exit 0, no output): everything else, so the normal permission
   flow runs. The hook never decides when it cannot parse or inspect the call,
   except that unparsable text which clearly looks like `rm -rf` is still denied.
@@ -37,9 +48,10 @@ import json
 import os
 import re
 import sys
+from collections.abc import Callable
 
 from hook_adapter import load_payload, read_commands
-from shell_command_scan import ParseError, command_index, walk
+from shell_command_scan import Invocation, ParseError, command_index, walk
 
 _RM_NAMES = frozenset({"rm", "rmdir"})
 _NAV = frozenset({"cd", "pushd", "popd"})
@@ -52,6 +64,28 @@ _LONG_FLAGS = frozenset(
 _REDIRECT_OP = re.compile(r"^(?:\d*|&)(?:>>?|<)$")  # bare operator; the next word is its target
 _REDIRECT_ATTACHED = re.compile(r"^(?:\d*|&)(?:>>?|<)")  # `>file`, `2>&1`
 _UNSAFE_CHARS = re.compile(r"[$`*?\[\]{}!\n]")
+_FRESH_VAR = re.compile(r"^\$(?:(\w+)|\{(\w+)\})$")
+# Commands that can set a shell variable other than by `NAME=value`. Each one that names a
+# variable counts as a second write to it. `eval` and `source` can set anything, so they
+# rule out every variable in their scope.
+_SETS_VARS = frozenset(
+    {
+        "declare",
+        "export",
+        "for",
+        "getopts",
+        "let",
+        "local",
+        "mapfile",
+        "read",
+        "readarray",
+        "readonly",
+        "select",
+        "typeset",
+        "unset",
+    }
+)
+_OPAQUE = frozenset({"eval", "source", "."})
 
 _DENY_REASON = (
     "Recursive force rm is blocked outside $TMPDIR. Name the exact files, ask the user, "
@@ -199,6 +233,86 @@ def _find_hits(args):
     return False
 
 
+def _makes_directory(text: str) -> bool:
+    """True when *text* is one plain `mktemp -d ...` command that really creates a directory."""
+    try:
+        found = walk(text)
+    except ParseError:
+        return False
+    if len(found) != 1 or not found[0].argv or os.path.basename(found[0].argv[0]) != "mktemp":
+        return False
+    makes_dir = False
+    for word in found[0].argv[1:]:
+        if word == "--dry-run":
+            return False
+        if word == "--directory":
+            makes_dir = True
+        elif word.startswith("-") and not word.startswith("--") and word != "-":
+            if "u" in word:  # `-u` only prints a name and creates nothing
+                return False
+            makes_dir = makes_dir or "d" in word
+    return makes_dir
+
+
+def _fresh_scratch(invocations: list[Invocation]) -> Callable[[int, int, str], bool]:
+    """Return a check, `is_fresh(index, scope, name)`, for whether `$name` holds a new directory.
+
+    It does when, in that scope, `name` is set exactly once, by a command that is nothing
+    but `name=$(mktemp -d ...)`, earlier than the command asking, and nothing else in the
+    scope can change it. A directory the same text just created cannot hold anything but
+    what that text put in it, which is what makes `rm -rf "$name"` safe to leave alone.
+    """
+    made = {}
+    writes = {}
+    opaque = set()
+    for index, inv in enumerate(invocations):
+        for name, sub in inv.assignments:
+            key = (inv.scope, name)
+            writes[key] = writes.get(key, 0) + 1
+            if sub is not None and _makes_directory(sub):
+                made[key] = index
+        i = command_index(inv.argv)
+        if i is None:
+            continue
+        head = os.path.basename(inv.argv[i])
+        rest = inv.argv[i + 1 :]
+        if head in _OPAQUE:
+            opaque.add(inv.scope)
+        elif head in _SETS_VARS or (head == "printf" and "-v" in rest):
+            for word in rest:
+                if not word.startswith("-"):
+                    key = (inv.scope, word.split("=", 1)[0])
+                    writes[key] = writes.get(key, 0) + 1
+
+    def is_fresh(index: int, scope: int, name: str) -> bool:
+        start = made.get((scope, name))
+        return (
+            start is not None
+            and start < index
+            and writes[(scope, name)] == 1
+            and scope not in opaque
+        )
+
+    return is_fresh
+
+
+def _all_fresh(
+    paths: list[str], is_fresh: Callable[[int, int, str], bool], index: int, scope: int
+) -> bool:
+    """True when every path is a bare `$NAME` or `${NAME}` that `is_fresh` accepts there.
+
+    A suffix such as `$NAME/x` does not qualify: if `mktemp` failed, NAME is empty and
+    `"$NAME"/*` would be `/*`.
+    """
+    if not paths:
+        return False
+    for path in paths:
+        match = _FRESH_VAR.match(path)
+        if not match or not is_fresh(index, scope, match.group(1) or match.group(2)):
+            return False
+    return True
+
+
 def decide(command, cwd="", tmpdir=""):
     """Return ("allow" | "deny", reason), or None when the hook has no opinion."""
     try:
@@ -209,10 +323,11 @@ def decide(command, cwd="", tmpdir=""):
     # trusts neither $TMPDIR nor the call's cwd.
     root = None if re.search(r"(?<![\w$])TMPDIR=", command) else _tmp_root(tmpdir)
     effective_cwd = cwd
+    is_fresh = _fresh_scratch(invocations)
     saw_rm = False
     only_rm = True
     all_allowable = True
-    for inv in invocations:
+    for index, inv in enumerate(invocations):
         i = command_index(inv.argv)
         name = os.path.basename(inv.argv[i]) if i is not None else ""
         if name in _NAV:
@@ -232,7 +347,7 @@ def decide(command, cwd="", tmpdir=""):
             and bool(paths)
             and all(_inside(p, effective_cwd, tmpdir, root) for p in paths)
         )
-        if recursive and force and not inside:
+        if recursive and force and not inside and not _all_fresh(paths, is_fresh, index, inv.scope):
             return ("deny", _DENY_REASON)
         direct = (
             i == 0

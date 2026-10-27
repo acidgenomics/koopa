@@ -26,6 +26,13 @@ TOP_COMMANDS: list[tuple[str, str, str]] = [
         "Remove installed applications. Defaults to uninstalling koopa itself.",
     ),
     (
+        "sync",
+        "[default-apps]",
+        "Repair actionable local installation issues from the current registry without "
+        "updating koopa or checking for newer app versions. The default-apps target "
+        "restores default app membership.",
+    ),
+    (
         "update",
         "[mode] [app...]",
         "Update koopa and stale apps; 'system' mode updates system apps.",
@@ -49,6 +56,15 @@ INSTALL_FLAGS: list[tuple[str, str]] = [
 REINSTALL_FLAGS: list[tuple[str, str]] = [
     ("--all-revdeps", "Reinstall the specified apps and all of their reverse dependencies."),
     ("--only-revdeps", "Reinstall only the reverse dependencies, not the specified apps."),
+]
+
+SYNC_FLAGS: list[tuple[str, str]] = [
+    (
+        "--dry-run",
+        "Report local system-check findings, or preview removals with default-apps, "
+        "without changing the installation.",
+    ),
+    ("--yes, -y", "Skip the confirmation before removing apps."),
 ]
 
 # ---------------------------------------------------------------------------
@@ -259,6 +275,7 @@ RUN_DESCRIPTIONS: dict[str, str] = {
     "move-into-dated-dirs-by-filename": "Move files into dated directories based on filename.",
     "move-into-dated-dirs-by-timestamp": "Move files into dated directories based on timestamp.",
     "nfiletypes": "Count file types in a directory.",
+    "organize-screenshots": "Rename PNG files to kebab-case and move them into dated directories.",
     "rename-camel-case": "Rename files to camelCase.",
     "rename-from-csv": "Rename files according to a CSV mapping.",
     "rename-kebab-case": "Rename files to kebab-case.",
@@ -307,6 +324,7 @@ RUN_SYNOPSIS: dict[str, str] = {
     "move-into-dated-dirs-by-filename": "files...",
     "move-into-dated-dirs-by-timestamp": "files...",
     "nfiletypes": "directory",
+    "organize-screenshots": "[--dry-run] [--quiet] [directory]",
     "rename-camel-case": "paths...",
     "rename-from-csv": "csv-file",
     "rename-kebab-case": "paths...",
@@ -330,6 +348,7 @@ APP_NAMESPACE_DESCRIPTIONS: dict[str, str] = {
     "brew": "Homebrew maintenance utilities.",
     "claude": "Claude Code configuration maintenance utilities.",
     "conda": "conda environment management utilities.",
+    "copilot": "GitHub Copilot CLI configuration maintenance utilities.",
     "current": "Query the current upstream version of a package or resource.",
     "docker": "Docker image build, run, and cleanup utilities.",
     "dracula-pro": "Dracula Pro theme bundle install and update-check utilities.",
@@ -422,6 +441,8 @@ APP_DESCRIPTIONS: dict[str, str] = {
     "conda-clean-cache": "Clean the conda package cache.",
     "conda-create-env": "Create a conda environment from packages or an environment file.",
     "conda-remove-env": "Remove a conda environment.",
+    # copilot
+    "copilot-archive-plans": "Archive old Copilot CLI plan files into date-based subdirectories.",
     # current (version lookups)
     "current-aws-cli-version": "Print the current upstream AWS CLI version.",
     "current-bioconductor-version": "Print the current Bioconductor release version.",

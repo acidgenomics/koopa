@@ -35,12 +35,15 @@ Reinstall applications, with optional reverse dependency rebuilds.
 \fBuninstall\fR \fI[app...]\fR
 Remove installed applications. Defaults to uninstalling koopa itself.
 .TP
+\fBsync\fR \fI[default-apps]\fR
+Repair actionable local installation issues from the current registry without updating koopa or checking for newer app versions. The default-apps target restores default app membership.
+.TP
 \fBupdate\fR \fI[mode] [app...]\fR
 Update koopa and stale apps; 'system' mode updates system apps.
+.SS "Utility commands"
 .TP
 \fBlist\fR \fI[--all]\fR
 List available apps. No args lists defaults; --all lists all.
-.SS "Utility commands"
 .TP
 \fBconfigure\fR \fIapp...\fR
 Run post-install configuration for applications.
@@ -81,6 +84,14 @@ Reinstall the specified apps and all of their reverse dependencies.
 .TP
 \fB\-\-only\-revdeps\fR
 Reinstall only the reverse dependencies, not the specified apps.
+.
+.SH "SYNC OPTIONS"
+.TP
+\fB\-\-dry\-run\fR
+Report local system-check findings, or preview removals with default-apps, without changing the installation.
+.TP
+\fB\-\-yes, \-y\fR
+Skip the confirmation before removing apps.
 .
 .SH "SYSTEM SUBCOMMANDS"
 .TP
@@ -477,6 +488,9 @@ Update generated documentation files.
 
 .TP
 \fBrun nfiletypes\fR
+
+.TP
+\fBrun organize\-screenshots\fR
 
 .TP
 \fBrun rename\-camel\-case\fR

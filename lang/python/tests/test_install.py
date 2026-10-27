@@ -199,11 +199,18 @@ def _fail_worker(
 
 def test_run_install_plan_single_app() -> None:
     """A single-app plan completes successfully."""
+    import io
+
     from koopa.install import _run_install_plan
+
+    class _TTY(io.StringIO):
+        def isatty(self) -> bool:
+            return True
 
     plan = [("myapp", "update")]
     dep_map: dict = {}
     calls: list[str] = []
+    stderr = _TTY()
 
     def _worker(config, pid_map=None):  # noqa: ANN001, ANN202
         calls.append(config.name)
@@ -215,10 +222,13 @@ def test_run_install_plan_single_app() -> None:
         patch("koopa.io.import_app_json", return_value={"myapp": {}}),
         patch("koopa.install._remove_from_pending_plan"),
         patch("koopa.install._save_pending_plan"),
+        patch("koopa.install.sys.stderr", stderr),
+        patch("koopa.alert._supports_color", return_value=True),
     ):
         _run_install_plan(plan, dep_map, make_config=_make_scheduler_config)
 
     assert calls == ["myapp"]
+    assert "=> | installing 1 app: myapp" in stderr.getvalue()
 
 
 def test_run_install_plan_dep_order() -> None:

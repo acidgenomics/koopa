@@ -745,9 +745,9 @@ _koopa_activate_python() {
     then
         export PIP_REQUIRE_VIRTUALENV='true'
     fi
-    if [[ -z "${PYTHONDONTWRITEBYTECODE:-}" ]]
+    if [[ -z "${PYTHONPYCACHEPREFIX:-}" ]]
     then
-        export PYTHONDONTWRITEBYTECODE=1
+        export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-${HOME:?}/.cache}/python"
     fi
     if [[ -z "${PYTHONSTARTUP:-}" ]]
     then

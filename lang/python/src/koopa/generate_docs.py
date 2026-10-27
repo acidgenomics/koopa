@@ -24,6 +24,7 @@ from koopa.cli_docs import (
     REINSTALL_FLAGS,
     RUN_DESCRIPTIONS,
     RUN_SYNOPSIS,
+    SYNC_FLAGS,
     SYSTEM_DESCRIPTIONS,
     SYSTEM_SYNOPSIS,
     TOP_COMMANDS,
@@ -110,6 +111,9 @@ def _render_top_level() -> str:
     lines.append("## Reinstall options")
     lines.append("")
     lines += _flag_table(REINSTALL_FLAGS)
+    lines.append("## Sync options")
+    lines.append("")
+    lines += _flag_table(SYNC_FLAGS)
     return "\n".join(lines) + "\n"
 
 

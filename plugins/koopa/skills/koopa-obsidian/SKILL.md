@@ -113,6 +113,13 @@ One-time prerequisites:
 
 1. **Obsidian must be running.** Otherwise every command fails with `The CLI is
    unable to find Obsidian.` Fix: `open -a Obsidian`, then poll `pgrep -x Obsidian`.
+   Use `-x`: a loose `pgrep -fl -i obsidian` also matches the QuickLook helper
+   (`ObsidianQuickLook.appex`), which runs without the app. This error is not a
+   configuration fault; the CLI link and the in-app setting can both be correct. To
+   avoid it, add Obsidian to macOS Login Items. Retry the command after the app starts.
+   Only if the CLI is not installed or the app will not start, read the vault path from
+   the registry (`~/Library/Application Support/obsidian/obsidian.json` on macOS):
+   prefer `"open": true`, else the highest `"ts"`.
 2. **The CLI must be enabled in-app**, once: Settings > General > Advanced >
    "Command line interface". Until then: `Command line interface is not enabled.`
 

@@ -688,7 +688,7 @@ _python_restore_lib() {
 }
 
 install_python() {
-    __kvar_version='3.14.8'
+    __kvar_version='3.14.10'
     printf 'Installing python.\n'
     # On macOS, dylib install_names are baked in as absolute paths at build
     # time, so point PREFIX/lib at the staged lib for the duration of this
@@ -893,8 +893,8 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.13.1'
-    __kvar_python_version='3.14.8'
+    __kvar_uv_version='0.13.5'
+    __kvar_python_version='3.14.9'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
     if is_macos && is_arm64

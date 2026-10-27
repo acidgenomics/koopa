@@ -87,7 +87,7 @@ lang/python/
 - Use `subprocess.run(..., check=True)`, never `check=False`.
 - XDG base dirs: use `from koopa.xdg import xdg_config_home, xdg_data_home`.
   Never hardcode `~/.config` or `~/.local/share`.
-- Plans and TODOs go in `todo.org` (Org mode) at the repo root, not
+- Plans and TODOs go in `todo.md` (Markdown) at the repo root, not
   `.claude/todo.md`.
 - After a correction, route the lesson to its home (skill, path-scoped rule,
   or slim core) per `.agents/rules/koopa-lessons.md`. Don't accumulate

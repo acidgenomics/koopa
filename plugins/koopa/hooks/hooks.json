@@ -6,43 +6,43 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/block_tmux_kill_server.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/block_tmux_kill_server.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/block_destructive_git.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/block_destructive_git.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/audit_secrets_before_push.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/audit_secrets_before_push.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/push_gate.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/push_gate.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_installs.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_installs.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/block_uv.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/block_uv.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_broad_scan.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_broad_scan.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_rm.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_rm.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_hook_writes.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_hook_writes.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_sensitive_paths.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_sensitive_paths.py\""
           }
         ]
       },
@@ -51,7 +51,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_tmp.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_tmp.py\""
           }
         ]
       },
@@ -60,7 +60,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_report_path.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_report_path.py\""
           }
         ]
       },
@@ -69,7 +69,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_keywords.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_keywords.py\""
+          },
+          {
+            "type": "command",
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_secret_content.py\""
           }
         ]
       },
@@ -78,7 +82,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_env_files.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_env_files.py\""
           }
         ]
       }
@@ -88,19 +92,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_workspace_root.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_workspace_root.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_local_time.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/session_local_time.py\""
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py\""
           }
         ]
       }
@@ -110,7 +114,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py\""
           }
         ]
       }
@@ -120,7 +124,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py\""
+            "command": "python3 -B \"${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py\""
           }
         ]
       }

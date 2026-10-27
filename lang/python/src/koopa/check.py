@@ -1142,8 +1142,13 @@ def check_tmux_server_stale() -> bool:
     return warn_tmux_stale()
 
 
-def check_system() -> bool:
+def check_system(*, include_disk: bool = True) -> bool:
     """Run all system checks.
+
+    Parameters
+    ----------
+    include_disk : bool, optional
+        Whether to include the disk-space advisory check.
 
     Returns
     -------
@@ -1161,6 +1166,8 @@ def check_system() -> bool:
     check_build_system()
     if not check_bootstrap_version():
         needs_update = True
+    if not check_venv_version():
+        needs_update = True
     if not check_installed_apps():
         needs_update = True
     if not check_broken_app_installs():
@@ -1169,7 +1176,7 @@ def check_system() -> bool:
         needs_update = True
     if not check_missing_default_apps():
         needs_update = True
-    if not check_disk("/"):
+    if include_disk and not check_disk("/"):
         needs_disk_space = True
     if not check_tmux_server_stale():
         needs_tmux_restart = True
@@ -1191,8 +1198,10 @@ def check_system() -> bool:
         or needs_tmux_restart
         or needs_dracula_pro_update
     ):
-        if needs_update or needs_system_update:
-            alert_note("Run 'koopa update' to resolve these issues.")
+        if needs_update:
+            alert_note("Run 'koopa sync' to resolve local installation issues.")
+        if needs_system_update:
+            alert_note("Run 'koopa update system' to resolve system application issues.")
         return False
     alert_success("System passed all checks.")
     return True

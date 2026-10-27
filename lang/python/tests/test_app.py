@@ -8,6 +8,8 @@ from unittest.mock import patch
 from koopa.app import (
     _PRUNE_TRASH_PREFIX,
     app_deps,
+    default_app_closure,
+    default_apps,
     installer_artifact_key,
     is_cpu_bound_app,
     prune_apps,
@@ -57,6 +59,25 @@ def test_app_deps_tmux_excludes_jemalloc_on_linux() -> None:
     with patch("koopa.app.os_id", return_value="linux-amd64"):
         deps = app_deps("tmux")
     assert "jemalloc" not in deps
+
+
+def test_default_app_closure_uses_registry_defaults_and_resolves_aliases() -> None:
+    """Only supported registry defaults and their resolved dependencies are retained."""
+    json_data = {
+        "default-app": {"default": True, "dependencies": ["build-tool"]},
+        "build-tool": {"dependencies": ["generic-python"]},
+        "generic-python": {"alias_of": "python3.14"},
+        "python3.14": {},
+        "non-default": {"default": False},
+        "unsupported": {"default": True, "supported": {"macos-arm64": False}},
+        "removed": {"default": True, "removed": True},
+    }
+    with (
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.app.os_id", return_value="macos-arm64"),
+    ):
+        assert default_apps() == ["default-app"]
+        assert default_app_closure() == {"build-tool", "default-app", "python3.14"}
 
 
 # -- installer_artifact_key tests ---------------------------------------------

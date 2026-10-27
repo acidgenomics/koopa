@@ -7,52 +7,52 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/block_tmux_kill_server.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/block_tmux_kill_server.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/block_destructive_git.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/block_destructive_git.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/audit_secrets_before_push.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/audit_secrets_before_push.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/push_gate.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/push_gate.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_installs.py\"",
+            "command": "env AGENT_HOOK_HARNESS=copilot python3 -B \"${PLUGIN_ROOT}/hooks/guard_installs.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/block_uv.py\"",
+            "command": "env AGENT_HOOK_HARNESS=copilot python3 -B \"${PLUGIN_ROOT}/hooks/block_uv.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_broad_scan.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_broad_scan.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_rm.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_rm.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "env AGENT_HOOK_HARNESS=copilot python3 \"${PLUGIN_ROOT}/hooks/guard_hook_writes.py\"",
+            "command": "env AGENT_HOOK_HARNESS=copilot python3 -B \"${PLUGIN_ROOT}/hooks/guard_hook_writes.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "env AGENT_HOOK_HARNESS=copilot python3 \"${PLUGIN_ROOT}/hooks/guard_sensitive_paths.py\"",
+            "command": "env AGENT_HOOK_HARNESS=copilot python3 -B \"${PLUGIN_ROOT}/hooks/guard_sensitive_paths.py\"",
             "timeout": 5
           }
         ]
@@ -62,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_tmp.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_tmp.py\"",
             "timeout": 5
           }
         ]
@@ -72,7 +72,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_report_path.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_report_path.py\"",
             "timeout": 5
           }
         ]
@@ -82,7 +82,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_keywords.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_keywords.py\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_secret_content.py\"",
             "timeout": 5
           }
         ]
@@ -92,7 +97,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/guard_env_files.py\"",
+            "command": "python3 -B \"${PLUGIN_ROOT}/hooks/guard_env_files.py\"",
             "timeout": 5
           }
         ]

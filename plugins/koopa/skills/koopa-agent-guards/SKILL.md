@@ -32,14 +32,15 @@ or note, nothing is stopped).
 | `block_destructive_git.py` | PreToolUse, Bash | block | `reset --hard`, `clean -fd`, any force push (`-f`, `--force*`, `+refspec`), `git rm -rf`, `checkout -- .`, `branch -D`, `git push origin main` or `master` (also `refs/heads/main`), `push --all`/`--branches`/`--mirror`/`:`/glob. In a checkout shared by sessions: `add -A`/`-u`/`.`, `commit -a`, a whole-tree `stash`, `stash pop`/`drop`/`clear`, `restore .`, `checkout .`, `worktree remove`/`prune` | Use a non-destructive form: name the paths (`git add -- <file>`, `git stash push -- <path>`), or stop and ask the user to run it. A push after `cd` or `git -C` into a different repo passes |
 | `audit_secrets_before_push.py` | PreToolUse, Bash | block | a real `git push` whose outgoing range (`@{u}..HEAD`, else `origin/<branch>..HEAD`) holds a file named like `.env`, `.pem`, `.p12`, `credentials.json`, `secrets.*`, `*_key.*` | Remove the file from the commits, then push. History surgery needs the user |
 | `push_gate.py` | PreToolUse, Bash | block | opt-in: a `git push` sending a commit with no receipt in `$(git rev-parse --git-path koopa-push-gate)/<sha>`. Inert until that directory exists | Run the project's check on a clean tree; it writes the receipt for HEAD when it passes. Then push |
-| `guard_installs.py` | PreToolUse, Bash | block | `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman -S`, `port`, `pipx`, `poetry add`, `cpan`, `uv add`, R `install.packages`, `koopa install`, `curl ... \| sh` | Name the command or the koopa app and let the user install it |
-| `block_uv.py` | PreToolUse, Bash | block | `uv` or `uvx` in any form, also inside `bash -c`, `ssh host '...'`, substitutions | Use the project's own environment and scripts |
+| `guard_installs.py` | PreToolUse, Bash | ask; block for koopa | `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman -S`, `port`, `pipx`, `poetry add`, `cpan`, `uv add`, R `install.packages`, `curl ... \| sh`, also behind `sudo`/`env`/`timeout`, inside `bash -c`, `ssh host` (quoted or not), substitutions, and batched calls. Probes (`pip show`, `npm ls`, `brew info`) pass. Blocks `koopa install`/`reinstall`/`uninstall`/`update`/`configure`/`admin ...`/`system prune-apps`/`system switch-to-develop`, which the `koopa` CLI refuses under an agent anyway; asks if the same line sets `KOOPA_AGENT=` or unsets a marker | State the command and why; the user approves or declines the prompt. For a blocked koopa command, show the user the command to run in their own terminal |
+| `block_uv.py` | PreToolUse, Bash | ask | a `uv` or `uvx` command that can change dependencies or environments (`sync`, `add`, `remove`, `run`, `pip install`, `lock`, `venv`, any `uvx` tool run), with the same wrapper, `ssh`, and batch detection. Read-only probes pass: `--version`, `help`, `<sub> --help`, `pip list/show/freeze/tree/check`, `python list/find/dir`, `tool list/dir`, `cache dir/size`, `self version`, `version` (no bump), `tree --frozen/--locked`, `lock --check` | Prefer the project's own environment and scripts; otherwise state the command and let the user answer the prompt |
 | `guard_broad_scan.py` | PreToolUse, Bash | block | `find`, `grep -r`, `rg`, `fd` rooted at `~`, `$HOME`, `/`, `/Users`, `/home`, or a bare `/Users/<name>` | Scope the scan to the project or a known subpath |
 | `guard_rm.py` | PreToolUse, Bash | block, or allow | block: recursive-force `rm`, `find -delete`, `find -exec rm` unless every target is strictly inside `$TMPDIR`. allow: plain `rm` or `rmdir` inside `$TMPDIR` | Name exact files, or clean up under `$TMPDIR`, or ask the user |
 | `guard_tmp.py` | PreToolUse, Bash and file-write tools | block | writing under `/tmp`, `/var/tmp`, `/dev/shm` (redirect, `tee`, `touch`, `mkdir`, `cp`/`mv` destination, `curl -o`, Write/Edit) | `mktemp -d`, then use that path |
 | `guard_hook_writes.py` | PreToolUse, Bash | ask | a command that writes `.agents/hooks`, `.claude/hooks`, or `.claude/settings*.json` (`sed -i`, redirect, `tee`, `mv`, `rm`, `cp` onto it, interpreter code) | Edit the managed source and apply it, or let the user approve |
 | `guard_report_path.py` | PreToolUse, Write/Edit/MultiEdit | block | a write to `reports/YYYY/MM/DD/`, `reports/YYYY-MM-DD/`, or directly under the project's top-level `reports/`, when a notes vault is detected | Write to the vault path named in the message |
 | `guard_keywords.py` | PreToolUse, Edit/Write/MultiEdit/NotebookEdit | block | a configured keyword in the file path or new content, in a publishable repo | Move the content to a private repo, or the user allowlists the remote |
+| `guard_secret_content.py` | PreToolUse, Edit/Write/MultiEdit/NotebookEdit | block | new content, on any path, holding an AWS access key ID, a presigned URL signature, a Databricks or GitHub token, a bearer credential, or a private key. A value containing `EXAMPLE`, or with fewer than six distinct characters, passes | Reference the credential (an environment variable or a secrets manager), or use a documented placeholder |
 | `guard_env_files.py` | PreToolUse, Edit/Write/Read/Bash | block | `.env` or `.env.local` read or edited, by file tool or by any command naming it | Ask the user for the specific value. `source .env` is allowed |
 | `guard_sensitive_paths.py` | PreToolUse, Bash | ask | a command referencing `~/Documents` or `~/Downloads` (`~`, `$HOME`, `${HOME}`, `/Users/<name>`) | Answer the prompt, or the user lists safe folders in `koopa.allowedPaths` |
 | `guard_settings_keywords.py` | SessionStart and Stop, Claude Code only | context at start, block at Stop | a configured keyword in `$CLAUDE_PROJECT_DIR/.claude/settings.json` in a publishable repo | Move that permission entry to `.claude/settings.local.json` (gitignored) |
@@ -92,7 +93,7 @@ to change them; that is the user's call.
 - `CLAUDE_PROJECT_DIR`: the two session hooks do nothing unless it is set and
   non-empty. The secrets and report-path hooks also use it for the repo or
   project root.
-- `AGENT_HOOK_HARNESS=copilot`: set by the Copilot registration so the two ask
+- `AGENT_HOOK_HARNESS=copilot`: set by the Copilot registration so the four ask
   hooks print Copilot's bare `permissionDecision` shape instead of the
   `hookSpecificOutput` wrapper.
 - `TMPDIR`: `guard_rm.py` only allows or accepts deletes inside it, and
@@ -108,13 +109,15 @@ every matching tool, including the edit that would repair it. Every guard theref
 catches its own errors and picks one posture on purpose:
 
 - Text-pattern fallback, so obvious text still blocks: `block_destructive_git.py`,
-  `block_uv.py`, `guard_installs.py`, `block_tmux_kill_server.py`,
-  `audit_secrets_before_push.py`.
+  `block_tmux_kill_server.py`, `audit_secrets_before_push.py`.
+- Text-pattern fallback that asks (never blocks): `block_uv.py`, `guard_installs.py`
+  (its koopa block applies only when the parser can read the command).
 - Block: `guard_env_files.py`.
 - Fail open, so a bug skips the check instead of locking every Bash or Write call:
   `guard_rm.py`, `guard_tmp.py`, `guard_broad_scan.py`, `guard_hook_writes.py`,
-  `guard_sensitive_paths.py`, `guard_report_path.py`, `push_gate.py`, and
-  `guard_keywords.py` (the git `pre-commit` hook is its backstop).
+  `guard_sensitive_paths.py`, `guard_report_path.py`, `push_gate.py`,
+  `guard_secret_content.py`, and `guard_keywords.py` (the git `pre-commit` hook is its
+  backstop).
 - Never block, by design: `session_local_time.py` and `session_compact_snapshot.py`.
 
 When editing a guard, keep it importable at every step. Add a new import in the
@@ -129,10 +132,10 @@ same edit as its first use, or a post-edit formatter may strip it as unused.
   even inside a test string or a Python heredoc that never reads one (2026-10).
   To test a deny rule that mentions such a name, read the rule instead of putting
   the name in a command.
-- Unparsable input fails open, with exceptions: `block_uv.py` fails closed on a
-  broad pattern, `guard_rm.py` still denies obvious `rm -rf` text, and
-  `guard_env_files.py` blocks on an internal error. Empty or malformed stdin
-  exits 0 everywhere else.
+- Unparsable input fails open, with exceptions: `block_uv.py` and
+  `guard_installs.py` ask when a broad text pattern matches, `guard_rm.py` still
+  denies obvious `rm -rf` text, and `guard_env_files.py` blocks on an internal
+  error. Empty or malformed stdin exits 0 everywhere else.
 - `rm` inside `$TMPDIR` is auto-approved only when the path has no variable
   other than `$TMPDIR`, no glob, no `~`, no `..`. A `cd` or `TMPDIR=` earlier in
   the command makes the hook distrust the targets.
@@ -143,8 +146,14 @@ same edit as its first use, or a post-edit formatter may strip it as unused.
   the env guard.
 - `guard_report_path.py` does nothing with no vault detected, and never blocks a
   delete or the source side of a move.
-- `guard_hook_writes.py` and `guard_sensitive_paths.py` ask, never deny. They are
-  speed bumps: a script that writes a protected file itself is not seen.
+- `guard_hook_writes.py`, `guard_sensitive_paths.py`, `guard_installs.py` and
+  `block_uv.py` ask, never deny, and never auto-approve (the one exception: a koopa
+  command that changes the system is blocked, because the `koopa` CLI's agent mode
+  refuses it in every harness, hooks or not). They are speed bumps: a
+  script that writes a protected file or installs a package itself is not seen.
+- A uv probe passes only while it is on the read-only list. An unknown global
+  option or subcommand, `xargs` feeding `uv`, or uv code inside an interpreter
+  string all ask. `which uv` passes; installing `uv` is `guard_installs.py`'s call.
 - Keyword matching is case-insensitive with a letter-or-digit boundary
   (`acmecorp` does not match `acmecorporation`), and a write is blocked only in
   an absolute path inside a git work tree whose `origin` is not allowlisted and
@@ -164,8 +173,8 @@ documented alternative. Take the alternative; do not reword the command.
   this plugin, refuses a variable that could expand to a top-level directory
   (`/bin`). It suggests the `${tmp:?}` form, which stops the shell when the
   variable is empty. Use that form.
-- **`uv --version`:** `block_uv.py` blocks every `uv` command. Read the installed
-  version from `etc/koopa/app.json` instead.
+- **`uv --version`:** blocked by `block_uv.py` until 2026-10, when it moved to an
+  ask posture. Read-only probes like this now pass with no prompt.
 - **`grep -r` / `ls` / `find` that look broad:** `guard_broad_scan.py` blocked two
   commands: one with `grep -rn` after a `cd ~/...`, and one that mixed `ls` of a
   `/Applications` glob with `grep -a` on an app binary. In both cases the exact
@@ -175,7 +184,7 @@ documented alternative. Take the alternative; do not reword the command.
   user's Claude settings deny these even in a throwaway test repository. Test a
   git alias with a stub `git` earlier on `PATH` that only prints its arguments,
   and mimic git by appending `"$@"` to the alias body. See `koopa-claude-permissions`.
-- **Missing tools in the agent shell:** `timeout` is not installed (do not wrap
-  commands in it; end an interactive program with its own timer). `man` can hang
+- **Missing tools in the agent shell:** macOS has no `timeout`: use
+  `gtimeout` (see `koopa-env`). `man` can hang
   a non-interactive shell; use `GIT_PAGER=cat git help -c` for git option names.
   A pseudo-terminal for a program that needs a tty: `script -q /dev/null env ...`.

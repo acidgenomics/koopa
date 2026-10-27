@@ -605,7 +605,7 @@ def test_secrets_entry_does_not_block_when_git_cannot_answer(tmp_path: Path) -> 
 
 
 def test_hooks_json_files_register_all_hooks_in_order() -> None:
-    """Both registries: ten Bash hooks in order, then one group each for four more hooks.
+    """Both registries: ten Bash hooks in order, then four more groups (two hooks in one).
 
     The Claude and Codex file also registers the Claude Code only hooks under SessionStart,
     PreCompact and Stop; the Copilot file has PreToolUse only.
@@ -625,8 +625,8 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         "guard_hook_writes",
         "guard_sensitive_paths",
     ]
-    # These two read AGENT_HOOK_HARNESS to pick the Copilot output shape.
-    harness_hooks = {"guard_hook_writes", "guard_sensitive_paths"}
+    # These read AGENT_HOOK_HARNESS to pick the Copilot output shape for their ask.
+    harness_hooks = {"guard_installs", "block_uv", "guard_hook_writes", "guard_sensitive_paths"}
     for registry, root, is_copilot in (
         (claude, "${CLAUDE_PLUGIN_ROOT}", False),
         (copilot, "${PLUGIN_ROOT}", True),
@@ -635,26 +635,28 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         assert len(groups) == 5
         assert groups[0]["matcher"] == "Bash"
         prefix = "env AGENT_HOOK_HARNESS=copilot " if is_copilot else ""
+        # -B: hooks import shared modules, and no __pycache__ may land under plugins/.
         expected = [
-            f'{prefix if name in harness_hooks else ""}python3 "{root}/hooks/{name}.py"'
+            f'{prefix if name in harness_hooks else ""}python3 -B "{root}/hooks/{name}.py"'
             for name in bash_hooks
         ]
         assert [h["command"] for h in groups[0]["hooks"]] == expected
         assert groups[1]["matcher"] == "Bash|Write|Edit|MultiEdit|NotebookEdit"
         assert [h["command"] for h in groups[1]["hooks"]] == [
-            f'python3 "{root}/hooks/guard_tmp.py"'
+            f'python3 -B "{root}/hooks/guard_tmp.py"'
         ]
         assert groups[2]["matcher"] == "Write|Edit|MultiEdit"
         assert [h["command"] for h in groups[2]["hooks"]] == [
-            f'python3 "{root}/hooks/guard_report_path.py"'
+            f'python3 -B "{root}/hooks/guard_report_path.py"'
         ]
         assert groups[3]["matcher"] == "Edit|Write|MultiEdit|NotebookEdit"
         assert [h["command"] for h in groups[3]["hooks"]] == [
-            f'python3 "{root}/hooks/guard_keywords.py"'
+            f'python3 -B "{root}/hooks/guard_keywords.py"',
+            f'python3 -B "{root}/hooks/guard_secret_content.py"',
         ]
         assert groups[4]["matcher"] == "Edit|Write|Read|Bash"
         assert [h["command"] for h in groups[4]["hooks"]] == [
-            f'python3 "{root}/hooks/guard_env_files.py"'
+            f'python3 -B "{root}/hooks/guard_env_files.py"'
         ]
     # Copilot: PreToolUse only. The Claude Code only hooks must not be registered there.
     assert set(copilot["hooks"]) == {"PreToolUse"}
@@ -665,29 +667,29 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
     assert len(start) == 1
     assert "matcher" not in start[0]
     assert [h["command"] for h in start[0]["hooks"]] == [
-        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py"',
-        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard_workspace_root.py"',
-        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/session_local_time.py"',
-        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py"',
+        'python3 -B "${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py"',
+        'python3 -B "${CLAUDE_PLUGIN_ROOT}/hooks/guard_workspace_root.py"',
+        'python3 -B "${CLAUDE_PLUGIN_ROOT}/hooks/session_local_time.py"',
+        'python3 -B "${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py"',
     ]
     # No matcher: PreCompact fires on both the manual and the automatic trigger.
     assert len(compact) == 1
     assert "matcher" not in compact[0]
     assert [h["command"] for h in compact[0]["hooks"]] == [
-        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py"'
+        'python3 -B "${CLAUDE_PLUGIN_ROOT}/hooks/session_compact_snapshot.py"'
     ]
     assert len(stop) == 1
     assert "matcher" not in stop[0]
     assert [h["command"] for h in stop[0]["hooks"]] == [
-        'python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py"'
+        'python3 -B "${CLAUDE_PLUGIN_ROOT}/hooks/guard_settings_keywords.py"'
     ]
     copilot_text = json.dumps(copilot)
     for claude_only in ("guard_settings_keywords", "guard_workspace_root", "session_"):
         assert claude_only not in copilot_text
-    # Totals: 14 PreToolUse + 4 SessionStart + 1 PreCompact + 1 Stop in the Claude file,
-    # 14 in the Copilot file.
-    assert sum(len(g["hooks"]) for e in claude["hooks"].values() for g in e) == 20
-    assert sum(len(g["hooks"]) for g in copilot["hooks"]["PreToolUse"]) == 14
+    # Totals: 15 PreToolUse + 4 SessionStart + 1 PreCompact + 1 Stop in the Claude file,
+    # 15 in the Copilot file.
+    assert sum(len(g["hooks"]) for e in claude["hooks"].values() for g in e) == 21
+    assert sum(len(g["hooks"]) for g in copilot["hooks"]["PreToolUse"]) == 15
     for group in copilot["hooks"]["PreToolUse"]:
         assert all(h["timeout"] == 5 for h in group["hooks"])
     for event in claude["hooks"].values():
@@ -698,6 +700,7 @@ def test_hooks_json_files_register_all_hooks_in_order() -> None:
         "guard_tmp",
         "guard_report_path",
         "guard_keywords",
+        "guard_secret_content",
         "guard_env_files",
         "guard_settings_keywords",
         "guard_workspace_root",

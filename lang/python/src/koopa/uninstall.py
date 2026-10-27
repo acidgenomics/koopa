@@ -230,31 +230,47 @@ def uninstall_koopa() -> None:
         shutil.rmtree(kp, ignore_errors=True)
 
 
-def uninstall_non_default_apps(yes: bool = False, verbose: bool = False) -> None:
-    """Uninstall installed apps that are not default and not dependencies of defaults.
+def sync_default_apps(
+    *,
+    dry_run: bool = False,
+    yes: bool = False,
+    verbose: bool = False,
+) -> None:
+    """Synchronize installed shared apps with the default app set.
 
     Parameters
     ----------
+    dry_run : bool, optional
+        Print apps that would be removed without changing the installation.
     yes : bool, optional
         Skip the interactive confirmation prompt.
     verbose : bool, optional
         Enable verbose uninstaller output.
     """
-    from koopa.app import app_deps, import_app_json, installed_apps, shared_apps
-    from koopa.install import _acquire_install_lock, _release_install_lock
+    from koopa.app import default_app_closure, installed_apps
+    from koopa.install import (
+        _acquire_install_lock,
+        _release_install_lock,
+        install_missing_default_apps,
+    )
 
-    installed = set(installed_apps())
-    default_apps = set(shared_apps(mode="default")) & installed
-    json_data = import_app_json()
-    protected: set[str] = set(default_apps)
-    for app in default_apps:
-        if app in json_data:
-            protected.update(app_deps(app))
-    targets = sorted(installed - protected)
-    if not targets:
-        print("No non-default apps to uninstall.")
+    protected = default_app_closure()
+    targets = sorted(set(installed_apps()) - protected)
+    if dry_run:
+        if not targets:
+            print("No non-default apps to remove.")
+            return
+        print(f"Apps to remove ({len(targets)}):")
+        for app in targets:
+            print(f"  {app}")
         return
-    print(f"Apps to uninstall ({len(targets)}):")
+
+    install_missing_default_apps(verbose=verbose)
+    targets = sorted(set(installed_apps()) - protected)
+    if not targets:
+        print("Default apps are already synchronized.")
+        return
+    print(f"Apps to remove ({len(targets)}):")
     for app in targets:
         print(f"  {app}")
     if not yes and sys.stdin.isatty():

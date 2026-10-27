@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "koopa",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "Use koopa to install apps, manage shell activation, and troubleshoot the koopa environment in any project.",
   "author": {
     "name": "Acid Genomics",

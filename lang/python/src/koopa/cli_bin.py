@@ -439,6 +439,27 @@ def _handle_move_into_dated_dirs_by_timestamp(args: list[str]) -> None:
         shutil.move(filepath, dest)
 
 
+def _handle_organize_screenshots(args: list[str]) -> None:
+    import argparse
+
+    from koopa.file_ops import organize_screenshots
+
+    parser = argparse.ArgumentParser(
+        prog="organize-screenshots",
+        description="Rename PNG files to kebab-case and move them into YYYY/MM/DD directories.",
+    )
+    parser.add_argument("--dry-run", action="store_true", help="show planned changes only")
+    parser.add_argument("--quiet", action="store_true", help="suppress output")
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        default=str(Path.home() / "Pictures" / "screenshots"),
+        help="directory with PNG files (default: ~/Pictures/screenshots)",
+    )
+    parsed = parser.parse_args(args)
+    organize_screenshots(parsed.directory, dry_run=parsed.dry_run, quiet=parsed.quiet)
+
+
 # -- Archive operations --------------------------------------------------------
 
 
@@ -1235,6 +1256,7 @@ _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "move-into-dated-dirs-by-filename": _handle_move_into_dated_dirs_by_filename,
     "move-into-dated-dirs-by-timestamp": _handle_move_into_dated_dirs_by_timestamp,
     "nfiletypes": _handle_nfiletypes,
+    "organize-screenshots": _handle_organize_screenshots,
     "rename-camel-case": _handle_rename_camel_case,
     "rename-from-csv": _handle_rename_from_csv,
     "rename-kebab-case": _handle_rename_kebab_case,

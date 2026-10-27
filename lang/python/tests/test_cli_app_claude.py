@@ -5,10 +5,13 @@ from pathlib import Path
 import pytest
 from koopa.cli_app import (
     _PYTHON_HANDLERS,
+    _doubly_loaded_rules,
     _estimate_claude_tokens,
     _find_project_root,
     _rule_is_path_scoped,
     _scan_claude_config,
+    _scan_skill_index,
+    _skill_index_text,
 )
 
 
@@ -420,3 +423,73 @@ def test_find_project_root_no_match(tmp_path: Path) -> None:
     # Result may be None or may find the real git root of this test process;
     # the important thing is it doesn't crash.
     assert result is None or isinstance(result, str)
+
+
+def _write_skill(skills_dir: Path, name: str, description: str) -> None:
+    """Write a minimal SKILL.md with a folded description."""
+    skill_dir = skills_dir / name
+    skill_dir.mkdir(parents=True)
+    (skill_dir / "SKILL.md").write_text(
+        f"---\nname: {name}\ndescription: >-\n  {description}\n---\n\n# {name}\n\nBody text.\n"
+    )
+
+
+def test_skill_index_text_reads_name_and_folded_description() -> None:
+    text = "---\nname: demo\ndescription: >-\n  Line one\n  line two.\n---\n\nBody\n"
+    assert _skill_index_text(text) == "demoLine one line two."
+    assert _skill_index_text("no frontmatter") == ""
+
+
+def test_scan_skill_index_counts_a_symlinked_skill_once(tmp_path: Path) -> None:
+    skills = tmp_path / ".agents" / "skills"
+    _write_skill(skills, "alpha", "a" * 30)
+    _write_skill(skills, "beta", "b" * 60)
+    (tmp_path / ".claude").mkdir()
+    (tmp_path / ".claude" / "skills").symlink_to(skills)
+    count, chars, tokens = _scan_skill_index([str(skills), str(tmp_path / ".claude" / "skills")])
+    assert count == 2
+    assert chars == len("alpha") + 30 + len("beta") + 60
+    assert tokens == (len("alpha") + 30) // 3 + (len("beta") + 60) // 3
+
+
+def test_doubly_loaded_rules_needs_both_files(tmp_path: Path) -> None:
+    rules = tmp_path / "rules"
+    instructions = tmp_path / "instructions"
+    rules.mkdir()
+    instructions.mkdir()
+    (rules / "a-rule.md").write_text("x")
+    (rules / "b-rule.md").write_text("x")
+    (instructions / "a-rule.instructions.md").write_text("x")
+    assert _doubly_loaded_rules(str(rules), str(instructions)) == ["a-rule.md"]
+    assert _doubly_loaded_rules(str(rules), str(tmp_path / "missing")) == []
+
+
+def test_claude_audit_tokens_reports_skill_index_and_doubled_rules(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    rules = tmp_path / ".agents" / "rules"
+    rules.mkdir(parents=True)
+    (rules / "style.md").write_text("c" * 300)
+    copilot = tmp_path / ".copilot" / "instructions"
+    copilot.mkdir(parents=True)
+    (copilot / "style.instructions.md").write_text("c" * 300)
+    _write_skill(tmp_path / ".agents" / "skills", "demo", "d" * 50)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "global"])
+    out = capsys.readouterr().out
+    assert "Global skill index (1 skills" in out
+    assert f"{len('demo') + 50:6d} chars" in out
+    assert "Global rules that Copilot loads twice" in out
+    assert "~/.agents/rules/style.md" in out
+
+
+def test_claude_audit_tokens_skill_index_not_in_max_tokens(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Skill descriptions are reported but do not count toward --max-tokens."""
+    _write_skill(tmp_path / ".agents" / "skills", "demo", "d" * 3000)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    _PYTHON_HANDLERS["claude-audit-tokens"](["--scope", "global", "--max-tokens", "10"])

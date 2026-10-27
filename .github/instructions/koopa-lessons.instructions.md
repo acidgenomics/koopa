@@ -57,7 +57,8 @@ description: "Lessons (koopa core)"
 Claude Code lists every skill's description, and loads each `paths:`-scoped
 rule when a matching file opens, so no index is kept here. Canonical sources:
 `.agents/skills/koopa-*/SKILL.md`, `.agents/rules/koopa-*.md`. Edit there, not
-through the `.claude/skills` or `.claude/rules` symlinks: Copilot CLI reads
-the generated `.github/instructions/koopa-*.instructions.md` adapters instead
-of `.agents/rules` directly; regenerate with
-`koopa develop generate-agent-config` after a rule change.
+through the `.claude/skills` or `.claude/rules` symlinks, then regenerate the
+`.github/instructions/koopa-*.instructions.md` adapters with
+`koopa develop generate-agent-config`. Copilot CLI 1.0.89+ reads both
+`.claude/rules` and the adapters, so it loads each rule twice
+(`copilot instruction list`); the adapters stay for Copilot on GitHub.com.

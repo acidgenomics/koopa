@@ -46,27 +46,27 @@ To use this plugin from Gemini CLI: `gemini extensions link
   Bookmarks pane and `bookmarks-all`).
 - `skills/koopa-python`: Python virtual environment lessons (why moving a
   project breaks `.venv/bin/activate`, and why direnv `PATH_add` survives it).
-- `skills/koopa-todo-org`: org-mode `todo.org` conventions for project task
+- `skills/koopa-todo-md`: Markdown `todo.md` conventions for project task
   tracking.
 - `skills/koopa-workflow-guidance`: workflow orchestration (plan mode etiquette,
   subagent discipline, session hygiene, git commit conventions).
 
 ## Hooks
 
-Thirteen `PreToolUse` hooks in five groups, plus two Claude Code only hooks on
-`SessionStart` and `Stop`. Nine run on `Bash`, registered in this order
+Fifteen `PreToolUse` hooks in five groups, plus two Claude Code only hooks on
+`SessionStart` and `Stop`. Ten run on `Bash`, registered in this order
 (`guard_sensitive_paths.py` last). `guard_tmp.py` has its own group on
 `Bash|Write|Edit|MultiEdit|NotebookEdit`, `guard_report_path.py` has a third group
-on `Write|Edit|MultiEdit`, `guard_keywords.py` has a fourth on
-`Edit|Write|MultiEdit|NotebookEdit`, and `guard_env_files.py` has a fifth on
+on `Write|Edit|MultiEdit`, `guard_keywords.py` and then `guard_secret_content.py` share a
+fourth on `Edit|Write|MultiEdit|NotebookEdit`, and `guard_env_files.py` has a fifth on
 `Edit|Write|Read|Bash`. `guard_settings_keywords.py` (`SessionStart` and `Stop`) and
 `guard_workspace_root.py` (`SessionStart`) are registered in `hooks/hooks.json` only, with
-no matcher. The Copilot file has the thirteen `PreToolUse` hooks and no `SessionStart` or
+no matcher. The Copilot file has the fifteen `PreToolUse` hooks and no `SessionStart` or
 `Stop` entry.
 
 These are opinionated defaults. They ship on for every user of the plugin, they are
-strict on purpose, and they encode one person's safety habits: no software installs
-by the agent, no `uv`, no `rm -rf` outside `$TMPDIR`, no `/tmp` scratch files, session
+strict on purpose, and they encode one person's safety habits: no software install
+or `uv` dependency change by the agent without your approval, no `rm -rf` outside `$TMPDIR`, no `/tmp` scratch files, session
 reports go to your Obsidian vault instead of a `reports/` folder, no reading or editing
 of `.env` files, a prompt before the agent touches `~/Documents` or `~/Downloads`, a
 warning when a Claude Code session is not rooted in a git repository, and (once you
@@ -89,14 +89,29 @@ Code, type `!` before the command).
   `credentials.json`, `secrets.*`, `*_key.*`). The repository comes from
   `CLAUDE_PROJECT_DIR`, else the payload `cwd`, else the current directory. A
   git failure (not a repo, no range) never blocks.
-- `guard_installs.py`: blocks commands that install software: `pip`, `npm`,
-  `pnpm`, `yarn`, `cargo`, `gem`, `go install`, `brew`, `apt`, `dnf`, `yum`,
-  `pacman`, `port`, `pipx`, `poetry add`, `uv add`, `cpan`/`cpanm`, `R install.packages`,
-  `BiocManager::install`, `renv::install`, `koopa install`, and `curl ... | sh`.
-  The agent surfaces the command and you install it yourself.
-- `block_uv.py`: blocks `uv` and `uvx` in any form, including inside
-  `bash -c`, `ssh host '...'`, and substitutions. When the parser cannot decide
-  it fails closed on a broad text pattern.
+- `guard_installs.py`: asks (`permissionDecision: ask`) before a
+  command that installs software: `pip`, `npm`, `pnpm`, `yarn`, `cargo`, `gem`,
+  `go install`, `brew`, `apt`, `dnf`, `yum`, `pacman`, `port`, `pipx`, `poetry add`,
+  `uv add`, `cpan`/`cpanm`, `R install.packages`, `BiocManager::install`,
+  `renv::install`, and `curl ... | sh`. Detection holds behind
+  wrappers (`sudo`, `env`, `timeout`), `bash -c`, `ssh host` (quoted or not),
+  substitutions, and every command of a batched Copilot call. Read-only probes
+  (`pip show`, `npm ls`, `brew info`) pass with no prompt. When the parser cannot
+  decide, a text pattern decides whether to ask. Nothing is ever auto-approved.
+  A `koopa` command that changes the system (`install`, `reinstall`, `sync`,
+  `uninstall`, `update`, `configure`, `admin ...`, `system prune-apps`, `system
+  switch-to-develop`) is blocked instead, because the `koopa` CLI refuses it under
+  a coding agent anyway (see Agent mode below); a command line that also turns
+  agent mode off (`KOOPA_AGENT=0`, `env -u AI_AGENT`) asks.
+- `block_uv.py`: asks (never denies) before a `uv` or `uvx` command that can
+  change dependencies or environments (`uv sync`, `uv add`, `uv run`, `uv pip
+  install`, `uv lock`, any `uvx` tool run), with the same wrapper, `ssh`, and
+  batch detection. Read-only probes pass with no prompt: `uv --version`, `uv help`,
+  `<sub> --help`, `uv pip list/show/freeze/tree/check`, `uv python list/find/dir`,
+  `uv tool list/dir`, `uv cache dir/size`, `uv self version`, `uv version` (no
+  bump), `uv tree --frozen/--locked`, and `uv lock --check`. When the parser
+  cannot decide, a broad text pattern decides whether to ask. The file name is
+  kept so existing registrations stay valid.
 - `guard_broad_scan.py`: blocks `find`, `grep -r`, `rg`, and `fd` rooted at `~`,
   `$HOME`, `/`, `/Users`, `/home`, or a bare home directory. Deeper paths pass.
 - `guard_rm.py`: denies recursive-force `rm` (and `find -delete`, `find -exec rm`)
@@ -121,6 +136,13 @@ Code, type `!` before the command).
   under the project's top-level `reports/`, and names the vault path to use. With
   no vault detected it does nothing. A delete, or the source side of a move, is
   never blocked. `hooks/obsidian_vault.py` is its vault resolver.
+- `guard_secret_content.py`: blocks a file write, on any path, whose new content holds a
+  well-known credential: an AWS access key ID, a presigned URL signature, a Databricks or
+  GitHub token, a bearer credential, or a private key with key material. Documented
+  placeholders pass (a value containing `EXAMPLE`, or one with fewer than six distinct
+  characters), as does text that only names a shape. The message names the kind, the
+  file, and the line, never the value. It also reads `MultiEdit` and `NotebookEdit`
+  bodies, which `hook_adapter.py` does not. Fails open on an internal error.
 - `guard_keywords.py`: blocks a Write/Edit that would put a configured restricted
   keyword into a publishable repository. It is inert until you configure it, and the
   plugin ships no keywords. It reads three git config keys. The dotfiles `pre-commit`
@@ -215,7 +237,8 @@ Files:
   (for destructive git with no `cd` exemption). `guard_broad_scan.py` is text
   based only. A block prints the reason to stderr and exits 2; `guard_rm.py` also
   prints an allow decision on stdout for `rm` inside `$TMPDIR`. The ask hooks
-  (`guard_hook_writes.py`, `guard_sensitive_paths.py`) print an ask decision on stdout.
+  (`guard_hook_writes.py`, `guard_sensitive_paths.py`, `guard_installs.py`,
+  `block_uv.py`) print an ask decision on stdout and exit 0.
   `guard_workspace_root.py` prints a plain warning line on stdout. Empty or malformed
   stdin exits 0.
 - `hooks/hook_adapter.py`, `hooks/shell_command_scan.py`,
@@ -283,3 +306,30 @@ Not verified (needs a human):
   `guard_sensitive_paths.py` prints under `AGENT_HOOK_HARNESS=copilot`.
 - That a `SessionStart` hook's stdout (`guard_workspace_root.py`) and `additionalContext`
   (`guard_settings_keywords.py`) are shown to the model in each Claude Code version.
+
+## Agent mode
+
+Hooks only help in a harness that runs them, and some run none. So the rule that an
+agent never changes the system also lives in the `koopa` CLI itself
+(`lang/python/src/koopa/agent_mode.py`). When a coding agent launched the command,
+`koopa` refuses `install`, `reinstall`, `uninstall`, `update`, `configure`, every
+`admin` subcommand, `system prune-apps`, and `system switch-to-develop`. It exits 2 and
+prints the exact command for the user to run in their own terminal. Read-only commands
+(`list`, `app`, `system which`, ...) run as usual.
+
+A coding agent is detected from the markers harnesses set for the commands they run:
+`AI_AGENT`, `PI_CODING_AGENT`, `CLAUDE_CODE_CHILD_SESSION`, `COPILOT_CLI`, or
+`GEMINI_CLI`. `KOOPA_AGENT=1` forces agent mode on and `KOOPA_AGENT=0` turns it off,
+for a person running koopa through a harness's own shell escape (`!` in Claude Code or
+Copilot CLI) that passes those markers on.
+
+Which shells carry a marker, read from the installed applications:
+
+- A plain VS Code integrated terminal sets none. VS Code (1.142.0) sets `AI_AGENT` only
+  in the terminals Copilot's agent creates and in its agent-host process, so a person
+  typing into an agent-created terminal is in agent mode.
+- Claude Code (2.1.303) sets `CLAUDE_CODE_CHILD_SESSION=1`, and `AI_AGENT`, in the
+  environment of every shell it spawns. A `!` command gets the same environment as the
+  Bash tool, so no marker can tell them apart: prefix `KOOPA_AGENT=0` there, or use your
+  own terminal.
+- Copilot CLI's `!` escape is not verified.

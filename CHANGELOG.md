@@ -1,5 +1,46 @@
 # Changelog
 
+## koopa 0.36.0 (2026-10-26)
+
+Major changes:
+
+- koopa now detects coding-agent environments and refuses system-changing
+  commands, including installs, updates, configuration, and administration.
+  Read-only commands remain available, and users can explicitly opt out for
+  commands they run themselves.
+- Added `koopa sync` to repair actionable local installation issues reported by
+  `koopa system check` without pulling koopa or checking for upstream app
+  releases. `koopa sync default-apps` restores the default app stack, first
+  installing any missing defaults and then removing non-default apps. Both
+  modes support a non-mutating `--dry-run` preview.
+
+Minor changes:
+
+- Added `koopa app copilot archive-plans`, which archives old
+  `.copilot/plans/*.md` files into `archive/YYYY/MM/DD/`. It shares its
+  implementation with `koopa app claude archive-plans`.
+- `koopa develop check` reports only the first failing phase, with the full
+  failure output, so inexpensive checks stop the gate before slower ones run.
+- Refreshed the bootstrap environment and routine application registry pins.
+
+New apps:
+
+- Added markdownlint-cli2 0.24.0, a non-default configuration-based Markdown
+  linter.
+
+## koopa 0.35.1 (2026-10-19)
+
+Minor changes:
+
+- `block_uv.py` and `guard_installs.py` now ask for explicit user approval on
+  dependency-changing `uv`/`uvx` and install commands instead of hard-blocking
+  them outright. Read-only probes (`uv --version`, `uv pip list`,
+  `uv tree --frozen`, `uv lock --check`, `pip show`, `npm ls`, `brew info`, and
+  similar) still pass with no prompt. `uv_command_scan.py` and
+  `guard_installs_scan.py` were updated to distinguish a dependency-changing
+  verdict from a read-only one. Documented in `plugins/koopa/README.md` and the
+  `koopa-agent-guards` skill.
+
 ## koopa 0.35.0 (2026-10-18)
 
 Major changes:

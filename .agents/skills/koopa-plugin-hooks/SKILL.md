@@ -33,8 +33,9 @@ what it blocks.
 - Claude Code only hooks (`guard_settings_keywords.py` on `SessionStart` and `Stop`,
   `guard_workspace_root.py` on `SessionStart`) are registered only in the first file.
 - A hook that must answer in Copilot's output shape (the ask hooks
-  `guard_hook_writes.py` and `guard_sensitive_paths.py`) is registered in the Copilot
-  file with an `env AGENT_HOOK_HARNESS=copilot` prefix before `python3`.
+  `guard_hook_writes.py`, `guard_sensitive_paths.py`, `guard_installs.py` and
+  `block_uv.py`) is registered in the Copilot file with an
+  `env AGENT_HOOK_HARNESS=copilot` prefix before `python3`.
 
 ## Checklist for adding a hook
 
@@ -90,9 +91,12 @@ Both exit 2 with the reason on stderr. A command that merely mentions the text, 
 `echo "tmux kill-server"`, exits 0.
 
 - Run Python with `-B` and tests with `PYTHONDONTWRITEBYTECODE=1`, so no `__pycache__`
-  appears under `plugins/`. The existing tests set `PYTHONDONTWRITEBYTECODE=1` in the
-  subprocess environment and run entries with `-B`; no test asserts that `plugins/` stays
-  free of bytecode, so this is practice, not a gate.
+  appears under `plugins/`. Since 2026-10-23 koopa's shell activation exports
+  `PYTHONPYCACHEPREFIX` (`${XDG_CACHE_HOME}/python`) instead of `PYTHONDONTWRITEBYTECODE`.
+  A harness not started from a koopa shell has neither, so only `-B` reliably keeps the
+  hooks clean: they import shared modules such as `hook_adapter`. Both `hooks.json` registries run every hook as `python3 -B`, and
+  `test_hooks_json_files_register_all_hooks_in_order` pins that. The existing tests set
+  `PYTHONDONTWRITEBYTECODE=1` in the subprocess environment and run entries with `-B`.
 - Tests that read git config isolate it: `GIT_CONFIG_GLOBAL` points at a file under
   `tmp_path`, `GIT_CONFIG_SYSTEM=/dev/null` (the tests also set `GIT_CONFIG_NOSYSTEM=1`),
   and `HOME` is under `tmp_path`. See `test_plugin_hooks_keywords.py`. Do the same in any

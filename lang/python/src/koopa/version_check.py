@@ -686,7 +686,7 @@ def _check_conda(
             timeout=5,
             _retries=0,
         )
-    except (urllib.error.URLError, OSError, TimeoutError) as exc:
+    except (urllib.error.URLError, OSError) as exc:
         raise _NetworkUnavailableError(f"conda {channel}/{package}: {exc}") from exc
     version = data.get("latest_version", "")
     if not version:
@@ -945,7 +945,7 @@ def _check_nongnu(package: str) -> str:
         # All nongnu mirrors unreachable — fall back to repology.
         try:
             return _check_repology(package)
-        except (urllib.error.URLError, OSError, TimeoutError) as exc:
+        except (urllib.error.URLError, OSError) as exc:
             _raise_network_unavailable(exc)
             raise AssertionError("unreachable") from exc
     pattern = re.compile(rf"{re.escape(package)}[_-]([\d]+(?:\.[\d]+)*)\.tar\.(?:gz|xz|bz2|lz)")
@@ -1238,7 +1238,7 @@ def _check_man_db() -> str:
     """
     try:
         return _check_gitlab("gitlab.com", "man-db/man-db")
-    except (urllib.error.URLError, OSError, TimeoutError, _NetworkUnavailableError):
+    except (urllib.error.URLError, OSError, _NetworkUnavailableError):
         return _check_repology("man-db")
 
 
@@ -1419,10 +1419,6 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
     "convmv": (
         "https://www.j3e.de/linux/convmv/",
         "convmv",
-    ),
-    "flac": (
-        "https://ftp.osuosl.org/pub/xiph/releases/flac/",
-        "flac",
     ),
     "fontconfig": (
         "https://www.freedesktop.org/software/fontconfig/release/",
@@ -1830,7 +1826,8 @@ def _check_liblinear() -> str:
         versions = [v for v in (_liblinear_tag_to_version(t["name"]) for t in tags) if v]
         if versions:
             return max(versions, key=_version_key)
-    except (urllib.error.URLError, OSError, TimeoutError):
+    except (urllib.error.URLError, OSError):
+        # Fall back to the upstream page when GitHub is unavailable.
         pass
     # Upstream page is not valid UTF-8, so decode as latin-1.
     html = _http_get_text(
@@ -2276,6 +2273,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("google-cloud-sdk", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
+    "flac": _AppCheckSpec("github", _check_github, ("xiph", "flac")),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
     "isl": _AppCheckSpec(
@@ -3671,8 +3669,9 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
         if match and match.group(2) != new_version:
             text = pattern.sub(rf"\g<1>{new_version}\g<3>", text)
             count += 1
+            label = "python (source build)" if func_name == "python" else func_name
             print(
-                f"  bootstrap.sh {func_name}: {match.group(2)} -> {new_version}",
+                f"  bootstrap.sh {label}: {match.group(2)} -> {new_version}",
                 file=sys.stderr,
             )
     py_app_key = _bootstrap_app_map().get("python", "")
@@ -3701,7 +3700,12 @@ def update_bootstrap(app_data: dict[str, Any]) -> int:
                 text,
             )
             if held_match and held_match.group(1) != py_version:
-                print(f"  bootstrap.sh python: {py_version} held for cooldown", file=sys.stderr)
+                print(
+                    f"  bootstrap.sh python (via uv): {held_match.group(1)} kept, "
+                    f"{py_version} held for {_BOOTSTRAP_UV_PYTHON_COOLDOWN_DAYS}-day cooldown "
+                    f"(pinned {py_entry.get('date', 'unknown')})",
+                    file=sys.stderr,
+                )
     uv_entry = app_data.get("uv", {})
     uv_updated = False
     if isinstance(uv_entry, dict):

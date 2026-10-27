@@ -3,8 +3,9 @@ name: koopa-workflow-guidance
 description: >-
   Workflow orchestration guidance, plan mode etiquette, subagent discipline,
   session hygiene, and git commit conventions. Use when asked about plan mode,
-  how to structure multi-step work, when to use subagents, or when making a
-  git commit.
+  how to structure multi-step work, when to use subagents, when making a
+  git commit, or when cleaning up old Claude or Copilot plan files
+  (`koopa app claude|copilot archive-plans`).
 ---
 
 # Workflow Orchestration
@@ -12,8 +13,9 @@ description: >-
 ## Plan Mode
 
 A conversation, not a race. Start by understanding the problem, ask questions,
-challenge assumptions. Don't call ExitPlanMode until explicitly given the green
-light. Enter plan mode for architectural decisions or non-obvious tradeoffs.
+challenge assumptions. Don't leave plan mode or request plan approval until
+explicitly given the green light. Enter plan mode for architectural decisions or
+non-obvious tradeoffs.
 
 ## Operating Principles
 
@@ -42,6 +44,26 @@ light. Enter plan mode for architectural decisions or non-obvious tradeoffs.
 
 Save to `.claude/plans/`. Use system-assigned filenames as-is.
 Plan → verify → track → explain → capture lessons.
+
+### Archiving old plans
+
+Plan files pile up in the project. Clean them up with the koopa command for the
+tool that wrote them. Run it from inside the project:
+
+```sh
+koopa app claude archive-plans --dry-run     # .claude/plans
+koopa app copilot archive-plans --dry-run    # .copilot/plans
+```
+
+- Always run with `--dry-run` first and show the user the result. The real run
+  moves files, so run it only after the user agrees.
+- Plans older than `--days N` (default 14) move to
+  `plans/archive/YYYY/MM/DD/`. The date comes from a `YYYY-MM-DD-` filename
+  prefix, else from the file's modified time.
+- A name collision in the archive overwrites the older file. Check the dry-run
+  listing for repeated names.
+- The Copilot command covers only the repo-local mirror in `.copilot/plans/`. It
+  never touches the private `~/.copilot/session-state/*/plan.md` copies.
 
 ## Git Commit Conventions
 

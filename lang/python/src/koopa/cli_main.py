@@ -12,6 +12,8 @@ import platform
 import sys
 from typing import TYPE_CHECKING, Any
 
+from koopa.agent_mode import is_agent_session, is_gated, refusal_message
+
 if TYPE_CHECKING:
     from koopa.install import InstallConfig
 
@@ -367,10 +369,19 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- uninstall ------------------------------------------------------------
     uninstall_p = subparsers.add_parser("uninstall")
     uninstall_p.add_argument("apps", nargs="*")
-    uninstall_p.add_argument("--non-default", action="store_true", default=False)
     uninstall_p.add_argument("--no-revdeps", action="store_true", default=False)
     uninstall_p.add_argument("--yes", "-y", action="store_true", default=False)
     _add_common_flags(uninstall_p)
+
+    # -- sync -----------------------------------------------------------------
+    sync_p = subparsers.add_parser(
+        "sync",
+        description="Repair local installation state from the current registry.",
+    )
+    sync_p.add_argument("target", choices=["default-apps"], nargs="?")
+    sync_p.add_argument("--dry-run", action="store_true", default=False)
+    sync_p.add_argument("--yes", "-y", action="store_true", default=False)
+    _add_common_flags(sync_p)
 
     # -- update ---------------------------------------------------------------
     update_p = subparsers.add_parser(
@@ -822,20 +833,6 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     from koopa.uninstall import UninstallConfig, uninstall_app, uninstall_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
-    if args.non_default:
-        if apps:
-            print(
-                "Error: --non-default cannot be combined with app names.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        from koopa.uninstall import uninstall_non_default_apps
-
-        uninstall_non_default_apps(
-            yes=getattr(args, "yes", False),
-            verbose=getattr(args, "verbose", False),
-        )
-        return
     if not apps:
         apps = ["koopa"]
     if apps == ["koopa"]:
@@ -877,6 +874,90 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
         for app in apps:
             config = UninstallConfig(name=app, mode=mode, verbose=args.verbose)
             uninstall_app(config)
+    finally:
+        if acquired:
+            _release_install_lock()
+
+
+def _handle_sync(args: argparse.Namespace) -> None:
+    """Handle ``koopa sync`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``sync`` subcommand.
+    """
+    _require_supported_platform()
+    _require_git_managed_install()
+    _require_slurm_allocation()
+    _revert_direnv_env(verbose=args.verbose)
+    if args.target == "default-apps":
+        from koopa.uninstall import sync_default_apps
+
+        sync_default_apps(
+            dry_run=args.dry_run,
+            yes=args.yes,
+            verbose=args.verbose,
+        )
+        return
+    if args.dry_run:
+        from koopa.check import check_system
+
+        check_system(include_disk=False)
+        return
+    _sync_local_installation(verbose=args.verbose)
+
+
+def _sync_local_installation(*, verbose: bool = False) -> None:
+    """Repair local installation state without checking for updates.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        Enable verbose output from repair operations.
+    """
+    from koopa.alert import alert_success, styled_name, warn
+    from koopa.app import prune_apps
+    from koopa.check import prune_broken_symlinks
+    from koopa.install import (
+        InstallPlanError,
+        _acquire_install_lock,
+        _cleanup_legacy_config,
+        _release_install_lock,
+        _update_venv,
+        remove_alias_app_dirs,
+        remove_unsupported_apps,
+        repair_app_symlinks,
+        update_bootstrap,
+        update_stale_apps,
+    )
+
+    acquired = _acquire_install_lock()
+    try:
+        _cleanup_legacy_config()
+        if update_bootstrap(verbose=verbose):
+            _release_install_lock()
+            acquired = False
+            _exec_restart_with_bootstrap()
+        _update_venv(_koopa_prefix())
+        remove_alias_app_dirs()
+        try:
+            remove_unsupported_apps(verbose=verbose)
+        except Exception as exc:
+            warn(f"Removing unsupported apps failed: {exc}")
+        prune_broken_symlinks()
+        try:
+            repair_app_symlinks()
+        except Exception as exc:
+            warn(f"Repairing app symlinks failed: {exc}")
+        try:
+            update_stale_apps(verbose=verbose)
+        except InstallPlanError as exc:
+            from koopa.alert import stop
+
+            stop(f"koopa sync failed: {_failed_apps_summary(exc.failed_apps)}")
+        prune_apps(verbose=verbose)
+        alert_success(f"{styled_name('koopa')} sync was successful.")
     finally:
         if acquired:
             _release_install_lock()
@@ -1200,10 +1281,14 @@ def main() -> None:
     if args.command is None:
         parser.print_help()
         sys.exit(1)
+    if is_agent_session(os.environ) and is_gated(args.command, getattr(args, "remainder", [])):
+        print(refusal_message(argv), file=sys.stderr, end="")
+        sys.exit(2)
     handlers = {
         "install": _handle_install,
         "reinstall": _handle_reinstall,
         "uninstall": _handle_uninstall,
+        "sync": _handle_sync,
         "update": _handle_update,
         "configure": _handle_configure,
         "list": _handle_list,

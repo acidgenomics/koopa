@@ -636,3 +636,64 @@ def delete_named_subdirs(dir_path: str, name: str) -> list[str]:
             shutil.rmtree(full)
             deleted.append(full)
     return deleted
+
+
+def organize_screenshots(
+    directory: str,
+    *,
+    dry_run: bool = False,
+    quiet: bool = False,
+) -> list[str]:
+    """Rename PNG files to kebab-case and move them into dated directories.
+
+    Only files at the top level of ``directory`` are processed. Each file moves
+    into ``YYYY/MM/DD`` under ``directory``, using its modification time in
+    local time.
+
+    Parameters
+    ----------
+    directory : str
+        Directory that contains the PNG files.
+    dry_run : bool, optional
+        Print the planned renames and moves without changing any file.
+    quiet : bool, optional
+        Suppress output.
+
+    Returns
+    -------
+    list[str]
+        Destination paths of the moved files.
+    """
+    from datetime import datetime
+
+    root = Path(directory).expanduser()
+    if not root.is_dir():
+        msg = f"Not a directory: '{root}'"
+        raise SystemExit(msg)
+    png_files = sorted(str(p) for p in root.glob("*.png") if p.is_file())
+    if not png_files:
+        return []
+    try:
+        from syntactic import syntactic_rename  # pyright: ignore[reportMissingImports]
+    except ImportError:
+        msg = "Package 'syntactic' is not installed."
+        raise SystemExit(msg) from None
+    renamed = syntactic_rename(png_files, fun="kebab_case", quiet=quiet, dry_run=dry_run)
+    moves: list[tuple[str, str]] = []
+    for src, new in zip(renamed["from"], renamed["to"], strict=True):
+        # Dry run leaves the file at its old path, so read the time from there.
+        mtime = os.path.getmtime(src if dry_run else new)
+        dt = datetime.fromtimestamp(mtime).astimezone()
+        dest = root / f"{dt.year:04d}" / f"{dt.month:02d}" / f"{dt.day:02d}" / Path(new).name
+        if dest.exists() or any(dest == other for _, other in moves):
+            msg = f"Destination exists: '{dest}'"
+            raise SystemExit(msg)
+        moves.append((src if dry_run else new, str(dest)))
+    for src, dest in moves:
+        if dry_run:
+            if not quiet:
+                print(f"[dry-run] {src} -> {dest}")
+            continue
+        Path(dest).parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(src, dest)
+    return [dest for _, dest in moves]

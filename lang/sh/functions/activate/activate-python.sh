@@ -3,7 +3,7 @@
 _koopa_activate_python() {
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2026-04-24.
+    # @note Updated 2026-10-23.
     #
     # Configures:
     # - Site packages library.
@@ -28,9 +28,11 @@ _koopa_activate_python() {
     then
         export PIP_REQUIRE_VIRTUALENV='true'
     fi
-    if [ -z "${PYTHONDONTWRITEBYTECODE:-}" ]
+    # 2026-10-23: Cache bytecode in one tree instead of '__pycache__' next to
+    # sources, which keeps worktrees clean and imports fast.
+    if [ -z "${PYTHONPYCACHEPREFIX:-}" ]
     then
-        export PYTHONDONTWRITEBYTECODE=1
+        export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-${HOME:?}/.cache}/python"
     fi
     # Added in Python 3.11.
     # This messes with Google Cloud SDK currently, so disabling.
