@@ -33,7 +33,7 @@ AGENT_MARKERS: tuple[str, ...] = (
 AGENT_OVERRIDE = "KOOPA_AGENT"
 
 #: Top-level commands that change the system.
-GATED_COMMANDS = frozenset({"configure", "install", "reinstall", "uninstall", "update"})
+GATED_COMMANDS = frozenset({"configure", "install", "reinstall", "sync", "uninstall", "update"})
 
 #: Command groups with subcommands that change the system. ``None`` gates every
 #: subcommand of the group.

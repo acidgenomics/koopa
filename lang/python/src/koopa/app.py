@@ -811,6 +811,61 @@ def prune_app_binaries(dry_run: bool = False) -> None:
     return None
 
 
+def default_apps() -> list[str]:
+    """Return default shared apps defined in the registry.
+
+    Unlike :func:`shared_apps`, this function never treats an already-installed
+    app as a default app.
+
+    Returns
+    -------
+    list[str]
+        Default shared app names supported on the current platform.
+    """
+    sys_dict = {"os_id": os_id()}
+    json_data = import_app_json()
+    out: list[str] = []
+    for name, entry in json_data.items():
+        if entry.get("alias_of") or entry.get("removed") or not entry.get("default"):
+            continue
+        supported = entry.get("supported", {})
+        if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
+            continue
+        if entry.get("private") or entry.get("system") or entry.get("user"):
+            continue
+        out.append(name)
+    return out
+
+
+def default_app_closure() -> set[str]:
+    """Return default shared apps and their resolved transitive dependencies.
+
+    Returns
+    -------
+    set[str]
+        Default shared app names and every dependency a fresh default install
+        requires.
+    """
+    json_data = import_app_json()
+
+    def _resolve_alias(name: str) -> str:
+        seen: set[str] = set()
+        while name not in seen:
+            seen.add(name)
+            entry = json_data.get(name, {})
+            alias = entry.get("alias_of", "")
+            if not alias:
+                break
+            name = alias
+        return name
+
+    apps: set[str] = set()
+    for name in default_apps():
+        apps.add(_resolve_alias(name))
+        apps.update(_resolve_alias(dep) for dep in app_deps(name))
+    return apps
+
+
 def shared_apps(mode: str) -> list:
     """Return names of shared apps.
 

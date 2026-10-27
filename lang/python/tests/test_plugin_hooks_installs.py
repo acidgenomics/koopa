@@ -424,6 +424,7 @@ KOOPA_DENIED = [
     "koopa install jq",
     "koopa install --reinstall jq",
     "koopa reinstall --all",
+    "koopa sync default-apps",
     "koopa uninstall jq",
     "koopa update",
     "koopa configure r",
@@ -439,6 +440,7 @@ KOOPA_DENIED = [
 # run, so they ask.
 KOOPA_OVERRIDE_ASKS = [
     "KOOPA_AGENT=0 koopa install jq",
+    "KOOPA_AGENT=0 koopa sync default-apps",
     "env KOOPA_AGENT=0 koopa install jq",
     "env -u AI_AGENT koopa update",
     "env --unset=COPILOT_CLI koopa update",
@@ -500,7 +502,13 @@ def test_entry_blocks_a_koopa_command_in_a_copilot_batch() -> None:
 
 @pytest.mark.parametrize(
     "command",
-    ["koopa reinstall jq", "koopa admin flush-dns", "koopa system prune-apps", "koopa update"],
+    [
+        "koopa reinstall jq",
+        "koopa sync default-apps",
+        "koopa admin flush-dns",
+        "koopa system prune-apps",
+        "koopa update",
+    ],
 )
 def test_text_patterns_match_koopa_commands_that_change_the_system(command: str) -> None:
     """When the parser cannot decide, these still ask through the text fallback."""

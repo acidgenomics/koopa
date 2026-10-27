@@ -98,8 +98,8 @@ Code, type `!` before the command).
   substitutions, and every command of a batched Copilot call. Read-only probes
   (`pip show`, `npm ls`, `brew info`) pass with no prompt. When the parser cannot
   decide, a text pattern decides whether to ask. Nothing is ever auto-approved.
-  A `koopa` command that changes the system (`install`, `reinstall`, `uninstall`,
-  `update`, `configure`, `admin ...`, `system prune-apps`, `system
+  A `koopa` command that changes the system (`install`, `reinstall`, `sync`,
+  `uninstall`, `update`, `configure`, `admin ...`, `system prune-apps`, `system
   switch-to-develop`) is blocked instead, because the `koopa` CLI refuses it under
   a coding agent anyway (see Agent mode below); a command line that also turns
   agent mode off (`KOOPA_AGENT=0`, `env -u AI_AGENT`) asks.

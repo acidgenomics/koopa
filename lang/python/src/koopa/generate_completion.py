@@ -90,6 +90,8 @@ _SYSTEM_LIST: list[tuple[str, str | None]] = [
     ("launch-agents", "macos"),
 ]
 
+_SYNC_TARGETS = ["default-apps"]
+
 
 def _get_main_command_flags() -> dict[str, list[str]]:
     """Derive flags for top-level subcommands from argparse parser.
@@ -614,6 +616,7 @@ _TOP_CMDS = [
     "list",
     "reinstall",
     "run",
+    "sync",
     "system",
     "uninstall",
     "update",
@@ -628,6 +631,7 @@ _TOP_CMD_DESCS = {
     "list": "List available apps",
     "reinstall": "Reinstall an app",
     "run": "Run a utility command",
+    "sync": "Synchronize apps",
     "system": "System information and management",
     "uninstall": "Uninstall an app",
     "update": "Update installed apps",
@@ -787,6 +791,10 @@ def _generate_fish_completion(
     lines += ["", "# update: mode completions."]
     for mode in ("koopa", "system"):
         lines.append(f"complete -c koopa -n '__fish_seen_subcommand_from update' -a '{mode}'")
+
+    lines += ["", "# sync targets."]
+    for target in _SYNC_TARGETS:
+        lines.append(f"complete -c koopa -n '__fish_seen_subcommand_from sync' -a '{target}'")
 
     lines += ["", "# update system: app names."]
     for app in sorted({name for name, _plat in update_system_apps}):
@@ -1021,6 +1029,8 @@ def _generate_zsh_completion(
             lines.append(f"        {cmd}) _koopa_develop ;;")
         elif cmd == "run":
             lines.append(f"        {cmd}) _koopa_run ;;")
+        elif cmd == "sync":
+            lines.append(f"        {cmd}) _koopa_sync ;;")
         elif cmd in ("install", "reinstall", "uninstall"):
             lines.append(f"        {cmd}) _koopa_install ;;")
         elif cmd == "update":
@@ -1077,6 +1087,28 @@ def _generate_zsh_completion(
     for app in all_apps:
         lines.append(f"        '{app}'")
     lines += ["    )", "    _describe -t apps 'app name' apps", "}", ""]
+
+    # -- sync -----------------------------------------------------------------
+    sync_flags_zsh = sorted(flag_map.get("sync", []))
+    lines += [
+        "_koopa_sync() {",
+        "    local context state line",
+        "    typeset -A opt_args",
+        "    _arguments -C \\",
+    ]
+    for flag in sync_flags_zsh:
+        lines.append(f"        '{flag}[{flag}]' \\")
+    lines += [
+        "        '1: :_koopa_sync_targets'",
+        "}",
+        "",
+        "_koopa_sync_targets() {",
+        "    local -a targets",
+        "    targets=(",
+    ]
+    for target in _SYNC_TARGETS:
+        lines.append(f"        '{target}'")
+    lines += ["    )", "    _describe -t targets 'sync target' targets", "}", ""]
 
     # -- update ---------------------------------------------------------------
     update_flags_zsh = sorted(flag_map.get("update", []))
@@ -1213,6 +1245,7 @@ def _generate_powershell_completion(
         f"                'run'       {{ $completions = @({_ps_array(_load_run_commands())}) }}",
         f"                'install'   {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'reinstall' {{ $completions = @({_ps_array(all_apps)}) }}",
+        f"                'sync'      {{ $completions = @({_ps_array(_SYNC_TARGETS)}) }}",
         f"                'uninstall' {{ $completions = @({_ps_array(all_apps)}) }}",
         f"                'system'    {{ $completions = @({_system_cmds_ps}) }}",
         f"                'update'    {{ $completions = @({_ps_array(['koopa', 'system'])}) }}",
@@ -1402,6 +1435,8 @@ def _generate_elvish_completion(
     lines.append(f"            put {' '.join(all_apps)}")
     lines.append("        } elif (eq $args[1] 'uninstall') {")
     lines.append(f"            put {' '.join(all_apps)}")
+    lines.append("        } elif (eq $args[1] 'sync') {")
+    lines.append(f"            put {' '.join(_SYNC_TARGETS)}")
     lines.append("        } elif (eq $args[1] 'update') {")
     lines.append("            put koopa system")
     lines.append("        } elif (eq $args[1] 'configure') {")
@@ -1521,6 +1556,7 @@ def _generate_nushell_completion(
     _nu_completer(lines, "koopa_admin_cmds", admin_cmds)
     _nu_completer(lines, "koopa_update_modes", ["koopa", "system"])
     _nu_completer(lines, "koopa_update_system_apps", update_system_app_names)
+    _nu_completer(lines, "koopa_sync_targets", _SYNC_TARGETS)
     _nu_completer(lines, "koopa_configure_modes", ["system", "user"])
 
     # Per-namespace completers for app sub-tree.
@@ -1557,6 +1593,15 @@ def _generate_nushell_completion(
         lines.append("    app_name: string@koopa_app_names")
         lines.append("]")
         lines.append("")
+
+    # sync extern.
+    sync_flags = sorted(flag_map.get("sync", []))
+    lines.append('extern "koopa sync" [')
+    for f in sync_flags:
+        lines.append(f"    {f}")
+    lines.append("    target: string@koopa_sync_targets")
+    lines.append("]")
+    lines.append("")
 
     # update extern.
     update_flags = sorted(flag_map.get("update", []))
@@ -1854,6 +1899,16 @@ def generate_completion() -> None:  # noqa: PLR0915
         _emit_case_entry(
             "'update')",
             [f"{i5}args+=({update_items_str})"],
+            i4,
+        )
+    )
+
+    # sync
+    sync_items_str = " ".join(f"'{x}'" for x in _SYNC_TARGETS)
+    lines.extend(
+        _emit_case_entry(
+            "'sync')",
+            [f"{i5}args+=({sync_items_str})"],
             i4,
         )
     )

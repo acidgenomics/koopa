@@ -15,6 +15,11 @@ Reinstall applications, with optional reverse dependency rebuilds.
 
 Remove installed applications. Defaults to uninstalling koopa itself.
 
+(koopa-sync)=
+## `sync default-apps`
+
+Synchronize app membership with the local registry: install missing defaults and remove all other installed apps. Does not update app versions or koopa.
+
 (koopa-update)=
 ## `update [mode] [app...]`
 
@@ -70,4 +75,11 @@ Developer and maintenance utilities.
 | --- | --- |
 | `--all-revdeps` | Reinstall the specified apps and all of their reverse dependencies. |
 | `--only-revdeps` | Reinstall only the reverse dependencies, not the specified apps. |
+
+## Sync options
+
+| Flag | Description |
+| --- | --- |
+| `--dry-run` | Preview apps that would be removed without changing the installation. |
+| `--yes, -y` | Skip the confirmation before removing apps. |
 

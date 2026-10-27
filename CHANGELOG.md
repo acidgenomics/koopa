@@ -1,12 +1,27 @@
 # Changelog
 
-## koopa 0.36.0 (unreleased)
+## koopa 0.36.0 (2026-10-26)
+
+Major changes:
+
+- koopa now detects coding-agent environments and refuses system-changing
+  commands, including installs, updates, configuration, and administration.
+  Read-only commands remain available, and users can explicitly opt out for
+  commands they run themselves.
 
 Minor changes:
 
 - Added `koopa app copilot archive-plans`, which archives old
   `.copilot/plans/*.md` files into `archive/YYYY/MM/DD/`. It shares its
   implementation with `koopa app claude archive-plans`.
+- `koopa develop check` reports only the first failing phase, with the full
+  failure output, so inexpensive checks stop the gate before slower ones run.
+- Refreshed the bootstrap environment and routine application registry pins.
+
+New apps:
+
+- Added markdownlint-cli2 0.24.0, a non-default configuration-based Markdown
+  linter.
 
 ## koopa 0.35.1 (2026-10-19)
 

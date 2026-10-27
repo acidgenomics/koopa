@@ -26,6 +26,12 @@ TOP_COMMANDS: list[tuple[str, str, str]] = [
         "Remove installed applications. Defaults to uninstalling koopa itself.",
     ),
     (
+        "sync",
+        "default-apps",
+        "Synchronize app membership with the local registry: install missing defaults and "
+        "remove all other installed apps. Does not update app versions or koopa.",
+    ),
+    (
         "update",
         "[mode] [app...]",
         "Update koopa and stale apps; 'system' mode updates system apps.",
@@ -49,6 +55,11 @@ INSTALL_FLAGS: list[tuple[str, str]] = [
 REINSTALL_FLAGS: list[tuple[str, str]] = [
     ("--all-revdeps", "Reinstall the specified apps and all of their reverse dependencies."),
     ("--only-revdeps", "Reinstall only the reverse dependencies, not the specified apps."),
+]
+
+SYNC_FLAGS: list[tuple[str, str]] = [
+    ("--dry-run", "Preview apps that would be removed without changing the installation."),
+    ("--yes, -y", "Skip the confirmation before removing apps."),
 ]
 
 # ---------------------------------------------------------------------------

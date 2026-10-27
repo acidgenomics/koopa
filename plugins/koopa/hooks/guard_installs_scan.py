@@ -34,8 +34,8 @@ What does not count: the same words inside quoted text given to a data command
 (`echo`, `grep`, `git commit -m`), a comment, or a heredoc fed to a non-shell
 command. `uninstall`, `reinstall`, and `pip list` are not installs.
 
-`koopa` commands that change the system (`install`, `reinstall`, `uninstall`,
-`update`, `configure`, every `admin` subcommand, `system prune-apps` and
+`koopa` commands that change the system (`install`, `reinstall`, `sync`,
+`uninstall`, `update`, `configure`, every `admin` subcommand, `system prune-apps` and
 `system switch-to-develop`) get their own decision, `koopa_agent_decision`: the
 `koopa` CLI refuses them under a coding agent, so the guard denies them unless the
 same command line turns agent mode off, which asks instead.
@@ -86,7 +86,9 @@ KOOPA_AGENT_MARKERS = (
     "GEMINI_CLI",
 )
 KOOPA_AGENT_OVERRIDE = "KOOPA_AGENT"
-KOOPA_GATED_COMMANDS = frozenset({"configure", "install", "reinstall", "uninstall", "update"})
+KOOPA_GATED_COMMANDS = frozenset(
+    {"configure", "install", "reinstall", "sync", "uninstall", "update"}
+)
 KOOPA_GATED_SUBCOMMANDS = {
     "admin": None,
     "system": frozenset({"prune-apps", "switch-to-develop"}),

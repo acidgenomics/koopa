@@ -85,6 +85,24 @@ def test_update_parser_accepts_system_mode() -> None:
     assert args.mode == "system"
 
 
+def test_sync_parser_accepts_default_apps_and_dry_run() -> None:
+    """Sync accepts the default-apps target and its preview flag."""
+    parser = cli_main._build_parser()
+    args = parser.parse_args(["sync", "default-apps", "--dry-run"])
+
+    assert args.command == "sync"
+    assert args.target == "default-apps"
+    assert args.dry_run is True
+
+
+def test_uninstall_parser_rejects_removed_non_default_flag() -> None:
+    """The legacy non-default uninstall interface is no longer available."""
+    parser = cli_main._build_parser()
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["uninstall", "--non-default"])
+
+
 def test_require_git_managed_install_permits_pinned_release(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

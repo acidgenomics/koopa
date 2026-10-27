@@ -369,10 +369,19 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- uninstall ------------------------------------------------------------
     uninstall_p = subparsers.add_parser("uninstall")
     uninstall_p.add_argument("apps", nargs="*")
-    uninstall_p.add_argument("--non-default", action="store_true", default=False)
     uninstall_p.add_argument("--no-revdeps", action="store_true", default=False)
     uninstall_p.add_argument("--yes", "-y", action="store_true", default=False)
     _add_common_flags(uninstall_p)
+
+    # -- sync -----------------------------------------------------------------
+    sync_p = subparsers.add_parser(
+        "sync",
+        description="Synchronize app membership with the current local registry.",
+    )
+    sync_p.add_argument("target", choices=["default-apps"])
+    sync_p.add_argument("--dry-run", action="store_true", default=False)
+    sync_p.add_argument("--yes", "-y", action="store_true", default=False)
+    _add_common_flags(sync_p)
 
     # -- update ---------------------------------------------------------------
     update_p = subparsers.add_parser(
@@ -824,20 +833,6 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     from koopa.uninstall import UninstallConfig, uninstall_app, uninstall_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
-    if args.non_default:
-        if apps:
-            print(
-                "Error: --non-default cannot be combined with app names.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        from koopa.uninstall import uninstall_non_default_apps
-
-        uninstall_non_default_apps(
-            yes=getattr(args, "yes", False),
-            verbose=getattr(args, "verbose", False),
-        )
-        return
     if not apps:
         apps = ["koopa"]
     if apps == ["koopa"]:
@@ -882,6 +877,28 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     finally:
         if acquired:
             _release_install_lock()
+
+
+def _handle_sync(args: argparse.Namespace) -> None:
+    """Handle ``koopa sync`` subcommand.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed CLI arguments for the ``sync`` subcommand.
+    """
+    _require_supported_platform()
+    _require_git_managed_install()
+    _require_slurm_allocation()
+    _revert_direnv_env(verbose=args.verbose)
+    if args.target == "default-apps":
+        from koopa.uninstall import sync_default_apps
+
+        sync_default_apps(
+            dry_run=args.dry_run,
+            yes=args.yes,
+            verbose=args.verbose,
+        )
 
 
 def _failed_apps_summary(failed: list[str]) -> str | None:
@@ -1209,6 +1226,7 @@ def main() -> None:
         "install": _handle_install,
         "reinstall": _handle_reinstall,
         "uninstall": _handle_uninstall,
+        "sync": _handle_sync,
         "update": _handle_update,
         "configure": _handle_configure,
         "list": _handle_list,

@@ -46,6 +46,7 @@ def test_override_and_empty_values(env: dict[str, str], expected: bool) -> None:
     [
         ("install", [], True),
         ("reinstall", [], True),
+        ("sync", ["default-apps"], True),
         ("uninstall", [], True),
         ("update", [], True),
         ("configure", [], True),
@@ -87,6 +88,7 @@ def _run_main(monkeypatch: pytest.MonkeyPatch, argv: list[str]) -> list[str]:
         "_handle_install",
         "_handle_reinstall",
         "_handle_uninstall",
+        "_handle_sync",
         "_handle_update",
         "_handle_configure",
         "_handle_list",
@@ -106,6 +108,7 @@ def _run_main(monkeypatch: pytest.MonkeyPatch, argv: list[str]) -> list[str]:
     [
         ["install", "jq"],
         ["reinstall", "jq"],
+        ["sync", "default-apps"],
         ["uninstall", "jq"],
         ["update"],
         ["configure", "r"],
