@@ -2591,11 +2591,12 @@
     ],
     "category": "Dotfile",
     "date": "2026-10-24",
-    "default": false,
+    "default": true,
     "dependencies": [
       "chezmoi"
     ],
     "description": "acidgenomics dotfiles managed with chezmoi",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
@@ -7103,9 +7104,10 @@
     "category": "Documentation",
     "conda_channel": "conda-forge",
     "date": "2026-10-10",
-    "default": false,
+    "default": true,
     "description": "universal document format converter",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pandoc.org/",
@@ -11093,7 +11095,7 @@
     ],
     "category": "Shell",
     "date": "2026-07-14",
-    "default": false,
+    "default": true,
     "dependencies": [
       "ncurses",
       "pcre2"
@@ -11105,6 +11107,7 @@
     "man1": [
       "zsh.1"
     ],
+    "revision": 1,
     "src_url": "https://www.zsh.org/pub/zsh-{version}.tar.xz",
     "type": "cli",
     "url": [

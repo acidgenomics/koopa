@@ -376,9 +376,9 @@ def _build_parser() -> argparse.ArgumentParser:
     # -- sync -----------------------------------------------------------------
     sync_p = subparsers.add_parser(
         "sync",
-        description="Synchronize app membership with the current local registry.",
+        description="Repair local installation state from the current registry.",
     )
-    sync_p.add_argument("target", choices=["default-apps"])
+    sync_p.add_argument("target", choices=["default-apps"], nargs="?")
     sync_p.add_argument("--dry-run", action="store_true", default=False)
     sync_p.add_argument("--yes", "-y", action="store_true", default=False)
     _add_common_flags(sync_p)
@@ -899,6 +899,68 @@ def _handle_sync(args: argparse.Namespace) -> None:
             yes=args.yes,
             verbose=args.verbose,
         )
+        return
+    if args.dry_run:
+        from koopa.check import check_system
+
+        check_system(include_disk=False)
+        return
+    _sync_local_installation(verbose=args.verbose)
+
+
+def _sync_local_installation(*, verbose: bool = False) -> None:
+    """Repair local installation state without checking for updates.
+
+    Parameters
+    ----------
+    verbose : bool, optional
+        Enable verbose output from repair operations.
+    """
+    from koopa.alert import alert_success, styled_name, warn
+    from koopa.app import prune_apps
+    from koopa.check import prune_broken_symlinks
+    from koopa.install import (
+        InstallPlanError,
+        _acquire_install_lock,
+        _cleanup_legacy_config,
+        _release_install_lock,
+        _update_venv,
+        remove_alias_app_dirs,
+        remove_unsupported_apps,
+        repair_app_symlinks,
+        update_bootstrap,
+        update_stale_apps,
+    )
+
+    acquired = _acquire_install_lock()
+    try:
+        _cleanup_legacy_config()
+        if update_bootstrap(verbose=verbose):
+            _release_install_lock()
+            acquired = False
+            _exec_restart_with_bootstrap()
+        _update_venv(_koopa_prefix())
+        remove_alias_app_dirs()
+        try:
+            remove_unsupported_apps(verbose=verbose)
+        except Exception as exc:
+            warn(f"Removing unsupported apps failed: {exc}")
+        prune_broken_symlinks()
+        try:
+            repair_app_symlinks()
+        except Exception as exc:
+            warn(f"Repairing app symlinks failed: {exc}")
+        try:
+            update_stale_apps(verbose=verbose)
+        except InstallPlanError as exc:
+            from koopa.alert import stop
+
+            stop(f"koopa sync failed: {_failed_apps_summary(exc.failed_apps)}")
+        prune_apps(verbose=verbose)
+        alert_success(f"{styled_name('koopa')} sync was successful.")
+    finally:
+        if acquired:
+            _release_install_lock()
 
 
 def _failed_apps_summary(failed: list[str]) -> str | None:

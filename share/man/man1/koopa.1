@@ -35,8 +35,8 @@ Reinstall applications, with optional reverse dependency rebuilds.
 \fBuninstall\fR \fI[app...]\fR
 Remove installed applications. Defaults to uninstalling koopa itself.
 .TP
-\fBsync\fR \fIdefault-apps\fR
-Synchronize app membership with the local registry: install missing defaults and remove all other installed apps. Does not update app versions or koopa.
+\fBsync\fR \fI[default-apps]\fR
+Repair actionable local installation issues from the current registry without updating koopa or checking for newer app versions. The default-apps target restores default app membership.
 .TP
 \fBupdate\fR \fI[mode] [app...]\fR
 Update koopa and stale apps; 'system' mode updates system apps.
@@ -88,7 +88,7 @@ Reinstall only the reverse dependencies, not the specified apps.
 .SH "SYNC OPTIONS"
 .TP
 \fB\-\-dry\-run\fR
-Preview apps that would be removed without changing the installation.
+Report local system-check findings, or preview removals with default-apps, without changing the installation.
 .TP
 \fB\-\-yes, \-y\fR
 Skip the confirmation before removing apps.

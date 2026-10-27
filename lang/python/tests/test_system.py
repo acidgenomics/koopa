@@ -332,6 +332,7 @@ def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setattr("koopa.system.is_debian_like", lambda: False)
     monkeypatch.setattr("koopa.check.check_build_system", lambda: None)
     monkeypatch.setattr("koopa.check.check_bootstrap_version", lambda: True)
+    monkeypatch.setattr("koopa.check.check_venv_version", lambda: True)
     monkeypatch.setattr("koopa.check.check_installed_apps", lambda: True)
     monkeypatch.setattr("koopa.check.check_broken_app_installs", lambda: True)
     monkeypatch.setattr("koopa.check.check_broken_symlinks", lambda: True)
@@ -347,6 +348,47 @@ def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) 
         ),
     )
     assert check_system() is True
+
+
+def test_check_system_advises_sync_for_local_issues(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Local app issues direct users to sync instead of update."""
+    monkeypatch.setattr("koopa.system.is_macos", lambda: False)
+    monkeypatch.setattr("koopa.system.is_debian_like", lambda: False)
+    monkeypatch.setattr("koopa.check.check_build_system", lambda: None)
+    monkeypatch.setattr("koopa.check.check_bootstrap_version", lambda: True)
+    monkeypatch.setattr("koopa.check.check_venv_version", lambda: True)
+    monkeypatch.setattr("koopa.check.check_installed_apps", lambda: True)
+    monkeypatch.setattr("koopa.check.check_broken_app_installs", lambda: True)
+    monkeypatch.setattr("koopa.check.check_broken_symlinks", lambda: True)
+    monkeypatch.setattr("koopa.check.check_missing_default_apps", lambda: False)
+    monkeypatch.setattr("koopa.check.check_disk", lambda path: True)
+    monkeypatch.setattr("koopa.check.check_tmux_server_stale", lambda: True)
+    monkeypatch.setattr("koopa.check.check_dracula_pro_layout", lambda: True)
+    with patch("koopa.alert.alert_note") as alert_note:
+        assert check_system() is False
+
+    alert_note.assert_called_once_with("Run 'koopa sync' to resolve local installation issues.")
+
+
+def test_check_system_can_skip_disk_advisory(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sync dry runs do not report disk pressure they cannot repair."""
+    monkeypatch.setattr("koopa.system.is_macos", lambda: False)
+    monkeypatch.setattr("koopa.system.is_debian_like", lambda: False)
+    monkeypatch.setattr("koopa.check.check_build_system", lambda: None)
+    monkeypatch.setattr("koopa.check.check_bootstrap_version", lambda: True)
+    monkeypatch.setattr("koopa.check.check_venv_version", lambda: True)
+    monkeypatch.setattr("koopa.check.check_installed_apps", lambda: True)
+    monkeypatch.setattr("koopa.check.check_broken_app_installs", lambda: True)
+    monkeypatch.setattr("koopa.check.check_broken_symlinks", lambda: True)
+    monkeypatch.setattr("koopa.check.check_missing_default_apps", lambda: True)
+    monkeypatch.setattr(
+        "koopa.check.check_disk",
+        lambda path: (_ for _ in ()).throw(AssertionError("disk check should be skipped")),
+    )
+    monkeypatch.setattr("koopa.check.check_tmux_server_stale", lambda: True)
+    monkeypatch.setattr("koopa.check.check_dracula_pro_layout", lambda: True)
+
+    assert check_system(include_disk=False) is True
 
 
 # os_appearance_mode — Linux headless cache-file fallback

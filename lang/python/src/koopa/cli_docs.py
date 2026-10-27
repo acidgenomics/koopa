@@ -27,9 +27,10 @@ TOP_COMMANDS: list[tuple[str, str, str]] = [
     ),
     (
         "sync",
-        "default-apps",
-        "Synchronize app membership with the local registry: install missing defaults and "
-        "remove all other installed apps. Does not update app versions or koopa.",
+        "[default-apps]",
+        "Repair actionable local installation issues from the current registry without "
+        "updating koopa or checking for newer app versions. The default-apps target "
+        "restores default app membership.",
     ),
     (
         "update",
@@ -58,7 +59,11 @@ REINSTALL_FLAGS: list[tuple[str, str]] = [
 ]
 
 SYNC_FLAGS: list[tuple[str, str]] = [
-    ("--dry-run", "Preview apps that would be removed without changing the installation."),
+    (
+        "--dry-run",
+        "Report local system-check findings, or preview removals with default-apps, "
+        "without changing the installation.",
+    ),
     ("--yes, -y", "Skip the confirmation before removing apps."),
 ]
 

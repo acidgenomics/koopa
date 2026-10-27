@@ -108,6 +108,7 @@ def _run_main(monkeypatch: pytest.MonkeyPatch, argv: list[str]) -> list[str]:
     [
         ["install", "jq"],
         ["reinstall", "jq"],
+        ["sync"],
         ["sync", "default-apps"],
         ["uninstall", "jq"],
         ["update"],

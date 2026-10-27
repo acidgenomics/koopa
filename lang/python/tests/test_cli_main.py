@@ -95,6 +95,68 @@ def test_sync_parser_accepts_default_apps_and_dry_run() -> None:
     assert args.dry_run is True
 
 
+def test_sync_parser_allows_bare_sync() -> None:
+    """Bare sync repairs the current local installation."""
+    parser = cli_main._build_parser()
+    args = parser.parse_args(["sync"])
+
+    assert args.target is None
+
+
+def test_handle_sync_dry_run_checks_without_repairing(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Bare dry run reports system-check findings without mutating state."""
+    for name in (
+        "_require_supported_platform",
+        "_require_git_managed_install",
+        "_require_slurm_allocation",
+        "_revert_direnv_env",
+    ):
+        monkeypatch.setattr(cli_main, name, lambda **_kwargs: None)
+    with (
+        patch("koopa.check.check_system") as check_system,
+        patch.object(cli_main, "_sync_local_installation") as sync_local,
+    ):
+        cli_main._handle_sync(
+            argparse.Namespace(target=None, dry_run=True, yes=False, verbose=False)
+        )
+
+    check_system.assert_called_once()
+    sync_local.assert_not_called()
+
+
+def test_sync_local_installation_repairs_without_updating_koopa(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Bare sync repairs local state and never pulls koopa or checks remote versions."""
+    monkeypatch.setattr(cli_main, "_koopa_prefix", lambda: "/tmp/koopa")
+    with (
+        patch("koopa.install._acquire_install_lock", return_value=True),
+        patch("koopa.install._release_install_lock") as release_lock,
+        patch("koopa.install._cleanup_legacy_config") as cleanup,
+        patch("koopa.install.update_bootstrap", return_value=False) as update_bootstrap,
+        patch("koopa.install._update_venv") as update_venv,
+        patch("koopa.install.remove_alias_app_dirs") as remove_aliases,
+        patch("koopa.install.remove_unsupported_apps") as remove_unsupported,
+        patch("koopa.check.prune_broken_symlinks") as prune_broken,
+        patch("koopa.install.repair_app_symlinks") as repair_links,
+        patch("koopa.install.update_stale_apps") as update_stale,
+        patch("koopa.app.prune_apps") as prune_apps,
+        patch("koopa.alert.alert_success"),
+    ):
+        cli_main._sync_local_installation(verbose=True)
+
+    cleanup.assert_called_once()
+    update_bootstrap.assert_called_once_with(verbose=True)
+    update_venv.assert_called_once_with("/tmp/koopa")
+    remove_aliases.assert_called_once()
+    remove_unsupported.assert_called_once_with(verbose=True)
+    prune_broken.assert_called_once()
+    repair_links.assert_called_once()
+    update_stale.assert_called_once_with(verbose=True)
+    prune_apps.assert_called_once_with(verbose=True)
+    release_lock.assert_called_once()
+
+
 def test_uninstall_parser_rejects_removed_non_default_flag() -> None:
     """The legacy non-default uninstall interface is no longer available."""
     parser = cli_main._build_parser()
