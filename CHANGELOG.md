@@ -8,6 +8,11 @@ Major changes:
   commands, including installs, updates, configuration, and administration.
   Read-only commands remain available, and users can explicitly opt out for
   commands they run themselves.
+- Added `koopa sync` to repair actionable local installation issues reported by
+  `koopa system check` without pulling koopa or checking for upstream app
+  releases. `koopa sync default-apps` restores the default app stack, first
+  installing any missing defaults and then removing non-default apps. Both
+  modes support a non-mutating `--dry-run` preview.
 
 Minor changes:
 
