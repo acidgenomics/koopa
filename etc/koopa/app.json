@@ -2315,13 +2315,11 @@
     "bin": [
       "databricks"
     ],
-    "build_dependencies": [
-      "go"
-    ],
     "category": "Cloud",
     "date": "2026-10-22",
     "default": false,
     "description": "command-line interface for Databricks",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
@@ -2759,6 +2757,7 @@
     "date": "2026-04-13",
     "default": false,
     "description": "expressive shell with structured data pipelines",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://elv.sh/",
@@ -4093,6 +4092,7 @@
     "man1": [
       "gum.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/charmbracelet/gum/"
@@ -4493,6 +4493,7 @@
     "notes": [
       "Bump on minor release update only."
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://gohugo.io/",
@@ -4710,6 +4711,7 @@
     "date": "2026-10-22",
     "default": false,
     "description": "JFrog platform command-line interface",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/jfrog/jfrog-cli",
@@ -8859,6 +8861,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "very fast S3 and object storage CLI tool",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/peak/s5cmd/"
@@ -8972,6 +8975,7 @@
     "date": "2026-09-22",
     "default": true,
     "description": "fast source code line counter with complexity estimation",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/boyter/scc/"
@@ -10943,6 +10947,7 @@
     "notes": [
       "Switch to conda recipe in the future."
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/mikefarah/yq/"

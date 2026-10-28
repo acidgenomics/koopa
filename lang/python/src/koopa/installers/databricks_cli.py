@@ -1,6 +1,12 @@
 """Install databricks-cli."""
 
-from koopa.install import build_go_package
+import os
+import sys
+
+from koopa.archive import extract
+from koopa.download import download
+from koopa.file_ops import mkdir
+from koopa.system import arch2
 
 
 def main(
@@ -24,13 +30,13 @@ def main(
         Extra ``--flag=value`` arguments derived from the app's
         ``installer_args`` entry in app.json.
     """
-    url = f"https://github.com/databricks/cli/archive/v{version}.tar.gz"
-    ldflags = f"-X github.com/databricks/cli/internal/build.buildVersion={version}"
-    build_go_package(
-        url=url,
-        name=name,
-        version=version,
-        prefix=prefix,
-        bin_name="databricks",
-        ldflags=ldflags,
+    os_key = "darwin" if sys.platform == "darwin" else "linux"
+    url = (
+        f"https://github.com/databricks/cli/releases/download/v{version}/"
+        f"databricks_cli_{version}_{os_key}_{arch2()}.tar.gz"
     )
+    tarball = download(url)
+    extract(tarball, prefix)
+    bin_dir = os.path.join(prefix, "bin")
+    mkdir(bin_dir)
+    os.replace(os.path.join(prefix, "databricks"), os.path.join(bin_dir, "databricks"))

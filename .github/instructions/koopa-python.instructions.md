@@ -15,6 +15,9 @@ by the user-global `~/.agents/rules/dotfiles-python.md`.
 Always `subprocess.run(..., check=True)`. Never `check=False`: ruff warns `PLW1510`.
 The correct fix is always `check=True`, not `check=False` and not suppressing the warning.
 
+Linux `ldd` can exit 1 for static ELF executables; accept only recognized
+static-binary diagnostics, not every nonzero exit from an ELF file.
+
 ## Exception handlers
 
 Do not list `TimeoutError` alongside `OSError` in an exception tuple:
