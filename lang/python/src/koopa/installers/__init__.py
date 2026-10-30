@@ -359,7 +359,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "swig": f"{_M}.swig",
     "tmux": f"{_M}.tmux",
     "utf8proc": f"{_M}.utf8proc",
-    "vim": f"{_M}._conda",
+    "vim": f"{_M}.vim",
     "xorg-libice": f"{_M}.xorg_libice",
     "xorg-libpthread-stubs": f"{_M}.xorg_libpthread_stubs",
     "xorg-libsm": f"{_M}.xorg_libsm",

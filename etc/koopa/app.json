@@ -10203,14 +10203,40 @@
       "xxd"
     ],
     "build_dependencies": [
-      "conda"
+      "make",
+      "pkg-config"
     ],
     "category": "Editor",
-    "conda_channel": "conda-forge",
     "date": "2026-10-30",
     "default": true,
+    "dependencies": {
+      "linux-amd64": [
+        "gettext",
+        "libiconv",
+        "ncurses",
+        "perl",
+        "python3.14",
+        "xorg-libx11",
+        "xorg-libxt"
+      ],
+      "linux-arm64": [
+        "gettext",
+        "libiconv",
+        "ncurses",
+        "perl",
+        "python3.14",
+        "xorg-libx11",
+        "xorg-libxt"
+      ],
+      "noarch": [
+        "gettext",
+        "libiconv",
+        "ncurses",
+        "perl",
+        "python3.14"
+      ]
+    },
     "description": "highly configurable text editor",
-    "installer": "conda-package",
     "man1": [
       "ex.1",
       "rview.1",
@@ -10221,6 +10247,8 @@
       "vimtutor.1",
       "xxd.1"
     ],
+    "revision": 1,
+    "src_url": "https://github.com/vim/vim/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/vim/vim/"
