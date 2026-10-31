@@ -3,7 +3,7 @@
 import os
 import subprocess
 
-from koopa.install import build_go_package
+from koopa.install import install_go_package
 
 
 def main(
@@ -27,15 +27,9 @@ def main(
         Extra ``--flag=value`` arguments derived from the app's
         ``installer_args`` entry in app.json.
     """
-    url = f"https://github.com/charmbracelet/gum/archive/v{version}.tar.gz"
+    url = f"github.com/charmbracelet/gum/v2@v{version}"
     ldflags = f"-s -w -X main.Version={version}"
-    build_go_package(
-        url=url,
-        name=name,
-        version=version,
-        prefix=prefix,
-        ldflags=ldflags,
-    )
+    install_go_package(url=url, prefix=prefix, ldflags=ldflags)
     gum = os.path.join(prefix, "bin", "gum")
     bash_c = os.path.join(prefix, "etc", "bash_completion.d", "gum")
     fish_c = os.path.join(prefix, "share", "fish", "vendor_completions.d", "gum.fish")

@@ -41,6 +41,9 @@
   alternative; never reword the command. See `koopa-agent-guards` (Gotchas).
   Test git aliases with a stub `git`, because deny rules also hit throwaway
   repos (`koopa-claude-permissions`).
+- **Scratch Git repositories must disable commit signing.** Pass
+  `-c commit.gpgSign=false` in test helpers: a user's global signing
+  configuration can fail when xdist initializes repositories concurrently.
 - **The `dotfiles` pin is not hand-edited, and `develop` is not what other hosts
   get.** Merge to `main`, then run `check-app-versions --reset-cache dotfiles`.
   See `koopa-dotfiles`.

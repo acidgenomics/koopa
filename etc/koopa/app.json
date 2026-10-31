@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5900205422411776",
+    "build_id": "4768735748292608",
     "category": "AI",
-    "date": "2026-10-24",
+    "date": "2026-10-31",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "0192c9930fc8eccddc7aed96a6afde915f29ee380c81b6b6a835e68e4f1950514d98a596a87fbab9b1d87ba24921e29327af064bac8ced0bb873e78243826de9",
-      "darwin_amd64": "974f91063b2f5f01c89573304f01efb27319ac1228a1f06e1b8e83509b076fdcb77cd52b488b722554aa0a443a2b8addede5daffbd75a41f9d51ec5d108a12d1",
-      "linux_amd64": "beda760587589f5827b0b516c3ec2c5bd5cd2e91eb0e2533807ba1e990a27dcd63aef0191e0b76fb60feab0d16eaa8210fb79842c34dd4809e257e1712edd152",
-      "linux_arm64": "6a9fa0df6300633404571f66ec7924098cc70a9f23ac55c3659139bbcbdd2ea5301fe1ef728d4c064fac65104ea14a2b74421f320a82e5bcf218c482b58e3a16"
+      "darwin_arm64": "e858cfc02fb5bb500a760643da270accd2847aa986b7e2973da97ad1928b99d62f62bad28c039e25b65e1ca073d27b2f30b13ed0919d0329774eb1e0ee5b4748",
+      "darwin_amd64": "1d78368cd5a136dc4c7cc71cfe4649d1b1e643630d79327ff3c4efd4b19a90d5603e2cf65a54f80c7eaef973dd09f854dae8a8228b4edd4c6466c679ded9babf",
+      "linux_amd64": "ea01c73b772187bca928852cf96235f0d846d6da5ebdac188b9ae719597465737f325540d483ee5f3f62d151029001713344972a187ddfb98cc7b97f7204b7f4",
+      "linux_arm64": "7cae317fb6a02eb387982f06bfb234b366879cf9a80ad8969b571e5a55d1e37a6a5a49cd6b703c0443bb417937cf5e3b14a8c80cb26917ad79eef723a9f374c7"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.4.7"
+    "version": "1.4.12"
   },
   "apache-airflow": {
     "bin": [
@@ -267,7 +267,7 @@
       "sparkR"
     ],
     "category": "Database",
-    "date": "2026-05-02",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "temurin"
@@ -281,7 +281,7 @@
     "url": [
       "https://spark.apache.org/"
     ],
-    "version": "4.2.0"
+    "version": "4.3.0"
   },
   "apptainer": {
     "build_dependencies": [
@@ -490,7 +490,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-18",
+    "date": "2026-10-30",
     "default": true,
     "description": "magical shell history with sync and search",
     "installer": "conda-package",
@@ -501,7 +501,7 @@
     "url": [
       "https://github.com/atuinsh/atuin/"
     ],
-    "version": "18.24.1"
+    "version": "18.24.4"
   },
   "autoconf": {
     "bin": [
@@ -649,7 +649,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-10-26",
+    "date": "2026-10-30",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -661,7 +661,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.38.2"
+    "version": "2.38.3"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -952,7 +952,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-09-27",
+    "date": "2026-10-30",
     "default": false,
     "description": "utilities for variant calling and manipulating VCF/BCF files",
     "installer": "conda-package",
@@ -966,7 +966,7 @@
       "https://github.com/samtools/bcftools/",
       "https://bioconda.github.io/recipes/bcftools/README.html"
     ],
-    "version": "1.24"
+    "version": "1.25"
   },
   "bcl-convert": {
     "bin": [
@@ -1604,7 +1604,7 @@
     ],
     "category": "Dotfile",
     "conda_channel": "conda-forge",
-    "date": "2026-09-29",
+    "date": "2026-10-30",
     "default": true,
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
@@ -1613,7 +1613,7 @@
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
     ],
-    "version": "2.73.0"
+    "version": "2.73.3"
   },
   "choose": {
     "bin": [
@@ -1643,7 +1643,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-10-26",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "node"
@@ -1657,7 +1657,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.311"
+    "version": "2.1.316"
   },
   "claude-replay": {
     "bin": [
@@ -1724,7 +1724,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-10-23",
+    "date": "2026-10-30",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1733,7 +1733,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.26.3"
+    "version": "2.27.0"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -1750,7 +1750,7 @@
       "conda"
     ],
     "category": "Build",
-    "date": "2026-10-03",
+    "date": "2026-10-30",
     "default": true,
     "description": "cross-platform build system generator",
     "installer": "conda-package",
@@ -1758,7 +1758,7 @@
     "url": [
       "https://cmake.org/download/"
     ],
-    "version": "4.4.4"
+    "version": "4.4.5"
   },
   "codex": {
     "bin": [
@@ -1863,7 +1863,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-10-24",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "node"
@@ -1877,7 +1877,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.104-0"
+    "version": "1.0.106-0"
   },
   "coreutils": {
     "bin": [
@@ -2315,18 +2315,15 @@
     "bin": [
       "databricks"
     ],
-    "build_dependencies": [
-      "go"
-    ],
     "category": "Cloud",
-    "date": "2026-10-22",
+    "date": "2026-10-30",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.22.1"
+    "version": "1.23.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2381,7 +2378,7 @@
   },
   "dbt-databricks": {
     "category": "Workflow",
-    "date": "2026-10-26",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "dbt"
@@ -2396,7 +2393,7 @@
       "https://docs.getdbt.com",
       "https://github.com/databricks/dbt-databricks"
     ],
-    "version": "1.12.8"
+    "version": "1.13.0"
   },
   "dbt-postgres": {
     "category": "Workflow",
@@ -2518,7 +2515,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-09-22",
+    "date": "2026-10-30",
     "default": true,
     "description": "structural diff tool that understands syntax",
     "installer": "conda-package",
@@ -2526,7 +2523,7 @@
     "url": [
       "https://github.com/Wilfred/difftastic/"
     ],
-    "version": "0.71.0"
+    "version": "0.72.0"
   },
   "direnv": {
     "bin": [
@@ -2590,18 +2587,17 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-10-24",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "chezmoi"
     ],
     "description": "acidgenomics dotfiles managed with chezmoi",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "08846615aa1b55c1810f5e7b6e5705f71f771be9"
+    "version": "f8faab51eb42675aef199660222b9f7aa9c991b3"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -2759,6 +2755,7 @@
     "date": "2026-04-13",
     "default": false,
     "description": "expressive shell with structured data pipelines",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://elv.sh/",
@@ -3130,7 +3127,7 @@
       "flake8"
     ],
     "category": "Python",
-    "date": "2026-09-24",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python"
@@ -3143,7 +3140,7 @@
       "https://flake8.pycqa.org/",
       "https://github.com/PyCQA/flake8/"
     ],
-    "version": "7.4.1"
+    "version": "7.5.0"
   },
   "flex": {
     "build_dependencies": [
@@ -3414,7 +3411,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-10-24",
+    "date": "2026-10-30",
     "default": false,
     "description": "NCI Genomic Data Commons data transfer tool",
     "installer": "conda-package",
@@ -3424,7 +3421,7 @@
       "https://github.com/NCI-GDC/gdc-client",
       "https://bioconda.github.io/recipes/gdc-client/README.html"
     ],
-    "version": "2.4.0"
+    "version": "2.6.0"
   },
   "gemini-cli": {
     "bin": [
@@ -3621,7 +3618,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-10-24",
+    "date": "2026-10-30",
     "default": true,
     "description": "official GitHub command-line interface",
     "installer": "conda-package",
@@ -3629,7 +3626,7 @@
     "url": [
       "https://github.com/cli/cli/"
     ],
-    "version": "2.103.2"
+    "version": "2.103.3"
   },
   "ghostscript": {
     "bin": [
@@ -3905,7 +3902,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-10-24",
+    "date": "2026-10-30",
     "default": true,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
@@ -3914,7 +3911,7 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "590.0.1"
+    "version": "591.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -4055,7 +4052,7 @@
       "rust"
     ],
     "category": "Bioinformatics",
-    "date": "2026-07-27",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python"
@@ -4066,7 +4063,7 @@
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.3.1"
+    "version": "1.3.2"
   },
   "gsl": {
     "date": "2024-12-30",
@@ -4093,6 +4090,7 @@
     "man1": [
       "gum.1"
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/charmbracelet/gum/"
@@ -4395,7 +4393,7 @@
       "make"
     ],
     "category": "Bioinformatics",
-    "date": "2026-07-14",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -4417,7 +4415,7 @@
       "https://github.com/samtools/htslib/",
       "https://www.htslib.org/"
     ],
-    "version": "1.24"
+    "version": "1.25"
   },
   "httpie": {
     "date": "2026-10-12",
@@ -4461,7 +4459,7 @@
       "hf"
     ],
     "category": "AI",
-    "date": "2026-10-23",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python"
@@ -4477,7 +4475,7 @@
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "hugo": {
     "bin": [
@@ -4487,7 +4485,7 @@
       "go"
     ],
     "category": "Documentation",
-    "date": "2026-10-14",
+    "date": "2026-10-30",
     "default": false,
     "description": "fast static site generator written in Go",
     "notes": [
@@ -4498,7 +4496,7 @@
       "https://gohugo.io/",
       "https://github.com/gohugoio/hugo/"
     ],
-    "version": "0.168.0",
+    "version": "0.169.0",
     "version_granularity": "minor"
   },
   "hurl": {
@@ -4600,7 +4598,7 @@
       "icav2"
     ],
     "category": "Cloud",
-    "date": "2026-10-01",
+    "date": "2026-10-31",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
     "installer_platform": "linux",
@@ -4620,7 +4618,7 @@
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
-    "version": "2.49.0"
+    "version": "2.50.0"
   },
   "imagemagick": {
     "date": "2026-05-02",
@@ -4632,7 +4630,7 @@
       "ipython"
     ],
     "category": "Python",
-    "date": "2026-09-17",
+    "date": "2026-10-30",
     "default": true,
     "dependencies": [
       "python"
@@ -4644,7 +4642,7 @@
       "https://ipython.org/",
       "https://pypi.org/project/ipython/"
     ],
-    "version": "9.17.1"
+    "version": "9.18.0"
   },
   "isl": {
     "build_dependencies": [
@@ -4707,7 +4705,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-10-22",
+    "date": "2026-10-30",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4715,7 +4713,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.128.0"
+    "version": "2.129.0"
   },
   "jj": {
     "bin": [
@@ -4810,7 +4808,7 @@
       "jupyter-lab"
     ],
     "category": "Python",
-    "date": "2026-09-22",
+    "date": "2026-10-30",
     "default": true,
     "dependencies": [
       "python"
@@ -4827,7 +4825,7 @@
       "https://jupyter.org/",
       "https://pypi.org/project/jupyterlab/"
     ],
-    "version": "4.6.4"
+    "version": "4.6.5"
   },
   "just": {
     "bin": [
@@ -4966,7 +4964,7 @@
       "kubectl"
     ],
     "category": "Cloud",
-    "date": "2026-09-25",
+    "date": "2026-10-30",
     "default": false,
     "description": "command-line tool for controlling Kubernetes clusters",
     "notes": [
@@ -4978,7 +4976,7 @@
       "https://kubernetes.io/docs/reference/kubectl/",
       "https://github.com/kubernetes/kubernetes"
     ],
-    "version": "1.37.1"
+    "version": "1.37.2"
   },
   "lame": {
     "bin": [
@@ -5012,7 +5010,7 @@
       "latch"
     ],
     "category": "Cloud",
-    "date": "2026-10-22",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -5029,7 +5027,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.77.2"
+    "version": "2.78.0"
   },
   "lazygit": {
     "bin": [
@@ -5413,7 +5411,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-07-01",
+    "date": "2026-10-30",
     "default": false,
     "description": "SIMD-accelerated JPEG encoding and decoding library",
     "src_url": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/{version}/libjpeg-turbo-{version}.tar.gz",
@@ -5423,7 +5421,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.2.0"
+    "version": "3.2.1"
   },
   "libksba": {
     "build_dependencies": [
@@ -5883,7 +5881,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-10-19",
+    "date": "2026-10-30",
     "default": false,
     "description": "just-in-time compiler for Lua",
     "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
@@ -5892,7 +5890,7 @@
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
     ],
-    "version": "2410b57fd466298e6a64a68986a6b696c23656ac"
+    "version": "592f9e3f549c7f176a9a7a0d70189559305f2eda"
   },
   "luarocks": {
     "bin": [
@@ -6319,7 +6317,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-26",
+    "date": "2026-10-31",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6329,7 +6327,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.19"
+    "version": "2026.10.24"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6475,7 +6473,7 @@
       "mypyc"
     ],
     "category": "Python",
-    "date": "2026-10-02",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python"
@@ -6494,7 +6492,7 @@
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "nano": {
     "bin": [
@@ -6672,7 +6670,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-10-22",
+    "date": "2026-10-30",
     "default": false,
     "description": "scalable and reproducible scientific workflow framework",
     "installer": "conda-package",
@@ -6682,7 +6680,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "26.10.3"
+    "version": "26.10.4"
   },
   "nghttp2": {
     "build_dependencies": [
@@ -7046,7 +7044,7 @@
   },
   "oracle-instant-client": {
     "category": "Cloud",
-    "date": "2026-08-10",
+    "date": "2026-10-30",
     "default": false,
     "description": "Oracle Database client libraries",
     "installer_platform": "fedora",
@@ -7060,7 +7058,7 @@
     "url": [
       "https://www.oracle.com/database/technologies/instant-client.html"
     ],
-    "version": "21.23.0.0.0-1"
+    "version": "21.24.0.0.0-1"
   },
   "ouch": {
     "bin": [
@@ -7103,17 +7101,16 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-10-10",
+    "date": "2026-10-30",
     "default": true,
     "description": "universal document format converter",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://pandoc.org/",
       "https://github.com/jgm/pandoc/"
     ],
-    "version": "3.12.1"
+    "version": "3.13"
   },
   "parallel": {
     "bin": [
@@ -7349,7 +7346,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-10-18",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "python"
@@ -7361,7 +7358,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.18.4"
+    "version": "1.18.11"
   },
   "pixi": {
     "bin": [
@@ -7465,6 +7462,28 @@
     ],
     "version": "1.64.1"
   },
+  "pnpm": {
+    "bin": [
+      "pn",
+      "pnpm",
+      "pnpx",
+      "pnx"
+    ],
+    "category": "JavaScript",
+    "date": "2026-10-31",
+    "default": false,
+    "dependencies": [
+      "node"
+    ],
+    "description": "fast, disk space efficient package manager",
+    "installer": "node-package",
+    "type": "cli",
+    "url": [
+      "https://pnpm.io/",
+      "https://www.npmjs.com/package/pnpm/"
+    ],
+    "version": "12.17.0"
+  },
   "poetry": {
     "bin": [
       "poetry"
@@ -7504,7 +7523,7 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-09-08",
+    "date": "2026-10-30",
     "default": false,
     "description": "PDF rendering library and command-line utilities",
     "installer": "conda-package",
@@ -7513,7 +7532,7 @@
       "https://poppler.freedesktop.org/",
       "https://gitlab.freedesktop.org/poppler/poppler"
     ],
-    "version": "26.09.0"
+    "version": "26.10.0"
   },
   "postgresql": {
     "bin": [
@@ -7716,7 +7735,7 @@
       "pyflakes"
     ],
     "category": "Python",
-    "date": "2026-10-10",
+    "date": "2026-10-30",
     "default": true,
     "dependencies": [
       "python"
@@ -7728,7 +7747,7 @@
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
     ],
-    "version": "4.0.3"
+    "version": "4.1.0"
   },
   "pygments": {
     "bin": [
@@ -7882,7 +7901,7 @@
       "pytest"
     ],
     "category": "Python",
-    "date": "2026-06-19",
+    "date": "2026-10-30",
     "default": true,
     "dependencies": [
       "python"
@@ -7891,16 +7910,18 @@
     "installer": "python-package",
     "installer_args": {
       "extra_packages": [
-        "pytest-cov"
+        "pytest-cov",
+        "pytest-xdist"
       ]
     },
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "9.1.1"
+    "version": "9.2.0"
   },
   "python": {
     "alias_of": "python3.14",
@@ -8236,7 +8257,7 @@
       "quarto"
     ],
     "category": "R",
-    "date": "2026-10-10",
+    "date": "2026-10-30",
     "default": true,
     "description": "scientific and technical publishing system",
     "type": "cli",
@@ -8244,7 +8265,7 @@
       "https://quarto.org/",
       "https://github.com/quarto-dev/quarto-cli/"
     ],
-    "version": "1.10.19"
+    "version": "1.10.20"
   },
   "r": {
     "bin": [
@@ -8255,7 +8276,7 @@
       "conda"
     ],
     "category": "Language",
-    "date": "2026-06-28",
+    "date": "2026-10-30",
     "default": false,
     "description": "R statistical computing language and environment",
     "installer": "conda-package",
@@ -8272,7 +8293,7 @@
       "https://cloud.r-project.org/src/base/R-4/",
       "https://cran.r-project.org/bin/macosx/"
     ],
-    "version": "4.6.1"
+    "version": "4.6.2"
   },
   "r-devel": {
     "build_dependencies": [
@@ -8281,7 +8302,7 @@
       "subversion"
     ],
     "category": "Language",
-    "date": "2026-10-18",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -8344,7 +8365,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "90700"
+    "version": "90800"
   },
   "r-gfortran": {
     "category": "R",
@@ -8432,7 +8453,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-10-18",
+    "date": "2026-10-31",
     "default": false,
     "description": "universal conda package builder",
     "installer": "conda-package",
@@ -8441,7 +8462,7 @@
       "https://rattler.build/",
       "https://github.com/prefix-dev/rattler-build"
     ],
-    "version": "0.77.0"
+    "version": "0.80.0"
   },
   "rbenv": {
     "bin": [
@@ -8629,7 +8650,7 @@
     ],
     "category": "AI",
     "conda_channel": "conda-forge",
-    "date": "2026-10-26",
+    "date": "2026-10-30",
     "default": false,
     "description": "continuous code review for AI coding agents",
     "installer": "conda-package",
@@ -8638,7 +8659,7 @@
       "https://www.roborev.io/",
       "https://github.com/kenn-io/roborev/"
     ],
-    "version": "0.73.0"
+    "version": "0.74.0"
   },
   "ronn": {
     "bin": [
@@ -8700,7 +8721,7 @@
   },
   "rstudio-server": {
     "category": "R",
-    "date": "2026-10-15",
+    "date": "2026-10-30",
     "default": false,
     "description": "web-based RStudio IDE server",
     "installer_platform": "debian",
@@ -8714,7 +8735,7 @@
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
-    "version": "2026.10.0+233"
+    "version": "2026.10.1+239"
   },
   "rsync": {
     "bin": [
@@ -8781,7 +8802,7 @@
       "ruff"
     ],
     "category": "Python",
-    "date": "2026-10-23",
+    "date": "2026-10-30",
     "default": true,
     "dependencies": [
       "python"
@@ -8792,7 +8813,7 @@
     "url": [
       "https://pypi.org/project/ruff/"
     ],
-    "version": "0.17.2"
+    "version": "0.17.3"
   },
   "ruff-lsp": {
     "date": "2026-10-12",
@@ -8859,6 +8880,7 @@
     "date": "2024-12-30",
     "default": false,
     "description": "very fast S3 and object storage CLI tool",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/peak/s5cmd/"
@@ -8908,7 +8930,7 @@
     },
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-07-14",
+    "date": "2026-10-30",
     "default": false,
     "description": "tools for manipulating alignments in SAM and BAM format",
     "installer": "conda-package",
@@ -8922,7 +8944,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.24"
+    "version": "1.25"
   },
   "scalene": {
     "bin": [
@@ -8948,7 +8970,7 @@
       "scanpy"
     ],
     "category": "Bioinformatics",
-    "date": "2026-09-13",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python"
@@ -8959,7 +8981,7 @@
     "url": [
       "https://scanpy.readthedocs.io/"
     ],
-    "version": "1.12.4"
+    "version": "1.12.5"
   },
   "scc": {
     "bin": [
@@ -8972,6 +8994,7 @@
     "date": "2026-09-22",
     "default": true,
     "description": "fast source code line counter with complexity estimation",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/boyter/scc/"
@@ -9139,7 +9162,7 @@
   },
   "shiny-server": {
     "category": "R",
-    "date": "2025-05-08",
+    "date": "2026-10-30",
     "default": false,
     "description": "server for deploying R Shiny web applications",
     "installer_platform": "debian",
@@ -9153,7 +9176,7 @@
     "url": [
       "https://www.rstudio.com/products/shiny/download-server/"
     ],
-    "version": "1.5.23.1030"
+    "version": "1.5.24.1047"
   },
   "shunit2": {
     "bin": [
@@ -9309,7 +9332,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-10-26",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9319,7 +9342,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "2efcc7912dee6ee5db14425f42388d043dad7763"
+    "version": "3f53cdde55aa3fc2596c65d8710ddad4a5370b88"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9359,7 +9382,7 @@
       "sqlfluff"
     ],
     "category": "Python",
-    "date": "2026-10-03",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "python"
@@ -9371,7 +9394,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.4.0"
+    "version": "4.5.0"
   },
   "sqlite": {
     "bin": [
@@ -9566,7 +9589,7 @@
       "surreal"
     ],
     "category": "Database",
-    "date": "2026-10-19",
+    "date": "2026-10-30",
     "default": false,
     "description": "multi-model database with SurrealQL query language",
     "type": "cli",
@@ -9574,7 +9597,7 @@
       "https://surrealdb.com/",
       "https://github.com/surrealdb/surrealdb/"
     ],
-    "version": "3.3.4"
+    "version": "3.3.5"
   },
   "swig": {
     "bin": [
@@ -10046,7 +10069,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-10-26",
+    "date": "2026-10-30",
     "default": true,
     "dependencies": [
       "python"
@@ -10058,7 +10081,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.92"
+    "version": "0.0.95"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10158,14 +10181,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-10-22",
+    "date": "2026-10-30",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.13.5"
+    "version": "0.13.6"
   },
   "valkey": {
     "bin": [
@@ -10177,7 +10200,7 @@
     ],
     "category": "Database",
     "conda_channel": "conda-forge",
-    "date": "2026-09-02",
+    "date": "2026-10-30",
     "default": false,
     "description": "open-source in-memory data store (Redis fork, BSD-licensed)",
     "installer": "conda-package",
@@ -10189,7 +10212,7 @@
       "https://valkey.io/",
       "https://github.com/valkey-io/valkey/"
     ],
-    "version": "9.1.2"
+    "version": "9.1.3"
   },
   "vim": {
     "bin": [
@@ -10203,14 +10226,40 @@
       "xxd"
     ],
     "build_dependencies": [
-      "conda"
+      "make",
+      "pkg-config"
     ],
     "category": "Editor",
-    "conda_channel": "conda-forge",
-    "date": "2026-09-13",
+    "date": "2026-10-30",
     "default": true,
+    "dependencies": {
+      "linux-amd64": [
+        "gettext",
+        "libiconv",
+        "ncurses",
+        "perl",
+        "python3.14",
+        "xorg-libx11",
+        "xorg-libxt"
+      ],
+      "linux-arm64": [
+        "gettext",
+        "libiconv",
+        "ncurses",
+        "perl",
+        "python3.14",
+        "xorg-libx11",
+        "xorg-libxt"
+      ],
+      "noarch": [
+        "gettext",
+        "libiconv",
+        "ncurses",
+        "perl",
+        "python3.14"
+      ]
+    },
     "description": "highly configurable text editor",
-    "installer": "conda-package",
     "man1": [
       "ex.1",
       "rview.1",
@@ -10221,11 +10270,13 @@
       "vimtutor.1",
       "xxd.1"
     ],
+    "revision": 1,
+    "src_url": "https://github.com/vim/vim/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.1054"
+    "version": "9.2.1252"
   },
   "visidata": {
     "bin": [
@@ -10233,7 +10284,7 @@
       "visidata"
     ],
     "category": "Terminal",
-    "date": "2026-07-01",
+    "date": "2026-10-30",
     "default": false,
     "dependencies": [
       "python"
@@ -10249,7 +10300,7 @@
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "3.4"
+    "version": "3.5"
   },
   "vivid": {
     "bin": [
@@ -10943,6 +10994,7 @@
     "notes": [
       "Switch to conda recipe in the future."
     ],
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/mikefarah/yq/"
@@ -10980,7 +11032,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-10-26",
+    "date": "2026-10-30",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10989,7 +11041,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.25.3"
+    "version": "1.26.2"
   },
   "zellij": {
     "bin": [

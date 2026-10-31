@@ -3,12 +3,13 @@
 import gzip
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 import pytest
 from koopa.cli_develop import (
     _DEVELOP_HANDLERS,
     _detect_color_mode_thrash,
+    _run_pytest,
     _run_tool,
     _skill_frontmatter_errors,
     _skill_infer_prefix,
@@ -629,6 +630,28 @@ def test_run_tool_not_quiet_streams_live() -> None:
     returncode = _run_tool([sys.executable, "-c", "print('noise')"], quiet=False)
 
     assert returncode == 0
+
+
+def test_run_pytest_uses_all_available_workers() -> None:
+    """Pytest uses pytest-xdist to run tests in parallel."""
+    with (
+        patch("koopa.prefix.python_prefix", return_value="/repo/lang/python"),
+        patch("koopa.cli_develop.shutil.which", return_value="/usr/bin/pytest"),
+        patch("koopa.cli_develop._run_tool", return_value=0) as run_tool,
+    ):
+        assert _run_pytest(["--tb=short"]) == 0
+
+    run_tool.assert_called_once_with(
+        [
+            "/usr/bin/pytest",
+            "/repo/lang/python/tests",
+            "-n",
+            "auto",
+            "--tb=short",
+        ],
+        quiet=False,
+        env=ANY,
+    )
 
 
 def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:

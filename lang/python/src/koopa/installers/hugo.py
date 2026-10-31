@@ -1,6 +1,6 @@
 """Install hugo."""
 
-from koopa.install import build_go_package
+from koopa.install import install_go_package
 
 
 def main(
@@ -24,12 +24,5 @@ def main(
         Extra ``--flag=value`` arguments derived from the app's
         ``installer_args`` entry in app.json.
     """
-    url = f"https://github.com/gohugoio/hugo/archive/v{version}.tar.gz"
-    build_go_package(
-        url=url,
-        name=name,
-        version=version,
-        prefix=prefix,
-        ldflags="-s -w",
-        tags="extended",
-    )
+    url = f"github.com/gohugoio/hugo@v{version}"
+    install_go_package(url=url, prefix=prefix, ldflags="-s -w", tags="extended")

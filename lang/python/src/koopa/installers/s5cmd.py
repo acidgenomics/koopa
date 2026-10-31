@@ -1,6 +1,6 @@
 """Install s5cmd."""
 
-from koopa.install import build_go_package
+from koopa.install import install_go_package
 
 
 def main(
@@ -24,12 +24,6 @@ def main(
         Extra ``--flag=value`` arguments derived from the app's
         ``installer_args`` entry in app.json.
     """
-    url = f"https://github.com/peak/s5cmd/archive/refs/tags/v{version}.tar.gz"
+    url = f"github.com/peak/s5cmd/v2@v{version}"
     ldflags = f"-s -w -X=github.com/peak/s5cmd/v2/version.Version={version}"
-    build_go_package(
-        url=url,
-        name=name,
-        version=version,
-        prefix=prefix,
-        ldflags=ldflags,
-    )
+    install_go_package(url=url, prefix=prefix, ldflags=ldflags)

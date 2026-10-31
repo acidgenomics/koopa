@@ -882,6 +882,64 @@ def test_missing_shared_libs_noop_on_macos(tmp_path: Path) -> None:
         assert _missing_shared_libs(str(binary)) == []
 
 
+@pytest.mark.parametrize("diagnostic", ["not a dynamic executable", "statically linked"])
+@pytest.mark.parametrize("stream", ["stdout", "stderr"])
+def test_missing_shared_libs_accepts_static_elf(diagnostic: str, stream: str) -> None:
+    """Static ELF executables can make ldd exit 1 without missing libraries."""
+    from koopa.install import _missing_shared_libs
+
+    error = subprocess.CalledProcessError(
+        1,
+        ["ldd", "pandoc"],
+        output=f"\t{diagnostic}\n" if stream == "stdout" else "",
+        stderr=f"\t{diagnostic}\n" if stream == "stderr" else "",
+    )
+    with (
+        patch("koopa.install.is_linux", return_value=True),
+        patch("koopa.install.shutil.which", return_value="/usr/bin/ldd"),
+        patch("koopa.install._is_elf", return_value=True),
+        patch("koopa.install.subprocess.run", side_effect=error) as run,
+    ):
+        assert _missing_shared_libs("pandoc") == []
+    assert run.call_args.kwargs["env"]["LC_ALL"] == "C"
+
+
+@pytest.mark.parametrize(
+    ("returncode", "diagnostic"),
+    [(1, "invalid ELF header"), (1, ""), (2, "not a dynamic executable")],
+)
+def test_missing_shared_libs_propagates_ldd_failure(returncode: int, diagnostic: str) -> None:
+    """Unrecognized ldd failures still abort the installation."""
+    from koopa.install import _missing_shared_libs
+
+    error = subprocess.CalledProcessError(returncode, ["ldd", "pandoc"], stderr=diagnostic)
+    with (
+        patch("koopa.install.is_linux", return_value=True),
+        patch("koopa.install.shutil.which", return_value="/usr/bin/ldd"),
+        patch("koopa.install._is_elf", return_value=True),
+        patch("koopa.install.subprocess.run", side_effect=error),
+        pytest.raises(subprocess.CalledProcessError) as raised,
+    ):
+        _missing_shared_libs("pandoc")
+    assert raised.value is error
+
+
+def test_missing_shared_libs_reports_unresolved_dependency() -> None:
+    """Successful ldd invocations still report unresolved shared libraries."""
+    from koopa.install import _missing_shared_libs
+
+    result = subprocess.CompletedProcess(
+        ["ldd", "nvim"], 0, stdout="\tlibunibilium.so.4 => not found\n", stderr=""
+    )
+    with (
+        patch("koopa.install.is_linux", return_value=True),
+        patch("koopa.install.shutil.which", return_value="/usr/bin/ldd"),
+        patch("koopa.install._is_elf", return_value=True),
+        patch("koopa.install.subprocess.run", return_value=result),
+    ):
+        assert _missing_shared_libs("nvim") == ["libunibilium.so.4"]
+
+
 def test_link_conda_binaries_raises_on_broken_linkage(tmp_path: Path) -> None:
     """A binary with an unresolved shared library fails the install loudly."""
     from koopa.install import _link_conda_binaries

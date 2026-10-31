@@ -1,6 +1,6 @@
 """Install yq."""
 
-from koopa.install import build_go_package
+from koopa.install import install_go_package
 
 
 def main(
@@ -24,5 +24,5 @@ def main(
         Extra ``--flag=value`` arguments derived from the app's
         ``installer_args`` entry in app.json.
     """
-    url = f"https://github.com/mikefarah/yq/archive/v{version}.tar.gz"
-    build_go_package(url=url, name=name, version=version, prefix=prefix)
+    url = f"github.com/mikefarah/yq/v4@v{version}"
+    install_go_package(url=url, prefix=prefix)

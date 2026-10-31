@@ -1,5 +1,31 @@
 # Changelog
 
+## koopa 0.37.0 (2026-10-31)
+
+Major changes:
+
+- Go-based application installers now install directly from Go modules in an
+  isolated, koopa-managed Go build environment. This avoids dependence on
+  GitHub source archives and supports required linker flags and build tags.
+- Databricks CLI and JFrog CLI now install upstream prebuilt releases rather
+  than compiling from source.
+- Vim now builds from source instead of using Conda's Homebrew-linked binary,
+  avoiding a broken dependency on macOS.
+
+Minor changes:
+
+- Static Linux ELF executables no longer fail shared-library validation when
+  `ldd` correctly reports that they are not dynamically linked.
+- `koopa develop check` now runs the Python test suite in parallel using all
+  available CPU cores.
+- Refreshed the bootstrap `uv` and Python versions and routine application
+  registry pins.
+
+New apps:
+
+- Added pnpm 12.17.0, a fast disk-space-efficient JavaScript package manager
+  (CLI, non-default).
+
 ## koopa 0.36.0 (2026-10-26)
 
 Major changes:

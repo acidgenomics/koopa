@@ -41,7 +41,7 @@ _SECRETS = _HOOKS_DIR / "audit_secrets_before_push.py"
 
 
 def _git(repo: Path, *args: str) -> None:
-    """Run git inside a scratch repository, with the user's global hooks disabled."""
+    """Run git inside a scratch repository without user hooks or commit signing."""
     subprocess.run(
         [
             "git",
@@ -51,6 +51,8 @@ def _git(repo: Path, *args: str) -> None:
             "user.name=Test",
             "-c",
             "core.hooksPath=/dev/null",
+            "-c",
+            "commit.gpgSign=false",
             *args,
         ],
         cwd=repo,

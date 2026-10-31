@@ -1476,10 +1476,13 @@ def install_go_package(
     *,
     url: str,
     prefix: str = "",
+    ldflags: str = "",
+    tags: str = "",
 ) -> None:
     """Install a Go package using ``go install``.
 
-    Converted from install-go-package.sh.
+    Converted from install-go-package.sh. Fetches the module through the
+    Go module proxy, so it does not depend on GitHub's source archive host.
 
     Parameters
     ----------
@@ -1487,13 +1490,18 @@ def install_go_package(
         Go module path or URL to install (passed to ``go install``).
     prefix : str, optional
         Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
+    ldflags : str, optional
+        Linker flags passed via ``go install -ldflags``.
+    tags : str, optional
+        Build tags passed via ``go install -tags``.
     """
+    from koopa.build import activate_app, locate
+
+    env = activate_app("go", build_only=True)
+    env.apply()
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
-    go = shutil.which("go")
-    if go is None:
-        msg = "go not found."
-        raise FileNotFoundError(msg)
+    go = locate("go")
     gobin = os.path.join(prefix, "bin")
     gocache = tempfile.mkdtemp(prefix="koopa-gocache-")
     gopath = tempfile.mkdtemp(prefix="koopa-gopath-")
@@ -1503,8 +1511,13 @@ def install_go_package(
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
     go_network_env(env)
+    install_args: list[str] = []
+    if ldflags:
+        install_args.extend(["-ldflags", ldflags])
+    if tags:
+        install_args.extend(["-tags", tags])
     try:
-        subprocess.run([go, "install", url], env=env, check=True)
+        subprocess.run([go, "install", *install_args, url], env=env, check=True)
     finally:
         shutil.rmtree(gocache, ignore_errors=True)
         shutil.rmtree(gopath, ignore_errors=True)
@@ -2522,9 +2535,9 @@ def _missing_shared_libs(binary: str) -> list[str]:
     """Return shared libraries that ldd cannot resolve for an ELF binary.
 
     Linux-only: otool -L on macOS does not report a missing library the way
-    ldd does, so this is a no-op there. ldd exits 0 for a valid ELF file even
-    when a dependency is missing, so check=True is safe once _is_elf() has
-    filtered out scripts (a non-ELF file makes ldd exit non-zero).
+    ldd does, so this is a no-op there. Static ELF executables can make ldd
+    exit 1 despite having no shared library dependencies. Accept only the
+    recognized static-binary diagnostics; propagate other failures.
 
     Parameters
     ----------
@@ -2542,13 +2555,23 @@ def _missing_shared_libs(binary: str) -> list[str]:
         return []
     if not _is_elf(binary):
         return []
-    result = subprocess.run(
-        ["ldd", binary],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
+    try:
+        result = subprocess.run(
+            ["ldd", binary],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            env={**os.environ, "LC_ALL": "C"},
+        )
+    except subprocess.CalledProcessError as exc:
+        diagnostic = f"{exc.stdout or ''}{exc.stderr or ''}".strip()
+        if exc.returncode == 1 and diagnostic in {
+            "not a dynamic executable",
+            "statically linked",
+        }:
+            return []
+        raise
     return _parse_ldd_missing(result.stdout)
 
 
