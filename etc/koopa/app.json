@@ -7463,6 +7463,28 @@
     ],
     "version": "1.64.1"
   },
+  "pnpm": {
+    "bin": [
+      "pn",
+      "pnpm",
+      "pnpx",
+      "pnx"
+    ],
+    "category": "JavaScript",
+    "date": "2026-10-30",
+    "default": false,
+    "dependencies": [
+      "node"
+    ],
+    "description": "fast, disk space efficient package manager",
+    "installer": "node-package",
+    "type": "cli",
+    "url": [
+      "https://pnpm.io/",
+      "https://www.npmjs.com/package/pnpm/"
+    ],
+    "version": "12.16.1"
+  },
   "poetry": {
     "bin": [
       "poetry"
