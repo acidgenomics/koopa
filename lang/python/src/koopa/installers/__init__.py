@@ -265,7 +265,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "wget2": f"{_M}._gnu",
     "antigravity-cli": f"{_M}.antigravity_cli",
     "aws-azure-login": f"{_M}.aws_azure_login",
-    # -- node-package (9) ------------------------------------------------
+    # -- node-package (10) -----------------------------------------------
     "bash-language-server": f"{_M}._node_pkg",
     "claude-code": f"{_M}._node_pkg",
     "claude-replay": f"{_M}._node_pkg",
@@ -274,6 +274,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "gemini-cli": f"{_M}._node_pkg",
     "markdownlint-cli": f"{_M}._node_pkg",
     "markdownlint-cli2": f"{_M}._node_pkg",
+    "pnpm": f"{_M}._node_pkg",
     "prettier": f"{_M}._node_pkg",
     # -- ruby-package (4) ------------------------------------------------
     "bashcov": f"{_M}._ruby_pkg",
@@ -359,7 +360,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "swig": f"{_M}.swig",
     "tmux": f"{_M}.tmux",
     "utf8proc": f"{_M}.utf8proc",
-    "vim": f"{_M}._conda",
+    "vim": f"{_M}.vim",
     "xorg-libice": f"{_M}.xorg_libice",
     "xorg-libpthread-stubs": f"{_M}.xorg_libpthread_stubs",
     "xorg-libsm": f"{_M}.xorg_libsm",
