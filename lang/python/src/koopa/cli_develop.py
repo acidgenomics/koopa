@@ -1118,7 +1118,7 @@ def _run_pytest(args: list[str], *, quiet: bool = False) -> int:
     env = os.environ.copy()
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = f"{src_dir}:{existing}" if existing else src_dir
-    return _run_tool([pytest_cmd, tests_dir, *args], quiet=quiet, env=env)
+    return _run_tool([pytest_cmd, tests_dir, "-n", "auto", *args], quiet=quiet, env=env)
 
 
 def _handle_pytest(args: list[str]) -> None:

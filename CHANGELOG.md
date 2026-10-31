@@ -16,6 +16,8 @@ Minor changes:
 
 - Static Linux ELF executables no longer fail shared-library validation when
   `ldd` correctly reports that they are not dynamically linked.
+- `koopa develop check` now runs the Python test suite in parallel using all
+  available CPU cores.
 - Refreshed the bootstrap `uv` and Python versions and routine application
   registry pins.
 

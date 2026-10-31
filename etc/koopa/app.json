@@ -7910,9 +7910,11 @@
     "installer": "python-package",
     "installer_args": {
       "extra_packages": [
-        "pytest-cov"
+        "pytest-cov",
+        "pytest-xdist"
       ]
     },
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/pytest/",
