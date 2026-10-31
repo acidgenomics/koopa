@@ -53,6 +53,7 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    git push origin vX.Y.Z
    # then open a PR: develop -> main
    ```
+   Title the release PR with the bare tag, for example `vX.Y.Z`.
 
 ## CHANGELOG.md format
 
