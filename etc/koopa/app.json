@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5900205422411776",
+    "build_id": "4768735748292608",
     "category": "AI",
-    "date": "2026-10-24",
+    "date": "2026-10-31",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "0192c9930fc8eccddc7aed96a6afde915f29ee380c81b6b6a835e68e4f1950514d98a596a87fbab9b1d87ba24921e29327af064bac8ced0bb873e78243826de9",
-      "darwin_amd64": "974f91063b2f5f01c89573304f01efb27319ac1228a1f06e1b8e83509b076fdcb77cd52b488b722554aa0a443a2b8addede5daffbd75a41f9d51ec5d108a12d1",
-      "linux_amd64": "beda760587589f5827b0b516c3ec2c5bd5cd2e91eb0e2533807ba1e990a27dcd63aef0191e0b76fb60feab0d16eaa8210fb79842c34dd4809e257e1712edd152",
-      "linux_arm64": "6a9fa0df6300633404571f66ec7924098cc70a9f23ac55c3659139bbcbdd2ea5301fe1ef728d4c064fac65104ea14a2b74421f320a82e5bcf218c482b58e3a16"
+      "darwin_arm64": "e858cfc02fb5bb500a760643da270accd2847aa986b7e2973da97ad1928b99d62f62bad28c039e25b65e1ca073d27b2f30b13ed0919d0329774eb1e0ee5b4748",
+      "darwin_amd64": "1d78368cd5a136dc4c7cc71cfe4649d1b1e643630d79327ff3c4efd4b19a90d5603e2cf65a54f80c7eaef973dd09f854dae8a8228b4edd4c6466c679ded9babf",
+      "linux_amd64": "ea01c73b772187bca928852cf96235f0d846d6da5ebdac188b9ae719597465737f325540d483ee5f3f62d151029001713344972a187ddfb98cc7b97f7204b7f4",
+      "linux_arm64": "7cae317fb6a02eb387982f06bfb234b366879cf9a80ad8969b571e5a55d1e37a6a5a49cd6b703c0443bb417937cf5e3b14a8c80cb26917ad79eef723a9f374c7"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.4.7"
+    "version": "1.4.12"
   },
   "apache-airflow": {
     "bin": [
@@ -267,7 +267,7 @@
       "sparkR"
     ],
     "category": "Database",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "temurin"
@@ -281,7 +281,7 @@
     "url": [
       "https://spark.apache.org/"
     ],
-    "version": "4.2.1"
+    "version": "4.3.0"
   },
   "apptainer": {
     "build_dependencies": [
@@ -1643,7 +1643,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "node"
@@ -1657,7 +1657,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.314"
+    "version": "2.1.316"
   },
   "claude-replay": {
     "bin": [
@@ -1863,7 +1863,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "node"
@@ -1877,7 +1877,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.105-0"
+    "version": "1.0.106-0"
   },
   "coreutils": {
     "bin": [
@@ -2587,18 +2587,17 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-10-24",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "chezmoi"
     ],
     "description": "acidgenomics dotfiles managed with chezmoi",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "08846615aa1b55c1810f5e7b6e5705f71f771be9"
+    "version": "f8faab51eb42675aef199660222b9f7aa9c991b3"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -4599,7 +4598,7 @@
       "icav2"
     ],
     "category": "Cloud",
-    "date": "2026-10-01",
+    "date": "2026-10-31",
     "default": false,
     "description": "command-line interface for Illumina Connected Analytics",
     "installer_platform": "linux",
@@ -4619,7 +4618,7 @@
       "https://help.ica.illumina.com/command-line-interface/",
       "https://help.ica.illumina.com/command-line-interface/cli-releasehistory"
     ],
-    "version": "2.49.0"
+    "version": "2.50.0"
   },
   "imagemagick": {
     "date": "2026-05-02",
@@ -6318,7 +6317,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6328,7 +6327,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.23"
+    "version": "2026.10.24"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7347,7 +7346,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "python"
@@ -7359,7 +7358,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.18.10"
+    "version": "1.18.11"
   },
   "pixi": {
     "bin": [
@@ -7471,7 +7470,7 @@
       "pnx"
     ],
     "category": "JavaScript",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "node"
@@ -7483,7 +7482,7 @@
       "https://pnpm.io/",
       "https://www.npmjs.com/package/pnpm/"
     ],
-    "version": "12.16.1"
+    "version": "12.17.0"
   },
   "poetry": {
     "bin": [
@@ -8301,7 +8300,7 @@
       "subversion"
     ],
     "category": "Language",
-    "date": "2026-10-18",
+    "date": "2026-10-31",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -8364,7 +8363,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "90700"
+    "version": "90800"
   },
   "r-gfortran": {
     "category": "R",
@@ -8452,7 +8451,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "default": false,
     "description": "universal conda package builder",
     "installer": "conda-package",
@@ -8461,7 +8460,7 @@
       "https://rattler.build/",
       "https://github.com/prefix-dev/rattler-build"
     ],
-    "version": "0.79.0"
+    "version": "0.80.0"
   },
   "rbenv": {
     "bin": [
@@ -9381,7 +9380,7 @@
       "sqlfluff"
     ],
     "category": "Python",
-    "date": "2026-10-03",
+    "date": "2026-10-31",
     "default": true,
     "dependencies": [
       "python"
@@ -9393,7 +9392,7 @@
       "https://docs.sqlfluff.com/",
       "https://pypi.org/project/sqlfluff/"
     ],
-    "version": "4.4.0"
+    "version": "4.5.0"
   },
   "sqlite": {
     "bin": [
