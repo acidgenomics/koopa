@@ -339,6 +339,7 @@ def test_check_system_skips_macos_icloud_drive(monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setattr("koopa.check.check_missing_default_apps", lambda: True)
     monkeypatch.setattr("koopa.check.check_disk", lambda path: True)
     monkeypatch.setattr("koopa.check.check_tmux_server_stale", lambda: True)
+    monkeypatch.setattr("koopa.check.check_system_r", lambda: True)
     monkeypatch.setattr("koopa.check.check_macos_system_python", lambda: True)
     monkeypatch.setattr("koopa.check.check_macos_xcode_clt", lambda: True)
     monkeypatch.setattr(
