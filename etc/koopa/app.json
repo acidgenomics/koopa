@@ -1104,7 +1104,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-10-11",
+    "date": "2026-11-01",
     "default": false,
     "description": "helper tools for building Bioconda packages",
     "installer": "conda-package",
@@ -1121,7 +1121,7 @@
       "https://bioconda.github.io/recipes/bioconda-utils/README.html",
       "https://github.com/bioconda/bioconda-utils/"
     ],
-    "version": "5.1.0"
+    "version": "5.2.0"
   },
   "bison": {
     "build_dependencies": [
@@ -5376,7 +5376,7 @@
       "make"
     ],
     "category": "Library",
-    "date": "2026-05-02",
+    "date": "2026-11-01",
     "default": false,
     "description": "character set conversion library",
     "installer": "gnu-app",
@@ -5386,7 +5386,7 @@
       "https://www.gnu.org/software/libiconv/",
       "https://mirrors.kernel.org/gnu/libiconv/?C=M;O=D"
     ],
-    "version": "1.19"
+    "version": "1.19.1"
   },
   "libidn": {
     "build_dependencies": [
@@ -6317,7 +6317,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-31",
+    "date": "2026-11-01",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6327,7 +6327,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.10.24"
+    "version": "2026.10.25"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6871,7 +6871,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-10-19",
+    "date": "2026-11-01",
     "default": false,
     "description": "Git repository summary in the terminal",
     "installer": "conda-package",
@@ -6880,7 +6880,7 @@
       "https://onefetch.dev/",
       "https://github.com/o2sh/onefetch/"
     ],
-    "version": "3.1.0"
+    "version": "3.2.0"
   },
   "oniguruma": {
     "date": "2025-01-02",
@@ -8896,7 +8896,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-09-26",
+    "date": "2026-11-01",
     "default": false,
     "description": "fast, accurate RNA-seq quantification tool",
     "installer": "conda-package",
@@ -8905,7 +8905,7 @@
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "2.8.0"
+    "version": "2.9.1"
   },
   "sambamba": {
     "date": "2024-12-30",
@@ -9944,7 +9944,7 @@
       "tu-datastore"
     ],
     "category": "AI",
-    "date": "2026-10-13",
+    "date": "2026-11-01",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -9966,7 +9966,7 @@
       "https://github.com/mims-harvard/ToolUniverse",
       "https://zitniklab.hms.harvard.edu/ToolUniverse/"
     ],
-    "version": "1.5.7"
+    "version": "1.5.8"
   },
   "topgrade": {
     "bin": [
