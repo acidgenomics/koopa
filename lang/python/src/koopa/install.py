@@ -3258,6 +3258,7 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         )
         shutil.rmtree(venv_dir)
         return
+    _write_venv_private_ca_sitecustomize(venv_dir)
     revision_file = os.path.join(prefix, "etc", "koopa", "venv-version.txt")
     version_file = os.path.join(venv_dir, "VERSION")
     legacy_stamp = os.path.join(venv_dir, ".stamp")

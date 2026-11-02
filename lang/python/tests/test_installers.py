@@ -192,6 +192,40 @@ def test_private_ca_shim_relaxes_default_context_strict_flag(tmp_path: Path) -> 
     assert inactive["check_hostname"] is True
 
 
+@pytest.mark.parametrize("outdated_shim", [False, True])
+def test_update_venv_repairs_private_ca_shim_when_current(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, outdated_shim: bool
+) -> None:
+    """A current koopa venv still receives the latest private CA compatibility."""
+    libexec = tmp_path / ".venv"
+    subprocess.run([sys.executable, "-m", "venv", str(libexec)], check=True)
+    python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+    (tmp_path / ".python-version").write_text(f"{python_version}\n")
+    revision = tmp_path / "etc" / "koopa" / "venv-version.txt"
+    revision.parent.mkdir(parents=True)
+    revision.write_text("1\n")
+    (libexec / "VERSION").write_text("1\n")
+    if outdated_shim:
+        site_packages = next(libexec.glob("lib/python*/site-packages"))
+        (site_packages / "sitecustomize.py").write_text("import ssl\nssl.VERIFY_X509_STRICT = 0\n")
+    monkeypatch.setattr(install, "is_owner", lambda: True)
+    with patch("koopa.install.shutil.which", side_effect=AssertionError("must not install extras")):
+        install._update_venv(str(tmp_path))
+    data_home = tmp_path / "share"
+    bundle = data_home / "ca-certificates" / "cacert.pem"
+    bundle.parent.mkdir(parents=True)
+    bundle.write_text("")
+    active = _venv_ssl_flags(
+        libexec, {"XDG_DATA_HOME": str(data_home), "SSL_CERT_FILE": str(bundle)}
+    )
+    assert active == {
+        "create_default_context": False,
+        "https_context": False,
+        "check_hostname": True,
+        "cert_required": True,
+    }
+
+
 def test_synapseclient_uses_current_python_package() -> None:
     """Synapse installs from PyPI with complete extras on koopa's Python."""
     entry = import_app_json()["synapseclient"]
