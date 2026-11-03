@@ -6,7 +6,7 @@ import subprocess
 from os.path import basename, isdir, isfile, islink, join, realpath
 
 from koopa.app import extract_app_deps, installed_apps
-from koopa.io import import_app_json
+from koopa.io import app_version, import_app_json
 from koopa.prefix import (
     bash_completions_prefix,
     bootstrap_prefix,
@@ -141,7 +141,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
         if json_data[name].get("removed"):
             issues.append((name, "removed app", False))
             continue
-        current_ver = json_data[name]["version"]
+        current_ver = app_version(json_data[name], current_os)
         if len(current_ver) == 40:
             current_ver = current_ver[:7]
         if linked_ver != current_ver:

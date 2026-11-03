@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from koopa.io import extract_conda_bin_names, import_json
+from koopa.io import app_version, extract_conda_bin_names, import_json
 
 
 def test_import_json(tmp_path: Path) -> None:
@@ -69,3 +69,22 @@ def test_extract_conda_bin_names_nested_paths(tmp_path: Path) -> None:
     f.write_text(json.dumps(data))
     result = extract_conda_bin_names(str(f))
     assert result == ["tool"]
+
+
+def test_app_version_uses_platform_override() -> None:
+    """A platform entry in version_overrides replaces the default version."""
+    entry = {
+        "version": "9.2.1252",
+        "version_overrides": {"macos-arm64": "9.2.1054"},
+    }
+    assert app_version(entry, "macos-arm64") == "9.2.1054"
+
+
+def test_app_version_falls_back_to_default() -> None:
+    """Platforms without an override use the default version."""
+    entry = {
+        "version": "9.2.1252",
+        "version_overrides": {"macos-arm64": "9.2.1054"},
+    }
+    assert app_version(entry, "linux-amd64") == "9.2.1252"
+    assert app_version({"version": "1.0"}, "macos-arm64") == "1.0"

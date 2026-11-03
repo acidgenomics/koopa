@@ -10234,6 +10234,7 @@
     "date": "2026-10-30",
     "default": true,
     "description": "highly configurable text editor",
+    "install_note": "On macOS arm64, koopa installs vim 9.2.1054 because the conda-forge macOS build of 9.2.1252 links Homebrew pixman and aborts at startup (conda-forge/vim-feedstock#1690). Other platforms install 9.2.1252.",
     "installer": "conda-package",
     "man1": [
       "ex.1",
@@ -10249,7 +10250,10 @@
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.1252"
+    "version": "9.2.1252",
+    "version_overrides": {
+      "macos-arm64": "9.2.1054"
+    }
   },
   "visidata": {
     "bin": [
