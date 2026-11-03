@@ -1057,6 +1057,16 @@ def _check_openssl_series(major: str) -> str:
 
     The downloads table lists only supported branches (the LTS and the
     latest feature releases), so openssl3 tracks the 3.5 LTS line.
+
+    Parameters
+    ----------
+    major : str
+        OpenSSL major version series, e.g. "3" or "4".
+
+    Returns
+    -------
+    str
+        Newest version string in the series.
     """
     html = _http_get_text("https://openssl-library.org/source/")
     pattern = re.compile(rf"openssl-({re.escape(major)}\.\d+\.\d+)\.tar\.gz")
