@@ -408,6 +408,66 @@ def test_print_chezmoi_status_with_changes(
     assert ".bashrc" in combined
 
 
+def test_print_chezmoi_status_filters_expected_target(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Expected changes are omitted and the remaining count is accurate."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        return subprocess.CompletedProcess(
+            args,
+            returncode=0,
+            stdout=" M .gnupg/gpg.conf\n M .bashrc\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    _print_chezmoi_status(
+        "/usr/bin/chezmoi",
+        str(source),
+        {},
+        expected_targets={".gnupg/gpg.conf"},
+    )
+    captured = capsys.readouterr()
+    combined = captured.err + captured.out
+    assert "Pending changes (1)" in combined
+    assert ".bashrc" in combined
+    assert ".gnupg/gpg.conf" not in combined
+
+
+def test_print_chezmoi_status_only_expected_target_is_silent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Only expected changes produce no status message."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        return subprocess.CompletedProcess(
+            args,
+            returncode=0,
+            stdout=" M .gnupg/gpg.conf\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    _print_chezmoi_status(
+        "/usr/bin/chezmoi",
+        str(source),
+        {},
+        expected_targets={".gnupg/gpg.conf"},
+    )
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert captured.out == ""
+
+
 # ---------------------------------------------------------------------------
 # _chezmoi_entry_state
 # ---------------------------------------------------------------------------

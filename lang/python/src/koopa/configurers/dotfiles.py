@@ -68,6 +68,7 @@ def _print_chezmoi_status(
     source: str,
     env: dict[str, str],
     config: str | None = None,
+    expected_targets: set[str] | None = None,
 ) -> None:
     """Print a concise per-file change summary for a chezmoi tree (read-only).
 
@@ -86,6 +87,8 @@ def _print_chezmoi_status(
     config : str | None, optional
         Path to this tree's ``chezmoi.toml``, or ``None`` to omit
         ``--config`` from the ``chezmoi`` invocation.
+    expected_targets : set[str] | None, optional
+        Target paths with expected changes that should be omitted.
     """
     if not os.path.isdir(source):
         return
@@ -100,6 +103,10 @@ def _print_chezmoi_status(
     if not lines:
         alert_note(f"No pending changes: {source}")
         return
+    if expected_targets is not None:
+        lines = [ln for ln in lines if ln[3:].strip() not in expected_targets]
+        if not lines:
+            return
     alert_info(f"Pending changes ({len(lines)}): {source}")
     for ln in lines:
         print(f"  {ln}", file=sys.stderr)
@@ -750,7 +757,12 @@ def main(
         msg = f"Install script not found: {install_script}"
         raise FileNotFoundError(msg)
     alert_info(f"Running '{install_script}'.")
-    _print_chezmoi_status(chezmoi, main_source, env)
+    _print_chezmoi_status(
+        chezmoi,
+        main_source,
+        env,
+        expected_targets={".gnupg/gpg.conf"},
+    )
     main_removes = _chezmoiremove_targets(chezmoi, main_source, env)
     main_state = _chezmoi_entry_state(chezmoi, main_source, env)
     main_shielded = _user_owned_remove_paths(home, main_removes, main_state, main_source)
@@ -784,7 +796,13 @@ def main(
         )
         private_removes = _chezmoiremove_targets(chezmoi, private_source, env, config=pcfg)
         _warn_remove_manage_conflict("private", main_targets, private_removes)
-        _print_chezmoi_status(chezmoi, private_source, env, config=pcfg)
+        _print_chezmoi_status(
+            chezmoi,
+            private_source,
+            env,
+            config=pcfg,
+            expected_targets={".gnupg/gpg.conf"},
+        )
         private_state = _chezmoi_entry_state(chezmoi, private_source, env, config=pcfg)
         private_shielded = _user_owned_remove_paths(
             home, private_removes, private_state, private_source
