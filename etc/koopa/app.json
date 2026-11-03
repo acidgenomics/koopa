@@ -711,7 +711,7 @@
       "az"
     ],
     "category": "Cloud",
-    "date": "2026-10-10",
+    "date": "2026-11-03",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -726,7 +726,7 @@
     "url": [
       "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
     ],
-    "version": "2.91.0"
+    "version": "2.92.0"
   },
   "bamtools": {
     "bin": [
@@ -7011,12 +7011,12 @@
     ],
     "description": "toolkit for TLS and general-purpose cryptography (v3)",
     "installer": "openssl",
+    "revision": 1,
     "src_url": "https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz",
     "type": "library",
     "url": [
       "https://openssl-library.org/source/"
     ],
-    "revision": 1,
     "version": "3.5.9"
   },
   "openssl4": {
@@ -7347,7 +7347,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-10-31",
+    "date": "2026-11-03",
     "default": false,
     "dependencies": [
       "python"
@@ -7359,7 +7359,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.18.11"
+    "version": "1.18.12"
   },
   "pixi": {
     "bin": [
@@ -10070,7 +10070,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-10-30",
+    "date": "2026-11-03",
     "default": true,
     "dependencies": [
       "python"
@@ -10082,7 +10082,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.95"
+    "version": "0.0.96"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10182,14 +10182,14 @@
       "uvx"
     ],
     "category": "Python",
-    "date": "2026-10-30",
+    "date": "2026-11-03",
     "default": true,
     "description": "extremely fast Python package and project manager",
     "type": "cli",
     "url": [
       "https://pypi.org/project/uv/"
     ],
-    "version": "0.13.6"
+    "version": "0.13.7"
   },
   "valkey": {
     "bin": [
@@ -10231,7 +10231,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-10-30",
+    "date": "2026-11-03",
     "default": true,
     "description": "highly configurable text editor",
     "install_note": "On macOS arm64, koopa installs vim 9.2.1054 because the conda-forge macOS build of 9.2.1252 links Homebrew pixman and aborts at startup (conda-forge/vim-feedstock#1690). Other platforms install 9.2.1252.",
@@ -10250,7 +10250,7 @@
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.1252",
+    "version": "9.2.1286",
     "version_overrides": {
       "macos-arm64": "9.2.1054"
     }

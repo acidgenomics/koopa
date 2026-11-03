@@ -813,6 +813,14 @@ def test_src_url_hold_message_holds_pin_when_tarball_is_missing() -> None:
     assert held == "tcl-tk: 9.1.0 available upstream; source not published, pin held at 9.0.4"
 
 
+def test_src_url_hold_message_silently_holds_apache_arrow() -> None:
+    """Apache Arrow's missing source archive silently keeps the current pin."""
+    info = {"src_url": "https://x/{version}/apache-arrow-{version}.tar.gz"}
+    with patch("koopa.version_check._http_url_missing", return_value=True):
+        held = _src_url_hold_message("apache-arrow", "26.0.0", "26.0.1", info)
+    assert held == ""
+
+
 def test_src_url_hold_message_allows_bump_when_tarball_is_present() -> None:
     """No hold is returned once the latest version's source tarball resolves upstream."""
     info = {"src_url": "https://x/{version}/tcl{version}-src.tar.gz"}

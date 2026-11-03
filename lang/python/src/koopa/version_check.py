@@ -333,8 +333,8 @@ def _held_message(
     Returns
     -------
     str | None
-        Hold message explaining why the pin was not bumped, or None if the
-        bump should proceed.
+        A hold message, an empty string for a silent Apache Arrow hold, or
+        None if the bump should proceed.
     """
     if _is_excluded(latest, excluded):
         return f"{app_name}: {latest} available upstream; excluded, pin held at {current}"
@@ -385,8 +385,8 @@ def _hold_reason(
     Returns
     -------
     str | None
-        Hold message explaining why the pin was not bumped, or None if the
-        bump should proceed.
+        A hold message, an empty string for a silent hold, or None if the bump
+        should proceed.
     """
     held = _held_message(app_name, current, latest, excluded, gran)
     if held is not None:
@@ -2749,7 +2749,7 @@ def _cache_hit_result(
     -------
     tuple[VersionCheckResult, str | None] | None
         A ``(result, hold_message)`` pair if the cached value resolves the
-        app, else None on a cache miss.
+        app, else None on a cache miss. The message is empty for a silent hold.
     """
     # Only a genuine change is eligible for a hold, mirroring the same guard in
     # _run_check: a cached value equal to the pin has nothing to hold, and
@@ -2856,7 +2856,7 @@ def check_app_versions(  # noqa: C901, PLR0915
                 )
                 if hit is not None:
                     result, held = hit
-                    if held is not None:
+                    if held:
                         print(held, file=sys.stderr)
                     results.append(result)
                     continue
@@ -3344,6 +3344,8 @@ def _src_url_hold_message(
     """
     if not _missing_src_urls(info, latest):
         return None
+    if app_name == "apache-arrow":
+        return ""
     return f"{app_name}: {latest} available upstream; source not published, pin held at {current}"
 
 
@@ -3549,11 +3551,12 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
                 )
         missing = _missing_src_urls(data[r.name], r.latest_version)
         if missing:
-            print(
-                f"{r.name}: {r.latest_version} available upstream; "
-                f"source not published, pin held at {r.current_version}",
-                file=sys.stderr,
-            )
+            if r.name != "apache-arrow":
+                print(
+                    f"{r.name}: {r.latest_version} available upstream; "
+                    f"source not published, pin held at {r.current_version}",
+                    file=sys.stderr,
+                )
             continue
         data[r.name]["version"] = r.latest_version
         data[r.name]["date"] = today
