@@ -1053,17 +1053,18 @@ def _check_directory_listing(
 
 
 def _check_openssl_series(major: str) -> str:
-    html = _http_get_text("https://www.openssl.org/source/")
-    pattern = re.compile(rf"openssl-({re.escape(major)}\.[\d]+(?:\.[\d]+)*)\.tar")
-    versions = pattern.findall(html)
+    """Return the newest release in a major series still listed upstream.
+
+    The downloads table lists only supported branches (the LTS and the
+    latest feature releases), so openssl3 tracks the 3.5 LTS line.
+    """
+    html = _http_get_text("https://openssl-library.org/source/")
+    pattern = re.compile(rf"openssl-({re.escape(major)}\.\d+\.\d+)\.tar\.gz")
+    versions = set(pattern.findall(html))
     if not versions:
         msg = f"No OpenSSL {major}.x versions found"
         raise RuntimeError(msg)
-    best = max(
-        set(versions),
-        key=lambda v: tuple(int(x) for x in v.split(".")),
-    )
-    return best
+    return max(versions, key=lambda v: tuple(int(x) for x in v.split(".")))
 
 
 def _check_directory_version_dirs(url: str, prefix: str = "") -> str:
@@ -2299,11 +2300,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("awscli", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
-    "vim": _AppCheckSpec(
-        "conda",
-        lambda: _check_conda("vim", "conda-forge", subdirs=("linux-64", "osx-arm64")),
-        (),
-    ),
+    "vim": _AppCheckSpec("github", _check_github, ("vim", "vim")),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",

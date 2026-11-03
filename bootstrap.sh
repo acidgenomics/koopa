@@ -632,7 +632,7 @@ install_perl() {
 }
 
 install_openssl() {
-    __kvar_version='3.6.5'
+    __kvar_version='3.5.9'
     printf 'Installing openssl.\n'
     __kvar_filename="openssl-${__kvar_version}.tar.gz"
     # NOTE: mirror name is 'openssl3', matching the app.json key (and
