@@ -109,12 +109,13 @@ def _warn_cross_tree_overlap(
     tree_label: str,
     main_targets: set[str],
     tree_targets: set[str],
+    expected_targets: set[str] | None = None,
 ) -> None:
     """Warn when a later tree manages targets the main tree also manages.
 
     The later (work/private) ``chezmoi apply`` overwrites the main tree's
     version of any shared target.  Emit one visible warning listing each
-    colliding relative target path.
+    unexpected colliding relative target path.
 
     Parameters
     ----------
@@ -125,8 +126,11 @@ def _warn_cross_tree_overlap(
         Target paths (relative to ``~``) the main tree manages.
     tree_targets : set[str]
         Target paths (relative to ``~``) the later tree manages.
+    expected_targets : set[str] | None, optional
+        Overlapping target paths that are intentional and should not be warned
+        about.
     """
-    overlap = sorted(main_targets & tree_targets)
+    overlap = sorted((main_targets & tree_targets) - (expected_targets or set()))
     if not overlap:
         return
     n = len(overlap)
@@ -772,7 +776,12 @@ def main(
         alert_info(f"Running '{private_install_script}'.")
         pcfg = private_config if os.path.isfile(private_config) else None
         private_targets = _chezmoi_managed(chezmoi, private_source, env, config=pcfg)
-        _warn_cross_tree_overlap("private", main_targets, private_targets)
+        _warn_cross_tree_overlap(
+            "private",
+            main_targets,
+            private_targets,
+            expected_targets={".gnupg/gpg.conf"},
+        )
         private_removes = _chezmoiremove_targets(chezmoi, private_source, env, config=pcfg)
         _warn_remove_manage_conflict("private", main_targets, private_removes)
         _print_chezmoi_status(chezmoi, private_source, env, config=pcfg)
