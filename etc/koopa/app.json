@@ -10270,13 +10270,12 @@
       "vimtutor.1",
       "xxd.1"
     ],
-    "revision": 1,
     "src_url": "https://github.com/vim/vim/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.1252"
+    "version": "9.2.1276"
   },
   "visidata": {
     "bin": [
