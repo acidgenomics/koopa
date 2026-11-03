@@ -34,4 +34,4 @@ installation and usage details.
 
 ## License
 
-[Apache-2.0 license](LICENSE). Copyright 2016 Acid Genomics LLC.
+© 2016-pres. [Acid Genomics](https://acidgenomics.com/) LLC · Apache 2.0 ([LICENSE](LICENSE)).
