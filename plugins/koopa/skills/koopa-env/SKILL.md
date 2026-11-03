@@ -38,6 +38,32 @@ it does not load prompt, alias, or history machinery. If a command that should
 resolve to a koopa-managed tool instead reports "command not found" in an
 agent session, check whether this variable is set.
 
+### A bare tool name over `ssh host 'cmd'` runs the system binary
+
+Without activation, `PATH` has no koopa directory. A bare `tmux`, `bash`, or
+`chezmoi` resolves to the system copy (for example `/usr/bin/tmux` 3.2a on
+Ubuntu LTS), not the koopa copy that the interactive shell uses. This fails
+silently in two ways:
+
+- A **read** reports the wrong version or config, so you describe a binary
+  that the user never runs. Confirmed 2026-11-02: `tmux -V` over ssh said 3.2a
+  while the live server ran koopa tmux 3.8.
+- A **write** uses the wrong binary or renders the wrong path. A chezmoi
+  template that calls `lookPath "bash"` rendered `default-shell` as
+  `/usr/bin/bash` instead of the koopa bash. Confirmed 2026-11-02.
+
+Fix: call the tool by its full path (`~/.local/share/koopa/bin/<tool>`). For a
+tool that looks up other tools, such as `chezmoi` with `lookPath`, also put koopa
+first on `PATH` for that one command:
+
+```sh
+ssh host 'export PATH=$HOME/.local/share/koopa/bin:$PATH; chezmoi --source=<tree>/chezmoi diff <target>'
+```
+
+Run `chezmoi diff <target>` before `apply`. A changed binary path in the diff
+(`default-shell`, a `lookPath` result) means the `PATH` is wrong. To see the
+binary that a live process uses, run `ps -eo pid,args | grep '[t]mux'`.
+
 ## On macOS, `sed` is BSD sed: use `gsed` for in-place edits
 
 macOS ships BSD `sed`. `sed -i 's/a/b/' file` fails there with `undefined label`,

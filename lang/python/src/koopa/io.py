@@ -114,6 +114,25 @@ def import_app_json() -> dict:
     return data
 
 
+def app_version(entry: dict, platform: str) -> str:
+    """Return the app version for one platform.
+
+    Parameters
+    ----------
+    entry : dict
+        App registry entry from 'app.json'.
+    platform : str
+        Platform identifier, such as 'macos-arm64'.
+
+    Returns
+    -------
+    str
+        The platform's value in 'version_overrides' if present, else 'version'.
+    """
+    overrides = entry.get("version_overrides", {})
+    return overrides.get(platform, entry.get("version", ""))
+
+
 def import_json(file: str) -> dict:
     """Import a JSON file with retry on parse failure.
 

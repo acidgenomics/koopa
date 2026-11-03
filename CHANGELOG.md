@@ -1,5 +1,27 @@
 # Changelog
 
+## koopa 0.38.0 (2026-11-03)
+
+Major changes:
+
+- App registry entries can now pin different versions by platform, and
+  installation and installed-version checks honor those overrides.
+- Vim installs from conda-forge again. On macOS arm64, koopa pins Vim to
+  9.2.1054 because the newer conda-forge build crashes due to its Homebrew-linked
+  pixman dependency; other platforms use 9.2.1286.
+
+Minor changes:
+
+- Existing koopa Python virtual environments now repair the private CA
+  compatibility shim during updates, even when the environment itself is
+  otherwise current.
+- OpenSSL version checks now follow the official supported-download listings.
+- Dotfiles configuration no longer reports the intentional `.gnupg/gpg.conf`
+  overlap between the main and private trees as a conflict.
+- Reworked the README with direct links to installation, CLI reference, and
+  usage guides, and clarified platform requirements.
+- Refreshed bootstrap and routine application registry versions.
+
 ## koopa 0.37.0 (2026-10-31)
 
 Major changes:

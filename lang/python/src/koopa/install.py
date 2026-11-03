@@ -21,7 +21,7 @@ from koopa.app import app_json_bin, app_json_man1, resolve_alias
 from koopa.archive import extract
 from koopa.download import download
 from koopa.exec import run
-from koopa.io import import_app_json
+from koopa.io import app_version, import_app_json
 from koopa.prefix import (
     app_prefix,
     bash_completions_prefix,
@@ -103,10 +103,12 @@ def _app_json_version(key: str) -> str:
     str
         Version string, or an empty string if the key or version is absent.
     """
+    from koopa.system import os_id
+
     data = import_app_json()
     entry = data.get(key, {})
     if isinstance(entry, dict):
-        return entry.get("version", "")
+        return app_version(entry, os_id())
     return ""
 
 
@@ -3258,6 +3260,7 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
         )
         shutil.rmtree(venv_dir)
         return
+    _write_venv_private_ca_sitecustomize(venv_dir)
     revision_file = os.path.join(prefix, "etc", "koopa", "venv-version.txt")
     version_file = os.path.join(venv_dir, "VERSION")
     legacy_stamp = os.path.join(venv_dir, ".stamp")

@@ -88,6 +88,40 @@ def test_warn_cross_tree_overlap_count(capsys: pytest.CaptureFixture[str]) -> No
     assert "3" in combined
 
 
+def test_warn_cross_tree_overlap_expected_target(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Expected overlaps are omitted while unexpected overlaps still warn."""
+    main = {".gnupg/gpg.conf", ".bashrc"}
+    private = {".gnupg/gpg.conf", ".bashrc"}
+    _warn_cross_tree_overlap(
+        "private",
+        main,
+        private,
+        expected_targets={".gnupg/gpg.conf"},
+    )
+    captured = capsys.readouterr()
+    combined = captured.err + captured.out
+    assert "Warning" in combined
+    assert ".bashrc" in combined
+    assert ".gnupg/gpg.conf" not in combined
+
+
+def test_warn_cross_tree_overlap_only_expected_target(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """No warning when all overlapping targets are expected."""
+    _warn_cross_tree_overlap(
+        "private",
+        {".gnupg/gpg.conf"},
+        {".gnupg/gpg.conf"},
+        expected_targets={".gnupg/gpg.conf"},
+    )
+    captured = capsys.readouterr()
+    assert "Warning" not in captured.err
+    assert "Warning" not in captured.out
+
+
 # ---------------------------------------------------------------------------
 # _chezmoi_managed
 # ---------------------------------------------------------------------------
@@ -372,6 +406,66 @@ def test_print_chezmoi_status_with_changes(
     assert "Pending changes (2)" in combined
     assert ".config/git/config" in combined
     assert ".bashrc" in combined
+
+
+def test_print_chezmoi_status_filters_expected_target(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Expected changes are omitted and the remaining count is accurate."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        return subprocess.CompletedProcess(
+            args,
+            returncode=0,
+            stdout=" M .gnupg/gpg.conf\n M .bashrc\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    _print_chezmoi_status(
+        "/usr/bin/chezmoi",
+        str(source),
+        {},
+        expected_targets={".gnupg/gpg.conf"},
+    )
+    captured = capsys.readouterr()
+    combined = captured.err + captured.out
+    assert "Pending changes (1)" in combined
+    assert ".bashrc" in combined
+    assert ".gnupg/gpg.conf" not in combined
+
+
+def test_print_chezmoi_status_only_expected_target_is_silent(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Only expected changes produce no status message."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        return subprocess.CompletedProcess(
+            args,
+            returncode=0,
+            stdout=" M .gnupg/gpg.conf\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    _print_chezmoi_status(
+        "/usr/bin/chezmoi",
+        str(source),
+        {},
+        expected_targets={".gnupg/gpg.conf"},
+    )
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert captured.out == ""
 
 
 # ---------------------------------------------------------------------------

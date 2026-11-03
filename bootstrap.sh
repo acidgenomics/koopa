@@ -632,7 +632,7 @@ install_perl() {
 }
 
 install_openssl() {
-    __kvar_version='3.6.5'
+    __kvar_version='3.5.9'
     printf 'Installing openssl.\n'
     __kvar_filename="openssl-${__kvar_version}.tar.gz"
     # NOTE: mirror name is 'openssl3', matching the app.json key (and
@@ -893,7 +893,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.13.6'
+    __kvar_uv_version='0.13.7'
     __kvar_python_version='3.14.10'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"

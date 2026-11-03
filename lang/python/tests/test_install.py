@@ -1135,7 +1135,7 @@ def test_install_python_package_two_phase_pip_install(tmp_path: Path) -> None:
 
 
 def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path) -> None:
-    """koopa's venv extras install exempts first-party `syntactic` from cooldown.
+    """Koopa's venv extras install exempts first-party `syntactic` from cooldown.
 
     A configured dependency cooldown (exclude-newer in ~/.config/uv/uv.toml)
     must still govern third-party extras, so no global override is passed.
@@ -1151,11 +1151,13 @@ def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path)
 
     captured: list[list[str]] = []
 
-    def fake_run(args, **_kwargs):  # noqa: ANN001, ANN202
+    def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         if args[-1] == "--version":
             return subprocess.CompletedProcess(args, 0, stdout="Python 3.14.0\n")
+        if "-c" in args:
+            return subprocess.CompletedProcess(args, 0, stdout=str(venv_dir / "site-packages"))
         captured.append(args)
-        return None
+        return subprocess.CompletedProcess(args, 0)
 
     with (
         patch("koopa.install.is_owner", return_value=True),

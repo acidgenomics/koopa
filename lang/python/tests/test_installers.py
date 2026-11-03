@@ -20,7 +20,6 @@ from koopa.installers import (
     has_python_installer,
     neovim,
     python_app,
-    vim,
 )
 from koopa.installers import pyright as pyright_installer
 from koopa.io import import_app_json
@@ -192,6 +191,40 @@ def test_private_ca_shim_relaxes_default_context_strict_flag(tmp_path: Path) -> 
     assert inactive["check_hostname"] is True
 
 
+@pytest.mark.parametrize("outdated_shim", [False, True])
+def test_update_venv_repairs_private_ca_shim_when_current(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, outdated_shim: bool
+) -> None:
+    """A current koopa venv still receives the latest private CA compatibility."""
+    libexec = tmp_path / ".venv"
+    subprocess.run([sys.executable, "-m", "venv", str(libexec)], check=True)
+    python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+    (tmp_path / ".python-version").write_text(f"{python_version}\n")
+    revision = tmp_path / "etc" / "koopa" / "venv-version.txt"
+    revision.parent.mkdir(parents=True)
+    revision.write_text("1\n")
+    (libexec / "VERSION").write_text("1\n")
+    if outdated_shim:
+        site_packages = next(libexec.glob("lib/python*/site-packages"))
+        (site_packages / "sitecustomize.py").write_text("import ssl\nssl.VERIFY_X509_STRICT = 0\n")
+    monkeypatch.setattr(install, "is_owner", lambda: True)
+    with patch("koopa.install.shutil.which", side_effect=AssertionError("must not install extras")):
+        install._update_venv(str(tmp_path))
+    data_home = tmp_path / "share"
+    bundle = data_home / "ca-certificates" / "cacert.pem"
+    bundle.parent.mkdir(parents=True)
+    bundle.write_text("")
+    active = _venv_ssl_flags(
+        libexec, {"XDG_DATA_HOME": str(data_home), "SSL_CERT_FILE": str(bundle)}
+    )
+    assert active == {
+        "create_default_context": False,
+        "https_context": False,
+        "check_hostname": True,
+        "cert_required": True,
+    }
+
+
 def test_synapseclient_uses_current_python_package() -> None:
     """Synapse installs from PyPI with complete extras on koopa's Python."""
     entry = import_app_json()["synapseclient"]
@@ -285,47 +318,6 @@ def test_cellranger_extracts_nested_vendor_tar(tmp_path: Path) -> None:
 
     assert extract_mock.call_count == 2
     assert (Path(prefix) / "bin").is_symlink()
-
-
-@pytest.mark.parametrize("linux", [False, True])
-def test_vim_builds_from_source_and_verifies_startup(linux: bool) -> None:
-    """Vim uses declared libraries and checks startup after the source build."""
-    prefix = "/opt/koopa/app/vim/9.2.1252"
-    with (
-        patch("koopa.installers.vim.activate_app_deps") as deps_mock,
-        patch("koopa.installers.vim.download_extract_cd") as download_mock,
-        patch("koopa.installers.vim.app_prefix", return_value="/opt/koopa/opt/python3.14"),
-        patch("koopa.installers.vim.is_linux", return_value=linux),
-        patch("koopa.installers.vim.make_build") as build_mock,
-        patch("koopa.installers.vim.subprocess.run") as run_mock,
-    ):
-        vim.main(name="vim", version="9.2.1252", prefix=prefix)
-
-    download_mock.assert_called_once_with()
-    assert build_mock.call_args.kwargs["env"] is deps_mock.return_value
-    args = build_mock.call_args.kwargs["conf_args"]
-    assert ("--with-x" if linux else "--without-x") in args
-    assert "--enable-python3interp=yes" in args
-    assert "--enable-perlinterp=yes" in args
-    run_mock.assert_called_once_with(
-        [f"{prefix}/bin/vim", "--version"], check=True, capture_output=True, text=True
-    )
-
-
-def test_vim_rejects_an_executable_that_cannot_start() -> None:
-    """A loader failure must fail installation rather than expose broken Vim."""
-    with (
-        patch("koopa.installers.vim.activate_app_deps"),
-        patch("koopa.installers.vim.download_extract_cd"),
-        patch("koopa.installers.vim.app_prefix", return_value="/opt/koopa/opt/python3.14"),
-        patch("koopa.installers.vim.make_build"),
-        patch(
-            "koopa.installers.vim.subprocess.run",
-            side_effect=subprocess.CalledProcessError(-6, ["vim", "--version"]),
-        ),
-        pytest.raises(subprocess.CalledProcessError),
-    ):
-        vim.main(name="vim", version="9.2.1252", prefix="/opt/koopa/app/vim/9.2.1252")
 
 
 def test_fix_unibilium_soname_creates_symlink(tmp_path: Path) -> None:
