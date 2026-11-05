@@ -695,6 +695,39 @@ def _check_conda(
     return version
 
 
+def _check_conda_configured(
+    package: str,
+    channel: str = "conda-forge",
+    *,
+    subdirs: tuple[str, ...] = ("linux-64",),
+) -> str:
+    """Return the newest conda version from the channel this machine installs from.
+
+    ``_check_conda`` given a bare channel name searches public conda-forge.
+    The installer resolves that name to the configured mirror URL. A mirror can
+    lag public conda-forge, so a pin from the public channel can name a build
+    that the install step cannot find. This check resolves the channel the same
+    way as the installer.
+
+    Parameters
+    ----------
+    package : str
+        Conda package name.
+    channel : str
+        Conda channel name to resolve, such as ``"conda-forge"``.
+    subdirs : tuple[str, ...]
+        Platform subdirectories to search. The lowest of the newest versions wins.
+
+    Returns
+    -------
+    str
+        Lowest of the newest versions found in each searched subdirectory.
+    """
+    from koopa.install import _resolve_conda_channel_url
+
+    return _check_conda(package, _resolve_conda_channel_url(channel), subdirs=subdirs)
+
+
 class _NetworkUnavailableError(RuntimeError):
     """Raised when all network sources for a check are unreachable.
 
@@ -2310,7 +2343,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("awscli", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
-    "vim": _AppCheckSpec("github", _check_github, ("vim", "vim")),
+    "vim": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda_configured("vim", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",
