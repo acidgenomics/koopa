@@ -7,12 +7,42 @@ find-broken-symlinks, find-empty-dirs, file-count, line-count, etc.
 
 import contextlib
 import os
+import re
 import shutil
 import subprocess
 import tempfile
+from datetime import datetime
 from pathlib import Path
 
 from koopa.exec import run
+
+# macOS default name, for example "Screenshot 2026-10-01 at 7.17.11 AM.png".
+# The optional " (N)" suffix is macOS's duplicate marker.
+_MACOS_AM_PM = re.compile(
+    r"^(?P<prefix>Screenshot|Screen Recording) (?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})"
+    r" at (?P<hour>\d{1,2})\.(?P<minute>\d{2})\.(?P<second>\d{2})[ \u202f]"
+    r"(?P<meridiem>am|pm)(?P<dup> \(\d+\))?(?P<ext>\.(?:png|mov))$",
+    re.IGNORECASE,
+)
+# Earlier kebab-case name, for example "screenshot-2026-10-01-at-7-17-11-am.png".
+# The optional "-N" suffixes are duplicate markers from the old rename.
+_LEGACY_AM_PM = re.compile(
+    r"^(?P<prefix>screenshot|screen-recording)-(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})"
+    r"-at-(?P<hour>\d{1,2})-(?P<minute>\d{2})-(?P<second>\d{2})-(?P<meridiem>am|pm)"
+    r"(?P<dup>(?:-\d+)+)?(?P<ext>\.(?:png|mov))$",
+    re.IGNORECASE,
+)
+# Name from 2024, for example "screenshot-2024-06-10-102152.png", already on a 24-hour clock.
+_HOUR24_NAME = re.compile(
+    r"^(?P<prefix>screenshot)-(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})"
+    r"-(?P<hour>\d{2})(?P<minute>\d{2})(?P<second>\d{2})(?P<ext>\.png)$"
+)
+# Final name, for example "screenshot-2026-10-01-07-17-11.png" or "...-07-17-11-1.png".
+_FINAL_NAME = re.compile(
+    r"^(?P<prefix>screenshot|screen-recording)-(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})"
+    r"-(?P<hour>\d{2})-(?P<minute>\d{2})-(?P<second>\d{2})(?P<dup>-\d+)?(?P<ext>\.(?:png|mov))$"
+)
+_SCREENSHOT_SUFFIXES = frozenset({".png", ".mov"})
 
 
 def mkdir(path: str, *, sudo: bool = False) -> None:
@@ -638,62 +668,154 @@ def delete_named_subdirs(dir_path: str, name: str) -> list[str]:
     return deleted
 
 
+def _screenshot_destination(name: str) -> tuple[str, str] | None:
+    """Return the dated folder and the 24-hour name for a screenshot file name.
+
+    Parameters
+    ----------
+    name : str
+        File name, for example ``"Screenshot 2026-10-01 at 7.17.11 PM.png"``.
+
+    Returns
+    -------
+    tuple[str, str] | None
+        Folder as ``YYYY/MM/DD`` and new name as ``screenshot-YYYY-MM-DD-HH-MM-SS.png``,
+        or ``None`` when the name matches no known form or is not a valid time.
+    """
+    am_pm = _MACOS_AM_PM.fullmatch(name) or _LEGACY_AM_PM.fullmatch(name)
+    if am_pm is not None:
+        hour12 = int(am_pm["hour"])
+        if not 1 <= hour12 <= 12:
+            return None
+        hour = hour12 % 12 + (12 if am_pm["meridiem"].lower() == "pm" else 0)
+        found = am_pm
+    else:
+        found_24 = _HOUR24_NAME.fullmatch(name) or _FINAL_NAME.fullmatch(name)
+        if found_24 is None:
+            return None
+        hour = int(found_24["hour"])
+        found = found_24
+    try:
+        when = datetime(
+            int(found["year"]),
+            int(found["month"]),
+            int(found["day"]),
+            hour,
+            int(found["minute"]),
+            int(found["second"]),
+        )
+    except ValueError:
+        return None
+    prefix = found["prefix"].lower().replace(" ", "-")
+    ext = found["ext"].lower()
+    return f"{when:%Y/%m/%d}", f"{prefix}-{when:%Y-%m-%d-%H-%M-%S}{ext}"
+
+
+def _free_path(folder: Path, name: str, src: Path, taken: set[Path]) -> Path:
+    """Return a destination that no file and no planned move uses.
+
+    Parameters
+    ----------
+    folder : Path
+        Destination directory.
+    name : str
+        Preferred file name.
+    src : Path
+        File being moved. Its own path counts as free.
+    taken : set[Path]
+        Destinations already planned in this run.
+
+    Returns
+    -------
+    Path
+        ``folder / name``, or the same name with ``-1``, ``-2``, and so on.
+    """
+    stem = Path(name).stem
+    suffix = Path(name).suffix
+    candidate = folder / name
+    counter = 0
+    while candidate in taken or (candidate.exists() and candidate != src):
+        counter += 1
+        candidate = folder / f"{stem}-{counter}{suffix}"
+    return candidate
+
+
+def _screenshot_candidates(root: Path, *, recursive: bool) -> list[Path]:
+    """Return the PNG and MOV files that a run should consider.
+
+    Parameters
+    ----------
+    root : Path
+        Directory to scan.
+    recursive : bool
+        Scan all subdirectories too, not only the top level.
+
+    Returns
+    -------
+    list[Path]
+        Sorted file paths.
+    """
+    paths = root.rglob("*") if recursive else root.glob("*")
+    return sorted(p for p in paths if p.is_file() and p.suffix.lower() in _SCREENSHOT_SUFFIXES)
+
+
 def organize_screenshots(
     directory: str,
     *,
     dry_run: bool = False,
     quiet: bool = False,
+    recursive: bool = False,
 ) -> list[str]:
-    """Rename PNG files to kebab-case and move them into dated directories.
+    """Rename screenshots to 24-hour names and move them into dated directories.
 
-    Only files at the top level of ``directory`` are processed. Each file moves
-    into ``YYYY/MM/DD`` under ``directory``, using its modification time in
-    local time.
+    Each name holds its own date and time, so the folder comes from the name,
+    not from the file's modification time. Names use zero-padded 24-hour time
+    and no AM or PM. A name that would collide gets ``-1``, ``-2``, and so on,
+    so no file is overwritten. Names that match no known form stay in place.
 
     Parameters
     ----------
     directory : str
-        Directory that contains the PNG files.
+        Directory that contains the screenshot files.
     dry_run : bool, optional
         Print the planned renames and moves without changing any file.
     quiet : bool, optional
         Suppress output.
+    recursive : bool, optional
+        Also rename and re-home files in existing ``YYYY/MM/DD`` folders.
 
     Returns
     -------
     list[str]
         Destination paths of the moved files.
-    """
-    from datetime import datetime
 
+    Raises
+    ------
+    SystemExit
+        If ``directory`` is not a directory.
+    """
     root = Path(directory).expanduser()
     if not root.is_dir():
         msg = f"Not a directory: '{root}'"
         raise SystemExit(msg)
-    png_files = sorted(str(p) for p in root.glob("*.png") if p.is_file())
-    if not png_files:
-        return []
-    try:
-        from syntactic import syntactic_rename  # pyright: ignore[reportMissingImports]
-    except ImportError:
-        msg = "Package 'syntactic' is not installed."
-        raise SystemExit(msg) from None
-    renamed = syntactic_rename(png_files, fun="kebab_case", quiet=quiet, dry_run=dry_run)
-    moves: list[tuple[str, str]] = []
-    for src, new in zip(renamed["from"], renamed["to"], strict=True):
-        # Dry run leaves the file at its old path, so read the time from there.
-        mtime = os.path.getmtime(src if dry_run else new)
-        dt = datetime.fromtimestamp(mtime).astimezone()
-        dest = root / f"{dt.year:04d}" / f"{dt.month:02d}" / f"{dt.day:02d}" / Path(new).name
-        if dest.exists() or any(dest == other for _, other in moves):
-            msg = f"Destination exists: '{dest}'"
-            raise SystemExit(msg)
-        moves.append((src if dry_run else new, str(dest)))
+    moves: list[tuple[Path, Path]] = []
+    taken: set[Path] = set()
+    for src in _screenshot_candidates(root, recursive=recursive):
+        destination = _screenshot_destination(src.name)
+        if destination is None:
+            if not quiet:
+                print(f"Skipped, unrecognized name: {src}")
+            continue
+        folder, new_name = destination
+        dest = _free_path(root / folder, new_name, src, taken)
+        taken.add(dest)
+        if dest != src:
+            moves.append((src, dest))
     for src, dest in moves:
         if dry_run:
             if not quiet:
                 print(f"[dry-run] {src} -> {dest}")
             continue
-        Path(dest).parent.mkdir(parents=True, exist_ok=True)
+        dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(src, dest)
-    return [dest for _, dest in moves]
+    return [str(dest) for _, dest in moves]

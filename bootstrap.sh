@@ -874,7 +874,7 @@ install_libffi() {
 }
 
 install_zlib() {
-    __kvar_version='1.3.2'
+    __kvar_version='1.4'
     printf 'Installing zlib.\n'
     __kvar_filename="zlib-${__kvar_version}.tar.gz"
     download_with_fallback \

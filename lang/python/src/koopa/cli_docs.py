@@ -275,7 +275,9 @@ RUN_DESCRIPTIONS: dict[str, str] = {
     "move-into-dated-dirs-by-filename": "Move files into dated directories based on filename.",
     "move-into-dated-dirs-by-timestamp": "Move files into dated directories based on timestamp.",
     "nfiletypes": "Count file types in a directory.",
-    "organize-screenshots": "Rename PNG files to kebab-case and move them into dated directories.",
+    "organize-screenshots": (
+        "Rename screenshots to 24-hour names and move them into dated directories."
+    ),
     "rename-camel-case": "Rename files to camelCase.",
     "rename-from-csv": "Rename files according to a CSV mapping.",
     "rename-kebab-case": "Rename files to kebab-case.",
@@ -324,7 +326,7 @@ RUN_SYNOPSIS: dict[str, str] = {
     "move-into-dated-dirs-by-filename": "files...",
     "move-into-dated-dirs-by-timestamp": "files...",
     "nfiletypes": "directory",
-    "organize-screenshots": "[--dry-run] [--quiet] [directory]",
+    "organize-screenshots": "[--dry-run] [--quiet] [--recursive] [directory]",
     "rename-camel-case": "paths...",
     "rename-from-csv": "csv-file",
     "rename-kebab-case": "paths...",

@@ -205,12 +205,13 @@ Move files into dated directories based on timestamp.
 Count file types in a directory.
 
 (koopa-run-organize-screenshots)=
-## `run organize-screenshots [--dry-run] [--quiet] [directory]`
+## `run organize-screenshots [--dry-run] [--quiet] [--recursive] [directory]`
 
-Rename PNG files to kebab-case and move them into dated directories.
+Rename screenshots to 24-hour names and move them into dated directories.
 
 - `--dry-run`
 - `--quiet`
+- `--recursive`
 
 (koopa-run-rename-camel-case)=
 ## `run rename-camel-case paths...`

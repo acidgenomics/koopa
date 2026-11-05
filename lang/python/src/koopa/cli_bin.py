@@ -446,18 +446,31 @@ def _handle_organize_screenshots(args: list[str]) -> None:
 
     parser = argparse.ArgumentParser(
         prog="organize-screenshots",
-        description="Rename PNG files to kebab-case and move them into YYYY/MM/DD directories.",
+        description=(
+            "Rename screenshots to screenshot-YYYY-MM-DD-HH-MM-SS.png (24-hour time) "
+            "and move them into YYYY/MM/DD directories."
+        ),
     )
     parser.add_argument("--dry-run", action="store_true", help="show planned changes only")
     parser.add_argument("--quiet", action="store_true", help="suppress output")
     parser.add_argument(
+        "--recursive",
+        action="store_true",
+        help="also rename and re-home files in existing YYYY/MM/DD folders",
+    )
+    parser.add_argument(
         "directory",
         nargs="?",
         default=str(Path.home() / "Pictures" / "screenshots"),
-        help="directory with PNG files (default: ~/Pictures/screenshots)",
+        help="directory with screenshot files (default: ~/Pictures/screenshots)",
     )
     parsed = parser.parse_args(args)
-    organize_screenshots(parsed.directory, dry_run=parsed.dry_run, quiet=parsed.quiet)
+    organize_screenshots(
+        parsed.directory,
+        dry_run=parsed.dry_run,
+        quiet=parsed.quiet,
+        recursive=parsed.recursive,
+    )
 
 
 # -- Archive operations --------------------------------------------------------
