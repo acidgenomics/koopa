@@ -10250,7 +10250,10 @@
     "url": [
       "https://github.com/vim/vim/"
     ],
-    "version": "9.2.1293",
+    "version": "9.2.1286",
+    "version_exclude": [
+      "9.2.1293"
+    ],
     "version_overrides": {
       "macos-arm64": "9.2.1054"
     }
