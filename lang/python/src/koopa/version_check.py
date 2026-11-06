@@ -600,6 +600,11 @@ def _check_github(owner: str, repo: str) -> str:
     return _sanitize_github_tag(tag, repo)
 
 
+def _check_codeberg(owner: str, repo: str) -> str:
+    data = _http_get_json(f"https://codeberg.org/api/v1/repos/{owner}/{repo}/releases/latest")
+    return _sanitize_github_tag(data["tag_name"], repo)
+
+
 def _check_pypi(package: str) -> str:
     """Return the newest stable, non-yanked PyPI release.
 
@@ -2318,6 +2323,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "flac": _AppCheckSpec("github", _check_github, ("xiph", "flac")),
+    "haskell-ghcup": _AppCheckSpec("codeberg", _check_codeberg, ("haskell", "ghcup-hs")),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
     "isl": _AppCheckSpec(
@@ -2429,6 +2435,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "rsync": _AppCheckSpec("github", _check_github, ("RsyncProject", "rsync")),
+    "sox-ng": _AppCheckSpec("codeberg", _check_codeberg, ("sox_ng", "sox_ng")),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
     "screen": _AppCheckSpec("gnu", lambda: _check_gnu("screen"), ()),

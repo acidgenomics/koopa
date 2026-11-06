@@ -662,6 +662,28 @@ def test_rsync_uses_upstream_github_release(monkeypatch: pytest.MonkeyPatch) -> 
     assert spec.check_fn(*spec.args) == "3.5.2"
 
 
+@pytest.mark.parametrize(
+    ("name", "repo", "tag", "expected"),
+    [
+        ("haskell-ghcup", "haskell/ghcup-hs", "v0.2.7.0", "0.2.7.0"),
+        ("sox-ng", "sox_ng/sox_ng", "sox_ng-14.8.1", "14.8.1"),
+    ],
+)
+def test_codeberg_release_checks(
+    monkeypatch: pytest.MonkeyPatch, name: str, repo: str, tag: str, expected: str
+) -> None:
+    """Codeberg checks resolve upstream release tags for both projects."""
+
+    def get_json(url: str) -> dict[str, str]:
+        assert url == f"https://codeberg.org/api/v1/repos/{repo}/releases/latest"
+        return {"tag_name": tag}
+
+    monkeypatch.setattr("koopa.version_check._http_get_json", get_json)
+    spec = classify_app(name, {"version": "1.0", "url": []})
+    assert spec is not None
+    assert spec.check_fn(*spec.args) == expected
+
+
 # ── _automake_bin_names (extra_fields_fn: version-suffixed bin names) ──────
 
 

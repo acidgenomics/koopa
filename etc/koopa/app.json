@@ -4206,10 +4206,11 @@
     "date": "2026-06-19",
     "default": false,
     "description": "Haskell toolchain installer",
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.haskell.org/ghcup/",
-      "https://github.com/haskell/ghcup-hs/"
+      "https://codeberg.org/haskell/ghcup-hs"
     ],
     "version": "0.2.6.2"
   },
@@ -6215,9 +6216,10 @@
     "default": true,
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
+    "revision": 1,
     "type": "cli",
     "url": [
-      "https://github.com/lunaryorn/mdcat/"
+      "https://github.com/BIRSAx2/mdcat/"
     ],
     "version": "2.19.0"
   },
@@ -8600,22 +8602,11 @@
     "version": "0.10.10"
   },
   "rmate": {
-    "bin": [
-      "rmate"
-    ],
-    "category": "Editor",
-    "date": "2026-05-02",
-    "default": false,
-    "dependencies": [
-      "ruby"
-    ],
-    "description": "TextMate remote file editing tool",
-    "installer": "ruby-package",
-    "type": "cli",
+    "date": "2026-11-06",
+    "removed": true,
     "url": [
       "https://github.com/textmate/rmate/"
-    ],
-    "version": "1.5.9"
+    ]
   },
   "rmats": {
     "bin": [
@@ -8676,23 +8667,12 @@
     ]
   },
   "ronn-ng": {
-    "bin": [
-      "ronn"
-    ],
-    "category": "Documentation",
-    "date": "2024-06-16",
-    "default": false,
-    "dependencies": [
-      "ruby"
-    ],
-    "description": "actively maintained fork of ronn",
-    "installer": "ruby-package",
-    "type": "cli",
+    "date": "2026-11-06",
+    "removed": true,
     "url": [
       "https://github.com/apjanke/ronn-ng/",
       "https://rubygems.org/gems/ronn-ng/"
-    ],
-    "version": "0.10.1"
+    ]
   },
   "rsem": {
     "bin": [
@@ -9302,27 +9282,33 @@
     "version": "0.3.7"
   },
   "sox": {
-    "bin": [
-      "sox"
-    ],
-    "build_dependencies": [
-      "conda"
-    ],
-    "category": "Multimedia",
-    "conda_channel": "conda-forge",
-    "date": "2022-08-30",
-    "default": false,
-    "description": "Swiss army knife of audio manipulation tools",
-    "installer": "conda-package",
-    "man1": [
-      "sox.1"
-    ],
-    "type": "cli",
+    "date": "2026-11-06",
+    "removed": true,
     "url": [
       "http://sox.sourceforge.net/sox.html",
       "https://sourceforge.net/projects/sox/files/sox/"
+    ]
+  },
+  "sox-ng": {
+    "bin": [
+      "sox",
+      "sox_ng"
     ],
-    "version": "14.4.2"
+    "category": "Multimedia",
+    "date": "2026-11-06",
+    "default": false,
+    "description": "maintained fork of the SoX audio manipulation tools",
+    "man1": [
+      "sox.1",
+      "sox_ng.1"
+    ],
+    "revision": 1,
+    "src_url": "https://codeberg.org/sox_ng/sox_ng/releases/download/sox_ng-{version}/sox_ng-{version}.tar.gz",
+    "type": "cli",
+    "url": [
+      "https://codeberg.org/sox_ng/sox_ng"
+    ],
+    "version": "14.8.1"
   },
   "spacemacs": {
     "bin": [

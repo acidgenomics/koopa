@@ -140,7 +140,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "shfmt": f"{_M}._conda",
     "snakemake": f"{_M}._conda",
     "somalier": f"{_M}._conda",
-    "sox": f"{_M}._conda",
     "star": f"{_M}._conda",
     "star-fusion": f"{_M}._conda",
     "starship": f"{_M}._conda",
@@ -278,8 +277,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "prettier": f"{_M}._node_pkg",
     # -- ruby-package (4) ------------------------------------------------
     "bashcov": f"{_M}._ruby_pkg",
-    "rmate": f"{_M}._ruby_pkg",
-    "ronn-ng": f"{_M}._ruby_pkg",
     # -- rust-package (6) ------------------------------------------------
     "bandwhich": f"{_M}._rust_pkg",
     "gping": f"{_M}._rust_pkg",
@@ -441,6 +438,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "readline": f"{_M}.readline",
     "rust": f"{_M}.rust_app",
     "serf": f"{_M}.serf",
+    "sox-ng": f"{_M}.sox_ng",
     "star-conda": f"{_M}.star_conda",
     "subversion": f"{_M}.subversion",
     "surrealdb": f"{_M}.surrealdb",
