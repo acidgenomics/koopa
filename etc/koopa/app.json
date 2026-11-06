@@ -1504,14 +1504,15 @@
   },
   "ca-certificates": {
     "category": "Library",
-    "date": "2026-04-15",
+    "date": "2026-11-06",
     "default": false,
     "description": "Mozilla CA certificate bundle",
+    "revision": 1,
     "type": "library",
     "url": [
       "https://curl.se/docs/caextract.html"
     ],
-    "version": "2026-03-19"
+    "version": "2026-11-05"
   },
   "cairo": {
     "build_dependencies": [

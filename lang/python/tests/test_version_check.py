@@ -743,6 +743,53 @@ def _write_app_json(tmp_path: Path, data: dict) -> None:
     (etc_dir / "app.json").write_text(json.dumps(data))
 
 
+def test_ca_certificate_date_updates_fresh_and_cached(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Newer CA bundle dates are reported and written on both lookup paths."""
+    data = {"ca-certificates": {"version": "2026-03-19"}}
+    _write_app_json(tmp_path, data)
+    monkeypatch.setattr("koopa.version_check.koopa_prefix", lambda: str(tmp_path))
+    monkeypatch.setattr("koopa.io.koopa_prefix", lambda: str(tmp_path))
+    monkeypatch.setattr("koopa.version_check.xdg_cache_home", lambda: str(tmp_path))
+    monkeypatch.setattr("koopa.version_check._github_token", "test")
+    monkeypatch.setattr("koopa.version_check.import_app_json", lambda: data)
+    monkeypatch.setattr(
+        "koopa.version_check._http_get_text",
+        lambda _url: "cacert-2026-03-19.pem cacert-2026-11-05.pem",
+    )
+    monkeypatch.setattr("koopa.version_check.update_venv_version", lambda _results: None)
+    monkeypatch.setattr("koopa.version_check.update_bootstrap", lambda _data: 0)
+    monkeypatch.setattr("koopa.app.import_app_json", lambda: data)
+
+    fresh = check_app_versions(name_filter=["ca-certificates"])
+    cached = check_app_versions(name_filter=["ca-certificates"])
+    assert fresh[0].is_outdated
+    assert cached[0].is_outdated
+    assert cached[0].latest_version == "2026-11-05"
+    assert update_app_json(cached) == 1
+    written = json.loads((tmp_path / "etc" / "koopa" / "app.json").read_text())
+    assert written["ca-certificates"]["version"] == "2026-11-05"
+
+
+@pytest.mark.parametrize(
+    ("current", "latest", "outdated", "too_high"),
+    [
+        ("2026-03-19", "2026-11-05", True, False),
+        ("2026-11-05", "2026-03-19", False, True),
+        ("2026-11-05", "2026-11-05", False, False),
+        ("2025-12-31", "2026-01-01", True, False),
+    ],
+)
+def test_date_version_ordering(
+    current: str, latest: str, outdated: bool, too_high: bool
+) -> None:
+    """Compare date versions across months, years, and downgrades."""
+    result = VersionCheckResult("ca-certificates", current, latest, "dirlist")
+    assert result.is_outdated is outdated
+    assert result.is_pinned_too_high is too_high
+
+
 def test_update_app_json_holds_pin_when_artifact_not_staged(tmp_path: Path) -> None:
     """A gated app's pin is held, and reported, when its artifact isn't staged."""
     json_data = {
