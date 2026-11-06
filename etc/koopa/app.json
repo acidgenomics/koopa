@@ -10989,10 +10989,15 @@
     "date": "2026-10-26",
     "default": false,
     "dependencies": [
+      "node",
       "python"
     ],
     "description": "download videos from YouTube and many other sites",
     "installer": "python-package",
+    "installer_args": {
+      "pip_name": "yt-dlp[default]"
+    },
+    "revision": 1,
     "soft_dependencies": [
       "ffmpeg"
     ],
