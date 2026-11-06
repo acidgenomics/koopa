@@ -1445,7 +1445,7 @@ _GITLAB_MAP: dict[str, tuple[str, str]] = {
 
 _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
     "apr": (
-        "https://archive.apache.org/dist/apr/",
+        "https://dlcdn.apache.org/apr/",
         "apr",
     ),
     "armadillo": (
@@ -1453,7 +1453,7 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "armadillo",
     ),
     "apr-util": (
-        "https://archive.apache.org/dist/apr/",
+        "https://dlcdn.apache.org/apr/",
         "apr-util",
     ),
     "bzip2": (
@@ -1529,16 +1529,12 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "pkg-config",
     ),
     # NOTE: pkg-config is overridden in _SPECIAL_CASES to handle SSL failures gracefully.
-    "rsync": (
-        "https://download.samba.org/pub/rsync/src/",
-        "rsync",
-    ),
     "serf": (
-        "https://archive.apache.org/dist/serf/",
+        "https://dlcdn.apache.org/serf/",
         "serf",
     ),
     "subversion": (
-        "https://archive.apache.org/dist/subversion/",
+        "https://dlcdn.apache.org/subversion/",
         "subversion",
     ),
     "zlib": (
@@ -1910,7 +1906,7 @@ def _check_anaconda() -> str:
 
 
 def _check_apache_dirlist(project: str) -> str:
-    url = f"https://archive.apache.org/dist/{project}/"
+    url = f"https://dlcdn.apache.org/{project}/"
     html = _http_get_text(url)
     pattern = re.compile(rf"{re.escape(project)}-([\d]+(?:\.[\d]+)*)")
     versions = pattern.findall(html)
@@ -2428,6 +2424,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
+    "rsync": _AppCheckSpec("github", _check_github, ("RsyncProject", "rsync")),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
     "screen": _AppCheckSpec("gnu", lambda: _check_gnu("screen"), ()),
@@ -2878,6 +2875,7 @@ def check_app_versions(  # noqa: C901, PLR0915
     if not specs:
         return results
     to_check: list[tuple[str, str, _AppCheckSpec]] = []
+    hold_messages: list[str] = []
     for app_name, version, spec in specs:
         if cache is not None:
             cached = cache.get(app_name)
@@ -2894,13 +2892,15 @@ def check_app_versions(  # noqa: C901, PLR0915
                 if hit is not None:
                     result, held = hit
                     if held:
-                        print(held, file=sys.stderr)
+                        hold_messages.append(held)
                     results.append(result)
                     continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
     total = len(to_check)
     if not to_check:
+        for held in sorted(hold_messages):
+            print(held, file=sys.stderr)
         if cached_count:
             print(
                 f"All {cached_count} apps resolved from cache.",
@@ -2925,9 +2925,6 @@ def check_app_versions(  # noqa: C901, PLR0915
         if cached_count:
             msg += f" ({cached_count} cached)"
         print(msg, file=sys.stderr)
-
-    completed = {"n": 0}
-    completed_lock = threading.Lock()
 
     def _run_check(
         app_name: str, current: str, spec: _AppCheckSpec
@@ -2965,20 +2962,15 @@ def check_app_versions(  # noqa: C901, PLR0915
             # every outdated and pinned-too-high app, sorted, with its source.
             return VersionCheckResult(app_name, current, latest, spec.source, None), None
         except _NetworkUnavailableError:
-            msg = f"{app_name}: check failed (network unavailable)"
             return VersionCheckResult(
                 app_name, current, None, spec.source, "check failed (network unavailable)"
-            ), msg
+            ), None
         except Exception as exc:
             friendly = _friendly_network_error(exc)
-            if friendly:
-                msg = f"{app_name}: {friendly}"
-                error_str = friendly
-            else:
-                msg = f"{app_name}: error: {exc}"
-                error_str = str(exc)
-            return VersionCheckResult(app_name, current, None, spec.source, error_str), msg
+            error_str = friendly if friendly else str(exc)
+            return VersionCheckResult(app_name, current, None, spec.source, error_str), None
 
+    completed = 0
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
             pool.submit(_run_check, app_name, version, spec): app_name
@@ -2987,23 +2979,21 @@ def check_app_versions(  # noqa: C901, PLR0915
         for future in as_completed(futures):
             result, msg = future.result()
             results.append(result)
+            if msg:
+                hold_messages.append(msg)
             if pbar is not None:
-                if msg:
-                    pbar.write(msg, file=sys.stderr)
                 pbar.update(1)
             else:
-                with completed_lock:
-                    completed["n"] += 1
-                    n = completed["n"]
-                if msg:
-                    print(f"  [{n}/{total}] {msg}", file=sys.stderr)
-                elif n % 50 == 0 or n == total:
+                completed += 1
+                if completed % 50 == 0 or completed == total:
                     print(
-                        f"  [{n}/{total}] checked...",
+                        f"  [{completed}/{total}] checked...",
                         file=sys.stderr,
                     )
     if pbar is not None:
         pbar.close()
+    for held in sorted(hold_messages):
+        print(held, file=sys.stderr)
     if cache is not None:
         cache.save()
     results.sort(key=lambda r: r.name)
