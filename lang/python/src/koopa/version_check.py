@@ -110,8 +110,12 @@ class _VersionCache:
             "ts": time.time(),
         }
 
-    def reset(self) -> None:
-        self._data = {}
+    def reset(self, names: list[str] | None = None) -> None:
+        if names is None:
+            self._data = {}
+        else:
+            for name in names:
+                self._data.pop(name, None)
 
     def save(self) -> None:
         os.makedirs(os.path.dirname(self._path), exist_ok=True)
@@ -2818,7 +2822,7 @@ def check_app_versions(  # noqa: C901, PLR0915
     max_workers : int, optional
         Maximum number of concurrent version-check threads.
     reset_cache : bool, optional
-        If True, discard the on-disk version cache before checking.
+        If True, discard cached results for the apps being checked.
 
     Returns
     -------
@@ -2841,8 +2845,6 @@ def check_app_versions(  # noqa: C901, PLR0915
     # app itself is in scope.
     _print_version_exclude_audit(*_audit_version_excludes(json_data))
     cache = _VersionCache()
-    if reset_cache:
-        cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
     holds: dict[str, tuple[str, ...]] = {}
@@ -2874,6 +2876,9 @@ def check_app_versions(  # noqa: C901, PLR0915
     results: list[VersionCheckResult] = list(unsupported)
     if not specs:
         return results
+    if reset_cache:
+        names = [name for name, _, _ in specs] if name_filter or source_filter else None
+        cache.reset(names)
     to_check: list[tuple[str, str, _AppCheckSpec]] = []
     hold_messages: list[str] = []
     for app_name, version, spec in specs:
@@ -2909,18 +2914,18 @@ def check_app_versions(  # noqa: C901, PLR0915
         results.sort(key=lambda r: r.name)
         return results
 
-    uncached_names = [name for name, _, _ in to_check]
     try:
         from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
-        n_uncached = len(uncached_names)
-        desc = f"Checking {n_uncached} {plural(n_uncached, 'app')}"
-        if cached_count:
-            desc += f" ({cached_count} cached)"
-        pbar = tqdm(total=total, desc="Checking", unit="app", dynamic_ncols=True)
+        pbar = tqdm(
+            total=total,
+            desc=f"Checking ({cached_count} cached)",
+            unit="app",
+            dynamic_ncols=True,
+        )
     except ModuleNotFoundError:
         pbar = None
-        n_uncached = len(uncached_names)
+        n_uncached = len(to_check)
         msg = f"Checking {n_uncached} {plural(n_uncached, 'app')}..."
         if cached_count:
             msg += f" ({cached_count} cached)"

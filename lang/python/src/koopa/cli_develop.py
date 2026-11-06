@@ -1010,7 +1010,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
     parser.add_argument(
         "--reset-cache",
         action="store_true",
-        help="clear version cache and force fresh lookups",
+        help="clear cached results for selected apps and force fresh lookups",
     )
     parsed = parser.parse_args(args)
     import os

@@ -8,9 +8,11 @@ import json
 import os
 import ssl
 import subprocess
+import sys
 import urllib.error
 from datetime import date, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -41,7 +43,10 @@ from koopa.version_check import (
     _pip_index_hold_message,
     _pip_index_url,
     _src_url_hold_message,
+    _VersionCache,
+    check_app_versions,
     classify_app,
+    print_report,
     update_app_json,
     update_bootstrap,
 )
@@ -509,6 +514,152 @@ def test_fetch_first_reachable_raises_network_unavailable_when_all_fail(
     monkeypatch.setattr("koopa.version_check._http_get_text", fake_get)
     with pytest.raises(_NetworkUnavailableError):
         _fetch_first_reachable(["https://a.example/sed/", "https://b.example/sed/"])
+
+
+@pytest.mark.parametrize("progress_bar", [True, False])
+def test_check_app_versions_defers_messages_until_progress_finishes(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    progress_bar: bool,
+) -> None:
+    """Failures appear only in the report, and cached and fresh holds follow progress."""
+
+    def fail() -> str:
+        raise TimeoutError("timed out")
+
+    progress_options: list[dict[str, object]] = []
+
+    class Progress:
+        def __init__(self, **kwargs: object) -> None:
+            progress_options.append(kwargs)
+
+        def update(self, _n: int) -> None:
+            pass
+
+        def close(self) -> None:
+            print("progress finished", file=sys.stderr)
+
+    specs = {
+        "cached": _AppCheckSpec("test", lambda: "2.0", ()),
+        "fresh": _AppCheckSpec("test", lambda: "2.0", ()),
+        "failed": _AppCheckSpec("test", fail, ()),
+    }
+    monkeypatch.setattr("koopa.version_check._github_token", "test")
+    monkeypatch.setattr(
+        "koopa.version_check.import_app_json",
+        lambda: {name: {"version": "1.0"} for name in specs},
+    )
+    monkeypatch.setattr("koopa.version_check.classify_app", lambda name, _info: specs[name])
+    monkeypatch.setattr(
+        "koopa.version_check._VersionCache.get",
+        lambda _self, name: "2.0" if name == "cached" else None,
+    )
+    monkeypatch.setattr("koopa.version_check._VersionCache.save", lambda _self: None)
+    monkeypatch.setattr(
+        "koopa.version_check._hold_reason",
+        lambda name, *_args: f"{name}: held",
+    )
+    if progress_bar:
+        monkeypatch.setitem(sys.modules, "tqdm", SimpleNamespace(tqdm=Progress))
+    else:
+        monkeypatch.setitem(sys.modules, "tqdm", None)
+    results = check_app_versions()
+    print_report(results)
+    captured = capsys.readouterr()
+    end = "progress finished" if progress_bar else "[2/2] checked..."
+    assert captured.err.index(end) < captured.err.index("cached: held")
+    assert captured.err.index(end) < captured.err.index("fresh: held")
+    assert "failed:" not in captured.err
+    assert "Failed (1):\n  failed: check failed (network timeout)" in captured.out
+    if progress_bar:
+        assert progress_options[0]["desc"] == "Checking (1 cached)"
+        assert progress_options[0]["total"] == 2
+    else:
+        assert "(1 cached)" in captured.err
+
+
+@pytest.mark.parametrize("filter_by", ["name", "source", "all"])
+def test_reset_cache_preserves_unselected_entries(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, filter_by: str
+) -> None:
+    """A filtered reset evicts only selected entries, including failed lookups."""
+
+    def fail() -> str:
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr("koopa.version_check.xdg_cache_home", lambda: str(tmp_path))
+    monkeypatch.setattr("koopa.version_check._github_token", "test")
+    monkeypatch.setitem(sys.modules, "tqdm", None)
+    monkeypatch.setattr(
+        "koopa.version_check.import_app_json",
+        lambda: {"selected": {"version": "1.0"}, "other": {"version": "1.0"}},
+    )
+    specs = {
+        "selected": _AppCheckSpec("first", fail, ()),
+        "other": _AppCheckSpec("second", lambda: "1.0", ()),
+    }
+    monkeypatch.setattr("koopa.version_check.classify_app", lambda name, _info: specs[name])
+    cache = _VersionCache()
+    cache.put("selected", "1.0", "first")
+    cache.put("other", "1.0", "second")
+    cache.put("unrelated", "1.0", "third")
+    cache.save()
+
+    results = check_app_versions(
+        reset_cache=True,
+        name_filter=["selected"] if filter_by == "name" else None,
+        source_filter="first" if filter_by == "source" else None,
+    )
+    cache = _VersionCache()
+    assert cache.get("selected") is None
+    assert next(result for result in results if result.name == "selected").error is not None
+    assert cache.get("other") == "1.0"
+    assert cache.get("unrelated") == (None if filter_by == "all" else "1.0")
+
+
+@pytest.mark.parametrize(
+    ("name", "url", "listing", "expected"),
+    [
+        ("apr", "https://dlcdn.apache.org/apr/", "apr-1.7.6.tar.gz", "1.7.6"),
+        ("apr-util", "https://dlcdn.apache.org/apr/", "apr-util-1.6.6.tar.gz", "1.6.6"),
+        ("serf", "https://dlcdn.apache.org/serf/", "serf-1.3.10.tar.bz2", "1.3.10"),
+        (
+            "subversion",
+            "https://dlcdn.apache.org/subversion/",
+            "subversion-1.15.0.tar.gz",
+            "1.15.0",
+        ),
+        ("apache-spark", "https://dlcdn.apache.org/spark/", "spark-4.3.0/", "4.3.0"),
+    ],
+)
+def test_apache_release_checks_use_current_distribution(
+    monkeypatch: pytest.MonkeyPatch, name: str, url: str, listing: str, expected: str
+) -> None:
+    """Apache checks parse current releases from the distribution server."""
+
+    def get_text(actual_url: str, **_kwargs: object) -> str:
+        assert actual_url == url
+        return listing
+
+    monkeypatch.setattr("koopa.version_check._http_get_text", get_text)
+    spec = classify_app(name, {"version": "1.0", "url": []})
+    assert spec is not None
+    assert spec.check_fn(*spec.args) == expected
+
+
+def test_rsync_uses_upstream_github_release(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Rsync checks the upstream stable GitHub release instead of the unavailable mirror."""
+    monkeypatch.setattr(
+        "koopa.version_check._http_get_json",
+        lambda url, **_kwargs: (
+            {"tag_name": "v3.5.2"}
+            if url == "https://api.github.com/repos/RsyncProject/rsync/releases/latest"
+            else {}
+        ),
+    )
+    spec = classify_app("rsync", {"version": "1.0", "url": []})
+    assert spec is not None
+    assert spec.check_fn(*spec.args) == "3.5.2"
 
 
 # ── _automake_bin_names (extra_fields_fn: version-suffixed bin names) ──────
