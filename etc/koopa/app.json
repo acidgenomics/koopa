@@ -24,7 +24,7 @@
       "make"
     ],
     "category": "Compression",
-    "date": "2026-10-22",
+    "date": "2026-11-07",
     "default": true,
     "description": "file archiver with a high compression ratio",
     "src_url": "https://github.com/ip7z/7zip/releases/download/{version}/7z{version_nodot}-src.tar.xz",
@@ -33,7 +33,7 @@
       "https://www.7-zip.org/",
       "https://github.com/ip7z/7zip/"
     ],
-    "version": "26.05"
+    "version": "26.06"
   },
   "ack": {
     "bin": [
@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "4951595792859136",
+    "build_id": "6604829099950080",
     "category": "AI",
-    "date": "2026-11-06",
+    "date": "2026-11-07",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "89c9080f26d99bb94c2aed1bf67e0612dc7803a77fc64963e6c95377de6dd0d6269931f413a21ab2ba885c3f4ee8343727520c5ff94740345ac06b4b73085d67",
-      "darwin_amd64": "e1820cab27aa3462383c15d9d69995f3b3fad9ed7cb5208bb0a5d7b8696ef2690baef6df8604bb769d584a1094cc0ed64afe0173ee45523ec36413695b7966ff",
-      "linux_amd64": "aa876c0813572efaf85ed47983cc937414705d40490cbdb54f6e255656a4f8744ae38e457823e924fa8270b348124e0521d3cda3fec6824bb2d14b98a7a05baa",
-      "linux_arm64": "9a141da7b218c640a962188b388905f065cc307425bbeff6e74c07f95266f93526f6d0dee9bad876b79431403f5b30ef4e6514f5f44fbf06dca2a077f54f6175"
+      "darwin_arm64": "3215656cfe5336bce310365f61de7c85b4946a14de506747837106dfaf948dcff303c47e648e06fbbb73a8702538eae171e675f2910e4f49b280549018b46e95",
+      "darwin_amd64": "865f6ec3d6a7bddff3a5bffda6df12db2df8abfedf3064acb4426db2ec0ce59de3d49d1378960df7a4646ffdbd74601f23184f0d23abfc1cd6717a1bd29e6922",
+      "linux_amd64": "e363e1b17daaac2589f18e6973429c039fd5a5e5c15e9c0852fa349836f3992b10fe84732bc8d8c8208e149f0304f15aba9dec696d12efeed03917492c0580eb",
+      "linux_arm64": "c2fac818b3c1bb224079df03a714ccba99728b6a3a41d86d247ab2feb8582a43840c5032f1c2b75e72667623d5503e7ffda2712c4f37b6ee19f99c3fcfb25bae"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.5.2"
+    "version": "1.5.3"
   },
   "apache-airflow": {
     "bin": [
@@ -1864,7 +1864,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-10-31",
+    "date": "2026-11-07",
     "default": true,
     "dependencies": [
       "node"
@@ -1878,7 +1878,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.106-0"
+    "version": "1.0.108-0"
   },
   "coreutils": {
     "bin": [
@@ -2987,7 +2987,7 @@
     ],
     "category": "Filesystem",
     "conda_channel": "conda-forge",
-    "date": "2026-11-05",
+    "date": "2026-11-07",
     "default": true,
     "description": "simple, fast alternative to the find command",
     "installer": "conda-package",
@@ -2995,7 +2995,7 @@
     "url": [
       "https://github.com/sharkdp/fd/"
     ],
-    "version": "10.5.1"
+    "version": "10.5.2"
   },
   "ffmpeg": {
     "bin": [
@@ -3761,7 +3761,7 @@
       "glances"
     ],
     "category": "Terminal",
-    "date": "2026-10-11",
+    "date": "2026-11-07",
     "default": false,
     "dependencies": [
       "python"
@@ -3776,7 +3776,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.5.8"
+    "version": "4.5.9"
   },
   "glib": {
     "build_dependencies": [
@@ -4810,7 +4810,7 @@
       "jupyter-lab"
     ],
     "category": "Python",
-    "date": "2026-10-30",
+    "date": "2026-11-07",
     "default": true,
     "dependencies": [
       "python"
@@ -4827,7 +4827,7 @@
       "https://jupyter.org/",
       "https://pypi.org/project/jupyterlab/"
     ],
-    "version": "4.6.5"
+    "version": "4.6.6"
   },
   "just": {
     "bin": [
@@ -6320,7 +6320,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-11-06",
+    "date": "2026-11-07",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6330,7 +6330,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.11.2"
+    "version": "2026.11.3"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7350,7 +7350,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-11-06",
+    "date": "2026-11-07",
     "default": false,
     "dependencies": [
       "python"
@@ -7362,7 +7362,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.18.14"
+    "version": "1.18.16"
   },
   "pixi": {
     "bin": [
@@ -8492,7 +8492,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-10-10",
+    "date": "2026-11-07",
     "default": true,
     "description": "sync files to and from cloud storage providers",
     "installer": "conda-package",
@@ -8503,7 +8503,7 @@
     "url": [
       "https://rclone.org/"
     ],
-    "version": "1.75.2"
+    "version": "1.76.0"
   },
   "readline": {
     "build_dependencies": [
@@ -9320,7 +9320,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-11-06",
+    "date": "2026-11-07",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9330,7 +9330,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "16a561eff48430e7ced9aa9abb446b2c71a5c7c6"
+    "version": "f81742f66b6cd41099a4773c5adc07e6c272d7a5"
   },
   "spacevim": {
     "date": "2026-05-10",
