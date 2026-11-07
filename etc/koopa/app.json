@@ -2588,7 +2588,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-11-05",
+    "date": "2026-11-07",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2598,7 +2598,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "1e65877cf5722edf1da71cd8ae1a05235c8d5471"
+    "version": "f2233fe2f857a7104190a05b13481a3f5702e678"
   },
   "dracula-pro": {
     "category": "Dotfile",
