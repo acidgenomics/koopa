@@ -1,6 +1,7 @@
 """Configure dark/light color-mode and re-render mode-dependent dotfiles."""
 
 import fcntl
+import json
 import os
 import re
 import subprocess
@@ -19,6 +20,64 @@ from koopa.tmux import reload_tmux_config, warn_tmux_stale
 _CHEZMOI_STRIP_RE = re.compile(
     r"^(?:private_|readonly_|empty_|encrypted_|exact_|once_|run_|modify_|create_|literal_)*"
 )
+
+# Claude Code custom theme files under ``~/.claude/themes/``.  ``settings.json``
+# selects the auto theme once and never changes; a color-mode flip rewrites the
+# auto file in place, and a running Claude session reloads it without a restart.
+_CLAUDE_AUTO_THEME_FILE = "dracula-pro-auto.json"
+_CLAUDE_AUTO_THEME_NAME = "Dracula Pro Auto"
+_CLAUDE_DARK_THEME_FILE = "dracula-pro.json"
+_CLAUDE_LIGHT_THEME_FILE = "dracula-pro-alucard.json"
+
+
+def _sync_claude_auto_theme(mode: str, themes_dir: str) -> bool:
+    """Write the current mode's Dracula Pro palette into the Claude auto theme.
+
+    Copies ``dracula-pro.json`` (dark) or ``dracula-pro-alucard.json`` (light)
+    to ``dracula-pro-auto.json`` with the display name ``Dracula Pro Auto``.
+    Claude Code reloads a theme file that changes in place, so an open session
+    follows the OS mode without a restart.  Does nothing unless both source
+    palettes exist, which is how a host without Dracula Pro is detected.
+
+    Parameters
+    ----------
+    mode : str
+        Color mode, ``"light"`` or ``"dark"``.
+    themes_dir : str
+        Claude Code theme directory, normally ``~/.claude/themes``.
+
+    Returns
+    -------
+    bool
+        True when the auto theme file was written, False when it was already
+        current, a source palette is missing, or a file could not be read or
+        written.  It never raises: the caller runs it before the color-mode
+        marker check, and a raise there would block every later flip.
+    """
+    dark = os.path.join(themes_dir, _CLAUDE_DARK_THEME_FILE)
+    light = os.path.join(themes_dir, _CLAUDE_LIGHT_THEME_FILE)
+    if not (os.path.isfile(dark) and os.path.isfile(light)):
+        return False
+    source = light if mode == "light" else dark
+    dest = os.path.join(themes_dir, _CLAUDE_AUTO_THEME_FILE)
+    try:
+        with open(source) as fh:
+            theme = json.load(fh)
+        if not isinstance(theme, dict):
+            warn(f"Claude theme {source} is not a JSON object; skipping {dest}.")
+            return False
+        theme["name"] = _CLAUDE_AUTO_THEME_NAME
+        text = json.dumps(theme, indent=2) + "\n"
+        if os.path.isfile(dest):
+            with open(dest) as fh:
+                if fh.read() == text:
+                    return False
+        with open(dest, "w") as fh:
+            fh.write(text)
+    except (OSError, json.JSONDecodeError) as exc:
+        warn(f"Could not update Claude theme {dest}: {exc}")
+        return False
+    return True
 
 
 def _chezmoi_source_to_target(source_root: str, source_path: str) -> str:
@@ -160,7 +219,7 @@ def _apply_color_mode_tree(
     *,
     verbose: bool,
     required: bool,
-) -> tuple[set[str], set[str]] | None:
+) -> tuple[set[str], set[str]]:
     """Apply one chezmoi tree's color-mode-branching targets.
 
     Returns ``(candidate_rels, applied_rels)`` -- every KOOPA_COLOR_MODE target
@@ -172,14 +231,15 @@ def _apply_color_mode_tree(
     warning is the fix for the permanent false alarm this module used to emit on
     every flip once a target legitimately moved to an overlay tree.
 
-    Returns ``None`` only when ``required`` is true and the managed-probe failed --
-    the caller must treat that as a hard, silent abort of the whole color-mode run
-    (matching this module's pre-multi-tree behavior: warn and return without
-    writing the applied-marker, never raise).  A non-required tree never returns
-    ``None``: a probe failure there warns and yields empty sets, skipping only that
-    tree -- ``_chezmoi_managed()`` is documented to "never block the configure
-    run," and inverting an empty result into "apply everything" would reintroduce
-    the bug that filter exists to prevent.
+    When ``required`` is true and the managed-probe failed, this raises
+    ``RuntimeError``: nothing was applied, so the run must not report success,
+    and the applied-marker stays unwritten.  ``_chezmoi_managed()`` has already
+    printed chezmoi's own error.  An earlier version returned ``None`` here and
+    the caller returned quietly, so ``configure_app`` printed "Successfully
+    configured" for a run that applied nothing.  A non-required tree never
+    raises: a probe failure there yields empty sets, skipping only that tree.
+    Never invert an empty result into "apply everything"; that would
+    reintroduce the bug the managed filter exists to prevent.
 
     ``required`` otherwise controls apply-failure handling.  The main tree passes
     ``required=True``: an apply-subprocess failure raises (via ``check=True``),
@@ -213,18 +273,25 @@ def _apply_color_mode_tree(
 
     Returns
     -------
-    tuple[set[str], set[str]] | None
+    tuple[set[str], set[str]]
         A ``(candidate_rels, applied_rels)`` pair of target paths (relative
         to ``~``): every color-mode target this tree's templates produce,
-        and the subset actually applied. ``None`` only when ``required`` is
-        true and the managed-probe failed.
+        and the subset actually applied.
+
+    Raises
+    ------
+    RuntimeError
+        If ``required`` is true and the managed-probe failed.
     """
     if not os.path.isdir(source):
         return set(), set()
     managed = _chezmoi_managed(chezmoi, source, env, config=config)
     if not managed:
+        if required:
+            msg = f"chezmoi managed failed for the {tree_label} tree; nothing was applied."
+            raise RuntimeError(msg)
         warn(f"chezmoi managed probe returned nothing for the {tree_label} tree; skipping apply.")
-        return None if required else (set(), set())
+        return set(), set()
     home = os.path.expanduser("~")
     candidates = _scan_color_mode_candidates(source)
     candidate_rels = {os.path.relpath(c, home) for c in candidates}
@@ -311,10 +378,16 @@ def main(
     marker_file = os.path.join(home, ".cache", "koopa", "color-mode-applied")
     ts = datetime.now().astimezone().isoformat(timespec="seconds")
 
+    # Claude Code: rewrite the auto theme in place so open sessions reload it.
+    # This runs before the marker fast path and needs no chezmoi, so a chezmoi
+    # failure or a stale marker can never leave the Claude theme behind.  It is
+    # idempotent and never raises.
+    new_mode = os_appearance_mode()
+    _sync_claude_auto_theme(new_mode, os.path.join(home, ".claude", "themes"))
+
     # Fast path (lock-free): if the marker already matches the current OS mode,
     # skip entirely.  This keeps the thundering herd from N new shells cheap —
     # no lock contention in the common already-converged case.
-    new_mode = os_appearance_mode()
     if os.path.isfile(marker_file):
         with open(marker_file) as fh:
             if fh.read().strip() == new_mode:
@@ -380,7 +453,9 @@ def main(
                 False,
             ),
         ):
-            result = _apply_color_mode_tree(
+            # A main-tree probe failure raises here, so the run reports an error
+            # and the applied-marker stays unwritten.
+            candidate_rels, applied_rels = _apply_color_mode_tree(
                 chezmoi,
                 env,
                 tree_label,
@@ -389,12 +464,6 @@ def main(
                 verbose=verbose,
                 required=required,
             )
-            # None only from the required (main) tree's managed-probe failure --
-            # abort the whole run without writing the applied-marker, matching
-            # this module's pre-multi-tree behavior.
-            if result is None:
-                return
-            candidate_rels, applied_rels = result
             all_candidates |= candidate_rels
             all_applied |= applied_rels
 

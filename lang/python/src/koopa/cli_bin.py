@@ -1227,11 +1227,40 @@ def _handle_update_today_bucket(args: list[str]) -> None:
         ln(dated_dir, today_link)
 
 
+def _handle_background_tasks(args: list[str]) -> None:
+    """Handle ``koopa run background-tasks``.
+
+    Run each background task once: the macOS appearance schedule, the
+    color-mode sync, the today-bucket links, and screenshot organizing.  The
+    ``com.acidgenomics.koopa`` launch agent calls this on every trigger.  Each
+    task decides for itself whether to act, so it is safe to run at any time.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand. This subcommand takes no
+        arguments; any value here causes argparse to exit with an error.
+    """
+    import argparse
+
+    from koopa.background_tasks import run_background_tasks
+
+    parser = argparse.ArgumentParser(
+        prog="background-tasks",
+        description="Run each koopa background task once.",
+    )
+    parser.parse_args(args)
+    failed = run_background_tasks()
+    if failed:
+        sys.exit(1)
+
+
 # -- Dispatch table ------------------------------------------------------------
 
 
 _HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "autopad-zeros": _handle_autopad_zeros,
+    "background-tasks": _handle_background_tasks,
     "check-release-notifications": _handle_check_release_notifications,
     "clone": _handle_clone,
     "convert-svg-to-png": _handle_convert_svg_to_png,

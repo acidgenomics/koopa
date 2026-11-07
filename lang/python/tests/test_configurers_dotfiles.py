@@ -161,6 +161,25 @@ def test_chezmoi_managed_subprocess_error(monkeypatch: pytest.MonkeyPatch, tmp_p
     assert result == set()
 
 
+def test_chezmoi_managed_failure_warns_with_stderr(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A failed probe prints chezmoi's own error, so the cause is not hidden."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+    message = "chezmoi: Library/LaunchAgents/x.plist: inconsistent state (x.plist.tmpl, remove)"
+
+    def fake_run(args: list[str], **_: object) -> subprocess.CompletedProcess:
+        raise subprocess.CalledProcessError(1, args, output="", stderr=message + "\n")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    assert _chezmoi_managed("/usr/bin/chezmoi", str(source), {}) == set()
+    captured = capsys.readouterr()
+    combined = captured.err + captured.out
+    assert "inconsistent state" in combined
+    assert str(source) in combined
+
+
 def test_chezmoi_managed_oserror(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Returns empty set on OSError — never raises."""
     source = tmp_path / "chezmoi"

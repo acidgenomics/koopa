@@ -208,6 +208,7 @@ _koopa_complete() {
                 'run')
                     args+=(
                         'autopad-zeros'
+                        'background-tasks'
                         'check-release-notifications'
                         'clone'
                         'convert-svg-to-png'

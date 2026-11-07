@@ -263,7 +263,7 @@ is not.
 ### Avoiding a write race on settings.json
 
 `settings.json` is a contested file: chezmoi writes it, VS Code writes it, and
-koopa's background `com.koopa.color-mode-sync` watcher re-renders it on every
+koopa's background `com.acidgenomics.koopa` launch agent re-renders it on every
 OS dark/light flip if the template contains `KOOPA_COLOR_MODE`.
 
 **Rule:** do NOT put `KOOPA_COLOR_MODE`-conditional logic in `settings.json.tmpl`.

@@ -727,6 +727,7 @@ _koopa_run() {
     local -a cmds
     cmds=(
         'autopad-zeros'
+        'background-tasks'
         'check-release-notifications'
         'clone'
         'convert-svg-to-png'

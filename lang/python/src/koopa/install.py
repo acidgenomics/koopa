@@ -1265,9 +1265,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 link_in_fish_completions(config.prefix)
                 link_in_zsh_completions(config.prefix)
                 link_in_powershell_completions(config.prefix)
-        elif config.mode == "system":
-            if config.update_ldconfig:
-                run("ldconfig", sudo=True, check=False)
+        elif config.mode == "system" and config.update_ldconfig:
+            run("ldconfig", sudo=True, check=False)
     except Exception:
         opt_link = os.path.join(opt_prefix(), config.name)
         if os.path.islink(opt_link):
@@ -2762,7 +2761,7 @@ def install_shared_apps(mode: str = "default") -> None:
         msg = "No longer supported for Intel Macs."
         raise RuntimeError(msg)
     try:
-        import psutil  # type: ignore[import-untyped]  # ty: ignore[unresolved-import]
+        import psutil  # type: ignore[import-untyped]  # ty: ignore[import-not-found]
 
         mem_gb = psutil.virtual_memory().total / (1024**3)
         mem_gb_cutoff = 6
