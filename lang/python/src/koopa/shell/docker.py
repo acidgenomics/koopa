@@ -370,11 +370,10 @@ def run(
         from koopa.aws import aws_ecr_login_private
 
         aws_ecr_login_private()
-    elif image.startswith("public.ecr.aws/"):
-        if os.environ.get("AWS_ECR_PROFILE"):
-            from koopa.aws import aws_ecr_login_public
+    elif image.startswith("public.ecr.aws/") and os.environ.get("AWS_ECR_PROFILE"):
+        from koopa.aws import aws_ecr_login_public
 
-            aws_ecr_login_public()
+        aws_ecr_login_public()
     _docker("pull", image)
     run_args: list[str] = ["--interactive", "--tty"]
     for var in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):

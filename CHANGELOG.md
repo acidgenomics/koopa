@@ -1,5 +1,34 @@
 # Changelog
 
+## koopa 0.39.0 (2026-11-09)
+
+Major changes:
+
+- Added `koopa run background-tasks` to coordinate scheduled macOS appearance
+  changes, color-mode synchronization, today-bucket links, and screenshot
+  organization. Tasks run with mutual exclusion, and a failure does not block
+  the remaining tasks.
+- Color-mode updates now re-render mode-aware files across the main, work, and
+  private chezmoi trees, and update Claude Code's Dracula Pro auto theme in
+  place.
+- Added `koopa run organize-screenshots` to rename screenshots and recordings
+  to 24-hour timestamps and move them into dated directories, with recursive,
+  dry-run, and collision-safe handling.
+- Version checks now filter prereleases and hold updates when a release tarball
+  or configured package index lacks the candidate. Scoped cache resets now
+  preserve cached results for unselected apps.
+
+Minor changes:
+
+- Removed unsupported app entries, including `mcp-atlassian`, `rmate`, and
+  `ronn-ng`, and retired the legacy SoX entry.
+- Improved yt-dlp installation dependencies and refreshed bootstrap and
+  routine application versions.
+
+New apps:
+
+- Added sox-ng 14.8.1, a maintained fork of SoX (CLI, non-default).
+
 ## koopa 0.38.0 (2026-11-03)
 
 Major changes:

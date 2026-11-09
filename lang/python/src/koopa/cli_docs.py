@@ -238,6 +238,7 @@ DEVELOP_SYNOPSIS: dict[str, str] = {
 
 RUN_DESCRIPTIONS: dict[str, str] = {
     "autopad-zeros": "Autopad zeros in numbered file names.",
+    "background-tasks": "Run each koopa background task once (used by the launch agent).",
     "check-release-notifications": "Compare GitHub release notifications against app.json.",
     "clone": "Clone directory contents using rsync.",
     "convert-svg-to-png": "Convert SVG files to PNG using macOS sips.",

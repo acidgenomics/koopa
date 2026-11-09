@@ -132,6 +132,7 @@ def sanitize_version(version: str) -> str:
     explicit pre-release marker (e.g. 'beta2' in '3.15.0beta2') so that
     downstream pre-release detection still works after sanitization. A bare
     trailing letter with no marker word (e.g. '1.1.1w') is preserved as-is.
+    Date-formatted versions retain their month and day.
 
     Parameters
     ----------
@@ -146,5 +147,7 @@ def sanitize_version(version: str) -> str:
     v = version.strip()
     if v.startswith("v") or v.startswith("V"):
         v = v[1:]
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
+        return v
     match = _SANITIZE_VERSION_RE.match(v)
     return match.group(1) if match else v

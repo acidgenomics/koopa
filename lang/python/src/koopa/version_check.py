@@ -110,8 +110,12 @@ class _VersionCache:
             "ts": time.time(),
         }
 
-    def reset(self) -> None:
-        self._data = {}
+    def reset(self, names: list[str] | None = None) -> None:
+        if names is None:
+            self._data = {}
+        else:
+            for name in names:
+                self._data.pop(name, None)
 
     def save(self) -> None:
         os.makedirs(os.path.dirname(self._path), exist_ok=True)
@@ -596,6 +600,11 @@ def _check_github(owner: str, repo: str) -> str:
     return _sanitize_github_tag(tag, repo)
 
 
+def _check_codeberg(owner: str, repo: str) -> str:
+    data = _http_get_json(f"https://codeberg.org/api/v1/repos/{owner}/{repo}/releases/latest")
+    return _sanitize_github_tag(data["tag_name"], repo)
+
+
 def _check_pypi(package: str) -> str:
     """Return the newest stable, non-yanked PyPI release.
 
@@ -693,6 +702,39 @@ def _check_conda(
         msg = f"No version found via Anaconda API for {channel}/{package}"
         raise RuntimeError(msg)
     return version
+
+
+def _check_conda_configured(
+    package: str,
+    channel: str = "conda-forge",
+    *,
+    subdirs: tuple[str, ...] = ("linux-64",),
+) -> str:
+    """Return the newest conda version from the channel this machine installs from.
+
+    ``_check_conda`` given a bare channel name searches public conda-forge.
+    The installer resolves that name to the configured mirror URL. A mirror can
+    lag public conda-forge, so a pin from the public channel can name a build
+    that the install step cannot find. This check resolves the channel the same
+    way as the installer.
+
+    Parameters
+    ----------
+    package : str
+        Conda package name.
+    channel : str
+        Conda channel name to resolve, such as ``"conda-forge"``.
+    subdirs : tuple[str, ...]
+        Platform subdirectories to search. The lowest of the newest versions wins.
+
+    Returns
+    -------
+    str
+        Lowest of the newest versions found in each searched subdirectory.
+    """
+    from koopa.install import _resolve_conda_channel_url
+
+    return _check_conda(package, _resolve_conda_channel_url(channel), subdirs=subdirs)
 
 
 class _NetworkUnavailableError(RuntimeError):
@@ -1412,7 +1454,7 @@ _GITLAB_MAP: dict[str, tuple[str, str]] = {
 
 _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
     "apr": (
-        "https://archive.apache.org/dist/apr/",
+        "https://dlcdn.apache.org/apr/",
         "apr",
     ),
     "armadillo": (
@@ -1420,7 +1462,7 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "armadillo",
     ),
     "apr-util": (
-        "https://archive.apache.org/dist/apr/",
+        "https://dlcdn.apache.org/apr/",
         "apr-util",
     ),
     "bzip2": (
@@ -1496,16 +1538,12 @@ _DIR_LISTING_MAP: dict[str, tuple[str, str]] = {
         "pkg-config",
     ),
     # NOTE: pkg-config is overridden in _SPECIAL_CASES to handle SSL failures gracefully.
-    "rsync": (
-        "https://download.samba.org/pub/rsync/src/",
-        "rsync",
-    ),
     "serf": (
-        "https://archive.apache.org/dist/serf/",
+        "https://dlcdn.apache.org/serf/",
         "serf",
     ),
     "subversion": (
-        "https://archive.apache.org/dist/subversion/",
+        "https://dlcdn.apache.org/subversion/",
         "subversion",
     ),
     "zlib": (
@@ -1877,7 +1915,7 @@ def _check_anaconda() -> str:
 
 
 def _check_apache_dirlist(project: str) -> str:
-    url = f"https://archive.apache.org/dist/{project}/"
+    url = f"https://dlcdn.apache.org/{project}/"
     html = _http_get_text(url)
     pattern = re.compile(rf"{re.escape(project)}-([\d]+(?:\.[\d]+)*)")
     versions = pattern.findall(html)
@@ -2285,6 +2323,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "flac": _AppCheckSpec("github", _check_github, ("xiph", "flac")),
+    "haskell-ghcup": _AppCheckSpec("codeberg", _check_codeberg, ("haskell", "ghcup-hs")),
     "hdf5": _AppCheckSpec("github", _check_github, ("HDFGroup", "hdf5")),
     "icu4c": _AppCheckSpec("github", _check_github, ("unicode-org", "icu")),
     "isl": _AppCheckSpec(
@@ -2310,7 +2349,11 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         lambda: _check_conda("awscli", "conda-forge", subdirs=("linux-64", "osx-arm64")),
         (),
     ),
-    "vim": _AppCheckSpec("github", _check_github, ("vim", "vim")),
+    "vim": _AppCheckSpec(
+        "conda",
+        lambda: _check_conda_configured("vim", "conda-forge", subdirs=("linux-64", "osx-arm64")),
+        (),
+    ),
     "boost": _AppCheckSpec("github", _check_boost, ()),
     "bash": _AppCheckSpec(
         "gnu",
@@ -2391,6 +2434,8 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         ),
         (),
     ),
+    "rsync": _AppCheckSpec("github", _check_github, ("RsyncProject", "rsync")),
+    "sox-ng": _AppCheckSpec("codeberg", _check_codeberg, ("sox_ng", "sox_ng")),
     "rust": _AppCheckSpec("github", _check_github, ("rust-lang", "rust")),
     "pkg-config": _AppCheckSpec("dirlist", _check_pkg_config, ()),
     "screen": _AppCheckSpec("gnu", lambda: _check_gnu("screen"), ()),
@@ -2784,7 +2829,7 @@ def check_app_versions(  # noqa: C901, PLR0915
     max_workers : int, optional
         Maximum number of concurrent version-check threads.
     reset_cache : bool, optional
-        If True, discard the on-disk version cache before checking.
+        If True, discard cached results for the apps being checked.
 
     Returns
     -------
@@ -2807,8 +2852,6 @@ def check_app_versions(  # noqa: C901, PLR0915
     # app itself is in scope.
     _print_version_exclude_audit(*_audit_version_excludes(json_data))
     cache = _VersionCache()
-    if reset_cache:
-        cache.reset()
     specs: list[tuple[str, str, _AppCheckSpec]] = []
     unsupported: list[VersionCheckResult] = []
     holds: dict[str, tuple[str, ...]] = {}
@@ -2840,7 +2883,11 @@ def check_app_versions(  # noqa: C901, PLR0915
     results: list[VersionCheckResult] = list(unsupported)
     if not specs:
         return results
+    if reset_cache:
+        names = [name for name, _, _ in specs] if name_filter or source_filter else None
+        cache.reset(names)
     to_check: list[tuple[str, str, _AppCheckSpec]] = []
+    hold_messages: list[str] = []
     for app_name, version, spec in specs:
         if cache is not None:
             cached = cache.get(app_name)
@@ -2857,13 +2904,15 @@ def check_app_versions(  # noqa: C901, PLR0915
                 if hit is not None:
                     result, held = hit
                     if held:
-                        print(held, file=sys.stderr)
+                        hold_messages.append(held)
                     results.append(result)
                     continue
         to_check.append((app_name, version, spec))
     cached_count = len(specs) - len(to_check)
     total = len(to_check)
     if not to_check:
+        for held in sorted(hold_messages):
+            print(held, file=sys.stderr)
         if cached_count:
             print(
                 f"All {cached_count} apps resolved from cache.",
@@ -2872,25 +2921,22 @@ def check_app_versions(  # noqa: C901, PLR0915
         results.sort(key=lambda r: r.name)
         return results
 
-    uncached_names = [name for name, _, _ in to_check]
     try:
         from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
-        n_uncached = len(uncached_names)
-        desc = f"Checking {n_uncached} {plural(n_uncached, 'app')}"
-        if cached_count:
-            desc += f" ({cached_count} cached)"
-        pbar = tqdm(total=total, desc="Checking", unit="app", dynamic_ncols=True)
+        pbar = tqdm(
+            total=total,
+            desc=f"Checking ({cached_count} cached)",
+            unit="app",
+            dynamic_ncols=True,
+        )
     except ModuleNotFoundError:
         pbar = None
-        n_uncached = len(uncached_names)
+        n_uncached = len(to_check)
         msg = f"Checking {n_uncached} {plural(n_uncached, 'app')}..."
         if cached_count:
             msg += f" ({cached_count} cached)"
         print(msg, file=sys.stderr)
-
-    completed = {"n": 0}
-    completed_lock = threading.Lock()
 
     def _run_check(
         app_name: str, current: str, spec: _AppCheckSpec
@@ -2928,20 +2974,15 @@ def check_app_versions(  # noqa: C901, PLR0915
             # every outdated and pinned-too-high app, sorted, with its source.
             return VersionCheckResult(app_name, current, latest, spec.source, None), None
         except _NetworkUnavailableError:
-            msg = f"{app_name}: check failed (network unavailable)"
             return VersionCheckResult(
                 app_name, current, None, spec.source, "check failed (network unavailable)"
-            ), msg
+            ), None
         except Exception as exc:
             friendly = _friendly_network_error(exc)
-            if friendly:
-                msg = f"{app_name}: {friendly}"
-                error_str = friendly
-            else:
-                msg = f"{app_name}: error: {exc}"
-                error_str = str(exc)
-            return VersionCheckResult(app_name, current, None, spec.source, error_str), msg
+            error_str = friendly if friendly else str(exc)
+            return VersionCheckResult(app_name, current, None, spec.source, error_str), None
 
+    completed = 0
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
             pool.submit(_run_check, app_name, version, spec): app_name
@@ -2950,23 +2991,21 @@ def check_app_versions(  # noqa: C901, PLR0915
         for future in as_completed(futures):
             result, msg = future.result()
             results.append(result)
+            if msg:
+                hold_messages.append(msg)
             if pbar is not None:
-                if msg:
-                    pbar.write(msg, file=sys.stderr)
                 pbar.update(1)
             else:
-                with completed_lock:
-                    completed["n"] += 1
-                    n = completed["n"]
-                if msg:
-                    print(f"  [{n}/{total}] {msg}", file=sys.stderr)
-                elif n % 50 == 0 or n == total:
+                completed += 1
+                if completed % 50 == 0 or completed == total:
                     print(
-                        f"  [{n}/{total}] checked...",
+                        f"  [{completed}/{total}] checked...",
                         file=sys.stderr,
                     )
     if pbar is not None:
         pbar.close()
+    for held in sorted(hold_messages):
+        print(held, file=sys.stderr)
     if cache is not None:
         cache.save()
     results.sort(key=lambda r: r.name)

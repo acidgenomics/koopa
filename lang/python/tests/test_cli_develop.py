@@ -273,6 +273,34 @@ def test_color_mode_audit_missing_log_is_pass(
     assert "PASS" in captured.out
 
 
+def test_detect_color_mode_thrash_ignores_scheduled_flips() -> None:
+    """Applies hours apart are normal 09:00/17:00 flips, not thrash.
+
+    The launch agent writes no "already applied" line between flips, so two
+    days of the schedule give four alternating applies with nothing between.
+    """
+    lines = [
+        "[2026-11-06T09:00:08-05:00] Applying color mode: light\n",
+        "[2026-11-06T17:00:08-05:00] Applying color mode: dark\n",
+        "[2026-11-07T09:00:08-05:00] Applying color mode: light\n",
+        "[2026-11-07T17:00:08-05:00] Applying color mode: dark\n",
+    ]
+    longest, _ = _detect_color_mode_thrash(lines)
+    assert longest == 1
+
+
+def test_detect_color_mode_thrash_still_flags_fast_flips() -> None:
+    """Alternating applies seconds apart still count as one thrash run."""
+    lines = [
+        "[2026-11-07T09:00:01-05:00] Applying color mode: light\n",
+        "[2026-11-07T09:00:03-05:00] Applying color mode: dark\n",
+        "[2026-11-07T09:00:05-05:00] Applying color mode: light\n",
+        "[2026-11-07T09:00:07-05:00] Applying color mode: dark\n",
+    ]
+    longest, _ = _detect_color_mode_thrash(lines)
+    assert longest == 4
+
+
 # -- check-skills ---------------------------------------------------------------
 
 _CLEAN_SKILL_MD = """---

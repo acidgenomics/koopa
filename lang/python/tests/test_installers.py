@@ -20,6 +20,7 @@ from koopa.installers import (
     has_python_installer,
     neovim,
     python_app,
+    sox_ng,
 )
 from koopa.installers import pyright as pyright_installer
 from koopa.io import import_app_json
@@ -29,6 +30,20 @@ _BANNED_CPU_COUNT_PATTERNS = (
     "multiprocessing.cpu_count(",
     "from multiprocessing import cpu_count",
 )
+
+
+def test_sox_ng_installs_legacy_command() -> None:
+    """Enable upstream's compatibility links, including the original sox command."""
+    with (
+        patch.object(sox_ng, "activate_app_deps") as activate,
+        patch.object(sox_ng, "download_extract_cd") as download,
+        patch.object(sox_ng, "make_build") as build,
+    ):
+        sox_ng.main(name="sox-ng", version="14.8.1", prefix="/prefix")
+    download.assert_called_once_with()
+    build.assert_called_once_with(
+        conf_args=["--prefix=/prefix", "--enable-replace"], env=activate.return_value
+    )
 
 
 def test_no_installer_bypasses_koopa_cpu_count() -> None:

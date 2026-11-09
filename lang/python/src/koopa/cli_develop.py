@@ -1010,7 +1010,7 @@ def _handle_check_app_versions(args: list[str]) -> None:
     parser.add_argument(
         "--reset-cache",
         action="store_true",
-        help="clear version cache and force fresh lookups",
+        help="clear cached results for selected apps and force fresh lookups",
     )
     parsed = parser.parse_args(args)
     import os
@@ -2638,6 +2638,11 @@ def _detect_color_mode_thrash(
     Rules:
     - ``Applying color mode: X`` — extends the alternating run when X differs
       from the previous apply; resets to run of 1 when X repeats.
+    - Two timestamped applies more than 10 minutes apart are separate events,
+      not thrash, so the run resets.  The ``com.acidgenomics.koopa`` launch
+      agent skips the configurer when nothing changed, so its log has no
+      ``Color mode already applied:`` lines between the scheduled 09:00 and
+      17:00 flips; without this rule two normal days would read as thrash.
     - ``Color mode already applied:`` — resets the run (stabilization seen).
     - Any other line is ignored.
 
@@ -2655,9 +2660,19 @@ def _detect_color_mode_thrash(
         (mode, timestamp) pairs making up that run.
     """
     import re
+    from datetime import datetime, timedelta
 
     apply_re = re.compile(r"(?:\[(?P<ts>[^\]]+)\]\s+)?Applying color mode:\s+(?P<mode>\S+)")
     stable_re = re.compile(r"Color mode already applied:")
+    window = timedelta(minutes=10)
+
+    def _parse_ts(ts: str | None) -> datetime | None:
+        if ts is None:
+            return None
+        try:
+            return datetime.fromisoformat(ts)
+        except ValueError:
+            return None
 
     best_len = 0
     best_run: list[tuple[str, str | None]] = []
@@ -2668,8 +2683,13 @@ def _detect_color_mode_thrash(
         if m:
             mode = m.group("mode")
             ts = m.group("ts")
+            prev_at = _parse_ts(cur_run[-1][1]) if cur_run else None
+            cur_at = _parse_ts(ts)
             if cur_run and cur_run[-1][0] == mode:
                 # Same mode repeated — machine or human mash without flip; reset.
+                cur_run = [(mode, ts)]
+            elif prev_at is not None and cur_at is not None and cur_at - prev_at > window:
+                # Far apart in time: a separate flip, not thrash; reset.
                 cur_run = [(mode, ts)]
             else:
                 cur_run.append((mode, ts))
@@ -2719,8 +2739,7 @@ def _handle_color_mode_audit(args: list[str]) -> None:
         metavar="PATH",
         default=None,
         help=(
-            "path to the log file (default: ~/Library/Logs/koopa-color-mode-sync.log "
-            "on macOS; journalctl on Linux)"
+            "path to the log file (default: ~/Library/Logs/koopa.log on macOS; journalctl on Linux)"
         ),
     )
     parser.add_argument(
@@ -2741,9 +2760,9 @@ def _handle_color_mode_audit(args: list[str]) -> None:
         with open(parsed.log) as fh:
             lines = fh.readlines()
     elif platform.system() == "Darwin":
-        default_log = os.path.join(
-            os.path.expanduser("~"), "Library", "Logs", "koopa-color-mode-sync.log"
-        )
+        # The com.acidgenomics.koopa launch agent writes every background
+        # task, color-mode sync included, to this one log.
+        default_log = os.path.join(os.path.expanduser("~"), "Library", "Logs", "koopa.log")
         if not os.path.isfile(default_log):
             alert_note("No color-mode sync log found — skipping audit.")
             print("color-mode-audit: PASS (no log)")

@@ -45,6 +45,10 @@ def main(
             "-DZSTD_LZMA_SUPPORT=ON",
             "-DZSTD_PROGRAMS_LINK_SHARED=ON",
             "-DZSTD_ZLIB_SUPPORT=ON",
+            # lz4 1.11.0 removed the obsolete unprefixed enum aliases that zstd
+            # 1.5.7 fileio.c still uses. Map the old type name to the new one.
+            # This replaces the default Release flags, so repeat them.
+            "-DCMAKE_C_FLAGS_RELEASE=-O3 -DNDEBUG -DcontentChecksum_t=LZ4F_contentChecksum_t",
             f"-DLIBLZ4_INCLUDE_DIR={lz4_prefix}/include",
             f"-DLIBLZ4_LIBRARY={lz4_prefix}/lib/liblz4.{ext}",
             f"-DLIBLZMA_INCLUDE_DIR={xz_prefix}/include",

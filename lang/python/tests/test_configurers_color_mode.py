@@ -1,5 +1,6 @@
 """Tests for koopa.configurers.color_mode helpers."""
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -8,7 +9,9 @@ from koopa.configurers.color_mode import (
     _apply_color_mode_tree,
     _chezmoi_source_to_target,
     _discover_color_mode_targets,
+    _sync_claude_auto_theme,
 )
+from koopa.configurers.color_mode import main as color_mode_main
 
 # ---------------------------------------------------------------------------
 # _chezmoi_source_to_target
@@ -193,25 +196,43 @@ def test_apply_color_mode_tree_unmanaged_target_now_applied_by_overlay_tree(
     assert "Warning" not in (captured.err + captured.out)
 
 
-def test_apply_color_mode_tree_probe_failure_never_raises(
+def test_apply_color_mode_tree_required_probe_failure_raises(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    """An empty managed set warns and skips this tree, even when required=True.
+    """A failed main-tree probe raises, so the run cannot report success.
 
-    _chezmoi_managed() degrades to an empty set on probe failure by design and
-    must never block the configure run -- inverting an empty result into "apply
-    everything" would reintroduce the original whole-apply-abort bug.  required
-    only gates apply-subprocess failure handling, not probe failure.
+    The earlier behavior returned None and the caller returned quietly, so
+    'koopa configure user color-mode' printed "Successfully configured" and
+    exited 0 for a run that applied nothing (an invalid .chezmoiremove made
+    'chezmoi managed' exit 1).  The empty set must still never be read as
+    "apply everything".
     """
     source = tmp_path / "chezmoi"
     source.mkdir()
 
     monkeypatch.setattr("koopa.configurers.color_mode._chezmoi_managed", lambda *_a, **_kw: set())
 
+    with pytest.raises(RuntimeError, match="main tree"):
+        _apply_color_mode_tree(
+            "/usr/bin/chezmoi", {}, "main", str(source), None, verbose=False, required=True
+        )
+
+
+def test_apply_color_mode_tree_non_required_probe_failure_skips(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A failed overlay-tree probe warns and skips only that tree."""
+    source = tmp_path / "chezmoi"
+    source.mkdir()
+
+    monkeypatch.setattr("koopa.configurers.color_mode._chezmoi_managed", lambda *_a, **_kw: set())
+
     result = _apply_color_mode_tree(
-        "/usr/bin/chezmoi", {}, "main", str(source), None, verbose=False, required=True
+        "/usr/bin/chezmoi", {}, "work", str(source), None, verbose=False, required=False
     )
-    assert result is None
+    assert result == (set(), set())
+    captured = capsys.readouterr()
+    assert "work tree" in (captured.err + captured.out)
 
 
 def test_apply_color_mode_tree_required_apply_failure_raises(
@@ -268,3 +289,88 @@ def test_apply_color_mode_tree_non_required_apply_failure_warns_and_continues(
     assert applied_rels == set()
     captured = capsys.readouterr()
     assert "Warning" in (captured.err + captured.out)
+
+
+# ---------------------------------------------------------------------------
+# _sync_claude_auto_theme
+# ---------------------------------------------------------------------------
+
+
+def _write_palettes(themes: Path) -> None:
+    themes.mkdir(parents=True, exist_ok=True)
+    dark = {"name": "Dracula Pro", "base": "dark", "overrides": {"text": "#F8F8F2"}}
+    light = {"name": "Dracula Pro Alucard", "base": "light", "overrides": {"text": "#1F1F1F"}}
+    (themes / "dracula-pro.json").write_text(json.dumps(dark))
+    (themes / "dracula-pro-alucard.json").write_text(json.dumps(light))
+
+
+def test_sync_claude_auto_theme_dark_copies_dark_palette(tmp_path: Path) -> None:
+    """Dark mode writes the dark palette under the Dracula Pro Auto name."""
+    _write_palettes(tmp_path)
+    assert _sync_claude_auto_theme("dark", str(tmp_path)) is True
+    theme = json.loads((tmp_path / "dracula-pro-auto.json").read_text())
+    assert theme["name"] == "Dracula Pro Auto"
+    assert theme["base"] == "dark"
+    assert theme["overrides"] == {"text": "#F8F8F2"}
+
+
+def test_sync_claude_auto_theme_light_copies_light_palette(tmp_path: Path) -> None:
+    """Light mode writes the light palette under the Dracula Pro Auto name."""
+    _write_palettes(tmp_path)
+    assert _sync_claude_auto_theme("light", str(tmp_path)) is True
+    theme = json.loads((tmp_path / "dracula-pro-auto.json").read_text())
+    assert theme["name"] == "Dracula Pro Auto"
+    assert theme["base"] == "light"
+    assert theme["overrides"] == {"text": "#1F1F1F"}
+
+
+def test_sync_claude_auto_theme_skips_when_palette_missing(tmp_path: Path) -> None:
+    """Without both palettes, the auto file is not written (no Dracula Pro)."""
+    (tmp_path / "dracula-pro.json").write_text("{}")
+    assert _sync_claude_auto_theme("dark", str(tmp_path)) is False
+    assert not (tmp_path / "dracula-pro-auto.json").exists()
+
+
+def test_sync_claude_auto_theme_noop_when_current(tmp_path: Path) -> None:
+    """A second call with the same mode does not rewrite the file."""
+    _write_palettes(tmp_path)
+    assert _sync_claude_auto_theme("dark", str(tmp_path)) is True
+    assert _sync_claude_auto_theme("dark", str(tmp_path)) is False
+
+
+@pytest.mark.parametrize("contents", ["{not json", "[1, 2]"])
+def test_sync_claude_auto_theme_bad_palette_warns(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], contents: str
+) -> None:
+    """A malformed or non-object palette warns and returns False, never raises."""
+    _write_palettes(tmp_path)
+    (tmp_path / "dracula-pro.json").write_text(contents)
+    assert _sync_claude_auto_theme("dark", str(tmp_path)) is False
+    assert not (tmp_path / "dracula-pro-auto.json").exists()
+    captured = capsys.readouterr()
+    assert "Warning" in (captured.err + captured.out)
+
+
+def test_main_syncs_claude_theme_before_marker_fast_path(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """main() updates the Claude theme even when the marker says nothing to do.
+
+    The theme write must not depend on the chezmoi apply or the marker: a
+    chezmoi failure once left settings.json pointing at a theme file that was
+    never written.
+    """
+    marker = tmp_path / ".cache" / "koopa" / "color-mode-applied"
+    marker.parent.mkdir(parents=True)
+    marker.write_text("dark\n")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr("koopa.configurers.color_mode.os_appearance_mode", lambda: "dark")
+    calls: list[tuple[str, str]] = []
+
+    def fake_sync(mode: str, themes_dir: str) -> bool:
+        calls.append((mode, themes_dir))
+        return False
+
+    monkeypatch.setattr("koopa.configurers.color_mode._sync_claude_auto_theme", fake_sync)
+    color_mode_main(name="color-mode", platform="common", mode="user")
+    assert calls == [("dark", str(tmp_path / ".claude" / "themes"))]

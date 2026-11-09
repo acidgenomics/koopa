@@ -40,7 +40,7 @@ def main(
     subprocess_env["BOOTSTRAP_HASKELL_NO_UPGRADE"] = "1"
     subprocess_env["GHCUP_INSTALL_BASE_PREFIX"] = build_prefix
     download(
-        f"https://github.com/haskell/ghcup-hs/archive/v{version}.tar.gz",
+        f"https://codeberg.org/haskell/ghcup-hs/archive/v{version}.tar.gz",
         output="ghcup.tar.gz",
     )
     bootstrap = download(

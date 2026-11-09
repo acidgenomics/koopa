@@ -224,6 +224,54 @@ directly. Never invoke `opt/dotfiles/install` or any path that calls
 `_sync_launchd_agent`/`_sync_systemd_user_agent`. Leave agent lifecycle to the full
 `koopa configure user dotfiles`.
 
+## macOS: One Launch Agent Runs Every Background Task (2026-11)
+
+`com.acidgenomics.koopa` (`~/Library/LaunchAgents/com.acidgenomics.koopa.plist`)
+replaced four per-task agents: `com.koopa.color-mode-sync`,
+`com.koopa.color-mode-schedule`, `com.koopa.today-bucket`, and
+`com.koopa.organize-screenshots`. Every trigger runs
+`koopa run background-tasks` (`koopa/background_tasks.py`). The triggers are a
+`WatchPaths` watch on `.GlobalPreferences.plist`, a calendar at 00:00, 09:00,
+and 17:00, a 600-second timer, and login. All output goes to
+`~/Library/Logs/koopa.log`, which `koopa develop color-mode-audit` now reads by
+default.
+
+launchd does not tell the job which trigger fired (the `launchd.plist(5)` man
+page documents no such value), so each task decides for itself:
+
+- **Schedule:** acts once per 09:00/17:00 boundary, recorded in
+  `~/.cache/koopa/background-tasks/color-mode-schedule`. A manual toggle stays
+  until the next boundary, and a boundary missed during sleep applies on the
+  next run. It needs macOS, Dracula Pro, and macOS's own Auto appearance off.
+  It runs first and waits for the OS to report the new mode, so the sync in the
+  same pass applies the flip without waiting for `WatchPaths`.
+- **Sync:** runs `configure user color-mode` only when the applied marker
+  differs from the OS mode.
+- **Today bucket** and **screenshots:** the screenshot task runs at most once
+  per 540 seconds.
+
+A failing task warns and the rest still run, `SystemExit` included. A run that
+finds another run's lock exits at once. launchd runs one instance at a time.
+The man page says a `StartInterval` firing that arrives during a run is missed;
+it says nothing either way for `WatchPaths` or calendar firings (unverified).
+The 600-second timer is the fallback for any missed event, including the
+"highly race-prone" `WatchPaths` the man page warns about. The color-mode task
+also syncs the Claude theme on every tick, so a stale theme file self-heals
+within one tick. Because the agent skips the configurer when nothing changed,
+`koopa.log` has no "already applied" lines between scheduled flips;
+`koopa develop color-mode-audit` treats applies more than 10 minutes apart as
+separate events, not thrash.
+
+**Known, accepted:** the theme sync runs outside the color-mode lock, so two
+runs during a flip can finish in either order, and the next tick corrects a
+stale result. `koopa configure user dotfiles` boots out the agent and can stop
+a run partway; the next tick repairs it.
+
+**Migration:** `.chezmoiremove` deletes the four old plists, and `install` boots
+out their labels with the `gui/<uid>/<label>` form, which needs no plist file.
+The Linux systemd unit `koopa-color-mode-sync.service` is unchanged. The rule
+above still holds: the dispatcher must never call the dotfiles installer.
+
 ## A Tool Can Be Invisible to the Whole Pipeline: No Template Means No Candidate
 
 **Symptom:** a terminal tool (btop, in the 2026-08 case) renders the wrong
@@ -269,6 +317,34 @@ chezmoi managed --path-style=absolute --source=opt/dotfiles/chezmoi | grep <tool
 ```
 Present in the first list but absent from the second is the pre-existing
 "On-Disk-Only Target Check" bug below, now applied to a brand-new target.
+
+## A Target Both Managed and in `.chezmoiremove` Breaks the Whole Tree (2026-11)
+
+**Symptom:** `koopa configure user color-mode` printed "Warning: chezmoi
+managed probe returned nothing for the main tree; skipping apply." and then
+"Successfully configured", and exited 0. Nothing was applied: no marker, no
+re-rendered bat/starship/delta, no Claude theme file.
+
+**Cause:** one tree's `.chezmoiremove` listed four LaunchAgents plists whose
+templates still existed in the same tree. chezmoi rejects that for the whole
+tree, not just those targets:
+
+```
+chezmoi: Library/LaunchAgents/com.koopa.color-mode-sync.plist: inconsistent state (.../com.koopa.color-mode-sync.plist.tmpl, remove)
+```
+
+`chezmoi managed` exits 1, so every caller of `_chezmoi_managed()` saw an empty
+set. Koopa then made it worse in two ways, both fixed 2026-11: the probe threw
+away chezmoi's stderr, and a main-tree probe failure returned quietly, so the
+configurer printed success.
+
+**Rules:**
+- Delete a template and add its `.chezmoiremove` entry in the same change.
+  Never land either one alone in a live checkout.
+- Check with `chezmoi managed --source=<tree> -i files,symlinks`: it must exit
+  0 before you run any apply.
+- `_chezmoi_managed()` now warns with chezmoi's own error, and a main-tree
+  probe failure raises, so the command exits 1.
 
 ## On-Disk-Only Target Check Wedges the Whole Apply (One Unmanaged File Blocks All)
 
@@ -392,8 +468,9 @@ marker is present) permanently stale, since the main tree never touches it and
 nothing else does either.
 
 `configurers/color_mode.py` runs its own targeted `chezmoi apply` per tree: main
-required (a probe or apply failure there aborts the whole run without writing the
-applied-marker), work/private best-effort (a failure warns and continues, marker
+required (a probe or apply failure there raises, so the command prints an error
+and exits 1, and the applied-marker stays unwritten), work/private best-effort
+(a failure warns and continues, marker
 still written, so a permanently broken overlay tree never wedges every future
 shell in the documented infinite-respawn loop). It does **not** delegate to
 `dotfiles.py`'s `main()`: that function's install-script path
@@ -625,8 +702,8 @@ time (a normal apply writes the file, then the marker, in that order).
 
 **Root cause (2026-09):** unlike `dot_config/*/User/settings.json.tmpl` for
 VS Code forks (see the "Avoiding a write race on settings.json" rule in the
-`koopa-vscode` skill), `dot_claude/settings.json.tmpl` still branches directly
-on `KOOPA_COLOR_MODE` for the `theme` key. Claude Code itself writes its own
+`koopa-vscode` skill), `dot_claude/settings.json.tmpl` branched directly
+on `KOOPA_COLOR_MODE` for the `theme` key (until the 2026-11 fix below). Claude Code itself writes its own
 `~/.claude/settings.json` at runtime on ordinary in-app changes (toggling a
 plugin, changing `effortLevel`, switching output style, changing model); it
 reads the file into memory, changes one key, and writes the whole file back.
@@ -634,20 +711,45 @@ If that write happens in a Claude Code window that loaded the file *before*
 the last correct chezmoi render, it flushes the window's stale in-memory
 `theme` value and silently undoes the render, with no error anywhere.
 
-**No code fix exists for this one.** Confirmed against official Claude Code
-docs (2026-09): the `theme` setting has no VS Code-style
-`autoDetectColorScheme` equivalent: `"auto"` only resolves built-in presets,
-and there is no paired light/dark syntax for two *custom* themes. Render-time
-`KOOPA_COLOR_MODE` branching is the only supported way to switch between
-`custom:dracula-pro` and `custom:dracula-pro-alucard`, so removing the branch
-(the VS Code fix) is not an option here; it would just freeze the theme
-permanently instead of freezing it intermittently.
+**Fixed 2026-11: a constant theme name plus an in-place file rewrite.** The
+`theme` setting has no VS Code-style `autoDetectColorScheme` equivalent:
+`"auto"` only resolves built-in presets, and there is no paired light/dark
+syntax for two *custom* themes. Changing the setting does not redraw a running
+session either: a flip that only rewrote `settings.json` left an open session on
+the old palette. What works is a theme file that changes in place. Claude Code
+watches `~/.claude/themes/` and reloads a changed file in a running session;
+this was tested by hand in a live session, in both directions, with no restart.
 
-**Mitigation (procedural, not automatable):** after any color-mode flip and
-re-apply, quit and relaunch every open Claude Code window, not just the one
-used to run the fix. A window left open across the flip is still holding the
-pre-flip `theme` value in memory and will re-write it on its next own settings
-save, even minutes or hours later.
+So `dot_claude/settings.json.tmpl` now writes the constant
+`"theme": "custom:dracula-pro-auto"` when Dracula Pro is installed (and
+`"auto"` otherwise), with no `KOOPA_COLOR_MODE` branch. The template is
+therefore no longer a color-mode flip target. On every color-mode run,
+`_sync_claude_auto_theme()` in `configurers/color_mode.py` rewrites
+`~/.claude/themes/dracula-pro-auto.json` in place from `dracula-pro.json`
+(dark) or `dracula-pro-alucard.json` (light), with the display name
+"Dracula Pro Auto". It runs at the top of `main()`, before the marker check and
+with no chezmoi, so neither a chezmoi failure nor a stale marker can skip it.
+It never raises: a bad palette file warns and returns. It does nothing unless
+both source palettes exist, so a
+host without Dracula Pro (EC2) falls back to `"auto"` in the template. The
+dotfiles `install` script creates the auto file for the current mode at
+install time. A constant setting also removes the stale-write problem: a
+window that rewrites `settings.json` restores the same value.
+
+**One-time migration:** a window that started before the fix holds the old
+theme name (`custom:dracula-pro` or `custom:dracula-pro-alucard`), so it
+ignores `dracula-pro-auto.json` and can still write its old value back into
+`settings.json`. After the first `koopa configure user dotfiles` that applies
+the new template, quit and relaunch every open Claude Code window once. After
+that no restart is needed on a flip.
+
+**Untested:** a temp-file rename in place of the plain overwrite (a plain
+overwrite is what passed), and whether Copilot CLI follows a theme file at all.
+
+**Diagnostic:** `~/.claude/themes/dracula-pro-auto.json` should have the `base`
+of the current OS mode (`"dark"` or `"light"`), and `settings.json` should read
+`custom:dracula-pro-auto`. A window still on the old palette after a restart
+has the old name in memory; run `/theme` and pick "Dracula Pro Auto".
 
 ## Ghostty: Symlink Creation Must Run Pre-Chezmoi, Not Post
 

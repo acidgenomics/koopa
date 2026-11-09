@@ -31,7 +31,9 @@ def _chezmoi_managed(
     defines a non-default persistentState (the work tree does) so ``managed``
     reads the same state DB the install script applies.  Returns an empty set
     if the source is absent or the probe fails — a probe must never block the
-    configure run.
+    configure run.  A failed probe prints chezmoi's own error first, so the
+    cause is visible (e.g. "inconsistent state" when one tree both manages a
+    target and lists it in ``.chezmoiremove``).
 
     Parameters
     ----------
@@ -58,7 +60,13 @@ def _chezmoi_managed(
     args.extend(["-i", "files,symlinks"])
     try:
         result = subprocess.run(args, env=env, capture_output=True, text=True, check=True)
-    except (subprocess.CalledProcessError, OSError):
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip().splitlines()
+        detail = "\n".join(stderr[:5]) or f"exit status {exc.returncode}"
+        warn(f"chezmoi managed failed for {source}:\n{detail}")
+        return set()
+    except OSError as exc:
+        warn(f"chezmoi managed could not run for {source}: {exc}")
         return set()
     return {line.strip() for line in result.stdout.splitlines() if line.strip()}
 

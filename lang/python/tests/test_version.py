@@ -105,6 +105,11 @@ def test_sanitize_version_plain() -> None:
     assert sanitize_version("10.2.1") == "10.2.1"
 
 
+def test_sanitize_version_preserves_date() -> None:
+    """Date-formatted releases retain the month and day."""
+    assert sanitize_version("v2026-11-05") == "2026-11-05"
+
+
 def test_sanitize_version_preserves_beta_marker() -> None:
     """Test sanitize_version preserves an explicit pre-release marker and its digits."""
     assert sanitize_version("3.15.0beta2") == "3.15.0beta2"
