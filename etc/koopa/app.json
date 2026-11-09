@@ -594,29 +594,28 @@
   "automake": {
     "bin": [
       "aclocal",
-      "aclocal-1.19",
+      "aclocal-1.20",
       "automake",
-      "automake-1.19"
+      "automake-1.20"
     ],
     "build_dependencies": [
       "make",
       "pkg-config"
     ],
     "category": "Build",
-    "date": "2026-09-13",
+    "date": "2026-11-09",
     "default": false,
     "dependencies": [
       "autoconf"
     ],
     "description": "generates Makefiles from simple descriptions",
     "installer": "gnu-app",
-    "revision": 1,
     "src_url": "https://mirrors.kernel.org/gnu/automake/automake-{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://mirrors.kernel.org/gnu/automake/?C=M;O=D"
     ],
-    "version": "1.19"
+    "version": "1.20"
   },
   "aws-azure-login": {
     "bin": [
@@ -1644,7 +1643,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-11-06",
+    "date": "2026-11-09",
     "default": true,
     "dependencies": [
       "node"
@@ -1658,7 +1657,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.319"
+    "version": "2.1.321"
   },
   "claude-replay": {
     "bin": [
@@ -1864,7 +1863,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-11-07",
+    "date": "2026-11-09",
     "default": true,
     "dependencies": [
       "node"
@@ -1878,7 +1877,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.108-0"
+    "version": "1.0.109-0"
   },
   "coreutils": {
     "bin": [
@@ -2317,14 +2316,14 @@
       "databricks"
     ],
     "category": "Cloud",
-    "date": "2026-11-05",
+    "date": "2026-11-09",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.24.0"
+    "version": "1.25.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -3276,7 +3275,7 @@
     ],
     "category": "Filesystem",
     "conda_channel": "conda-forge",
-    "date": "2026-10-11",
+    "date": "2026-11-09",
     "default": true,
     "description": "command-line fuzzy finder",
     "installer": "conda-package",
@@ -3287,7 +3286,7 @@
     "url": [
       "https://github.com/junegunn/fzf/"
     ],
-    "version": "0.74.5"
+    "version": "0.75.0"
   },
   "gatk": {
     "bin": [
@@ -4032,7 +4031,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-09-29",
+    "date": "2026-11-09",
     "default": true,
     "description": "GNU document formatting system",
     "installer": "conda-package",
@@ -4043,7 +4042,7 @@
     "url": [
       "https://mirrors.kernel.org/gnu/groff/?C=M;O=D"
     ],
-    "version": "1.24.2"
+    "version": "1.25.0"
   },
   "gseapy": {
     "bin": [
@@ -4204,16 +4203,15 @@
       "curl"
     ],
     "category": "Build",
-    "date": "2026-06-19",
+    "date": "2026-11-09",
     "default": false,
     "description": "Haskell toolchain installer",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://codeberg.org/haskell/ghcup-hs"
     ],
-    "version": "0.2.6.2"
+    "version": "0.2.7.0"
   },
   "haskell-stack": {
     "bin": [
@@ -4925,7 +4923,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-05-02",
+    "date": "2026-11-09",
     "default": false,
     "dependencies": [
       "libedit",
@@ -4938,7 +4936,7 @@
     "url": [
       "https://web.mit.edu/kerberos/"
     ],
-    "version": "1.22.2"
+    "version": "1.22.3"
   },
   "ksh93": {
     "bin": [
@@ -5040,7 +5038,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-10-22",
+    "date": "2026-11-09",
     "default": false,
     "description": "terminal UI for git with a simple and intuitive interface",
     "installer": "conda-package",
@@ -5048,7 +5046,7 @@
     "url": [
       "https://github.com/jesseduffield/lazygit/"
     ],
-    "version": "0.66.2"
+    "version": "0.66.3"
   },
   "ldc": {
     "build_dependencies": [
@@ -5883,7 +5881,7 @@
       "pkg-config"
     ],
     "category": "Language",
-    "date": "2026-10-30",
+    "date": "2026-11-09",
     "default": false,
     "description": "just-in-time compiler for Lua",
     "src_url": "https://github.com/LuaJIT/LuaJIT/archive/{version}.tar.gz",
@@ -5892,7 +5890,7 @@
       "https://luajit.org/",
       "https://github.com/LuaJIT/LuaJIT"
     ],
-    "version": "592f9e3f549c7f176a9a7a0d70189559305f2eda"
+    "version": "b83bcba6ea300d4eb16e8257ddf80bcdef1f938b"
   },
   "luarocks": {
     "bin": [
@@ -6186,23 +6184,12 @@
     "successor": "atuin"
   },
   "mcp-atlassian": {
-    "bin": [
-      "mcp-atlassian"
-    ],
-    "category": "AI",
-    "date": "2026-09-06",
-    "default": false,
-    "dependencies": [
-      "python"
-    ],
-    "description": "MCP server for Atlassian Jira and Confluence",
-    "installer": "python-package",
-    "type": "cli",
+    "date": "2026-11-09",
+    "removed": true,
     "url": [
       "https://pypi.org/project/mcp-atlassian/",
       "https://github.com/sooperset/mcp-atlassian"
-    ],
-    "version": "0.23.1"
+    ]
   },
   "mdcat": {
     "bin": [
@@ -6320,7 +6307,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-11-07",
+    "date": "2026-11-09",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6330,7 +6317,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.11.3"
+    "version": "2026.11.5"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -7452,7 +7439,7 @@
       "playwright"
     ],
     "category": "Python",
-    "date": "2026-10-23",
+    "date": "2026-11-09",
     "default": false,
     "dependencies": [
       "python"
@@ -7464,7 +7451,7 @@
       "https://playwright.dev/",
       "https://pypi.org/project/playwright/"
     ],
-    "version": "1.64.1"
+    "version": "1.65.0"
   },
   "pnpm": {
     "bin": [
@@ -7527,7 +7514,7 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-10-30",
+    "date": "2026-11-09",
     "default": false,
     "description": "PDF rendering library and command-line utilities",
     "installer": "conda-package",
@@ -7536,7 +7523,7 @@
       "https://poppler.freedesktop.org/",
       "https://gitlab.freedesktop.org/poppler/poppler"
     ],
-    "version": "26.10.0"
+    "version": "26.11.0"
   },
   "postgresql": {
     "bin": [
@@ -9239,7 +9226,7 @@
       "snow"
     ],
     "category": "Cloud",
-    "date": "2026-11-02",
+    "date": "2026-11-09",
     "default": false,
     "dependencies": [
       "python3.13"
@@ -9255,7 +9242,7 @@
       "https://docs.snowflake.com/en/developer-guide/snowflake-cli/index",
       "https://github.com/snowflakedb/snowflake-cli"
     ],
-    "version": "3.32.1"
+    "version": "3.33.0"
   },
   "somalier": {
     "bin": [
@@ -9320,7 +9307,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-11-07",
+    "date": "2026-11-09",
     "default": false,
     "dependencies": [
       "emacs"
@@ -9330,7 +9317,7 @@
     "url": [
       "https://github.com/syl20bnr/spacemacs/"
     ],
-    "version": "f81742f66b6cd41099a4773c5adc07e6c272d7a5"
+    "version": "1f69b2a854a7a46f709def08412dbd5d6dc073a1"
   },
   "spacevim": {
     "date": "2026-05-10",
@@ -9577,7 +9564,7 @@
       "surreal"
     ],
     "category": "Database",
-    "date": "2026-11-03",
+    "date": "2026-11-09",
     "default": false,
     "description": "multi-model database with SurrealQL query language",
     "type": "cli",
@@ -9585,7 +9572,7 @@
       "https://surrealdb.com/",
       "https://github.com/surrealdb/surrealdb/"
     ],
-    "version": "4.0.0"
+    "version": "4.0.1"
   },
   "swig": {
     "bin": [
@@ -10057,7 +10044,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-11-06",
+    "date": "2026-11-09",
     "default": true,
     "dependencies": [
       "python"
@@ -10069,7 +10056,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.99"
+    "version": "0.0.100"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10955,7 +10942,7 @@
       "go"
     ],
     "category": "Text",
-    "date": "2026-11-06",
+    "date": "2026-11-09",
     "default": false,
     "description": "YAML, JSON, and XML command-line processor",
     "notes": [
@@ -10965,7 +10952,7 @@
     "url": [
       "https://github.com/mikefarah/yq/"
     ],
-    "version": "4.54.2"
+    "version": "4.54.3"
   },
   "yt-dlp": {
     "bin": [
