@@ -2344,7 +2344,7 @@
     "installer_args": {
       "pip_name": "dbt-core"
     },
-    "revision": 1,
+    "revision": 2,
     "type": "cli",
     "url": [
       "https://docs.getdbt.com",

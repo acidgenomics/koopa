@@ -1134,6 +1134,74 @@ def test_install_python_package_two_phase_pip_install(tmp_path: Path) -> None:
     assert not os.path.isfile(pip_conf)
 
 
+def test_install_python_package_derives_egg_name_from_pip_name(tmp_path: Path) -> None:
+    """Without `egg_name`, the RECORD lookup uses `pip_name`, not the app name.
+
+    The `dbt` app installs the `dbt-core` distribution, so the lookup must
+    search for `dbt_core`. Extras are not part of the dist-info name.
+    """
+    import os
+
+    from koopa.install import install_python_package
+
+    def fake_run(args: list[str], **_kwargs: object) -> None:
+        if args[1:3] == ["-m", "venv"]:
+            os.makedirs(os.path.join(args[3], "bin"), exist_ok=True)
+
+    with (
+        patch("koopa.install.subprocess.run", side_effect=fake_run),
+        patch("koopa.install._app_dependencies", return_value=[]),
+        patch("koopa.install._link_pip_binaries") as link,
+    ):
+        install_python_package(
+            name="dbt",
+            pip_name="dbt-core[extra]",
+            version="1.12.6",
+            prefix=str(tmp_path / "prefix"),
+        )
+
+    assert link.call_args.kwargs["egg_name"] == "dbt_core"
+
+
+def test_find_dist_record_normalizes_names(tmp_path: Path) -> None:
+    """The RECORD lookup matches PEP 503 equivalent dist-info names only."""
+    from koopa.install import _find_dist_record
+
+    for entry in (
+        "dbt_core-1.12.6.dist-info",
+        "dbt_core_experimental_parser-2.0.11.dist-info",
+        "PyYAML-6.0.2.dist-info",
+    ):
+        (tmp_path / entry).mkdir()
+        (tmp_path / entry / "RECORD").touch()
+    site = str(tmp_path)
+    dbt_record = str(tmp_path / "dbt_core-1.12.6.dist-info" / "RECORD")
+
+    assert _find_dist_record(site, egg_name="dbt-core", version="1.12.6") == dbt_record
+    assert _find_dist_record(site, egg_name="DBT.Core", version="1.12.6") == dbt_record
+    assert _find_dist_record(site, egg_name="pyyaml", version="6.0.2") == str(
+        tmp_path / "PyYAML-6.0.2.dist-info" / "RECORD"
+    )
+    assert _find_dist_record(site, egg_name="dbt", version="1.12.6") is None
+
+
+def test_find_dist_record_prefers_matching_version(tmp_path: Path) -> None:
+    """A dist-info at the requested version wins; otherwise any match is used."""
+    from koopa.install import _find_dist_record
+
+    for entry in ("example-1.0.0.dist-info", "example-2.0.0.dist-info"):
+        (tmp_path / entry).mkdir()
+        (tmp_path / entry / "RECORD").touch()
+    site = str(tmp_path)
+
+    assert _find_dist_record(site, egg_name="example", version="2.0.0") == str(
+        tmp_path / "example-2.0.0.dist-info" / "RECORD"
+    )
+    assert _find_dist_record(site, egg_name="example", version="3.0.0") == str(
+        tmp_path / "example-1.0.0.dist-info" / "RECORD"
+    )
+
+
 def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path) -> None:
     """Koopa's venv extras install exempts first-party `syntactic` from cooldown.
 
