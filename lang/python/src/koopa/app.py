@@ -611,6 +611,45 @@ def stale_revdeps(names: list[str]) -> list[str]:
     return list(stale_revdeps_with_triggers(names))
 
 
+def stale_revdep_closure(
+    names: list[str],
+    include: Callable[[str], bool] | None = None,
+) -> dict[str, list[str]]:
+    """Get every installed app that a rebuild of *names* makes stale.
+
+    Repeats `stale_revdeps_with_triggers` until no new app appears, because
+    a rebuilt dependency makes its own reverse dependencies stale too: a
+    zlib rebuild makes libxml2 stale, and the libxml2 rebuild then makes
+    libxslt stale.
+
+    Parameters
+    ----------
+    names : list[str]
+        Application names being installed or reinstalled.
+    include : Callable[[str], bool] | None, optional
+        Filter for reverse dependencies. An app it rejects is not added, and
+        its own reverse dependencies are not followed.
+
+    Returns
+    -------
+    dict[str, list[str]]
+        Each stale app, in the order found, mapped to the rebuilt apps that
+        make it stale. *names* themselves are not included.
+    """
+    targets = list(dict.fromkeys(names))
+    found: dict[str, list[str]] = {}
+    while True:
+        new = {
+            rd: triggers
+            for rd, triggers in stale_revdeps_with_triggers(targets).items()
+            if rd not in found and (include is None or include(rd))
+        }
+        if not new:
+            return found
+        found.update(new)
+        targets.extend(new)
+
+
 def installed_apps() -> list:
     """List installed apps.
 

@@ -19,11 +19,20 @@ def _link_app(opt_dir: Path, app_dir: Path, name: str, version: str) -> Path:
     return version_dir
 
 
-def _dep_issue(tmp_path: Path, dep_version: str, dep_revision: str | None, info: dict) -> list:
+def _dep_issue(
+    tmp_path: Path,
+    dep_version: str,
+    dep_revision: str | None,
+    info: dict,
+    *,
+    dep_info: dict | None = None,
+    installer: str = "",
+) -> list:
     """Set up myapp -> dep and return actionable issues for myapp.
 
-    myapp is linked at version 1.0 with the given .install/info.json. dep is
-    linked at *dep_version*, optionally with a .install/revision file.
+    myapp is linked at version 1.0 with the given .install/info.json and
+    *installer*. dep is linked at *dep_version*, optionally with a
+    .install/revision file and a .install/info.json of *dep_info*.
     """
     from koopa.check import _iter_installed_app_issues
 
@@ -39,9 +48,11 @@ def _dep_issue(tmp_path: Path, dep_version: str, dep_revision: str | None, info:
     if dep_revision is not None:
         (dep_dir / ".install").mkdir()
         (dep_dir / ".install" / "revision").write_text(dep_revision)
+    if dep_info is not None:
+        _write_json(dep_dir / ".install" / "info.json", dep_info)
 
     json_data = {
-        "myapp": {"version": "1.0", "dependencies": ["dep"]},
+        "myapp": {"version": "1.0", "dependencies": ["dep"], "installer": installer},
         "dep": {"version": "9.9"},  # app.json target; must never be consulted for staleness
     }
 
@@ -93,6 +104,47 @@ def test_dep_revision_bumped_on_disk_flagged(tmp_path: Path) -> None:
     )
     assert len(issues) == 1
     assert issues[0][1] == "dependency dep revised: 1 -> 2"
+
+
+def test_dep_rebuilt_after_install_at_same_version_flagged(tmp_path: Path) -> None:
+    """A dep rebuilt at the same version and revision after myapp flags myapp.
+
+    Regression test: libxml2 2.15.4 was rebuilt against a new zlib, but
+    libxslt, built earlier against it, kept loading the old zlib.
+    """
+    issues = _dep_issue(
+        tmp_path,
+        dep_version="2.0",
+        dep_revision=None,
+        info={"date": "2026-11-01 15:52:19", "dep_versions": {"dep": "2.0"}},
+        dep_info={"date": "2026-11-05 16:46:01"},
+    )
+    assert issues == [("myapp", "dependency dep rebuilt after this install")]
+
+
+def test_dep_installed_before_app_not_flagged(tmp_path: Path) -> None:
+    """A dep installed before myapp, and unchanged since, does not flag myapp."""
+    issues = _dep_issue(
+        tmp_path,
+        dep_version="2.0",
+        dep_revision=None,
+        info={"date": "2026-11-05 16:46:01", "dep_versions": {"dep": "2.0"}},
+        dep_info={"date": "2026-11-01 15:52:19"},
+    )
+    assert issues == []
+
+
+def test_isolated_installer_runtime_rebuild_not_flagged(tmp_path: Path) -> None:
+    """A rebuilt runtime of an isolated installer (python for python-package) is skipped."""
+    issues = _dep_issue(
+        tmp_path,
+        dep_version="2.0",
+        dep_revision=None,
+        info={"date": "2026-11-01 15:52:19", "dep_versions": {"dep": "2.0"}},
+        dep_info={"date": "2026-11-05 16:46:01"},
+        installer="dep-package",
+    )
+    assert issues == []
 
 
 def test_recorded_empty_deps_not_flagged_by_firewall_dict_reresolution(

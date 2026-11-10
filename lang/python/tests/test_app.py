@@ -16,6 +16,7 @@ from koopa.app import (
     is_cpu_bound_app,
     prune_apps,
     recorded_app_deps,
+    stale_revdep_closure,
     stale_revdeps,
     stale_revdeps_with_triggers,
 )
@@ -534,3 +535,49 @@ def test_stale_revdeps_with_triggers_reports_rebuilt_dependencies(tmp_path: Path
     ):
         result = stale_revdeps_with_triggers(["first", "second"])
     assert result == {"dependent": ["first", "second"]}
+
+
+def _patch_revdep_chain(tmp_path: Path) -> list[_PatchController]:
+    """Install zlib -> libxml2 -> libxslt, each recording its direct dependency."""
+    app_dir = tmp_path / "app"
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    _link_app_with_recorded_deps(app_dir, opt_dir, "zlib", [])
+    _link_app_with_recorded_deps(app_dir, opt_dir, "libxml2", ["zlib"])
+    _link_app_with_recorded_deps(app_dir, opt_dir, "libxslt", ["libxml2"])
+    json_data = {
+        "zlib": {"version": "current"},
+        "libxml2": {"version": "current", "dependencies": ["zlib"]},
+        "libxslt": {"version": "current", "dependencies": ["libxml2"]},
+    }
+    return [
+        patch("koopa.app.koopa_opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.app.import_app_json", return_value=json_data),
+        patch("koopa.app.installed_apps", return_value=["zlib", "libxml2", "libxslt"]),
+    ]
+
+
+def test_stale_revdep_closure_follows_every_level(tmp_path: Path) -> None:
+    """A zlib rebuild makes libxml2 stale, and that rebuild makes libxslt stale."""
+    patches = _patch_revdep_chain(tmp_path)
+    for p in patches:
+        p.start()
+    try:
+        result = stale_revdep_closure(["zlib"])
+    finally:
+        for p in patches:
+            p.stop()
+    assert result == {"libxml2": ["zlib"], "libxslt": ["libxml2"]}
+
+
+def test_stale_revdep_closure_does_not_follow_a_rejected_app(tmp_path: Path) -> None:
+    """An app the filter rejects is left out, and so are its reverse dependencies."""
+    patches = _patch_revdep_chain(tmp_path)
+    for p in patches:
+        p.start()
+    try:
+        result = stale_revdep_closure(["zlib"], include=lambda name: name != "libxml2")
+    finally:
+        for p in patches:
+            p.stop()
+    assert result == {}

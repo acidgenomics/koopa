@@ -82,6 +82,40 @@ def _installed_dep_state(
     return state
 
 
+def _installed_dep_date(opt_dir: str, dep: str, cache: dict[str, str]) -> str:
+    """Return the recorded install date of *dep* as linked under opt/.
+
+    Parameters
+    ----------
+    opt_dir : str
+        Path to the koopa opt/ prefix containing app symlinks.
+    dep : str
+        Name of the dependency app to look up.
+    cache : dict[str, str]
+        Memoization cache mapping dependency name to its install date.
+
+    Returns
+    -------
+    str
+        The ``date`` field of the dep's ``.install/info.json`` (UTC,
+        ``YYYY-MM-DD HH:MM:SS``, so dates compare as strings), or an empty
+        string when it is not recorded.
+    """
+    if dep in cache:
+        return cache[dep]
+    import json
+
+    date = ""
+    try:
+        with open(join(opt_dir, dep, ".install", "info.json")) as f:
+            value = json.load(f).get("date", "")
+        date = value if isinstance(value, str) else ""
+    except (OSError, ValueError):
+        date = ""
+    cache[dep] = date
+    return date
+
+
 def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, PLR0912, PLR0915
     """Return ``(app_name, reason, actionable)`` for each installed app issue.
 
@@ -104,6 +138,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
     names = installed_apps()
     issues: list[tuple[str, str, bool]] = []
     dep_state_cache: dict[str, tuple[str, int] | None] = {}
+    dep_date_cache: dict[str, str] = {}
     from koopa.system import os_id
 
     current_os = os_id()
@@ -255,6 +290,25 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                             )
                             stale_dep = True
                             break
+            if not stale_dep:
+                # A dep rebuilt at the same version and revision (for example
+                # libxml2 relinked against a new zlib) changes neither field
+                # above, but its install date moves past this app's.
+                own_date = _info.get("date", "")
+                for dep in app_deps if own_date else []:
+                    if installer.startswith(dep):
+                        continue
+                    resolved_dep = dep
+                    dep_entry = json_data.get(dep, {})
+                    if isinstance(dep_entry, dict) and dep_entry.get("alias_of"):
+                        resolved_dep = dep_entry["alias_of"]
+                    dep_date = _installed_dep_date(opt_dir, resolved_dep, dep_date_cache)
+                    if dep_date > own_date:
+                        issues.append(
+                            (name, f"dependency {resolved_dep} rebuilt after this install", True),
+                        )
+                        stale_dep = True
+                        break
             if stale_dep:
                 continue
         expected_bins = entry.get("bin", [])
@@ -1049,7 +1103,7 @@ def prune_broken_symlinks() -> None:
 
 def _print_update_plan() -> None:
     """Print the full list of apps that 'koopa update' will install."""
-    from koopa.app import stale_revdeps_with_triggers
+    from koopa.app import stale_revdep_closure
 
     outdated = outdated_apps_with_reasons()
     broken = broken_app_installs()
@@ -1063,14 +1117,9 @@ def _print_update_plan() -> None:
     if not seen:
         return
     direct = set(seen)
-    changed = True
-    while changed:
-        changed = False
-        for rd, triggers in stale_revdeps_with_triggers(list(seen)).items():
-            if rd not in seen:
-                label = "dependency" if len(triggers) == 1 else "dependencies"
-                seen[rd] = f"{label} {', '.join(triggers)} rebuilt"
-                changed = True
+    for rd, triggers in stale_revdep_closure(list(seen)).items():
+        label = "dependency" if len(triggers) == 1 else "dependencies"
+        seen[rd] = f"{label} {', '.join(triggers)} rebuilt"
     revdeps = sorted(set(seen) - direct)
     apps = sorted(seen)
     if revdeps:
