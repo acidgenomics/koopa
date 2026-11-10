@@ -28,11 +28,19 @@ non-zero with no clear error on screen.
 
 ## Stale app versions
 
-`koopa system prune-apps` removes old, unlinked versions of installed CLI
-apps, keeping only the currently active version on disk. This deletes files.
-Confirm with the user before running it, and prefer describing what it would
-do rather than running it unprompted; there is no dry-run flag exposed on
-the CLI surface, so treat every invocation as live.
+`koopa system prune-apps` removes old, unlinked versions of installed apps of
+every type, keeping the currently linked version. koopa links compiled apps to
+exact `app/<name>/<version>/lib` paths, so an old library can still be in use:
+before deleting, ripgrep scans the app's reverse dependencies for the old path,
+and a referenced version is kept and reported (for example, `Keeping zlib
+1.3.2: still used by 'libxslt/...'`; reinstall that app to release it). Links in
+`bin/` and `share/` into a deleted version move to the linked version, or are
+removed when it has no such file. Without ripgrep, only `cli` apps are pruned.
+
+This deletes files. Run `koopa system prune-apps --dry-run` first: it prints
+what it would prune, keep, relink, and remove, changes nothing, and runs under a
+coding agent. Confirm with the user before the real run, which the `koopa` CLI
+refuses under an agent anyway.
 
 ## When a check fails
 

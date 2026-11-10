@@ -42,6 +42,11 @@ GATED_SUBCOMMANDS: Mapping[str, frozenset[str] | None] = {
     "system": frozenset({"prune-apps", "switch-to-develop"}),
 }
 
+#: Gated subcommands whose ``--dry-run`` only reports and changes nothing.
+DRY_RUN_SUBCOMMANDS: Mapping[str, frozenset[str]] = {
+    "system": frozenset({"prune-apps"}),
+}
+
 _HELP_FLAGS = frozenset({"-h", "--help"})
 
 
@@ -79,13 +84,16 @@ def is_gated(command: str, remainder: Sequence[str]) -> bool:
     -------
     bool
         True for a gated top-level command, or for a gated subcommand of a group. A
-        group call that asks only for help is not gated.
+        group call that asks only for help, or a dry run of a subcommand listed in
+        :data:`DRY_RUN_SUBCOMMANDS`, is not gated.
     """
     if command in GATED_COMMANDS:
         return True
     if command not in GATED_SUBCOMMANDS or not remainder:
         return False
     if _HELP_FLAGS & set(remainder):
+        return False
+    if remainder[0] in DRY_RUN_SUBCOMMANDS.get(command, ()) and "--dry-run" in remainder:
         return False
     allowed = GATED_SUBCOMMANDS[command]
     return allowed is None or remainder[0] in allowed

@@ -1,10 +1,12 @@
 """App module unit tests."""
 
+import shutil
 import stat
 from pathlib import Path
 from typing import Protocol
 from unittest.mock import patch
 
+import pytest
 from koopa.app import (
     _PRUNE_TRASH_PREFIX,
     app_deps,
@@ -289,26 +291,163 @@ def test_prune_apps_sweeps_leftover_trash(tmp_path: Path) -> None:
     assert not any(r.name.startswith(_PRUNE_TRASH_PREFIX) for r in remaining)
 
 
-def test_prune_apps_skips_non_cli_type(tmp_path: Path) -> None:
-    """Apps with type != 'cli' (e.g. build_tool) are not pruned."""
+needs_rg = pytest.mark.skipif(shutil.which("rg") is None, reason="needs ripgrep (rg)")
+
+
+def _version(app_dir: Path, name: str, version: str, files: dict[str, str] | None = None) -> Path:
+    """Create app/<name>/<version> with *files* (relative path to text)."""
+    path = app_dir / name / version
+    path.mkdir(parents=True)
+    for rel, text in (files or {}).items():
+        (path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (path / rel).write_text(text)
+    return path
+
+
+def _run_prune(tmp_path: Path, json_data: dict, *, dry_run: bool = False) -> None:
+    """Run prune_apps over tmp_path/app and tmp_path/opt."""
     app_dir = tmp_path / "app"
-    opt_dir = tmp_path / "opt"
-    linked = app_dir / "git" / "2.55.0"
-    stale = app_dir / "git" / "2.54.0"
-    linked.mkdir(parents=True)
-    stale.mkdir(parents=True)
-    opt_dir.mkdir()
-    (opt_dir / "git").symlink_to(linked)
-    json_data = {"git": {"type": "build_tool", "version": "2.55.0"}}
-    patches = _patch_prune(str(app_dir), str(opt_dir), json_data, ["git"])
+    installed = sorted(p.name for p in app_dir.iterdir())
+    patches = _patch_prune(str(app_dir), str(tmp_path / "opt"), json_data, installed)
     for p in patches:
         p.start()
     try:
-        prune_apps()
+        prune_apps(dry_run=dry_run)
     finally:
         for p in patches:
             p.stop()
-    assert stale.exists()
+
+
+def _link(tmp_path: Path, name: str, version_dir: Path) -> None:
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir(exist_ok=True)
+    (opt_dir / name).symlink_to(version_dir)
+
+
+@needs_rg
+def test_prune_apps_prunes_unreferenced_build_tool(tmp_path: Path) -> None:
+    """An old build_tool version that nothing refers to is pruned."""
+    app_dir = tmp_path / "app"
+    _link(tmp_path, "git", _version(app_dir, "git", "2.55.0"))
+    stale = _version(app_dir, "git", "2.54.0")
+    _run_prune(tmp_path, {"git": {"type": "build_tool"}})
+    assert not stale.exists()
+    assert (app_dir / "git" / "2.55.0").exists()
+
+
+@needs_rg
+def test_prune_apps_keeps_library_a_transitive_revdep_uses(tmp_path: Path) -> None:
+    """An old library a kept install still loads is kept; an unused one is pruned.
+
+    libxslt depends on zlib only through libxml2, so the scan must follow
+    reverse dependencies transitively to find the reference.
+    """
+    app_dir = tmp_path / "app"
+    zlib_old = _version(app_dir, "zlib", "1.3.2")
+    zlib_older = _version(app_dir, "zlib", "1.3.1")
+    _link(tmp_path, "zlib", _version(app_dir, "zlib", "1.4"))
+    _link(tmp_path, "libxml2", _version(app_dir, "libxml2", "2.15.4"))
+    _link(
+        tmp_path,
+        "libxslt",
+        _version(
+            app_dir, "libxslt", "1.1.45", {"bin/xsltproc": f"\0{zlib_old}/lib/libz.1.dylib\0"}
+        ),
+    )
+    json_data = {
+        "zlib": {},
+        "libxml2": {"dependencies": ["zlib"]},
+        "libxslt": {"dependencies": ["libxml2"]},
+    }
+    _run_prune(tmp_path, json_data)
+    assert zlib_old.exists()
+    assert not zlib_older.exists()
+
+
+@needs_rg
+def test_prune_apps_ignores_install_logs_and_longer_versions(tmp_path: Path) -> None:
+    """A path in .install/ or a longer version (1.1 vs 1.10) is not a reference."""
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "dep", "1.1")
+    _version(app_dir, "dep", "1.10")
+    files = {
+        ".install/build.log": f"PATH={old}/bin",
+        "lib/libuser.dylib": f"\0{app_dir}/dep/1.10/lib\0",
+    }
+    _link(tmp_path, "dep", app_dir / "dep" / "1.10")
+    _link(tmp_path, "user", _version(app_dir, "user", "1.0", files))
+    _run_prune(tmp_path, {"dep": {}, "user": {"dependencies": ["dep"]}})
+    assert not old.exists()
+
+
+@needs_rg
+def test_prune_apps_keeps_what_a_kept_old_version_uses(tmp_path: Path) -> None:
+    """A kept old version stays installed, so the old versions it uses stay too."""
+    app_dir = tmp_path / "app"
+    zlib_old = _version(app_dir, "zlib", "1.3.2")
+    _link(tmp_path, "zlib", _version(app_dir, "zlib", "1.4"))
+    xml_old = _version(app_dir, "libxml2", "2.15.3", {"lib/libxml2.dylib": f"\0{zlib_old}/lib\0"})
+    _link(tmp_path, "libxml2", _version(app_dir, "libxml2", "2.15.4"))
+    files = {"bin/xsltproc": f"\0{xml_old}/lib\0"}
+    _link(tmp_path, "libxslt", _version(app_dir, "libxslt", "1.1.45", files))
+    json_data = {
+        "zlib": {},
+        "libxml2": {"dependencies": ["zlib"]},
+        "libxslt": {"dependencies": ["libxml2"]},
+    }
+    _run_prune(tmp_path, json_data)
+    assert xml_old.exists()
+    assert zlib_old.exists()
+
+
+@needs_rg
+def test_prune_apps_relinks_or_removes_stale_links(tmp_path: Path) -> None:
+    """A link into a pruned version moves to the linked version, or goes away."""
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "libtool", "2.5.4", {"bin/libtool": "", "bin/aclocal-1.18": ""})
+    new = _version(app_dir, "libtool", "2.6.2", {"bin/libtool": ""})
+    _link(tmp_path, "libtool", new)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "libtool").symlink_to(old / "bin" / "libtool")
+    (bin_dir / "aclocal-1.18").symlink_to(old / "bin" / "aclocal-1.18")
+    _run_prune(tmp_path, {"libtool": {"type": "build_tool"}})
+    assert not old.exists()
+    assert (bin_dir / "libtool").readlink() == new / "bin" / "libtool"
+    assert not (bin_dir / "aclocal-1.18").is_symlink()
+
+
+@needs_rg
+def test_prune_apps_dry_run_changes_nothing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A dry run reports the prune and the relink but changes no file or link."""
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "libtool", "2.5.4", {"bin/libtool": ""})
+    new = _version(app_dir, "libtool", "2.6.2", {"bin/libtool": ""})
+    _link(tmp_path, "libtool", new)
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "libtool").symlink_to(old / "bin" / "libtool")
+    _run_prune(tmp_path, {"libtool": {"type": "build_tool"}}, dry_run=True)
+    out = capsys.readouterr().out
+    assert old.exists()
+    assert (bin_dir / "libtool").readlink() == old / "bin" / "libtool"
+    assert f"[dry-run] Pruning {str(old)!r}." in out
+    assert "[dry-run] Relinking" in out
+
+
+def test_prune_apps_without_ripgrep_prunes_only_cli(tmp_path: Path) -> None:
+    """Without ripgrep there is no reference check, so only cli apps are pruned."""
+    app_dir = tmp_path / "app"
+    _link(tmp_path, "git", _version(app_dir, "git", "2.55.0"))
+    git_old = _version(app_dir, "git", "2.54.0")
+    _link(tmp_path, "jq", _version(app_dir, "jq", "1.8"))
+    jq_old = _version(app_dir, "jq", "1.7")
+    with patch("koopa.app.which", return_value=None):
+        _run_prune(tmp_path, {"git": {"type": "build_tool"}, "jq": {"type": "cli"}})
+    assert git_old.exists()
+    assert not jq_old.exists()
 
 
 def _link_app_with_recorded_deps(app_dir: Path, opt_dir: Path, name: str, deps: list) -> None:

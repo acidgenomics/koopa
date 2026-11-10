@@ -25,7 +25,7 @@ To use this plugin from Gemini CLI: `gemini extensions link
 - `skills/koopa-env` — why a tool resolves from koopa vs. Homebrew/the system,
   and `KOOPA_AUTO_ACTIVATE` for non-interactive/agentic sessions.
 - `skills/koopa-troubleshoot` — `koopa system check`/`info`, install logs, and
-  why `koopa system prune-apps` needs confirmation before running.
+  how `koopa system prune-apps` decides what to delete, with its `--dry-run`.
 - `skills/koopa-claude-permissions`: Claude Code permission system internals
   (protected paths, permission modes, allow/ask/deny precedence, the PreToolUse
   `permissionDecision` hook contract).
@@ -315,7 +315,7 @@ agent never changes the system also lives in the `koopa` CLI itself
 `koopa` refuses `install`, `reinstall`, `uninstall`, `update`, `configure`, every
 `admin` subcommand, `system prune-apps`, and `system switch-to-develop`. It exits 2 and
 prints the exact command for the user to run in their own terminal. Read-only commands
-(`list`, `app`, `system which`, ...) run as usual.
+(`list`, `app`, `system which`, ...) and `system prune-apps --dry-run` run as usual.
 
 A coding agent is detected from the markers harnesses set for the commands they run:
 `AI_AGENT`, `PI_CODING_AGENT`, `CLAUDE_CODE_CHILD_SESSION`, `COPILOT_CLI`, or

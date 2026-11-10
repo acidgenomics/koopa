@@ -453,6 +453,7 @@ KOOPA_NO_DECISION = [
     "koopa list",
     "koopa system prefix",
     "koopa system info",
+    "koopa system prune-apps --dry-run",
     "koopa admin --help",
     "koopa install --help",
     "koopa app python --version",

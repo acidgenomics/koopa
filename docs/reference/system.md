@@ -36,6 +36,7 @@ Print the installation prefix for koopa or a named application.
 Remove stale application versions.
 
 - `--verbose`
+- `--dry-run`
 
 (koopa-system-switch-to-develop)=
 ## `system switch-to-develop`

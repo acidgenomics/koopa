@@ -6,9 +6,21 @@ import time
 from collections.abc import Callable
 from datetime import datetime
 from json import loads
-from os import chmod, getpid, rename
-from os.path import basename, isdir, isfile, islink, join, realpath
-from shutil import rmtree
+from os import chmod, getpid, readlink, rename, symlink, unlink, walk
+from os.path import (
+    basename,
+    dirname,
+    exists,
+    isdir,
+    isfile,
+    islink,
+    join,
+    normpath,
+    realpath,
+    relpath,
+    sep,
+)
+from shutil import rmtree, which
 from subprocess import run
 
 from koopa.data import argsort, unique_pos
@@ -651,34 +663,279 @@ def _prune_rmtree_onexc(
     raise excinfo
 
 
-def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
-    """Prune apps.
+def _app_revdep_closure(names: set[str], installed: list[str], json_data: dict) -> set[str]:
+    """Return the installed apps that depend on any of *names*.
 
     Parameters
     ----------
-    dry_run : bool, optional
-        Print what would be pruned without deleting anything.
-    verbose : bool, optional
-        Print each subdirectory as it's pruned.
+    names : set[str]
+        App names whose reverse dependencies to collect.
+    installed : list[str]
+        Installed app names to consider.
+    json_data : dict
+        Parsed app.json registry.
+
+    Returns
+    -------
+    set[str]
+        Installed apps that list one of *names* as a runtime or build
+        dependency, directly or through other installed apps. Soft
+        dependencies are not followed: they are found on ``PATH`` at run
+        time, never by a versioned path.
     """
-    app_prefix = koopa_app_prefix()
-    json_data = import_app_json()
-    supported_names = json_data.keys()
-    installed_names = installed_apps()
-    opt_prefix = koopa_opt_prefix()
-    pruned: list[str] = []
-    to_delete: list[str] = []
-    pid = getpid()
-    for name in installed_names:
-        if name not in supported_names:
+    revdeps: dict[str, set[str]] = {}
+    for app in installed:
+        for dep in extract_app_deps(app, json_data, include_soft_deps=False):
+            entry = json_data.get(dep, {})
+            target = entry.get("alias_of", dep) if isinstance(entry, dict) else dep
+            revdeps.setdefault(target, set()).add(app)
+    found: set[str] = set()
+    stack = list(names)
+    while stack:
+        for app in revdeps.get(stack.pop(), set()):
+            if app not in found:
+                found.add(app)
+                stack.append(app)
+    return found
+
+
+def _rg_literal(text: str) -> str:
+    r"""Escape *text* as a ripgrep (Rust regex) literal.
+
+    Parameters
+    ----------
+    text : str
+        Literal text to match.
+
+    Returns
+    -------
+    str
+        The text with every character that is not an ASCII letter or digit
+        written as a ``\\x{..}`` escape, which Rust regex always accepts.
+    """
+    return "".join(c if c.isascii() and c.isalnum() else f"\\x{{{ord(c):x}}}" for c in text)
+
+
+def _version_key(path: str, bases: tuple[str, ...]) -> tuple[str, str] | None:
+    """Return the ``(name, version)`` of the app version directory holding *path*.
+
+    Parameters
+    ----------
+    path : str
+        Absolute, normalized path.
+    bases : tuple[str, ...]
+        Spellings of the app prefix, such as the configured path and its
+        real path.
+
+    Returns
+    -------
+    tuple[str, str] | None
+        The app name and version, or None when *path* is not inside an app
+        version directory.
+    """
+    for base in bases:
+        if path.startswith(base + sep):
+            parts = path[len(base) + 1 :].split(sep)
+            if len(parts) >= 2 and parts[1]:
+                return parts[0], parts[1]
+    return None
+
+
+def _link_targets(path: str) -> tuple[str, str]:
+    """Return the literal and the fully resolved target of symlink *path*.
+
+    Parameters
+    ----------
+    path : str
+        Path to a symlink.
+
+    Returns
+    -------
+    tuple[str, str]
+        The link's own target, normalized against its directory, and its
+        real path.
+    """
+    return normpath(join(dirname(path), readlink(path))), realpath(path)
+
+
+def _find_version_references(
+    sources: list[str],
+    candidates: dict[tuple[str, str], str],
+    bases: tuple[str, ...],
+    rg: str,
+) -> dict[tuple[str, str], str]:
+    """Find files and symlinks under *sources* that point into an old app version.
+
+    A reference is the byte string ``/app/<name>/<version>`` followed by a
+    character that cannot continue a version (so ``1.1`` does not match
+    ``1.10``), or a symlink whose target is inside the version's directory.
+    ``.install/`` directories hold build logs and metadata, not runtime
+    references, so they are not searched.
+
+    Parameters
+    ----------
+    sources : list[str]
+        Directories to search.
+    candidates : dict[tuple[str, str], str]
+        Map of each old ``(name, version)`` to its directory.
+    bases : tuple[str, ...]
+        Spellings of the app prefix.
+    rg : str
+        Path to the ripgrep executable.
+
+    Returns
+    -------
+    dict[tuple[str, str], str]
+        Map of each referenced ``(name, version)`` to one path that refers
+        to it.
+
+    Raises
+    ------
+    RuntimeError
+        If ripgrep reports an error, since an unreadable file could hide a
+        reference.
+    """
+    found: dict[tuple[str, str], str] = {}
+    if not sources or not candidates:
+        return found
+    tail = r"(?:[^0-9A-Za-z._+\x{2d}]|$)"
+    patterns = "\n".join(_rg_literal(f"/app/{n}/{v}") + tail for n, v in candidates)
+    proc = run(
+        [
+            rg,
+            "--no-config",
+            "--no-messages",
+            "-uu",
+            "--text",
+            "--only-matching",
+            "--null",
+            "--with-filename",
+            "--no-line-number",
+            "--glob",
+            "!.install/",
+            "--file",
+            "-",
+            "--",
+            *sources,
+        ],
+        input=patterns,
+        capture_output=True,
+        text=True,
+        errors="replace",
+        check=False,
+    )
+    if proc.returncode not in (0, 1):
+        raise RuntimeError(f"ripgrep exited with status {proc.returncode}.")
+    for line in proc.stdout.splitlines():
+        path, _, match = line.partition("\0")
+        body = match.removeprefix("/app/")
+        for text in (body, body[:-1]):
+            name, _, version = text.partition("/")
+            if (name, version) in candidates:
+                found.setdefault((name, version), path)
+                break
+    for source in sources:
+        for root, subdirs, files in walk(source):
+            subdirs[:] = [d for d in subdirs if d != ".install"]
+            for entry in subdirs + files:
+                link = join(root, entry)
+                if not islink(link):
+                    continue
+                for target in _link_targets(link):
+                    key = _version_key(target, bases)
+                    if key in candidates:
+                        found.setdefault(key, link)
+    return found
+
+
+def _stale_links(
+    link_dirs: list[str],
+    deletable: dict[tuple[str, str], str],
+    linked: dict[str, str],
+    bases: tuple[str, ...],
+) -> list[tuple[str, str | None]]:
+    """Find symlinks that point into an old app version that will be deleted.
+
+    Parameters
+    ----------
+    link_dirs : list[str]
+        Directories of koopa links to check, such as ``bin`` and ``share``.
+    deletable : dict[tuple[str, str], str]
+        Map of each old ``(name, version)`` to delete to its directory.
+    linked : dict[str, str]
+        Map of each app name to the directory of its linked version.
+    bases : tuple[str, ...]
+        Spellings of the app prefix.
+
+    Returns
+    -------
+    list[tuple[str, str | None]]
+        Each stale link with its new target: the same file in the linked
+        version, or None when the linked version has no such file.
+    """
+    out: list[tuple[str, str | None]] = []
+    for top in link_dirs:
+        if not isdir(top):
+            continue
+        for root, subdirs, files in walk(top):
+            for entry in subdirs + files:
+                link = join(root, entry)
+                if not islink(link):
+                    continue
+                target = _link_targets(link)[0]
+                key = _version_key(target, bases)
+                if key not in deletable:
+                    continue
+                base = next(b for b in bases if target.startswith(b + sep))
+                rel = relpath(target, join(base, *key))
+                new = join(linked[key[0]], rel)
+                out.append((link, new if exists(new) else None))
+    return out
+
+
+def _collect_prune_candidates(
+    app_prefix: str,
+    opt_prefix: str,
+    json_data: dict,
+) -> tuple[dict[str, str], dict[tuple[str, str], str], list[str]]:
+    """Split each installed app's version directories into linked, old, and trash.
+
+    Parameters
+    ----------
+    app_prefix : str
+        Path to the koopa app prefix.
+    opt_prefix : str
+        Path to the koopa opt prefix.
+    json_data : dict
+        Parsed app.json registry.
+
+    Returns
+    -------
+    tuple[dict[str, str], dict[tuple[str, str], str], list[str]]
+        The linked version directory of each app, each old ``(name,
+        version)`` mapped to its directory, and leftover trash from an
+        interrupted prune.
+
+    Raises
+    ------
+    ValueError
+        If an installed app is not in app.json, or a ``cli`` app is not
+        linked in *opt_prefix*.
+    """
+    linked: dict[str, str] = {}
+    candidates: dict[tuple[str, str], str] = {}
+    trash: list[str] = []
+    for name in installed_apps():
+        if name not in json_data:
             raise ValueError(f"{name!r} is not a supported app.")
-        json = json_data[name]
-        app_type = json.get("type", "library")
-        if app_type != "cli":
+        entry = json_data[name]
+        if entry.get("alias_of"):
             continue
         opt_path = join(opt_prefix, name)
         if not islink(opt_path):
-            raise ValueError(f"{name!r} is not linked in {opt_prefix!r}.")
+            if entry.get("type", "library") == "cli":
+                raise ValueError(f"{name!r} is not linked in {opt_prefix!r}.")
+            continue
         linked_subdir = realpath(opt_path)
         subdirs = list_subdirs(
             path=join(app_prefix, name),
@@ -689,27 +946,182 @@ def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
         for subdir in subdirs:
             # Sweep leftover trash from interrupted prior runs.
             if basename(subdir).startswith(_PRUNE_TRASH_PREFIX):
-                to_delete.append(subdir)
-                continue
-            if subdir == linked_subdir:
-                continue
-            if dry_run:
-                print(f"[dry-run] Pruning {subdir!r}.")
-                continue
-            if verbose:
-                print(f"Pruning {subdir!r}.")
-            # Rename into a hidden sibling first: atomic and O(1) on NFS,
-            # removes the old version from the live namespace immediately.
-            trash = join(app_prefix, name, f"{_PRUNE_TRASH_PREFIX}{basename(subdir)}.{pid}")
-            try:
-                rename(subdir, trash)
-                to_delete.append(trash)
-            except OSError:
-                to_delete.append(subdir)
-            pruned.append(subdir)
-    if not dry_run and to_delete:
-        from koopa.alert import alert
+                trash.append(subdir)
+            elif realpath(subdir) == linked_subdir:
+                linked[name] = subdir
+            else:
+                candidates[(name, basename(subdir))] = subdir
+    return linked, candidates, trash
 
+
+def _check_prune_references(
+    candidates: dict[tuple[str, str], str],
+    linked: dict[str, str],
+    json_data: dict,
+    bases: tuple[str, ...],
+) -> dict[tuple[str, str], str] | None:
+    """Find which old app versions a kept install still refers to.
+
+    Parameters
+    ----------
+    candidates : dict[tuple[str, str], str]
+        Map of each old ``(name, version)`` to its directory.
+    linked : dict[str, str]
+        Map of each app name to the directory of its linked version.
+    json_data : dict
+        Parsed app.json registry.
+    bases : tuple[str, ...]
+        Spellings of the app prefix.
+
+    Returns
+    -------
+    dict[tuple[str, str], str] | None
+        Map of each old version still in use to one path that refers to it,
+        or None when the check could not run.
+    """
+    from koopa.alert import alert, warn
+
+    rg = which("rg")
+    if rg is None:
+        warn("ripgrep (rg) is not installed, so only cli apps are pruned.")
+        return None
+    names = {name for name, _ in candidates}
+    scope = names | _app_revdep_closure(names, list(linked), json_data)
+    sources = [linked[name] for name in sorted(scope) if name in linked]
+    venv = join(dirname(bases[0]), ".venv")
+    if isdir(venv):
+        sources.append(venv)
+    alert(f"Checking {len(candidates)} old app versions for references.")
+    in_use: dict[tuple[str, str], str] = {}
+    stop = threading.Event()
+    spinner = threading.Thread(target=_prune_spinner, args=(stop, time.monotonic()), daemon=True)
+    spinner.start()
+    try:
+        remaining = dict(candidates)
+        while sources and remaining:
+            found = _find_version_references(sources, remaining, bases, rg)
+            in_use.update(found)
+            remaining = {k: v for k, v in remaining.items() if k not in found}
+            # A kept old version stays installed, so what it uses stays too.
+            sources = [candidates[key] for key in found]
+    except RuntimeError as exc:
+        warn(f"Reference check failed ({exc}), so only cli apps are pruned.")
+        return None
+    finally:
+        stop.set()
+        spinner.join()
+    return in_use
+
+
+def _relink_stale_links(
+    link_dirs: list[str],
+    deletable: dict[tuple[str, str], str],
+    linked: dict[str, str],
+    bases: tuple[str, ...],
+    *,
+    dry_run: bool,
+    verbose: bool,
+) -> None:
+    """Move links that point into a deleted version to the linked version.
+
+    Parameters
+    ----------
+    link_dirs : list[str]
+        Directories of koopa links to check, such as ``bin`` and ``share``.
+    deletable : dict[tuple[str, str], str]
+        Map of each old ``(name, version)`` to delete to its directory.
+    linked : dict[str, str]
+        Map of each app name to the directory of its linked version.
+    bases : tuple[str, ...]
+        Spellings of the app prefix.
+    dry_run : bool
+        Print each change without making it.
+    verbose : bool
+        Print each change as it is made.
+    """
+    for link, new in _stale_links(link_dirs, deletable, linked, bases):
+        if dry_run:
+            action = f"Relinking {link!r} to {new!r}" if new else f"Removing {link!r}"
+            print(f"[dry-run] {action}.")
+            continue
+        unlink(link)
+        if new:
+            symlink(new, link)
+        if verbose:
+            print(f"Relinked {link!r} to {new!r}." if new else f"Removed {link!r}.")
+
+
+def prune_apps(dry_run: bool = False, verbose: bool = False) -> None:
+    """Prune old app versions that nothing uses.
+
+    Every app type is pruned. An old version of a ``library`` or
+    ``build_tool`` app can still be in use: koopa links compiled apps to
+    exact ``app/<name>/<version>/lib`` paths, so a kept install can load an
+    old library. Before deleting, ripgrep scans the linked versions of the
+    app's reverse dependencies (runtime and build, followed transitively),
+    the app's own linked version, and koopa's ``.venv`` for the old path.
+    A referenced version is kept, and the reference is reported. Links in
+    ``bin`` and ``share`` that point into a deleted version are moved to
+    the same file in the linked version, or removed when it has none.
+    Without a working ripgrep, only ``cli`` apps are pruned, without a
+    reference check.
+
+    Parameters
+    ----------
+    dry_run : bool, optional
+        Print what would be pruned, kept, and relinked without changing
+        anything.
+    verbose : bool, optional
+        Print each subdirectory as it's pruned.
+    """
+    from koopa.alert import alert, alert_note
+
+    app_prefix = koopa_app_prefix()
+    bases = tuple(dict.fromkeys((normpath(app_prefix), realpath(app_prefix))))
+    root = dirname(app_prefix)
+    json_data = import_app_json()
+    linked, candidates, to_delete = _collect_prune_candidates(
+        app_prefix, koopa_opt_prefix(), json_data
+    )
+    in_use = _check_prune_references(candidates, linked, json_data, bases) if candidates else {}
+    if in_use is None:
+        deletable = {
+            key: path
+            for key, path in candidates.items()
+            if json_data[key[0]].get("type", "library") == "cli"
+        }
+    else:
+        deletable = {key: path for key, path in candidates.items() if key not in in_use}
+        for (name, version), ref in sorted(in_use.items()):
+            prefix = "[dry-run] " if dry_run else ""
+            owner = relpath(ref, app_prefix) if ref.startswith(app_prefix + sep) else ref
+            alert_note(f"{prefix}Keeping {name} {version}: still used by {owner!r}.")
+    _relink_stale_links(
+        [join(root, "bin"), join(root, "share")],
+        deletable,
+        linked,
+        bases,
+        dry_run=dry_run,
+        verbose=verbose,
+    )
+    pruned: list[str] = []
+    pid = getpid()
+    for (name, _), subdir in sorted(deletable.items()):
+        if dry_run:
+            print(f"[dry-run] Pruning {subdir!r}.")
+            continue
+        if verbose:
+            print(f"Pruning {subdir!r}.")
+        # Rename into a hidden sibling first: atomic and O(1) on NFS,
+        # removes the old version from the live namespace immediately.
+        trash = join(app_prefix, name, f"{_PRUNE_TRASH_PREFIX}{basename(subdir)}.{pid}")
+        try:
+            rename(subdir, trash)
+            to_delete.append(trash)
+        except OSError:
+            to_delete.append(subdir)
+        pruned.append(subdir)
+    if not dry_run and to_delete:
         alert("Pruning old app versions.")
         stop = threading.Event()
         spinner = threading.Thread(

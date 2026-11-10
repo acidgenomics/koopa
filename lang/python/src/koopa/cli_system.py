@@ -285,12 +285,14 @@ def _handle_prune_apps(args: list[str] | None = None) -> None:
     ----------
     args : list[str] | None, optional
         Command arguments. Pruning runs verbosely if ``"--verbose"`` is
-        present.
+        present, and only reports what it would change if ``"--dry-run"``
+        is present.
     """
     from koopa.app import prune_apps
 
     verbose = args is not None and "--verbose" in args
-    prune_apps(verbose=verbose)
+    dry_run = args is not None and "--dry-run" in args
+    prune_apps(dry_run=dry_run, verbose=verbose)
 
 
 def _handle_update_tex_packages() -> None:

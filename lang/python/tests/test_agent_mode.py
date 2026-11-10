@@ -54,6 +54,9 @@ def test_override_and_empty_values(env: dict[str, str], expected: bool) -> None:
         ("admin", ["flush-dns", "--help"], False),
         ("admin", [], False),
         ("system", ["prune-apps"], True),
+        ("system", ["prune-apps", "--verbose"], True),
+        ("system", ["prune-apps", "--dry-run"], False),
+        ("system", ["switch-to-develop", "--dry-run"], True),
         ("system", ["switch-to-develop"], True),
         ("system", ["prefix"], False),
         ("system", ["info"], False),
@@ -79,6 +82,7 @@ def test_hook_copies_match_agent_mode() -> None:
     assert agent_mode.AGENT_OVERRIDE == _scan.KOOPA_AGENT_OVERRIDE
     assert _scan.KOOPA_GATED_COMMANDS == agent_mode.GATED_COMMANDS
     assert dict(agent_mode.GATED_SUBCOMMANDS) == _scan.KOOPA_GATED_SUBCOMMANDS
+    assert dict(agent_mode.DRY_RUN_SUBCOMMANDS) == _scan.KOOPA_DRY_RUN_SUBCOMMANDS
 
 
 def _run_main(monkeypatch: pytest.MonkeyPatch, argv: list[str]) -> list[str]:
