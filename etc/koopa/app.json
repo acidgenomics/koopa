@@ -223,15 +223,14 @@
     "date": "2026-11-06",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "workflow orchestration platform",
     "installer": "python-package",
     "installer_args": {
-      "egg_name": "apache_airflow_core",
-      "python_version": "3.13"
+      "egg_name": "apache_airflow_core"
     },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://airflow.apache.org/"
@@ -713,14 +712,11 @@
     "date": "2026-11-03",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "official Microsoft Azure command-line interface",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
@@ -2341,15 +2337,14 @@
     "date": "2026-10-14",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "data build tool for analytics engineering",
     "installer": "python-package",
     "installer_args": {
-      "pip_name": "dbt-core",
-      "python_version": "3.13"
+      "pip_name": "dbt-core"
     },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://docs.getdbt.com",
@@ -5013,14 +5008,11 @@
     "date": "2026-10-30",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "bioinformatics platform SDK and CLI",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.12"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/latch/",
@@ -9229,14 +9221,11 @@
     "date": "2026-11-09",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "official command-line interface for Snowflake",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://docs.snowflake.com/en/developer-guide/snowflake-cli/index",
@@ -9630,14 +9619,11 @@
     "date": "2026-07-14",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "command-line interface for Tableau Server and Cloud",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://tableau.github.io/tabcmd/",
@@ -9922,19 +9908,15 @@
     "date": "2026-11-05",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "scientific tool ecosystem and MCP server for AI agents",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
     "notes": [
       "Base install covers the API and database tools. The [graph] and [ml] extras need graphviz headers plus rdkit and admet-ai, so they are deliberately excluded.",
-      "The base install pulls the playwright Python package but no browser binaries. Web-scraping tools need a separate 'playwright install chromium'.",
-      "Pinned below python3.14: markitdown[all] (a base dependency, not optional) requires youtube-transcript-api~=1.0.0, which sets requires_python <3.14. No newer markitdown release loosens this pin."
+      "The base install pulls the playwright Python package but no browser binaries. Web-scraping tools need a separate 'playwright install chromium'."
     ],
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/tooluniverse/",
