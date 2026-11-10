@@ -81,7 +81,7 @@
     "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-08-03",
-    "default": false,
+    "default": true,
     "description": "static linter for GitHub Actions workflow files",
     "installer": "conda-package",
     "soft_dependencies": [
@@ -3696,7 +3696,7 @@
     ],
     "category": "VCS",
     "date": "2026-05-31",
-    "default": false,
+    "default": true,
     "dependencies": [
       "python"
     ],
@@ -3898,10 +3898,9 @@
     "category": "Cloud",
     "conda_channel": "conda-forge",
     "date": "2026-11-03",
-    "default": true,
+    "default": false,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
-    "python_version_pin": true,
     "type": "cli",
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
@@ -6156,7 +6155,7 @@
     ],
     "category": "Documentation",
     "date": "2026-10-24",
-    "default": false,
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -6773,7 +6772,7 @@
     "category": "Language",
     "conda_channel": "conda-forge",
     "date": "2026-11-03",
-    "default": false,
+    "default": true,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
     "installer_args": {
@@ -7454,7 +7453,7 @@
     ],
     "category": "JavaScript",
     "date": "2026-11-05",
-    "default": false,
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -7568,7 +7567,7 @@
     ],
     "category": "Text",
     "date": "2026-07-23",
-    "default": false,
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -7805,7 +7804,7 @@
     ],
     "category": "Python",
     "date": "2026-11-05",
-    "default": false,
+    "default": true,
     "dependencies": [
       "python"
     ],
@@ -8623,7 +8622,7 @@
     "category": "AI",
     "conda_channel": "conda-forge",
     "date": "2026-10-30",
-    "default": false,
+    "default": true,
     "description": "continuous code review for AI coding agents",
     "installer": "conda-package",
     "type": "cli",
