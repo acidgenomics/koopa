@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+Minor changes:
+
+- Updated the website's installation, activation, and dotfiles guides, added an
+  agentic coding guide, and moved the applications guide to `/apps.html`.
+- Moved global agent guidance into on-demand koopa plugin skills, including
+  shell and Ghostty guidance.
+- Koopa's Python environment now installs `acidgenomics-syntactic` from PyPI
+  instead of the legacy private-index distribution.
+- `koopa app koopa publish-docs` now accepts `--dry-run`; the existing
+  `--dryrun` spelling remains available.
+
 ## koopa 0.39.0 (2026-11-09)
 
 Major changes:
