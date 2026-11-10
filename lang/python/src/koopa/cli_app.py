@@ -475,7 +475,9 @@ def _handle_koopa_publish_docs(args: list[str]) -> None:
         help="Skip CloudFront cache invalidation.",
     )
     parser.add_argument(
+        "--dry-run",
         "--dryrun",
+        dest="dryrun",
         action="store_true",
         help="Print the aws s3 sync plan without uploading anything.",
     )

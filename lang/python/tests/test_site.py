@@ -6,6 +6,24 @@ import pytest
 from koopa.site import _cloudfront_distribution_id
 
 
+@pytest.mark.parametrize(
+    ("args", "dryrun", "invalidate"),
+    [
+        ([], False, True),
+        (["--dry-run"], True, True),
+        (["--dryrun", "--no-invalidate"], True, False),
+    ],
+)
+def test_publish_docs_cli_flags(args: list[str], dryrun: bool, invalidate: bool) -> None:
+    """Forward the preferred dry-run flag and its legacy alias safely."""
+    from koopa.cli_app import _handle_koopa_publish_docs
+
+    with patch("koopa.site.publish_docs") as publish:
+        _handle_koopa_publish_docs(args)
+
+    publish.assert_called_once_with(invalidate=invalidate, dryrun=dryrun)
+
+
 def test_cloudfront_distribution_id_returns_specific_value() -> None:
     """Test the site-specific env var is used, not a generic one."""
     values = {

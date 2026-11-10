@@ -21,17 +21,13 @@ optional-dependencies.docs = [
   "sphinx",
 ]
 optional-dependencies.extra = [
-  "syntactic>=0.1",
+  "acidgenomics-syntactic>=0.1.1",
   "tqdm",
 ]
 scripts.koopa = "koopa.cli_main:main"
 
 [tool.setuptools]
 packages.find.where = [ "lang/python/src" ]
-
-[tool.uv]
-sources.syntactic = { index = "acidgenomics" }
-index = [ { name = "acidgenomics", url = "https://python.acidgenomics.com/simple/" } ]
 
 [tool.ruff]
 # Deliberately below requires-python. koopa's runtime needs 3.14, but the

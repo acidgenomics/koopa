@@ -631,7 +631,7 @@ Remove stale S3 keys left over from a previous docs build.
 Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.
 
 - `--no-invalidate`
-- `--dryrun`
+- `--dry-run`
 
 ## md5sum
 

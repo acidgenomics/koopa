@@ -1,15 +1,22 @@
 ---
 name: koopa-python
 description: >-
-  Python virtual environment lessons, why moving a project directory breaks
-  .venv/bin/activate's hardcoded absolute path, and why direnv's PATH_add is
-  relocation-proof where source activate is not. Use when a console-script
-  entry point becomes "command not found" after moving a project directory,
-  when writing or debugging a .envrc that activates a Python venv, or when
-  deciding between PATH_add and source activate under direnv's strict_env.
+  Python style and virtual-environment guidance, including why moving a project
+  breaks .venv/bin/activate and why direnv PATH_add is relocation-proof. Use
+  when writing Python code, debugging a moved environment, or activating a
+  Python venv through direnv.
 ---
 
 # Python Virtual Environment Lessons
+
+## Python coding conventions
+
+- Follow the project's `pyproject.toml` and configured formatter and linter.
+- Use native type hints, annotate function signatures, and use `X | None` for
+  optional values. Do not add `from __future__ import annotations`.
+- Use `typing.TypeAlias` for complex type aliases.
+- Check existing project patterns before introducing a new one. Do not install
+  tooling or dependencies without the user's approval.
 
 ## Moving a `.venv` breaks `activate` scripts: use `PATH_add` in `.envrc` instead
 

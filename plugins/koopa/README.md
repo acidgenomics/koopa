@@ -44,12 +44,15 @@ To use this plugin from Gemini CLI: `gemini extensions link
 - `skills/koopa-obsidian`: the Obsidian desktop CLI and vault mechanics, and
   `koopa app obsidian bookmark` for dated bookmark notes (vs. the native
   Bookmarks pane and `bookmarks-all`).
-- `skills/koopa-python`: Python virtual environment lessons (why moving a
-  project breaks `.venv/bin/activate`, and why direnv `PATH_add` survives it).
+- `skills/koopa-ghostty`: troubleshoot Ghostty macOS privacy permissions
+  without broadening access unnecessarily.
+- `skills/koopa-python`: Python style and virtual environment guidance,
+  including why direnv `PATH_add` survives project moves.
+- `skills/koopa-shell`: shell indentation and control-flow conventions.
 - `skills/koopa-todo-md`: Markdown `todo.md` conventions for project task
   tracking.
-- `skills/koopa-workflow-guidance`: workflow orchestration (plan mode etiquette,
-  subagent discipline, session hygiene, git commit conventions).
+- `skills/koopa-workflow-guidance`: coding discipline, verification, plan mode,
+  subagent use, session hygiene, and git commit conventions.
 
 ## Hooks
 

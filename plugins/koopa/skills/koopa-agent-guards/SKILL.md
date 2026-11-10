@@ -10,6 +10,20 @@ description: >-
 
 # koopa agent guards
 
+## Baseline security and privacy
+
+- Never put credentials, personal data, or sensitive configuration in source
+  files, logs, prompts, commits, or scratch files. Use environment variables or
+  a secret manager, and treat files such as `.env`, `credentials.json`, `*.pem`,
+  `*_key.*`, and token-named files as sensitive.
+- Do not introduce `eval`, `exec`, dynamic SQL, or shell injection without
+  explicit approval. Sanitize input at system boundaries and use parameterized
+  SQL.
+- Flag changes involving authentication, cryptography, network access,
+  databases, file-system access, or permissions.
+- Do not include personal data in code, logs, prompts, or plan files. Flag code
+  that transmits user data without consent.
+
 ## What the guards are
 
 The plugin registers Python hooks that run before a tool call

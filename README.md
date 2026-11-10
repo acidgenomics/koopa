@@ -19,7 +19,7 @@ See the [installation guide](https://koopa.acidgenomics.com/installation.html) f
 the full install flow, or jump to the [CLI reference](https://koopa.acidgenomics.com/reference/index.html)
 for every `koopa` command.
 
-Guides: [Applications](https://koopa.acidgenomics.com/applications.html),
+Guides: [Applications](https://koopa.acidgenomics.com/apps.html),
 [Activation](https://koopa.acidgenomics.com/activation.html),
 [Dotfiles](https://koopa.acidgenomics.com/dotfiles.html), and
 [Troubleshooting](https://koopa.acidgenomics.com/troubleshooting.html).

@@ -1203,7 +1203,7 @@ def test_find_dist_record_prefers_matching_version(tmp_path: Path) -> None:
 
 
 def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path) -> None:
-    """Koopa's venv extras install exempts first-party `syntactic` from cooldown.
+    """Koopa's venv extras install exempts first-party syntactic from cooldown.
 
     A configured dependency cooldown (exclude-newer in ~/.config/uv/uv.toml)
     must still govern third-party extras, so no global override is passed.
@@ -1237,7 +1237,41 @@ def test_update_venv_uv_extras_exempts_first_party_from_cooldown(tmp_path: Path)
     assert len(captured) == 1
     assert "--exclude-newer" not in captured[0]
     idx = captured[0].index("--exclude-newer-package")
-    assert captured[0][idx + 1] == "syntactic=false"
+    assert captured[0][idx + 1] == "acidgenomics-syntactic=false"
+
+
+def test_update_venv_removes_legacy_syntactic_before_install(tmp_path: Path) -> None:
+    """Remove the old distribution before installing its renamed replacement."""
+    from koopa.install import _update_venv
+
+    (tmp_path / ".python-version").write_text("3.14\n")
+    venv_dir = tmp_path / ".venv"
+    (venv_dir / "bin").mkdir(parents=True)
+    (venv_dir / "bin" / "python3").touch()
+    (venv_dir / "pyvenv.cfg").write_text("version = 3.14.0\n")
+    dist = venv_dir / "lib" / "python3.14" / "site-packages" / "syntactic-0.1.0.dist-info"
+    dist.mkdir(parents=True)
+    (dist / "RECORD").touch()
+
+    captured: list[list[str]] = []
+
+    def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        if args[-1] == "--version":
+            return subprocess.CompletedProcess(args, 0, stdout="Python 3.14.0\n")
+        if "-c" in args:
+            return subprocess.CompletedProcess(args, 0, stdout=str(venv_dir / "site-packages"))
+        captured.append(args)
+        return subprocess.CompletedProcess(args, 0)
+
+    with (
+        patch("koopa.install.is_owner", return_value=True),
+        patch("koopa.install.shutil.which", return_value="/usr/bin/uv"),
+        patch("koopa.install.subprocess.run", side_effect=fake_run),
+    ):
+        _update_venv(str(tmp_path))
+
+    assert [args[2] for args in captured] == ["uninstall", "install"]
+    assert captured[0][-1] == "syntactic"
 
 
 def test_update_venv_recreates_on_patch_version_change(tmp_path: Path) -> None:

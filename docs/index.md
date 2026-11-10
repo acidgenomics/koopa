@@ -24,7 +24,7 @@ documentation and safeguards for system-changing commands.
 :caption: Guide
 
 installation
-applications
+apps
 activation
 dotfiles
 agentic-coding

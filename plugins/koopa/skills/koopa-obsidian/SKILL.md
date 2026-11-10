@@ -19,9 +19,25 @@ Obsidian open. Its default vault is the one marked active in
 
 ## Which vault, and where `KOOPA_BUCKET` fits
 
-koopa resolves the vault in this order: `KOOPA_BUCKET`, then
-`OBSIDIAN_VAULT_DIR`, then Obsidian's registry (the vault with `"open": true`,
-else the highest `"ts"`). The result is symlink-resolved with `realpath`.
+Resolve the active vault in this order:
+
+1. Ask Obsidian first: `obsidian vault info=path`. If there are multiple
+   vaults, run `obsidian vaults verbose` and pass `vault=<name>` or ask which
+   one to use. Do not assume an environment variable points to the vault
+   Obsidian currently opens.
+2. If the CLI is unavailable, inspect Obsidian's registry:
+   `~/Library/Application Support/obsidian/obsidian.json` on macOS or
+   `~/.config/obsidian/obsidian.json` on Linux. Prefer the entry with
+   `"open": true`, otherwise use the highest `"ts"`.
+3. As a last resort, use a tool-specific override such as
+   `OBSIDIAN_VAULT_DIR`, then `KOOPA_BUCKET`.
+4. If no vault is found, use a safe project-local default; do not hard-block.
+
+The resolved path may be a symlink. Compare paths with `realpath` before
+concluding that two different strings refer to different vaults.
+
+The `guard_report_path.py` hook has a separate, non-interactive resolver. It
+uses `KOOPA_BUCKET`, then `OBSIDIAN_VAULT_DIR`, then Obsidian's registry.
 
 A vault is often reached through a symlink (for example `~/Documents` pointing
 into a cloud-synced folder), so the path `obsidian vaults verbose` prints and
@@ -108,6 +124,13 @@ One-time prerequisites:
 1. `obsidian plugins:restrict off` (no args reports `on` or `off`).
 2. `obsidian plugin:install id=dataview`, then `obsidian plugin:enable id=dataview`.
 3. Settings, Community plugins, Dataview, "Enable JavaScript queries" (GUI only).
+
+## Session reports
+
+Save session reports in the detected vault at
+`YYYY/MM/DD/<slug>.md`, not in a repository `reports/` directory or
+`.claude/reports/`. Add YAML frontmatter with `type: report`, `title`, and
+`date`. Do not add a date prefix to the filename.
 
 ## Prerequisites for the CLI (both required)
 

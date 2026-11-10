@@ -106,7 +106,7 @@ def _wrap_bullet(category: str, names: list[str], width: int = 72) -> str:
 def _render_default_apps_section(apps: list[str]) -> str:
     """Render the default application stack as a bulleted markdown list.
 
-    No heading -- this is included into ``docs/applications.md`` under an
+    No heading -- this is included into ``docs/apps.md`` under an
     existing '## Default application stack' heading via a MyST
     ``{include}`` directive, so a duplicate heading here would double up.
 
@@ -187,7 +187,7 @@ def _render_refs(apps: list[str]) -> str:
 
 
 def write_app_stack_include(apps: list[str]) -> None:
-    """Write the generated app-stack include consumed by docs/applications.md.
+    """Write the generated app-stack include consumed by docs/apps.md.
 
     Parameters
     ----------

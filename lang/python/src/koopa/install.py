@@ -3325,6 +3325,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     if uv is None:
         warn("uv is not installed; cannot install virtual environment extras.")
         return
+    site_packages = os.path.join(venv_dir, "lib", f"python{python_version}", "site-packages")
+    if _find_dist_record(site_packages, egg_name="syntactic", version="") is not None:
+        subprocess.run(
+            [uv, "pip", "uninstall", "--python", venv_python, "syntactic"],
+            check=True,
+        )
     subprocess.run(
         [
             uv,
@@ -3336,12 +3342,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
-            # `syntactic` is first-party (Acid Genomics index), so a freshly
+            # `acidgenomics-syntactic` is first-party, so a freshly
             # published release must not be held back by the user's dependency
             # cooldown (exclude-newer in ~/.config/uv/uv.toml). Third-party
             # extras such as `tqdm` still resolve under that cooldown.
             "--exclude-newer-package",
-            "syntactic=false",
+            "acidgenomics-syntactic=false",
             # uv bundles its own TLS cert store rather than consulting the OS
             # one. On networks where the OS store trusts a cert uv's bundled
             # store doesn't (observed against python.acidgenomics.com), uv
