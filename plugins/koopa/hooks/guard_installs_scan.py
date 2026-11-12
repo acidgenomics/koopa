@@ -36,7 +36,8 @@ command. `uninstall`, `reinstall`, and `pip list` are not installs.
 
 `koopa` commands that change the system (`install`, `reinstall`, `sync`,
 `uninstall`, `update`, `configure`, every `admin` subcommand, `system prune-apps` and
-`system switch-to-develop`) get their own decision, `koopa_agent_decision`: the
+`system switch-to-develop` and the `develop switch-to-*` commands) get their own decision,
+`koopa_agent_decision`: the
 `koopa` CLI refuses them under a coding agent, so the guard denies them unless the
 same command line turns agent mode off, which asks instead. `system prune-apps
 --dry-run` changes nothing, so it gets no decision.
@@ -93,6 +94,7 @@ KOOPA_GATED_COMMANDS = frozenset(
 KOOPA_GATED_SUBCOMMANDS = {
     "admin": None,
     "system": frozenset({"prune-apps", "switch-to-develop"}),
+    "develop": frozenset({"switch-to-develop", "switch-to-main"}),
 }
 # Gated subcommands whose `--dry-run` only reports and changes nothing.
 KOOPA_DRY_RUN_SUBCOMMANDS = {

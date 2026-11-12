@@ -117,7 +117,7 @@ Print the installation prefix for koopa or a named application.
 Remove stale application versions.
 .TP
 \fBsystem switch\-to\-develop\fR
-Switch koopa installation to the development branch.
+Legacy alias for `koopa develop switch-to-develop`.
 .TP
 \fBsystem version\fR \fIname\fR
 Print the installed version of an application.
@@ -335,6 +335,15 @@ Find apps in app.json that no other app depends on.
 \fBdevelop prune\-app\-binaries\fR
 Remove stale application binaries from the cache.
 .TP
+\fBdevelop prune\-stale\-docs\fR \fI[--no-dryrun]\fR
+Remove stale S3 keys left over from a previous docs build.
+.TP
+\fBdevelop publish\-docs\fR \fI[--no-invalidate] [--dry-run]\fR
+Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.
+.TP
+\fBdevelop publish\-release\fR \fItag\fR
+Publish a stable koopa release archive to koopa.acidgenomics.com.
+.TP
 \fBdevelop push\-all\-app\-builds\fR
 Push all application builds to the binary cache.
 .TP
@@ -367,6 +376,12 @@ Rewrite .install/info.json environ blocks down to the allowlist.
 .TP
 \fBdevelop shellcheck\fR
 Run shellcheck on all shell scripts.
+.TP
+\fBdevelop switch\-to\-develop\fR
+Switch a Git-managed koopa installation to the develop branch.
+.TP
+\fBdevelop switch\-to\-main\fR
+Switch a Git-managed koopa installation to the main branch.
 .TP
 \fBdevelop ty\fR
 Run the ty type checker on the Python source tree.

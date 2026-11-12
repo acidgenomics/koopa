@@ -10,8 +10,10 @@ Minor changes:
   shell and Ghostty guidance.
 - Koopa's Python environment now installs `acidgenomics-syntactic` from PyPI
   instead of the legacy private-index distribution.
-- `koopa app koopa publish-docs` now accepts `--dry-run`; the existing
-  `--dryrun` spelling remains available.
+- Moved the koopa site publishing and stale-doc pruning commands under
+  `koopa develop`.
+- The koopa website publisher now accepts `--dry-run`; the existing `--dryrun`
+  spelling remains available.
 
 ## koopa 0.39.0 (2026-11-09)
 

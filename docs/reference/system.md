@@ -41,7 +41,7 @@ Remove stale application versions.
 (koopa-system-switch-to-develop)=
 ## `system switch-to-develop`
 
-Switch koopa installation to the development branch.
+Legacy alias for `koopa develop switch-to-develop`.
 
 (koopa-system-version)=
 ## `system version name`

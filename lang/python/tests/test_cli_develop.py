@@ -39,10 +39,34 @@ def test_handlers_expected_commands() -> None:
         "color-mode-audit",
         "generate-agent-config",
         "generate-completion",
+        "prune-stale-docs",
+        "publish-docs",
+        "publish-release",
         "shellcheck",
     ]
     for cmd in expected:
         assert cmd in _DEVELOP_HANDLERS, f"Expected command '{cmd}' not in _DEVELOP_HANDLERS"
+
+
+def test_publish_release_dispatches_tag() -> None:
+    """Test that publish-release forwards the tag to the release publisher."""
+    with patch("koopa.release.publish_release") as publish_release:
+        _DEVELOP_HANDLERS["publish-release"](["v1.2.3"])
+    publish_release.assert_called_once_with("v1.2.3")
+
+
+def test_publish_docs_forwards_options() -> None:
+    """Test that publish-docs forwards its CLI options."""
+    with patch("koopa.site.publish_docs") as publish_docs:
+        _DEVELOP_HANDLERS["publish-docs"](["--no-invalidate", "--dry-run"])
+    publish_docs.assert_called_once_with(invalidate=False, dryrun=True)
+
+
+def test_prune_stale_docs_forwards_option() -> None:
+    """Test that prune-stale-docs forwards its CLI option."""
+    with patch("koopa.site.prune_stale") as prune_stale:
+        _DEVELOP_HANDLERS["prune-stale-docs"](["--no-dryrun"])
+    prune_stale.assert_called_once_with(dryrun=False)
 
 
 def test_activation_speed_test_help(capsys: pytest.CaptureFixture[str]) -> None:

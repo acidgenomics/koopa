@@ -431,6 +431,8 @@ KOOPA_DENIED = [
     "koopa admin flush-dns",
     "koopa system prune-apps",
     "koopa system switch-to-develop",
+    "koopa develop switch-to-main",
+    "koopa develop switch-to-develop",
     "sudo koopa install jq",
     'bash -c "koopa update"',
     "ssh host 'koopa install jq'",

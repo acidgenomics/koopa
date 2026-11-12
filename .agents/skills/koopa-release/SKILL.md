@@ -36,7 +36,7 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    user-facing changes. The site publish command regenerates the CLI reference
    and default app stack, then builds Sphinx with warnings as errors:
    ```sh
-   koopa app koopa publish-docs --dry-run
+   koopa develop publish-docs --dry-run
    ```
    Run this from the koopa prefix containing the release changes. Publishing
    does not happen automatically when the release is merged.
@@ -62,16 +62,26 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    # then open a PR: develop -> main
    ```
    Title the release PR with the bare tag, for example `vX.Y.Z`.
-6. **Publish the website**: after the release changes are merged to `main`,
+6. **Publish the experimental stable archive**: after the tag is merged to
+   `main`, confirm its bootstrap sources are mirrored under
+   `https://koopa.acidgenomics.com/src/`, then publish each release:
+   ```sh
+   koopa develop publish-release vX.Y.Z
+   ```
+   Confirm `/releases/latest` names the tag and `/install-release` and the
+   versioned `/releases/vX.Y.Z/koopa.tar.gz` are reachable. CloudFront
+   invalidation can take time to propagate. The Git-managed installer remains
+   the default; this archive channel is an experimental fallback.
+7. **Publish the website**: after the release changes are merged to `main`,
    publish the site from the koopa prefix containing that merged tree:
    ```sh
-   koopa app koopa publish-docs
+   koopa develop publish-docs
    ```
    Verify the changed pages on `https://koopa.acidgenomics.com/`. The publish
    command syncs built files and invalidates CloudFront, but intentionally does
    not delete stale S3 keys. For removed or renamed pages, inspect
-   `koopa app koopa prune-stale-docs` and explicitly remove confirmed stale keys
-   with `koopa app koopa prune-stale-docs --no-dryrun`.
+   `koopa develop prune-stale-docs` and explicitly remove confirmed stale keys
+   with `koopa develop prune-stale-docs --no-dryrun`.
 
 ## CHANGELOG.md format
 

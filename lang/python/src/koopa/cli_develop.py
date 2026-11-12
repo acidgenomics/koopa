@@ -2815,6 +2815,68 @@ def _handle_color_mode_audit(args: list[str]) -> None:
     alert_success("color-mode-audit passed — no thrash detected.")
 
 
+def _handle_switch_to_main(args: list[str]) -> None:
+    from koopa.cli_system import _switch_koopa_branch
+
+    _switch_koopa_branch(args, "main")
+
+
+def _handle_switch_to_develop(args: list[str]) -> None:
+    from koopa.cli_system import _switch_koopa_branch
+
+    _switch_koopa_branch(args, "develop")
+
+
+def _handle_publish_docs(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa develop publish-docs")
+    parser.add_argument(
+        "--no-invalidate",
+        dest="invalidate",
+        action="store_false",
+        help="Skip CloudFront cache invalidation.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        "--dryrun",
+        dest="dryrun",
+        action="store_true",
+        help="Print the aws s3 sync plan without uploading anything.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.site import publish_docs
+
+    publish_docs(invalidate=parsed.invalidate, dryrun=parsed.dryrun)
+
+
+def _handle_prune_stale_docs(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa develop prune-stale-docs")
+    parser.add_argument(
+        "--no-dryrun",
+        dest="dryrun",
+        action="store_false",
+        help="Actually delete stale keys instead of only listing them.",
+    )
+    parsed = parser.parse_args(args)
+    from koopa.site import prune_stale
+
+    prune_stale(dryrun=parsed.dryrun)
+
+
+def _handle_publish_release(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa develop publish-release")
+    parser.add_argument("tag", help="Stable version tag already merged into main.")
+    parsed = parser.parse_args(args)
+    from koopa.release import publish_release
+
+    publish_release(parsed.tag)
+
+
 _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "activation-speed-test": _handle_activation_speed_test,
     "activation-fork-audit": _handle_activation_fork_audit,
@@ -2856,6 +2918,11 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "orphan-apps": _handle_orphan_apps,
     "conda-candidates": _handle_conda_candidates,
     "color-mode-audit": _handle_color_mode_audit,
+    "prune-stale-docs": _handle_prune_stale_docs,
+    "publish-docs": _handle_publish_docs,
+    "publish-release": _handle_publish_release,
+    "switch-to-develop": _handle_switch_to_develop,
+    "switch-to-main": _handle_switch_to_main,
 }
 
 

@@ -138,11 +138,6 @@ _APP_TREE: dict[str, Any] = {
             "single-end": "kallisto-quant-single-end",
         },
     },
-    "koopa": {
-        "prune-stale-docs": "koopa-prune-stale-docs",
-        "publish-docs": "koopa-publish-docs",
-        "publish-release": "koopa-publish-release",
-    },
     "md5sum": {
         "check-to-new-md5-file": "md5sum-check-to-new-md5-file",
     },
@@ -460,59 +455,6 @@ def _handle_python_sync_docs_theme(args: list[str]) -> None:
     up_to_date = sync_docs_theme(parsed.package_dirs, check=parsed.check)
     if parsed.check and not up_to_date:
         sys.exit(1)
-
-
-# -- koopa (site) handlers ----------------------------------------------------
-
-
-def _handle_koopa_publish_docs(args: list[str]) -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser(prog="koopa app koopa publish-docs")
-    parser.add_argument(
-        "--no-invalidate",
-        dest="invalidate",
-        action="store_false",
-        help="Skip CloudFront cache invalidation.",
-    )
-    parser.add_argument(
-        "--dry-run",
-        "--dryrun",
-        dest="dryrun",
-        action="store_true",
-        help="Print the aws s3 sync plan without uploading anything.",
-    )
-    parsed = parser.parse_args(args)
-    from koopa.site import publish_docs
-
-    publish_docs(invalidate=parsed.invalidate, dryrun=parsed.dryrun)
-
-
-def _handle_koopa_prune_stale_docs(args: list[str]) -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser(prog="koopa app koopa prune-stale-docs")
-    parser.add_argument(
-        "--no-dryrun",
-        dest="dryrun",
-        action="store_false",
-        help="Actually delete stale keys instead of only listing them.",
-    )
-    parsed = parser.parse_args(args)
-    from koopa.site import prune_stale
-
-    prune_stale(dryrun=parsed.dryrun)
-
-
-def _handle_koopa_publish_release(args: list[str]) -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser(prog="koopa app koopa publish-release")
-    parser.add_argument("tag", help="Stable version tag already merged into main.")
-    parsed = parser.parse_args(args)
-    from koopa.release import publish_release
-
-    publish_release(parsed.tag)
 
 
 # -- r handlers --------------------------------------------------------------
@@ -3176,10 +3118,6 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "gpg-prompt": _handle_gpg_prompt,
     "gpg-reload": _handle_gpg_reload,
     "gpg-restart": _handle_gpg_restart,
-    # koopa (site)
-    "koopa-prune-stale-docs": _handle_koopa_prune_stale_docs,
-    "koopa-publish-docs": _handle_koopa_publish_docs,
-    "koopa-publish-release": _handle_koopa_publish_release,
     # python
     "python-publish": _handle_python_publish,
     "python-publish-docs": _handle_python_publish_docs,

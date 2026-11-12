@@ -40,6 +40,7 @@ GATED_COMMANDS = frozenset({"configure", "install", "reinstall", "sync", "uninst
 GATED_SUBCOMMANDS: Mapping[str, frozenset[str] | None] = {
     "admin": None,
     "system": frozenset({"prune-apps", "switch-to-develop"}),
+    "develop": frozenset({"switch-to-develop", "switch-to-main"}),
 }
 
 #: Gated subcommands whose ``--dry-run`` only reports and changes nothing.

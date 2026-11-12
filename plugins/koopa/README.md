@@ -102,8 +102,9 @@ Code, type `!` before the command).
   (`pip show`, `npm ls`, `brew info`) pass with no prompt. When the parser cannot
   decide, a text pattern decides whether to ask. Nothing is ever auto-approved.
   A `koopa` command that changes the system (`install`, `reinstall`, `sync`,
-  `uninstall`, `update`, `configure`, `admin ...`, `system prune-apps`, `system
-  switch-to-develop`) is blocked instead, because the `koopa` CLI refuses it under
+  `uninstall`, `update`, `configure`, `admin ...`, `system prune-apps`, and the
+  `develop switch-to-*` commands (also the legacy `system switch-to-develop`)
+  is blocked instead, because the `koopa` CLI refuses it under
   a coding agent anyway (see Agent mode below); a command line that also turns
   agent mode off (`KOOPA_AGENT=0`, `env -u AI_AGENT`) asks.
 - `block_uv.py`: asks (never denies) before a `uv` or `uvx` command that can
@@ -316,7 +317,8 @@ Hooks only help in a harness that runs them, and some run none. So the rule that
 agent never changes the system also lives in the `koopa` CLI itself
 (`lang/python/src/koopa/agent_mode.py`). When a coding agent launched the command,
 `koopa` refuses `install`, `reinstall`, `uninstall`, `update`, `configure`, every
-`admin` subcommand, `system prune-apps`, and `system switch-to-develop`. It exits 2 and
+`admin` subcommand, `system prune-apps`, and `develop switch-to-main` or
+`develop switch-to-develop` (including its legacy `system` alias). It exits 2 and
 prints the exact command for the user to run in their own terminal. Read-only commands
 (`list`, `app`, `system which`, ...) and `system prune-apps --dry-run` run as usual.
 

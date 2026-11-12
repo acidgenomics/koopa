@@ -58,6 +58,9 @@ def test_override_and_empty_values(env: dict[str, str], expected: bool) -> None:
         ("system", ["prune-apps", "--dry-run"], False),
         ("system", ["switch-to-develop", "--dry-run"], True),
         ("system", ["switch-to-develop"], True),
+        ("develop", ["switch-to-main"], True),
+        ("develop", ["switch-to-develop"], True),
+        ("develop", ["switch-to-main", "--help"], False),
         ("system", ["prefix"], False),
         ("system", ["info"], False),
         ("list", [], False),
@@ -119,6 +122,8 @@ def _run_main(monkeypatch: pytest.MonkeyPatch, argv: list[str]) -> list[str]:
         ["configure", "r"],
         ["admin", "flush-dns"],
         ["system", "prune-apps"],
+        ["develop", "switch-to-main"],
+        ["develop", "switch-to-develop"],
     ],
 )
 def test_agent_refuses_commands_that_change_the_system(

@@ -9,7 +9,8 @@ shell-command hooks.
 
 When koopa detects that a coding agent launched a command, it refuses commands that
 would change the system: `install`, `reinstall`, `uninstall`, `update`, `configure`,
-`admin` commands, `system prune-apps`, and `system switch-to-develop`. The refusal
+`admin` commands, `system prune-apps`, and `develop switch-to-main` or
+`develop switch-to-develop` (including its legacy `system` alias). The refusal
 shows the command for you to run in your own terminal. Read-only commands, such as
 `koopa list` and `koopa system info`, remain available.
 

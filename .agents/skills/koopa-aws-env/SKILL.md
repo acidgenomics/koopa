@@ -124,7 +124,7 @@ requires **both** the credentials stanza and a resolvable `aws_account_id()`,
 emits a one-time `alert_note` when the account ID is missing, and the source
 build proceeds normally like any public machine.
 
-`koopa app koopa publish-docs` can fail on the *last* step only: the S3 sync
+`koopa develop publish-docs` can fail on the *last* step only: the S3 sync
 succeeds (content is live) but the CloudFront invalidation raises
 `AWS_CLOUDFRONT_DISTRIBUTION_ID_KOOPA (or AWS_CLOUDFRONT_DISTRIBUTION_ID) must
 be set` if neither var is in `.env`. This leaves the new content uploaded but
