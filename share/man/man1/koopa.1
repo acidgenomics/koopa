@@ -114,7 +114,7 @@ Print the operating system identifier slug.
 Print the installation prefix for koopa or a named application.
 .TP
 \fBsystem prune\-apps\fR
-Remove stale application versions.
+Rebuild apps referencing old versions, then remove unreferenced versions. Versions still referenced are kept.
 .TP
 \fBsystem switch\-to\-develop\fR
 Legacy alias for `koopa develop switch-to-develop`.
