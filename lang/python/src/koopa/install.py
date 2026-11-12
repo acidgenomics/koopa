@@ -1512,7 +1512,7 @@ def install_go_package(
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
     go_network_env(env)
-    install_args: list[str] = []
+    install_args: list[str] = ["-trimpath"]
     if ldflags:
         install_args.extend(["-ldflags", ldflags])
     if tags:

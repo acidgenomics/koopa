@@ -111,13 +111,14 @@ def test_handle_update_reports_failed_app_without_retry(
         patch("koopa.install.update_koopa", return_value=False),
         patch("koopa.install.update_stale_apps", side_effect=failure),
         patch("koopa.install._run_install_plan") as run_install_plan,
-        patch("koopa.app.prune_apps"),
+        patch("koopa.app.prune_apps") as prune_apps,
         patch("koopa.alert.stop", side_effect=SystemExit(1)) as stop,
         pytest.raises(SystemExit),
     ):
         cli_main._handle_update(argparse.Namespace(mode=None, apps=[], verbose=False, system=False))
 
     run_install_plan.assert_not_called()
+    prune_apps.assert_not_called()
     stop.assert_called_once_with("koopa update failed: 1 app failed: databricks-cli.")
 
 

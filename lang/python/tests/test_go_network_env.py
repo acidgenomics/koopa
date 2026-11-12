@@ -53,6 +53,7 @@ def test_go_install_helpers_pass_defaults(tmp_path: Path, monkeypatch: pytest.Mo
     monkeypatch.setattr(install.shutil, "which", lambda _name: "/usr/bin/go")
     with patch("koopa.install.subprocess.run") as run:
         install.install_go_package(url="example.test/cmd@v1", prefix=str(tmp_path))
+    assert "-trimpath" in run.call_args.args[0]
     env = run.call_args.kwargs["env"]
     assert env["GOPROXY"] == "https://proxy.golang.org|direct"
     assert env["GODEBUG"] == "http2client=0"

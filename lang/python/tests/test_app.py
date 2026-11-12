@@ -218,6 +218,8 @@ def _patch_prune(
         patch("koopa.app.koopa_opt_prefix", return_value=opt_dir),
         patch("koopa.app.import_app_json", return_value=json_data),
         patch("koopa.app.installed_apps", return_value=installed),
+        patch("koopa.install._acquire_install_lock", return_value=False),
+        patch("koopa.install._app_json_version", return_value="1.0"),
     ]
 
 
@@ -360,7 +362,8 @@ def test_prune_apps_keeps_library_a_transitive_revdep_uses(tmp_path: Path) -> No
         "libxml2": {"dependencies": ["zlib"]},
         "libxslt": {"dependencies": ["libxml2"]},
     }
-    _run_prune(tmp_path, json_data)
+    with patch("koopa.app._rebuild_prune_references", return_value=False):
+        _run_prune(tmp_path, json_data)
     assert zlib_old.exists()
     assert not zlib_older.exists()
 
@@ -396,9 +399,131 @@ def test_prune_apps_keeps_what_a_kept_old_version_uses(tmp_path: Path) -> None:
         "libxml2": {"dependencies": ["zlib"]},
         "libxslt": {"dependencies": ["libxml2"]},
     }
-    _run_prune(tmp_path, json_data)
+    with patch("koopa.app._rebuild_prune_references", return_value=False):
+        _run_prune(tmp_path, json_data)
     assert xml_old.exists()
     assert zlib_old.exists()
+
+
+@needs_rg
+def test_prune_apps_rebuilds_all_referring_apps_and_rescans(tmp_path: Path) -> None:
+    """Rebuild every linked owner once, then remove the unreferenced version."""
+    from koopa.install import InstallConfig
+
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "go", "1.0")
+    _link(tmp_path, "go", _version(app_dir, "go", "1.1"))
+    for name in ("first", "second"):
+        _link(tmp_path, name, _version(app_dir, name, "1.0", {"bin/tool": str(old)}))
+    data = {
+        "go": {"type": "build_tool"},
+        "first": {"build_dependencies": ["go"]},
+        "second": {"build_dependencies": ["go"]},
+    }
+    rebuilt: list[str] = []
+
+    def install(config: InstallConfig) -> None:
+        assert not config.binary
+        assert not config.push
+        rebuilt.append(config.name)
+        tool = app_dir / config.name / "1.0" / "bin" / "tool"
+        tool.parent.mkdir(parents=True)
+        tool.write_text("rebuilt")
+
+    with (
+        patch(
+            "koopa.cli_main._build_install_config",
+            side_effect=lambda name, **_: InstallConfig(name),
+        ),
+        patch("koopa.install.install_app", side_effect=install),
+    ):
+        _run_prune(tmp_path, data)
+    assert sorted(rebuilt) == ["first", "second"]
+    assert not old.exists()
+
+
+@needs_rg
+def test_prune_apps_keeps_remaining_reference_after_rebuild(tmp_path: Path) -> None:
+    """A rebuild that does not remove a reference must not prune its target."""
+    from koopa.install import InstallConfig
+
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "go", "1.0")
+    _link(tmp_path, "go", _version(app_dir, "go", "1.1"))
+    _link(tmp_path, "user", _version(app_dir, "user", "1.0", {"bin/tool": str(old)}))
+    data = {"go": {}, "user": {"build_dependencies": ["go"]}}
+
+    def install(_config: InstallConfig) -> None:
+        tool = app_dir / "user" / "1.0" / "bin" / "tool"
+        tool.parent.mkdir(parents=True)
+        tool.write_text(str(old))
+
+    with (
+        patch("koopa.cli_main._build_install_config", return_value=InstallConfig("user")),
+        patch("koopa.install.install_app", side_effect=install) as install_mock,
+    ):
+        _run_prune(tmp_path, data)
+    install_mock.assert_called_once()
+    assert old.exists()
+
+
+@needs_rg
+def test_prune_apps_failed_rebuild_does_not_prune(tmp_path: Path) -> None:
+    """An unsuccessful rebuild stops pruning before old versions are removed."""
+    from koopa.install import InstallConfig
+
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "go", "1.0")
+    _link(tmp_path, "go", _version(app_dir, "go", "1.1"))
+    _link(tmp_path, "user", _version(app_dir, "user", "1.0", {"bin/tool": str(old)}))
+    data = {"go": {}, "user": {"build_dependencies": ["go"]}}
+    with (
+        patch("koopa.cli_main._build_install_config", return_value=InstallConfig("user")),
+        patch("koopa.install.install_app", side_effect=RuntimeError("build failed")),
+        pytest.raises(RuntimeError, match="build failed"),
+    ):
+        _run_prune(tmp_path, data)
+    assert old.exists()
+    assert (app_dir / "user" / "1.0" / "bin" / "tool").read_text() == str(old)
+
+
+@needs_rg
+def test_prune_apps_does_not_rebuild_noncurrent_install(tmp_path: Path) -> None:
+    """Do not silently replace an older linked installation with the registry version."""
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "go", "1.0")
+    _link(tmp_path, "go", _version(app_dir, "go", "1.1"))
+    _link(tmp_path, "user", _version(app_dir, "user", "0.9", {"bin/tool": str(old)}))
+    with patch("koopa.install.install_app") as install:
+        _run_prune(tmp_path, {"go": {}, "user": {"build_dependencies": ["go"]}})
+    install.assert_not_called()
+    assert old.exists()
+
+
+def test_prune_apps_preserves_interrupted_rebuild(tmp_path: Path) -> None:
+    """A leftover rebuild backup must not be mistaken for an old app version."""
+    app_dir = tmp_path / "app"
+    _link(tmp_path, "user", _version(app_dir, "user", "1.0"))
+    backup = _version(app_dir, "user", ".koopa-rebuild-test", {"previous/bin/tool": "original"})
+    with pytest.raises(RuntimeError, match="requires recovery"):
+        _run_prune(tmp_path, {"user": {}})
+    assert (backup / "previous" / "bin" / "tool").read_text() == "original"
+
+
+@needs_rg
+def test_prune_apps_dry_run_reports_rebuild_without_installing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Dry runs report affected apps without attempting a rebuild."""
+    app_dir = tmp_path / "app"
+    old = _version(app_dir, "go", "1.0")
+    _link(tmp_path, "go", _version(app_dir, "go", "1.1"))
+    _link(tmp_path, "user", _version(app_dir, "user", "1.0", {"bin/tool": str(old)}))
+    with patch("koopa.install.install_app") as install:
+        _run_prune(tmp_path, {"go": {}, "user": {"build_dependencies": ["go"]}}, dry_run=True)
+    install.assert_not_called()
+    assert old.exists()
+    assert "[dry-run] Rebuilding 'user'" in capsys.readouterr().out
 
 
 @needs_rg
@@ -438,8 +563,8 @@ def test_prune_apps_dry_run_changes_nothing(
     assert "[dry-run] Relinking" in out
 
 
-def test_prune_apps_without_ripgrep_prunes_only_cli(tmp_path: Path) -> None:
-    """Without ripgrep there is no reference check, so only cli apps are pruned."""
+def test_prune_apps_without_ripgrep_keeps_versions(tmp_path: Path) -> None:
+    """Without ripgrep, even CLI apps may be referenced and must be kept."""
     app_dir = tmp_path / "app"
     _link(tmp_path, "git", _version(app_dir, "git", "2.55.0"))
     git_old = _version(app_dir, "git", "2.54.0")
@@ -448,7 +573,7 @@ def test_prune_apps_without_ripgrep_prunes_only_cli(tmp_path: Path) -> None:
     with patch("koopa.app.which", return_value=None):
         _run_prune(tmp_path, {"git": {"type": "build_tool"}, "jq": {"type": "cli"}})
     assert git_old.exists()
-    assert not jq_old.exists()
+    assert jq_old.exists()
 
 
 def _link_app_with_recorded_deps(app_dir: Path, opt_dir: Path, name: str, deps: list) -> None:

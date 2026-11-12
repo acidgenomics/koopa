@@ -81,7 +81,10 @@ SYSTEM_DESCRIPTIONS: dict[str, str] = {
     "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
     "os-slug": "Print the operating system identifier slug.",
     "prefix": "Print the installation prefix for koopa or a named application.",
-    "prune-apps": "Remove stale application versions.",
+    "prune-apps": (
+        "Rebuild apps referencing old versions, then remove unreferenced versions. "
+        "Versions still referenced are kept."
+    ),
     "switch-to-develop": "Legacy alias for `koopa develop switch-to-develop`.",
     "version": "Print the installed version of an application.",
     "which": "Print the real path of an application.",

@@ -1133,12 +1133,12 @@ def _handle_update(args: argparse.Namespace) -> None:
                 install_error = str(exc)
         if install_error is None:
             install_error = _failed_apps_summary(root_failures)
+        if install_error is not None:
+            stop(f"koopa update failed: {install_error}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")
-        if install_error is not None:
-            stop(f"koopa update failed: {install_error}")
         alert_success(f"{styled_name('koopa')} update was successful.")
     finally:
         if acquired:

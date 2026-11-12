@@ -33,7 +33,7 @@ Print the installation prefix for koopa or a named application.
 (koopa-system-prune-apps)=
 ## `system prune-apps`
 
-Remove stale application versions.
+Rebuild apps referencing old versions, then remove unreferenced versions. Versions still referenced are kept.
 
 - `--verbose`
 - `--dry-run`

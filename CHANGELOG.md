@@ -1,19 +1,36 @@
 # Changelog
 
-## Unreleased
+## koopa 0.40.0 (2026-11-12)
+
+Major changes:
+
+- Added an experimental stable release archive channel for installations
+  without GitHub. Release installations can update from koopa's domain while
+  preserving installed apps and protecting locally modified files.
+- App pruning rebuilds apps that reference old versions, then checks again
+  before removing them. References can be build metadata rather than runtime
+  linkage; Go packages installed from modules now use `-trimpath` to avoid
+  embedding toolchain paths. `koopa system prune-apps --dry-run` previews
+  changes without deleting files.
+- Reinstall and update plans now follow stale reverse dependencies
+  transitively, and system checks detect dependencies rebuilt at the same
+  version.
 
 Minor changes:
 
+- Added `koopa develop switch-to-main` and `switch-to-develop` for
+  Git-managed installations, with checks for tracked local changes.
 - Updated the website's installation, activation, and dotfiles guides, added an
   agentic coding guide, and moved the applications guide to `/apps.html`.
-- Moved global agent guidance into on-demand koopa plugin skills, including
-  shell and Ghostty guidance.
 - Koopa's Python environment now installs `acidgenomics-syntactic` from PyPI
   instead of the legacy private-index distribution.
+- Fixed Python package executable linking for normalized distribution names
+  and removed obsolete interpreter pins from several apps.
 - Moved the koopa site publishing and stale-doc pruning commands under
   `koopa develop`.
 - The koopa website publisher now accepts `--dry-run`; the existing `--dryrun`
   spelling remains available.
+- Updated the default application stack and refreshed routine app versions.
 
 ## koopa 0.39.0 (2026-11-09)
 
