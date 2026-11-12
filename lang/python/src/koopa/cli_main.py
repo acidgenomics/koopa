@@ -616,7 +616,6 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
     _require_git_managed_install()
     _require_slurm_allocation()
     _revert_direnv_env(verbose=args.verbose)
-    from koopa.app import stale_revdeps
     from koopa.install import (
         _acquire_install_lock,
         _release_install_lock,
@@ -653,19 +652,50 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
             install_app(config)
             _remove_from_pending_plan(app)
         if not args.no_revdeps:
-            stale = stale_revdeps(apps)
-            if stale:
-                print(
-                    f"Stale reverse dependencies: {', '.join(stale)}",
-                    file=sys.stderr,
-                )
-                for dep in stale:
-                    config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
-                    install_app(config)
-                    _remove_from_pending_plan(dep)
+            _reinstall_stale_revdeps(apps, verbose=args.verbose)
     finally:
         if acquired:
             _release_install_lock()
+
+
+def _reinstall_stale_revdeps(apps: list[str], *, verbose: bool = False) -> None:
+    """Reinstall every installed app that a rebuild of *apps* makes stale.
+
+    Follows reverse dependencies through every level, not only the first:
+    after a zlib rebuild, libxml2 is rebuilt, and then libxslt, which links
+    against both. Apps are rebuilt in dependency order, using the same plan
+    as ``koopa update``.
+
+    Parameters
+    ----------
+    apps : list[str]
+        Application names that were just reinstalled.
+    verbose : bool, optional
+        Enable verbose installer output.
+    """
+    from koopa.app import stale_revdep_closure
+    from koopa.install import (
+        _compute_install_plan,
+        _is_supported_app,
+        _remove_from_pending_plan,
+        install_app,
+    )
+
+    stale = stale_revdep_closure(apps, include=_is_supported_app)
+    if not stale:
+        return
+    print(f"Stale reverse dependencies: {', '.join(stale)}", file=sys.stderr)
+    reasons = [
+        (rd, f"{'dependency' if len(t) == 1 else 'dependencies'} {', '.join(t)} rebuilt")
+        for rd, t in stale.items()
+    ]
+    plan, _ = _compute_install_plan(reasons)
+    for app, reason in plan:
+        config = _build_install_config(app, reinstall=app in stale, verbose=verbose)
+        if app in stale:
+            config.reinstall_reason = reason
+        install_app(config)
+        _remove_from_pending_plan(app)
 
 
 def _reinstall_all(*, verbose: bool = False) -> None:
@@ -1035,8 +1065,15 @@ def _handle_update(args: argparse.Namespace) -> None:
     try:
         if mode == "koopa":
             python_changed = update_koopa(verbose=args.verbose)
+            if os.path.isfile(os.path.join(_koopa_prefix(), ".koopa-release.json")) and (
+                update_bootstrap(verbose=args.verbose)
+            ):
+                _release_install_lock()
+                acquired = False
+                _exec_restart_with_bootstrap()
             if python_changed:
                 _release_install_lock()
+                acquired = False
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             update_agent_plugins(verbose=args.verbose)
@@ -1096,12 +1133,12 @@ def _handle_update(args: argparse.Namespace) -> None:
                 install_error = str(exc)
         if install_error is None:
             install_error = _failed_apps_summary(root_failures)
+        if install_error is not None:
+            stop(f"koopa update failed: {install_error}")
         try:
             prune_apps(verbose=args.verbose)
         except (ValueError, OSError) as exc:
             warn(f"Prune failed: {exc}")
-        if install_error is not None:
-            stop(f"koopa update failed: {install_error}")
         alert_success(f"{styled_name('koopa')} update was successful.")
     finally:
         if acquired:

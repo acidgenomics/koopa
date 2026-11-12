@@ -9,7 +9,14 @@ description: >-
   packaged/pinned koopa install can still manage apps or self-update.
 ---
 
-# koopa Distribution
+# Koopa Distribution
+
+## Default and fallback
+
+The default `/install` path creates a Git-managed installation and updates it
+through Git. The separately selected `/install-release` path is an experimental
+fallback for stable domain-hosted archives; do not make it the default. Publish
+an archive for every release as described in `koopa-release`.
 
 ## A pinned (non-git) tree already fully supports app management
 
@@ -18,12 +25,10 @@ on `lang/python/src` existing in the koopa prefix, **not** on `.git` being
 present. A tarball extraction (no `.git` dir at all) passes this check and can
 run `install`/`uninstall`/`configure` normally.
 
-`update_koopa()` in `lang/python/src/koopa/install.py` calls `is_git_repo()`
-(a plain `.git`-directory check in `git.py`). On a pinned tree this is False,
-so it prints `alert_note("Pinned release detected at '<prefix>'.")` and
-returns cleanly; it never attempts `git pull`. This is deliberate, existing
-behavior, not something that needs new code to support restricted-network
-distribution.
+`update_koopa()` in `lang/python/src/koopa/install.py` calls `is_git_repo()`.
+A non-git tree with `.koopa-release.json` follows the domain's stable release
+channel; a non-git tree without that marker remains pinned and does not update.
+Neither path runs `git pull`.
 
 Verified end-to-end (extract `git archive HEAD` to a scratch dir, point
 `KOOPA_PREFIX` at it): `koopa update`, `koopa list`, and `koopa install --help`
@@ -77,14 +82,11 @@ env -i HOME="$scratch" KOOPA_FORCE=1 sh -c \
 Without `KOOPA_FORCE=1` this silently no-ops (exit 0, empty output): a false
 pass, not a failure you'll notice.
 
-## Bootstrap Python has no restricted-network awareness
+## Bootstrap Python and restricted networks
 
-`bin/koopa` requires `/usr/bin/python3` to exactly match `.python-version`
-(currently `3.12`); anything else (including a newer or older system Python)
-falls through to running `bootstrap.sh`. `bootstrap.sh` downloads a Python
-build directly from `python.org` or `koopa.acidgenomics.com/src`; it does
-not consult `etc/koopa/vendor.json` or any mirror config at all. On a
-`pull_priority: "vendor_only"` network this download fails outright. The only
-workaround today is ensuring a matching system Python 3.12 is already at
-`/usr/bin/python3` before koopa's first invocation; there's no way to route
-the bootstrap step itself through an internal mirror.
+`bin/koopa` checks the venv and bootstrap interpreters, then matching system
+Python interpreters, and reports how to run `bootstrap.sh` if none is usable.
+`bootstrap.sh` understands vendor mirrors and `vendor_only`. For a marked
+stable release it skips the GitHub-hosted uv fast path and uses the domain
+source mirror or configured vendor mirror. Individual apps and Python extras
+can still require other network access.

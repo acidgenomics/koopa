@@ -4,7 +4,7 @@ requires = [ "setuptools" ]
 
 [project]
 name = "koopa"
-version = "0.39.0"
+version = "0.40.0"
 description = "Shell bootloader for data science."
 readme = "README.md"
 keywords = [ "bioinformatics", "data science", "fair data", "ngs", "shell" ]
@@ -21,17 +21,13 @@ optional-dependencies.docs = [
   "sphinx",
 ]
 optional-dependencies.extra = [
-  "syntactic>=0.1",
+  "acidgenomics-syntactic>=0.1.1",
   "tqdm",
 ]
 scripts.koopa = "koopa.cli_main:main"
 
 [tool.setuptools]
 packages.find.where = [ "lang/python/src" ]
-
-[tool.uv]
-sources.syntactic = { index = "acidgenomics" }
-index = [ { name = "acidgenomics", url = "https://python.acidgenomics.com/simple/" } ]
 
 [tool.ruff]
 # Deliberately below requires-python. koopa's runtime needs 3.14, but the
@@ -137,7 +133,7 @@ run.source = [ "lang/python/src" ]
 [tool.bumpver]
 commit = true
 commit_message = "Bump version to {new_version}."
-current_version = "v0.39.0"
+current_version = "v0.40.0"
 push = false
 tag = false
 tag_message = "{new_version}"

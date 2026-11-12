@@ -10,6 +10,51 @@ import pytest
 from koopa import cli_main
 
 
+def test_reinstall_rebuilds_stale_revdeps_in_dependency_order(tmp_path: Path) -> None:
+    """Every stale level is rebuilt, each app after the apps it links against.
+
+    The closure lists libxslt first, but libxslt links against libxml2, so the
+    plan must rebuild libxml2 before it.
+    """
+    from types import SimpleNamespace
+
+    opt_dir = tmp_path / "opt"
+    opt_dir.mkdir()
+    for name in ("zlib", "libxml2", "libxslt"):
+        (tmp_path / name).mkdir()
+        (opt_dir / name).symlink_to(tmp_path / name)
+    json_data = {
+        "zlib": {},
+        "libxml2": {"dependencies": ["zlib"]},
+        "libxslt": {"dependencies": ["libxml2"]},
+    }
+    built: list[tuple[str, bool, str]] = []
+
+    def fake_config(name: str, *, reinstall: bool = False, verbose: bool = False) -> object:
+        del verbose
+        return SimpleNamespace(name=name, reinstall=reinstall, reinstall_reason="")
+
+    def fake_install(config: SimpleNamespace) -> None:
+        built.append((config.name, config.reinstall, config.reinstall_reason))
+
+    closure = {"libxslt": ["libxml2"], "libxml2": ["zlib"]}
+    with (
+        patch("koopa.app.stale_revdep_closure", return_value=closure),
+        patch("koopa.install.import_app_json", return_value=json_data),
+        patch("koopa.install.opt_prefix", return_value=str(opt_dir)),
+        patch("koopa.install._dep_has_broken_rpath", return_value=False),
+        patch("koopa.install.install_app", side_effect=fake_install),
+        patch("koopa.install._remove_from_pending_plan"),
+        patch.object(cli_main, "_build_install_config", side_effect=fake_config),
+    ):
+        cli_main._reinstall_stale_revdeps(["zlib"])
+
+    assert built == [
+        ("libxml2", True, "dependency zlib rebuilt"),
+        ("libxslt", True, "dependency libxml2 rebuilt"),
+    ]
+
+
 def test_handle_update_skips_system_updates_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
     """Default update should not trigger system upgrades."""
     monkeypatch.setattr(cli_main, "_require_supported_platform", lambda: None)
@@ -66,13 +111,14 @@ def test_handle_update_reports_failed_app_without_retry(
         patch("koopa.install.update_koopa", return_value=False),
         patch("koopa.install.update_stale_apps", side_effect=failure),
         patch("koopa.install._run_install_plan") as run_install_plan,
-        patch("koopa.app.prune_apps"),
+        patch("koopa.app.prune_apps") as prune_apps,
         patch("koopa.alert.stop", side_effect=SystemExit(1)) as stop,
         pytest.raises(SystemExit),
     ):
         cli_main._handle_update(argparse.Namespace(mode=None, apps=[], verbose=False, system=False))
 
     run_install_plan.assert_not_called()
+    prune_apps.assert_not_called()
     stop.assert_called_once_with("koopa update failed: 1 app failed: databricks-cli.")
 
 

@@ -5,6 +5,11 @@
 
 Autopad zeros in numbered file names.
 
+(koopa-run-background-tasks)=
+## `run background-tasks`
+
+Run each koopa background task once (used by the launch agent).
+
 (koopa-run-check-release-notifications)=
 ## `run check-release-notifications`
 

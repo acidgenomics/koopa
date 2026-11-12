@@ -167,6 +167,26 @@ Find apps in app.json that no other app depends on.
 
 Remove stale application binaries from the cache.
 
+(koopa-develop-prune-stale-docs)=
+## `develop prune-stale-docs [--no-dryrun]`
+
+Remove stale S3 keys left over from a previous docs build.
+
+- `--no-dryrun`
+
+(koopa-develop-publish-docs)=
+## `develop publish-docs [--no-invalidate] [--dry-run]`
+
+Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.
+
+- `--no-invalidate`
+- `--dry-run`
+
+(koopa-develop-publish-release)=
+## `develop publish-release tag`
+
+Publish a stable koopa release archive to koopa.acidgenomics.com.
+
 (koopa-develop-push-all-app-builds)=
 ## `develop push-all-app-builds`
 
@@ -228,6 +248,16 @@ Rewrite .install/info.json environ blocks down to the allowlist.
 ## `develop shellcheck`
 
 Run shellcheck on all shell scripts.
+
+(koopa-develop-switch-to-develop)=
+## `develop switch-to-develop`
+
+Switch a Git-managed koopa installation to the develop branch.
+
+(koopa-develop-switch-to-main)=
+## `develop switch-to-main`
+
+Switch a Git-managed koopa installation to the main branch.
 
 (koopa-develop-ty)=
 ## `develop ty`

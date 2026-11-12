@@ -28,6 +28,28 @@ _BOOTSTRAP_SH = _REPO_ROOT / "bootstrap.sh"
 _SOURCE_BUILD_FUNCTIONS = ("perl", "openssl", "python", "bzip2", "xz", "libffi", "zlib")
 
 
+def test_release_bootstrap_only_uses_domain_mirror(tmp_path: Path) -> None:
+    """Do not try GitHub when a stable release bootstraps Python."""
+    (tmp_path / ".koopa-release.json").write_text("{}")
+    script = f"""
+set -eu
+{_function_defs_only()}
+KOOPA_PREFIX="{tmp_path}"
+PREFIX="{tmp_path}/bootstrap"
+DESTDIR=""
+VENDOR_ENABLED=0
+VENDOR_BASE_URL=""
+_curl_verbose=""
+curl() {{ return 1; }}
+download_with_fallback app app \\
+    https://github.com/example/app.tar.gz \\
+    https://koopa.acidgenomics.com/src/app/app.tar.gz || true
+"""
+    result = subprocess.run(["sh", "-c", script], capture_output=True, text=True, check=True)
+    assert "Trying https://koopa.acidgenomics.com/src/app/app.tar.gz" in result.stdout
+    assert "github.com" not in result.stdout
+
+
 @pytest.fixture(autouse=True)
 def _clear_vendor_config_cache(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Generator[None]:
     """Isolate XDG_CONFIG_HOME and clear the vendor_config() lru_cache.
@@ -377,15 +399,14 @@ def test_bootstrap_cpu_count_rejects_malformed_slurm_value(tmp_path: Path) -> No
     assert result.stdout.strip() == "2"
 
 
-def test_bootstrap_uv_fast_path_is_unconditional() -> None:
-    """Regression: the uv fast path must run on every host, not just some.
+def test_bootstrap_uv_fast_path_only_skips_stable_releases() -> None:
+    """Keep the uv fast path except for the GitHub-free stable channel.
 
     has_firewall() previously vetoed the fast path whenever SSL_CERT_FILE was
     set to koopa's own CA bundle sitting outside $KOOPA_PREFIX -- exactly what
     koopa's own shell activation exports -- forcing a source compile even
     when the CDN was reachable. Measured cost on a real host: 16m42s.
-    install_python_uv() already fails cleanly and falls back to a source
-    build on any real failure, so the attempt itself must never be gated.
+    Stable releases intentionally skip uv because it downloads from GitHub.
     """
     text = _BOOTSTRAP_SH.read_text()
     assert "has_firewall" not in text
@@ -397,10 +418,7 @@ def test_bootstrap_uv_fast_path_is_unconditional() -> None:
         if line.strip() and not line.strip().startswith("#")
     ]
     assert code_lines[0] == "__kvar_build_ok=0"
-    assert code_lines[1] == "if (", (
-        f"expected the uv fast path to open unconditionally right after"
-        f" '__kvar_build_ok=0', found: {code_lines[1]!r}"
-    )
+    assert code_lines[1] == 'if [ ! -f "${KOOPA_PREFIX}/.koopa-release.json" ] && ('
 
 
 def test_bootstrap_has_no_use_sudo_flag() -> None:

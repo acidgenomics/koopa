@@ -16,14 +16,18 @@ sh -c "$(curl -LSs https://koopa.acidgenomics.com/install)"
 See [Installation](installation.md) for the full install flow, or jump straight to
 the [CLI reference](reference/index.md) for every `koopa` command.
 
+Koopa also supports [agentic coding](agentic-coding.md), with agent-specific
+documentation and safeguards for system-changing commands.
+
 ```{toctree}
 :maxdepth: 1
 :caption: Guide
 
 installation
-applications
+apps
 activation
 dotfiles
+agentic-coding
 troubleshooting
 ```
 

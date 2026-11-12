@@ -81,7 +81,7 @@
     "category": "VCS",
     "conda_channel": "conda-forge",
     "date": "2026-08-03",
-    "default": false,
+    "default": true,
     "description": "static linter for GitHub Actions workflow files",
     "installer": "conda-package",
     "soft_dependencies": [
@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "6604829099950080",
+    "build_id": "6212266538958848",
     "category": "AI",
-    "date": "2026-11-07",
+    "date": "2026-11-12",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "3215656cfe5336bce310365f61de7c85b4946a14de506747837106dfaf948dcff303c47e648e06fbbb73a8702538eae171e675f2910e4f49b280549018b46e95",
-      "darwin_amd64": "865f6ec3d6a7bddff3a5bffda6df12db2df8abfedf3064acb4426db2ec0ce59de3d49d1378960df7a4646ffdbd74601f23184f0d23abfc1cd6717a1bd29e6922",
-      "linux_amd64": "e363e1b17daaac2589f18e6973429c039fd5a5e5c15e9c0852fa349836f3992b10fe84732bc8d8c8208e149f0304f15aba9dec696d12efeed03917492c0580eb",
-      "linux_arm64": "c2fac818b3c1bb224079df03a714ccba99728b6a3a41d86d247ab2feb8582a43840c5032f1c2b75e72667623d5503e7ffda2712c4f37b6ee19f99c3fcfb25bae"
+      "darwin_arm64": "00a4d76bfca8dcce2250805468fd31053fb4f5d340e8d6555a0233b319c30740822021ee3804f231d2a0fb96746777614e7586895e2bcba75cac564ddb765b0d",
+      "darwin_amd64": "6ce695802806c30f1191f32634b0f044ac7bda134f3052905cfc25869514bb4bcb99bf1b5385bd3c6cf420508a3024d107b6ba1c683b8863a8822605cdf5c27e",
+      "linux_amd64": "0c67824908caf9cc3156699802b8097f2fd02c4608ae9293c9aa7f17e1bcd342c4b9c2e158388253a37804ef6bd9c6b1d25cfaca3c07bbb7587378fc91839bb4",
+      "linux_arm64": "ed103a9e2f10d99eaf2988d2ace55ffffa08b6f9d3b2297459dc42617dfa2386ed984b1231efda4d93279a1deaab9a7e51b85ed06938527870aaec21bba27254"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.5.3"
+    "version": "1.5.6"
   },
   "apache-airflow": {
     "bin": [
@@ -223,15 +223,14 @@
     "date": "2026-11-06",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "workflow orchestration platform",
     "installer": "python-package",
     "installer_args": {
-      "egg_name": "apache_airflow_core",
-      "python_version": "3.13"
+      "egg_name": "apache_airflow_core"
     },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://airflow.apache.org/"
@@ -444,7 +443,7 @@
     ],
     "category": "Text",
     "conda_channel": "conda-forge",
-    "date": "2026-11-02",
+    "date": "2026-11-12",
     "default": false,
     "description": "AST-aware structural code search and replace tool",
     "installer": "conda-package",
@@ -453,7 +452,7 @@
       "https://ast-grep.github.io/",
       "https://github.com/ast-grep/ast-grep/"
     ],
-    "version": "0.51.1"
+    "version": "0.51.2"
   },
   "attr": {
     "build_dependencies": [
@@ -490,7 +489,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-11-05",
+    "date": "2026-11-12",
     "default": true,
     "description": "magical shell history with sync and search",
     "installer": "conda-package",
@@ -501,7 +500,7 @@
     "url": [
       "https://github.com/atuinsh/atuin/"
     ],
-    "version": "18.24.5"
+    "version": "18.24.6"
   },
   "autoconf": {
     "bin": [
@@ -713,14 +712,11 @@
     "date": "2026-11-03",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "official Microsoft Azure command-line interface",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
@@ -870,7 +866,7 @@
       "bashcov"
     ],
     "category": "Shell",
-    "date": "2026-11-05",
+    "date": "2026-11-12",
     "default": false,
     "dependencies": [
       "ruby"
@@ -882,7 +878,7 @@
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
     ],
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   "bat": {
     "bin": [
@@ -1604,7 +1600,7 @@
     ],
     "category": "Dotfile",
     "conda_channel": "conda-forge",
-    "date": "2026-11-02",
+    "date": "2026-11-12",
     "default": true,
     "description": "dotfile manager with templating and secrets support",
     "installer": "conda-package",
@@ -1613,7 +1609,7 @@
       "https://www.chezmoi.io/",
       "https://github.com/twpayne/chezmoi"
     ],
-    "version": "2.74.0"
+    "version": "2.74.1"
   },
   "choose": {
     "bin": [
@@ -1643,7 +1639,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-11-09",
+    "date": "2026-11-12",
     "default": true,
     "dependencies": [
       "node"
@@ -1657,7 +1653,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.321"
+    "version": "2.1.322"
   },
   "claude-replay": {
     "bin": [
@@ -1724,7 +1720,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-10-30",
+    "date": "2026-11-12",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1733,7 +1729,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.27.0"
+    "version": "2.28.0"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -1863,7 +1859,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-11-09",
+    "date": "2026-11-12",
     "default": true,
     "dependencies": [
       "node"
@@ -1877,7 +1873,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.109-0"
+    "version": "1.0.110-0"
   },
   "coreutils": {
     "bin": [
@@ -2275,7 +2271,7 @@
       "make"
     ],
     "category": "Shell",
-    "date": "2026-07-20",
+    "date": "2026-11-12",
     "default": false,
     "dependencies": [
       "libedit"
@@ -2291,7 +2287,7 @@
       "http://gondor.apana.org.au/~herbert/dash/",
       "https://git.kernel.org/pub/scm/utils/dash/dash.git"
     ],
-    "version": "0.5.13.5"
+    "version": "0.5.13.6"
   },
   "dask": {
     "bin": [
@@ -2316,14 +2312,14 @@
       "databricks"
     ],
     "category": "Cloud",
-    "date": "2026-11-09",
+    "date": "2026-11-12",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.25.0"
+    "version": "1.26.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2338,28 +2334,26 @@
       "dbt"
     ],
     "category": "Workflow",
-    "date": "2026-10-14",
+    "date": "2026-11-12",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "data build tool for analytics engineering",
     "installer": "python-package",
     "installer_args": {
-      "pip_name": "dbt-core",
-      "python_version": "3.13"
+      "pip_name": "dbt-core"
     },
-    "python_version_pin": true,
     "type": "cli",
     "url": [
       "https://docs.getdbt.com",
       "https://github.com/dbt-labs/dbt-core"
     ],
-    "version": "1.12.6"
+    "version": "1.12.7"
   },
   "dbt-bigquery": {
     "category": "Workflow",
-    "date": "2026-11-05",
+    "date": "2026-11-12",
     "default": false,
     "dependencies": [
       "dbt"
@@ -2374,7 +2368,7 @@
       "https://docs.getdbt.com",
       "https://github.com/dbt-labs/dbt-adapters"
     ],
-    "version": "1.12.2"
+    "version": "1.12.3"
   },
   "dbt-databricks": {
     "category": "Workflow",
@@ -2550,7 +2544,7 @@
     ],
     "category": "Container",
     "conda_channel": "conda-forge",
-    "date": "2026-10-21",
+    "date": "2026-11-12",
     "default": false,
     "description": "credential helpers for Docker",
     "installer": "conda-package",
@@ -2558,7 +2552,7 @@
     "url": [
       "https://github.com/docker/docker-credential-helpers/"
     ],
-    "version": "0.9.12"
+    "version": "0.9.13"
   },
   "doom-emacs": {
     "bin": [
@@ -2587,7 +2581,7 @@
       "git"
     ],
     "category": "Dotfile",
-    "date": "2026-11-07",
+    "date": "2026-11-10",
     "default": true,
     "dependencies": [
       "chezmoi"
@@ -2597,7 +2591,7 @@
     "url": [
       "https://github.com/acidgenomics/dotfiles/"
     ],
-    "version": "f2233fe2f857a7104190a05b13481a3f5702e678"
+    "version": "c7e1f933125845fb7335835dd2a1d0cf426b3723"
   },
   "dracula-pro": {
     "category": "Dotfile",
@@ -3148,7 +3142,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2022-09-26",
+    "date": "2026-11-12",
     "default": false,
     "dependencies": [
       "gettext",
@@ -3160,7 +3154,7 @@
     "url": [
       "https://github.com/westes/flex/"
     ],
-    "version": "2.6.4"
+    "version": "2.6.9"
   },
   "fltk": {
     "date": "2026-05-02",
@@ -3672,7 +3666,7 @@
       "xz"
     ],
     "category": "VCS",
-    "date": "2026-09-29",
+    "date": "2026-11-12",
     "default": true,
     "dependencies": [
       "curl",
@@ -3693,7 +3687,7 @@
     "url": [
       "https://git-scm.com/"
     ],
-    "version": "2.56.0"
+    "version": "2.56.1"
   },
   "git-filter-repo": {
     "bin": [
@@ -3701,7 +3695,7 @@
     ],
     "category": "VCS",
     "date": "2026-05-31",
-    "default": false,
+    "default": true,
     "dependencies": [
       "python"
     ],
@@ -3883,14 +3877,14 @@
       "go"
     ],
     "category": "Language",
-    "date": "2026-10-21",
+    "date": "2026-11-12",
     "default": false,
     "description": "Go programming language toolchain",
     "type": "cli",
     "url": [
       "https://golang.org/dl/"
     ],
-    "version": "1.27.3"
+    "version": "1.27.4"
   },
   "google-cloud-sdk": {
     "bin": [
@@ -3902,16 +3896,15 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-11-03",
-    "default": true,
+    "date": "2026-11-12",
+    "default": false,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
-    "python_version_pin": true,
     "type": "cli",
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "592.0.0"
+    "version": "593.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -4705,7 +4698,7 @@
       "jf"
     ],
     "category": "Cloud",
-    "date": "2026-11-03",
+    "date": "2026-11-12",
     "default": false,
     "description": "JFrog platform command-line interface",
     "type": "cli",
@@ -4713,7 +4706,7 @@
       "https://github.com/jfrog/jfrog-cli",
       "https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"
     ],
-    "version": "2.131.0"
+    "version": "2.132.0"
   },
   "jj": {
     "bin": [
@@ -5013,14 +5006,11 @@
     "date": "2026-10-30",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "bioinformatics platform SDK and CLI",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.12"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/latch/",
@@ -5122,7 +5112,7 @@
       "make"
     ],
     "category": "Filesystem",
-    "date": "2026-11-02",
+    "date": "2026-11-12",
     "default": true,
     "description": "preprocessor for less to display non-text files",
     "src_url": "https://github.com/wofr06/lesspipe/archive/refs/tags/v{version}.tar.gz",
@@ -5130,7 +5120,7 @@
     "url": [
       "https://github.com/wofr06/lesspipe/"
     ],
-    "version": "2.29"
+    "version": "2.30"
   },
   "libaec": {
     "build_dependencies": [
@@ -5946,7 +5936,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-11-05",
+    "date": "2026-11-12",
     "default": false,
     "description": "extremely fast lossless compression algorithm",
     "man1": [
@@ -5961,7 +5951,7 @@
       "https://lz4.github.io/lz4/",
       "https://github.com/lz4/lz4/"
     ],
-    "version": "1.11.0"
+    "version": "1.11.1"
   },
   "lzip": {
     "bin": [
@@ -6163,8 +6153,8 @@
       "markdownlint-cli2"
     ],
     "category": "Documentation",
-    "date": "2026-10-24",
-    "default": false,
+    "date": "2026-11-12",
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -6175,7 +6165,7 @@
       "https://github.com/DavidAnson/markdownlint-cli2",
       "https://www.npmjs.com/package/markdownlint-cli2/"
     ],
-    "version": "0.24.0"
+    "version": "0.24.1"
   },
   "mcfly": {
     "date": "2026-01-02",
@@ -6200,16 +6190,15 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-10-21",
+    "date": "2026-11-12",
     "default": true,
     "description": "cat clone for Markdown with terminal rendering",
     "installer": "conda-package",
-    "revision": 1,
     "type": "cli",
     "url": [
       "https://github.com/BIRSAx2/mdcat/"
     ],
-    "version": "2.19.0"
+    "version": "2.20.0"
   },
   "meson": {
     "bin": [
@@ -6307,7 +6296,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-11-09",
+    "date": "2026-11-12",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6317,7 +6306,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.11.5"
+    "version": "2026.11.7"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6780,8 +6769,8 @@
     ],
     "category": "Language",
     "conda_channel": "conda-forge",
-    "date": "2026-11-03",
-    "default": false,
+    "date": "2026-11-12",
+    "default": true,
     "description": "JavaScript runtime built on V8 (Node.js)",
     "installer": "conda-package",
     "installer_args": {
@@ -6796,7 +6785,7 @@
     "url": [
       "https://nodejs.org/"
     ],
-    "version": "26.13.0"
+    "version": "26.13.1"
   },
   "npth": {
     "build_dependencies": [
@@ -6842,7 +6831,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-10-10",
+    "date": "2026-11-12",
     "default": false,
     "description": "modern shell using structured data pipelines",
     "installer": "conda-package",
@@ -6850,7 +6839,7 @@
     "url": [
       "https://github.com/nushell/nushell/"
     ],
-    "version": "0.116.1"
+    "version": "0.117.0"
   },
   "onefetch": {
     "bin": [
@@ -7092,7 +7081,7 @@
     ],
     "category": "Documentation",
     "conda_channel": "conda-forge",
-    "date": "2026-10-30",
+    "date": "2026-11-12",
     "default": true,
     "description": "universal document format converter",
     "installer": "conda-package",
@@ -7101,7 +7090,7 @@
       "https://pandoc.org/",
       "https://github.com/jgm/pandoc/"
     ],
-    "version": "3.13"
+    "version": "3.14"
   },
   "parallel": {
     "bin": [
@@ -7360,7 +7349,7 @@
     ],
     "category": "Python",
     "conda_channel": "conda-forge",
-    "date": "2026-11-05",
+    "date": "2026-11-12",
     "default": false,
     "description": "cross-platform, multi-language package management tool",
     "installer": "conda-package",
@@ -7369,7 +7358,7 @@
       "https://pixi.sh/",
       "https://github.com/prefix-dev/pixi/"
     ],
-    "version": "0.84.1"
+    "version": "0.84.2"
   },
   "pixman": {
     "build_dependencies": [
@@ -7439,7 +7428,7 @@
       "playwright"
     ],
     "category": "Python",
-    "date": "2026-11-09",
+    "date": "2026-11-12",
     "default": false,
     "dependencies": [
       "python"
@@ -7451,7 +7440,7 @@
       "https://playwright.dev/",
       "https://pypi.org/project/playwright/"
     ],
-    "version": "1.65.0"
+    "version": "1.65.1"
   },
   "pnpm": {
     "bin": [
@@ -7461,8 +7450,8 @@
       "pnx"
     ],
     "category": "JavaScript",
-    "date": "2026-11-05",
-    "default": false,
+    "date": "2026-11-12",
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -7473,7 +7462,7 @@
       "https://pnpm.io/",
       "https://www.npmjs.com/package/pnpm/"
     ],
-    "version": "12.18.0"
+    "version": "12.20.0"
   },
   "poetry": {
     "bin": [
@@ -7561,14 +7550,14 @@
       "pwsh"
     ],
     "category": "Shell",
-    "date": "2026-10-26",
+    "date": "2026-11-12",
     "default": false,
     "description": "cross-platform task automation shell by Microsoft",
     "type": "cli",
     "url": [
       "https://github.com/PowerShell/PowerShell/"
     ],
-    "version": "7.6.9"
+    "version": "7.7.0"
   },
   "prettier": {
     "bin": [
@@ -7576,7 +7565,7 @@
     ],
     "category": "Text",
     "date": "2026-07-23",
-    "default": false,
+    "default": true,
     "dependencies": [
       "node"
     ],
@@ -7708,7 +7697,7 @@
       "sed"
     ],
     "category": "Python",
-    "date": "2026-10-26",
+    "date": "2026-11-12",
     "default": false,
     "description": "manage multiple Python versions",
     "man1": [
@@ -7719,7 +7708,7 @@
     "url": [
       "https://github.com/pyenv/pyenv/"
     ],
-    "version": "2.8.14"
+    "version": "2.8.15"
   },
   "pyflakes": {
     "bin": [
@@ -7813,7 +7802,7 @@
     ],
     "category": "Python",
     "date": "2026-11-05",
-    "default": false,
+    "default": true,
     "dependencies": [
       "python"
     ],
@@ -8403,7 +8392,7 @@
     ],
     "category": "R",
     "conda_channel": "conda-forge",
-    "date": "2026-10-02",
+    "date": "2026-11-12",
     "default": true,
     "description": "modern R console with syntax highlighting and completion",
     "installer": "conda-package",
@@ -8412,7 +8401,7 @@
       "https://github.com/randy3k/radian/",
       "https://pypi.org/project/radian/"
     ],
-    "version": "0.7.1"
+    "version": "0.8.0"
   },
   "ranger-fm": {
     "bin": [
@@ -8631,7 +8620,7 @@
     "category": "AI",
     "conda_channel": "conda-forge",
     "date": "2026-10-30",
-    "default": false,
+    "default": true,
     "description": "continuous code review for AI coding agents",
     "installer": "conda-package",
     "type": "cli",
@@ -9229,14 +9218,11 @@
     "date": "2026-11-09",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "official command-line interface for Snowflake",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://docs.snowflake.com/en/developer-guide/snowflake-cli/index",
@@ -9630,14 +9616,11 @@
     "date": "2026-07-14",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "command-line interface for Tableau Server and Cloud",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://tableau.github.io/tabcmd/",
@@ -9922,19 +9905,15 @@
     "date": "2026-11-05",
     "default": false,
     "dependencies": [
-      "python3.13"
+      "python"
     ],
     "description": "scientific tool ecosystem and MCP server for AI agents",
     "installer": "python-package",
-    "installer_args": {
-      "python_version": "3.13"
-    },
     "notes": [
       "Base install covers the API and database tools. The [graph] and [ml] extras need graphviz headers plus rdkit and admet-ai, so they are deliberately excluded.",
-      "The base install pulls the playwright Python package but no browser binaries. Web-scraping tools need a separate 'playwright install chromium'.",
-      "Pinned below python3.14: markitdown[all] (a base dependency, not optional) requires youtube-transcript-api~=1.0.0, which sets requires_python <3.14. No newer markitdown release loosens this pin."
+      "The base install pulls the playwright Python package but no browser binaries. Web-scraping tools need a separate 'playwright install chromium'."
     ],
-    "python_version_pin": true,
+    "revision": 1,
     "type": "cli",
     "url": [
       "https://pypi.org/project/tooluniverse/",
@@ -10044,7 +10023,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-11-09",
+    "date": "2026-11-12",
     "default": true,
     "dependencies": [
       "python"
@@ -10056,7 +10035,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.100"
+    "version": "0.0.101"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10990,7 +10969,7 @@
     ],
     "category": "Editor",
     "conda_channel": "conda-forge",
-    "date": "2026-11-05",
+    "date": "2026-11-12",
     "default": false,
     "description": "high-performance, multiplayer code editor",
     "installer": "conda-package",
@@ -10999,7 +10978,7 @@
       "https://zed.dev/",
       "https://github.com/zed-industries/zed/"
     ],
-    "version": "1.27.0"
+    "version": "1.28.1"
   },
   "zellij": {
     "bin": [
@@ -11010,7 +10989,7 @@
     ],
     "category": "Terminal",
     "conda_channel": "conda-forge",
-    "date": "2026-08-28",
+    "date": "2026-11-12",
     "default": false,
     "description": "terminal workspace with layouts and plugins",
     "installer": "conda-package",
@@ -11018,7 +10997,7 @@
     "url": [
       "https://github.com/zellij-org/zellij/"
     ],
-    "version": "0.45.1"
+    "version": "0.46.0"
   },
   "zenith": {
     "date": "2026-06-02",

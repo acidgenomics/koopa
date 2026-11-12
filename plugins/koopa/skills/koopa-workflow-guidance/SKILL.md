@@ -1,11 +1,10 @@
 ---
 name: koopa-workflow-guidance
 description: >-
-  Workflow orchestration guidance, plan mode etiquette, subagent discipline,
-  session hygiene, and git commit conventions. Use when asked about plan mode,
-  how to structure multi-step work, when to use subagents, when making a
-  git commit, or when cleaning up old Claude or Copilot plan files
-  (`koopa app claude|copilot archive-plans`).
+  Coding and workflow guidance, verification, plan mode etiquette, subagent
+  discipline, session hygiene, and git commit conventions. Use when planning
+  multi-step coding work, deciding whether to delegate, or managing plans and
+  commits.
 ---
 
 # Workflow Orchestration
@@ -39,6 +38,39 @@ non-obvious tradeoffs.
 - **Bug fixing**: given a bug report, just fix it.
 - **Elegance**: for non-trivial changes, ask "is there a more elegant way?"
 - **Session hygiene**: after two failed corrections, STOP and reset with a sharper prompt.
+
+## Coding and change discipline
+
+- Make only the requested change. State assumptions, and ask before choosing
+  between materially different approaches or changing load-bearing behavior.
+- Handle errors at system boundaries such as user input, external APIs, and
+  file I/O. Trust internal code; do not add fallbacks for impossible states.
+- Verify the behavior the change is meant to provide. Run relevant tests,
+  linters, and type checkers when available; do not report completion based
+  only on a plausible diff.
+- Fix lint and type errors instead of suppressing them. Do not override project
+  configuration.
+- Use installed tools from `PATH`, not paths into a project's `.venv`, unless
+  that project explicitly requires it. Do not install tools or packages without
+  the user's approval. Surface the exact command or koopa app name and let the
+  user approve it.
+- Do not reach for tools outside the current project unless the user asks.
+  Leave commits and pushes to the user, and never add AI attribution to commit
+  messages.
+- Never use hardcoded `/tmp` paths for scratch files; use `mktemp` or the
+  language's temporary-file helper. Never put sensitive data in scratch files.
+- Avoid em-dash punctuation in prose.
+
+## Shared authoring conventions
+
+- Keep system-generated plan filenames unchanged; the plan UI may depend on the
+  exact filename.
+- Use two-space indentation for JSON.
+- For deep research, pair web research with GitHub code search when available.
+- For Obsidian session reports, use the vault's dated
+  `YYYY/MM/DD/<slug>.md` location and the `type: report`, `title`, and `date`
+  frontmatter. See `koopa-obsidian`.
+- For Git history surgery, see `koopa-git-history-surgery`.
 
 ## Plan Files & Task Management
 

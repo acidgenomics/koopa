@@ -207,6 +207,10 @@ Anything else is kept and reported as "not written by chezmoi".
 This applies to all chezmoi-managed content: dotfiles, Claude Code skills, rules,
 settings: anything under `opt/dotfiles/chezmoi/dot_*/`.
 
+When removing source files, also find their template consumers and generated
+adapters. Run `chezmoi status --source=<source>` for the entire tree: checking
+only removed targets can miss a broken include in an unrelated target.
+
 Failing to add a `.chezmoiremove` entry means the orphan remains active (e.g. as a
 globally-available Claude skill) even though the source no longer tracks it.
 

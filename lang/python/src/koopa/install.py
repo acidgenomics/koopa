@@ -1512,7 +1512,7 @@ def install_go_package(
     env["GOCACHE"] = gocache
     env["GOPATH"] = gopath
     go_network_env(env)
-    install_args: list[str] = []
+    install_args: list[str] = ["-trimpath"]
     if ldflags:
         install_args.extend(["-ldflags", ldflags])
     if tags:
@@ -1683,7 +1683,8 @@ def install_python_package(
     pip_name : str, optional
         PyPI distribution name, if different from *egg_name*.
     egg_name : str, optional
-        Installed package (egg/dist-info) name, if different from *name*.
+        Installed package (egg/dist-info) name. Defaults to *pip_name*
+        without extras, or to *name* when *pip_name* is not set.
     python_version : str, optional
         Python minor version (e.g. ``"3.12"``) to build the venv with.
     extra_packages : list[str] | None, optional
@@ -1700,7 +1701,7 @@ def install_python_package(
     if not prefix:
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if not egg_name:
-        egg_name = name.replace("-", "_")
+        egg_name = (pip_name or name).split("[", 1)[0].replace("-", "_")
     if not pip_name:
         pip_name = egg_name
     # Resolve python executable from app dependencies when not explicit.
@@ -1802,6 +1803,51 @@ def _write_venv_private_ca_sitecustomize(libexec: str) -> None:
     write_private_ca_sitecustomize(site_packages)
 
 
+def _find_dist_record(site_packages: str, *, egg_name: str, version: str) -> str | None:
+    """Find the RECORD file of an installed distribution.
+
+    Compares ``.dist-info`` directory names after PEP 503 normalization, so
+    ``dbt-core``, ``dbt_core``, and ``DBT.Core`` all match the same
+    directory. A directory whose version starts with *version* wins over a
+    match at any other version.
+
+    Parameters
+    ----------
+    site_packages : str
+        Path to the venv's ``site-packages`` directory.
+    egg_name : str
+        Installed distribution name, in any PEP 503 equivalent spelling.
+    version : str
+        Preferred distribution version.
+
+    Returns
+    -------
+    str | None
+        Path to the ``RECORD`` file, or None if no distribution matches.
+    """
+    from koopa.pypi import _normalize_name
+
+    if not os.path.isdir(site_packages):
+        return None
+    target = _normalize_name(egg_name)
+    fallback: str | None = None
+    for entry in sorted(os.listdir(site_packages)):
+        stem = entry.removesuffix(".dist-info")
+        if stem == entry:
+            continue
+        dist, _, dist_version = stem.rpartition("-")
+        if _normalize_name(dist) != target:
+            continue
+        record = os.path.join(site_packages, entry, "RECORD")
+        if not os.path.isfile(record):
+            continue
+        if dist_version.startswith(version):
+            return record
+        if fallback is None:
+            fallback = record
+    return fallback
+
+
 def _link_pip_binaries(
     *,
     egg_name: str,
@@ -1822,7 +1868,6 @@ def _link_pip_binaries(
     libexec : str
         Path to the venv directory holding the installed package.
     """
-    import glob as glob_mod
     import re
 
     venv_python = os.path.join(libexec, "bin", "python3")
@@ -1834,29 +1879,11 @@ def _link_pip_binaries(
     )
     py_version = result.stdout.strip().split()[-1]
     py_maj_min = ".".join(py_version.split(".")[:2])
-    record_pattern = os.path.join(
-        libexec,
-        "lib",
-        f"python{py_maj_min}",
-        "site-packages",
-        f"{egg_name}-{version}*.dist-info",
-        "RECORD",
-    )
-    matches = glob_mod.glob(record_pattern)
-    if not matches:
-        record_pattern2 = os.path.join(
-            libexec,
-            "lib",
-            f"python{py_maj_min}",
-            "site-packages",
-            f"{egg_name}-*.dist-info",
-            "RECORD",
-        )
-        matches = glob_mod.glob(record_pattern2)
-    if not matches:
+    site_packages = os.path.join(libexec, "lib", f"python{py_maj_min}", "site-packages")
+    record_file = _find_dist_record(site_packages, egg_name=egg_name, version=version)
+    if record_file is None:
         msg = f"No RECORD file found for {egg_name} in {libexec}"
         raise FileNotFoundError(msg)
-    record_file = matches[0]
     bin_pattern = re.compile(r"^\.\./\.\./\.\./bin/([^/,]+),")
     man1_pattern = re.compile(r"^\.\./\.\./\.\./share/man/man1/([^/,]+),")
     bin_names: list[str] = []
@@ -3084,8 +3111,20 @@ def update_koopa(*, verbose: bool = False) -> bool:
             msg = f"Current user does not own koopa installation at '{prefix}'."
             raise PermissionError(msg)
     if not is_git_repo(prefix):
-        alert_note(f"Pinned release detected at '{prefix}'.")
-        return False
+        release_marker = os.path.join(prefix, ".koopa-release.json")
+        updated = False
+        if os.path.isfile(release_marker):
+            from koopa.release import update_release
+
+            updated = update_release(prefix)
+            if updated:
+                alert_info("Updated koopa to the latest stable release.")
+                _zsh_compaudit_set_permissions()
+            else:
+                alert_note("koopa is already at the latest stable release.")
+        else:
+            alert_note(f"Pinned release detected at '{prefix}'.")
+        return updated
     branch = git_branch(prefix)
     if branch == "HEAD":
         alert_note(f"Pinned release detected (detached HEAD) at '{prefix}'.")
@@ -3298,6 +3337,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
     if uv is None:
         warn("uv is not installed; cannot install virtual environment extras.")
         return
+    site_packages = os.path.join(venv_dir, "lib", f"python{python_version}", "site-packages")
+    if _find_dist_record(site_packages, egg_name="syntactic", version="") is not None:
+        subprocess.run(
+            [uv, "pip", "uninstall", "--python", venv_python, "syntactic"],
+            check=True,
+        )
     subprocess.run(
         [
             uv,
@@ -3309,12 +3354,12 @@ def _update_venv(prefix: str) -> None:  # noqa: PLR0911
             f"{prefix}[extra]",
             "--upgrade",
             "--reinstall",
-            # `syntactic` is first-party (Acid Genomics index), so a freshly
+            # `acidgenomics-syntactic` is first-party, so a freshly
             # published release must not be held back by the user's dependency
             # cooldown (exclude-newer in ~/.config/uv/uv.toml). Third-party
             # extras such as `tqdm` still resolve under that cooldown.
             "--exclude-newer-package",
-            "syntactic=false",
+            "acidgenomics-syntactic=false",
             # uv bundles its own TLS cert store rather than consulting the OS
             # one. On networks where the OS store trusts a cert uv's bundled
             # store doesn't (observed against python.acidgenomics.com), uv
@@ -4265,19 +4310,14 @@ def update_stale_apps(*, verbose: bool = False) -> None:
     # Iteratively expand reverse dependencies: if openssl3 is being rebuilt,
     # python3.14 (which links against it) also needs rebuilding, etc.
     if apps_with_reasons:
-        from koopa.app import stale_revdeps_with_triggers
+        from koopa.app import stale_revdep_closure
 
         seen_names = {a for a, _ in apps_with_reasons}
-        changed = True
-        while changed:
-            changed = False
-            revdeps = stale_revdeps_with_triggers([a for a, _ in apps_with_reasons])
-            for rd, triggers in revdeps.items():
-                if rd not in seen_names and _is_supported_app(rd):
-                    label = "dependency" if len(triggers) == 1 else "dependencies"
-                    apps_with_reasons.append((rd, f"{label} {', '.join(triggers)} rebuilt"))
-                    seen_names.add(rd)
-                    changed = True
+        revdeps = stale_revdep_closure([a for a, _ in apps_with_reasons], include=_is_supported_app)
+        for rd, triggers in revdeps.items():
+            label = "dependency" if len(triggers) == 1 else "dependencies"
+            apps_with_reasons.append((rd, f"{label} {', '.join(triggers)} rebuilt"))
+            seen_names.add(rd)
     else:
         seen_names = set()
     # Include missing default apps so everything installs in one pass.

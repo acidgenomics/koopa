@@ -285,12 +285,14 @@ def _handle_prune_apps(args: list[str] | None = None) -> None:
     ----------
     args : list[str] | None, optional
         Command arguments. Pruning runs verbosely if ``"--verbose"`` is
-        present.
+        present, and only reports what it would change if ``"--dry-run"``
+        is present.
     """
     from koopa.app import prune_apps
 
     verbose = args is not None and "--verbose" in args
-    prune_apps(verbose=verbose)
+    dry_run = args is not None and "--dry-run" in args
+    prune_apps(dry_run=dry_run, verbose=verbose)
 
 
 def _handle_update_tex_packages() -> None:
@@ -494,44 +496,79 @@ def _handle_system_info(_args: list[str]) -> None:
     print("\n".join(info))
 
 
-def _handle_switch_to_develop(_args: list[str]) -> None:
-    """Handle ``koopa system switch-to-develop``.
+def _switch_koopa_branch(args: list[str], branch: str) -> None:
+    """Switch a Git-managed installation to the selected branch.
 
     Parameters
     ----------
-    _args : list[str]
-        Unused. Accepted for dispatch signature consistency with other
-        system subcommand handlers.
+    args : list[str]
+        Command-line arguments to parse.
+    branch : str
+        Branch to switch to.
     """
+    import argparse
+
     from koopa.alert import alert, alert_note
     from koopa.git import git_branch
     from koopa.prefix import koopa_prefix
 
+    parser = argparse.ArgumentParser(prog=f"koopa develop switch-to-{branch}")
+    parser.parse_args(args)
     prefix = koopa_prefix()
-    branch = "develop"
-    origin = "origin"
-    alert(f"Switching koopa at '{prefix}' to '{branch}'.")
+    if not os.path.exists(os.path.join(prefix, ".git")):
+        raise RuntimeError(f"Not a Git-managed koopa installation: '{prefix}'.")
     if git_branch(prefix) == branch:
         alert_note(f"Already on '{branch}' branch.")
         return
-    subprocess.run(
-        ["git", "remote", "set-branches", "--add", origin, branch],
+    status = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=no"],
         cwd=prefix,
+        capture_output=True,
+        text=True,
         check=True,
     )
-    subprocess.run(
-        ["git", "fetch", origin],
-        cwd=prefix,
-        check=True,
-    )
-    subprocess.run(
-        ["git", "checkout", "--track", f"{origin}/{branch}"],
-        cwd=prefix,
-        check=True,
-    )
+    if status.stdout.strip():
+        raise RuntimeError(
+            f"Tracked files have local changes; resolve them before switching to {branch}."
+        )
+    alert(f"Switching koopa at '{prefix}' to '{branch}'.")
+    try:
+        subprocess.run(
+            ["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
+            cwd=prefix,
+            check=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        if exc.returncode != 1:
+            raise
+        subprocess.run(
+            ["git", "fetch", "origin", f"refs/heads/{branch}:refs/remotes/origin/{branch}"],
+            cwd=prefix,
+            check=True,
+        )
+        subprocess.run(
+            ["git", "remote", "set-branches", "--add", "origin", branch],
+            cwd=prefix,
+            check=True,
+        )
+        command = ["git", "switch", "--track", "-c", branch, f"origin/{branch}"]
+    else:
+        command = ["git", "switch", branch]
+    subprocess.run(command, cwd=prefix, check=True)
     from koopa.install import _zsh_compaudit_set_permissions
 
     _zsh_compaudit_set_permissions()
+
+
+def _handle_switch_to_develop(args: list[str]) -> None:
+    """Handle the legacy ``koopa system switch-to-develop`` alias.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command-line arguments to parse.
+    """
+    _switch_koopa_branch(args, "develop")
 
 
 def _handle_disable_passwordless_sudo() -> None:

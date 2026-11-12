@@ -146,9 +146,8 @@ The reliable check is to attempt the actual `pip install` (or `koopa install
 <app>`) rather than inferring compatibility from wheel filenames. When it fails
 with `ResolutionImpossible`, read which package sets the offending
 `requires-python`, then pin the app below that ceiling with the minimal
-necessary version drop: see `apache-airflow`, `azure-cli`, `dbt`,
-`snowflake-cli`, `tabcmd` for the `dependencies: ["python3.13"]` +
-`installer_args.python_version` + `python_version_pin: true` pattern.
+necessary version drop: see `gentropy` for the `dependencies: ["python3.13"]` +
+`installer_args.python_version` pattern.
 
 ## Version Check Machinery
 

@@ -81,8 +81,11 @@ SYSTEM_DESCRIPTIONS: dict[str, str] = {
     "list": "List system information (subcommands: app-versions, launch-agents, path-priority).",
     "os-slug": "Print the operating system identifier slug.",
     "prefix": "Print the installation prefix for koopa or a named application.",
-    "prune-apps": "Remove stale application versions.",
-    "switch-to-develop": "Switch koopa installation to the development branch.",
+    "prune-apps": (
+        "Rebuild apps referencing old versions, then remove unreferenced versions. "
+        "Versions still referenced are kept."
+    ),
+    "switch-to-develop": "Legacy alias for `koopa develop switch-to-develop`.",
     "version": "Print the installed version of an application.",
     "which": "Print the real path of an application.",
 }
@@ -172,6 +175,8 @@ ADMIN_SYNOPSIS: dict[str, str] = {
 # ---------------------------------------------------------------------------
 
 DEVELOP_DESCRIPTIONS: dict[str, str] = {
+    "switch-to-develop": "Switch a Git-managed koopa installation to the develop branch.",
+    "switch-to-main": "Switch a Git-managed koopa installation to the main branch.",
     "audit-src-mirror": "Audit S3 source mirror for missing or stale tarballs.",
     "bump-revision": "Bump the revision of one or more apps in app.json.",
     "bump-venv-version": "Bump the Python venv version.",
@@ -213,6 +218,9 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "find-ignored-bin-files": "Find files in bin/ that are ignored by git.",
     "numpydoc": "Run the numpydoc docstring validator on the Python source tree.",
     "orphan-apps": "Find apps in app.json that no other app depends on.",
+    "prune-stale-docs": "Remove stale S3 keys left over from a previous docs build.",
+    "publish-docs": "Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.",
+    "publish-release": "Publish a stable koopa release archive to koopa.acidgenomics.com.",
     "pyrefly": "Run the pyrefly type checker on the Python source tree.",
     "pyright": "Run the pyright type checker on the Python source tree.",
     "reset-revisions": "Remove the revision key from all apps in app.json.",
@@ -224,6 +232,9 @@ DEVELOP_SYNOPSIS: dict[str, str] = {
     "check-skills": "[path...]",
     "generate-agent-config": "[--check]",
     "mirror-src": "name...",
+    "prune-stale-docs": "[--no-dryrun]",
+    "publish-docs": "[--no-invalidate] [--dry-run]",
+    "publish-release": "tag",
     "push-app-build": "name...",
     "push-installer": "app file [--version version] [--force]",
     "remove-app": "name",
@@ -362,7 +373,6 @@ APP_NAMESPACE_DESCRIPTIONS: dict[str, str] = {
     "hisat2": "HISAT2 spliced aligner wrappers.",
     "jekyll": "Jekyll static site build and deploy utilities.",
     "kallisto": "kallisto pseudo-alignment wrappers.",
-    "koopa": "koopa.acidgenomics.com Sphinx docs site publishing.",
     "md5sum": "md5sum checksum utilities.",
     "photos": "Photo and video file renaming utilities.",
     "miso": "MISO alternative-splicing index utilities.",
@@ -494,9 +504,6 @@ APP_DESCRIPTIONS: dict[str, str] = {
     # jekyll
     "jekyll-deploy-to-aws": "Build a Jekyll site and deploy it to S3 + CloudFront.",
     "jekyll-serve": "Serve a Jekyll site locally for development.",
-    # koopa (site)
-    "koopa-prune-stale-docs": "Remove stale S3 keys left over from a previous docs build.",
-    "koopa-publish-docs": "Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.",
     # md5sum
     "md5sum-check-to-new-md5-file": "Compute md5sum checksums and log them to a new .md5 file.",
     # obsidian

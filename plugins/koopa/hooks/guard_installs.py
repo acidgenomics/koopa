@@ -12,9 +12,9 @@ so the normal permission flow applies.
 
 A `koopa` command that changes the system (`install`, `reinstall`, `sync`,
 `uninstall`, `update`, `configure`, `admin ...`, `system prune-apps`, `system
-switch-to-develop`) is denied instead: the `koopa` CLI refuses it under a coding agent
-in every harness (`koopa.agent_mode`), so asking would only collect an approval the CLI
-then ignores.
+switch-to-develop`, or `develop switch-to-*`) is denied instead: the `koopa` CLI
+refuses it under a coding agent in every harness (`koopa.agent_mode`), so asking
+would only collect an approval the CLI then ignores.
 The deny reason tells the agent to show the user the command to run themselves. When
 the same command line turns agent mode off (`KOOPA_AGENT=0 koopa ...`,
 `env -u AI_AGENT koopa ...`), the command would really run, so the hook asks.
@@ -77,7 +77,8 @@ _INSTALL_PATTERNS = tuple(
         # koopa commands that change the system
         _B
         + r"koopa\s+(?:install|reinstall|sync|uninstall|update|configure|admin\s+\S+"
-        + r"|system\s+(?:prune-apps|switch-to-develop))"
+        + r"|system\s+(?:prune-apps|switch-to-develop)"
+        + r"|develop\s+(?:switch-to-develop|switch-to-main))"
         + _END,
     )
 )
