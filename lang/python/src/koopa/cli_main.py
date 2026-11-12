@@ -1065,8 +1065,15 @@ def _handle_update(args: argparse.Namespace) -> None:
     try:
         if mode == "koopa":
             python_changed = update_koopa(verbose=args.verbose)
+            if os.path.isfile(os.path.join(_koopa_prefix(), ".koopa-release.json")) and (
+                update_bootstrap(verbose=args.verbose)
+            ):
+                _release_install_lock()
+                acquired = False
+                _exec_restart_with_bootstrap()
             if python_changed:
                 _release_install_lock()
+                acquired = False
                 _exec_restart_after_pull()
             _update_venv(_koopa_prefix())
             update_agent_plugins(verbose=args.verbose)

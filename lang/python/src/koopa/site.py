@@ -1,7 +1,7 @@
 """Build and publish koopa.acidgenomics.com (the koopa Sphinx docs site).
 
-The koopa bucket root also serves ``/install`` (curl'd by every new install)
-and ``/src/<app>/<tarball>`` (the source mirror ``bootstrap.sh`` depends on),
+The koopa bucket root also serves ``/install``, ``/install-release``,
+``/releases/``, and ``/src/<app>/<tarball>`` (the bootstrap source mirror),
 so the docs sync never uses ``--delete``: a stale-content prune is a
 separate, explicit, dry-run-by-default step that skips both reserved
 prefixes and anything present in the freshly built tree.
@@ -17,7 +17,7 @@ from pathlib import Path
 _PROFILE = "acidgenomics"
 
 # Bucket-root prefixes that a prune must never delete.
-_RESERVED_PREFIXES: tuple[str, ...] = ("install", "src/")
+_RESERVED_PREFIXES: tuple[str, ...] = ("install", "src/", "releases/")
 
 
 def _aws() -> str:
@@ -229,7 +229,7 @@ def publish_docs(*, invalidate: bool = True, dryrun: bool = False) -> None:
 def prune_stale(*, dryrun: bool = True) -> None:
     """Remove S3 keys that no longer correspond to a file in the built site.
 
-    Never touches ``_RESERVED_PREFIXES`` (``install``, ``src/``), regardless
+    Never touches ``_RESERVED_PREFIXES`` (``install``, ``src/``, ``releases/``), regardless
     of whether those keys appear in the freshly built site tree.
 
     Parameters

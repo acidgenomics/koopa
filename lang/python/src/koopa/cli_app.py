@@ -141,6 +141,7 @@ _APP_TREE: dict[str, Any] = {
     "koopa": {
         "prune-stale-docs": "koopa-prune-stale-docs",
         "publish-docs": "koopa-publish-docs",
+        "publish-release": "koopa-publish-release",
     },
     "md5sum": {
         "check-to-new-md5-file": "md5sum-check-to-new-md5-file",
@@ -501,6 +502,17 @@ def _handle_koopa_prune_stale_docs(args: list[str]) -> None:
     from koopa.site import prune_stale
 
     prune_stale(dryrun=parsed.dryrun)
+
+
+def _handle_koopa_publish_release(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="koopa app koopa publish-release")
+    parser.add_argument("tag", help="Stable version tag already merged into main.")
+    parsed = parser.parse_args(args)
+    from koopa.release import publish_release
+
+    publish_release(parsed.tag)
 
 
 # -- r handlers --------------------------------------------------------------
@@ -3167,6 +3179,7 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     # koopa (site)
     "koopa-prune-stale-docs": _handle_koopa_prune_stale_docs,
     "koopa-publish-docs": _handle_koopa_publish_docs,
+    "koopa-publish-release": _handle_koopa_publish_release,
     # python
     "python-publish": _handle_python_publish,
     "python-publish-docs": _handle_python_publish_docs,

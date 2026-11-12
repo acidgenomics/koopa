@@ -74,6 +74,40 @@ sudo dnf -y install \
 
 ## Install koopa
 
+### Stable release without GitHub
+
+For networks that cannot access public GitHub, install the latest stable
+release directly from koopa.acidgenomics.com:
+
+```sh
+curl -fsSL https://koopa.acidgenomics.com/install-release | sh
+```
+
+To select a specific published release initially, replace `vX.Y.Z` with its tag:
+
+```sh
+curl -fsSL https://koopa.acidgenomics.com/install-release | sh -s -- --version vX.Y.Z
+```
+
+The installer verifies the archive against the published SHA-256 checksum and
+builds bootstrap Python from source. `koopa update koopa` then
+updates the installation to the latest stable release from the same domain.
+It preserves installed apps and refuses to overwrite locally modified release
+files or unmanaged files. An existing Git-managed installation continues to
+update through Git as before.
+
+The release archive and bootstrap sources do not require GitHub, but individual
+apps and Python extras may need other network access or a configured mirror.
+The checksum detects corruption; it is not an independent signature.
+
+To publish a new stable release after its tag is merged into `main`, run
+`koopa app koopa publish-release vX.Y.Z` from the release checkout. This
+publishes immutable versioned archives and advances the stable channel. Before
+publishing, ensure the bootstrap source versions in that tag are mirrored under
+`/src/` on the domain.
+
+### Git-managed installation
+
 The install script will prompt to determine whether you want a shared install for all
 users, or for the current local user only. It will also ask about dotfile
 configuration and whether your shell profile configuration file should be modified.

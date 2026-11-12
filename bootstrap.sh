@@ -515,6 +515,18 @@ download_with_fallback() {
             unset -v __dwf_dirname __dwf_filename __dwf_name __dwf_primary __dwf_pub __dwf_rewritten __dwf_rw __dwf_vendor
             return 1
         fi
+    elif [ -f "${KOOPA_PREFIX}/.koopa-release.json" ]
+    then
+        __dwf_urls="${__dwf_vendor}${__dwf_rewritten}"
+        for __dwf_pub in "$@"
+        do
+            case "$__dwf_pub" in
+                https://koopa.acidgenomics.com/src/*)
+                    __dwf_urls="${__dwf_urls}${__dwf_pub}
+"
+                    ;;
+            esac
+        done
     else
         __dwf_urls="${__dwf_primary}
 ${__dwf_vendor}${__dwf_rewritten}"
@@ -1171,13 +1183,9 @@ main() {
     fi
     stage_init || return 1
     __kvar_build_ok=0
-    # Always try the uv fast path first: a prebuilt CPython download takes
-    # seconds versus minutes to compile from source, and this is safe on a
-    # genuinely firewalled host too -- install_python_uv fails cleanly (e.g.
-    # vendor_only with no derivable mirror, no uv on PATH, or an unreachable
-    # CDN) and this falls through to the source build below, same as any
-    # other fast-path failure.
-    if (
+    # Stable releases use the domain mirror exclusively. Other installs try
+    # uv first and fall back to source if a mirror or the CDN is unavailable.
+    if [ ! -f "${KOOPA_PREFIX}/.koopa-release.json" ] && (
         DESTDIR="$__kvar_destdir"
         export DESTDIR
         install_python_uv
@@ -1185,7 +1193,7 @@ main() {
     then
         __kvar_build_ok=1
     else
-        printf 'uv fast path failed, falling back to source build.\n' >&2
+        printf 'Using source build for bootstrap Python.\n' >&2
         rm -fr "$__kvar_destdir"
         mkdir -p "$__kvar_destdir"
     fi

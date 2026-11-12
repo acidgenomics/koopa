@@ -3111,8 +3111,20 @@ def update_koopa(*, verbose: bool = False) -> bool:
             msg = f"Current user does not own koopa installation at '{prefix}'."
             raise PermissionError(msg)
     if not is_git_repo(prefix):
-        alert_note(f"Pinned release detected at '{prefix}'.")
-        return False
+        release_marker = os.path.join(prefix, ".koopa-release.json")
+        updated = False
+        if os.path.isfile(release_marker):
+            from koopa.release import update_release
+
+            updated = update_release(prefix)
+            if updated:
+                alert_info("Updated koopa to the latest stable release.")
+                _zsh_compaudit_set_permissions()
+            else:
+                alert_note("koopa is already at the latest stable release.")
+        else:
+            alert_note(f"Pinned release detected at '{prefix}'.")
+        return updated
     branch = git_branch(prefix)
     if branch == "HEAD":
         alert_note(f"Pinned release detected (detached HEAD) at '{prefix}'.")

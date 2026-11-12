@@ -633,6 +633,11 @@ Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.
 - `--no-invalidate`
 - `--dry-run`
 
+(koopa-app-koopa-publish-release)=
+### `app koopa publish-release`
+
+Publish a stable koopa release archive to koopa.acidgenomics.com.
+
 ## md5sum
 
 md5sum checksum utilities.

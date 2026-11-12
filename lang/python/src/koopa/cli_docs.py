@@ -497,6 +497,7 @@ APP_DESCRIPTIONS: dict[str, str] = {
     # koopa (site)
     "koopa-prune-stale-docs": "Remove stale S3 keys left over from a previous docs build.",
     "koopa-publish-docs": "Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.",
+    "koopa-publish-release": "Publish a stable koopa release archive to koopa.acidgenomics.com.",
     # md5sum
     "md5sum-check-to-new-md5-file": "Compute md5sum checksums and log them to a new .md5 file.",
     # obsidian
