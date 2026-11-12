@@ -16,10 +16,10 @@ from koopa.site import _cloudfront_distribution_id
 )
 def test_publish_docs_cli_flags(args: list[str], dryrun: bool, invalidate: bool) -> None:
     """Forward the preferred dry-run flag and its legacy alias safely."""
-    from koopa.cli_app import _handle_koopa_publish_docs
+    from koopa.cli_develop import _handle_publish_docs
 
     with patch("koopa.site.publish_docs") as publish:
-        _handle_koopa_publish_docs(args)
+        _handle_publish_docs(args)
 
     publish.assert_called_once_with(invalidate=invalidate, dryrun=dryrun)
 
