@@ -497,7 +497,15 @@ def _handle_system_info(_args: list[str]) -> None:
 
 
 def _switch_koopa_branch(args: list[str], branch: str) -> None:
-    """Switch a Git-managed installation to the selected branch."""
+    """Switch a Git-managed installation to the selected branch.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command-line arguments to parse.
+    branch : str
+        Branch to switch to.
+    """
     import argparse
 
     from koopa.alert import alert, alert_note
@@ -553,7 +561,13 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
 
 
 def _handle_switch_to_develop(args: list[str]) -> None:
-    """Handle the legacy ``koopa system switch-to-develop`` alias."""
+    """Handle the legacy ``koopa system switch-to-develop`` alias.
+
+    Parameters
+    ----------
+    args : list[str]
+        Command-line arguments to parse.
+    """
     _switch_koopa_branch(args, "develop")
 
 
