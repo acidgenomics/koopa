@@ -15,6 +15,7 @@ def test_lig_spec_suggests_commands_and_apps(tmp_path: Path) -> None:
     lig = shutil.which("lig")
     if lig is None:
         pytest.skip("Lig is not installed")
+    lig_path: str = lig
     specs = tmp_path / "lig" / "specs"
     specs.mkdir(parents=True)
     spec = specs / "koopa.json"
@@ -32,11 +33,11 @@ def test_lig_spec_suggests_commands_and_apps(tmp_path: Path) -> None:
         "PATH": f"{root / 'bin'}{os.pathsep}{os.environ.get('PATH', '')}",
         "XDG_CONFIG_HOME": str(tmp_path),
     }
-    subprocess.run([lig, "specs", "check", str(spec)], env=env, check=True, capture_output=True)
+    subprocess.run([lig_path, "specs", "check", str(spec)], env=env, check=True, capture_output=True)
 
     def complete(line: str) -> str:
         return subprocess.run(
-            [lig, "complete", line], env=env, check=True, capture_output=True, text=True
+            [lig_path, "complete", line], env=env, check=True, capture_output=True, text=True
         ).stdout
 
     assert "check-app-versions" in complete("koopa develop check-a")

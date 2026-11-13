@@ -61,7 +61,7 @@ Regenerate the cached Bash function library.
 (koopa-develop-check)=
 ## `develop check`
 
-Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest.
+Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, activation speed, pytest.
 
 (koopa-develop-check-app-versions)=
 ## `develop check-app-versions`

@@ -190,7 +190,8 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "bump-venv-version": "Bump the Python venv version.",
     "cache-functions": "Regenerate the cached Bash function library.",
     "check": (
-        "Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest."
+        "Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, "
+        "activation speed, pytest."
     ),
     "check-app-versions": "Check upstream versions for all apps in app.json.",
     "check-skills": "Validate SKILL.md frontmatter for cross-CLI compatibility.",

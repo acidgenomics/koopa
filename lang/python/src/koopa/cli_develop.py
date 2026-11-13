@@ -1375,6 +1375,39 @@ def _run_agent_config_check(args: list[str], *, quiet: bool = False) -> int:
     return 0
 
 
+def _run_activation_speed_check(args: list[str], *, quiet: bool = False) -> int:
+    """Run the Bash and Zsh activation speed gate.
+
+    Parameters
+    ----------
+    args : list[str]
+        Extra arguments passed to the speed test.
+    quiet : bool, default False
+        Hide output on a pass; print it only on failure.
+
+    Returns
+    -------
+    int
+        Exit code returned by the speed test.
+    """
+    from koopa.prefix import koopa_prefix
+
+    return _run_tool(
+        [
+            os.path.join(koopa_prefix(), "bin", "koopa"),
+            "develop",
+            "activation-speed-test",
+            "--runs",
+            "3",
+            "--shells",
+            "bash",
+            "zsh",
+            *args,
+        ],
+        quiet=quiet,
+    )
+
+
 def _handle_generate_agent_config(args: list[str]) -> None:
     """Handle ``koopa develop generate-agent-config``.
 
@@ -1429,16 +1462,15 @@ def _handle_check(args: list[str]) -> None:
 
     Runs the full quality gate as one command: ``agent config``,
     ``ruff check``, ``ruff format --check``, ``pyright``, ``ty check``,
-    ``pyrefly check``, ``numpydoc``, then ``pytest``. Phases run in cheap-to-expensive order and
-    stop at the first failure, so a fast lint error fails in seconds instead
-    of waiting for pytest. A passing phase's output is hidden; the failing
-    phase prints its full output before the gate raises.
+    ``pyrefly check``, ``numpydoc``, ``activation-speed-test``, then
+    ``pytest``. Phases stop at the first failure. A passing phase's output is
+    hidden; the failing phase prints its full output before the gate raises.
 
     Parameters
     ----------
     args : list[str]
         Raw CLI arguments for this subcommand. Rejected if non-empty, since
-        an argument cannot be routed unambiguously across eight tools.
+        an argument cannot be routed unambiguously across the checks.
     """
     from koopa.alert import alert_success
     from koopa.progress import _fmt_duration, _styled_time
@@ -1447,7 +1479,8 @@ def _handle_check(args: list[str]) -> None:
         msg = (
             "'koopa develop check' takes no arguments. Run the individual "
             "subcommands instead: generate-agent-config --check, ruff-check, "
-            "ruff-format-check, pyright, ty, pyrefly, numpydoc, pytest."
+            "ruff-format-check, pyright, ty, pyrefly, numpydoc, "
+            "activation-speed-test, pytest."
         )
         raise RuntimeError(msg)
     phases: list[tuple[str, Callable[..., int]]] = [
@@ -1458,6 +1491,7 @@ def _handle_check(args: list[str]) -> None:
         ("ty check", _run_ty),
         ("pyrefly check", _run_pyrefly),
         ("numpydoc", _run_numpydoc),
+        ("activation speed", _run_activation_speed_check),
         ("pytest", _run_pytest),
     ]
     live = sys.stderr.isatty()

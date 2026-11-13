@@ -24,7 +24,13 @@ _TRIPLES = {
 
 
 def _platform_triple() -> str:
-    """Resolve a supported release target."""
+    """Resolve a supported release target.
+
+    Returns
+    -------
+    str
+        Release target triple for the current platform.
+    """
     platform = (sys.platform, arch2())
     triple = _TRIPLES.get(platform)
     if triple is None:
@@ -34,7 +40,17 @@ def _platform_triple() -> str:
 
 
 def _verify_archive(archive: str, checksum: str, filename: str) -> None:
-    """Check the sidecar format and the archive digest."""
+    """Check the sidecar format and the archive digest.
+
+    Parameters
+    ----------
+    archive : str
+        Path to the downloaded archive.
+    checksum : str
+        Path to the SHA-256 sidecar.
+    filename : str
+        Expected archive filename in the sidecar.
+    """
     fields = Path(checksum).read_text(encoding="utf-8").split()
     if (
         len(fields) != 2
@@ -51,7 +67,17 @@ def _verify_archive(archive: str, checksum: str, filename: str) -> None:
 
 
 def _install_archive(archive: str, directory: str, prefix: str) -> None:
-    """Copy only the expected regular binary out of the verified archive."""
+    """Copy only the expected regular binary out of the verified archive.
+
+    Parameters
+    ----------
+    archive : str
+        Path to the verified archive.
+    directory : str
+        Expected directory containing the binary in the archive.
+    prefix : str
+        Installation prefix directory.
+    """
     binary_name = f"{directory}/lig"
     with tarfile.open(archive, "r:gz") as tf:
         matches = [member for member in tf.getmembers() if member.name == binary_name]
