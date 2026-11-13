@@ -77,9 +77,7 @@ def test_refuses_tracked_changes_without_switching(checkout: Path) -> None:
 
 @pytest.mark.parametrize("branch", ["main", "develop"])
 @pytest.mark.parametrize("already_on_branch", [False, True])
-def test_refreshes_existing_branch(
-    checkout: Path, branch: str, already_on_branch: bool
-) -> None:
+def test_refreshes_existing_branch(checkout: Path, branch: str, already_on_branch: bool) -> None:
     """Fetch and fast-forward the target, including when it is already checked out."""
     cli_develop.handle_develop([f"switch-to-{branch}"])
     if not already_on_branch:
@@ -130,6 +128,7 @@ def test_divergence_does_not_discard_local_commits(checkout: Path) -> None:
     _git(checkout, "add", "tracked")
     _git(checkout, "-c", "commit.gpgSign=false", "commit", "-m", "local main")
     local_commit = _git(checkout, "rev-parse", "HEAD")
+    cli_develop.handle_develop(["switch-to-develop"])
     source = checkout.parent / "source"
     _git(source, "switch", "main")
     (source / "tracked").write_text("remote main commit")
@@ -139,9 +138,31 @@ def test_divergence_does_not_discard_local_commits(checkout: Path) -> None:
 
     with pytest.raises(subprocess.CalledProcessError):
         cli_develop.handle_develop(["switch-to-main"])
-    assert _git(checkout, "rev-parse", "HEAD") == local_commit
+    assert _git(checkout, "branch", "--show-current") == "develop"
+    assert _git(checkout, "rev-parse", "main") == local_commit
     assert _git(checkout, "rev-parse", "origin/main") == remote_commit
-    assert (checkout / "tracked").read_text() == "local main commit"
+
+
+@pytest.mark.parametrize("detached", [False, True])
+def test_update_collision_returns_to_previous_branch(checkout: Path, detached: bool) -> None:
+    """An untracked file blocking the update must not leave the stale branch checked out."""
+    cli_develop.handle_develop(["switch-to-main"])
+    cli_develop.handle_develop(["switch-to-develop"])
+    previous_commit = _git(checkout, "rev-parse", "HEAD")
+    if detached:
+        _git(checkout, "switch", "--detach")
+    (checkout / "new-file").write_text("local data")
+    source = checkout.parent / "source"
+    _git(source, "switch", "main")
+    (source / "new-file").write_text("remote data")
+    _git(source, "add", "new-file")
+    _git(source, "-c", "commit.gpgSign=false", "commit", "-m", "remote file")
+
+    with pytest.raises(subprocess.CalledProcessError):
+        cli_develop.handle_develop(["switch-to-main"])
+    assert _git(checkout, "branch", "--show-current") == ("" if detached else "develop")
+    assert _git(checkout, "rev-parse", "HEAD") == previous_commit
+    assert (checkout / "new-file").read_text() == "local data"
 
 
 def test_refuses_non_git_installation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

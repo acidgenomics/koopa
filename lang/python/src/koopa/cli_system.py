@@ -530,7 +530,13 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
         )
     alert(f"Refreshing koopa at '{prefix}' from 'origin/{branch}'.")
     subprocess.run(
-        ["git", "fetch", "--no-tags", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}"],
+        [
+            "git",
+            "fetch",
+            "--no-tags",
+            "origin",
+            f"+refs/heads/{branch}:refs/remotes/origin/{branch}",
+        ],
         cwd=prefix,
         check=True,
     )
@@ -551,9 +557,22 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
         command = ["git", "switch", "--track", "-c", branch, f"origin/{branch}"]
     else:
         command = ["git", "switch", branch]
-    if git_branch(prefix) != branch:
+    current_branch = git_branch(prefix)
+    restore_command = ["git", "switch", current_branch]
+    if current_branch == "HEAD":
+        previous_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=prefix, capture_output=True, text=True, check=True
+        ).stdout.strip()
+        restore_command = ["git", "switch", "--detach", previous_commit]
+    switched = current_branch != branch
+    if switched:
         subprocess.run(command, cwd=prefix, check=True)
-    subprocess.run(["git", "merge", "--ff-only", f"origin/{branch}"], cwd=prefix, check=True)
+    try:
+        subprocess.run(["git", "merge", "--ff-only", f"origin/{branch}"], cwd=prefix, check=True)
+    except subprocess.CalledProcessError:
+        if switched:
+            subprocess.run(restore_command, cwd=prefix, check=True)
+        raise
     from koopa.install import _zsh_compaudit_set_permissions
 
     _zsh_compaudit_set_permissions()

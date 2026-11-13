@@ -378,10 +378,10 @@ Rewrite .install/info.json environ blocks down to the allowlist.
 Run shellcheck on all shell scripts.
 .TP
 \fBdevelop switch\-to\-develop\fR
-Switch a Git-managed koopa installation to the develop branch.
+Fetch origin/develop, switch to develop, and fast-forward it. Requires a clean tracked worktree and an available origin; divergent commits are preserved.
 .TP
 \fBdevelop switch\-to\-main\fR
-Switch a Git-managed koopa installation to the main branch.
+Fetch origin/main, switch to main, and fast-forward it. Requires a clean tracked worktree and an available origin; divergent commits are preserved.
 .TP
 \fBdevelop ty\fR
 Run the ty type checker on the Python source tree.

@@ -27,6 +27,9 @@ errors with "app names are only valid with 'koopa update system'" before
 anything runs. All dispatched through `_handle_update()` in
 `lang/python/src/koopa/cli_main.py:692`.
 
+For switching branches or recovering a stale `main` checkout that broke koopa,
+see the branch-switch and recovery guidance in the `koopa-cli` skill.
+
 ## System updates are opt-in only, not part of the default sequence
 
 As of the 2026-08-06 change ("System updates are no longer run by default";
