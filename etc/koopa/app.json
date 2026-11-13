@@ -5761,12 +5761,12 @@
     "date": "2026-11-12",
     "default": true,
     "description": "IDE-style autocomplete for the terminal",
-    "installer": "rust-package",
+    "installer": "lig",
     "installer_args": {
       "git_url": "https://github.com/KevenGoncalves/lig",
       "tag": "v{version}"
     },
-    "revision": 2,
+    "revision": 3,
     "type": "cli",
     "url": [
       "https://github.com/KevenGoncalves/lig"

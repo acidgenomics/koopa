@@ -280,7 +280,6 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "bandwhich": f"{_M}._rust_pkg",
     "gping": f"{_M}._rust_pkg",
     "hexyl": f"{_M}._rust_pkg",
-    "lig": f"{_M}._rust_pkg",
     "rustqc": f"{_M}._rust_pkg",
     "xsra": f"{_M}._rust_pkg",
     # -- perl-package (3) ------------------------------------------------
@@ -322,6 +321,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "ldns": f"{_M}.ldns",
     "less": f"{_M}.less",
     "lesspipe": f"{_M}.lesspipe",
+    "lig": f"{_M}.lig",
     "libaec": f"{_M}.libaec",
     "libarchive": f"{_M}.libarchive",
     "libassuan": f"{_M}.libassuan",

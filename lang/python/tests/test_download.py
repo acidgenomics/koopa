@@ -93,6 +93,31 @@ def test_download_with_mirror_still_validates_archive_payload(
         )
 
 
+def test_download_with_mirror_allows_caller_to_validate_archive(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Leave archive integrity checks to the caller when explicitly requested."""
+    output = tmp_path / "pkg.tar.gz"
+    attempted = []
+
+    def fake_download(url: str, out: str | None = None, **_kwargs: object) -> str:
+        assert out is not None
+        attempted.append(url)
+        Path(out).write_bytes(b"not an archive")
+        return out
+
+    monkeypatch.setattr("koopa.download.download", fake_download)
+    result = download_with_mirror(
+        "https://example.com/pkg.tar.gz",
+        "pkg",
+        "pkg.tar.gz",
+        output=str(output),
+        validate_archive=False,
+    )
+    assert result == str(output)
+    assert attempted == ["https://example.com/pkg.tar.gz"]
+
+
 def test_download_with_mirror_vendor_only_skips_public_hosts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

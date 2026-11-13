@@ -1507,14 +1507,9 @@ def test_classify_app_registry_url_fallback_for_bespoke_installer() -> None:
 
 def test_classify_app_lig_uses_github_releases() -> None:
     """Lig's unrelated crates.io name must not override its GitHub releases."""
-    spec = classify_app(
-        "lig",
-        {
-            "installer": "rust-package",
-            "url": ["https://github.com/KevenGoncalves/lig"],
-            "version": "1.3.0",
-        },
-    )
+    from koopa.io import import_app_json
+
+    spec = classify_app("lig", import_app_json()["lig"])
     assert spec is not None
     assert spec.source == "github"
     assert spec.args == ("KevenGoncalves", "lig")
