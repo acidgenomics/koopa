@@ -175,8 +175,8 @@ ADMIN_SYNOPSIS: dict[str, str] = {
 # ---------------------------------------------------------------------------
 
 DEVELOP_DESCRIPTIONS: dict[str, str] = {
-    "switch-to-develop": "Switch a Git-managed koopa installation to the develop branch.",
-    "switch-to-main": "Switch a Git-managed koopa installation to the main branch.",
+    "switch-to-develop": "Switch to develop and fast-forward it from origin.",
+    "switch-to-main": "Switch to main and fast-forward it from origin.",
     "audit-src-mirror": "Audit S3 source mirror for missing or stale tarballs.",
     "bump-revision": "Bump the revision of one or more apps in app.json.",
     "bump-venv-version": "Bump the Python venv version.",
