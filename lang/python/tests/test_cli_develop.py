@@ -824,6 +824,8 @@ def test_activation_speed_check_uses_three_bash_and_zsh_runs() -> None:
             "--shells",
             "bash",
             "zsh",
+            "--threshold-bash",
+            "300",
         ],
         quiet=True,
     )

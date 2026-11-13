@@ -13,7 +13,7 @@ koopa develop check
 
 Runs every check below in one command: `agent config`, `ruff check`,
 `ruff format --check`, `pyright`, `ty check`, `pyrefly check`, `numpydoc`,
-`activation-speed-test --runs 3 --shells bash zsh`, then `pytest`.
+`activation-speed-test --runs 3 --shells bash zsh --threshold-bash 300`, then `pytest`.
 Phases run in cheap-to-expensive order and stop at the first failure, so a
 fast lint error fails in seconds instead of waiting for pytest. A passing
 phase's output is hidden; the failing phase prints its full output before

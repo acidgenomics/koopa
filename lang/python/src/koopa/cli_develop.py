@@ -1402,6 +1402,8 @@ def _run_activation_speed_check(args: list[str], *, quiet: bool = False) -> int:
             "--shells",
             "bash",
             "zsh",
+            "--threshold-bash",
+            "300",
             *args,
         ],
         quiet=quiet,
