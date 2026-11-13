@@ -781,9 +781,7 @@ def test_ca_certificate_date_updates_fresh_and_cached(
         ("2025-12-31", "2026-01-01", True, False),
     ],
 )
-def test_date_version_ordering(
-    current: str, latest: str, outdated: bool, too_high: bool
-) -> None:
+def test_date_version_ordering(current: str, latest: str, outdated: bool, too_high: bool) -> None:
     """Compare date versions across months, years, and downgrades."""
     result = VersionCheckResult("ca-certificates", current, latest, "dirlist")
     assert result.is_outdated is outdated
@@ -1505,6 +1503,21 @@ def test_classify_app_registry_url_fallback_for_bespoke_installer() -> None:
     assert spec is not None
     assert spec.source == "pypi"
     assert spec.args == ("playwright",)
+
+
+def test_classify_app_lig_uses_github_releases() -> None:
+    """Lig's unrelated crates.io name must not override its GitHub releases."""
+    spec = classify_app(
+        "lig",
+        {
+            "installer": "rust-package",
+            "url": ["https://github.com/KevenGoncalves/lig"],
+            "version": "1.3.0",
+        },
+    )
+    assert spec is not None
+    assert spec.source == "github"
+    assert spec.args == ("KevenGoncalves", "lig")
 
 
 def test_classify_app_python_plugin_uses_pypi_not_monorepo_github() -> None:

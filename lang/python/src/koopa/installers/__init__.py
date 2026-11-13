@@ -276,10 +276,11 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "prettier": f"{_M}._node_pkg",
     # -- ruby-package (4) ------------------------------------------------
     "bashcov": f"{_M}._ruby_pkg",
-    # -- rust-package (6) ------------------------------------------------
+    # -- rust-package (7) ------------------------------------------------
     "bandwhich": f"{_M}._rust_pkg",
     "gping": f"{_M}._rust_pkg",
     "hexyl": f"{_M}._rust_pkg",
+    "lig": f"{_M}._rust_pkg",
     "rustqc": f"{_M}._rust_pkg",
     "xsra": f"{_M}._rust_pkg",
     # -- perl-package (3) ------------------------------------------------

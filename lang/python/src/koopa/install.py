@@ -1949,7 +1949,7 @@ def install_rust_package(
     name : str, optional
         Crate name to install. Defaults to ``KOOPA_INSTALL_NAME``.
     version : str, optional
-        Crate version to install. Defaults to ``KOOPA_INSTALL_VERSION``.
+        Crate version to install from crates.io. Defaults to ``KOOPA_INSTALL_VERSION``.
     prefix : str, optional
         Installation prefix directory. Defaults to ``KOOPA_INSTALL_PREFIX``.
     features : str, optional
@@ -1957,7 +1957,7 @@ def install_rust_package(
     git_url : str, optional
         Git repository URL to install from, instead of crates.io.
     tag : str, optional
-        Git tag to check out when installing from *git_url*.
+        Git tag to check out when installing from *git_url*. Required with *git_url*.
     with_openssl : bool, optional
         If True, point ``OPENSSL_DIR`` at koopa's own openssl build.
     rustflags : str, optional
@@ -1973,6 +1973,9 @@ def install_rust_package(
         prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
     if jobs is None:
         jobs = cpu_count()
+    if git_url and not tag:
+        msg = "A tag is required when installing a Rust package from Git."
+        raise ValueError(msg)
     cargo = shutil.which("cargo")
     if cargo is None:
         msg = "cargo not found."
@@ -1999,15 +2002,14 @@ def install_rust_package(
         "--root",
         prefix,
         "--verbose",
-        "--version",
-        version,
     ]
     if features:
         install_args.extend(["--features", features])
     if git_url:
         install_args.extend(["--git", git_url])
-    if tag:
         install_args.extend(["--tag", tag])
+    else:
+        install_args.extend(["--version", version])
     install_args.append(name)
     try:
         subprocess.run(install_args, env=env, check=True)

@@ -2,14 +2,22 @@
 name: koopa-cli
 description: >-
   Command syntax for koopa, a shell bootloader that installs apps into its own
-  prefix instead of the system package manager. Use when a task calls for
-  installing a CLI tool, updating apps, switching koopa branches, recovering
-  from a stale checkout, or listing what koopa manages, so you reach for
-  `koopa install`/`koopa update`/`koopa list` instead of `brew`, `apt`, or
-  `pip install --user`.
+  prefix instead of the system package manager. Use when changing koopa's CLI
+  architecture, installing a CLI tool, updating apps, switching koopa branches,
+  recovering from a stale checkout, or listing what koopa manages.
 ---
 
 # koopa CLI
+
+## CLI architecture and recovery
+
+Keep the core CLI on standard-library `argparse`, not a required framework such
+as Typer. `bin/koopa` can fall back to bootstrap or system Python when the
+virtual environment is unavailable; CLI startup and update/recovery must not
+depend on third-party packages. Update may also run under the outgoing Python
+version and restart with bootstrap Python before recreating the virtual
+environment. Preserve existing command behavior and all six generated shell
+completions when changing the CLI; see `koopa-completion`.
 
 ## Install an app
 

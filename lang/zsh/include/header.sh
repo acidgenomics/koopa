@@ -77,6 +77,7 @@ __koopa_activate_koopa() {
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
     _koopa_activate_xdg || return 1
+    _koopa_activate_lig_pre || return 1
     _koopa_export_editor || return 1
     _koopa_export_gnupg || return 1
     _koopa_export_history || return 1
@@ -258,6 +259,7 @@ __koopa_zsh_header() {
     if [[ "${bool['activate']}" -eq 1 ]] && [[ "${bool['minimal']}" -eq 0 ]]
     then
         _koopa_activate_zsh_extras
+        _koopa_activate_lig_post || return 1
     fi
     if [[ "${bool['test']}" -eq 1 ]]
     then

@@ -2332,6 +2332,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
+    "lig": _AppCheckSpec("github", _check_github, ("KevenGoncalves", "lig")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),
     "lzip": _AppCheckSpec(
