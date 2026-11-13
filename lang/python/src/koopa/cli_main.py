@@ -331,7 +331,9 @@ def _add_common_flags(parser: argparse.ArgumentParser) -> None:
     parser : argparse.ArgumentParser
         Subcommand parser to add the shared flags to.
     """
-    parser.add_argument("--verbose", action="store_true", default=False)
+    parser.add_argument(
+        "--verbose", action="store_true", default=False, help="Show verbose output."
+    )
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -349,12 +351,28 @@ def _build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command")
 
     # -- install --------------------------------------------------------------
-    install_p = subparsers.add_parser("install")
-    install_p.add_argument("apps", nargs="*")
-    install_p.add_argument("--all", action="store_true", default=False)
-    install_p.add_argument("--no-dependencies", action="store_true", default=False)
-    install_p.add_argument("--reinstall", action="store_true", default=False)
-    install_p.add_argument("-D", dest="passthrough", action="append", default=[])
+    install_p = subparsers.add_parser(
+        "install",
+        description="Install applications; without app names, install the defaults.",
+    )
+    install_p.add_argument("apps", nargs="*", metavar="app", help="Application names to install.")
+    install_p.add_argument(
+        "--all", action="store_true", default=False, help="Install all supported applications."
+    )
+    install_p.add_argument(
+        "--no-dependencies", action="store_true", default=False, help="Skip dependencies."
+    )
+    install_p.add_argument(
+        "--reinstall", action="store_true", default=False, help="Reinstall already installed apps."
+    )
+    install_p.add_argument(
+        "-D",
+        dest="passthrough",
+        action="append",
+        default=[],
+        metavar="OPTION",
+        help="Pass an option to the installer, without its leading --; may be repeated.",
+    )
     _add_common_flags(install_p)
 
     # -- reinstall ------------------------------------------------------------
@@ -492,8 +510,23 @@ def _build_parser() -> argparse.ArgumentParser:
     admin_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
     # -- develop --------------------------------------------------------------
-    develop_p = subparsers.add_parser("develop")
-    develop_p.add_argument("remainder", nargs=argparse.REMAINDER)
+    from koopa.cli_develop import _DEVELOP_HANDLERS
+    from koopa.cli_docs import DEVELOP_DESCRIPTIONS
+
+    commands = sorted(_DEVELOP_HANDLERS)
+    width = max(map(len, commands))
+    develop_p = subparsers.add_parser(
+        "develop",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Developer and maintenance utilities.",
+        epilog="subcommands:\n"
+        + "\n".join(
+            f"  {name:<{width}}  {DEVELOP_DESCRIPTIONS.get(name, '')}" for name in commands
+        ),
+    )
+    develop_p.add_argument(
+        "remainder", nargs=argparse.REMAINDER, metavar="command", help="Command and its arguments."
+    )
 
     # -- run ------------------------------------------------------------------
     run_p = subparsers.add_parser("run")

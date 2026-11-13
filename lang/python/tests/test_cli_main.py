@@ -10,6 +10,31 @@ import pytest
 from koopa import cli_main
 
 
+@pytest.mark.parametrize("flag", ["-h", "--help"])
+def test_develop_help_lists_registered_commands(
+    flag: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Develop help lists the actual commands and their descriptions."""
+    from koopa.cli_develop import _DEVELOP_HANDLERS
+
+    with pytest.raises(SystemExit) as exc_info:
+        cli_main._build_parser().parse_args(["develop", flag])
+    assert exc_info.value.code == 0
+    output = capsys.readouterr().out
+    assert "Regenerate shell tab-completion scripts." in output
+    assert all(f"  {name} " in output for name in _DEVELOP_HANDLERS)
+
+
+def test_install_help_describes_arguments(capsys: pytest.CaptureFixture[str]) -> None:
+    """Install help explains the default and installer passthrough."""
+    with pytest.raises(SystemExit) as exc_info:
+        cli_main._build_parser().parse_args(["install", "--help"])
+    assert exc_info.value.code == 0
+    output = capsys.readouterr().out
+    assert "without app names, install the defaults" in output
+    assert "without its leading --" in output
+
+
 def test_reinstall_rebuilds_stale_revdeps_in_dependency_order(tmp_path: Path) -> None:
     """Every stale level is rebuilt, each app after the apps it links against.
 

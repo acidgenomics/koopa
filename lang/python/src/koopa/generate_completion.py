@@ -17,6 +17,7 @@ Usage::
 """
 
 import ast
+import json
 import os
 from datetime import date
 from typing import Any, cast
@@ -1712,6 +1713,130 @@ def _nu_completer(lines: list[str], name: str, items: list[str]) -> None:
     lines.append("")
 
 
+def _generate_lig_completion(
+    app_tree: dict[str, Any],
+    develop_cmds: list[str],
+    flag_map: dict[str, list[str]],
+) -> str:
+    """Generate a Lig spec from the same command sources as shell completions.
+
+    Parameters
+    ----------
+    app_tree : dict[str, Any]
+        Nested app command tree.
+    develop_cmds : list[str]
+        Developer subcommand names.
+    flag_map : dict[str, list[str]]
+        Mapping of command paths to flags.
+
+    Returns
+    -------
+    str
+        JSON-formatted Lig completion spec.
+    """
+    import argparse
+
+    from koopa.cli_docs import DEVELOP_DESCRIPTIONS, TOP_COMMANDS
+    from koopa.cli_main import _build_parser
+
+    def tree_entries(tree: dict[str, Any], path: str) -> list[dict[str, Any]]:
+        entries = []
+        for name, value in sorted(tree.items()):
+            key = f"{path}/{name}"
+            entry: dict[str, Any] = {"name": name}
+            if isinstance(value, dict):
+                entry["subcommands"] = tree_entries(value, key)
+            entry["options"] = [{"name": flag} for flag in sorted(set(flag_map.get(key, [])))]
+            entries.append(entry)
+        return entries
+
+    parser = _build_parser()
+    subparsers = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
+    descriptions = {name: desc for name, _, desc in TOP_COMMANDS}
+    commands: list[dict[str, Any]] = []
+    for name, subparser in subparsers.choices.items():
+        entry: dict[str, Any] = {"name": name, "description": descriptions.get(name, "")}
+        options: list[dict[str, Any]] = []
+        for action in subparser._actions:
+            if not action.option_strings:
+                continue
+            option: dict[str, Any] = {"name": action.option_strings}
+            if action.help and action.help != argparse.SUPPRESS:
+                option["description"] = action.help
+            if action.nargs != 0:
+                option["args"] = {"name": action.metavar or action.dest}
+            options.append(option)
+        entry["options"] = options
+        if name == "develop":
+            entry["subcommands"] = [
+                {
+                    "name": cmd,
+                    "description": DEVELOP_DESCRIPTIONS.get(cmd, ""),
+                    "options": [
+                        {"name": flag} for flag in sorted(set(flag_map.get(f"develop/{cmd}", [])))
+                    ],
+                }
+                for cmd in develop_cmds
+            ]
+        elif name == "app":
+            entry["subcommands"] = tree_entries(app_tree, "app")
+        elif name == "run":
+            entry["subcommands"] = [{"name": cmd} for cmd in _load_run_commands()]
+        elif name in ("system", "admin"):
+            source = _SYSTEM_COMMANDS if name == "system" else _ADMIN_COMMANDS
+            entry["subcommands"] = [{"name": cmd} for cmd, _ in sorted(source)]
+        elif name in ("install", "reinstall", "uninstall"):
+            entry["args"] = {
+                "name": "app",
+                "isVariadic": True,
+                "generators": {"script": ["koopa", "list", "--all"]},
+            }
+        elif name == "configure":
+            system_apps, user_apps = _get_configure_apps()
+            entry["subcommands"] = [
+                {
+                    "name": mode,
+                    "args": {
+                        "name": "app",
+                        "isVariadic": True,
+                        "suggestions": sorted({app for app, _ in apps}),
+                    },
+                }
+                for mode, apps in (("system", system_apps), ("user", user_apps))
+            ]
+        elif name == "update":
+            update_apps = _get_installer_mode_apps()["update-system"]
+            entry["subcommands"] = [
+                {"name": "koopa"},
+                {
+                    "name": "system",
+                    "args": {
+                        "name": "app",
+                        "isVariadic": True,
+                        "suggestions": sorted({app for app, _ in update_apps}),
+                    },
+                },
+            ]
+        elif name == "sync":
+            entry["args"] = {"name": "target", "suggestions": _SYNC_TARGETS}
+        commands.append(entry)
+    return (
+        json.dumps(
+            {
+                "name": "koopa",
+                "description": "Shell bootloader for data science.",
+                "options": [
+                    {"name": ["-h", "--help"], "description": "Show help."},
+                    {"name": ["-V", "-v", "--version"], "description": "Show version."},
+                ],
+                "subcommands": commands,
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Main generator
 # ---------------------------------------------------------------------------
@@ -2209,3 +2334,8 @@ def generate_completion() -> None:  # noqa: PLR0915
     os.makedirs(os.path.dirname(nushell_path), exist_ok=True)
     with open(nushell_path, "w") as f:
         f.write(nushell_content)
+
+    lig_path = os.path.join(koopa_prefix(), "etc", "koopa", "lig", "koopa.json")
+    os.makedirs(os.path.dirname(lig_path), exist_ok=True)
+    with open(lig_path, "w") as f:
+        f.write(_generate_lig_completion(app_tree, develop_cmds, flag_map))

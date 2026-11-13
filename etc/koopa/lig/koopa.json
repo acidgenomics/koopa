@@ -1,0 +1,2622 @@
+{
+  "name": "koopa",
+  "description": "Shell bootloader for data science.",
+  "options": [
+    {
+      "name": [
+        "-h",
+        "--help"
+      ],
+      "description": "Show help."
+    },
+    {
+      "name": [
+        "-V",
+        "-v",
+        "--version"
+      ],
+      "description": "Show version."
+    }
+  ],
+  "subcommands": [
+    {
+      "name": "install",
+      "description": "Install applications. No args installs defaults; --all installs all.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--all"
+          ],
+          "description": "Install all supported applications."
+        },
+        {
+          "name": [
+            "--no-dependencies"
+          ],
+          "description": "Skip dependencies."
+        },
+        {
+          "name": [
+            "--reinstall"
+          ],
+          "description": "Reinstall already installed apps."
+        },
+        {
+          "name": [
+            "-D"
+          ],
+          "description": "Pass an option to the installer, without its leading --; may be repeated.",
+          "args": {
+            "name": "OPTION"
+          }
+        },
+        {
+          "name": [
+            "--verbose"
+          ],
+          "description": "Show verbose output."
+        }
+      ],
+      "args": {
+        "name": "app",
+        "isVariadic": true,
+        "generators": {
+          "script": [
+            "koopa",
+            "list",
+            "--all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "reinstall",
+      "description": "Reinstall applications, with optional reverse dependency rebuilds.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--all"
+          ]
+        },
+        {
+          "name": [
+            "--all-revdeps"
+          ]
+        },
+        {
+          "name": [
+            "--no-revdeps"
+          ]
+        },
+        {
+          "name": [
+            "--only-revdeps"
+          ]
+        },
+        {
+          "name": [
+            "--verbose"
+          ],
+          "description": "Show verbose output."
+        }
+      ],
+      "args": {
+        "name": "app",
+        "isVariadic": true,
+        "generators": {
+          "script": [
+            "koopa",
+            "list",
+            "--all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "uninstall",
+      "description": "Remove installed applications. Defaults to uninstalling koopa itself.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--no-revdeps"
+          ]
+        },
+        {
+          "name": [
+            "--yes",
+            "-y"
+          ]
+        },
+        {
+          "name": [
+            "--verbose"
+          ],
+          "description": "Show verbose output."
+        }
+      ],
+      "args": {
+        "name": "app",
+        "isVariadic": true,
+        "generators": {
+          "script": [
+            "koopa",
+            "list",
+            "--all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "sync",
+      "description": "Repair actionable local installation issues from the current registry without updating koopa or checking for newer app versions. The default-apps target restores default app membership.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--dry-run"
+          ]
+        },
+        {
+          "name": [
+            "--yes",
+            "-y"
+          ]
+        },
+        {
+          "name": [
+            "--verbose"
+          ],
+          "description": "Show verbose output."
+        }
+      ],
+      "args": {
+        "name": "target",
+        "suggestions": [
+          "default-apps"
+        ]
+      }
+    },
+    {
+      "name": "update",
+      "description": "Update koopa and stale apps; 'system' mode updates system apps.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--verbose"
+          ],
+          "description": "Show verbose output."
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "koopa"
+        },
+        {
+          "name": "system",
+          "args": {
+            "name": "app",
+            "isVariadic": true,
+            "suggestions": [
+              "homebrew",
+              "python",
+              "r",
+              "tex-packages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "configure",
+      "description": "Run post-install configuration for applications.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--verbose"
+          ],
+          "description": "Show verbose output."
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "system",
+          "args": {
+            "name": "app",
+            "isVariadic": true,
+            "suggestions": [
+              "base",
+              "lmod",
+              "preferences",
+              "r",
+              "rstudio-server",
+              "sshd"
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "args": {
+            "name": "app",
+            "isVariadic": true,
+            "suggestions": [
+              "color-mode",
+              "doom-emacs",
+              "dotfiles",
+              "emacs-prelude",
+              "neovim",
+              "preferences",
+              "spacemacs"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "app",
+      "description": "Application-specific utilities (e.g. koopa app salmon quant).",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "aws",
+          "subcommands": [
+            {
+              "name": "batch",
+              "subcommands": [
+                {
+                  "name": "fetch-and-run",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--job-definition"
+                    },
+                    {
+                      "name": "--job-name"
+                    },
+                    {
+                      "name": "--memory"
+                    },
+                    {
+                      "name": "--profile"
+                    },
+                    {
+                      "name": "--queue"
+                    },
+                    {
+                      "name": "--vcpus"
+                    }
+                  ]
+                },
+                {
+                  "name": "list-jobs",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    },
+                    {
+                      "name": "--queue"
+                    },
+                    {
+                      "name": "--status"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            },
+            {
+              "name": "ec2",
+              "subcommands": [
+                {
+                  "name": "instance-id",
+                  "options": []
+                },
+                {
+                  "name": "list-running-instances",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "map-instance-ids-to-names",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "stop",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            },
+            {
+              "name": "ecr",
+              "subcommands": [
+                {
+                  "name": "login-private",
+                  "options": [
+                    {
+                      "name": "--account-id"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    },
+                    {
+                      "name": "--region"
+                    }
+                  ]
+                },
+                {
+                  "name": "login-public",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--region"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            },
+            {
+              "name": "s3",
+              "subcommands": [
+                {
+                  "name": "delete-versioned-glacier-objects",
+                  "options": [
+                    {
+                      "name": "--bucket"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--prefix"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete-versioned-objects",
+                  "options": [
+                    {
+                      "name": "--bucket"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--prefix"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "dot-clean",
+                  "options": [
+                    {
+                      "name": "--dryrun"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "find",
+                  "options": [
+                    {
+                      "name": "--bucket"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--pattern"
+                    },
+                    {
+                      "name": "--prefix"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "list-large-files",
+                  "options": [
+                    {
+                      "name": "--bucket"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--min-size-mb"
+                    },
+                    {
+                      "name": "--prefix"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "ls",
+                  "options": [
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    },
+                    {
+                      "name": "--recursive"
+                    }
+                  ]
+                },
+                {
+                  "name": "mv-to-parent",
+                  "options": [
+                    {
+                      "name": "--dryrun"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "sync",
+                  "options": [
+                    {
+                      "name": "--delete"
+                    },
+                    {
+                      "name": "--dryrun"
+                    },
+                    {
+                      "name": "--exclude"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--include"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                },
+                {
+                  "name": "sync-git-repo",
+                  "options": [
+                    {
+                      "name": "--delete"
+                    },
+                    {
+                      "name": "--dryrun"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--profile"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "bioconda",
+          "subcommands": [
+            {
+              "name": "autobump-recipe",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "bowtie2",
+          "subcommands": [
+            {
+              "name": "align",
+              "subcommands": [
+                {
+                  "name": "paired-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    },
+                    {
+                      "name": "--output-format"
+                    },
+                    {
+                      "name": "--reference-fasta"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            },
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--genome-fasta-file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "brew",
+          "subcommands": [
+            {
+              "name": "cleanup",
+              "options": []
+            },
+            {
+              "name": "dump-brewfile",
+              "options": []
+            },
+            {
+              "name": "fix-completion-dirs",
+              "options": []
+            },
+            {
+              "name": "install-bundle",
+              "options": []
+            },
+            {
+              "name": "outdated",
+              "options": []
+            },
+            {
+              "name": "reset-core-repo",
+              "options": []
+            },
+            {
+              "name": "reset-permissions",
+              "options": []
+            },
+            {
+              "name": "uninstall-all-brews",
+              "options": []
+            },
+            {
+              "name": "upgrade",
+              "options": []
+            },
+            {
+              "name": "version",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "claude",
+          "subcommands": [
+            {
+              "name": "archive-plans",
+              "options": [
+                {
+                  "name": "--days"
+                },
+                {
+                  "name": "--dry-run"
+                },
+                {
+                  "name": "--help"
+                }
+              ]
+            },
+            {
+              "name": "audit-tokens",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--max-tokens"
+                },
+                {
+                  "name": "--project-dir"
+                },
+                {
+                  "name": "--scope"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "conda",
+          "subcommands": [
+            {
+              "name": "clean-cache",
+              "options": []
+            },
+            {
+              "name": "create-env",
+              "options": [
+                {
+                  "name": "--file"
+                },
+                {
+                  "name": "--force"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--latest"
+                },
+                {
+                  "name": "--prefix"
+                }
+              ]
+            },
+            {
+              "name": "remove-env",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "copilot",
+          "subcommands": [
+            {
+              "name": "archive-plans",
+              "options": [
+                {
+                  "name": "--days"
+                },
+                {
+                  "name": "--dry-run"
+                },
+                {
+                  "name": "--help"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "current",
+          "subcommands": [
+            {
+              "name": "aws-cli-version",
+              "options": []
+            },
+            {
+              "name": "bioconductor-version",
+              "options": []
+            },
+            {
+              "name": "conda-package-version",
+              "options": []
+            },
+            {
+              "name": "ensembl-version",
+              "options": []
+            },
+            {
+              "name": "flybase-version",
+              "options": []
+            },
+            {
+              "name": "gencode-version",
+              "options": []
+            },
+            {
+              "name": "git-version",
+              "options": []
+            },
+            {
+              "name": "github-release-version",
+              "options": []
+            },
+            {
+              "name": "github-tag-version",
+              "options": []
+            },
+            {
+              "name": "gnu-ftp-version",
+              "options": []
+            },
+            {
+              "name": "google-cloud-sdk-version",
+              "options": []
+            },
+            {
+              "name": "latch-version",
+              "options": []
+            },
+            {
+              "name": "pypi-package-version",
+              "options": []
+            },
+            {
+              "name": "python-version",
+              "options": []
+            },
+            {
+              "name": "refseq-version",
+              "options": []
+            },
+            {
+              "name": "wormbase-version",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "docker",
+          "subcommands": [
+            {
+              "name": "build",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--local"
+                },
+                {
+                  "name": "--memory"
+                },
+                {
+                  "name": "--no-push"
+                },
+                {
+                  "name": "--remote"
+                }
+              ]
+            },
+            {
+              "name": "build-all-tags",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--local"
+                },
+                {
+                  "name": "--remote"
+                }
+              ]
+            },
+            {
+              "name": "prune-all-images",
+              "options": []
+            },
+            {
+              "name": "prune-old-images",
+              "options": []
+            },
+            {
+              "name": "remove",
+              "options": []
+            },
+            {
+              "name": "run",
+              "options": [
+                {
+                  "name": "--arm"
+                },
+                {
+                  "name": "--bash"
+                },
+                {
+                  "name": "--bind"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--x86"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "dracula-pro",
+          "subcommands": [
+            {
+              "name": "check",
+              "options": []
+            },
+            {
+              "name": "install",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-configure"
+                },
+                {
+                  "name": "--zip"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "file",
+          "subcommands": [
+            {
+              "name": "compress",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output"
+                }
+              ]
+            },
+            {
+              "name": "convert-line-endings",
+              "options": []
+            },
+            {
+              "name": "rename-to-lowercase-ext",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "ftp",
+          "subcommands": [
+            {
+              "name": "mirror",
+              "options": [
+                {
+                  "name": "--dir"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--host"
+                },
+                {
+                  "name": "--user"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "git",
+          "subcommands": [
+            {
+              "name": "pull",
+              "options": []
+            },
+            {
+              "name": "push-submodules",
+              "options": []
+            },
+            {
+              "name": "rename-master-to-main",
+              "options": []
+            },
+            {
+              "name": "reset",
+              "options": []
+            },
+            {
+              "name": "reset-fork-to-upstream",
+              "options": []
+            },
+            {
+              "name": "rm-submodule",
+              "options": []
+            },
+            {
+              "name": "rm-untracked",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "gpg",
+          "subcommands": [
+            {
+              "name": "prompt",
+              "options": []
+            },
+            {
+              "name": "reload",
+              "options": []
+            },
+            {
+              "name": "restart",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "hisat2",
+          "subcommands": [
+            {
+              "name": "align",
+              "subcommands": [
+                {
+                  "name": "paired-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--gtf-file"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                },
+                {
+                  "name": "single-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--gtf-file"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            },
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--genome-fasta-file"
+                },
+                {
+                  "name": "--gtf-file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "jekyll",
+          "subcommands": [
+            {
+              "name": "deploy-to-aws",
+              "options": [
+                {
+                  "name": "--bucket"
+                },
+                {
+                  "name": "--distribution-id"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--local-prefix"
+                },
+                {
+                  "name": "--profile"
+                }
+              ]
+            },
+            {
+              "name": "serve",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "kallisto",
+          "subcommands": [
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                },
+                {
+                  "name": "--transcriptome-fasta-file"
+                }
+              ]
+            },
+            {
+              "name": "quant",
+              "subcommands": [
+                {
+                  "name": "paired-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                },
+                {
+                  "name": "single-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "md5sum",
+          "subcommands": [
+            {
+              "name": "check-to-new-md5-file",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "miso",
+          "subcommands": [
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--gff-file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "obsidian",
+          "subcommands": [
+            {
+              "name": "bookmark",
+              "options": [
+                {
+                  "name": "--date"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--title"
+                },
+                {
+                  "name": "--vault-dir"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "photos",
+          "subcommands": [
+            {
+              "name": "rename-with-exiftool",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "python",
+          "subcommands": [
+            {
+              "name": "publish",
+              "options": [
+                {
+                  "name": "--force"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-pypi"
+                },
+                {
+                  "name": "--pypi-only"
+                }
+              ]
+            },
+            {
+              "name": "publish-docs",
+              "options": []
+            },
+            {
+              "name": "reindex",
+              "options": []
+            },
+            {
+              "name": "sync-docs-theme",
+              "options": [
+                {
+                  "name": "--check"
+                },
+                {
+                  "name": "--help"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "r",
+          "subcommands": [
+            {
+              "name": "archive",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-invalidate"
+                }
+              ]
+            },
+            {
+              "name": "bioconda-check",
+              "options": []
+            },
+            {
+              "name": "check",
+              "options": []
+            },
+            {
+              "name": "clean-orphan-binaries",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-invalidate"
+                }
+              ]
+            },
+            {
+              "name": "configure-environ",
+              "options": []
+            },
+            {
+              "name": "configure-java",
+              "options": []
+            },
+            {
+              "name": "configure-ldpaths",
+              "options": []
+            },
+            {
+              "name": "configure-makevars",
+              "options": []
+            },
+            {
+              "name": "copy-files-into-etc",
+              "options": []
+            },
+            {
+              "name": "deploy",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-invalidate"
+                }
+              ]
+            },
+            {
+              "name": "gfortran-libs",
+              "options": []
+            },
+            {
+              "name": "install-packages-in-site-library",
+              "options": []
+            },
+            {
+              "name": "package-version",
+              "options": []
+            },
+            {
+              "name": "paste-to-vector",
+              "options": []
+            },
+            {
+              "name": "publish",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-check"
+                },
+                {
+                  "name": "--no-deploy"
+                },
+                {
+                  "name": "--no-invalidate"
+                },
+                {
+                  "name": "--no-tag"
+                }
+              ]
+            },
+            {
+              "name": "publish-docs",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-invalidate"
+                }
+              ]
+            },
+            {
+              "name": "publish-from-github",
+              "options": [
+                {
+                  "name": "--check"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-invalidate"
+                },
+                {
+                  "name": "--org"
+                }
+              ]
+            },
+            {
+              "name": "reindex",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-invalidate"
+                }
+              ]
+            },
+            {
+              "name": "remove-packages-in-system-library",
+              "options": []
+            },
+            {
+              "name": "script",
+              "options": []
+            },
+            {
+              "name": "shiny-run-app",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--port"
+                }
+              ]
+            },
+            {
+              "name": "system-packages-non-base",
+              "options": []
+            },
+            {
+              "name": "version",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "rnaeditingindexer",
+          "options": [
+            {
+              "name": "--bam-dir"
+            },
+            {
+              "name": "--example"
+            },
+            {
+              "name": "--genome"
+            },
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--output-dir"
+            }
+          ]
+        },
+        {
+          "name": "rsem",
+          "subcommands": [
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--genome-fasta-file"
+                },
+                {
+                  "name": "--gtf-file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--num-threads"
+                },
+                {
+                  "name": "--output-dir"
+                }
+              ]
+            },
+            {
+              "name": "quant",
+              "subcommands": [
+                {
+                  "name": "bam",
+                  "options": [
+                    {
+                      "name": "--bam-file"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "salmon",
+          "subcommands": [
+            {
+              "name": "detect-fastq-library-type",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--index-dir"
+                },
+                {
+                  "name": "--r1"
+                },
+                {
+                  "name": "--r2"
+                },
+                {
+                  "name": "--threads"
+                }
+              ]
+            },
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                },
+                {
+                  "name": "--transcriptome-fasta-file"
+                }
+              ]
+            },
+            {
+              "name": "quant",
+              "subcommands": [
+                {
+                  "name": "bam",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                },
+                {
+                  "name": "paired-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                },
+                {
+                  "name": "single-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "sra",
+          "subcommands": [
+            {
+              "name": "download-accession-list",
+              "options": [
+                {
+                  "name": "--file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--srp-id"
+                }
+              ]
+            },
+            {
+              "name": "download-run-info-table",
+              "options": [
+                {
+                  "name": "--file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--srp-id"
+                }
+              ]
+            },
+            {
+              "name": "fastq-dump",
+              "options": [
+                {
+                  "name": "--fastq-directory"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--no-compress"
+                },
+                {
+                  "name": "--prefetch-directory"
+                }
+              ]
+            },
+            {
+              "name": "prefetch",
+              "options": [
+                {
+                  "name": "--accession-file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "ssh",
+          "subcommands": [
+            {
+              "name": "generate-key",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--prefix"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "star",
+          "subcommands": [
+            {
+              "name": "align",
+              "subcommands": [
+                {
+                  "name": "paired-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--gtf-file"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                },
+                {
+                  "name": "single-end",
+                  "options": [
+                    {
+                      "name": "--fastq-dir"
+                    },
+                    {
+                      "name": "--gtf-file"
+                    },
+                    {
+                      "name": "--help"
+                    },
+                    {
+                      "name": "--index-dir"
+                    },
+                    {
+                      "name": "--output-dir"
+                    }
+                  ]
+                }
+              ],
+              "options": []
+            },
+            {
+              "name": "index",
+              "options": [
+                {
+                  "name": "--genome-fasta-file"
+                },
+                {
+                  "name": "--gtf-file"
+                },
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--output-dir"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "sys",
+          "subcommands": [
+            {
+              "name": "linker-check",
+              "options": []
+            },
+            {
+              "name": "linker-info",
+              "options": []
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "wget",
+          "subcommands": [
+            {
+              "name": "recursive",
+              "options": [
+                {
+                  "name": "--help"
+                },
+                {
+                  "name": "--password"
+                },
+                {
+                  "name": "--url"
+                },
+                {
+                  "name": "--user"
+                }
+              ]
+            }
+          ],
+          "options": []
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "description": "List available apps. No args lists defaults; --all lists all.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "name": [
+            "--all"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "description": "System information and koopa management.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "check"
+        },
+        {
+          "name": "hostname"
+        },
+        {
+          "name": "info"
+        },
+        {
+          "name": "list"
+        },
+        {
+          "name": "os-slug"
+        },
+        {
+          "name": "prefix"
+        },
+        {
+          "name": "prune-apps"
+        },
+        {
+          "name": "switch-to-develop"
+        },
+        {
+          "name": "version"
+        },
+        {
+          "name": "which"
+        }
+      ]
+    },
+    {
+      "name": "admin",
+      "description": "System administration commands (require sudo).",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "add-group"
+        },
+        {
+          "name": "add-user"
+        },
+        {
+          "name": "apk-install"
+        },
+        {
+          "name": "apk-remove"
+        },
+        {
+          "name": "apk-update"
+        },
+        {
+          "name": "apt-install"
+        },
+        {
+          "name": "apt-list-installed"
+        },
+        {
+          "name": "apt-remove"
+        },
+        {
+          "name": "apt-update"
+        },
+        {
+          "name": "apt-upgrade"
+        },
+        {
+          "name": "clean-launch-services"
+        },
+        {
+          "name": "configure-lmod"
+        },
+        {
+          "name": "configure-sshd"
+        },
+        {
+          "name": "delete-cache"
+        },
+        {
+          "name": "delete-user"
+        },
+        {
+          "name": "disable-passwordless-sudo"
+        },
+        {
+          "name": "disable-touch-id-sudo"
+        },
+        {
+          "name": "dnf-install"
+        },
+        {
+          "name": "dnf-remove"
+        },
+        {
+          "name": "dnf-update"
+        },
+        {
+          "name": "enable-passwordless-sudo"
+        },
+        {
+          "name": "enable-touch-id-sudo"
+        },
+        {
+          "name": "fix-sudo-setrlimit-error"
+        },
+        {
+          "name": "flush-dns"
+        },
+        {
+          "name": "force-eject"
+        },
+        {
+          "name": "install-app"
+        },
+        {
+          "name": "os-version"
+        },
+        {
+          "name": "pacman-install"
+        },
+        {
+          "name": "pacman-remove"
+        },
+        {
+          "name": "pacman-update"
+        },
+        {
+          "name": "proc-cmdline"
+        },
+        {
+          "name": "reload-autofs"
+        },
+        {
+          "name": "systemctl-disable"
+        },
+        {
+          "name": "systemctl-restart"
+        },
+        {
+          "name": "systemctl-status"
+        },
+        {
+          "name": "systemctl-stop"
+        },
+        {
+          "name": "uninstall-app"
+        },
+        {
+          "name": "zsh-compaudit-set-permissions"
+        },
+        {
+          "name": "zypper-install"
+        },
+        {
+          "name": "zypper-remove"
+        },
+        {
+          "name": "zypper-update"
+        }
+      ]
+    },
+    {
+      "name": "develop",
+      "description": "Developer and maintenance utilities.",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "activation-fork-audit",
+          "description": "Static analysis of subprocess forks in the shell activation path.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--threshold-bash"
+            },
+            {
+              "name": "--threshold-zsh"
+            },
+            {
+              "name": "--verbose"
+            }
+          ]
+        },
+        {
+          "name": "activation-speed-test",
+          "description": "Measure shell activation time and check against thresholds.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--runs"
+            },
+            {
+              "name": "--shells"
+            },
+            {
+              "name": "--threshold-bash"
+            },
+            {
+              "name": "--threshold-fish"
+            },
+            {
+              "name": "--threshold-zsh"
+            },
+            {
+              "name": "--verbose"
+            }
+          ]
+        },
+        {
+          "name": "app-deps",
+          "description": "List the dependencies of an app.",
+          "options": []
+        },
+        {
+          "name": "app-revdeps",
+          "description": "List the reverse dependencies of an app.",
+          "options": [
+            {
+              "name": "--all"
+            },
+            {
+              "name": "--help"
+            }
+          ]
+        },
+        {
+          "name": "audit-src-mirror",
+          "description": "Audit S3 source mirror for missing or stale tarballs.",
+          "options": []
+        },
+        {
+          "name": "bump-bootstrap",
+          "description": "Bump the bootstrap version, marking existing bootstraps as stale.",
+          "options": []
+        },
+        {
+          "name": "bump-revision",
+          "description": "Bump the revision of one or more apps in app.json.",
+          "options": []
+        },
+        {
+          "name": "bump-venv-version",
+          "description": "Bump the Python venv version.",
+          "options": []
+        },
+        {
+          "name": "cache-functions",
+          "description": "Regenerate the cached Bash function library.",
+          "options": []
+        },
+        {
+          "name": "check",
+          "description": "Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest.",
+          "options": []
+        },
+        {
+          "name": "check-app-versions",
+          "description": "Check upstream versions for all apps in app.json.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--json"
+            },
+            {
+              "name": "--no-update"
+            },
+            {
+              "name": "--reset-cache"
+            },
+            {
+              "name": "--s3-upload"
+            },
+            {
+              "name": "--source"
+            }
+          ]
+        },
+        {
+          "name": "check-skills",
+          "description": "Validate SKILL.md frontmatter for cross-CLI compatibility.",
+          "options": []
+        },
+        {
+          "name": "circular-dependencies",
+          "description": "Detect circular dependency chains in app.json.",
+          "options": []
+        },
+        {
+          "name": "color-mode-audit",
+          "description": "Detect dark/light color-mode thrash in the sync log.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--log"
+            },
+            {
+              "name": "--threshold"
+            },
+            {
+              "name": "--verbose"
+            }
+          ]
+        },
+        {
+          "name": "conda-candidates",
+          "description": "Find source-built apps that are available on conda-forge or bioconda.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--verify"
+            }
+          ]
+        },
+        {
+          "name": "edit-app-json",
+          "description": "Open app.json in the default editor.",
+          "options": []
+        },
+        {
+          "name": "find-ignored-bin-files",
+          "description": "Find files in bin/ that are ignored by git.",
+          "options": []
+        },
+        {
+          "name": "format-app-json",
+          "description": "Sort and format app.json.",
+          "options": []
+        },
+        {
+          "name": "generate-agent-config",
+          "description": "Regenerate Copilot instructions and plugin manifests from .agents/ and plugins/koopa/plugin.json.",
+          "options": [
+            {
+              "name": "--check"
+            },
+            {
+              "name": "--help"
+            }
+          ]
+        },
+        {
+          "name": "generate-completion",
+          "description": "Regenerate shell tab-completion scripts.",
+          "options": []
+        },
+        {
+          "name": "generate-docs",
+          "description": "Regenerate the Sphinx CLI reference pages under docs/reference/.",
+          "options": []
+        },
+        {
+          "name": "generate-man",
+          "description": "Regenerate the koopa(1) man page.",
+          "options": []
+        },
+        {
+          "name": "log",
+          "description": "View the latest temporary log file.",
+          "options": []
+        },
+        {
+          "name": "mirror-src",
+          "description": "Mirror source tarballs to S3.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--prune"
+            }
+          ]
+        },
+        {
+          "name": "numpydoc",
+          "description": "Run the numpydoc docstring validator on the Python source tree.",
+          "options": []
+        },
+        {
+          "name": "orphan-apps",
+          "description": "Find apps in app.json that no other app depends on.",
+          "options": [
+            {
+              "name": "--all"
+            },
+            {
+              "name": "--help"
+            }
+          ]
+        },
+        {
+          "name": "prune-app-binaries",
+          "description": "Remove stale application binaries from the cache.",
+          "options": []
+        },
+        {
+          "name": "prune-stale-docs",
+          "description": "Remove stale S3 keys left over from a previous docs build.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--no-dryrun"
+            }
+          ]
+        },
+        {
+          "name": "publish-docs",
+          "description": "Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.",
+          "options": [
+            {
+              "name": "--dry-run"
+            },
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--no-invalidate"
+            }
+          ]
+        },
+        {
+          "name": "publish-release",
+          "description": "Publish a stable koopa release archive to koopa.acidgenomics.com.",
+          "options": []
+        },
+        {
+          "name": "push-all-app-builds",
+          "description": "Push all application builds to the binary cache.",
+          "options": []
+        },
+        {
+          "name": "push-app-build",
+          "description": "Push a specific application build to the binary cache.",
+          "options": []
+        },
+        {
+          "name": "push-app-builds",
+          "description": "Push all stale application builds to the binary cache.",
+          "options": []
+        },
+        {
+          "name": "push-installer",
+          "description": "Stage a downloaded vendor installer tarball to the artifacts bucket.",
+          "options": [
+            {
+              "name": "--force"
+            },
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--version"
+            }
+          ]
+        },
+        {
+          "name": "pyrefly",
+          "description": "Run the pyrefly type checker on the Python source tree.",
+          "options": []
+        },
+        {
+          "name": "pyright",
+          "description": "Run the pyright type checker on the Python source tree.",
+          "options": []
+        },
+        {
+          "name": "pytest",
+          "description": "Run the Python test suite.",
+          "options": []
+        },
+        {
+          "name": "remove-app",
+          "description": "Tombstone an app entry in app.json.",
+          "options": [
+            {
+              "name": "--help"
+            },
+            {
+              "name": "--revdeps"
+            }
+          ]
+        },
+        {
+          "name": "reset-revisions",
+          "description": "Remove the revision key from all apps in app.json.",
+          "options": []
+        },
+        {
+          "name": "scrub-install-info",
+          "description": "Rewrite .install/info.json environ blocks down to the allowlist.",
+          "options": [
+            {
+              "name": "--dry-run"
+            },
+            {
+              "name": "--help"
+            }
+          ]
+        },
+        {
+          "name": "shellcheck",
+          "description": "Run shellcheck on all shell scripts.",
+          "options": []
+        },
+        {
+          "name": "switch-to-develop",
+          "description": "Fetch origin/develop, switch to develop, and fast-forward it. Requires a clean tracked worktree and an available origin; divergent commits are preserved.",
+          "options": []
+        },
+        {
+          "name": "switch-to-main",
+          "description": "Fetch origin/main, switch to main, and fast-forward it. Requires a clean tracked worktree and an available origin; divergent commits are preserved.",
+          "options": []
+        },
+        {
+          "name": "ty",
+          "description": "Run the ty type checker on the Python source tree.",
+          "options": []
+        },
+        {
+          "name": "update-docs",
+          "description": "Update generated documentation files.",
+          "options": []
+        }
+      ]
+    },
+    {
+      "name": "run",
+      "description": "Run a utility command (e.g. koopa run rename-snake-case).",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ],
+      "subcommands": [
+        {
+          "name": "autopad-zeros"
+        },
+        {
+          "name": "background-tasks"
+        },
+        {
+          "name": "check-release-notifications"
+        },
+        {
+          "name": "clone"
+        },
+        {
+          "name": "convert-svg-to-png"
+        },
+        {
+          "name": "convert-utf8-nfd-to-nfc"
+        },
+        {
+          "name": "create-dmg"
+        },
+        {
+          "name": "delete-broken-symlinks"
+        },
+        {
+          "name": "delete-empty-dirs"
+        },
+        {
+          "name": "delete-named-subdirs"
+        },
+        {
+          "name": "detab"
+        },
+        {
+          "name": "df2"
+        },
+        {
+          "name": "dns"
+        },
+        {
+          "name": "dot-clean"
+        },
+        {
+          "name": "download"
+        },
+        {
+          "name": "download-cran-latest"
+        },
+        {
+          "name": "download-github-latest"
+        },
+        {
+          "name": "entab"
+        },
+        {
+          "name": "eol-lf"
+        },
+        {
+          "name": "extract"
+        },
+        {
+          "name": "extract-all"
+        },
+        {
+          "name": "file-count"
+        },
+        {
+          "name": "find-and-move-in-sequence"
+        },
+        {
+          "name": "find-and-replace"
+        },
+        {
+          "name": "find-broken-symlinks"
+        },
+        {
+          "name": "find-empty-dirs"
+        },
+        {
+          "name": "find-files-without-line-ending"
+        },
+        {
+          "name": "find-large-dirs"
+        },
+        {
+          "name": "find-large-files"
+        },
+        {
+          "name": "ifactive"
+        },
+        {
+          "name": "ip-address"
+        },
+        {
+          "name": "ip-info"
+        },
+        {
+          "name": "line-count"
+        },
+        {
+          "name": "merge-pdf"
+        },
+        {
+          "name": "move-files-in-batch"
+        },
+        {
+          "name": "move-files-up-1-level"
+        },
+        {
+          "name": "move-into-dated-dirs-by-filename"
+        },
+        {
+          "name": "move-into-dated-dirs-by-timestamp"
+        },
+        {
+          "name": "nfiletypes"
+        },
+        {
+          "name": "organize-screenshots"
+        },
+        {
+          "name": "rename-camel-case"
+        },
+        {
+          "name": "rename-from-csv"
+        },
+        {
+          "name": "rename-kebab-case"
+        },
+        {
+          "name": "rename-lowercase"
+        },
+        {
+          "name": "rename-snake-case"
+        },
+        {
+          "name": "reset-terminal"
+        },
+        {
+          "name": "rg-sort"
+        },
+        {
+          "name": "rg-unique"
+        },
+        {
+          "name": "sort-lines"
+        },
+        {
+          "name": "spotlight"
+        },
+        {
+          "name": "tar-multiple-dirs"
+        },
+        {
+          "name": "update-today-bucket"
+        }
+      ]
+    },
+    {
+      "name": "header",
+      "description": "",
+      "options": [
+        {
+          "name": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ]
+    }
+  ]
+}
