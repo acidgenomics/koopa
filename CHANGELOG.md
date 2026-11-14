@@ -1,5 +1,25 @@
 # Changelog
 
+## koopa 0.41.0 (2026-11-14)
+
+Major changes:
+
+- Added Lig to the default application stack, with shell integration for
+  interactive Bash, Zsh, fish, and PowerShell sessions. Koopa installs Lig
+  from verified upstream release binaries when available, with a Cargo
+  fallback, and supports opting out with `LIG_DISABLE=1`.
+
+Minor changes:
+
+- Improved CLI completion and command handling, app download and version checks,
+  and shell activation performance checks.
+- Updated the applications guide with Lig installation and shell integration
+  details, and refreshed routine application versions.
+
+New apps:
+
+- Added lig 1.3.0, IDE-style autocomplete for the terminal (CLI, default).
+
 ## koopa 0.40.0 (2026-11-12)
 
 Major changes:
