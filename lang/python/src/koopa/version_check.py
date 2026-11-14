@@ -2295,7 +2295,13 @@ def _check_boost() -> str:
 
 
 def _check_dracula_pro() -> str:
-    """Check the latest known Dracula Pro package version from its public changelog."""
+    """Check the latest known Dracula Pro package version from its public changelog.
+
+    Returns
+    -------
+    str
+        Latest Dracula Pro package version.
+    """
     from koopa.dracula_pro import latest_version
 
     return latest_version()
