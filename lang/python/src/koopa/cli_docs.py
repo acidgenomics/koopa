@@ -229,7 +229,9 @@ DEVELOP_DESCRIPTIONS: dict[str, str] = {
     "orphan-apps": "Find apps in app.json that no other app depends on.",
     "prune-stale-docs": "Remove stale S3 keys left over from a previous docs build.",
     "publish-docs": "Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.",
-    "publish-release": "Publish a stable koopa release archive to koopa.acidgenomics.com.",
+    "publish-release": (
+        "Publish a stable archive; with --pr, complete the merged release locally."
+    ),
     "pyrefly": "Run the pyrefly type checker on the Python source tree.",
     "pyright": "Run the pyright type checker on the Python source tree.",
     "reset-revisions": "Remove the revision key from all apps in app.json.",
@@ -243,7 +245,7 @@ DEVELOP_SYNOPSIS: dict[str, str] = {
     "mirror-src": "name...",
     "prune-stale-docs": "[--no-dryrun]",
     "publish-docs": "[--no-invalidate] [--dry-run]",
-    "publish-release": "tag",
+    "publish-release": "tag [--pr number]",
     "push-app-build": "name...",
     "push-installer": "app file [--version version] [--force]",
     "remove-app": "name",

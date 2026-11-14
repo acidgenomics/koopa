@@ -183,9 +183,11 @@ Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.
 - `--dry-run`
 
 (koopa-develop-publish-release)=
-## `develop publish-release tag`
+## `develop publish-release tag [--pr number]`
 
-Publish a stable koopa release archive to koopa.acidgenomics.com.
+Publish a stable archive; with --pr, complete the merged release locally.
+
+- `--pr`
 
 (koopa-develop-push-all-app-builds)=
 ## `develop push-all-app-builds`

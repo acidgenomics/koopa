@@ -19,6 +19,7 @@ from koopa.installers import (
     bcl_convert,
     cellranger,
     has_python_installer,
+    lig,
     neovim,
     python_app,
     sox_ng,
@@ -107,18 +108,21 @@ def test_rust_package_git_install_requires_tag() -> None:
         )
 
 
-def test_lig_cargo_tag_tracks_app_version() -> None:
-    """Keep the Cargo source tag aligned with the registry's version pin."""
+def test_lig_source_and_patch_track_app_version() -> None:
+    """Keep Lig's source and bundled patch aligned with the registry pin."""
     app = import_app_json()["lig"]
     assert isinstance(app, dict)
-    with patch.object(_rust_pkg, "install_rust_package") as rust_pkg_install:
-        _rust_pkg.main(
-            name="lig",
-            version=app["version"],
-            prefix="/prefix",
-            passthrough_args=install._build_passthrough_args("lig"),
-        )
-    assert rust_pkg_install.call_args.kwargs["tag"] == f"v{app['version']}"
+    assert app["version_pin"] is True
+    version = app["version"]
+    assert (Path(lig.koopa_prefix()) / "etc/koopa/lig" / f"{version}-theme-reload.patch").is_file()
+    with (
+        patch.object(lig, "vendor_config", return_value=None),
+        patch.object(lig.shutil, "which", return_value="/usr/bin/cargo"),
+        patch.object(lig, "download_with_mirror", side_effect=FileNotFoundError) as download,
+        pytest.raises(FileNotFoundError),
+    ):
+        lig.main(name="lig", version=version, prefix="/prefix")
+    assert download.call_args.args[0].endswith(f"/refs/tags/v{version}.tar.gz")
 
 
 def test_no_installer_bypasses_koopa_cpu_count() -> None:

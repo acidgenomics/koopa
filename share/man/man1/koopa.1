@@ -341,8 +341,8 @@ Remove stale S3 keys left over from a previous docs build.
 \fBdevelop publish\-docs\fR \fI[--no-invalidate] [--dry-run]\fR
 Build and publish the koopa Sphinx docs site to koopa.acidgenomics.com.
 .TP
-\fBdevelop publish\-release\fR \fItag\fR
-Publish a stable koopa release archive to koopa.acidgenomics.com.
+\fBdevelop publish\-release\fR \fItag [--pr number]\fR
+Publish a stable archive; with --pr, complete the merged release locally.
 .TP
 \fBdevelop push\-all\-app\-builds\fR
 Push all application builds to the binary cache.

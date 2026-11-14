@@ -134,13 +134,15 @@ def build_archive(root: str, tag: str, destination: str) -> str:
     return _digest(Path(destination).read_bytes())
 
 
-def publish_release(tag: str) -> None:
+def publish_release(tag: str, *, main_ref: str = "refs/heads/main") -> None:
     """Publish a stable tagged release and its installer to the koopa site.
 
     Parameters
     ----------
     tag : str
         Stable version tag already merged into main.
+    main_ref : str, optional
+        Local ref against which to verify that the tag is merged.
     """
     from koopa.prefix import koopa_prefix
     from koopa.site import _aws, _bucket, _invalidate_cloudfront
@@ -150,7 +152,7 @@ def publish_release(tag: str) -> None:
     aws = _aws()
     bucket = _bucket()
     subprocess.run(
-        ["git", "merge-base", "--is-ancestor", tag, "refs/heads/main"],
+        ["git", "merge-base", "--is-ancestor", tag, main_ref],
         cwd=root,
         check=True,
     )

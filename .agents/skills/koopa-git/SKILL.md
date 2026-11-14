@@ -12,24 +12,23 @@ description: >-
 
 - `develop`: active development. All work lands here.
 - `main`: release snapshots only. Updated exclusively via PR from `develop`.
-- Tags (`vX.Y.Z`) sit on `develop` at the **bumpver commit** (or the
-  "Prepare release" commit if bumpver ran first, see `koopa-release`).
+- Release tags (`vX.Y.Z`) identify the final tested release commit included
+  in `main`, including fixes after the version bump. See `koopa-release` for
+  post-merge verification and publication.
 
 ## Pushing a release
 
-After the CHANGELOG + bumpver commits are on `develop`:
-
-```sh
-git push origin develop
-git push origin vX.Y.Z         # or --force if re-tagging (see below)
-```
-
-Then open (or merge) the `develop`→`main` PR on GitHub.
+After release changes are on `develop`, open the `develop`→`main` PR.
+After it is merged, use `koopa develop publish-release vX.Y.Z --pr NUMBER`
+to verify, tag, push, and publish locally when the user has authorized the
+relevant actions; see `koopa-release` for prerequisites and recovery. The
+form without `--pr` only publishes the archive. Do not commit, push, or merge
+merely because release preparation was requested.
 
 ## Merge conflicts on the develop→main PR
 
-The tag points to a merge commit on `main` (the previous PR), so
-`vPREV..HEAD` looks enormous; that's expected, not a real conflict.
+Depending on the previous tag's placement, `vPREV..HEAD` can look much
+larger than the PR diff; that alone is not evidence of a conflict.
 
 The actual conflict is almost always just `CHANGELOG.md` (and occasionally
 `pyproject.toml`), because `main` lags behind `develop` by one or more
@@ -54,25 +53,17 @@ cherry-pick duplicate, then explodes on the first real conflict.
 
 ## Moving a tag after the fact
 
-If bumpver ran before the "Prepare release" commit, the tag sits one commit
-behind HEAD. Re-tag and force-push:
-
-```sh
-git tag -f vX.Y.Z          # moves tag to current HEAD
-git push origin vX.Y.Z --force
-```
-
-If the remote already has the tag at the right SHA, `git push` reports
-"Everything up-to-date"; that's fine, no action needed.
+Before creating or pushing a release tag, check both local and remote
+references. If an existing tag points elsewhere, stop and investigate; do
+not move or force-push a published tag without explicit authorization. A
+published stable archive is immutable, so moving a tag can also make its
+archive disagree with GitHub.
 
 ## Checking tag placement
 
-```sh
-git rev-parse vX.Y.Z       # SHA the tag points to
-git log --oneline -1        # current HEAD
-```
-
-The tag should sit on the bumpver commit (`Bump version to vX.Y.Z.`).
+Compare the local and remote tag's peeled commit to the verified release
+commit, and confirm that commit is in the freshly fetched `origin/main`.
+Do not assume the current `develop` HEAD or the bump commit is the release.
 
 ## Always `git fetch` before trusting an `origin/*` ref
 

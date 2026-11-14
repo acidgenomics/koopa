@@ -293,10 +293,12 @@ def test_download_with_mirror_vendor_first_includes_remote_rewrite(
         "https://sourceforge.net/projects/libpng/files/libpng16/1.6.58/libpng-1.6.58.tar.xz/download",
         "https://downloads.sourceforge.net/project/libpng/libpng-1.6.58.tar.xz",
         "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.16.0.tar.xz",
+        "https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/dash-0.5.13.6.tar.gz",
+        "https://codeberg.org/sox_ng/sox_ng/releases/download/sox_ng-14.8.1/sox_ng-14.8.1.tar.gz",
     ],
 )
 def test_blocks_spoofed_user_agent_matches(url: str) -> None:
-    """SourceForge's apex domain, subdomains, and www.freedesktop.org are detected."""
+    """Known hosts that reject the spoofed desktop-browser UA are detected."""
     assert _blocks_spoofed_user_agent(url) is True
 
 
@@ -306,6 +308,8 @@ def test_blocks_spoofed_user_agent_matches(url: str) -> None:
         "https://github.com/libgeos/geos/archive/3.14.1.tar.gz",
         "https://notsourceforge.net/files/foo.tar.gz",
         "https://xorg.freedesktop.org/archive/individual/lib/libX11-1.8.tar.xz",
+        "https://git.kernel.org.evil.com/archive.tar.gz",
+        "https://notcodeberg.org/archive.tar.gz",
     ],
 )
 def test_blocks_spoofed_user_agent_rejects(url: str) -> None:
@@ -313,16 +317,22 @@ def test_blocks_spoofed_user_agent_rejects(url: str) -> None:
     assert _blocks_spoofed_user_agent(url) is False
 
 
-def test_download_curl_omits_spoofed_user_agent_for_sourceforge(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://sourceforge.net/projects/infozip/files/Zip%203.x/3.0/zip30.tar.gz/download",
+        "https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/dash-0.5.13.6.tar.gz",
+        "https://codeberg.org/sox_ng/sox_ng/releases/download/sox_ng-14.8.1/sox_ng-14.8.1.tar.gz",
+    ],
+)
+def test_download_curl_omits_spoofed_user_agent_for_blocked_hosts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, url: str
 ) -> None:
-    """Curl must not send the spoofed desktop-browser UA to SourceForge.
+    """Curl must not send the spoofed desktop-browser UA to hosts that reject it.
 
-    Regression test: SourceForge's Cloudflare front 403s koopa's spoofed
-    Chrome/Edge _USER_AGENT string on the files/.../download redirect hop
-    (confirmed live against multiple SourceForge projects), which broke
-    libpng, pcre, swig, tcl-tk, unzip, and zip. Omitting the header (curl's
-    own default UA) succeeds.
+    These hosts reject koopa's spoofed Chrome/Edge _USER_AGENT string on
+    their source archive endpoints. Omitting the header (curl's own default
+    UA) succeeds.
     """
     monkeypatch.setattr("koopa.download._check_curl", lambda curl_cmd: None)
     captured: dict[str, list[str]] = {}
@@ -331,10 +341,7 @@ def test_download_curl_omits_spoofed_user_agent_for_sourceforge(
         captured["args"] = args
 
     monkeypatch.setattr("koopa.download.subprocess.run", fake_run)
-    _download_curl(
-        "https://sourceforge.net/projects/infozip/files/Zip%203.x/3.0/zip30.tar.gz/download",
-        str(tmp_path / "zip30.tar.gz"),
-    )
+    _download_curl(url, str(tmp_path / "source.tar.gz"))
     assert "--user-agent" not in captured["args"]
 
 
