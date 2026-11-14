@@ -21,9 +21,11 @@ description: >-
 After release changes are on `develop`, open the `develop`→`main` PR.
 After it is merged, use `koopa develop publish-release vX.Y.Z --pr NUMBER`
 to verify, tag, push, and publish locally when the user has authorized the
-relevant actions; see `koopa-release` for prerequisites and recovery. The
-form without `--pr` only publishes the archive. Do not commit, push, or merge
-merely because release preparation was requested.
+publication; see `koopa-release` for prerequisites and recovery. This is the
+only agent push exception: leave commits and branch pushes to the user, and
+never force-push, move, or delete tags under it. The form without `--pr` only
+publishes the archive. Release preparation alone does not authorize
+publication or merging.
 
 ## Merge conflicts on the develop→main PR
 
@@ -35,7 +37,7 @@ The actual conflict is almost always just `CHANGELOG.md` (and occasionally
 release cycles. `develop`'s version is always the correct one: it is a
 strict superset.
 
-**Fix: merge main into develop with `-X ours`**
+**Fix: the user merges main into develop with `-X ours`**
 
 ```sh
 git fetch origin
@@ -55,8 +57,8 @@ cherry-pick duplicate, then explodes on the first real conflict.
 
 Before creating or pushing a release tag, check both local and remote
 references. If an existing tag points elsewhere, stop and investigate; do
-not move or force-push a published tag without explicit authorization. A
-published stable archive is immutable, so moving a tag can also make its
+not move or force-push a published tag as part of agent release publication.
+A published stable archive is immutable, so moving a tag can also make its
 archive disagree with GitHub.
 
 ## Checking tag placement

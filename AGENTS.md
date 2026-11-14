@@ -82,7 +82,11 @@ lang/python/
 
 ## Key Conventions
 
-- Never commit or push; leave version control to the user.
+- Never create commits or push Git refs; leave those operations to the user.
+  The only exception is when asked to publish a merged koopa release: an
+  agent may create and push its new release tag through
+  `koopa develop publish-release vX.Y.Z --pr NUMBER`. Never force-push, move,
+  or delete a tag as part of this exception.
 - Never install packages or add dependencies without being asked.
 - Never suppress linting errors with `# noqa`; fix the underlying code.
 - Use `subprocess.run(..., check=True)`, never `check=False`.

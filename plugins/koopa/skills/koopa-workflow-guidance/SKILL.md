@@ -55,8 +55,8 @@ non-obvious tradeoffs.
   the user's approval. Surface the exact command or koopa app name and let the
   user approve it.
 - Do not reach for tools outside the current project unless the user asks.
-  Leave commits and pushes to the user, and never add AI attribution to commit
-  messages.
+  Leave commits and pushes to the user unless project instructions explicitly
+  permit a narrow exception, and never add AI attribution to commit messages.
 - Never use hardcoded `/tmp` paths for scratch files; use `mktemp` or the
   language's temporary-file helper. Never put sensitive data in scratch files.
 - Avoid em-dash punctuation in prose.
