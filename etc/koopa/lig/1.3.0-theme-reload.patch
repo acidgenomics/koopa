@@ -1,0 +1,153 @@
+diff --git a/src/config.rs b/src/config.rs
+index 5def8b069d8e..0952f2709d46 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -128,7 +128,7 @@ impl Size {
+ 
+ /// Colors: a 0-255 palette index, `"#rrggbb"`, or `"default"` (the
+ /// terminal's own). Unset ones come from the theme.
+-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
++#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+ #[serde(default, deny_unknown_fields)]
+ pub struct Colors {
+     #[serde(skip_serializing_if = "Option::is_none")]
+@@ -298,16 +298,24 @@ impl Default for Behavior {
+ }
+ 
+ impl Config {
++    fn parse(text: &str) -> Result<Config, toml::de::Error> {
++        let mut c = toml::from_str::<Config>(text)?;
++        // `[colors]`, over the older `[ui.colors]`; drawing reads them from `ui`.
++        c.ui.colors = c.colors.clone().or(std::mem::take(&mut c.ui.colors));
++        Ok(c)
++    }
++
++    /// Parse UI settings without replacing the current theme on a read or parse failure.
++    pub fn ui_from_text(text: &str) -> Option<Ui> {
++        Self::parse(text).ok().map(|c| c.ui)
++    }
++
+     /// Load the config file; problems are reported and defaults are used.
+     pub fn load() -> Config {
+         let path = config_path();
+         match std::fs::read_to_string(&path) {
+-            Ok(text) => match toml::from_str::<Config>(&text) {
+-                Ok(mut c) => {
+-                    // `[colors]`, over the older `[ui.colors]`; drawing reads them from `ui`.
+-                    c.ui.colors = c.colors.clone().or(std::mem::take(&mut c.ui.colors));
+-                    c
+-                }
++            Ok(text) => match Self::parse(&text) {
++                Ok(c) => c,
+                 Err(e) => {
+                     eprintln!("lig: ignoring {}: {e}", path.display());
+                     Config::default()
+@@ -318,6 +326,21 @@ impl Config {
+     }
+ }
+ 
++#[cfg(test)]
++mod theme_reload_tests {
++    use super::Config;
++
++    #[test]
++    fn merges_current_and_legacy_colors_and_rejects_invalid_config() {
++        let ui = Config::ui_from_text("[ui]\ntheme = 'light'\n[ui.colors]\nfg = '7'\nbg = '0'\n[colors]\nfg = '15'\n")
++            .unwrap();
++        assert_eq!(ui.theme, "light");
++        assert_eq!(ui.colors.fg.as_deref(), Some("15"));
++        assert_eq!(ui.colors.bg.as_deref(), Some("0"));
++        assert!(Config::ui_from_text("[colors\n").is_none());
++    }
++}
++
+ /// SGR parameters for a color spec, as foreground (`38`) or background (`48`).
+ pub fn sgr_color(spec: &str, base: u8) -> String {
+     let s = spec.trim();
+diff --git a/src/session.rs b/src/session.rs
+index 789b8153b7bf..5b14145d4660 100644
+--- a/src/session.rs
++++ b/src/session.rs
+@@ -23,6 +23,8 @@ use crate::term;
+ const DEBOUNCE: Duration = Duration::from_millis(4);
+ /// Upper bound on the debounce wait.
+ const MAX_DELAY: Duration = Duration::from_millis(40);
++/// While a popup is visible, check for theme changes without depending on OS-specific watchers.
++const CONFIG_POLL: Duration = Duration::from_millis(250);
+ /// How long Enter waits for suggestions that are still loading.
+ const ENTER_WAIT: Duration = Duration::from_millis(1500);
+ /// Show "Searching…" only when results take longer than this.
+@@ -332,6 +334,8 @@ pub fn run(shell: PathBuf, login: bool) -> Result<i32> {
+         dirty: false,
+         dirty_since: Instant::now(),
+         last_output: Instant::now(),
++        last_config_text: None,
++        last_config_check: Instant::now(),
+     };
+     s.event_loop(&rx);
+ 
+@@ -611,6 +615,9 @@ struct Session {
+     dirty: bool,
+     dirty_since: Instant,
+     last_output: Instant,
++    /// Last successfully parsed config; invalid or incomplete writes leave the theme alone.
++    last_config_text: Option<String>,
++    last_config_check: Instant,
+ }
+ 
+ impl Session {
+@@ -650,10 +657,25 @@ impl Session {
+                 let w = self.last_output + PROMPT_SETTLE;
+                 deadline = Some(deadline.map_or(w, |d| d.min(w)));
+             }
++            let other_deadline = deadline;
++            if self.drawn.is_some() {
++                let w = self.last_config_check + CONFIG_POLL;
++                deadline = Some(deadline.map_or(w, |d| d.min(w)));
++            }
+             let ev = if let Some(due) = deadline {
+                 match rx.recv_deadline(due) {
+                     Ok(ev) => ev,
+                     Err(RecvTimeoutError::Timeout) => {
++                        if self.drawn.is_some() && self.last_config_check.elapsed() >= CONFIG_POLL {
++                            self.last_config_check = Instant::now();
++                            if self.reload_ui_config() {
++                                self.render();
++                                continue;
++                            }
++                            if other_deadline.is_none_or(|d| d > Instant::now()) {
++                                continue;
++                            }
++                        }
+                         if self.prompt_pending && self.last_output.elapsed() >= PROMPT_SETTLE {
+                             self.prompt_settled();
+                         }
+@@ -1543,7 +1565,28 @@ impl Session {
+         }
+     }
+ 
++    fn reload_ui_config(&mut self) -> bool {
++        self.last_config_check = Instant::now();
++        let Ok(text) = std::fs::read_to_string(crate::config::config_path()) else {
++            return false;
++        };
++        if self.last_config_text.as_ref() == Some(&text) {
++            return false;
++        }
++        let Some(ui) = Config::ui_from_text(&text) else {
++            return false;
++        };
++        let changed = self.cfg.ui.theme != ui.theme || self.cfg.ui.colors != ui.colors;
++        self.cfg.ui.theme = ui.theme;
++        self.cfg.ui.colors = ui.colors;
++        self.last_config_text = Some(text);
++        changed
++    }
++
+     fn render(&mut self) {
++        if self.last_config_text.is_none() || self.last_config_check.elapsed() >= CONFIG_POLL {
++            self.reload_ui_config();
++        }
+         self.dirty = false;
+         let mut w = vec![];
+         let stuck = self.osc.take_pending();

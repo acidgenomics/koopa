@@ -1,9 +1,10 @@
 ---
 name: koopa-release
 description: >-
-  koopa release procedure, CHANGELOG authoring, bumpver contract, pre-release
-  gate, and what stays with the user. Use when preparing a release, writing
-  release notes, or understanding what "prepare the release" entails.
+  koopa release preparation and local agent-assisted publication, CHANGELOG,
+  version bump, pre-release gate, merged-commit tagging, GitHub release,
+  stable archive, source mirror, and website. Use when preparing or
+  publishing a koopa release, or when a release PR has been merged.
 ---
 
 # koopa Release Procedure
@@ -18,7 +19,8 @@ description: >-
 - `current_version = "v<version>"` (with `v` prefix)
 
 It creates a single commit `Bump version to vX.Y.Z.`: **no tag, no push**.
-Tagging, pushing, and merging `develop`→`main` are always the user's job.
+Since `commit = true`, do not run it unless a commit is explicitly authorized;
+otherwise prepare the version changes without committing.
 
 ## Release checklist
 
@@ -54,34 +56,92 @@ Tagging, pushing, and merging `develop`→`main` are always the user's job.
    numpydoc lint $(find lang/python/src/koopa -name '*.py')
    pytest lang/python/tests/
    ```
-5. **User-owned**: tag, push, and merge:
-   ```sh
-   git tag vX.Y.Z
-   git push origin develop
-   git push origin vX.Y.Z
-   # then open a PR: develop -> main
-   ```
-   Title the release PR with the bare tag, for example `vX.Y.Z`.
-6. **Publish the experimental stable archive**: after the tag is merged to
-   `main`, confirm its bootstrap sources are mirrored under
-   `https://koopa.acidgenomics.com/src/`, then publish each release:
-   ```sh
-   koopa develop publish-release vX.Y.Z
-   ```
-   Confirm `/releases/latest` names the tag and `/install-release` and the
-   versioned `/releases/vX.Y.Z/koopa.tar.gz` are reachable. CloudFront
-   invalidation can take time to propagate. The Git-managed installer remains
-   the default; this archive channel is an experimental fallback.
-7. **Publish the website**: after the release changes are merged to `main`,
-   publish the site from the koopa prefix containing that merged tree:
-   ```sh
-   koopa develop publish-docs
-   ```
-   Verify the changed pages on `https://koopa.acidgenomics.com/`. The publish
-   command syncs built files and invalidates CloudFront, but intentionally does
-   not delete stale S3 keys. For removed or renamed pages, inspect
-   `koopa develop prune-stale-docs` and explicitly remove confirmed stale keys
-   with `koopa develop prune-stale-docs --no-dryrun`.
+5. **Release PR**: title the `develop`→`main` PR with the bare tag, for example
+   `v0.41.0`. Follow the repository's commit/push and merge authorization
+   rules; do not assume permission to commit, push, or merge.
+6. **After merge**: when asked to publish or complete the release, carry out
+   the local publication procedure below rather than leaving tagging, release
+   publishing, or documentation refresh as manual handoffs. A request to
+   prepare a release alone is not authorization to commit, push, or merge.
+
+## Local post-merge publication
+
+Use the local koopa installation and its existing `acidgenomics` AWS profile.
+Do not set up GitHub Actions or store AWS credentials on GitHub. See
+`koopa-aws-env` for the local configuration. Respect repository instructions
+requiring explicit authorization for Git commits and pushes; do not merge a PR
+unless authorized. The following applies once the user asks the agent to
+publish the merged release and any required Git authorization is present.
+
+Run the end-to-end command from a clean checkout of the merged release:
+
+```sh
+koopa develop publish-release vX.Y.Z --pr 123
+```
+
+The `--pr` form orchestrates the entire flow below; do not repeat the steps
+manually after it succeeds. It requires authenticated local `gh` and AWS
+access, the `acidgenomics` profile, and a clean release tree matching
+`origin/main`. The existing `koopa develop publish-release vX.Y.Z` form
+remains archive-only. Do not run the full form speculatively: it creates and
+pushes a tag, publishes the archive and docs, creates a GitHub release, and
+deletes the previous GitHub release while preserving its tag.
+
+The automated sequence and its safeguards:
+
+1. **Verify the release**: use `gh pr view` to confirm that the intended
+   `develop`→`main` PR is merged and obtain its merged head and merge commit.
+   Run `git fetch origin` before inspecting remote-tracking refs. Choose the
+   final tested release commit actually included in `origin/main`, including
+   any fixes after the version bump; do not blindly tag the bump commit. For
+   a squash merge, use the merged commit on `main` if the PR head is not an
+   ancestor. Confirm the selected commit has the expected `pyproject.toml`
+   version and changelog, and the checkout used to build the docs has exactly
+   that committed tree with no uncommitted changes affecting publication.
+   Do not switch branches or overwrite local changes to make this true.
+2. **Preflight**: run `koopa develop check` and a documentation dry run.
+   Check the source mirror using the release's `bootstrap.sh` and
+   `.python-version` and confirm the exact bootstrap source URLs needed by
+   the stable installer are available under `https://koopa.acidgenomics.com/src/`.
+   `koopa develop audit-src-mirror` checks registry entries and reports
+   missing objects; it does not by itself prove every tagged bootstrap URL
+   is available. Use `koopa develop mirror-src <name>...` for missing
+   registry sources and retry the relevant audit. Do not use `--prune`.
+   The automated full-release command checks the mirror before tagging,
+   tries to repair a failed audit, and stops if the mirror or recheck fails,
+   including for unrelated missing app sources.
+3. **Tag**: inspect both local and remote tags first. If `vX.Y.Z` exists at
+   the intended commit, reuse it; if it points elsewhere, stop rather than
+   moving or force-pushing it. Otherwise create and push it at the verified
+   commit, then confirm the remote tag.
+4. **Publish the experimental stable archive**: archive-only `koopa develop
+   publish-release vX.Y.Z` requires the tag to be an ancestor of the local
+   `refs/heads/main`, not just `origin/main`. Fetch first and inspect that
+   local branch; if absent, create a tracking branch without checking it out.
+   If it is stale, fast-forward only after verifying it has no divergent local
+   commits; never force-update or delete it. The `--pr` form instead checks
+   freshly fetched `origin/main`, so no local `main` branch is needed.
+   The full command publishes from the release prefix, then verifies
+   `/releases/latest`, the archive checksum, and `/install-release`. CloudFront
+   invalidation may take time to propagate. Git-managed installation remains
+   the default.
+5. **Publish the website**: build the docs from the verified release checkout
+   and verify changed public pages and the generated app stack. The sync
+   invalidates CloudFront but does not delete stale S3 keys. For removed or
+   renamed pages, inspect `koopa develop prune-stale-docs`; delete confirmed
+   stale keys only with explicit authorization.
+6. **Publish the GitHub release**: create `vX.Y.Z` against the existing
+   verified tag with its bare tag as the title and release notes from the
+   matching changelog section. Verify it is the latest GitHub release before
+   deleting the previous GitHub release with `gh release delete vPREV --yes`;
+   never delete the prior tag. If a release already exists, inspect it and
+   resume safely rather than creating a duplicate or overwriting its notes.
+   Confirm both release metadata and the old and new tags afterward.
+
+Each publish step has external side effects. On failure, report what succeeded
+and what remains; do not claim the release is complete. Inspect existing tags,
+release metadata, and published artifacts, then rerun the same `--pr` command
+to resume safely when its checks permit; do not force-move conflicting tags.
 
 ## CHANGELOG.md format
 
@@ -118,9 +178,9 @@ if the tag hasn't been created yet for the previous release).
 
 ## Version source of truth
 
-`pyproject.toml:3`: `version = "X.Y.Z"`. Read at runtime by
-`koopa_version()` in `lang/python/src/koopa/version.py`. No other file
-hardcodes the koopa version.
+`[project]` in `pyproject.toml`: `version = "X.Y.Z"`. Read at runtime by
+`koopa_version()` in `lang/python/src/koopa/version.py`. Plugin manifest
+versions and `[tool.bumpver] current_version` must match.
 
 ## GitHub releases
 

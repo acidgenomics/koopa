@@ -2907,7 +2907,17 @@ def _handle_publish_release(args: list[str]) -> None:
 
     parser = argparse.ArgumentParser(prog="koopa develop publish-release")
     parser.add_argument("tag", help="Stable version tag already merged into main.")
+    parser.add_argument(
+        "--pr",
+        type=int,
+        help="Complete publication for this merged release PR, including tag, docs, and GitHub.",
+    )
     parsed = parser.parse_args(args)
+    if parsed.pr is not None:
+        from koopa.release_publish import finish_release
+
+        finish_release(parsed.tag, parsed.pr)
+        return
     from koopa.release import publish_release
 
     publish_release(parsed.tag)

@@ -29,7 +29,8 @@ def _blocks_spoofed_user_agent(url: str) -> bool:
 
     SourceForge's Cloudflare front 403s it on the files/.../download
     redirect hop, and www.freedesktop.org's Anubis bot check 418s it on
-    the release path; curl's own default UA is accepted by both.
+    the release path. git.kernel.org and codeberg.org also 403 the browser
+    UA on source archives; curl's default UA is accepted by these hosts.
 
     Parameters
     ----------
@@ -45,7 +46,7 @@ def _blocks_spoofed_user_agent(url: str) -> bool:
     return (
         host == "sourceforge.net"
         or host.endswith(".sourceforge.net")
-        or host == "www.freedesktop.org"
+        or host in {"www.freedesktop.org", "git.kernel.org", "codeberg.org"}
     )
 
 

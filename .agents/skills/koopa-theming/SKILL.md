@@ -306,6 +306,15 @@ no pre-blending at all; pre-blending toward `bg` for VS Code would produce
 an opaque wash that hides syntax highlighting entirely, the opposite of what
 alpha compositing is for.
 
+## Lig's Color-Mode Limitation
+
+Upstream Lig 1.3 loads its config once per session. koopa builds it with a
+bundled patch that reloads colors before drawing and polls while a popup is
+open; read and parse failures keep the last valid colors. Keep the custom
+mode-specific Dracula Pro config: the background launch agent re-renders it.
+The version is pinned until the patch is reviewed against a newer release.
+An existing Lig session must be restarted once to load the patched binary.
+
 ## Fish Color Pipeline
 
 ### Architecture

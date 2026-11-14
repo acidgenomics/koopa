@@ -55,6 +55,13 @@ def test_publish_release_dispatches_tag() -> None:
     publish_release.assert_called_once_with("v1.2.3")
 
 
+def test_publish_release_dispatches_complete_release() -> None:
+    """A PR explicitly requests the full release rather than archive-only publication."""
+    with patch("koopa.release_publish.finish_release") as finish_release:
+        _DEVELOP_HANDLERS["publish-release"](["v1.2.3", "--pr", "42"])
+    finish_release.assert_called_once_with("v1.2.3", 42)
+
+
 def test_publish_docs_forwards_options() -> None:
     """Test that publish-docs forwards its CLI options."""
     with patch("koopa.site.publish_docs") as publish_docs:
