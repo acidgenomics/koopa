@@ -3621,16 +3621,30 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
 
     _do_mirror = _has_acidgenomics_aws() or (_vendor_config() is not None and vendor_can_push())
     if _do_mirror:
-        print("Uploading source tarballs to mirror(s).", file=sys.stderr)
+        from koopa.text import plural
+
+        src_tarballs: list[tuple[str, str, str]] = []
         for r in bumped:
             if r.latest_version is None:
                 continue
             src_url = data[r.name].get("src_url", "")
             if not src_url:
                 continue
-            _mirror_src_to_s3(r.name, r.latest_version, src_url)
-            for extra_tmpl in data[r.name].get("extra_src_urls", []):
-                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
+            src_tarballs.append((r.name, r.latest_version, src_url))
+            src_tarballs.extend(
+                (r.name, r.latest_version, extra_tmpl)
+                for extra_tmpl in data[r.name].get("extra_src_urls", [])
+            )
+        n_tarballs = len(src_tarballs)
+        if n_tarballs:
+            print(
+                f"Uploading {n_tarballs} source {plural(n_tarballs, 'tarball')} to mirror storage.",
+                file=sys.stderr,
+            )
+        else:
+            print("No source tarballs to upload to mirror storage.", file=sys.stderr)
+        for name, version, src_url in src_tarballs:
+            _mirror_src_to_s3(name, version, src_url)
     elif s3_upload:
         print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
     return count

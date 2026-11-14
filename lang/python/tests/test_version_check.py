@@ -734,6 +734,66 @@ def test_update_app_json_refreshes_automake_bin_names_on_bump(tmp_path: Path) ->
     assert count == 1
 
 
+@pytest.mark.parametrize(
+    ("extra_src_urls", "message"),
+    [
+        ([], "Uploading 1 source tarball to mirror storage."),
+        (
+            ["https://example.com/automake-extra-{version}.tar.gz"],
+            "Uploading 2 source tarballs to mirror storage.",
+        ),
+    ],
+)
+def test_update_app_json_reports_source_tarball_upload_count(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    extra_src_urls: list[str],
+    message: str,
+) -> None:
+    """The upload status reports the number of source tarballs with correct pluralization."""
+    json_data = {
+        "automake": {
+            "version": "1.18.1",
+            "src_url": "https://example.com/automake-{version}.tar.gz",
+            "extra_src_urls": extra_src_urls,
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("automake", "1.18.1", "1.19.2", "gnu", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json"),
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=True),
+        patch("koopa.version_check._http_url_missing", return_value=False),
+        patch("koopa.version_check._mirror_src_to_s3") as mock_mirror,
+    ):
+        update_app_json(results)
+    assert capsys.readouterr().err.splitlines()[-1] == message
+    assert mock_mirror.call_count == len(extra_src_urls) + 1
+
+
+def test_update_app_json_reports_when_no_source_tarballs_are_available(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The upload status clarifies when there are no source tarballs to upload."""
+    json_data = {"automake": {"version": "1.18.1"}}
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("automake", "1.18.1", "1.19.2", "gnu", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json"),
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=True),
+        patch("koopa.version_check._mirror_src_to_s3") as mock_mirror,
+    ):
+        update_app_json(results)
+    assert capsys.readouterr().err.splitlines()[-1] == (
+        "No source tarballs to upload to mirror storage."
+    )
+    mock_mirror.assert_not_called()
+
+
 # ── update_app_json artifact gate ────────────────────────────────────────────
 
 
