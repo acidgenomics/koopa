@@ -1536,7 +1536,7 @@ def _check_spinner(label: str, stop: threading.Event, start: float) -> None:
     while True:
         frame = _SPINNER_FRAMES[idx % len(_SPINNER_FRAMES)]
         elapsed = time.monotonic() - start
-        sys.stderr.write(f"\r\033[K=> {frame} Running {label} [{elapsed:.0f}s]")
+        sys.stderr.write(f"\r\033[K🐢 {frame} Running {label} [{elapsed:.0f}s]")
         sys.stderr.flush()
         idx += 1
         if stop.wait(0.2):
