@@ -22,7 +22,7 @@ def _supported_bash() -> str:
         )
         if tuple(map(int, version.stdout.split())) >= (4, 4):
             return candidate
-    pytest.skip("Bash 4.4 or newer is not installed")
+    return pytest.skip("Bash 4.4 or newer is not installed")
 
 
 @pytest.mark.parametrize("lookup_succeeds", [True, False])
