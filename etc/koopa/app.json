@@ -2595,16 +2595,16 @@
   },
   "dracula-pro": {
     "category": "Dotfile",
-    "date": "2026-09-27",
+    "date": "2026-11-14",
     "default": false,
     "description": "paid color theme bundle",
+    "revision": 1,
     "type": "library",
     "url": [
       "https://draculatheme.com/pro/"
     ],
     "user": true,
-    "version": "2.2.3",
-    "version_pin": true
+    "version": "2.2.4"
   },
   "du-dust": {
     "bin": [

@@ -1618,6 +1618,15 @@ def test_classify_app_pypi_special_case_calls_check_fn_unwrapped(
     assert spec.check_fn(*spec.args) == "2.0.5"
 
 
+def test_classify_dracula_pro_checks_public_changelog(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Dracula Pro uses its public changelog as a special-case version source."""
+    monkeypatch.setattr("koopa.dracula_pro.latest_version", lambda: "2.2.5")
+    spec = classify_app("dracula-pro", {"version": "2.2.4"})
+    assert spec is not None
+    assert spec.source == "dracula-pro"
+    assert spec.check_fn(*spec.args) == "2.2.5"
+
+
 def test_classify_app_no_unsupported_apps_in_registry() -> None:
     """Every supported app in the real app.json classifies to a check strategy.
 

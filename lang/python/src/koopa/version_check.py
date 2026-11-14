@@ -2294,6 +2294,13 @@ def _check_boost() -> str:
     return re.sub(r"^boost-", "", tag)
 
 
+def _check_dracula_pro() -> str:
+    """Check the latest known Dracula Pro package version from its public changelog."""
+    from koopa.dracula_pro import latest_version
+
+    return latest_version()
+
+
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
     "antigravity-cli": _AppCheckSpec(
@@ -2310,6 +2317,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
     "clickhouse": _AppCheckSpec("github", _check_clickhouse, ()),
+    "dracula-pro": _AppCheckSpec("dracula-pro", _check_dracula_pro, ()),
     "glib": _AppCheckSpec("gitlab", _check_glib, ()),
     "attr": _AppCheckSpec(
         "dirlist",
