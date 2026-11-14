@@ -286,7 +286,8 @@
               "emacs-prelude",
               "neovim",
               "preferences",
-              "spacemacs"
+              "spacemacs",
+              "vim"
             ]
           }
         }
@@ -735,6 +736,26 @@
                 },
                 {
                   "name": "--scope"
+                }
+              ]
+            }
+          ],
+          "options": []
+        },
+        {
+          "name": "code",
+          "subcommands": [
+            {
+              "name": "audit-settings",
+              "options": [
+                {
+                  "name": "--extensions-dir"
+                },
+                {
+                  "name": "--fix"
+                },
+                {
+                  "name": "--help"
                 }
               ]
             }

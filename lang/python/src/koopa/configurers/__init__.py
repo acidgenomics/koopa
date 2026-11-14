@@ -17,6 +17,7 @@ PYTHON_CONFIGURERS: dict[tuple[str, str, str], str] = {
     ("dotfiles", "common", "user"): f"{_M}.dotfiles",
     ("emacs-prelude", "common", "user"): f"{_M}.emacs_prelude",
     ("neovim", "common", "user"): f"{_M}.neovim",
+    ("vim", "common", "user"): f"{_M}.vim",
     ("spacemacs", "common", "user"): f"{_M}.spacemacs",
     ("lmod", "linux", "system"): f"{_M}.lmod",
     ("sshd", "common", "system"): f"{_M}.sshd",

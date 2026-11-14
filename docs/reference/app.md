@@ -256,6 +256,18 @@ Report approximate token cost of Claude config files.
 - `--scope`
 - `--project-dir`
 
+## code
+
+Visual Studio Code settings audit utilities.
+
+(koopa-app-code-audit-settings)=
+### `app code audit-settings`
+
+Audit VS Code settings against installed extension manifests; use --fix for supported source-first R setting migrations.
+
+- `--extensions-dir`
+- `--fix`
+
 ## conda
 
 conda environment management utilities.

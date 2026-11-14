@@ -33,6 +33,7 @@ _koopa_complete() {
         ['app/bowtie2/index']='--help --genome-fasta-file --output-dir'
         ['app/claude/archive-plans']='--help --days --dry-run'
         ['app/claude/audit-tokens']='--help --max-tokens --scope --project-dir'
+        ['app/code/audit-settings']='--help --extensions-dir --fix'
         ['app/conda/create-env']='--help --file --prefix --force --latest'
         ['app/copilot/archive-plans']='--help --days --dry-run'
         ['app/docker/build']='--help --local --remote --memory --no-push'
@@ -130,6 +131,7 @@ _koopa_complete() {
                         'bowtie2'
                         'brew'
                         'claude'
+                        'code'
                         'conda'
                         'copilot'
                         'current'
@@ -947,6 +949,7 @@ _koopa_complete() {
                                 'emacs-prelude'
                                 'neovim'
                                 'spacemacs'
+                                'vim'
                             )
                             if _koopa_is_macos
                             then
@@ -1102,6 +1105,9 @@ _koopa_complete() {
                                 'archive-plans'
                                 'audit-tokens'
                             )
+                            ;;
+                        'code')
+                            args+=('audit-settings')
                             ;;
                         'conda')
                             args+=(
