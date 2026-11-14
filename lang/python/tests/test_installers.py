@@ -15,6 +15,7 @@ from koopa.install import _app_json_installer
 from koopa.installers import (
     PYTHON_INSTALLERS,
     PYTHON_PLATFORM_INSTALLERS,
+    _rust_pkg,
     bcl_convert,
     cellranger,
     has_python_installer,
@@ -44,6 +45,80 @@ def test_sox_ng_installs_legacy_command() -> None:
     build.assert_called_once_with(
         conf_args=["--prefix=/prefix", "--enable-replace"], env=activate.return_value
     )
+
+
+def test_rust_package_expands_version_in_tag() -> None:
+    """Resolve release-tag templates from the app's pinned version."""
+    with patch.object(_rust_pkg, "install_rust_package") as install:
+        _rust_pkg.main(
+            name="lig",
+            version="1.3.0",
+            prefix="/prefix",
+            passthrough_args=[
+                "--git-url=https://github.com/KevenGoncalves/lig",
+                "--tag=v{version}",
+            ],
+        )
+    install.assert_called_once_with(
+        name="lig",
+        version="1.3.0",
+        prefix="/prefix",
+        features="",
+        git_url="https://github.com/KevenGoncalves/lig",
+        tag="v1.3.0",
+        with_openssl=False,
+        rustflags="",
+    )
+
+
+def test_rust_package_git_install_uses_tag_without_registry_version(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Pin a Git Cargo install by tag, not by the crates.io version option."""
+    monkeypatch.setattr(install.shutil, "which", lambda _name: "/usr/bin/cargo")
+    monkeypatch.setattr(install, "safe_build_env", lambda: {})
+    monkeypatch.setattr(install, "cpu_count", lambda: 1)
+    with patch.object(install.subprocess, "run") as run:
+        install.install_rust_package(
+            name="lig",
+            version="1.3.0",
+            prefix=str(tmp_path / "prefix"),
+            git_url="https://github.com/KevenGoncalves/lig",
+            tag="v1.3.0",
+        )
+
+    args = run.call_args.args[0]
+    assert "--version" not in args
+    assert args[args.index("--git") + 1] == "https://github.com/KevenGoncalves/lig"
+    assert args[args.index("--tag") + 1] == "v1.3.0"
+    assert args[-1] == "lig"
+    assert run.call_args.kwargs["check"] is True
+
+
+def test_rust_package_git_install_requires_tag() -> None:
+    """Reject unpinned Cargo Git installs."""
+    with pytest.raises(ValueError, match="A tag is required"):
+        install.install_rust_package(
+            name="lig",
+            version="1.3.0",
+            prefix="/prefix",
+            git_url="https://github.com/KevenGoncalves/lig",
+        )
+
+
+def test_lig_cargo_tag_tracks_app_version() -> None:
+    """Keep the Cargo source tag aligned with the registry's version pin."""
+    app = import_app_json()["lig"]
+    assert isinstance(app, dict)
+    with patch.object(_rust_pkg, "install_rust_package") as rust_pkg_install:
+        _rust_pkg.main(
+            name="lig",
+            version=app["version"],
+            prefix="/prefix",
+            passthrough_args=install._build_passthrough_args("lig"),
+        )
+    assert rust_pkg_install.call_args.kwargs["tag"] == f"v{app['version']}"
 
 
 def test_no_installer_bypasses_koopa_cpu_count() -> None:

@@ -497,7 +497,7 @@ def _handle_system_info(_args: list[str]) -> None:
 
 
 def _switch_koopa_branch(args: list[str], branch: str) -> None:
-    """Switch a Git-managed installation to the selected branch.
+    """Switch to and fast-forward the selected Git-managed branch.
 
     Parameters
     ----------
@@ -508,7 +508,7 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
     """
     import argparse
 
-    from koopa.alert import alert, alert_note
+    from koopa.alert import alert
     from koopa.git import git_branch
     from koopa.prefix import koopa_prefix
 
@@ -517,9 +517,6 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
     prefix = koopa_prefix()
     if not os.path.exists(os.path.join(prefix, ".git")):
         raise RuntimeError(f"Not a Git-managed koopa installation: '{prefix}'.")
-    if git_branch(prefix) == branch:
-        alert_note(f"Already on '{branch}' branch.")
-        return
     status = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=no"],
         cwd=prefix,
@@ -531,7 +528,18 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
         raise RuntimeError(
             f"Tracked files have local changes; resolve them before switching to {branch}."
         )
-    alert(f"Switching koopa at '{prefix}' to '{branch}'.")
+    alert(f"Refreshing koopa at '{prefix}' from 'origin/{branch}'.")
+    subprocess.run(
+        [
+            "git",
+            "fetch",
+            "--no-tags",
+            "origin",
+            f"+refs/heads/{branch}:refs/remotes/origin/{branch}",
+        ],
+        cwd=prefix,
+        check=True,
+    )
     try:
         subprocess.run(
             ["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
@@ -542,11 +550,6 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
         if exc.returncode != 1:
             raise
         subprocess.run(
-            ["git", "fetch", "origin", f"refs/heads/{branch}:refs/remotes/origin/{branch}"],
-            cwd=prefix,
-            check=True,
-        )
-        subprocess.run(
             ["git", "remote", "set-branches", "--add", "origin", branch],
             cwd=prefix,
             check=True,
@@ -554,7 +557,22 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
         command = ["git", "switch", "--track", "-c", branch, f"origin/{branch}"]
     else:
         command = ["git", "switch", branch]
-    subprocess.run(command, cwd=prefix, check=True)
+    current_branch = git_branch(prefix)
+    restore_command = ["git", "switch", current_branch]
+    if current_branch == "HEAD":
+        previous_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=prefix, capture_output=True, text=True, check=True
+        ).stdout.strip()
+        restore_command = ["git", "switch", "--detach", previous_commit]
+    switched = current_branch != branch
+    if switched:
+        subprocess.run(command, cwd=prefix, check=True)
+    try:
+        subprocess.run(["git", "merge", "--ff-only", f"origin/{branch}"], cwd=prefix, check=True)
+    except subprocess.CalledProcessError:
+        if switched:
+            subprocess.run(restore_command, cwd=prefix, check=True)
+        raise
     from koopa.install import _zsh_compaudit_set_permissions
 
     _zsh_compaudit_set_permissions()

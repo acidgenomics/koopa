@@ -174,6 +174,7 @@ __koopa_activate_koopa() {
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
     _koopa_activate_xdg || return 1
+    _koopa_activate_lig_pre || return 1
     _koopa_export_editor || return 1
     _koopa_export_gnupg || return 1
     _koopa_export_history || return 1
@@ -436,6 +437,7 @@ __koopa_bash_header() {
         if [[ "${bool['minimal']}" -eq 0 ]]
         then
             _koopa_activate_bash_extras
+            _koopa_activate_lig_post || return 1
         fi
     fi
     if [[ "${bool['activate']}" -eq 0 ]]

@@ -32,7 +32,7 @@ def main(
         prefix=prefix,
         features=get_str(kwargs, "features"),
         git_url=get_str(kwargs, "git_url"),
-        tag=get_str(kwargs, "tag"),
+        tag=get_str(kwargs, "tag").replace("{version}", version),
         with_openssl=get_str(kwargs, "with_openssl") == "true",
         rustflags=get_str(kwargs, "rustflags"),
     )

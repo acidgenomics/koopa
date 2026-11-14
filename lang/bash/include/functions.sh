@@ -524,6 +524,15 @@ _koopa_activate_conda() {
 _koopa_activate_copilot_cli() {
     [[ -x "${KOOPA_PREFIX:?}/bin/copilot" ]] || return 0
     export COPILOT_AUTO_UPDATE=false
+    _koopa_is_interactive || return 0
+    copilot() {
+        if [[ -n "${KOOPA_BUCKET:-}" ]] && [[ -d "${KOOPA_BUCKET}/.obsidian" ]]
+        then
+            command copilot --add-dir "$KOOPA_BUCKET" "$@"
+        else
+            command copilot "$@"
+        fi
+    }
     return 0
 }
 
@@ -687,6 +696,56 @@ _koopa_activate_lesspipe() {
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
     return 0
+}
+
+_koopa_activate_lig_part() {
+    local part="$1"
+    local lig="${KOOPA_PREFIX:?}/bin/lig"
+    [[ -x "$lig" ]] || return 0
+    (( BASH_VERSINFO[0] > 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] >= 4) )) || return 0
+    [[ "$-" == *i* ]] || return 0
+    [[ -z "${LIG_DISABLE:-}" ]] || return 0
+    if [[ "$part" == 'pre' && -t 0 && -t 1 ]]
+    then
+        local bash_path
+        bash_path="$("$lig" shell-path "$$")" || return 0
+        [[ -x "$bash_path" ]] || return 0
+        local BASH="$bash_path"
+    fi
+    local cache_file="${XDG_CACHE_HOME:?}/koopa/shell-init/lig-bash-${part}.sh"
+    if [[ ! -s "$cache_file" ]] || [[ "$lig" -nt "$cache_file" ]]
+    then
+        mkdir -p "${cache_file%/*}" || return 1
+        local tmp_file="${cache_file}.$$"
+        if ! "$lig" init bash "$part" > "$tmp_file"
+        then
+            rm -f "$tmp_file"
+            return 1
+        fi
+        if [[ ! -s "$tmp_file" ]] || ! mv -f "$tmp_file" "$cache_file"
+        then
+            rm -f "$tmp_file"
+            return 1
+        fi
+    fi
+    local nounset=0
+    [[ -o nounset ]] && nounset=1
+    [[ "$nounset" -eq 1 ]] && set +o nounset
+    source "$cache_file"
+    local lig_status=$?
+    if [[ "$nounset" -eq 1 ]]
+    then
+        set -o nounset
+    fi
+    return "$lig_status"
+}
+
+_koopa_activate_lig_pre() {
+    _koopa_activate_lig_part 'pre'
+}
+
+_koopa_activate_lig_post() {
+    _koopa_activate_lig_part 'post'
 }
 
 _koopa_activate_micromamba() {

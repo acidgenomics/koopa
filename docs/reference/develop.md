@@ -61,7 +61,7 @@ Regenerate the cached Bash function library.
 (koopa-develop-check)=
 ## `develop check`
 
-Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest.
+Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, activation speed, pytest.
 
 (koopa-develop-check-app-versions)=
 ## `develop check-app-versions`
@@ -252,12 +252,12 @@ Run shellcheck on all shell scripts.
 (koopa-develop-switch-to-develop)=
 ## `develop switch-to-develop`
 
-Switch a Git-managed koopa installation to the develop branch.
+Fetch origin/develop, switch to develop, and fast-forward it. Requires a clean tracked worktree and an available origin; divergent commits are preserved.
 
 (koopa-develop-switch-to-main)=
 ## `develop switch-to-main`
 
-Switch a Git-managed koopa installation to the main branch.
+Fetch origin/main, switch to main, and fast-forward it. Requires a clean tracked worktree and an available origin; divergent commits are preserved.
 
 (koopa-develop-ty)=
 ## `develop ty`

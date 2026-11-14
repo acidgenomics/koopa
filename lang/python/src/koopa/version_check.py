@@ -2294,6 +2294,19 @@ def _check_boost() -> str:
     return re.sub(r"^boost-", "", tag)
 
 
+def _check_dracula_pro() -> str:
+    """Check the latest known Dracula Pro package version from its public changelog.
+
+    Returns
+    -------
+    str
+        Latest Dracula Pro package version.
+    """
+    from koopa.dracula_pro import latest_version
+
+    return latest_version()
+
+
 _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     "1password-cli": _AppCheckSpec("agilebits", _check_1password_cli, ()),
     "antigravity-cli": _AppCheckSpec(
@@ -2310,6 +2323,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
     ),
     "c-ares": _AppCheckSpec("github", _check_github, ("c-ares", "c-ares")),
     "clickhouse": _AppCheckSpec("github", _check_clickhouse, ()),
+    "dracula-pro": _AppCheckSpec("dracula-pro", _check_dracula_pro, ()),
     "glib": _AppCheckSpec("gitlab", _check_glib, ()),
     "attr": _AppCheckSpec(
         "dirlist",
@@ -2332,6 +2346,7 @@ _SPECIAL_CASES: dict[str, _AppCheckSpec] = {
         (),
     ),
     "libfido2": _AppCheckSpec("github", _check_github, ("Yubico", "libfido2")),
+    "lig": _AppCheckSpec("github", _check_github, ("KevenGoncalves", "lig")),
     "libtool": _AppCheckSpec("gnu", lambda: _check_gnu("libtool"), ()),
     "libyaml": _AppCheckSpec("github", _check_github, ("yaml", "libyaml")),
     "lzip": _AppCheckSpec(
@@ -3620,16 +3635,30 @@ def update_app_json(results: list[VersionCheckResult], *, s3_upload: bool = Fals
 
     _do_mirror = _has_acidgenomics_aws() or (_vendor_config() is not None and vendor_can_push())
     if _do_mirror:
-        print("Uploading source tarballs to mirror(s).", file=sys.stderr)
+        from koopa.text import plural
+
+        src_tarballs: list[tuple[str, str, str]] = []
         for r in bumped:
             if r.latest_version is None:
                 continue
             src_url = data[r.name].get("src_url", "")
             if not src_url:
                 continue
-            _mirror_src_to_s3(r.name, r.latest_version, src_url)
-            for extra_tmpl in data[r.name].get("extra_src_urls", []):
-                _mirror_src_to_s3(r.name, r.latest_version, extra_tmpl)
+            src_tarballs.append((r.name, r.latest_version, src_url))
+            src_tarballs.extend(
+                (r.name, r.latest_version, extra_tmpl)
+                for extra_tmpl in data[r.name].get("extra_src_urls", [])
+            )
+        n_tarballs = len(src_tarballs)
+        if n_tarballs:
+            print(
+                f"Uploading {n_tarballs} source {plural(n_tarballs, 'tarball')} to mirror storage.",
+                file=sys.stderr,
+            )
+        else:
+            print("No source tarballs to upload to mirror storage.", file=sys.stderr)
+        for name, version, src_url in src_tarballs:
+            _mirror_src_to_s3(name, version, src_url)
     elif s3_upload:
         print("S3 upload skipped: 'acidgenomics' AWS profile not available.", file=sys.stderr)
     return count

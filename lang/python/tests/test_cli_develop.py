@@ -716,12 +716,13 @@ def test_handle_check_all_pass(capsys: pytest.CaptureFixture[str]) -> None:
         "_run_ty",
         "_run_pyrefly",
         "_run_numpydoc",
+        "_run_activation_speed_check",
         "_run_pytest",
     ]
     patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
     for p in patches:
         p.start()
-    times = iter([0, 61, 100, 1300, *[v for _ in range(6) for v in (2000, 2001)]])
+    times = iter([0, 61, 100, 1300, *[v for _ in range(7) for v in (2000, 2001)]])
     with (
         patch("koopa.cli_develop.time.monotonic", side_effect=lambda: next(times)),
         patch("koopa.progress._use_color", return_value=True),
@@ -750,6 +751,7 @@ def test_handle_check_stops_at_first_failure(
         patch("koopa.cli_develop._run_ty", return_value=0) as ty,
         patch("koopa.cli_develop._run_pyrefly", return_value=0) as pyrefly,
         patch("koopa.cli_develop._run_numpydoc", return_value=0) as numpydoc,
+        patch("koopa.cli_develop._run_activation_speed_check", return_value=0) as speed,
         patch("koopa.cli_develop._run_pytest", return_value=0) as pytest_,
     ):
         with pytest.raises(RuntimeError, match="ruff format"):
@@ -758,7 +760,7 @@ def test_handle_check_stops_at_first_failure(
         agent_config.assert_called_once_with([], quiet=True)
         ruff_check.assert_called_once_with([], quiet=True)
         ruff_format.assert_called_once_with([], quiet=True)
-        for runner in (pyright, ty, pyrefly, numpydoc, pytest_):
+        for runner in (pyright, ty, pyrefly, numpydoc, speed, pytest_):
             runner.assert_not_called()
 
     captured = capsys.readouterr()
@@ -787,6 +789,7 @@ def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> No
         "_run_ty",
         "_run_pyrefly",
         "_run_numpydoc",
+        "_run_activation_speed_check",
         "_run_pytest",
     ]
     patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
@@ -800,3 +803,57 @@ def test_check_runs_agent_config_first(capsys: pytest.CaptureFixture[str]) -> No
 
     captured = capsys.readouterr()
     assert captured.err.index("agent config ") < captured.err.index("ruff check ")
+
+
+def test_activation_speed_check_uses_three_bash_and_zsh_runs() -> None:
+    """The check gate invokes the requested benchmark through the normal tool runner."""
+    from koopa.cli_develop import _run_activation_speed_check
+
+    with (
+        patch("koopa.prefix.koopa_prefix", return_value="/repo"),
+        patch("koopa.cli_develop._run_tool", return_value=1) as run_tool,
+    ):
+        assert _run_activation_speed_check([], quiet=True) == 1
+    run_tool.assert_called_once_with(
+        [
+            "/repo/bin/koopa",
+            "develop",
+            "activation-speed-test",
+            "--runs",
+            "3",
+            "--shells",
+            "bash",
+            "zsh",
+            "--threshold-bash",
+            "300",
+        ],
+        quiet=True,
+    )
+
+
+def test_check_stops_when_activation_speed_fails() -> None:
+    """A timing regression fails the gate before pytest."""
+    runners = [
+        "_run_agent_config_check",
+        "_run_ruff_check",
+        "_run_ruff_format_check",
+        "_run_pyright",
+        "_run_ty",
+        "_run_pyrefly",
+        "_run_numpydoc",
+    ]
+    patches = [patch(f"koopa.cli_develop.{name}", return_value=0) for name in runners]
+    for p in patches:
+        p.start()
+    try:
+        with (
+            patch("koopa.cli_develop._run_activation_speed_check", return_value=1) as speed,
+            patch("koopa.cli_develop._run_pytest") as pytest_,
+            pytest.raises(RuntimeError, match="activation speed failed"),
+        ):
+            _DEVELOP_HANDLERS["check"]([])
+        speed.assert_called_once_with([], quiet=True)
+        pytest_.assert_not_called()
+    finally:
+        for p in patches:
+            p.stop()

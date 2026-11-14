@@ -734,6 +734,66 @@ def test_update_app_json_refreshes_automake_bin_names_on_bump(tmp_path: Path) ->
     assert count == 1
 
 
+@pytest.mark.parametrize(
+    ("extra_src_urls", "message"),
+    [
+        ([], "Uploading 1 source tarball to mirror storage."),
+        (
+            ["https://example.com/automake-extra-{version}.tar.gz"],
+            "Uploading 2 source tarballs to mirror storage.",
+        ),
+    ],
+)
+def test_update_app_json_reports_source_tarball_upload_count(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    extra_src_urls: list[str],
+    message: str,
+) -> None:
+    """The upload status reports the number of source tarballs with correct pluralization."""
+    json_data = {
+        "automake": {
+            "version": "1.18.1",
+            "src_url": "https://example.com/automake-{version}.tar.gz",
+            "extra_src_urls": extra_src_urls,
+        },
+    }
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("automake", "1.18.1", "1.19.2", "gnu", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json"),
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=True),
+        patch("koopa.version_check._http_url_missing", return_value=False),
+        patch("koopa.version_check._mirror_src_to_s3") as mock_mirror,
+    ):
+        update_app_json(results)
+    assert capsys.readouterr().err.splitlines()[-1] == message
+    assert mock_mirror.call_count == len(extra_src_urls) + 1
+
+
+def test_update_app_json_reports_when_no_source_tarballs_are_available(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The upload status clarifies when there are no source tarballs to upload."""
+    json_data = {"automake": {"version": "1.18.1"}}
+    _write_app_json(tmp_path, json_data)
+    results = [VersionCheckResult("automake", "1.18.1", "1.19.2", "gnu", None)]
+    with (
+        patch("koopa.version_check.koopa_prefix", return_value=str(tmp_path)),
+        patch("koopa.version_check.export_app_json"),
+        patch("koopa.version_check.update_venv_version"),
+        patch("koopa.version_check._has_acidgenomics_aws", return_value=True),
+        patch("koopa.version_check._mirror_src_to_s3") as mock_mirror,
+    ):
+        update_app_json(results)
+    assert capsys.readouterr().err.splitlines()[-1] == (
+        "No source tarballs to upload to mirror storage."
+    )
+    mock_mirror.assert_not_called()
+
+
 # ── update_app_json artifact gate ────────────────────────────────────────────
 
 
@@ -781,9 +841,7 @@ def test_ca_certificate_date_updates_fresh_and_cached(
         ("2025-12-31", "2026-01-01", True, False),
     ],
 )
-def test_date_version_ordering(
-    current: str, latest: str, outdated: bool, too_high: bool
-) -> None:
+def test_date_version_ordering(current: str, latest: str, outdated: bool, too_high: bool) -> None:
     """Compare date versions across months, years, and downgrades."""
     result = VersionCheckResult("ca-certificates", current, latest, "dirlist")
     assert result.is_outdated is outdated
@@ -1507,6 +1565,16 @@ def test_classify_app_registry_url_fallback_for_bespoke_installer() -> None:
     assert spec.args == ("playwright",)
 
 
+def test_classify_app_lig_uses_github_releases() -> None:
+    """Lig's unrelated crates.io name must not override its GitHub releases."""
+    from koopa.io import import_app_json
+
+    spec = classify_app("lig", import_app_json()["lig"])
+    assert spec is not None
+    assert spec.source == "github"
+    assert spec.args == ("KevenGoncalves", "lig")
+
+
 def test_classify_app_python_plugin_uses_pypi_not_monorepo_github() -> None:
     """A `python-plugin` installer classifies via PyPI, not a shared GitHub repo.
 
@@ -1548,6 +1616,15 @@ def test_classify_app_pypi_special_case_calls_check_fn_unwrapped(
     assert spec.source == "pypi"
     assert spec.args == ("uv",)
     assert spec.check_fn(*spec.args) == "2.0.5"
+
+
+def test_classify_dracula_pro_checks_public_changelog(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Dracula Pro uses its public changelog as a special-case version source."""
+    monkeypatch.setattr("koopa.dracula_pro.latest_version", lambda: "2.2.5")
+    spec = classify_app("dracula-pro", {"version": "2.2.4"})
+    assert spec is not None
+    assert spec.source == "dracula-pro"
+    assert spec.check_fn(*spec.args) == "2.2.5"
 
 
 def test_classify_app_no_unsupported_apps_in_registry() -> None:

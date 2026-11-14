@@ -316,6 +316,7 @@ def download_with_mirror(
     output: str | None = None,
     quiet: bool = False,
     skip_koopa_mirror: bool = False,
+    validate_archive: bool = True,
 ) -> str:
     """Download from primary URL, falling back to mirrors.
 
@@ -363,6 +364,9 @@ def download_with_mirror(
         Suppress progress and status output.
     skip_koopa_mirror : bool, optional
         Do not fall back to the koopa mirror after the other sources fail.
+    validate_archive : bool, optional
+        Check archive magic bytes before returning. Disable when the caller
+        performs its own integrity verification.
 
     Returns
     -------
@@ -427,7 +431,7 @@ def download_with_mirror(
                 speed_time=speed_time,
                 quiet=quiet,
             )
-            if is_archive_payload and not archive.is_valid_archive(tarball):
+            if validate_archive and is_archive_payload and not archive.is_valid_archive(tarball):
                 raise ValueError("invalid archive")
             return tarball
         except Exception as exc:

@@ -42,6 +42,7 @@ function __koopa_activate_koopa
         return 0
     end
     _koopa_export_env
+    _koopa_activate_lig_pre
     _koopa_activate_ca_certificates
     _koopa_activate_copilot_cli
     _koopa_activate_ruby
@@ -108,6 +109,7 @@ if test "$koopa_activate" -eq 1
     if test "$koopa_minimal" -eq 0
         _koopa_activate_starship
         _koopa_activate_fish_extras
+        _koopa_activate_lig_post
     end
 end
 

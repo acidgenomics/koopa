@@ -276,7 +276,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "prettier": f"{_M}._node_pkg",
     # -- ruby-package (4) ------------------------------------------------
     "bashcov": f"{_M}._ruby_pkg",
-    # -- rust-package (6) ------------------------------------------------
+    # -- rust-package (7) ------------------------------------------------
     "bandwhich": f"{_M}._rust_pkg",
     "gping": f"{_M}._rust_pkg",
     "hexyl": f"{_M}._rust_pkg",
@@ -321,6 +321,7 @@ PYTHON_INSTALLERS: dict[str, str] = {
     "ldns": f"{_M}.ldns",
     "less": f"{_M}.less",
     "lesspipe": f"{_M}.lesspipe",
+    "lig": f"{_M}.lig",
     "libaec": f"{_M}.libaec",
     "libarchive": f"{_M}.libarchive",
     "libassuan": f"{_M}.libassuan",

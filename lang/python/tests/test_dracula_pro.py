@@ -181,7 +181,7 @@ def test_required_version_reads_app_json(monkeypatch: pytest.MonkeyPatch) -> Non
 
 
 def test_latest_version_skips_entries_without_a_version(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Returns the first version mentioned, walking past entries with none."""
+    """Uses the newest feed package version when it exceeds the registry version."""
     requested_urls = []
 
     def fake_http_get_text(url: str, **_kwargs: object) -> str:
@@ -189,21 +189,37 @@ def test_latest_version_skips_entries_without_a_version(monkeypatch: pytest.Monk
         return _SAMPLE_FEED
 
     monkeypatch.setattr("koopa.version_check._http_get_text", fake_http_get_text)
+    monkeypatch.setattr("koopa.dracula_pro.required_version", lambda: "2.2.2")
 
     assert latest_version() == "2.2.3"
     assert requested_urls == [CHANGELOG_RSS_URL]
 
 
-def test_latest_version_raises_when_feed_has_no_version(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Raises ValueError when no feed entry mentions a version."""
+def test_latest_version_uses_registry_when_feed_has_no_version(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Falls back to the recorded version when changelog entries omit package versions."""
     monkeypatch.setattr(
         "koopa.version_check._http_get_text",
         lambda _url, **_kwargs: (
             "<rss><channel><item><title>No version here</title></item></channel></rss>"
         ),
     )
-    with pytest.raises(ValueError, match="No version number found"):
-        latest_version()
+    monkeypatch.setattr("koopa.dracula_pro.required_version", lambda: "2.2.4")
+    assert latest_version() == "2.2.4"
+
+
+def test_latest_version_prefers_newer_feed_version(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Advances beyond the registry baseline when the feed names a newer package."""
+    monkeypatch.setattr(
+        "koopa.version_check._http_get_text",
+        lambda _url, **_kwargs: (
+            "<rss><channel><item><title>Package updates</title>"
+            "<description>Now in package v2.2.5.</description></item></channel></rss>"
+        ),
+    )
+    monkeypatch.setattr("koopa.dracula_pro.required_version", lambda: "2.2.4")
+    assert latest_version() == "2.2.5"
 
 
 def test_check_up_to_date(

@@ -213,34 +213,34 @@ def _mentioned_version(text: str) -> str | None:
 
 
 def latest_version() -> str:
-    """Return the latest published Dracula Pro version.
+    """Return the latest known Dracula Pro version.
 
-    Reads the public changelog feed and returns the version named in the
-    newest entry that mentions one -- not every changelog entry bumps the
-    package version (e.g. a single-theme fix ships inside the current one).
+    Reads the public changelog feed and returns the greater of the newest
+    package version it names and the version recorded in app.json. Changelog
+    entries do not always include a package version, so the registry provides
+    a baseline until the feed announces a newer one.
 
     Returns
     -------
     str
-        The latest version string (e.g. ``"2.2.3"``).
-
-    Raises
-    ------
-    ValueError
-        If no entry in the feed mentions a version number.
+        The latest known version string (e.g. ``"2.2.4"``).
     """
     from koopa.version_check import _http_get_text
 
     text = _http_get_text(CHANGELOG_RSS_URL)
     root = ElementTree.fromstring(text)
+    feed_version = None
     for item in root.iter("item"):
         title = item.findtext("title") or ""
         description = item.findtext("description") or ""
         version = _mentioned_version(f"{title} {description}")
         if version:
-            return version
-    msg = "No version number found in the Dracula Pro changelog feed."
-    raise ValueError(msg)
+            feed_version = version
+            break
+    current = required_version()
+    if feed_version is None:
+        return current
+    return max((current, feed_version), key=_version_tuple)
 
 
 def check() -> None:

@@ -175,14 +175,23 @@ ADMIN_SYNOPSIS: dict[str, str] = {
 # ---------------------------------------------------------------------------
 
 DEVELOP_DESCRIPTIONS: dict[str, str] = {
-    "switch-to-develop": "Switch a Git-managed koopa installation to the develop branch.",
-    "switch-to-main": "Switch a Git-managed koopa installation to the main branch.",
+    "switch-to-develop": (
+        "Fetch origin/develop, switch to develop, and fast-forward it. "
+        "Requires a clean tracked worktree and an available origin; "
+        "divergent commits are preserved."
+    ),
+    "switch-to-main": (
+        "Fetch origin/main, switch to main, and fast-forward it. "
+        "Requires a clean tracked worktree and an available origin; "
+        "divergent commits are preserved."
+    ),
     "audit-src-mirror": "Audit S3 source mirror for missing or stale tarballs.",
     "bump-revision": "Bump the revision of one or more apps in app.json.",
     "bump-venv-version": "Bump the Python venv version.",
     "cache-functions": "Regenerate the cached Bash function library.",
     "check": (
-        "Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, pytest."
+        "Run the full quality gate: agent config, ruff, pyright, ty, pyrefly, numpydoc, "
+        "activation speed, pytest."
     ),
     "check-app-versions": "Check upstream versions for all apps in app.json.",
     "check-skills": "Validate SKILL.md frontmatter for cross-CLI compatibility.",

@@ -398,6 +398,18 @@ koopa develop pytest lang/python/tests/test_cli_develop.py::test_activation_fork
 
 ## Gotchas
 
+### Ghostty login argv0 can make `$BASH` name a different shell
+
+On macOS, Ghostty can start `/opt/koopa/bin/bash` with `exec -l`, making
+`$0` start with `-` and causing Bash's `$BASH` to fall back to `$SHELL`.
+If the account shell is `/bin/zsh`, Lig's Bash pre-init then incorrectly
+launches Zsh. The koopa Lig wrapper resolves the running process with
+`lig shell-path $$` and locally overrides `$BASH` while sourcing pre-init.
+Test this with a PTY and the `exec -l` launch, not just `bash -i`: the latter
+does not reproduce the wrong executable. Do not change the account login shell
+to work around this; Ghostty already selects Bash independently. Never run
+`chsh` to change the default shell on macOS.
+
 ### A cross-shell env default never belongs in one shell's chezmoi template
 
 Exporting a new app-specific default in a Zsh-only profile template in a
