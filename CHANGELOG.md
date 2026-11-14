@@ -1,5 +1,20 @@
 # Changelog
 
+## koopa 0.41.1 (2026-11-14)
+
+Major changes:
+
+- Added a local post-merge release workflow to `koopa develop publish-release`
+  with `--pr`, automating checks, tagging, archive and website publication,
+  and GitHub release management. The archive-only form remains available.
+- Lig now reloads theme changes in running sessions. Koopa builds a patched,
+  pinned Lig release from verified source instead of upstream binaries.
+
+Minor changes:
+
+- Fixed source downloads from kernel.org and Codeberg that rejected the
+  browser-like user agent, restoring mirroring for dash and sox-ng.
+
 ## koopa 0.41.0 (2026-11-14)
 
 Major changes:
