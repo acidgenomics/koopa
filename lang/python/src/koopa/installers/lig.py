@@ -1,4 +1,4 @@
-"""Build Lig with koopa's live theme reload patch."""
+"""Build the pinned Lig release."""
 
 import hashlib
 import os
@@ -9,12 +9,11 @@ import tempfile
 from pathlib import Path
 
 from koopa.download import download_with_mirror
-from koopa.prefix import koopa_prefix
 from koopa.system import safe_build_env
 from koopa.vendor import vendor_config, vendor_pull_priority
 
-_VERSION = "1.3.0"
-_SOURCE_SHA256 = "8ec48d80af8d0a80a8ee2ec0c0e502252833b8aff85b1fe716e6a9d059b0d2b9"
+_VERSION = "1.4.0"
+_SOURCE_SHA256 = "a6d28a0035985160fd0bb23be95dfbccfc2e1b441d94d436ce4e13f5e9812040"
 
 
 def main(
@@ -24,7 +23,7 @@ def main(
     prefix: str,
     passthrough_args: list[str] | None = None,
 ) -> None:
-    """Build the pinned Lig release with live theme reloading.
+    """Build the pinned Lig release.
 
     Parameters
     ----------
@@ -38,7 +37,7 @@ def main(
         Unused installer arguments.
     """
     if version != _VERSION:
-        msg = f"lig: the live theme patch requires version {_VERSION}, not {version}"
+        msg = f"lig: installer supports version {_VERSION}, not {version}"
         raise ValueError(msg)
     if vendor_config() is not None and vendor_pull_priority() == "vendor_only":
         msg = "lig: source builds require Cargo registry access; use a koopa binary package"
@@ -47,7 +46,6 @@ def main(
     if cargo is None:
         msg = "cargo not found"
         raise FileNotFoundError(msg)
-    patch = Path(koopa_prefix()) / "etc" / "koopa" / "lig" / f"{version}-theme-reload.patch"
     filename = f"lig-{version}.tar.gz"
     url = f"https://github.com/KevenGoncalves/lig/archive/refs/tags/v{version}.tar.gz"
     with tempfile.TemporaryDirectory(prefix="koopa-lig-") as tmp:
@@ -60,7 +58,6 @@ def main(
         with tarfile.open(archive, "r:gz") as tf:
             tf.extractall(tmp, filter="data")
         source = Path(tmp) / f"lig-{version}"
-        subprocess.run(["patch", "-p1", "-F", "0", "-i", str(patch)], cwd=source, check=True)
         env = safe_build_env()
         env["CARGO_HOME"] = os.path.join(tmp, "cargo")
         env["CARGO_NET_GIT_FETCH_WITH_CLI"] = "true"
