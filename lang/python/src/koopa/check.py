@@ -130,6 +130,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
         whether the issue is actionable via reinstall.
     """
     from koopa.prefix import bin_prefix, man1_prefix
+    from koopa.venv_rebuild import can_preserve_python_venv
 
     opt_dir = opt_prefix()
     bin_dir = bin_prefix()
@@ -237,7 +238,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     app_deps = _resolve_dep_dict(app_deps, {"os_id": current_os})
             stale_dep = False
             for dep in app_deps:
-                if installer.startswith(dep):
+                if installer.startswith(dep) and installer != "python-package":
                     continue
                 resolved_dep = dep
                 dep_entry = json_data.get(dep, {})
@@ -262,9 +263,9 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                     break
             if not stale_dep:
                 recorded_dep_vers = _info.get("dep_versions", {})
-                if recorded_dep_vers:
+                if recorded_dep_vers or installer == "python-package":
                     for dep in app_deps:
-                        if installer.startswith(dep):
+                        if installer.startswith(dep) and installer != "python-package":
                             continue
                         resolved_dep = dep
                         dep_entry = json_data.get(dep, {})
@@ -275,6 +276,16 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                             continue
                         current_ver, _current_rev = state
                         recorded_ver = recorded_dep_vers.get(resolved_dep, "")
+                        if (
+                            installer == "python-package"
+                            and resolved_dep.startswith("python3.")
+                            and not recorded_ver
+                        ):
+                            issues.append(
+                                (name, f"dependency {resolved_dep} version unknown", True),
+                            )
+                            stale_dep = True
+                            break
                         if (
                             recorded_ver
                             and current_ver
@@ -296,7 +307,7 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                 # above, but its install date moves past this app's.
                 own_date = _info.get("date", "")
                 for dep in app_deps if own_date else []:
-                    if installer.startswith(dep):
+                    if installer.startswith(dep) and installer != "python-package":
                         continue
                     resolved_dep = dep
                     dep_entry = json_data.get(dep, {})
@@ -304,6 +315,8 @@ def _iter_installed_app_issues() -> list[tuple[str, str, bool]]:  # noqa: C901, 
                         resolved_dep = dep_entry["alias_of"]
                     dep_date = _installed_dep_date(opt_dir, resolved_dep, dep_date_cache)
                     if dep_date > own_date:
+                        if can_preserve_python_venv(name, resolved_dep, json_data):
+                            continue
                         issues.append(
                             (name, f"dependency {resolved_dep} rebuilt after this install", True),
                         )
