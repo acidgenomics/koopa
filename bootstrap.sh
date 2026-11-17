@@ -860,7 +860,7 @@ install_xz() {
 }
 
 install_libffi() {
-    __kvar_version='3.8.0'
+    __kvar_version='3.8.1'
     printf 'Installing libffi.\n'
     __kvar_filename="libffi-${__kvar_version}.tar.gz"
     download_with_fallback \
@@ -905,7 +905,7 @@ install_zlib() {
 }
 
 install_python_uv() {
-    __kvar_uv_version='0.13.8'
+    __kvar_uv_version='0.13.9'
     __kvar_python_version='3.14.10'
     printf 'Installing python via uv.\n'
     __kvar_tmpdir="$(mktemp -d -t koopa-uv-XXXXXX)"
