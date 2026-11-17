@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING
 from unittest.mock import patch
 
@@ -51,8 +52,10 @@ def test_go_install_helpers_pass_defaults(tmp_path: Path, monkeypatch: pytest.Mo
     monkeypatch.delenv("GOPROXY", raising=False)
     monkeypatch.delenv("GODEBUG", raising=False)
     monkeypatch.setattr(install.shutil, "which", lambda _name: "/usr/bin/go")
-    with patch("koopa.install.subprocess.run") as run:
+    original_env = dict(os.environ)
+    with patch.dict(os.environ), patch("koopa.install.subprocess.run") as run:
         install.install_go_package(url="example.test/cmd@v1", prefix=str(tmp_path))
+    assert dict(os.environ) == original_env
     assert "-trimpath" in run.call_args.args[0]
     env = run.call_args.kwargs["env"]
     assert env["GOPROXY"] == "https://proxy.golang.org|direct"
