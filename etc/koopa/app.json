@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5253791805734912",
+    "build_id": "6132547114106880",
     "category": "AI",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "f192adfc6ca61bc8f0be93b8503c1a0a4e0314f127c9a13fb7e25228343dfbba09ae1a1be083851d9e79a703e535cc19242db44675e40cf7f9a4eaa8cb9b272f",
-      "darwin_amd64": "060f38f8a9c436178ea58fd8ca84b7e6d9ce5f49600c52a90046945e0c496e25f0b52accb6440a0dc7b484e8a916f08c1da44da4db738adf9c1081c379a170c2",
-      "linux_amd64": "713ae840845d74736e2d4a96f5d84e3353d614e73a875793ddf500997ccee09595448cebfd8e94fdd90ce2a0fa97707bd1cc29763dcfe01c945d80c92234378f",
-      "linux_arm64": "f9f5c7ebc47a8b8de536acca8116b1f5a43dca614cde94008fe5a510517b23535fb281d85416930d76e76478858bf3dc66ea6d1b0c9b6eeadcfabe4d8ef2a807"
+      "darwin_arm64": "1b2c8e1f832e1be9b257c24e4ac75c9029771fef5af9b529ea295fff1aa5b9d3e1e5447200a76ac8a775889aa8399210716f188f84242b3c34a2e9a8a3c2cc7d",
+      "darwin_amd64": "ff1f625c2efcff03d2131e3e9dc67bb5d1974b67810706f80ad34317c83769486388226352f1a34ede54fad43f5941220ea9beddefc8b27419023c6e9aa4682c",
+      "linux_amd64": "dad3c015e8964fcdc1639b13b7152f4cb84cb1bde385707e2bcdf095d6f1831f4f6521199aec499cc052f9e99906b7fdbc52c273df064d5cb7c84b068ba3ce50",
+      "linux_arm64": "5f703c88e01851061c87c07b1a4ca54c1f5a6826ffada9fb005974a099e9a552ddb1f9ba2fe1194e2829803482c86084babf8cf91530a528bc7f659613600585"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.5.10"
+    "version": "1.5.11"
   },
   "apache-airflow": {
     "bin": [
@@ -1638,7 +1638,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": true,
     "dependencies": [
       "node"
@@ -1652,7 +1652,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.326"
+    "version": "2.1.327"
   },
   "claude-replay": {
     "bin": [
@@ -1683,7 +1683,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-11-14",
+    "date": "2026-11-18",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1691,7 +1691,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.10.4.207"
+    "version": "26.10.6.18"
   },
   "cloc": {
     "bin": [
@@ -1858,7 +1858,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": true,
     "dependencies": [
       "node"
@@ -1872,7 +1872,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.113-0"
+    "version": "1.0.114-0"
   },
   "coreutils": {
     "bin": [
@@ -2352,7 +2352,7 @@
   },
   "dbt-bigquery": {
     "category": "Workflow",
-    "date": "2026-11-12",
+    "date": "2026-11-18",
     "default": false,
     "dependencies": [
       "dbt"
@@ -2367,7 +2367,7 @@
       "https://docs.getdbt.com",
       "https://github.com/dbt-labs/dbt-adapters"
     ],
-    "version": "1.12.3"
+    "version": "1.12.4"
   },
   "dbt-databricks": {
     "category": "Workflow",
@@ -2454,7 +2454,7 @@
     ],
     "category": "Bioinformatics",
     "conda_channel": "bioconda",
-    "date": "2026-09-08",
+    "date": "2026-11-18",
     "default": false,
     "description": "tools for analysis of deep-sequencing data",
     "installer": "conda-package",
@@ -2469,7 +2469,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "4.0.0"
+    "version": "4.1.0"
   },
   "delta": {
     "bin": [
@@ -2563,7 +2563,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2573,7 +2573,7 @@
     "url": [
       "https://github.com/doomemacs/doomemacs/"
     ],
-    "version": "612a43debc401623cb3895f8ab11d7d4108f1769"
+    "version": "d4c525569883dcc3d41b73f386d1617f522e7221"
   },
   "dotfiles": {
     "build_dependencies": [
@@ -3141,7 +3141,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": false,
     "dependencies": [
       "gettext",
@@ -3153,7 +3153,7 @@
     "url": [
       "https://github.com/westes/flex/"
     ],
-    "version": "2.6.16"
+    "version": "2.7.1"
   },
   "fltk": {
     "date": "2026-05-02",
@@ -3611,7 +3611,7 @@
     ],
     "category": "VCS",
     "conda_channel": "conda-forge",
-    "date": "2026-11-13",
+    "date": "2026-11-18",
     "default": true,
     "description": "official GitHub command-line interface",
     "installer": "conda-package",
@@ -3619,7 +3619,7 @@
     "url": [
       "https://github.com/cli/cli/"
     ],
-    "version": "2.104.0"
+    "version": "2.105.0"
   },
   "ghostscript": {
     "bin": [
@@ -3895,7 +3895,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-11-12",
+    "date": "2026-11-18",
     "default": false,
     "description": "command-line tools for Google Cloud Platform",
     "installer": "conda-package",
@@ -3903,7 +3903,7 @@
     "url": [
       "https://cloud.google.com/sdk/docs/install-sdk"
     ],
-    "version": "593.0.0"
+    "version": "594.0.0"
   },
   "googletest": {
     "build_dependencies": [
@@ -5418,7 +5418,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-08-27",
+    "date": "2026-11-18",
     "default": false,
     "dependencies": [
       "libgpg-error"
@@ -5429,7 +5429,7 @@
     "url": [
       "https://gnupg.org/download/"
     ],
-    "version": "1.8.1"
+    "version": "1.9.0"
   },
   "liblinear": {
     "build_dependencies": [
@@ -5798,7 +5798,7 @@
     ],
     "category": "Build",
     "conda_channel": "conda-forge",
-    "date": "2026-11-05",
+    "date": "2026-11-18",
     "default": false,
     "description": "LLVM compiler infrastructure",
     "installer": "conda-package",
@@ -5806,7 +5806,7 @@
     "url": [
       "https://llvm.org/"
     ],
-    "version": "23.1.5"
+    "version": "23.1.6"
   },
   "lmod": {
     "build_dependencies": [
@@ -6101,7 +6101,7 @@
       "xz"
     ],
     "category": "Terminal",
-    "date": "2026-05-02",
+    "date": "2026-11-18",
     "default": true,
     "dependencies": [
       "gdbm",
@@ -6120,14 +6120,13 @@
     "man1": [
       "gman.1"
     ],
-    "revision": 2,
     "src_url": "https://download.savannah.nongnu.org/releases/man-db/man-db-{version}.tar.xz",
     "type": "cli",
     "url": [
       "https://man-db.nongnu.org/",
       "https://gitlab.com/man-db/man-db/-/releases"
     ],
-    "version": "2.13.1"
+    "version": "2.13.3"
   },
   "marimo": {
     "bin": [
@@ -7345,7 +7344,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": false,
     "dependencies": [
       "python"
@@ -7357,7 +7356,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.18.18"
+    "version": "1.18.19"
   },
   "pixi": {
     "bin": [
@@ -7469,7 +7468,7 @@
       "pnx"
     ],
     "category": "JavaScript",
-    "date": "2026-11-14",
+    "date": "2026-11-18",
     "default": true,
     "dependencies": [
       "node"
@@ -7481,7 +7480,7 @@
       "https://pnpm.io/",
       "https://www.npmjs.com/package/pnpm/"
     ],
-    "version": "12.21.0"
+    "version": "12.22.0"
   },
   "poetry": {
     "bin": [
@@ -7819,7 +7818,7 @@
       "pyproject-fmt"
     ],
     "category": "Python",
-    "date": "2026-11-05",
+    "date": "2026-11-18",
     "default": true,
     "dependencies": [
       "python"
@@ -7831,7 +7830,7 @@
       "https://pypi.org/project/pyproject-fmt/",
       "https://github.com/tox-dev/pyproject-fmt/"
     ],
-    "version": "2.30.6"
+    "version": "2.31.1"
   },
   "pyrefly": {
     "bin": [
@@ -9216,7 +9215,7 @@
     ],
     "category": "Workflow",
     "conda_channel": "bioconda",
-    "date": "2026-10-22",
+    "date": "2026-11-18",
     "default": false,
     "description": "scalable bioinformatics workflow manager",
     "installer": "conda-package",
@@ -9226,7 +9225,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.27.1"
+    "version": "9.27.2"
   },
   "snowflake-cli": {
     "bin": [
@@ -9286,20 +9285,19 @@
       "sox_ng"
     ],
     "category": "Multimedia",
-    "date": "2026-11-06",
+    "date": "2026-11-18",
     "default": false,
     "description": "maintained fork of the SoX audio manipulation tools",
     "man1": [
       "sox.1",
       "sox_ng.1"
     ],
-    "revision": 1,
     "src_url": "https://codeberg.org/sox_ng/sox_ng/releases/download/sox_ng-{version}/sox_ng-{version}.tar.gz",
     "type": "cli",
     "url": [
       "https://codeberg.org/sox_ng/sox_ng"
     ],
-    "version": "14.8.1"
+    "version": "14.9.0"
   },
   "spacemacs": {
     "bin": [
@@ -9768,7 +9766,7 @@
       "javac"
     ],
     "category": "Language",
-    "date": "2026-10-22",
+    "date": "2026-11-18",
     "default": false,
     "description": "Eclipse Temurin OpenJDK distribution",
     "notes": [
@@ -9778,7 +9776,7 @@
     "url": [
       "https://adoptium.net/"
     ],
-    "version": "25.0.5+8"
+    "version": "25.0.5.1+2"
   },
   "termcolor": {
     "date": "2022-11-05",
@@ -10039,7 +10037,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "default": true,
     "dependencies": [
       "python"
@@ -10051,7 +10049,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.105"
+    "version": "0.0.107"
   },
   "udunits": {
     "date": "2022-08-30",
