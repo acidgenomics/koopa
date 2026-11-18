@@ -85,6 +85,40 @@ def test_activation_speed_test_help(capsys: pytest.CaptureFixture[str]) -> None:
     assert "threshold" in captured.out.lower()
 
 
+@pytest.mark.parametrize(
+    ("times_ms", "fails", "summary"),
+    [
+        ([170, 188, 752], False, "mean=179ms"),
+        ([410, 450, 752], True, "mean=430ms"),
+        ([170, 752], True, "mean=461ms"),
+    ],
+)
+def test_activation_speed_test_trims_slowest_run(
+    times_ms: list[int],
+    fails: bool,
+    summary: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A single slow outlier is excluded, but sustained regressions still fail."""
+    clock = [value for duration in times_ms for value in (0.0, duration / 1000)]
+    with (
+        patch("koopa.cli_develop.shutil.which", return_value="/bin/zsh"),
+        patch("koopa.cli_develop.subprocess.run") as run,
+        patch("time.monotonic", side_effect=clock),
+        patch("koopa.alert.alert"),
+        patch("koopa.alert.alert_success"),
+    ):
+        args = ["--shells", "zsh", "--runs", str(len(times_ms))]
+        if fails:
+            with pytest.raises(SystemExit) as exc_info:
+                _DEVELOP_HANDLERS["activation-speed-test"](args)
+            assert exc_info.value.code == 1
+        else:
+            _DEVELOP_HANDLERS["activation-speed-test"](args)
+    assert run.call_count == len(times_ms)
+    assert summary in capsys.readouterr().out
+
+
 def test_activation_fork_audit_help(capsys: pytest.CaptureFixture[str]) -> None:
     """Test activation-fork-audit --help exits cleanly."""
     with pytest.raises(SystemExit) as exc_info:

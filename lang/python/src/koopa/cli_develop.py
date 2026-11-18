@@ -2502,7 +2502,7 @@ def _handle_activation_speed_test(args: list[str]) -> None:
                 print(f"    {elapsed_ms:.0f}ms")
         # Drop the slowest outlier (first run is often cold-cache).
         times_sorted = sorted(times_ms)
-        trimmed = times_sorted[1:] if len(times_sorted) > 2 else times_sorted
+        trimmed = times_sorted[:-1] if len(times_sorted) > 2 else times_sorted
         mean_ms = statistics.mean(trimmed)
         median_ms = statistics.median(trimmed)
         min_ms = min(trimmed)

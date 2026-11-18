@@ -244,6 +244,7 @@ def test_update_homebrew_all_brew_calls_noninteractive() -> None:
     39-hour hang from returning.
     """
     with (
+        patch.dict("os.environ"),
         patch("koopa.brew.subprocess.run", side_effect=_empty_run_side_effect()) as mock_run,
         patch("koopa.brew.brew_prefix", return_value="/opt/homebrew"),
         patch("koopa.system.has_sudo", return_value=True),

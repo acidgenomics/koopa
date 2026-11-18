@@ -60,6 +60,9 @@ _APP_TREE: dict[str, Any] = {
         "archive-plans": "claude-archive-plans",
         "audit-tokens": "claude-audit-tokens",
     },
+    "code": {
+        "audit-settings": "code-audit-settings",
+    },
     "conda": {
         "clean-cache": "conda-clean-cache",
         "create-env": "conda-create-env",
@@ -262,6 +265,89 @@ def _resolve_tree(
 
 
 # -- current handlers --------------------------------------------------------
+
+
+def _handle_code_audit_settings(args: list[str]) -> None:
+    """Handle ``koopa app code audit-settings``.
+
+    Parameters
+    ----------
+    args : list[str]
+        Raw CLI arguments for this subcommand.
+    """
+    import argparse
+    from pathlib import Path
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app code audit-settings",
+        description=(
+            "Audit VS Code settings for duplicate JSON keys, unregistered or deprecated "
+            "extension settings, and schema type or enum mismatches."
+        ),
+    )
+    parser.add_argument(
+        "settings",
+        nargs="?",
+        help="settings.json path (default: XDG Code/User/settings.json)",
+    )
+    parser.add_argument(
+        "--extensions-dir",
+        action="append",
+        default=[],
+        metavar="PATH",
+        help="additional extension directory containing extension subdirectories",
+    )
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help=(
+            "apply supported R setting renames to the Code chezmoi partial and target; "
+            "leave ambiguous findings for review"
+        ),
+    )
+    parsed = parser.parse_args(args)
+
+    from koopa.vscode_settings import (
+        audit_vscode_settings,
+        default_extension_dirs,
+        default_settings_path,
+        fix_vscode_settings,
+    )
+
+    settings_path = (
+        Path(os.path.abspath(os.path.expanduser(parsed.settings)))
+        if parsed.settings
+        else default_settings_path()
+    )
+    extension_dirs = default_extension_dirs()
+    extension_dirs.extend(Path(os.path.expanduser(path)) for path in parsed.extensions_dir)
+    if parsed.fix:
+        from koopa.prefix import koopa_prefix
+
+        source = Path(koopa_prefix()) / "opt" / "dotfiles" / "chezmoi"
+        changes = fix_vscode_settings(settings_path, extension_dirs, source)
+        for change in changes:
+            print(f"Fixed: {change}")
+        if not changes:
+            print("No safe migrations available.")
+    result = audit_vscode_settings(settings_path, extension_dirs)
+
+    print(f"Settings: {settings_path}")
+    print(f"Extension manifests: {result.manifest_count}")
+    for finding in result.findings:
+        print(
+            f"{finding.severity} {finding.code}: {finding.location}: {finding.detail}",
+            file=sys.stderr if finding.severity == "ERROR" else sys.stdout,
+        )
+    if result.error_count:
+        sys.exit(1)
+    if not result.findings:
+        print("No settings issues found.")
+    else:
+        print(
+            f"Audit completed with {len(result.findings)} finding(s), "
+            f"{result.error_count} error(s)."
+        )
 
 
 def _handle_current_no_args(func_name: str) -> Callable[[list[str]], None]:
@@ -3041,6 +3127,8 @@ _PYTHON_HANDLERS: dict[str, Any] = {
     "claude-archive-plans": lambda a: _handle_archive_plans(a, "claude", "Claude Code"),
     "copilot-archive-plans": lambda a: _handle_archive_plans(a, "copilot", "GitHub Copilot CLI"),
     "claude-audit-tokens": _handle_claude_audit_tokens,
+    # code
+    "code-audit-settings": _handle_code_audit_settings,
     # conda
     "conda-clean-cache": _handle_conda_clean_cache,
     "conda-create-env": _handle_conda_create_env,

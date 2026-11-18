@@ -60,6 +60,7 @@ _koopa_app() {
         bowtie2) _koopa_app_bowtie2 ;;
         brew) _koopa_app_brew ;;
         claude) _koopa_app_claude ;;
+        code) _koopa_app_code ;;
         conda) _koopa_app_conda ;;
         copilot) _koopa_app_copilot ;;
         current) _koopa_app_current ;;
@@ -97,6 +98,7 @@ _koopa_app_cmds() {
         'bowtie2'
         'brew'
         'claude'
+        'code'
         'conda'
         'copilot'
         'current'
@@ -260,6 +262,14 @@ _koopa_app_claude() {
         'audit-tokens'
     )
     _describe -t commands 'claude command' cmds
+}
+
+_koopa_app_code() {
+    local -a cmds
+    cmds=(
+        'audit-settings'
+    )
+    _describe -t commands 'code command' cmds
 }
 
 _koopa_app_conda() {

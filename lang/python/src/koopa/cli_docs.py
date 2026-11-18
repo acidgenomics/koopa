@@ -372,6 +372,7 @@ APP_NAMESPACE_DESCRIPTIONS: dict[str, str] = {
     "bowtie2": "Bowtie 2 short-read aligner wrappers.",
     "brew": "Homebrew maintenance utilities.",
     "claude": "Claude Code configuration maintenance utilities.",
+    "code": "Visual Studio Code settings audit utilities.",
     "conda": "conda environment management utilities.",
     "copilot": "GitHub Copilot CLI configuration maintenance utilities.",
     "current": "Query the current upstream version of a package or resource.",
@@ -461,6 +462,10 @@ APP_DESCRIPTIONS: dict[str, str] = {
     # claude
     "claude-archive-plans": "Archive old Claude Code plan files into date-based subdirectories.",
     "claude-audit-tokens": "Report approximate token cost of Claude config files.",
+    "code-audit-settings": (
+        "Audit VS Code settings against installed extension manifests; "
+        "use --fix for supported source-first R setting migrations."
+    ),
     # conda
     "conda-clean-cache": "Clean the conda package cache.",
     "conda-create-env": "Create a conda environment from packages or an environment file.",

@@ -19,8 +19,8 @@ description: >-
 - `current_version = "v<version>"` (with `v` prefix)
 
 It creates a single commit `Bump version to vX.Y.Z.`: **no tag, no push**.
-Since `commit = true`, do not run it unless a commit is explicitly authorized;
-otherwise prepare the version changes without committing.
+Since `commit = true`, do not run it; prepare the version changes without
+committing.
 
 ## Release checklist
 
@@ -57,21 +57,22 @@ otherwise prepare the version changes without committing.
    pytest lang/python/tests/
    ```
 5. **Release PR**: title the `develop`→`main` PR with the bare tag, for example
-   `v0.41.0`. Follow the repository's commit/push and merge authorization
-   rules; do not assume permission to commit, push, or merge.
+   `v0.41.0`. Leave commits and branch pushes to the user; do not merge a PR
+   unless authorized.
 6. **After merge**: when asked to publish or complete the release, carry out
    the local publication procedure below rather than leaving tagging, release
    publishing, or documentation refresh as manual handoffs. A request to
-   prepare a release alone is not authorization to commit, push, or merge.
+   prepare a release alone does not authorize publication or merging.
 
 ## Local post-merge publication
 
 Use the local koopa installation and its existing `acidgenomics` AWS profile.
 Do not set up GitHub Actions or store AWS credentials on GitHub. See
-`koopa-aws-env` for the local configuration. Respect repository instructions
-requiring explicit authorization for Git commits and pushes; do not merge a PR
-unless authorized. The following applies once the user asks the agent to
-publish the merged release and any required Git authorization is present.
+`koopa-aws-env` for the local configuration. Once the user asks to publish a
+merged release, the repository permits the agent to create and push its new
+tag through the full command below. This exception does not permit commits,
+branch pushes, or force-pushing, moving, or deleting tags. Do not merge a PR
+unless authorized.
 
 Run the end-to-end command from a clean checkout of the merged release:
 
@@ -86,6 +87,10 @@ access, the `acidgenomics` profile, and a clean release tree matching
 remains archive-only. Do not run the full form speculatively: it creates and
 pushes a tag, publishes the archive and docs, creates a GitHub release, and
 deletes the previous GitHub release while preserving its tag.
+
+When the tag needs pushing, the pre-push hook runs the quality gate again after
+the command's own preflight gate. This duplication is expected; do not bypass
+the hook or its corporate-identity guard.
 
 The automated sequence and its safeguards:
 
@@ -142,6 +147,9 @@ Each publish step has external side effects. On failure, report what succeeded
 and what remains; do not claim the release is complete. Inspect existing tags,
 release metadata, and published artifacts, then rerun the same `--pr` command
 to resume safely when its checks permit; do not force-move conflicting tags.
+If the user runs the command instead, inspect its outcome and independently
+verify the public latest manifest, GitHub release, and new and previous remote
+tags before reporting completion.
 
 ## CHANGELOG.md format
 

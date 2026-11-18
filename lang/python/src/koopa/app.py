@@ -561,6 +561,8 @@ def stale_revdeps_with_triggers(names: list[str]) -> dict[str, list[str]]:
         Mapping of each installed app whose recorded dependencies include
         one of names to the list of triggering names.
     """
+    from koopa.venv_rebuild import can_preserve_python_venv
+
     json_data = import_app_json()
     keys = list(json_data.keys())
     targets = set(names)
@@ -588,6 +590,8 @@ def stale_revdeps_with_triggers(names: list[str]) -> dict[str, list[str]]:
             if isinstance(d_entry, dict) and d_entry.get("alias_of"):
                 resolved_d = d_entry["alias_of"]
             if d in targets or resolved_d in targets:
+                if can_preserve_python_venv(key, resolved_d, json_data):
+                    continue
                 trigger = resolved_d if resolved_d in targets else d
                 if trigger not in triggering:
                     triggering.append(trigger)

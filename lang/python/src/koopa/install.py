@@ -3702,6 +3702,26 @@ def _load_pending_plan(source: str = "") -> list[tuple[str, str]]:
     return plan
 
 
+def _obsolete_python_venv_rebuild(app: str, reason: str, registry: dict) -> bool:
+    from koopa.venv_rebuild import can_preserve_python_venv
+
+    while reason.startswith("resumed: "):
+        reason = reason.removeprefix("resumed: ")
+    if reason.startswith("dependency "):
+        triggers = reason.removeprefix("dependency ")
+    elif reason.startswith("dependencies "):
+        triggers = reason.removeprefix("dependencies ")
+    else:
+        return False
+    if not triggers.endswith(" rebuilt"):
+        return False
+    deps = triggers.removesuffix(" rebuilt").split(", ")
+    return bool(deps) and all(
+        can_preserve_python_venv(app, registry.get(dep, {}).get("alias_of", dep), registry)
+        for dep in deps
+    )
+
+
 def _save_pending_plan(plan: list[tuple[str, str]], source: str = "") -> None:
     path = _update_plan_cache_path()
     if not plan:
@@ -4347,6 +4367,7 @@ def update_stale_apps(*, verbose: bool = False) -> None:
                 and app in json_data
                 and app in installed
                 and _is_supported_app(app)
+                and not _obsolete_python_venv_rebuild(app, reason, json_data)
             ):
                 apps_with_reasons.append((app, f"resumed: {reason}"))
                 seen_names.add(app)

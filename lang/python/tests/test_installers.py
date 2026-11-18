@@ -108,13 +108,12 @@ def test_rust_package_git_install_requires_tag() -> None:
         )
 
 
-def test_lig_source_and_patch_track_app_version() -> None:
-    """Keep Lig's source and bundled patch aligned with the registry pin."""
+def test_lig_source_tracks_app_version() -> None:
+    """Keep Lig's source aligned with the registry pin."""
     app = import_app_json()["lig"]
     assert isinstance(app, dict)
     assert app["version_pin"] is True
     version = app["version"]
-    assert (Path(lig.koopa_prefix()) / "etc/koopa/lig" / f"{version}-theme-reload.patch").is_file()
     with (
         patch.object(lig, "vendor_config", return_value=None),
         patch.object(lig.shutil, "which", return_value="/usr/bin/cargo"),
