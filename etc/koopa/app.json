@@ -197,23 +197,23 @@
     "bin": [
       "agy"
     ],
-    "build_id": "5514532022517760",
+    "build_id": "5250855658717184",
     "category": "AI",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "description": "Google Antigravity AI agent CLI (successor to Gemini CLI)",
     "sha512": {
-      "darwin_arm64": "b03a841eb3a29be918a66960b775f68ed4f3bcc02f33962131bbbc26c46ea983ceac6c832ad46efd11d73d9a2cb97df4ab24d4bc92ee47d3d5ece7b8d8b61235",
-      "darwin_amd64": "2276e0f189a917e7eaa4b00ece59fe6a1062914472e13247f402b56fe26c9afacd0af494476e31a5610fb0b273400ca4013f273d56d69c6fdd7e2d0ec933f596",
-      "linux_amd64": "af3f0be58b8475940d79f9abea19e762ecc3d265ea9f56cff8dd805e27ba299b44a305a79504a7ffe6ebdfa29a294c56edc4caed1875990bfaf2fef1508ec8b0",
-      "linux_arm64": "d64ad759781b50dfacfa7d9826c0ad469959d01bdf5a170acd4c83472eba31c677baf0052ac8ab48eef40f0d3f0e26057e752aabd24331c79f4c881d4b872125"
+      "darwin_arm64": "33f5617dc74fea606d47b2483c6d271c850c9f3c9c55b724c664c3c0d4b82100d819fbcf55714f851765f6628d4296883ac8939b4fdeb55d5e6b9ce923135d18",
+      "darwin_amd64": "b3eae073ee633032e9d473cdc7725c30bdfe2e09436bc36cfb3422e7e5fa3733de9591a7f78d02362294e7bf87e345d70e5d839689e526129a6f3fc041857a05",
+      "linux_amd64": "3dee9f26e298156db673f6ce2a0f5dfed5b30006e04ceb9809c68070e7b717587b33a3da0f8bc2eda45af81a50bc8b14c82b28ae5832bcfe3e7fd49397117b31",
+      "linux_arm64": "23c193151499a4986fd5fa0d8132665cc8ffbad6cc0b3ff4fd53a2cb68abb76b149a992b836d53063443cd89add335f14d8134fb02abdcecbf6e1eaef6c53d33"
     },
     "type": "cli",
     "url": [
       "https://antigravity.google/product/antigravity-cli",
       "https://antigravity.google/docs/cli-getting-started"
     ],
-    "version": "1.5.15"
+    "version": "1.5.16"
   },
   "apache-airflow": {
     "bin": [
@@ -647,7 +647,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": true,
     "description": "official Amazon Web Services command-line interface",
     "installer": "conda-package",
@@ -659,7 +659,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.39.3"
+    "version": "2.39.5"
   },
   "aws-mountpoint-s3": {
     "category": "Cloud",
@@ -1638,7 +1638,7 @@
       "claude"
     ],
     "category": "AI",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": true,
     "dependencies": [
       "node"
@@ -1652,7 +1652,7 @@
     "url": [
       "https://www.npmjs.com/package/@anthropic-ai/claude-code"
     ],
-    "version": "2.1.330"
+    "version": "2.1.331"
   },
   "claude-replay": {
     "bin": [
@@ -1683,7 +1683,7 @@
       "clickhouse"
     ],
     "category": "Database",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "description": "fast columnar OLAP database with local query engine",
     "type": "cli",
@@ -1691,7 +1691,7 @@
       "https://clickhouse.com/",
       "https://github.com/ClickHouse/ClickHouse/"
     ],
-    "version": "26.10.11.12"
+    "version": "26.11.1.2942"
   },
   "cloc": {
     "bin": [
@@ -1719,7 +1719,7 @@
     ],
     "category": "Cloud",
     "conda_channel": "conda-forge",
-    "date": "2026-11-12",
+    "date": "2026-11-24",
     "default": false,
     "description": "proxy for secure connections to Google Cloud SQL instances",
     "installer": "conda-package",
@@ -1728,7 +1728,7 @@
       "https://cloud.google.com/sql/docs/postgres/sql-proxy",
       "https://github.com/GoogleCloudPlatform/cloud-sql-proxy/"
     ],
-    "version": "2.28.0"
+    "version": "2.28.1"
   },
   "cloudbiolinux": {
     "date": "2026-05-11",
@@ -1788,7 +1788,7 @@
       "git-cz"
     ],
     "category": "Python",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": true,
     "dependencies": [
       "python"
@@ -1801,7 +1801,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.20.0"
+    "version": "4.20.1"
   },
   "conda": {
     "bin": [
@@ -1858,7 +1858,7 @@
       "copilot"
     ],
     "category": "AI",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": true,
     "dependencies": [
       "node"
@@ -1872,7 +1872,7 @@
     "url": [
       "https://www.npmjs.com/package/@github/copilot"
     ],
-    "version": "1.0.115-0"
+    "version": "1.0.116-0"
   },
   "coreutils": {
     "bin": [
@@ -2293,7 +2293,7 @@
       "dask"
     ],
     "category": "Data Science",
-    "date": "2026-08-27",
+    "date": "2026-11-24",
     "default": false,
     "dependencies": [
       "python"
@@ -2304,21 +2304,21 @@
     "url": [
       "https://www.dask.org/"
     ],
-    "version": "2026.8.0"
+    "version": "2026.11.0"
   },
   "databricks-cli": {
     "bin": [
       "databricks"
     ],
     "category": "Cloud",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "description": "command-line interface for Databricks",
     "type": "cli",
     "url": [
       "https://docs.databricks.com/aws/en/dev-tools/cli/"
     ],
-    "version": "1.27.0"
+    "version": "1.28.0"
   },
   "datafusion": {
     "date": "2026-08-04",
@@ -2791,7 +2791,7 @@
       "git"
     ],
     "category": "Editor",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "dependencies": [
       "emacs"
@@ -2802,7 +2802,7 @@
     "url": [
       "https://github.com/bbatsov/prelude/"
     ],
-    "version": "7bac56bb984f156ff280f89ececa59ecc9b08feb"
+    "version": "26afd5a6f03360a5f4d43f3f1f3c78e4f704ecb2"
   },
   "ensembl-perl-api": {
     "category": "Bioinformatics",
@@ -2896,7 +2896,7 @@
       "xz"
     ],
     "category": "Library",
-    "date": "2026-11-02",
+    "date": "2026-11-24",
     "default": false,
     "description": "fast stream-oriented XML parser library",
     "src_url": "https://github.com/libexpat/libexpat/releases/download/R_{version_underscore}/expat-{version}.tar.xz",
@@ -2904,7 +2904,7 @@
     "url": [
       "https://libexpat.github.io/"
     ],
-    "version": "2.10.0"
+    "version": "2.11.0"
   },
   "eza": {
     "bin": [
@@ -3141,7 +3141,7 @@
       "make"
     ],
     "category": "Build",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "dependencies": [
       "gettext",
@@ -3153,7 +3153,7 @@
     "url": [
       "https://github.com/westes/flex/"
     ],
-    "version": "2.7.4"
+    "version": "2.7.8"
   },
   "fltk": {
     "date": "2026-05-02",
@@ -5083,7 +5083,7 @@
       "make"
     ],
     "category": "Filesystem",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": true,
     "dependencies": [
       "ncurses",
@@ -5100,7 +5100,7 @@
       "https://github.com/gwsw/less/",
       "https://mirrors.kernel.org/gnu/less/?C=M;O=D"
     ],
-    "version": "713"
+    "version": "714"
   },
   "lesspipe": {
     "bin": [
@@ -5484,7 +5484,7 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-09-17",
+    "date": "2026-11-24",
     "default": false,
     "description": "portable C library for network traffic capture",
     "mirror": true,
@@ -5493,7 +5493,7 @@
     "url": [
       "https://www.tcpdump.org/"
     ],
-    "version": "1.11.0"
+    "version": "1.11.1"
   },
   "libpipeline": {
     "build_dependencies": [
@@ -5736,13 +5736,13 @@
       "pkg-config"
     ],
     "category": "Library",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "description": "YAML parser and emitter in C",
     "src_url": "https://github.com/yaml/libyaml/archive/{version}.tar.gz",
     "type": "library",
     "url": "https://github.com/yaml/libyaml/",
-    "version": "0.2.6"
+    "version": "0.2.7"
   },
   "libzip": {
     "date": "2025-05-30",
@@ -6314,7 +6314,7 @@
     ],
     "category": "Shell",
     "conda_channel": "conda-forge",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": false,
     "description": "polyglot dev tool version manager and task runner",
     "installer": "conda-package",
@@ -6324,7 +6324,7 @@
       "https://github.com/jdx/mise/",
       "https://crates.io/crates/mise"
     ],
-    "version": "2026.11.12"
+    "version": "2026.11.13"
   },
   "misopy": {
     "date": "2023-01-10",
@@ -6895,14 +6895,14 @@
       "dorado"
     ],
     "category": "Bioinformatics",
-    "date": "2026-08-27",
+    "date": "2026-11-24",
     "default": false,
     "description": "Oxford Nanopore high-accuracy basecaller",
     "type": "cli",
     "url": [
       "https://github.com/nanoporetech/dorado/"
     ],
-    "version": "2.1.2"
+    "version": "2.2.0"
   },
   "ont-guppy": {
     "date": "2023-05-31",
@@ -7344,7 +7344,7 @@
       "pipx"
     ],
     "category": "Python",
-    "date": "2026-11-18",
+    "date": "2026-11-24",
     "default": false,
     "dependencies": [
       "python"
@@ -7356,7 +7356,7 @@
       "https://github.com/pypa/pipx/",
       "https://pypi.org/project/pipx/"
     ],
-    "version": "1.18.19"
+    "version": "1.19.1"
   },
   "pixi": {
     "bin": [
@@ -8696,7 +8696,7 @@
   },
   "rstudio-server": {
     "category": "R",
-    "date": "2026-11-13",
+    "date": "2026-11-24",
     "default": false,
     "description": "web-based RStudio IDE server",
     "installer_platform": "debian",
@@ -8710,7 +8710,7 @@
     "url": [
       "https://www.rstudio.com/products/rstudio/download-server/"
     ],
-    "version": "2026.11.0+203"
+    "version": "2026.11.1+204"
   },
   "rsync": {
     "bin": [
@@ -9917,7 +9917,7 @@
       "tu-datastore"
     ],
     "category": "AI",
-    "date": "2026-11-14",
+    "date": "2026-11-24",
     "default": false,
     "dependencies": [
       "python"
@@ -9934,7 +9934,7 @@
       "https://github.com/mims-harvard/ToolUniverse",
       "https://zitniklab.hms.harvard.edu/ToolUniverse/"
     ],
-    "version": "1.5.10"
+    "version": "1.5.11"
   },
   "topgrade": {
     "bin": [
@@ -10037,7 +10037,7 @@
       "ty"
     ],
     "category": "Python",
-    "date": "2026-11-23",
+    "date": "2026-11-24",
     "default": true,
     "dependencies": [
       "python"
@@ -10049,7 +10049,7 @@
       "https://pypi.org/project/ty/",
       "https://github.com/astral-sh/ty/"
     ],
-    "version": "0.0.108"
+    "version": "0.0.109"
   },
   "udunits": {
     "date": "2022-08-30",
@@ -10952,7 +10952,7 @@
       "yt-dlp"
     ],
     "category": "Multimedia",
-    "date": "2026-10-26",
+    "date": "2026-11-24",
     "default": false,
     "dependencies": [
       "node",
@@ -10963,7 +10963,6 @@
     "installer_args": {
       "pip_name": "yt-dlp[default]"
     },
-    "revision": 1,
     "soft_dependencies": [
       "ffmpeg"
     ],
@@ -10972,7 +10971,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2026.10.26"
+    "version": "2026.11.23"
   },
   "zed": {
     "bin": [
@@ -11133,7 +11132,7 @@
       "pkg-config"
     ],
     "category": "Compression",
-    "date": "2025-02-20",
+    "date": "2026-11-24",
     "default": true,
     "dependencies": [
       "lz4",
@@ -11148,13 +11147,12 @@
       "zstdgrep.1",
       "zstdless.1"
     ],
-    "revision": 1,
     "src_url": "https://github.com/facebook/zstd/archive/v{version}.tar.gz",
     "type": "build_tool",
     "url": [
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
     ],
-    "version": "1.5.7"
+    "version": "1.6.0"
   }
 }
