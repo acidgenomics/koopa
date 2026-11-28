@@ -2971,6 +2971,25 @@ _DEVELOP_HANDLERS: dict[str, Callable[[list[str]], None]] = {
     "switch-to-main": _handle_switch_to_main,
 }
 
+_SAFE_HELP_COMMANDS = frozenset(
+    {
+        "activation-fork-audit",
+        "activation-speed-test",
+        "check-app-versions",
+        "check-skills",
+        "color-mode-audit",
+        "generate-agent-config",
+        "mirror-src",
+        "prune-stale-docs",
+        "publish-docs",
+        "publish-release",
+        "push-installer",
+        "scrub-install-info",
+        "switch-to-develop",
+        "switch-to-main",
+    }
+)
+
 
 def handle_develop(remainder: list[str]) -> None:
     """Dispatch ``koopa develop ...`` commands.
@@ -2988,6 +3007,16 @@ def handle_develop(remainder: list[str]) -> None:
     rest = remainder[1:]
     handler = _DEVELOP_HANDLERS.get(subcmd)
     if handler is not None:
+        from koopa.aws import dotenv_value
+
+        safe_help = subcmd in _SAFE_HELP_COMMANDS and rest in (["--help"], ["-h"])
+        if not safe_help and dotenv_value("KOOPA_DEVELOP") != "1":
+            print(
+                "Error: koopa develop commands require KOOPA_DEVELOP=1. "
+                "Set it in the environment or the koopa checkout's .env.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
         handler(rest)
         return
     print(f"Error: unknown develop command '{subcmd}'.", file=sys.stderr)

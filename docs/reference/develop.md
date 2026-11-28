@@ -1,5 +1,9 @@
 # koopa develop
 
+Develop commands require `KOOPA_DEVELOP=1` in the environment or the active koopa checkout's gitignored `.env`. A nonempty environment value takes precedence; only `1` enables the commands. This is separate from `KOOPA_BUILDER` and is an accidental-use guard, not a security boundary.
+
+Enable it on development hosts and in CI. The checkout's pre-push quality gate also requires the opt-in. Group help and completions remain available everywhere; supported subcommands also accept an exact `--help` or `-h` without enabling development mode. The legacy `koopa system switch-to-develop` alias is also restricted.
+
 (koopa-develop-activation-fork-audit)=
 ## `develop activation-fork-audit`
 

@@ -578,17 +578,6 @@ def _switch_koopa_branch(args: list[str], branch: str) -> None:
     _zsh_compaudit_set_permissions()
 
 
-def _handle_switch_to_develop(args: list[str]) -> None:
-    """Handle the legacy ``koopa system switch-to-develop`` alias.
-
-    Parameters
-    ----------
-    args : list[str]
-        Command-line arguments to parse.
-    """
-    _switch_koopa_branch(args, "develop")
-
-
 def _handle_disable_passwordless_sudo() -> None:
     """Handle ``koopa system disable-passwordless-sudo``."""
     import grp
@@ -1030,7 +1019,9 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         _handle_prune_apps(rest)
         return
     if subcmd == "switch-to-develop":
-        _handle_switch_to_develop(rest)
+        from koopa.cli_develop import handle_develop
+
+        handle_develop([subcmd, *rest])
         return
     if subcmd == "hostname":
         _handle_hostname()

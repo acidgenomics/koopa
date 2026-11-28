@@ -15,6 +15,7 @@ def _git(path: Path, *args: str) -> str:
 @pytest.fixture
 def checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Create an isolated develop-only shallow clone with a separate main."""
+    monkeypatch.setenv("KOOPA_DEVELOP", "1")
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "gitconfig"))
     monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
@@ -167,6 +168,7 @@ def test_update_collision_returns_to_previous_branch(checkout: Path, detached: b
 
 def test_refuses_non_git_installation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A stable archive cannot be switched to a Git branch."""
+    monkeypatch.setenv("KOOPA_DEVELOP", "1")
     monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: str(tmp_path))
     with pytest.raises(RuntimeError, match="Not a Git-managed"):
         cli_develop.handle_develop(["switch-to-main"])
@@ -188,3 +190,29 @@ def test_legacy_system_alias(checkout: Path) -> None:
     cli_develop.handle_develop(["switch-to-main"])
     cli_system.handle_system(["switch-to-develop"])
     assert _git(checkout, "branch", "--show-current") == "develop"
+
+
+def test_legacy_system_alias_requires_opt_in(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The legacy alias cannot bypass the developer guard."""
+    monkeypatch.delenv("KOOPA_DEVELOP", raising=False)
+    monkeypatch.setattr("koopa.aws._parse_dotenv", lambda: {})
+    monkeypatch.setattr("koopa.cli_system._switch_koopa_branch", lambda *_: pytest.fail("called"))
+    with pytest.raises(SystemExit) as exc:
+        cli_system.handle_system(["switch-to-develop"])
+    assert exc.value.code == 1
+    assert "KOOPA_DEVELOP=1" in capsys.readouterr().err
+
+
+def test_legacy_system_alias_help_without_opt_in(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Help for the legacy alias remains available without switching."""
+    monkeypatch.delenv("KOOPA_DEVELOP", raising=False)
+    monkeypatch.setattr("koopa.aws._parse_dotenv", lambda: {})
+    monkeypatch.setattr("koopa.prefix.koopa_prefix", lambda: pytest.fail("unexpected inspection"))
+    with pytest.raises(SystemExit) as exc:
+        cli_system.handle_system(["switch-to-develop", "--help"])
+    assert exc.value.code == 0
+    assert "switch-to-develop" in capsys.readouterr().out

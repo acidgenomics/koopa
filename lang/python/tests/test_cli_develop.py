@@ -8,12 +8,14 @@ from unittest.mock import ANY, patch
 import pytest
 from koopa.cli_develop import (
     _DEVELOP_HANDLERS,
+    _SAFE_HELP_COMMANDS,
     _detect_color_mode_thrash,
     _run_pytest,
     _run_tool,
     _skill_frontmatter_errors,
     _skill_infer_prefix,
     _version_from_filename,
+    handle_develop,
 )
 from koopa.prefix import koopa_prefix
 
@@ -27,6 +29,93 @@ def test_handlers_all_callable() -> None:
     """Test that all handler values are callable."""
     for name, handler in _DEVELOP_HANDLERS.items():
         assert callable(handler), f"Handler for '{name}' is not callable"
+
+
+@pytest.mark.parametrize(
+    ("environment", "dotenv", "allowed"),
+    [
+        (None, {}, False),
+        (None, {"KOOPA_DEVELOP": "1"}, True),
+        ("", {"KOOPA_DEVELOP": "1"}, True),
+        ("1", {}, True),
+        ("0", {"KOOPA_DEVELOP": "1"}, False),
+        ("true", {}, False),
+    ],
+)
+def test_develop_opt_in(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    environment: str | None,
+    dotenv: dict[str, str],
+    allowed: bool,
+) -> None:
+    """Only an explicit opt-in dispatches a develop command."""
+    if environment is None:
+        monkeypatch.delenv("KOOPA_DEVELOP", raising=False)
+    else:
+        monkeypatch.setenv("KOOPA_DEVELOP", environment)
+    monkeypatch.setattr("koopa.aws._parse_dotenv", lambda: dotenv)
+    with patch.dict(_DEVELOP_HANDLERS, {"check-app-versions": print}):
+        if allowed:
+            handle_develop(["check-app-versions", "git"])
+            assert "git" in capsys.readouterr().out
+        else:
+            with pytest.raises(SystemExit) as exc:
+                handle_develop(["check-app-versions", "git"])
+            assert exc.value.code == 1
+            captured = capsys.readouterr()
+            assert not captured.out
+            assert "KOOPA_DEVELOP=1" in captured.err
+
+
+@pytest.mark.parametrize("command", sorted(_SAFE_HELP_COMMANDS))
+@pytest.mark.parametrize("flag", ["--help", "-h"])
+def test_develop_audited_help(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    command: str,
+    flag: str,
+) -> None:
+    """Each allowed help handler exits before executing its command."""
+    monkeypatch.delenv("KOOPA_DEVELOP", raising=False)
+    monkeypatch.setattr("koopa.aws._parse_dotenv", lambda: {})
+    if command == "mirror-src":
+        handle_develop([command, flag])
+    else:
+        with pytest.raises(SystemExit) as exc:
+            handle_develop([command, flag])
+        assert exc.value.code == 0
+    captured = capsys.readouterr()
+    assert "usage:" in (captured.out + captured.err).lower()
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["format-app-json", "--help"],
+        ["check-app-versions", "git", "--help"],
+    ],
+)
+def test_develop_refuses_unsafe_help(monkeypatch: pytest.MonkeyPatch, args: list[str]) -> None:
+    """Help flags cannot bypass the guard on unaudited or mixed invocations."""
+    monkeypatch.delenv("KOOPA_DEVELOP", raising=False)
+    monkeypatch.setattr("koopa.aws._parse_dotenv", lambda: {})
+    with (
+        patch.dict(_DEVELOP_HANDLERS, {args[0]: lambda _: pytest.fail("handler called")}),
+        pytest.raises(SystemExit) as exc,
+    ):
+        handle_develop(args)
+    assert exc.value.code == 1
+
+
+def test_develop_unknown_command_still_reports_error(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Unknown commands do not produce a misleading opt-in error."""
+    monkeypatch.delenv("KOOPA_DEVELOP", raising=False)
+    with pytest.raises(SystemExit):
+        handle_develop(["not-a-command"])
+    assert "unknown develop command" in capsys.readouterr().err
 
 
 def test_handlers_expected_commands() -> None:
