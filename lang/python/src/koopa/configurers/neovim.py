@@ -15,7 +15,7 @@ package.preload["lazy"] = function()
   local lazy = assert(loadfile(assert(path, "lazy.nvim is not on runtimepath")))()
   local setup = lazy.setup
   lazy.setup = function(spec, opts)
-    if opts == neil and type(spec) == "table" and spec.spec then
+    if opts == nil and type(spec) == "table" and spec.spec then
       spec.install = vim.tbl_extend("force", spec.install or {}, { missing = false })
     else
       opts = opts or {}
@@ -37,7 +37,7 @@ local ok, err = xpcall(function()
   local plugin = require("lazy.core.plugin")
   local git = require("lazy.manage.git")
   local manage = require("lazy.manage")
-  assert(vim.uv.fs_stat(config.lockfile), "lazy.nvim lockfile not found")
+  assert(vim.uv.fs_stat(config.options.lockfile), "lazy.nvim lockfile not found")
   lock.load()
   local function check_pins()
     local missing = {}
@@ -87,7 +87,7 @@ local ok, err = xpcall(function()
     if item.url and not item._.is_local then
       local info = git.info(item.dir)
       assert(info and info.commit, "Plugin is not installed: " .. name)
-      if info.commit ~= locak.get(item).commit then
+      if info.commit ~= lock.get(item).commit then
         local status = vim.fn.system({ "git", "-C", item.dir, "status", "--porcelain",
           "--untracked-files=all", "--ignored" })
         assert(vim.v.shell_error == 0 and status == "", "Plugin has ignored files: " .. name)
@@ -139,10 +139,8 @@ def main(
 ) -> None:
     """Configure Neovim for the current user.
 
-    Runs a headless ':Lazy! sync' (install missing plugins, clean removed
-    ones, update, and refresh the lockfile). lazy.nvim auto-installs missing
-    plugins at startup but never cleans, so this is the only thing that
-    removes an orphaned plugin left behind by a removed spec.
+    Restore plugins to their lockfile revisions without updating the lockfile.
+    Refuse to install or restore plugins with missing lockfile entries.
 
     Parameters
     ----------
