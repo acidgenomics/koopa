@@ -7,6 +7,15 @@ _koopa_activate_lig_part() {
     (( BASH_VERSINFO[0] > 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] >= 4) )) || return 0
     [[ "$-" == *i* ]] || return 0
     [[ -z "${LIG_DISABLE:-}" ]] || return 0
+    # lig keeps runtime files under XDG_RUNTIME_DIR. Slurm compute nodes can set
+    # it to a /run/user/<uid> path that does not exist, so fall back to a
+    # user-owned directory under the cache home.
+    if [[ -n "${XDG_RUNTIME_DIR:-}" && ! -d "$XDG_RUNTIME_DIR" ]]
+    then
+        export XDG_RUNTIME_DIR="${XDG_CACHE_HOME:?}/koopa/xdg-runtime"
+        # shellcheck disable=SC2174
+        mkdir -p -m 700 "$XDG_RUNTIME_DIR" || return 1
+    fi
     if [[ "$part" == 'pre' && -t 0 && -t 1 ]]
     then
         # A login argv0 can make $BASH point to $SHELL rather than the running Bash.
