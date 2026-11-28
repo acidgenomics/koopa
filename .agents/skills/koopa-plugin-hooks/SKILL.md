@@ -43,9 +43,13 @@ what it blocks.
    blocks, what it does not, the input shapes, and the fail policy. Follow the house
    pattern:
    - No `jq`, no non-stdlib imports. Parse stdin as JSON in Python.
-   - Fail open on empty or malformed stdin (exit 0).
+   - Block on empty or malformed stdin and on any internal error (exit 2, reason on
+     stderr). Wrap the `__main__` call so an exception exits 2: Claude Code runs the
+     tool call after exit 1. A guard that fails open is the exception, and its
+     docstring says why.
    - A block prints the reason on stderr and exits 2.
-   - An ask hook prints a `permissionDecision` on stdout and never denies.
+   - An ask hook prints a `permissionDecision` on stdout and never denies a call it
+     can read.
    - Keep the file parseable as Python 3.10 (see Gotchas).
 2. Register it in the right file or files, in the right matcher group. Add the Copilot
    entry with `"timeout": 5`, plus the `env AGENT_HOOK_HARNESS=copilot` prefix if it
