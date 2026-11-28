@@ -49,7 +49,7 @@ into a cloud-synced folder), so the path `obsidian vaults verbose` prints and
 Three mechanisms exist. Do not mix them up.
 
 | Mechanism | Where it lives | Visible in |
-|---|---|---|
+| --- | --- | --- |
 | Dated bookmark note | `<vault>/YYYY/MM/DD/bookmarks.md`, one `- [Title](url)` per link | `bookmarks.base`, a `bookmarks-all` Dataview note, search |
 | Native Bookmarks pane | `<vault>/.obsidian/bookmarks.json` | Obsidian's Bookmarks sidebar tab only |
 | Link in a topic note | any `.md` note | that note |
@@ -130,7 +130,9 @@ One-time prerequisites:
 Save session reports in the detected vault at
 `YYYY/MM/DD/<slug>.md`, not in a repository `reports/` directory or
 `.claude/reports/`. Add YAML frontmatter with `type: report`, `title`, and
-`date`. Do not add a date prefix to the filename.
+`date`. Do not add a date prefix to the filename. Use strict lowercase
+kebab-case for `<slug>` (for example, `example-name.md`); do not use
+uppercase for title case in report filenames.
 
 ## Prerequisites for the CLI (both required)
 
@@ -161,7 +163,7 @@ are the authority.
 ## Command reference (curated subset)
 
 | Area | Command | Result |
-|---|---|---|
+| --- | --- | --- |
 | Daily notes | `obsidian daily:path`, `daily:read`, `daily:append content="..."`, `daily:prepend` | path, content, append, prepend |
 | Search | `obsidian search query="x" total`, `search:context query="x" limit=2`, `search query="x" format=json` | count, matching lines, JSON paths |
 | Files | `create path=... content=...` (`overwrite` to replace), `read`, `append`, `prepend`, `rename`, `move`, `delete` (`permanent` skips trash), `file`, `wordcount` | file operations |
@@ -217,7 +219,7 @@ not `file.ext == "md"`.
 Obsidian indexes, searches, links, and graphs only `.md` files.
 
 | Shape | Verdict |
-|---|---|
+| --- | --- |
 | Prose, meeting notes, a pasted terminal session kept as a note, a short list | Convert with `mv file.txt file.md`. Use `mv`, not `cp`: it keeps the birth time and does not force a cloud placeholder to hydrate. |
 | Header-row TSV/CSV, a path or ID manifest, a long command transcript | Leave as data. |
 
@@ -255,7 +257,7 @@ find -L . -name '*.md' -print0 | xargs -0 grep -c '```' | awk -F: '$2 % 2 != 0'
 ## Failure modes
 
 | Failure | Symptom | Action |
-|---|---|---|
+| --- | --- | --- |
 | App not running | `The CLI is unable to find Obsidian...` | `open -a Obsidian`; poll `pgrep -x Obsidian` |
 | CLI not enabled | `Command line interface is not enabled...` | Toggle it in Settings (GUI, once) |
 | Bare `obsidian` | Opens a blocking TUI | Always pass a subcommand from a script |
