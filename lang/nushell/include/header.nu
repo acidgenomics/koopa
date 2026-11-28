@@ -1,5 +1,5 @@
 # Nushell header.
-# @note Updated 2026-05-01.
+# @note Updated 2026-11-28.
 # @note Requires nushell 0.90+.
 #
 # Usage:
@@ -37,6 +37,7 @@ export use ../functions/prefix/xdg-config-home.nu *
 export use ../functions/export/export-env.nu *
 export use ../functions/activate/activate-bootstrap.nu *
 export use ../functions/activate/activate-ca-certificates.nu *
+export use ../functions/activate/activate-antigravity-cli.nu *
 export use ../functions/activate/activate-copilot-cli.nu *
 export use ../functions/activate/activate-conda.nu *
 export use ../functions/activate/activate-fzf.nu *
@@ -48,7 +49,7 @@ export use ../functions/activate/activate-color-mode-sync.nu *
 export use ../functions/activate/activate-aliases.nu *
 
 # Main activation function.
-# @note Updated 2026-05-01.
+# @note Updated 2026-11-28.
 export def --env _koopa_activate_koopa [] {
     let koopa_minimal = ($env.KOOPA_MINIMAL? | default "0")
 
@@ -61,6 +62,7 @@ export def --env _koopa_activate_koopa [] {
 
     _koopa_export_env
     _koopa_activate_ca_certificates
+    _koopa_activate_antigravity_cli
     _koopa_activate_copilot_cli
     _koopa_activate_conda
     _koopa_activate_difftastic

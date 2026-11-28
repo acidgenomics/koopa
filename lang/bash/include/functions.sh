@@ -139,6 +139,11 @@ _koopa_activate_aliases() {
     return 0
 }
 
+_koopa_activate_antigravity_cli() {
+    export AGY_CLI_DISABLE_AUTO_UPDATE=true
+    return 0
+}
+
 _koopa_activate_asdf() {
     local prefix
     prefix="${1:-}"
