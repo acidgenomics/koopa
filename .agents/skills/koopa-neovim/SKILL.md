@@ -3,7 +3,7 @@ name: koopa-neovim
 description: >-
   koopa Neovim configuration and plugin lifecycle. Covers the lazy.nvim architecture
   (defaults.lazy true, checker disabled, the LazyDone autocmd that closes the plugin
-  view), the koopa configure user neovim command that runs a headless Lazy sync,
+  view), the koopa configure user neovim command that restores locked plugins,
   versioning lazy-lock.json in the chezmoi source, and the after/syntax/org.vim
   override that stops org inline emphasis from bleeding across lines. Use when adding
   or removing a plugin spec, when a plugin directory under
@@ -45,25 +45,23 @@ removed. A removed spec leaves its directory behind under
 either, since the lock only tracks currently-specified plugins. That combination
 (directory present, no spec, no lock entry) is the tell for an orphan.
 
-Run the sync after any spec change (new plugin, removed plugin, or a `version`/
-`branch` constraint edit):
+Restore the locked plugin versions with:
 
 ```sh
 koopa configure user neovim
 ```
 
 This is `lang/python/src/koopa/configurers/neovim.py`, registered in
-`configurers/__init__.py` as `("neovim", "common", "user")`. It runs
-`nvim --headless "+Lazy! sync" +qa`, the documented headless idiom (the bang makes
-the command block until finished). `:Lazy sync` = install missing + clean orphaned +
-update existing, and rewrites `lazy-lock.json` as a side effect.
+`configurers/__init__.py` as `("neovim", "common", "user")`. It disables startup
+auto-install, validates pins, installs missing pinned plugins, and restores them
+to the lockfile. It does not update the lockfile or clean orphaned directories.
+It refuses an absent lockfile, absent lazy.nvim, unpinned plugins, incomplete
+plugin directories, changed plugin origins, unavailable branches, and dirty
+plugin checkouts. It leaves already-pinned checkouts alone; a checkout that
+needs to move also refuses ignored files, which Git could otherwise overwrite.
 
-After the sync it diffs the deployed `~/.config/nvim/lazy-lock.json` against the
-chezmoi source copy and, if they differ, prints the exact command to re-sync them:
-
-```sh
-chezmoi re-add --source=<koopa>/opt/dotfiles/chezmoi ~/.config/nvim/lazy-lock.json
-```
+After restoring it compares the deployed lockfile with the installed dotfiles
+copy and reports any difference. It never writes to the detached installed checkout.
 
 **The lockfile is versioned**, consistent with how `etc/koopa/app.json` pins every
 other koopa-managed app to an exact version. Without this, every host drifts to
@@ -74,9 +72,14 @@ Full loop for a plugin change:
 
 1. Edit the spec under `lua/plugins/*.lua` in the chezmoi source.
 2. Targeted `chezmoi apply` of the changed file(s).
-3. `koopa configure user neovim`.
-4. If it prints the drift note, run the `chezmoi re-add` command it gives you.
-5. Commit the spec change and the lockfile together.
+3. Open Neovim normally and run `:Lazy update` explicitly. Normal startup may
+   install newly specified plugins; review the resulting lockfile.
+4. Re-add the deployed lockfile to a writable dotfiles checkout using
+   `chezmoi re-add --source=<writable-dotfiles-checkout>/chezmoi ~/.config/nvim/lazy-lock.json`.
+5. Review and commit the spec and lockfile together. Merge the dotfiles change,
+   then advance the koopa dotfiles pin as described in `koopa-dotfiles`.
+6. Once that pin is installed and applied, `koopa configure user neovim`
+   restores the committed versions on each host.
 
 ## Inline emphasis bleeding across lines
 
